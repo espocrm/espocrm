@@ -21,7 +21,8 @@
     "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
     "acceptanceStatusCalls": "Akcepta statuss (zvani)",
     "title": "Konta nosaukums",
-    "hasPortalUser": "Ir portāla lietotājs"
+    "hasPortalUser": "Ir portāla lietotājs",
+    "originalEmail": "Sākotnējais e-pasta vēstule"
   },
   "links": {
     "opportunities": "Iespējas",

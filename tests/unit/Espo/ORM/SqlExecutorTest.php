@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,9 +35,15 @@ use Espo\ORM\PDO\PDOProvider;
 use PDO;
 use PDOStatement;
 use PDOException;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class SqlExecutorTest extends \PHPUnit\Framework\TestCase
+class SqlExecutorTest extends TestCase
 {
+    private $pdo;
+    private $sth;
+    private $executor;
+
     protected function setUp() : void
     {
         $this->pdo = $this->createMock(PDO::class);
@@ -60,7 +66,7 @@ class SqlExecutorTest extends \PHPUnit\Framework\TestCase
         $this->pdo
             ->expects($this->once())
             ->method('query')
-            ->will($this->returnValue($this->sth))
+            ->willReturn($this->sth)
             ->with($sql);
 
         $sth = $this->executor->execute($sql);
@@ -123,9 +129,7 @@ class SqlExecutorTest extends \PHPUnit\Framework\TestCase
 
         try {
             $this->executor->execute($sql);
-        } catch (PDOException $e) {
-
-        }
+        } catch (PDOException) {}
     }
 
     public function testExecuteDeadlock2()
@@ -136,15 +140,22 @@ class SqlExecutorTest extends \PHPUnit\Framework\TestCase
 
         $e->errorInfo = [40001, 1213];
 
+        $invokedCount = $this->exactly(2);
+
         $this->pdo
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('query')
-            ->will(
-                $this->onConsecutiveCalls(
-                    $this->throwException($e),
-                    $this->returnValue($this->sth)
-                )
-            );
+            ->willReturnCallback(function () use ($invokedCount, $e) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    throw $e;
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    return $this->sth;
+                }
+
+                throw new RuntimeException();
+            });
 
         $sth = $this->executor->execute($sql, true);
 

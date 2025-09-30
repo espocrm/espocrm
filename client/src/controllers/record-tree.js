@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import RecordController from 'controllers/record';
+import TreeCollection from 'collections/tree';
 
 class RecordTreeController extends RecordController {
 
@@ -49,15 +50,45 @@ class RecordTreeController extends RecordController {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionListTree() {
-        this.getCollection().then(collection => {
-            collection.url = collection.entityType + '/action/listTree';
+    /**
+     *
+     * @param {{
+     *     currentId?: string,
+     *     isReturn?: boolean,
+     * }} options
+     */
+    async actionListTree(options) {
+        const currentId = options.currentId;
 
-            this.main(this.getViewName('listTree'), {
-                scope: this.name,
-                collection: collection
-            });
-        });
+        const collection = await this.getCollection();
+
+        if (!(collection instanceof TreeCollection)) {
+            throw new Error("Wrong collection.");
+        }
+
+        collection.url = `${collection.entityType}/action/listTree`;
+        collection.currentId = currentId ?? null;
+
+        const isReturn = options.isReturn || this.getRouter().backProcessed;
+
+        this.main(this.getViewName('listTree'), {
+            scope: this.name,
+            collection: collection,
+        }, undefined, {key: 'listTree', useStored: isReturn});
+    }
+
+    async create(options = {}) {
+        if (options.parentId) {
+            options.attributes ??= {};
+
+            options.attributes.parentId = options.parentId;
+            options.attributes.parentName = options.parentName;
+
+            delete options.parentId;
+            delete options.parentName;
+        }
+
+        return super.create(options);
     }
 }
 

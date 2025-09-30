@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -375,12 +375,7 @@ class LinkFieldView extends BaseFieldView {
 
         if (this.isSearchMode()) {
             this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
-
-            this.events['click a[data-action="clearLinkOneOf"]'] = e =>{
-                const id = $(e.currentTarget).data('id').toString();
-
-                this.deleteLinkOneOf(id);
-            };
+            this.addActionHandler('clearLinkOneOf', (e, target) => this.deleteLinkOneOf(target.dataset.id));
         }
 
         this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
@@ -407,8 +402,9 @@ class LinkFieldView extends BaseFieldView {
     /**
      * Select.
      *
-     * @param {module:model} model A model.
+     * @param {import('model').default} model A model.
      * @protected
+     * @return {Promise|void}
      */
     select(model) {
         this.$elementName.val(model.get('name') || model.id);
@@ -713,10 +709,12 @@ class LinkFieldView extends BaseFieldView {
                     autoSelectFirst: true,
                     forceHide: true,
                     triggerSelectOnValidInput: false,
+                    catchFastEnter: true,
                     onSelect: item => {
-                        this.getModelFactory().create(this.foreignScope, model => {
+                        this.getModelFactory().create(this.foreignScope, async model => {
                             model.set(item.attributes);
-                            this.select(model);
+
+                            await (this.select(model) ?? await Promise.resolve());
 
                             this.$elementName.focus();
                         });
@@ -1131,8 +1129,8 @@ class LinkFieldView extends BaseFieldView {
             return new Promise(resolve => {
                 Espo.loader.requirePromise(this.panelDefs.createHandler)
                     .then(Handler => new Handler(this.getHelper()))
-                    .then(handler => {
-                        handler.getAttributes(this.model)
+                    .then(/** import('handlers/create-related').default */handler => {
+                        handler.getAttributes(this.model, this.name)
                             .then(additionalAttributes => {
                                 resolve({
                                     ...attributes,

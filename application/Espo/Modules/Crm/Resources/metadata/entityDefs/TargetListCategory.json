@@ -7,7 +7,7 @@
         "order": {
             "type": "int",
             "minValue": 1,
-            "required": true,
+            "readOnly": true,
             "textFilterDisabled": true
         },
         "description": {
@@ -33,7 +33,8 @@
             "type": "linkMultiple"
         },
         "parent": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/link-category-tree"
         },
         "childList": {
             "type": "jsonArray",

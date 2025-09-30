@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,13 @@ use PHPUnit\Framework\TestCase;
 
 class PrimaryFilterApplierTest extends TestCase
 {
+    private $filterFactory;
+    private $user;
+    private $selectManager;
+    private $queryBuilder;
+    private $entityType;
+    private $applier;
+
     protected function setUp(): void
     {
         $this->filterFactory = $this->createMock(PrimaryFilterFactory::class);

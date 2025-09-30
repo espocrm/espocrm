@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,8 +69,10 @@ class Url
 
         $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
 
+        $idIndex = count(explode('/', $scriptNameModified)) - 1;
+
         if ($url) {
-            $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
+            $portalId = explode('/', $url)[$idIndex] ?? null;
 
             if (str_contains($url, '=')) {
                 $portalId = null;
@@ -87,7 +89,7 @@ class Url
             return null;
         }
 
-        $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
+        $portalId = explode('/', $url)[$idIndex] ?? null;
 
         if ($portalId === '') {
             $portalId = null;
@@ -113,7 +115,7 @@ class Url
 
         $url = rtrim($a[0], '/');
 
-        return strpos($url, '/portal') !== false;
+        return str_contains($url, '/portal');
     }
 
     public static function detectIsInPortalWithId(): bool
@@ -135,5 +137,24 @@ class Url
         }
 
         return false;
+    }
+
+    public static function getRedirectUrlWithTrailingSlash(): ?string
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+
+        if ($uri === '' || $uri === '/' || str_ends_with($uri, '/')) {
+            return null;
+        }
+
+        $output = $uri . '/';
+
+        $queryString = $_SERVER['QUERY_STRING'] ?? null;
+
+        if ($queryString !== null && $queryString !== '') {
+            $output .= '?' . $_SERVER['QUERY_STRING'];
+        }
+
+        return $output;
     }
 }

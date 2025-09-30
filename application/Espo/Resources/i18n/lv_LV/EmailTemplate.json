@@ -17,9 +17,6 @@
   "tooltips": {
     "oneOff": "Atzīmējiet, ja šo veidni izmantosiet tikai vienu reizi. Piem., masveida e-pastam."
   },
-  "presetFilters": {
-    "actual": "Faktiskais"
-  },
   "placeholderTexts": {
     "optOutLink": "atrakstīšanās saite",
     "today": "Šodienas datums",

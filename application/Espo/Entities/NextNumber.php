@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,4 +34,34 @@ use Espo\Core\ORM\Entity;
 class NextNumber extends Entity
 {
     public const ENTITY_TYPE = 'NextNumber';
+
+    public function getNumberValue(): ?int
+    {
+        return $this->get('value');
+    }
+
+    public function setNumberValue(int $value): self
+    {
+        return $this->set('value', $value);
+    }
+
+    public function setTargetEntityType(string $entityType): self
+    {
+        return $this->set('entityType', $entityType);
+    }
+
+    public function setTargetFieldName(string $fieldName): self
+    {
+        return $this->set('fieldName', $fieldName);
+    }
+
+    public function getTargetEntityType(): string
+    {
+        return $this->get('entityType');
+    }
+
+    public function getTargetFieldName(): string
+    {
+        return $this->get('fieldName');
+    }
 }

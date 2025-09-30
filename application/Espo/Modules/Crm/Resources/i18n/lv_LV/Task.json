@@ -14,7 +14,8 @@
     "dateCompleted": "Pabeigšanas datums",
     "attachments": "Pielikumi",
     "reminders": "Atgādinājumi",
-    "contact": "Kontakts"
+    "contact": "Kontakts",
+    "originalEmail": "Sākotnējais e-pasta vēstule"
   },
   "links": {
     "attachments": "Pielikumi",
@@ -43,11 +44,11 @@
     "overdue": "nokavēts"
   },
   "presetFilters": {
-    "actual": "Faktiskais",
     "completed": "Pabeigts",
     "todays": "Šīsdienas",
     "overdue": "Nokavēts",
-    "deferred": "Atlikts"
+    "deferred": "Atlikts",
+    "actual": "Atvērt"
   },
   "nameOptions": {
     "replyToEmail": "Atbildēt uz e-pastu"

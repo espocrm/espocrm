@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,44 +29,53 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    TransactionManager,
-    QueryComposer\MysqlQueryComposer,
-    EntityFactory,
-    Metadata,
-    Locker\MysqlLocker,
-};
+use Espo\ORM\EntityFactory;
+use Espo\ORM\Locker\MysqlLocker;
+use Espo\ORM\Metadata;
+use Espo\ORM\QueryComposer\MysqlQueryComposer;
+use Espo\ORM\TransactionManager;
 
 use PDO;
+use PHPUnit\Framework\TestCase;
 
-class MysqlLockerTest extends \PHPUnit\Framework\TestCase
+class MysqlLockerTest extends TestCase
 {
+    private $locker;
+    private $pdo;
+
     protected function setUp() : void
     {
-        $this->pdo = $this->getMockBuilder(PDO::class)->disableOriginalConstructor()->getMock();
-
-        $entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
-
-        $metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
-
-        $this->transactionManager = $this->getMockBuilder(TransactionManager::class)
-            ->disableOriginalConstructor()->getMock();
+        $this->pdo = $this->createMock(PDO::class);
+        $entityFactory = $this->createMock(EntityFactory::class);
+        $metadata = $this->createMock(Metadata::class);
+        $transactionManager = $this->createMock(TransactionManager::class);
 
         $composer = new MysqlQueryComposer($this->pdo, $entityFactory, $metadata);
-
-        $this->locker = new MysqlLocker($this->pdo, $composer, $this->transactionManager);
+        $this->locker = new MysqlLocker($this->pdo, $composer, $transactionManager);
     }
 
     public function testLockCommit()
     {
+        $invokedCount = $this->exactly(3);
+
         $this->pdo
-            ->expects($this->exactly(3))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['LOCK TABLES `account` WRITE'],
-                ['LOCK TABLES `contact` READ'],
-                ['UNLOCK TABLES'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('LOCK TABLES `account` WRITE', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('LOCK TABLES `contact` READ', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals('UNLOCK TABLES', $sql);
+                }
+
+                return 1;
+            });
 
         $this->locker->lockExclusive('Account');
         $this->locker->lockShare('Contact');
@@ -80,14 +89,26 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
 
     public function testLockRollback()
     {
+        $invokedCount = $this->exactly(3);
+
         $this->pdo
-            ->expects($this->exactly(3))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['LOCK TABLES `account` WRITE'],
-                ['LOCK TABLES `contact` READ'],
-                ['UNLOCK TABLES'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('LOCK TABLES `account` WRITE', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('LOCK TABLES `contact` READ', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals('UNLOCK TABLES', $sql);
+                }
+
+                return 1;
+            });
 
         $this->locker->lockExclusive('Account');
         $this->locker->lockShare('Contact');

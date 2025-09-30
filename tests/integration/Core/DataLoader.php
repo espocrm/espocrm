@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,15 +31,14 @@ namespace tests\integration\Core;
 
 use Espo\Core\Application;
 use Espo\Core\Container;
-use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Exception;
+use RuntimeException;
 
 class DataLoader
 {
@@ -84,13 +83,38 @@ class DataLoader
     protected function handleData(array $fullData): void
     {
         foreach ($fullData as $type => $data) {
-            $methodName = 'load' . ucfirst($type);
+            if ($type === 'files') {
+                $this->loadFiles($data);
 
-            if (!method_exists($this, $methodName)) {
-                throw new Exception('DataLoader: Data type is not supported in dataFile.');
+                continue;
             }
 
-            $this->$methodName($data);
+            if ($type === 'entities') {
+                $this->loadEntities($data);
+
+                continue;
+            }
+
+            if ($type === 'data') {
+                $this->loadData($data);
+
+                continue;
+            }
+
+            if ($type === 'config') {
+                $this->loadConfig($data);
+
+                continue;
+            }
+
+            if ($type === 'preferences') {
+                $this->loadPreferences($data);
+
+                continue;
+            }
+
+
+            throw new RuntimeException('DataLoader: Data type is not supported in dataFile.');
         }
     }
 
@@ -101,7 +125,7 @@ class DataLoader
 
             $fileManager->copy($path, '.', true);
         } catch (Exception $e) {
-            throw new Exception('Error loadFiles: ' . $e->getMessage());
+            throw new RuntimeException('Error loadFiles: ' . $e->getMessage());
         }
     }
 
@@ -128,7 +152,7 @@ class DataLoader
                 try {
                     $entityManager->saveEntity($entity);
                 } catch (Exception $e) {
-                    throw new Exception('Error loadEntities: ' . $e->getMessage() . ', ' . print_r($entityData, true));
+                    throw new RuntimeException('Error loadEntities: ' . $e->getMessage() . ', ' . print_r($entityData, true));
                 }
             }
         }
@@ -146,7 +170,7 @@ class DataLoader
         try {
             $config->save();
         } catch (Exception $e) {
-            throw new Exception('Error loadConfig: ' . $e->getMessage());
+            throw new RuntimeException('Error loadConfig: ' . $e->getMessage());
         }
     }
 
@@ -163,29 +187,8 @@ class DataLoader
             try {
                 $entityManager->saveEntity($preferences);
             } catch (Exception $e) {
-                throw new Exception('Error loadPreferences: ' . $e->getMessage());
+                throw new RuntimeException('Error loadPreferences: ' . $e->getMessage());
             }
         }
     }
-
-    /*private function loadSql(array $data): void
-    {
-        if (empty($data)) {
-            return;
-        }
-
-        $helper = $this->getContainer()
-            ->getByClass(InjectableFactory::class)
-            ->create(DatabaseHelper::class);
-
-        $pdo = $helper->getPDO();
-
-        foreach ($data as $sql) {
-            try {
-                $pdo->query($sql);
-            } catch (Exception $e) {
-                throw new Exception('Error loadSql: ' . $e->getMessage() . ', sql: ' . $sql);
-            }
-        }
-    }*/
 }

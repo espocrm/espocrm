@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,8 @@ use Espo\ORM\Repository\Option\UnrelateOptions;
 /**
  * An afterUnrelate hook.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
+ * @template TRelatedEntity of Entity = Entity
  */
 interface AfterUnrelate
 {
@@ -44,7 +45,7 @@ interface AfterUnrelate
      *
      * @param TEntity $entity An entity.
      * @param string $relationName A relation name.
-     * @param Entity $relatedEntity An entity is being unrelated.
+     * @param TRelatedEntity $relatedEntity An entity is being unrelated.
      * @param UnrelateOptions $options Options.
      */
     public function afterUnrelate(

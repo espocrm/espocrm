@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,8 @@
 import View from 'view';
 import $ from 'jquery';
 import CollapsedModalBarView from 'views/collapsed-modal-bar';
+import {inject} from 'di';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 
 class MasterSiteView extends View {
 
@@ -67,6 +69,16 @@ class MasterSiteView extends View {
      */
     collapsedModalBarView
 
+
+    /**
+     * Injected to be loaded early.
+     *
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
+
     showLoadingNotification() {
         Espo.Ui.notifyWait();
     }
@@ -97,15 +109,16 @@ class MasterSiteView extends View {
     }
 
     afterRender() {
+        /** @type {Object.<string, Record>} */
         const params = this.getThemeManager().getParam('params');
 
-        const $body = $('body');
+        const body = document.body;
 
-        for (const param in params) {
-            const value = this.getThemeManager().getParam(param);
-
-            $body.attr('data-' + Espo.Utils.camelCaseToHyphen(param), value);
+        for (const param of Object.keys(params)) {
+            body.dataset[param] = this.getThemeManager().getParam(param);
         }
+
+        body.dataset.isDark = this.getThemeManager().getParam('isDark') ?? false;
 
         const footerView = this.getView('footer');
 

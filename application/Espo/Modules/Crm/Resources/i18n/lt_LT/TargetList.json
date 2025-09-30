@@ -10,14 +10,17 @@
     "excludingActionList": "Išskyrus",
     "optedOutCount": "Pasirinkta suma",
     "targetStatus": "Tikslo būsena",
-    "isOptedOut": "Yra atmesta"
+    "isOptedOut": "Yra atmesta",
+    "sourceCampaign": "Šaltinis Kampanija",
+    "category": "Kategorija"
   },
   "links": {
     "accounts": "Įmonės",
     "contacts": "Kontaktai",
     "leads": "Potencialūs klientai",
     "campaigns": "Kampanijos",
-    "massEmails": "Masiniai el. laiškai"
+    "massEmails": "Masiniai el. laiškai",
+    "category": "Kategorija"
   },
   "options": {
     "type": {

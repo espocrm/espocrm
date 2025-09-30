@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@
  *
  * @property {string} type A type.
  * @property {string} [attribute] An attribute (field).
- * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
+ * @property {module:search-manager~whereItem[]|string|number|boolean|string[]|null} [value] A value.
  * @property {boolean} [dateTime] Is a date-time item.
  * @property {string} [timeZone] A time-zone.
  */

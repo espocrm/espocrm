@@ -1,9 +1,8 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,19 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Di;
+import BaseFieldView from 'views/fields/base';
 
-use Espo\Core\Select\SelectBuilderFactory;
+export default class extends BaseFieldView {
 
-trait SelectBuilderFactorySetter
-{
+    // language=Handlebars
+    listTemplateContent = ``
+
     /**
-     * @var SelectBuilderFactory
+     * @private
+     * @type {string|null}
      */
-    protected $selectBuilderFactory;
+    baselineRoleId
 
-    public function setSelectBuilderFactory(SelectBuilderFactory $selectBuilderFactory): void
-    {
-        $this->selectBuilderFactory = $selectBuilderFactory;
+    setup() {
+        super.setup();
+
+        this.baselineRoleId = this.getConfig().get('baselineRoleId');
+    }
+
+    afterRenderList() {
+        super.afterRenderList();
+
+        if (this.baselineRoleId && this.model.id === this.baselineRoleId) {
+            this.element?.append(
+                (() => {
+                    const span = document.createElement('span');
+
+                    span.className = 'label label-default';
+                    span.textContent = this.translate('Baseline', 'labels', 'Role');
+
+                    return span;
+                })()
+            )
+        }
     }
 }

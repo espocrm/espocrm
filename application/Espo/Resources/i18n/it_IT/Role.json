@@ -25,7 +25,8 @@
     "Access": "Accesso",
     "Create Role": "Crea Ruolo",
     "Scope Level": "Livello ambito",
-    "Field Level": "Livello di campo"
+    "Field Level": "Livello di campo",
+    "Baseline": "Valore base"
   },
   "options": {
     "accessList": {

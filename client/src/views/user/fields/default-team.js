@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,6 +52,11 @@ class UserDefaultTeamFieldView extends LinkFieldView {
         const id = this.model.get('defaultTeamId');
 
         if (!id) {
+            return false;
+        }
+
+        if (!this.model.has('teamsIds')) {
+            // Mass update.
             return false;
         }
 

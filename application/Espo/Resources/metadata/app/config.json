@@ -165,6 +165,9 @@
         },
         "streamEmailWithContentEntityTypeList": {
             "level": "admin"
+        },
+        "baselineRole": {
+            "level": "admin"
         }
     }
 }

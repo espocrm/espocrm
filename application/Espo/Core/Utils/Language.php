@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
 use Espo\Entities\Preferences;
 
 use RuntimeException;
+use stdClass;
 
 class Language
 {
@@ -51,13 +52,17 @@ class Language
     private string $customPath = 'custom/Espo/Custom/Resources/i18n/{language}';
     private string $resourcePath = 'i18n/{language}';
 
+    /**
+     * @param bool $noFallback As of v9.2.
+     */
     public function __construct(
         ?string $language,
         private FileManager $fileManager,
         private ResourceReader $resourceReader,
         private DataCache $dataCache,
         protected bool $useCache = false,
-        protected bool $noCustom = false
+        protected bool $noCustom = false,
+        private bool $noFallback = false,
     ) {
         $this->currentLanguage = $language ?? $this->defaultLanguage;
 
@@ -214,6 +219,45 @@ class Language
     public function getAll(): array
     {
         return $this->get();
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getScopeCustom(string $scope): ?stdClass
+    {
+        $path = str_replace('{language}', $this->currentLanguage, $this->customPath) . "/$scope.json";
+
+        if (!$this->fileManager->isFile($path)) {
+            return null;
+        }
+
+        $fileContent = $this->fileManager->getContents($path);
+
+        return Json::decode($fileContent);
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function saveScopeCustom(string $scope, stdClass $data): void
+    {
+        $path = str_replace('{language}', $this->currentLanguage, $this->customPath) . "/$scope.json";
+
+        foreach (get_object_vars($data) as $key => $item) {
+            if (
+                $item instanceof stdClass &&
+                count(get_object_vars($data)) === 0
+            ) {
+                unset($data->$key);
+            }
+        }
+
+        $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $this->fileManager->putContents($path, $changedData);
+
+        $this->init(true);
     }
 
     /**
@@ -382,7 +426,7 @@ class Language
 
             $data = $this->resourceReader->readAsArray($path, $readerParams);
 
-            if ($language != $this->defaultLanguage) {
+            if ($language !== $this->defaultLanguage && !$this->noFallback) {
                 /** @var array<string, array<string, mixed>> $data */
                 $data = Util::merge($this->getDefaultLanguageData($reload), $data);
             }

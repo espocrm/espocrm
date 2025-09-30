@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 
 import ListRecordView from 'views/record/list';
 import RecordModal from 'helpers/record-modal';
+import ListTreeDraggableHelper from 'helpers/list/misc/list-tree-draggable';
 
 class ListTreeRecordView extends ListRecordView {
 
@@ -49,9 +50,39 @@ class ListTreeRecordView extends ListRecordView {
     createDisabled = false
     selectedData = null
     level = 0
+
     itemViewName = 'views/record/list-tree-item'
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    readOnly
+
     expandToggleInactive = false;
+
+    /**
+     * @private
+     * @type {ListTreeRecordView}
+     */
+    rootView
+
+    /**
+     * @type {string|null}
+     */
+    movedId = null
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    moveSupported
+
+    /**
+     * @private
+     * @type {ListTreeDraggableHelper}
+     */
+    draggableHelper
 
     // noinspection JSCheckFunctionSignatures
     data() {
@@ -76,6 +107,8 @@ class ListTreeRecordView extends ListRecordView {
         data.noData = data.createDisabled && !data.rowDataList.length && !data.showRoot;
         data.expandToggleInactive = this.expandToggleInactive;
         data.hasExpandToggle = !this.getUser().isPortal();
+
+        data.isEditable = this.level === 0 && !this.readOnly;
 
         return data;
     }
@@ -115,6 +148,10 @@ class ListTreeRecordView extends ListRecordView {
             this.selectedData = this.options.selectedData;
         }
 
+        this.entityType = this.collection.entityType;
+
+        this.moveSupported = !!this.getMetadata().get(`entityDefs.${this.entityType}.fields.order`);
+
         super.setup();
 
         if (this.selectable) {
@@ -137,6 +174,67 @@ class ListTreeRecordView extends ListRecordView {
                 }
             });
         }
+
+        if (this.level === 0) {
+            this.once('after:render', () => {
+                const collection = /** @type {import('collections/tree').default} */this.collection;
+
+                if (collection.openPath) {
+                    /**
+                     * @param {ListTreeRecordView} view
+                     * @param {string[]} path
+                     */
+                    const open = async (view, path) => {
+                        path = [...path];
+                        const id = path.shift()
+
+                        const itemView = view.getItemViews().find(view => view.model.id === id);
+
+                        if (!itemView) {
+                            return;
+                        }
+
+                        await itemView.unfold();
+
+                        if (!path.length) {
+                            return;
+                        }
+
+                        await open(itemView.getChildrenView(), path);
+                    }
+
+                    open(this, collection.openPath);
+
+                    collection.openPath = null;
+                }
+            });
+        }
+
+        this.listenTo(this.collection, 'model-sync', (/** import('model').default */m, /** Record */o) => {
+            if (o.action === 'destroy') {
+                const index = this.rowList.findIndex(it => it === m.id);
+
+                if (index > -1) {
+                    this.rowList.splice(index, 1);
+                }
+            }
+        });
+    }
+
+    onRemove() {
+        super.onRemove();
+
+        if (this.draggableHelper) {
+            this.draggableHelper.destroy();
+        }
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.level === 0 && !this.readOnly && this.moveSupported) {
+            this.initDraggableRoot();
+        }
     }
 
     /**
@@ -145,8 +243,7 @@ class ListTreeRecordView extends ListRecordView {
     setSelected(id) {
         if (id === null) {
             this.selectedData.id = null;
-        }
-        else {
+        } else {
             this.selectedData.id = id;
         }
 
@@ -155,8 +252,7 @@ class ListTreeRecordView extends ListRecordView {
 
             if (view.model.id === id) {
                 view.setIsSelected();
-            }
-            else {
+            } else {
                 view.isSelected = false;
             }
 
@@ -164,6 +260,13 @@ class ListTreeRecordView extends ListRecordView {
                 view.getChildrenView().setSelected(id);
             }
         });
+    }
+
+    /**
+     * @return {import('views/record/list-tree-item').default[]}
+     */
+    getItemViews() {
+        return this.rowList.map(key => this.getView(key));
     }
 
     buildRows(callback) {
@@ -194,6 +297,7 @@ class ListTreeRecordView extends ListRecordView {
                     selectable: this.selectable,
                     setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
                     rootView: this.rootView,
+                    moveSupported: this.moveSupported,
                 }, () => {
                     built++;
 
@@ -251,12 +355,10 @@ class ListTreeRecordView extends ListRecordView {
             attributes.parentName = this.model.attributes.name;
         }
 
-        const scope = this.collection.entityType;
-
         const helper = new RecordModal();
 
         helper.showCreate(this, {
-            entityType: scope,
+            entityType: this.entityType,
             attributes: attributes,
             afterSave: model => {
                 const collection = /** @type {import('collections/tree').default} collection */
@@ -295,6 +397,17 @@ class ListTreeRecordView extends ListRecordView {
 
             this.setSelected(null);
         }
+    }
+
+    /**
+     * @private
+     */
+    initDraggableRoot() {
+        if (!this.draggableHelper) {
+            this.draggableHelper = new ListTreeDraggableHelper(this);
+        }
+
+        this.draggableHelper.init();
     }
 }
 

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,10 +31,17 @@ import BaseFieldView from 'views/fields/base';
 class ComplexCreatedFieldView extends BaseFieldView {
 
     // language=Handlebars
-    detailTemplateContent =
-        `{{#if hasAt}}<span data-name="{{baseName}}At" class="field">{{{atField}}}</span>{{/if}}
-        {{#if hasBoth}}<span class="text-muted middle-dot"></span>{{/if}}
-        {{#if hasBy}}<span data-name="{{baseName}}By" class="field">{{{byField}}}</span>{{/if}}`
+    detailTemplateContent =  `
+        {{~#if hasAt~}}
+            <span data-name="{{baseName}}At" class="field">{{{atField}}}</span>
+        {{~/if~}}
+        {{~#if hasBoth~}}
+            <span style="user-select: none"> <span class="text-muted middle-dot"></span> </span>
+        {{~/if~}}
+        {{~#if hasBy~}}
+            <span data-name="{{baseName}}By" class="field">{{{byField}}}</span>
+        {{~/if~}}
+    `
 
     baseName = 'created'
 

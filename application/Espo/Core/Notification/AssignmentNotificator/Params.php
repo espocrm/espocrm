@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,10 +34,10 @@ namespace Espo\Core\Notification\AssignmentNotificator;
  */
 class Params
 {
-    /**
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     private $options = [];
+
+    private ?string $actionId = null;
 
     /**
      * Whether an option is set.
@@ -96,5 +96,24 @@ class Params
     public static function create(): self
     {
         return new self();
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function withActionId(?string $actionId): self
+    {
+        $obj = clone $this;
+        $obj->actionId = $actionId;
+
+        return $obj;
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getActionId(): ?string
+    {
+        return $this->actionId;
     }
 }

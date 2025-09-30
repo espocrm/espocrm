@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "event": "Ereignis",
+    "target": "Ziel",
+    "data": "Daten",
+    "isProcessed": "Wird verarbeitet",
+    "user": "Benutzer"
+  },
+  "links": {
+    "target": "Ziel",
+    "user": "Benutzer"
+  }
+}

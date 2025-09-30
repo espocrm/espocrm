@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,9 @@ namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Module;
 use Espo\Core\Utils\File\Manager as FileManager;
+use PHPUnit\Framework\TestCase;
 
-class ModuleTest extends \PHPUnit\Framework\TestCase
+class ModuleTest extends TestCase
 {
     /** @var Module */
     private $module;
@@ -49,61 +50,46 @@ class ModuleTest extends \PHPUnit\Framework\TestCase
     public function testOrder1(): void
     {
         $this->fileManager
+            ->expects(self::any())
             ->method('getDirList')
-            ->withConsecutive(
-                ['application/Espo/Modules'],
-                ['custom/Espo/Modules'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                ['M01', 'M02', 'M1', 'M2'],
-                ['M3', 'M4', 'M51', 'M52'],
-            );
+            ->willReturnMap([
+                [
+                    'application/Espo/Modules',
+                    ['M01', 'M02', 'M1', 'M2'],
+                ],
+                [
+                    'custom/Espo/Modules',
+                    ['M3', 'M4', 'M51', 'M52'],
+                ]
+            ]);
 
         $this->fileManager
+            ->expects(self::any())
             ->method('exists')
-            ->withConsecutive(
-                ['application/Espo/Modules/M01/Resources/module.json'],
-                ['application/Espo/Modules/M02/Resources/module.json'],
-                ['application/Espo/Modules/M1/Resources/module.json'],
-                ['application/Espo/Modules/M2/Resources/module.json'],
-                ['custom/Espo/Modules/M3/Resources/module.json'],
-                ['custom/Espo/Modules/M4/Resources/module.json'],
-                ['custom/Espo/Modules/M51/Resources/module.json'],
-                ['custom/Espo/Modules/M52/Resources/module.json'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-                true,
-            );
+            ->willReturnMap([
+                ['application/Espo/Modules/M01/Resources/module.json', true],
+                ['application/Espo/Modules/M02/Resources/module.json', true],
+                ['application/Espo/Modules/M1/Resources/module.json', true],
+                ['application/Espo/Modules/M2/Resources/module.json', true],
+                ['custom/Espo/Modules/M3/Resources/module.json', true],
+                ['custom/Espo/Modules/M4/Resources/module.json', true],
+                ['custom/Espo/Modules/M51/Resources/module.json', true],
+                ['custom/Espo/Modules/M52/Resources/module.json', true],
+            ]);
 
         $this->fileManager
+            ->expects(self::any())
             ->method('getContents')
-            ->withConsecutive(
-                ['application/Espo/Modules/M01/Resources/module.json'],
-                ['application/Espo/Modules/M02/Resources/module.json'],
-                ['application/Espo/Modules/M1/Resources/module.json'],
-                ['application/Espo/Modules/M2/Resources/module.json'],
-                ['custom/Espo/Modules/M3/Resources/module.json'],
-                ['custom/Espo/Modules/M4/Resources/module.json'],
-                ['custom/Espo/Modules/M51/Resources/module.json'],
-                ['custom/Espo/Modules/M52/Resources/module.json'],
-            )
-            ->willReturnOnConsecutiveCalls(
-                '{"order": 11}',
-                '{"order": 11}',
-                '{"order": 4}',
-                '{"order": 3}',
-                '{"order": 2}',
-                '{"order": 1}',
-                '{"order": 12}',
-                '{"order": 12}',
-            );
+            ->willReturnMap([
+                ['application/Espo/Modules/M01/Resources/module.json', '{"order": 11}'],
+                ['application/Espo/Modules/M02/Resources/module.json', '{"order": 11}'],
+                ['application/Espo/Modules/M1/Resources/module.json', '{"order": 4}'],
+                ['application/Espo/Modules/M2/Resources/module.json', '{"order": 3}'],
+                ['custom/Espo/Modules/M3/Resources/module.json', '{"order": 2}'],
+                ['custom/Espo/Modules/M4/Resources/module.json', '{"order": 1}'],
+                ['custom/Espo/Modules/M51/Resources/module.json', '{"order": 12}'],
+                ['custom/Espo/Modules/M52/Resources/module.json', '{"order": 12}'],
+            ]);
 
         $this->assertEquals(
             ['M4', 'M3', 'M2', 'M1', 'M01', 'M02', 'M51', 'M52'],

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -704,7 +704,7 @@ class Util
     public static function sanitizeFileName(string $fileName): string
     {
         /** @var string */
-        return preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
+        return preg_replace("/([^\w\d\-_~,;:\[\]\(\).])/u", '_', $fileName);
     }
 
     /**

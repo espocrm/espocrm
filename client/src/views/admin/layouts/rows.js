@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,6 +88,7 @@ class LayoutRowsView extends LayoutBaseView {
 
     afterRender() {
         $('#layout ul.enabled, #layout ul.disabled').sortable({
+            cursor: 'grabbing',
             connectWith: '#layout ul.connected',
             update: e => {
                 if (!$(e.target).hasClass('disabled')) {

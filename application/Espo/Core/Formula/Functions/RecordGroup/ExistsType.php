@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,40 +29,69 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\ORM\EntityManager;
-
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
+use Espo\Core\Select\SelectBuilderFactory;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ExistsType extends BaseFunction implements
-    Di\EntityManagerAware
+    Di\EntityManagerAware,
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     public function process(ArgumentList $args)
     {
-        if (count($args) < 3) {
-            $this->throwTooFewArguments(3);
+        if (count($args) < 1) {
+            $this->throwTooFewArguments(1);
         }
 
         $entityType = $this->evaluate($args[0]);
 
+        if (count($args) <= 2) {
+            $filter = null;
+
+            if (count($args) === 2) {
+                $filter = $this->evaluate($args[1]);
+            }
+
+            $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
+                ->create()
+                ->forUser($this->user)
+                ->from($entityType);
+
+            (new FindQueryUtil())->applyFilter($builder, $filter, 2);
+
+            try {
+                return (bool) $this->entityManager
+                    ->getRDBRepository($entityType)
+                    ->clone($builder->build())
+                    ->findOne();
+            } catch (BadRequest|Forbidden $e) {
+                throw new Error($e->getMessage(), 0, $e);
+            }
+        }
+
         $whereClause = [];
 
         $i = 1;
+
         while ($i < count($args) - 1) {
             $key = $this->evaluate($args[$i]);
             $value = $this->evaluate($args[$i + 1]);
+
             $whereClause[] = [$key => $value];
+
             $i = $i + 2;
         }
 

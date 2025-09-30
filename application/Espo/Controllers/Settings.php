@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Api\Request;
-use Espo\Core\Utils\Metadata;
 use Espo\Tools\App\SettingsService as Service;
 use Espo\Entities\User;
 
@@ -41,16 +40,10 @@ use stdClass;
 
 class Settings
 {
-    private Service $service;
-    private User $user;
-
     public function __construct(
-        Service $service,
-        User $user
-    ) {
-        $this->service = $service;
-        $this->user = $user;
-    }
+        private Service $service,
+        private User $user,
+    ) {}
 
     public function getActionRead(): stdClass
     {

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,8 @@ namespace tests\unit;
 
 use Espo\Core\Container;
 
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount as AnyInvokedCountMatcher;
 use PHPUnit\Framework\TestCase;
 
 use ReflectionClass;
@@ -46,7 +48,7 @@ class ContainerMocker
 
     public function create(array $serviceMap) : Container
     {
-        $container = $this->test->getMockBuilder(Container::class)->disableOriginalConstructor()->getMock();
+        $container = (new MockBuilder($this->test, Container::class))->disableOriginalConstructor()->getMock();
 
         $map = $serviceMap;
 
@@ -67,19 +69,19 @@ class ContainerMocker
         }
 
         $container
-            ->expects($this->test->any())
+            ->expects(new AnyInvokedCountMatcher)
             ->method('get')
-            ->will($this->test->returnValueMap($valueMap));
+            ->willReturnMap($valueMap);
 
         $container
-            ->expects($this->test->any())
+            ->expects(new AnyInvokedCountMatcher)
             ->method('has')
-            ->will($this->test->returnValueMap($hasMap));
+            ->willReturnMap($hasMap);
 
         $container
-            ->expects($this->test->any())
+            ->expects(new AnyInvokedCountMatcher)
             ->method('getClass')
-            ->will($this->test->returnValueMap($classMap));
+            ->willReturnMap($classMap);
 
         return $container;
     }

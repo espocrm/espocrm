@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -139,6 +139,14 @@ class ListRelatedView extends MainView {
      * @type {string}
      */
     nameAttribute
+
+    /**
+     * Disable select-all-result.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    allResultDisabled = false
 
     /**
      * @inheritDoc
@@ -596,11 +604,23 @@ class ListRelatedView extends MainView {
             o.type = 'listSmall';
         }
 
+        const foreignLink = this.model.getLinkParam(this.link, 'foreign');
+
+        if (!this.allResultDisabled && !this.panelDefs.allResultDisabled && foreignLink) {
+            o.forceAllResultSelectable = true;
+
+            o.allResultWhereItem = {
+                type: 'linkedWith',
+                attribute: foreignLink,
+                value: [this.model.id],
+            };
+        }
+
         this.prepareRecordViewOptions(o);
 
         const listViewName = this.getRecordViewName();
 
-        this.createView('list', listViewName, o, view =>{
+        this.createView('list', listViewName, o, view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
 

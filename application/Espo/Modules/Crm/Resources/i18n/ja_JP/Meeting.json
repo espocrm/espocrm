@@ -55,8 +55,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "何も送信されませんでした",
-    "selectAcceptanceStatus": "承認ステータスを設定します。",
-    "sendInvitationsToSelectedAttendees": "選択された参加者に招待メールが送信されます。",
-    "sendCancellationsToSelectedAttendees": "選択された参加者にキャンセルメールが送信されます。"
+    "selectAcceptanceStatus": "承認ステータスを設定します",
+    "sendInvitationsToSelectedAttendees": "選択された参加者に招待メールが送信されます",
+    "sendCancellationsToSelectedAttendees": "選択された参加者にキャンセルメールが送信されます"
   }
 }

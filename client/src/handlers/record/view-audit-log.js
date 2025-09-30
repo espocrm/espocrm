@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,11 +36,9 @@ class ViewAuditLogHandler {
         this.entityType = this.view.entityType;
         this.model = /** @type {module:model} */this.view.model;
 
-        this.hasAudited = (
-            this.metadata.get(`scopes.${this.entityType}.stream`) &&
-            this.metadata.get(`scopes.${this.entityType}.statusField`)
-        ) ||
-        this.model.getFieldList().find(field => this.model.getFieldParam(field, 'audited')) !== undefined;
+        this.hasAudited =
+            this.metadata.get(`scopes.${this.entityType}.statusField`) ||
+            this.model.getFieldList().find(field => this.model.getFieldParam(field, 'audited')) !== undefined;
 
         if (this.entityType === 'User' && !this.view.getUser().isAdmin()) {
             this.hasAudited = false;

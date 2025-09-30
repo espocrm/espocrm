@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,14 +29,17 @@
 
 namespace Espo\Core\WebSocket;
 
+use Espo\Core\Utils\Json;
 use GuzzleHttp\Psr7\Query;
 
 use Psr\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
+use Ratchet\Wamp\ServerProtocol as WAMP;
 use Ratchet\Wamp\Topic;
 use Ratchet\Wamp\WampConnection;
 use Ratchet\Wamp\WampServerInterface;
 
+use React\ChildProcess\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 use Exception;
@@ -120,30 +123,31 @@ class Pusher implements WampServerInterface
         $checkCommand = $this->getAccessCheckCommandForTopic($conn, $topic);
 
         if ($checkCommand) {
-            $checkResult = shell_exec($checkCommand);
+            $checkCommand = $checkCommand . ' 2>&1';
 
-            if ($checkResult !== 'true') {
-                if ($this->isDebugMode) {
-                    $this->log("$connectionId: check access failed for topic $topicId for user $userId");
+            $process = new Process($checkCommand);
+            $process->start();
+
+            $process->on('exit', function ($exitCode) use ($topic, $connectionId, $topicId, $userId) {
+                if ($exitCode !== 0) {
+                    if ($this->isDebugMode) {
+                        $this->log("$connectionId: check access failed for topic $topicId for user $userId");
+                    }
+
+                    return;
                 }
 
-                return;
-            }
+                if ($this->isDebugMode) {
+                    $this->log("$connectionId: check access succeed for topic $topicId for user $userId");
+                }
 
-            if ($this->isDebugMode) {
-                $this->log("$connectionId: check access succeed for topic $topicId for user $userId");
-            }
+                $this->addTopicForUser($connectionId, $topic, $userId);
+            });
+
+            return;
         }
 
-        if (!in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
-            if ($this->isDebugMode) {
-                $this->log("$connectionId: add topic $topicId for user $userId");
-            }
-
-            $this->connectionIdTopicIdListMap[$connectionId][] = $topicId;
-        }
-
-        $this->topicHash[$topicId] = $topic;
+        $this->addTopicForUser($connectionId, $topic, $userId);
     }
 
     /**
@@ -387,37 +391,28 @@ class Pusher implements WampServerInterface
         $authToken = preg_replace('/[^a-zA-Z0-9\-]+/', '', $params['authToken']);
         $userId = preg_replace('/[^a-zA-Z0-9\-]+/', '', $params['userId']);
 
-        $result = $this->getUserIdByAuthToken($authToken);
-
-        if (empty($result)) {
+        if (!$authToken || !$userId) {
             $this->closeConnection($conn);
 
             return;
         }
 
-        if ($result !== $userId) {
-            $this->closeConnection($conn);
+        $command = "$this->phpExecutablePath command.php AuthTokenCheck $authToken $userId 2>&1";
 
-            return;
-        }
+        $process = new Process($command);
+        $process->start();
 
-        $this->subscribeUser($conn, $userId);
-    }
+        $process->on('exit', function ($exitCode) use ($conn, $userId) {
+            if ($exitCode !== 0) {
+                $this->closeConnection($conn);
 
-    /**
-     * @param string $authToken
-     * @return string
-     */
-    private function getUserIdByAuthToken($authToken)
-    {
-        /** @var string|null|false $result */
-        $result = shell_exec($this->phpExecutablePath . " command.php AuthTokenCheck " . $authToken);
+                return;
+            }
 
-        if ($result === null || $result === false) {
-            return '';
-        }
+            $this->subscribeUser($conn, $userId);
 
-        return $result;
+            $this->sendWelcome($conn);
+        });
     }
 
     /**
@@ -561,5 +556,35 @@ class Pusher implements WampServerInterface
     private function log(string $msg): void
     {
         echo "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n";
+    }
+
+    private function addTopicForUser(string $connectionId, Topic $topic, string $userId): void
+    {
+        $topicId = $topic->getId();
+
+        if (!$topicId) {
+            return;
+        }
+
+        if (!in_array($topicId, $this->connectionIdTopicIdListMap[$connectionId])) {
+            if ($this->isDebugMode) {
+                $this->log("$connectionId: add topic $topicId for user $userId");
+            }
+
+            $this->connectionIdTopicIdListMap[$connectionId][] = $topicId;
+        }
+
+        $this->topicHash[$topicId] = $topic;
+    }
+
+    private function sendWelcome(ConnectionInterface $conn): void
+    {
+        /**
+         * @noinspection PhpPossiblePolymorphicInvocationInspection
+         * @phpstan-ignore property.notFound
+         */
+        $sessionId = $conn->WAMP->sessionId;
+
+        $conn->send(Json::encode([WAMP::MSG_WELCOME, $sessionId, 1]));
     }
 }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 namespace Espo\Classes\AssignmentNotificators;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\Notification\DefaultAssignmentNotificator;
 use Espo\Entities\EmailAddress;
@@ -273,13 +274,16 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            $this->entityManager->createEntity(Notification::ENTITY_TYPE, [
-                'type' => Notification::TYPE_EMAIL_RECEIVED,
-                'userId' => $userId,
-                'data' => $data,
-                'relatedId' => $entity->getId(),
-                'relatedType' => EmailEntity::ENTITY_TYPE,
-            ]);
+            $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+            $notification
+                ->setType(Notification::TYPE_EMAIL_RECEIVED)
+                ->setUserId($userId)
+                ->setData($data)
+                ->setRelated(LinkParent::createFromEntity($entity))
+                ->setActionId($params->getActionId());
+
+            $this->entityManager->saveEntity($notification);
         }
     }
 }

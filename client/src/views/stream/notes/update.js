@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,15 @@ class UpdateNoteStreamView extends NoteStreamView {
     messageName = 'update'
     rowActionsView = 'views/stream/record/row-actions/update'
 
+    statusText
+    statusStyle
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isExpanded = false
+
     data() {
         const fieldsString = this.fieldDataList
             .map(it => it.label)
@@ -45,6 +54,8 @@ class UpdateNoteStreamView extends NoteStreamView {
             parentType: this.model.get('parentType'),
             iconHtml: this.getIconHtml(),
             fieldsString: fieldsString,
+            statusText: this.statusText,
+            statusStyle: this.statusStyle,
         };
     }
 
@@ -56,18 +67,43 @@ class UpdateNoteStreamView extends NoteStreamView {
         super.init();
     }
 
+    afterRender() {
+        super.afterRender();
+
+        if (this.isExpanded) {
+            this.isExpanded = false;
+
+            this.toggleDetails()
+        }
+    }
+
     setup() {
-        this.addActionHandler('expandDetails', (e, target) => this.toggleDetails(e, target));
+        this.addActionHandler('expandDetails', () => this.toggleDetails());
 
         this.createMessage();
 
+        /** @type {Record} */
+        const data = this.model.attributes.data;
+
+        const parentType = this.model.attributes.parentType;
+
+        if (data.value != null) {
+            const statusField = this.statusField = this.getMetadata().get(`scopes.${parentType}.statusField`) ?? '';
+            const statusValue = data.value;
+
+            this.statusStyle = this.getMetadata()
+                .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
+                'default';
+
+            this.statusText = this.getLanguage()
+                .translateOption(statusValue, statusField, this.model.attributes.parentType);
+        }
+
         this.wait(true);
 
-        this.getModelFactory().create(this.model.get('parentType'), model => {
+        this.getModelFactory().create(parentType, model => {
             const modelWas = model;
             const modelBecame = model.clone();
-
-            const data = this.model.get('data');
 
             data.attributes = data.attributes || {};
 
@@ -76,7 +112,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
             this.fieldDataList = [];
 
-            const fields = this.fieldList = data.fields;
+            const fields = this.fieldList = data.fields ?? [];
 
             fields.forEach(field => {
                 const type = model.getFieldType(field) || 'base';
@@ -139,15 +175,14 @@ class UpdateNoteStreamView extends NoteStreamView {
         });
     }
 
-    /**
-     * @param {MouseEvent} event
-     * @param {HTMLElement} target
-     */
-    toggleDetails(event, target) {
-        const $details = this.$el.find('> .details');
-        const $fields = this.$el.find('> .fields');
 
-        if ($details.hasClass('hidden')) {
+    toggleDetails() {
+        const target = this.element.querySelector('[data-action="expandDetails"]');
+
+        const $details = this.$el.find('> .details');
+        const $fields = this.$el.find('> .stream-details-container > .fields');
+
+        if (!this.isExpanded) {
             $details.removeClass('hidden');
             $fields.addClass('hidden');
 
@@ -165,6 +200,8 @@ class UpdateNoteStreamView extends NoteStreamView {
                 .removeClass('fa-chevron-down')
                 .addClass('fa-chevron-up');
 
+            this.isExpanded = true;
+
             return;
         }
 
@@ -174,6 +211,8 @@ class UpdateNoteStreamView extends NoteStreamView {
         $(target).find('span')
             .addClass('fa-chevron-down')
             .removeClass('fa-chevron-up');
+
+        this.isExpanded = false;
     }
 }
 

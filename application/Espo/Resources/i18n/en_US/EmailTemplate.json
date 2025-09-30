@@ -17,6 +17,12 @@
         "Info": "Info",
         "Available placeholders": "Available placeholders"
     },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    },
     "messages": {
         "infoText": "Available placeholders:\n\n{optOutUrl} &#8211; URL for an unsubscribe link;\n\n{optOutLink} &#8211; an unsubscribe link."
     },

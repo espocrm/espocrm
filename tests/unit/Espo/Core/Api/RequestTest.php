@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,19 +29,17 @@
 
 namespace tests\unit\Espo\Core\Api;
 
-use Psr\Http\Message\{
-    ServerRequestInterface as Psr7Request,
-    StreamInterface,
-};
-
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface as Psr7Request;
+use Psr\Http\Message\StreamInterface;
 use Slim\Psr7\Factory\RequestFactory;
-
 use Espo\Core\Api\RequestWrapper;
 
-class RequestTest extends \PHPUnit\Framework\TestCase
+class RequestTest extends TestCase
 {
+    private $request;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->request = $this->getMockBuilder(Psr7Request::class)->disableOriginalConstructor()->getMock();
     }

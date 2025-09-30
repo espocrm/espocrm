@@ -29,6 +29,7 @@
     "isReplied": "Ir atbildēts",
     "isNotReplied": "Nav atbildēts",
     "folder": "Mape",
+    "folderString": "Mape",
     "inboundEmails": "Grupas konti",
     "emailAccounts": "Personiskie konti",
     "hasAttachment": "Ar pielikumu",
@@ -42,9 +43,6 @@
     "fromName": "Kā vārdā",
     "fromString": "No virknes",
     "isSystem": "Ir sistēma",
-    "toEmailAddresses": "Uz e-pasta adresēm",
-    "bccEmailAddresses": "Diskrētā kopija (BCC) uz e-pasta adresēm",
-    "replyToEmailAddresses": "Atbildēt uz e-pasta adresi",
     "personStringData": "Peronas teksta dati",
     "fromEmailAddress": "No adreses (saite)",
     "replyToName": "Vārds Atbildēt",
@@ -55,7 +53,14 @@
     "createdEvent": "Izveidotais notikums",
     "event": "Pasākums",
     "icsEventDateStart": "ICS Pasākuma datums Sākums",
-    "groupFolder": "Grupas mape"
+    "groupFolder": "Grupas mape",
+    "isUsersSent": "Vai lietotāja nosūtīts",
+    "inArchive": "Arhīvā",
+    "groupStatusFolder": "Grupas statusa mape",
+    "sendAt": "Sūtīt pie",
+    "toEmailAddresses": "Uz e-pasta adresēm",
+    "bccEmailAddresses": "BCC e-pasta adreses",
+    "replyToEmailAddresses": "Atbildes e-pasta adreses"
   },
   "links": {
     "replied": "Atbildēts",
@@ -66,20 +71,25 @@
     "sentBy": "Kas nosūtīja",
     "attachments": "Pielikumi",
     "fromEmailAddress": "No e-pasta adreses",
-    "toEmailAddresses": "Uz e-pasta adresi",
-    "ccEmailAddresses": "E-pasta kopija (CC) sūtāma uz",
-    "bccEmailAddresses": "Diskrētā kopija (BCC) sūtāma uz",
-    "replyToEmailAddresses": "Atbildēt uz e-pasta adresi",
-    "groupFolder": "Grupas mape"
+    "groupFolder": "Grupas mape",
+    "createdEvent": "Izveidotais notikums",
+    "toEmailAddresses": "Uz e-pasta adresēm",
+    "ccEmailAddresses": "CC e-pasta adreses",
+    "bccEmailAddresses": "BCC e-pasta adreses",
+    "replyToEmailAddresses": "Atbildes e-pasta adreses"
   },
   "options": {
     "status": {
       "Draft": "Melnraksts",
       "Sending": "Sūtīšana",
       "Sent": "Nosūtīts",
-      "Archived": "Arhivēts",
       "Received": "Saņemts",
-      "Failed": "Neizdevās"
+      "Failed": "Neizdevās",
+      "Archived": "Importēts"
+    },
+    "groupStatusFolder": {
+      "Archive": "Arhīvs",
+      "Trash": "Atkritumi"
     }
   },
   "labels": {
@@ -113,8 +123,14 @@
     "No Subject": "Nav tēmas",
     "Insert Field": "Ievietot lauku",
     "Event": "Pasākums",
-    "Moving to folder": "Pārvietošana uz mapi",
-    "Group Folders": "Grupu mapes"
+    "Group Folders": "Grupu mapes",
+    "View Attachments": "Skatīt pielikumus",
+    "Import EML": "Importēt EML",
+    "Moved to Archive": "Pārvietots uz arhīvu",
+    "Moved to Trash": "Pārvietots uz atkritumiem",
+    "Retrieved from Trash": "Izņemts no kategorijas Atkritumi",
+    "No Records Moved": "Nav pārvietotu ierakstu",
+    "Schedule Send": "Nosūtīt grafiku"
   },
   "messages": {
     "testEmailSent": "Nosūtīts testa e-pasts",
@@ -122,17 +138,30 @@
     "savedAsDraft": "Saglabāts kā melnraksts",
     "confirmInsertTemplate": "E-pasta pamatteksts tiks zaudēts. Vai tiešām vēlaties ievietot veidni?",
     "noSmtpSetup": "SMTP nav konfigurēts: {link}",
+    "confirmSend": "Nosūtīt e-pastu?",
     "sendConfirm": "Nosūtīt e-pastu?",
     "removeSelectedRecordsConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst atlasītos e-pasta ziņojumus?\n\nTie tiks dzēsti arī citiem lietotājiem.",
-    "removeRecordConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst e-pastu?\n\nTas tiks dzēsts arī citiem lietotājiem."
+    "removeRecordConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst e-pastu?\n\nTas tiks dzēsts arī citiem lietotājiem.",
+    "invalidCredentials": "Nederīgi akreditācijas dati.",
+    "unknownError": "Nezināma kļūda.",
+    "recipientAddressRejected": "Saņēmēja adrese noraidīta.",
+    "alreadyImported": "[E-pasts]({link}) sistēmā jau pastāv.",
+    "couldNotSentScheduledEmail": "Nevar nosūtīt plānoto [email]({link})",
+    "notEditAccess": "Nav piekļuves e-pasta rediģēšanai.",
+    "groupFolderNoAccess": "Nav piekļuves grupas mapei.",
+    "groupMoveOutNoEditAccess": "Nevar pārvietot no grupas mapes. Nav piekļuves e-pasta rediģēšanai.",
+    "groupMoveToNoEditAccess": "Nevar pārvietot uz grupas mapi. Nav piekļuves e-pasta rediģēšanai.",
+    "groupMoveToTrashNoEditAccess": "Nevar pārvietot e-pastu no grupas mapes uz atkritumiem. Nav piekļuves e-pasta rediģēšanai.",
+    "groupMoveToArchiveNoEditAccess": "Nevar pārvietot no grupas mapes uz arhīvu. Nav piekļuves e-pasta rediģēšanai."
   },
   "presetFilters": {
     "sent": "Nosūtīts",
-    "archived": "Arhivēts",
     "inbox": "Iesūtne",
     "drafts": "Melnraksts",
     "trash": "Atkritne",
-    "important": "Svarīgi"
+    "important": "Svarīgi",
+    "archived": "Importēts",
+    "archive": "Arhīvs"
   },
   "massActions": {
     "markAsRead": "Atzīmēt kā izlasīto",
@@ -141,9 +170,17 @@
     "markAsNotImportant": "Noņemt svarīguma atzīmi",
     "moveToTrash": "Pārvietot uz atkritni",
     "moveToFolder": "Pārvietot uz mapi",
-    "retrieveFromTrash": "Izgūt no atkritnes"
+    "retrieveFromTrash": "Izgūt no atkritnes",
+    "moveToArchive": "Arhīvs"
   },
   "strings": {
-    "sendingFailed": "E-pasta nosūtīšana neizdevās"
+    "sendingFailed": "E-pasta nosūtīšana neizdevās",
+    "group": "Grupa"
+  },
+  "actions": {
+    "moveToArchive": "Arhīvs"
+  },
+  "otherFields": {
+    "file": "Faili"
   }
 }

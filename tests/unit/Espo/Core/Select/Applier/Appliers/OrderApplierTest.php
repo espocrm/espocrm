@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,6 +49,13 @@ use PHPUnit\Framework\TestCase;
 class OrderApplierTest extends TestCase
 {
     private ?OrdererFactory $ordererFactory = null;
+
+    private $metadataProvider;
+    private $itemConverterFactory;
+    private $queryBuilder;
+    private $params;
+    private $entityType;
+    private $applier;
 
     protected function setUp(): void
     {
@@ -261,13 +268,11 @@ class OrderApplierTest extends TestCase
             $this->metadataProvider
                 ->expects($this->any())
                 ->method('hasAttribute')
-                ->will(
-                    $this->returnValueMap(
+                ->willReturnMap(
                         [
                             [$this->entityType, $orderBy, !$notExisting],
                             [$this->entityType, 'id', true],
                         ]
-                    )
                 );
 
         if ($converterResult) {

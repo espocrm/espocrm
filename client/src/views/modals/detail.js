@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ import ModalView from 'views/modal';
 import ActionItemSetup from 'helpers/action-item-setup';
 import Backbone from 'backbone';
 import RecordModal from 'helpers/record-modal';
+import Utils from 'utils';
 
 /**
  * A quick view modal.
@@ -67,7 +68,7 @@ class DetailModalView extends ModalView {
                 return;
             }
 
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+            if (Utils.isKeyEventInTextInput(e)) {
                 return;
             }
 
@@ -645,6 +646,9 @@ class DetailModalView extends ModalView {
             id: this.id,
             fullFormDisabled: this.fullFormDisabled,
             collapseDisabled: true,
+            beforeSave: (model, o) => {
+                this.trigger('before:save', model, o);
+            },
             afterSave: (model, o) => {
                 this.model.set(model.getClonedAttributes());
 
@@ -678,9 +682,13 @@ class DetailModalView extends ModalView {
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
+            this.trigger('before:delete', model);
+
             model.destroy()
                 .then(() => {
-                    this.trigger('after:destroy', model);
+                    this.trigger('after:delete', model);
+                    this.trigger('after:destroy', model); // For bc.
+
                     this.dialog.close();
 
                     Espo.Ui.success(this.translate('Removed'));
@@ -762,7 +770,7 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
@@ -785,7 +793,7 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 

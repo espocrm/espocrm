@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,6 +77,7 @@ class ListWithCategories extends ListView {
         super.setup();
 
         this.addActionHandler('toggleExpandedFromNavigation', () => this.actionToggleExpandedFromNavigation());
+        this.addActionHandler('manageCategories', () => this.actionManageCategories());
 
         this.defaultMaxSize = this.collection.maxSize;
 
@@ -166,6 +167,8 @@ class ListWithCategories extends ListView {
      * @inheritDoc
      */
     setupReuse(params) {
+        super.setupReuse(params);
+
         this.applyRoutingParams(params);
     }
 
@@ -734,14 +737,22 @@ class ListWithCategories extends ListView {
         return this.currentCategoryId;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
      * @private
      */
     actionManageCategories() {
         this.clearCategoryViews();
 
-        this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
+        const url = `#${this.categoryScope}`;
+
+        const options = {};
+
+        if (this.currentCategoryId) {
+            options.currentId = this.currentCategoryId;
+        }
+
+        this.getRouter().navigate(url, {trigger: false});
+        this.getRouter().dispatch(this.categoryScope, 'listTree', options);
     }
 
     /**
@@ -822,7 +833,9 @@ class ListWithCategories extends ListView {
      * @protected
      */
     updateHeader() {
-        this.getView('header').reRender();
+        if (this.getView('header')) {
+            this.getView('header').reRender();
+        }
     }
 
     /**

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,24 +29,29 @@
 
 namespace tests\unit\Espo\Core\Utils\Config;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    Utils\Config\ConfigWriterFileManager,
-    Utils\Config\ConfigWriterHelper,
-    Utils\Config\InternalConfigHelper,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Config\ConfigWriterFileManager;
+use Espo\Core\Utils\Config\ConfigWriterHelper;
+use Espo\Core\Utils\Config\InternalConfigHelper;
+use PHPUnit\Framework\TestCase;
 
-class ConfigWriterTest extends \PHPUnit\Framework\TestCase
+class ConfigWriterTest extends TestCase
 {
+    private $fileManager;
+    private $config;
+    private $helper;
+    private $internalConfigHelper;
+    private $configWriter;
+
+    private $configPath;
+    private $internalConfigPath;
+
     protected function setUp(): void
     {
         $this->fileManager = $this->createMock(ConfigWriterFileManager::class);
-
         $this->config = $this->createMock(Config::class);
-
         $this->helper = $this->createMock(ConfigWriterHelper::class);
-
         $this->internalConfigHelper = $this->createMock(InternalConfigHelper::class);
 
         $this->configWriter = new ConfigWriter(
@@ -111,15 +116,12 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
             ->method('update');
 
         $this->fileManager
+            ->expects($this->any())
             ->method('isFile')
-            ->withConsecutive(
-                [$this->configPath],
-                [$this->internalConfigPath],
-            )
-            ->willReturnOnConsecutiveCalls(
-                true,
-                false
-            );
+            ->willReturnMap([
+                [$this->configPath, true],
+                [$this->internalConfigPath, false],
+            ]);
 
         $this->fileManager
             ->expects($this->once())
@@ -129,11 +131,10 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
         $this->fileManager
             ->expects($this->exactly(2))
             ->method('getPhpContents')
-            ->withConsecutive(
-                [$this->configPath],
-                [$this->configPath],
-            )
-            ->willReturnOnConsecutiveCalls($previousData, $previousData);
+            ->willReturnMap([
+                [$this->configPath, $previousData],
+                [$this->configPath, $previousData],
+            ]);
 
         $this->configWriter->save();
     }
@@ -145,12 +146,12 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
 
         $this->internalConfigHelper
             ->method('isParamForInternalConfig')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['k1', false],
                     ['k2', true],
                     ['cacheTimestamp', false],
-                ])
+                ]
             );
 
         $this->helper
@@ -164,36 +165,36 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
             ->willReturn(1);
 
         $this->fileManager
+            ->expects(self::any())
             ->method('isFile')
-            ->withConsecutive(
-                [$this->configPath],
-                [$this->internalConfigPath],
-            )
-            ->willReturnOnConsecutiveCalls(
-                true,
-                true
-            );
+            ->willReturnMap([
+                [$this->configPath, true],
+                [$this->internalConfigPath, true],
+            ]);
 
         $this->fileManager
             ->expects($this->exactly(4))
             ->method('getPhpContents')
-            ->withConsecutive(
-                [$this->configPath],
-                [$this->internalConfigPath],
-                [$this->internalConfigPath],
-                [$this->configPath],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [],
-                [],
-            );
+            ->willReturnMap([
+                [$this->configPath, []],
+                [$this->internalConfigPath, []],
+                [$this->internalConfigPath, []],
+                [$this->configPath, []],
+            ]);
 
         $this->fileManager
-            ->method('putPhpcontents')
-            ->withConsecutive(
-                [$this->internalConfigPath, ['k2' => 'v2', 'microtimeInternal' => 1.0]],
-                [$this->configPath, ['k1' => 'v1', 'cacheTimestamp' => 1, 'microtime' => 1.0]],
-            );
+            ->expects(self::any())
+            ->method('putPhpContents')
+            ->willReturnMap([
+                [
+                    $this->internalConfigPath,
+                    ['k2' => 'v2', 'microtimeInternal' => 1.0]
+                ],
+                [
+                    $this->configPath,
+                    ['k1' => 'v1', 'cacheTimestamp' => 1, 'microtime' => 1.0]
+                ],
+            ]);
 
         $this->configWriter->save();
     }

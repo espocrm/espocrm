@@ -101,7 +101,8 @@
     "readOnlyAfterCreate": "Der Feldwert kann beim Anlegen eines neuen Datensatzes angegeben werden. Danach wird das Feld schreibgeschützt. Es kann weiterhin durch Formeln berechnet werden.",
     "linkReadOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden. Er kann aber durch eine Formel berechnet werden.\n\nAußerdem wird die Möglichkeit, einen Bezugsdatensatz aus Beziehungspaneelen zu erstellen, deaktiviert.",
     "relateOnImport": "Beim Importieren mit diesem Feld wird automatisch ein Datensatz mit einem passenden Fremddatensatz verknüpft. Verwenden Sie diese Funktion nur, wenn das Fremdfeld als eindeutig angesehen wird.",
-    "preview": "Die Schaltfläche Vorschau anzeigen. Anwendbar, wenn Markdown aktiviert ist."
+    "preview": "Die Schaltfläche Vorschau anzeigen. Anwendbar, wenn Markdown aktiviert ist.",
+    "itemsEditable": "Elemente können bearbeitet werden. Gilt nur, wenn keine Optionen angegeben sind."
   },
   "fieldParts": {
     "address": {

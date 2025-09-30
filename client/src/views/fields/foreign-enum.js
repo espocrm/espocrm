@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,13 +42,25 @@ class ForeignEnumFieldView extends EnumFieldView {
             return;
         }
 
-        const scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
+        const entityType = this.getMetadata().get(`entityDefs.${this.model.entityType}.links.${link}.entity`);
 
-        if (!scope) {
+        if (!entityType) {
             return;
         }
 
-        const fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields', field]);
+        /**
+         * @type {{
+         *     optionsPath?: string|null,
+         *     optionsReference?: string|null,
+         *     translation?: string|null,
+         *     options?: string[],
+         *     isSorted?: boolean,
+         *     displayAsLabel?: boolean,
+         *     style?: Record,
+         *     labelType?: string,
+         * }}
+         */
+        const fieldDefs = this.getMetadata().get(`entityDefs.${entityType}.fields.${field}`);
 
         if (!fieldDefs) {
             return;
@@ -56,25 +68,38 @@ class ForeignEnumFieldView extends EnumFieldView {
 
         let {
             optionsPath,
+            optionsReference,
             translation,
             options,
             isSorted,
             displayAsLabel,
             style,
+            labelType,
         } = fieldDefs;
 
-        options = optionsPath ? this.getMetadata().get(optionsPath) : options;
+        if (!optionsPath && optionsReference) {
+            const [refEntityType, refField] = optionsReference.split('.');
 
-        this.params.options = Espo.Utils.clone(options) || [];
+            optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+
+            style = this.getMetadata().get(`entityDefs.${refEntityType}.fields.${refField}.style`) ?? {};
+        }
+
+        if (optionsPath) {
+            options = this.getMetadata().get(optionsPath);
+        }
+
+        this.params.options = Espo.Utils.clone(options) ?? [];
         this.params.translation = translation;
-        this.params.isSorted = isSorted || false;
-        this.params.displayAsLabel = displayAsLabel || false;
-        this.styleMap = style || {};
+        this.params.isSorted = isSorted ?? false;
+        this.params.displayAsLabel = displayAsLabel ?? false;
+        this.params.labelType = labelType;
+        this.styleMap = style ?? {};
 
-        this.translatedOptions = Object.fromEntries(
-            this.params.options
-                .map(item => [item, this.getLanguage().translateOption(item, field, scope)])
-        );
+        const pairs = this.params.options
+            .map(item => [item, this.getLanguage().translateOption(item, field, entityType)])
+
+        this.translatedOptions = Object.fromEntries(pairs);
     }
 }
 

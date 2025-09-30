@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,37 +38,46 @@ class ListTreeRecordItemView extends View {
     level = 0
     listViewName = 'views/record/list-tree'
 
+    /**
+     * @private
+     * @type {import('views/record/list-tree').default}
+     */
+    rootView
+
+    /**
+     * @type {boolean}
+     */
+    isUnfolded = false
+
     data() {
         return {
-            name: this.model.get('name'),
+            name: this.model.attributes.name,
             isUnfolded: this.isUnfolded,
             showFold: this.isUnfolded && !this.isEnd,
             showUnfold: !this.isUnfolded && !this.isEnd,
             isEnd: this.isEnd,
             isSelected: this.isSelected,
             readOnly: this.readOnly,
+            isMovable: this.options.moveSupported && !this.options.readOnly,
         };
     }
 
-    events = {
-        /** @this ListTreeRecordItemView */
-        'click [data-action="unfold"]': function (e) {
-            this.unfold();
+    /**
+     * @param {{
+     *     moveSupported: boolean,
+     *     readOnly: boolean,
+     *     isSelected?: boolean,
+     *     level?: number,
+     *     selectedData?: {path: string, name: Record},
+     *     rootView: import('views/record/list-tree').default,
+     *     selectable?: boolean,
+     *     createDisabled?: boolean,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
 
-            e.stopPropagation();
-        },
-        /** @this ListTreeRecordItemView */
-        'click [data-action="fold"]': function (e) {
-            this.fold();
-
-            e.stopPropagation();
-        },
-        /** @this ListTreeRecordItemView */
-        'click [data-action="remove"]': function (e) {
-            this.actionRemove();
-
-            e.stopPropagation();
-        }
+        this.options = options;
     }
 
     setIsSelected() {
@@ -84,7 +93,7 @@ class ListTreeRecordItemView extends View {
 
         while (1) {
             path.unshift(view.model.id);
-            names[view.model.id] = view.model.get('name');
+            names[view.model.id] = view.model.attributes.name;
 
             if (view.getParentListView().level) {
                 view = view.getParentView().getParentView();
@@ -95,6 +104,24 @@ class ListTreeRecordItemView extends View {
     }
 
     setup() {
+        this.addActionHandler('unfold', e => {
+            this.unfold();
+
+            e.stopPropagation();
+        });
+
+        this.addActionHandler('fold', e => {
+            this.fold()
+
+            e.stopPropagation();
+        });
+
+        this.addActionHandler('remove', e => {
+            this.actionRemove();
+
+            e.stopPropagation();
+        });
+
         if ('level' in this.options) {
             this.level = this.options.level;
         }
@@ -153,6 +180,9 @@ class ListTreeRecordItemView extends View {
         return /** @type module:views/record/list-tree */this.getParentView();
     }
 
+    /**
+     * @private
+     */
     createChildren() {
         const childCollection = this.model.get('childCollection');
 
@@ -181,11 +211,18 @@ class ListTreeRecordItemView extends View {
         }, callback);
     }
 
+    /**
+     * @private
+     */
     checkLastChildren() {
         Espo.Ajax
-            .getRequest(this.collection.entityType + '/action/lastChildrenIdList', {parentId: this.model.id})
-            .then(idList =>{
+            .getRequest(`${this.collection.entityType}/action/lastChildrenIdList`, {parentId: this.model.id})
+            .then(idList => {
                 const childrenView = this.getChildrenView();
+
+                if (!childrenView) {
+                    return;
+                }
 
                 idList.forEach(id => {
                     const model = this.model.get('childCollection').get(id);
@@ -194,6 +231,7 @@ class ListTreeRecordItemView extends View {
                         model.isEnd = true;
                     }
 
+                    /** @type {ListTreeRecordItemView|null} */
                     const itemView = childrenView.getView(id);
 
                     if (!itemView) {
@@ -205,11 +243,15 @@ class ListTreeRecordItemView extends View {
                     itemView.afterIsEnd();
                 });
 
+                // @todo Refactor.
                 this.model.lastAreChecked = true;
             });
     }
 
-    unfold() {
+    /**
+     * Unfold.
+     */
+    async unfold() {
         if (this.createDisabled) {
             this.once('children-created', () => {
                 if (!this.model.lastAreChecked) {
@@ -220,7 +262,7 @@ class ListTreeRecordItemView extends View {
 
         const childCollection = this.model.get('childCollection');
 
-        if (childCollection !== null) {
+        if (childCollection != null) {
             this.createChildren();
             this.isUnfolded = true;
             this.afterUnfold();
@@ -230,34 +272,34 @@ class ListTreeRecordItemView extends View {
             return;
         }
 
-        this.getCollectionFactory().create(this.scope, collection => {
-            collection.url = this.collection.url;
-            collection.parentId = this.model.id;
+        const collection = await this.getCollectionFactory().create(this.scope);
 
-            Espo.Ui.notifyWait();
+        collection.url = this.collection.url;
+        collection.parentId = this.model.id;
 
-            this.listenToOnce(collection, 'sync', () => {
-                Espo.Ui.notify(false);
+        Espo.Ui.notifyWait();
 
-                this.model.set('childCollection', collection);
+        this.listenToOnce(collection, 'sync', () => {
+            Espo.Ui.notify(false);
 
-                this.createChildren();
+            this.model.set('childCollection', collection);
 
-                this.isUnfolded = true;
+            this.createChildren();
 
-                if (collection.length || !this.createDisabled) {
-                    this.afterUnfold();
+            this.isUnfolded = true;
 
-                    this.trigger('after:unfold');
-                } else {
-                    this.isEnd = true;
+            if (collection.length || !this.createDisabled) {
+                this.afterUnfold();
 
-                    this.afterIsEnd();
-                }
-            });
+                this.trigger('after:unfold');
+            } else {
+                this.isEnd = true;
 
-            collection.fetch();
+                this.afterIsEnd();
+            }
         });
+
+        await collection.fetch();
     }
 
     fold() {
@@ -282,22 +324,31 @@ class ListTreeRecordItemView extends View {
         if (!this.readOnly) {
             const $remove = this.$el.find('> .cell [data-action="remove"]');
 
-            this.$el.find('> .cell').on('mouseenter', function () {
+            this.$el.find('> .cell').on('mouseenter', () => {
+                if (this.rootView.movedId) {
+                    return;
+                }
                 $remove.removeClass('hidden');
             });
 
-            this.$el.find('> .cell').on('mouseleave', function () {
+            this.$el.find('> .cell').on('mouseleave', () => {
                 $remove.addClass('hidden');
             });
         }
     }
 
+    /**
+     * @private
+     */
     afterFold() {
         this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').addClass('hidden');
         this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').removeClass('hidden');
         this.$el.find(' > .children').addClass('hidden');
     }
 
+    /**
+     * @private
+     */
     afterUnfold() {
         this.$el.find('a[data-action="unfold"][data-id="'+this.model.id+'"]').addClass('hidden');
         this.$el.find('a[data-action="fold"][data-id="'+this.model.id+'"]').removeClass('hidden');
@@ -311,7 +362,7 @@ class ListTreeRecordItemView extends View {
         this.$el.find(' > .children').addClass('hidden');
     }
 
-    getCurrentPath() {
+    /*getCurrentPath() {
         let pointer = this;
         const path = [];
 
@@ -326,21 +377,24 @@ class ListTreeRecordItemView extends View {
         }
 
         return path;
-    }
+    }*/
 
-    actionRemove() {
-        this.confirm({
+    /**
+     * @private
+     */
+    async actionRemove() {
+        await this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages', this.scope),
             confirmText: this.translate('Remove'),
-        }, () => {
-            this.model.destroy({wait: true})
-                .then(() => this.remove());
-
         });
+
+        await this.model.destroy({wait: true});
+
+        this.remove();
     }
 
     /**
-     * @return module:views/record/list-tree
+     * @return {module:views/record/list-tree}
      */
     getChildrenView() {
         return /** @type module:views/record/list-tree */this.getView('children');

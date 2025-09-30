@@ -4,8 +4,8 @@
     "status": "Statut",
     "startDate": "Date de début",
     "endDate": "Date de fin",
-    "targetLists": "Listes de cibles",
-    "excludingTargetLists": "Exclure les listes de cibles",
+    "targetLists": "Listes de diffusion",
+    "excludingTargetLists": "Exclure les listes de diffusion",
     "sentCount": "Envoyé",
     "openedCount": "Ouvert",
     "clickedCount": "Cliqué",
@@ -26,8 +26,8 @@
     "budgetCurrency": "Devise Budget"
   },
   "links": {
-    "targetLists": "Listes de cibles",
-    "excludingTargetLists": "Excluant les listes de cibles",
+    "targetLists": "Listes de diffusion",
+    "excludingTargetLists": "Excluant les listes de diffusion",
     "accounts": "Comptes",
     "leads": "Prospects",
     "opportunities": "Opportunités",
@@ -51,7 +51,7 @@
   },
   "labels": {
     "Create Campaign": "Créer une campagne",
-    "Target Lists": "Listes de cibles",
+    "Target Lists": "Listes de diffusion",
     "Statistics": "Statistiques",
     "hard": "fort",
     "soft": "faible",

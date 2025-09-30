@@ -23,7 +23,7 @@
   },
   "messages": {
     "writeMessage": "ここにメッセージを書いてください",
-    "pinnedMaxCountExceeded": "これ以上メモをピン留めできません。最大許容数は {count} です。"
+    "pinnedMaxCountExceeded": "これ以上メモをピン留めできません最大許容数は {count} です"
   },
   "options": {
     "type": {

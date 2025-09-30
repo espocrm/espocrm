@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@
 import MainView from 'views/main';
 import SearchManager from 'search-manager';
 import RecordModal from 'helpers/record-modal';
+import Utils from 'utils';
 
 /**
  * A list view.
@@ -637,6 +638,7 @@ class ListView extends MainView {
             forceDisplayTopBar: true,
             additionalRowActionList: this.getMetadata().get(`clientDefs.${this.scope}.rowActionList`),
             settingsEnabled: true,
+            forceSettings: this.getMetadata().get(`clientDefs.${this.scope}.forceListViewSettings`),
         };
 
         if (this.getHelper().isXsScreen()) {
@@ -665,7 +667,7 @@ class ListView extends MainView {
         const listViewName = this.getRecordViewName();
 
         // noinspection JSValidateTypes
-        return this.createView('list', listViewName, o, /** import('views/record/list').default */view => {
+        return this.createView('list', listViewName, o, async /** import('views/record/list').default */view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
 
@@ -684,35 +686,36 @@ class ListView extends MainView {
             });
 
             if (!fetch) {
-                Espo.Ui.notify(false);
+                Espo.Ui.notify();
             }
 
             if (this.searchPanel) {
-                this.listenTo(view, 'sort', obj => {
-                    this.getStorage().set('listSorting', this.collection.entityType, obj);
+                this.listenTo(view, 'sort', o => {
+                    this.getStorage().set('listSorting', this.collection.entityType, o);
                 });
             }
 
             if (!fetch) {
-                view.render();
+                await view.render();
 
                 return;
             }
 
-            view.getSelectAttributeList(selectAttributeList => {
-                if (this.options.mediator && this.options.mediator.abort) {
-                    return;
-                }
+            const selectAttributes = await view.getSelectAttributeList();
 
-                if (selectAttributeList) {
-                    this.collection.data.select = selectAttributeList.join(',');
-                }
+            if (this.options.mediator && this.options.mediator.abort) {
+                return;
+            }
 
-                Espo.Ui.notifyWait();
+            if (selectAttributes) {
+                this.collection.data.select = selectAttributes.join(',');
+            }
 
-                this.collection.fetch({main: true})
-                    .then(() => Espo.Ui.notify(false));
-            });
+            Espo.Ui.notifyWait();
+
+            await this.collection.fetch({main: true});
+
+            Espo.Ui.notify();
         });
     }
 
@@ -879,10 +882,6 @@ class ListView extends MainView {
             return;
         }
 
-        /*if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-            return;
-        }*/
-
         if (!this.getAcl().checkScope(this.scope, 'create')) {
             return;
         }
@@ -946,21 +945,27 @@ class ListView extends MainView {
         this.getSearchView().selectNextPreset();
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowLeft(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         this.getRecordView().trigger('request-page', 'previous');
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlArrowRight(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         this.getRecordView().trigger('request-page', 'next');
     }
 

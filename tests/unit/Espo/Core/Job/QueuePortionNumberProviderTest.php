@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,13 +29,12 @@
 
 namespace tests\unit\Espo\Core\Job;
 
-use Espo\Core\{
-    Job\QueuePortionNumberProvider,
-    Job\QueueName,
-    Utils\Config,
-};
+use Espo\Core\Job\QueueName;
+use Espo\Core\Job\QueuePortionNumberProvider;
+use Espo\Core\Utils\Config;
+use PHPUnit\Framework\TestCase;
 
-class QueuePortionNumberProviderTest extends \PHPUnit\Framework\TestCase
+class QueuePortionNumberProviderTest extends TestCase
 {
     private $config;
 
@@ -58,13 +57,13 @@ class QueuePortionNumberProviderTest extends \PHPUnit\Framework\TestCase
     {
         $this->config
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['jobQ0MaxPortion', null, 201],
                     ['jobQ1MaxPortion', null, 501],
                     ['jobE0MaxPortion', null, 101],
                     ['jobTestDefaultMaxPortion', null, 301]
-                ])
+                ]
             );
 
         $provider = new QueuePortionNumberProvider($this->config);

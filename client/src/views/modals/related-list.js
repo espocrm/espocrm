@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ import SearchManager from 'search-manager';
 import $ from 'jquery';
 import SelectRelatedHelper from 'helpers/record/select-related';
 import CreateRelatedHelper from 'helpers/record/create-related';
+import Utils from 'utils';
 
 /**
  * A related-list modal.
@@ -71,12 +72,12 @@ class RelatedListModalView extends ModalView {
             this.handleShortcutKeyCtrlPeriod(e);
         },
         /** @this RelatedListModalView */
-        'Control+ArrowLeft': function () {
-            this.handleShortcutKeyControlArrowLeft();
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyControlArrowLeft(e);
         },
         /** @this RelatedListModalView */
-        'Control+ArrowRight': function () {
-            this.handleShortcutKeyControlArrowRight();
+        'Control+ArrowRight': function (e) {
+            this.handleShortcutKeyControlArrowRight(e);
         },
     }
 
@@ -704,15 +705,25 @@ class RelatedListModalView extends ModalView {
 
     /**
      * @protected
+     * @param {KeyboardEvent} e
      */
-    handleShortcutKeyControlArrowLeft() {
+    handleShortcutKeyControlArrowLeft(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         this.getRecordView().trigger('request-page', 'previous');
     }
 
     /**
      * @protected
+     * @param {KeyboardEvent} e
      */
-    handleShortcutKeyControlArrowRight() {
+    handleShortcutKeyControlArrowRight(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         this.getRecordView().trigger('request-page', 'next');
     }
 }

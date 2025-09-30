@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,14 +42,10 @@ use Espo\Tools\Pdf\Service;
 
 class Pdf implements EntryPoint
 {
-    private EntityManager $entityManager;
-    private Service $service;
-
-    public function __construct(EntityManager $entityManager, Service $service)
-    {
-        $this->entityManager = $entityManager;
-        $this->service = $service;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Service $service,
+    ) {}
 
     public function run(Request $request, Response $response): void
     {

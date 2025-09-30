@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://www.espocrm.com/schema/metadata/app/emailTemplates.json",
+    "$id": "https://www.espocrm.com/schema/metadata/app/emailTemplate.json",
     "title": "app/databasePlatforms",
     "description": "Email template definitions.",
     "type": "object",
@@ -20,6 +20,18 @@
                         "description": "An order position."
                     }
                 }
+            }
+        },
+        "entityLinkMapping": {
+            "description": "EntityType => link mapping. As of v9.2.0.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string",
+                    "description": "An entity type name mapped to a link."
+                },
+                "description": "A parent entity type name mapped to EntityType => link map.."
             }
         }
     }

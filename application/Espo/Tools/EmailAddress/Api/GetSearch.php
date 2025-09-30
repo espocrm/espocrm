@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@ use Espo\Tools\Email\AddressService;
 
 /**
  * Searches email addresses.
+ * @noinspection PhpUnused
  */
 class GetSearch implements Action
 {
@@ -50,7 +51,7 @@ class GetSearch implements Action
     public function __construct(
         private AddressService $service,
         private Acl $acl,
-        private Config $config
+        private Config\ApplicationConfig $applicationConfig,
     ) {}
 
     public function process(Request $request): Response
@@ -81,7 +82,7 @@ class GetSearch implements Action
         }
 
         if (!$maxSize || $maxSize > self::ADDRESS_MAX_SIZE) {
-            $maxSize = (int) $this->config->get('recordsPerPage');
+            $maxSize = $this->applicationConfig->getRecordsPerPage();
         }
 
         if ($entityType) {

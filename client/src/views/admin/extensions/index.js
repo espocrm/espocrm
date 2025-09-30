@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,11 +88,7 @@ class IndexExtensionsView extends View {
     }
 
     setup() {
-        const selectProvider = new SelectProvider(
-            this.getHelper().layoutManager,
-            this.getHelper().metadata,
-            this.getHelper().fieldManager
-        );
+        const selectProvider = new SelectProvider();
 
         this.wait(
             this.getCollectionFactory()

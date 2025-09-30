@@ -34,7 +34,8 @@
         },
         "order": {
             "type": "int",
-            "required": true,
+            "minValue": 1,
+            "readOnly": true,
             "disableFormatting": true,
             "textFilterDisabled": true
         },
@@ -43,7 +44,8 @@
             "view": "views/fields/teams"
         },
         "parent": {
-            "type": "link"
+            "type": "link",
+            "view": "views/fields/link-category-tree"
         },
         "childList": {
             "type": "jsonArray",

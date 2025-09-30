@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,22 +31,23 @@ namespace tests\unit\Espo\ORM\Repository;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
-use Espo\ORM\{
-    Repository\RDBTransactionManager,
-    TransactionManager,
-};
+use Espo\ORM\Repository\RDBTransactionManager;
+use Espo\ORM\TransactionManager;
 
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class RDBTransactionManagerTest extends \PHPUnit\Framework\TestCase
+class RDBTransactionManagerTest extends TestCase
 {
-    protected function setUp() : void
+    private $wrappee;
+    private $manager;
+
+    protected function setUp(): void
     {
-        $this->wrappee = $this->getMockBuilder(TransactionManager::class)->disableOriginalConstructor()->getMock();
+        $this->wrappee = $this->createMock(TransactionManager::class);
 
         $this->manager = new RDBTransactionManager($this->wrappee);
     }
-
 
     public function testStartOnce()
     {
@@ -67,7 +68,7 @@ class RDBTransactionManagerTest extends \PHPUnit\Framework\TestCase
         $this->wrappee
             ->expects($this->once())
             ->method('getLevel')
-            ->will($this->returnValue(1));
+            ->willReturn(1);
 
         $this->expectException(RuntimeException::class);
 

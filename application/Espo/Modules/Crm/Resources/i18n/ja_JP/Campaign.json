@@ -79,12 +79,12 @@
     "active": "アクティブ"
   },
   "messages": {
-    "unsubscribed": "メーリングリストから登録解除されました。",
-    "subscribedAgain": "再度登録されました。",
-    "cannotChangeType": "タイプを変更できません。"
+    "unsubscribed": "メーリングリストから登録解除されました",
+    "subscribedAgain": "再度登録されました",
+    "cannotChangeType": "タイプを変更できません"
   },
   "tooltips": {
-    "targetLists": "メッセージを受信するターゲット。",
-    "excludingTargetLists": "メッセージを受信してはいけないターゲット。"
+    "targetLists": "メッセージを受信するターゲット",
+    "excludingTargetLists": "メッセージを受信してはいけないターゲット"
   }
 }

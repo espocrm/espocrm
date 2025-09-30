@@ -38,7 +38,10 @@
     "keepFetchedEmailsUnread": "Saņemto e-pasta ziņojumu saglabāšana kā nelasītu",
     "smtpAuthMechanism": "SMTP autentificēšanas mehānisms",
     "security": "Drošība",
-    "groupEmailFolder": "Grupas e-pasta mape"
+    "groupEmailFolder": "Grupas e-pasta mape",
+    "connectedAt": "Savienots ar",
+    "excludeFromReply": "Izslēgt no atbildes",
+    "isSystem": "Vai sistēma"
   },
   "tooltips": {
     "reply": "Paziņot e-pasta nosūtītājiem, ka e-pasts ir saņemts.\n\nLai novērstu ieciklošanos, noteiktam lietotājam zināmā periodā iespējams nosūtīt tikai vienu e-pastu.",
@@ -55,7 +58,9 @@
     "smtpIsForMassEmail": "Ja būs atzīmēta šī izvēle, masveida e-pastiem būs pieejams SMTP",
     "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī.",
     "useSmtp": "Iespēja sūtīt e-pasta ziņojumus.",
-    "groupEmailFolder": "Ienākošos e-pasta ziņojumus ievietojiet grupas mapē."
+    "groupEmailFolder": "Ienākošos e-pasta ziņojumus ievietojiet grupas mapē.",
+    "excludeFromReply": "Atbildot uz e-pasta ziņojumiem, kas nosūtīti uz šī konta e-pasta adresi, tā e-pasta adrese netiks pievienota CC.\n\nŅemiet vērā, ka, iespējojot šo parametru, šī konta e-pasta adrese būs pieejama lietotājiem, kuriem ir piekļuve e-pasta vēstuļu sūtīšanai.",
+    "isSystem": "ir sistēmas e-pasta konts."
   },
   "links": {
     "filters": "Filtri",
@@ -81,6 +86,7 @@
     "Main": "Galvenais"
   },
   "messages": {
-    "couldNotConnectToImap": "Nav savienojuma ar IMAP serveri"
+    "couldNotConnectToImap": "Nav savienojuma ar IMAP serveri",
+    "imapNotConnected": "Nevar izveidot savienojumu ar grupu [IMAP konts](#InboundEmail/view/{id})."
   }
 }

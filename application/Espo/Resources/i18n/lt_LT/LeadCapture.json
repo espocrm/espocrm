@@ -21,7 +21,20 @@
     "skipOptInConfirmationIfSubscribed": "Praleisti patvirtinimą, jei vadovas jau yra tiksliniame sąraše",
     "smtpAccount": "SMTP paskyra",
     "inboundEmail": "Grupės el. pašto paskyra",
-    "exampleRequestHeaders": "Antraštės"
+    "exampleRequestHeaders": "Antraštės",
+    "phoneNumberCountry": "Telefono šalies kodas",
+    "fieldParams": "Lauko parametrai",
+    "formId": "Formos ID",
+    "formEnabled": "Interneto forma",
+    "formUrl": "Formos URL adresas",
+    "formSuccessText": "Tekstas, rodomas pateikus formą",
+    "formText": "Formoje rodomas tekstas",
+    "formSuccessRedirectUrl": "URL, į kurį nukreipiama pateikus formą",
+    "formLanguage": "Formoje vartojama kalba",
+    "formFrameAncestors": "Leidžiami formos įterpimo prieglobsčio serveriai",
+    "formCaptcha": "Naudokite Captcha",
+    "formTitle": "Formos pavadinimas",
+    "formTheme": "Formos tema"
   },
   "links": {
     "targetList": "Tikslinis sąrašas",
@@ -35,7 +48,9 @@
     "Create LeadCapture": "Sukurkite atvykimo tašką",
     "Generate New API Key": "Sukurti naują API raktą",
     "Request": "Prašymas",
-    "Confirm Opt-In": "Patvirtinkite pasirinkimą"
+    "Confirm Opt-In": "Patvirtinkite pasirinkimą",
+    "Generate New Form ID": "Sukurti naujos formos ID",
+    "Web Form": "Interneto forma"
   },
   "messages": {
     "generateApiKey": "Sukurkite naują API raktą",
@@ -43,6 +58,7 @@
     "optInIsConfirmed": "Atsisakymas patvirtintas."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Žymėjimas yra palaikomas."
+    "optInConfirmationSuccessMessage": "Žymėjimas yra palaikomas.",
+    "formCaptcha": "Kad galėtumėte naudoti Captcha, turite ją sukonfigūruoti skiltyje **Administravimas** > **Susiejimai**."
   }
 }

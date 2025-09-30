@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Binding\Key\NamedClassKey;
 use Espo\Core\Binding\Key\NamedKey;
 
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionNamedType;
@@ -50,25 +51,24 @@ use tests\unit\testClasses\Core\Binding\SomeInterface2;
 use tests\unit\testClasses\Core\Binding\SomeClass1;
 use tests\unit\testClasses\Core\Binding\SomeClass2;
 
-class BindingContainerTest extends \PHPUnit\Framework\TestCase
+class BindingContainerTest extends TestCase
 {
-    /**
-     * @var Binder
-     */
+    /** @var Binder */
     private $binder;
+    private $loader;
 
     protected function setUp(): void
     {
         $this->loader = $this->createMock(BindingLoader::class);
 
-        $this->data = new BindingData();
+        $data = new BindingData();
 
-        $this->binder = new Binder($this->data);
+        $this->binder = new Binder($data);
 
         $this->loader
             ->expects($this->any())
             ->method('load')
-            ->willReturn($this->data);
+            ->willReturn($data);
     }
 
     protected function createClassMock(string $className) : ReflectionClass

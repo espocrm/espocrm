@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,23 +29,26 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    TransactionManager,
-    QueryComposer\MysqlQueryComposer,
-    EntityFactory,
-    Metadata,
-    Locker\BaseLocker,
-};
+use Espo\ORM\EntityFactory;
+use Espo\ORM\Locker\BaseLocker;
+use Espo\ORM\Metadata;
+use Espo\ORM\QueryComposer\MysqlQueryComposer;
+use Espo\ORM\TransactionManager;
 
 use PDO;
+use PHPUnit\Framework\TestCase;
 
-class BaseLockerTest extends \PHPUnit\Framework\TestCase
+class BaseLockerTest extends TestCase
 {
+    private $transactionManager;
+    private $locker;
+    private $pdo;
+
     protected function setUp() : void
     {
-        $this->pdo = $this->getMockBuilder(PDO::class)->disableOriginalConstructor()->getMock();
+        $this->pdo = $this->createMock(PDO::class);
 
-        $entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
+        $entityFactory = $this->createMock(EntityFactory::class);
 
         $metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
@@ -63,13 +66,22 @@ class BaseLockerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->exactly(2))
             ->method('start');
 
+        $invokedCount = $this->exactly(2);
+
         $this->pdo
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['LOCK TABLES `account` WRITE'],
-                ['LOCK TABLES `contact` READ'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('LOCK TABLES `account` WRITE', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('LOCK TABLES `contact` READ', $sql);
+                }
+
+                return 1;
+            });
 
         $this->transactionManager
             ->expects($this->once())
@@ -91,13 +103,22 @@ class BaseLockerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->exactly(2))
             ->method('start');
 
+        $invokedCount = $this->exactly(2);
+
         $this->pdo
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['LOCK TABLES `account` WRITE'],
-                ['LOCK TABLES `contact` READ'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('LOCK TABLES `account` WRITE', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('LOCK TABLES `contact` READ', $sql);
+                }
+
+                return 1;
+            });
 
         $this->transactionManager
             ->expects($this->once())

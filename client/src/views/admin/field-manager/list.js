@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -98,9 +98,23 @@ class FieldManagerListView extends View {
                     isCustom: defs.isCustom || false,
                     type: defs.type,
                     label: this.translate(field, 'fields', this.scope),
-                    isEditable: !defs.customizationDisabled && this.isCustomizable,
+                    isEditable: !defs.customizationDisabled &&
+                        !defs.utility &&
+                        this.isCustomizable,
                 });
             });
+
+            this.fieldDefsArray = this.fieldDefsArray.sort((a, b) => {
+                if (a.isEditable && !b.isEditable) {
+                    return -1;
+                }
+
+                if (!a.isEditable && b.isEditable) {
+                    return 1;
+                }
+
+                return 0;
+            })
         });
     }
 

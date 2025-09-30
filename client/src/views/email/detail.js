@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ import DetailView from 'views/detail';
 import EmailHelper from 'email-helper';
 import RecordModal from 'helpers/record-modal';
 import SelectOneAttachmentModalView from 'views/attachment/modals/select-one';
+import Utils from 'utils';
 
 class EmailDetailView extends DetailView {
 
@@ -127,7 +128,7 @@ class EmailDetailView extends DetailView {
         });
 
         this.shortcutKeys['Control+Backspace'] = e => {
-            if ($(e.target).hasClass('note-editable')) {
+            if (Utils.isKeyEventInTextInput(e)) {
                 return;
             }
 
@@ -144,7 +145,7 @@ class EmailDetailView extends DetailView {
         };
 
         this.shortcutKeys['Control+Delete'] = e => {
-            if ($(e.target).hasClass('note-editable')) {
+            if (Utils.isKeyEventInTextInput(e)) {
                 return;
             }
 
@@ -161,7 +162,7 @@ class EmailDetailView extends DetailView {
         };
 
         this.shortcutKeys['Control+KeyI'] = e => {
-            if ($(e.target).hasClass('note-editable')) {
+            if (Utils.isKeyEventInTextInput(e)) {
                 return;
             }
 
@@ -180,7 +181,7 @@ class EmailDetailView extends DetailView {
         };
 
         this.shortcutKeys['Control+KeyM'] = e => {
-            if ($(e.target).hasClass('note-editable')) {
+            if (Utils.isKeyEventInTextInput(e)) {
                 return;
             }
 

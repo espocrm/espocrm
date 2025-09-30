@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,7 +84,8 @@ class DefaultImporter implements Importer
         private LinkMultipleSaver $linkMultipleSaver,
         private DuplicateFinder $duplicateFinder,
         private JobSchedulerFactory $jobSchedulerFactory,
-        private ParentFinder $parentFinder
+        private ParentFinder $parentFinder,
+        private AutoReplyDetector $autoReplyDetector,
     ) {
         $this->notificator = $notificatorFactory->createByClass(Email::class);
         $this->filtersMatcher = new FiltersMatcher();
@@ -145,6 +146,8 @@ class DefaultImporter implements Importer
 
             return $duplicate;
         }
+
+        $email->setIsAutoReply($this->autoReplyDetector->detect($message));
 
         $this->processDeliveryDate($parser, $message, $email);
 

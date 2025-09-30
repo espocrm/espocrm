@@ -16,6 +16,7 @@
     "name",
     "body",
     "bodyPlain",
+    "isAutoReply",
     "inboundEmails",
     "emailAccounts"
 ]

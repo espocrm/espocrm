@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Application\ApplicationParams;
 use Espo\Core\Application\Runner;
 use Espo\Core\Application\RunnerParameterized;
 use Espo\Core\Container\ContainerBuilder;
@@ -39,6 +40,7 @@ use Espo\Core\Utils\Autoload;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\ClientManager;
+use RuntimeException;
 
 /**
  * A central access point of the application.
@@ -47,19 +49,25 @@ class Application
 {
     protected Container $container;
 
-    public function __construct()
-    {
+    public function __construct(
+        ?ApplicationParams $params = null,
+    ) {
         date_default_timezone_set('UTC');
 
-        $this->initContainer();
+        $this->initContainer($params);
         $this->initAutoloads();
         $this->initPreloads();
     }
 
-    protected function initContainer(): void
+    protected function initContainer(?ApplicationParams $params): void
     {
-        /** @var Container $container */
-        $container = (new ContainerBuilder())->build();
+        $container = (new ContainerBuilder())
+            ->withParams($params)
+            ->build();
+
+        if (!$container instanceof Container) {
+            throw new RuntimeException();
+        }
 
         $this->container = $container;
     }

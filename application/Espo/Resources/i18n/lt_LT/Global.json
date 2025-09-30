@@ -55,9 +55,16 @@
     "Note": "Pastaba",
     "ImportError": "Importo klaida",
     "WorkingTimeCalendar": "Darbo laiko kalendorius",
-    "WorkingTimeRange": "Darbo laiko diapazonas",
     "GroupEmailFolder": "Grupės el. pašto aplankas",
-    "AuthenticationProvider": "Autentifikavimo teikėjas"
+    "AuthenticationProvider": "Autentifikavimo teikėjas",
+    "GlobalStream": "Pasaulinis srautas",
+    "WebhookQueueItem": "\"Webhook\" eilės elementas",
+    "AppLogRecord": "Programos žurnalo įrašas",
+    "WorkingTimeRange": "Darbo laiko išimtis",
+    "AddressCountry": "Adresas Šalis",
+    "AppSecret": "Programėlės paslaptis",
+    "OAuthProvider": "OAuth teikėjas",
+    "OAuthAccount": "\"OAuth\" paskyra"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -104,9 +111,16 @@
     "Note": "Pastabos",
     "ImportError": "Importo klaidos",
     "WorkingTimeCalendar": "Darbo laiko kalendoriai",
-    "WorkingTimeRange": "Darbo laiko intervalai",
     "GroupEmailFolder": "Grupės el. pašto aplankai",
-    "AuthenticationProvider": "Autentifikavimo paslaugų teikėjai"
+    "AuthenticationProvider": "Autentifikavimo paslaugų teikėjai",
+    "GlobalStream": "Pasaulinis srautas",
+    "WebhookQueueItem": "\"Webhook\" eilės elementai",
+    "AppLogRecord": "Programos žurnalas",
+    "WorkingTimeRange": "Darbo laiko išimtys",
+    "AddressCountry": "Adresas Šalys",
+    "AppSecret": "Programėlių paslaptys",
+    "OAuthProvider": "OAuth teikėjai",
+    "OAuthAccount": "\"OAuth\" paskyros"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -275,11 +289,36 @@
     "Log in as": "Prisijunkite kaip",
     "Sign in": "Prisijunkite",
     "Global Search": "Visuotinė paieška",
-    "Show Navigation Panel": "Rodyti navigacijos skydelį",
-    "Hide Navigation Panel": "Paslėpti navigacijos skydelį",
+    "Navigation Panel": "Rodyti navigacijos skydelį",
     "Print": "Spausdinti",
     "Copy to Clipboard": "Kopijuoti į iškarpinę",
-    "Copied to clipboard": "Nukopijuota į iškarpinę"
+    "Copied to clipboard": "Nukopijuota į iškarpinę",
+    "Audit Log": "Audito žurnalas",
+    "View Audit Log": "Peržiūrėti audito žurnalą",
+    "Previous Page": "Ankstesnis puslapis",
+    "Next Page": "Kitas puslapis",
+    "First Page": "Pirmasis puslapis",
+    "Last Page": "Paskutinis puslapis",
+    "Page": "Puslapis",
+    "Star": "Žvaigždė",
+    "Starred": "Žvaigždė",
+    "Remove Filter": "Pašalinti filtrą",
+    "Ready": "Paruošta",
+    "Column Resize": "Stulpelio dydžio keitimas",
+    "General": "Bendra",
+    "Send": "Siųsti",
+    "Timeout": "Laiko limitas",
+    "No internet": "Nėra interneto",
+    "Scheduled": "Suplanuota",
+    "Now": "Dabar",
+    "Expanded": "Išplėstas",
+    "Collapsed": "Sugriuvęs",
+    "Top Level": "Aukščiausias lygis",
+    "Fields": "Laukai",
+    "View User Access": "Peržiūrėti naudotojo prieigą",
+    "Reacted": "Reagavo",
+    "Reaction Removed": "Pašalinta reakcija",
+    "Reactions": "Reakcijos"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -341,6 +380,7 @@
     "notUpdated": "Neatnaujinta",
     "maintenanceMode": "Šiuo metu programa veikia techninės priežiūros režimu. Prieigą turi tik administratoriaus naudotojai.\n\nPriežiūros režimą galima išjungti adresu Administravimas → Nustatymai.",
     "fieldInvalid": "{field} yra negaliojantis",
+    "fieldPhoneInvalid": "{field} yra negaliojantis",
     "resolveSaveConflict": "Įrašas buvo pakeistas. Prieš išsaugodami įrašą turite išspręsti konfliktą.",
     "massActionProcessed": "Masinis veiksmas buvo apdorotas.",
     "fieldUrlExceedsMaxLength": "Užkoduotas URL viršija maksimalų ilgį {maxLength}",
@@ -357,7 +397,6 @@
     "validationFailure": "Galinio patvirtinimo klaida.\n\nLaukas: `{field}`\nPatvirtinimas: `{type}`",
     "confirmAppRefresh": "Paraiška buvo atnaujinta. Rekomenduojama atnaujinti puslapį, kad jis veiktų tinkamai.",
     "error404": "Jūsų prašomas url adresas negali būti tvarkomas.",
-    "error403": "Jūs neturite prieigos prie šios srities.",
     "extensionLicenseInvalid": "Netinkama '{name}' plėtinio licencija.",
     "extensionLicenseExpired": "Pratęsimo \"{name}\" licencijos prenumerata baigėsi.",
     "extensionLicenseSoftExpired": "Pratęsimo \"{name}\" licencijos prenumerata baigėsi.",
@@ -366,7 +405,6 @@
     "noAccessToForeignRecord": "Operacijai reikalinga `{veiksmų}` prieiga prie svetimo įrašo.",
     "fieldShouldBeNumber": "{field} turėtų būti galiojantis skaičius",
     "maintenanceModeError": "Šiuo metu programa veikia techninės priežiūros režimu.",
-    "noLinkAccess": "Nėra prieigos prie konkretaus įrašo susiejimo operacijos.",
     "cannotRelateNonExisting": "Negalima susieti su neegzistuojančiu {foreignEntityType} įrašu.",
     "cannotRelateForbidden": "Negalima susieti su draudžiamu {foreignEntityType} įrašu. Reikalinga `{action}` prieiga.",
     "cannotRelateForbiddenLink": "Nėra prieigos prie nuorodos \"{link}\".",
@@ -374,16 +412,40 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} turi būti galiojantis URL",
     "fieldShouldBeLess": "{field} neturėtų būti didesnis už {value}",
     "fieldShouldBeGreater": "{field} neturėtų būti mažesnis už {value}",
-    "cannotUnrelateRequiredLink": "Negalima panaikinti reikalaujamos nuorodos."
+    "cannotUnrelateRequiredLink": "Negalima panaikinti reikalaujamos nuorodos.",
+    "fieldPhoneInvalidCode": "Neteisingas šalies kodas",
+    "fieldPhoneTooShort": "{field} yra per trumpas",
+    "fieldPhoneTooLong": "{field} yra per ilgas",
+    "barcodeInvalid": "{field} yra negaliojantis {type}",
+    "noLinkAccess": "Negalima susieti su {foreignEntityType} įrašu per nuorodą \"{link}\". Nėra prieigos.",
+    "attemptIntervalFailure": "Operacija neleidžiama atlikti per tam tikrą laiko tarpą. Prieš kitą bandymą palaukite tam tikrą laiką.",
+    "confirmRestoreFromAudit": "Ankstesnės reikšmės bus nustatytos formoje. Tada galite išsaugoti įrašą ir atkurti ankstesnes vertes.",
+    "pageNumberIsOutOfBound": "Puslapio numeris yra neįrištas",
+    "fieldPhoneExtensionTooLong": "Pratęsimas neturėtų būti ilgesnis nei {maxLength}",
+    "cannotLinkAlreadyLinked": "Negalima susieti jau susieto įrašo.",
+    "starsLimitExceeded": "Žvaigždžių skaičius viršijo nustatytą ribą.",
+    "select2OrMoreRecords": "Pasirinkite 2 ar daugiau įrašų",
+    "selectNotMoreThanNumberRecords": "Pasirinkite ne daugiau kaip {skaičius} įrašų",
+    "selectAtLeastOneRecord": "Pasirinkite bent vieną įrašą",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{polyje} yra simbolių, kurie neleidžiami telefono numeriui",
+    "duplicateConflict": "Įrašas jau egzistuoja.",
+    "confirmMassUpdate": "Ar tikrai norite masiškai atnaujinti pasirinktus įrašus?",
+    "cannotRemoveCategoryWithChildCategory": "Negalima pašalinti kategorijos, kuri turi antrinę kategoriją.",
+    "cannotRemoveNotEmptyCategory": "Negalima pašalinti netuščios kategorijos.",
+    "arrayInputNotEmpty": "Elementas įvestas, bet nepridėtas",
+    "error403": "Jūs neturite prieigos prie šios srities.",
+    "sameRecordIsAlreadyBeingEdited": "Įrašas jau redaguojamas."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
     "followed": "Stebimas",
-    "onlyMyTeam": "Mano komanda"
+    "onlyMyTeam": "Mano komanda",
+    "shared": "Bendrai naudojamas"
   },
   "presetFilters": {
     "followed": "Stebimas",
-    "all": "Visi"
+    "all": "Visi",
+    "starred": "Žvaigždė"
   },
   "massActions": {
     "remove": "Ištrinti",
@@ -435,7 +497,11 @@
     "types": "Tipai",
     "middleName": "Vidurinis vardas",
     "emailAddressIsInvalid": "El. pašto adresas yra neteisingas",
-    "phoneNumberIsInvalid": "Telefono numeris negalioja"
+    "phoneNumberIsInvalid": "Telefono numeris negalioja",
+    "users": "Vartotojai",
+    "childList": "Vaikų sąrašas",
+    "collaborators": "Bendradarbiai",
+    "streamUpdatedAt": "Srautas atnaujintas"
   },
   "links": {
     "assignedUser": "Priskirtas darbuotojas",
@@ -446,7 +512,9 @@
     "teams": "Komandos",
     "users": "Vartotojai",
     "parent": "Pagrindinis",
-    "children": "Antrinis"
+    "children": "Antrinis",
+    "assignedUsers": "Priskirti naudotojai",
+    "collaborators": "Bendradarbiai"
   },
   "dashlets": {
     "Stream": "Srautas",
@@ -457,7 +525,10 @@
   "notificationMessages": {
     "assign": "\n{entityType} {entity} buvo priskirta tau",
     "emailReceived": "Laiškas gautas nuo {from}",
-    "entityRemoved": "{user} ištrynė {entityType} {entity}"
+    "entityRemoved": "{user} ištrynė {entityType} {entity}",
+    "emailInbox": "{naudotojas} pridėjo el. laišką {entity} į savo pašto dėžutę",
+    "userPostReaction": "{user} sureagavo į tavo {post}",
+    "userPostInParentReaction": "{user} sureagavo į tavo {post} įraše {entityType} {entitetas}"
   },
   "streamMessages": {
     "post": "{user} paskelbė {entityType} {entity}",
@@ -484,6 +555,7 @@
     "createAssigned": "{user} sukurė {entityType} {entity} priskyrė vartotojui {assignee}",
     "assign": "{user} priskyrė {entityType} {entity} vartotojui {assignee}",
     "assignThis": "{user} priskyrė {entityType} to {assignee}",
+    "assignMultiAddThis": "{user} priskyrė {entityType} to {assignee}",
     "postThis": "{user} paskelbė",
     "attachThis": "{user} prisegė",
     "statusThis": "{user} atnaujino {field}",
@@ -514,7 +586,12 @@
     "assignThisSelf": "{user} prisiskyrė sau šį {entityType}",
     "assignSelf": "{user} prisiskyrė sau {entityType} {entity}",
     "unrelate": "{user} nesusijęs {relatedEntityType} {relatedEntity} iš {entityType} {entity}",
-    "unrelateThis": "{user} nesusijęs {relatedEntityType} {relatedEntity} iš šio {entityType}"
+    "unrelateThis": "{user} nesusijęs {relatedEntityType} {relatedEntity} iš šio {entityType}",
+    "assignMultiAdd": "{naudotojas} priskyrė {subjektą} {gavėjui}",
+    "assignMultiRemove": "{naudotojas} nepriskirta {subjektas} iš {pašalintasAtsakovas}",
+    "assignMultiAddRemove": "{naudotojas} priskyrė {subjektą} {gavėjui} ir panaikino priskyrimą iš {pašalintasGavėjas}",
+    "assignMultiRemoveThis": "{naudotojas} panaikino šio {entityType} priskyrimą iš {removedAssignee}",
+    "assignMultiAddRemoveThis": "{naudotojas} priskyrė šį {entityType} {paskirtojui} ir panaikino priskyrimą iš {pašalintoPaskirtojo}"
   },
   "lists": {
     "monthNames": [
@@ -630,7 +707,9 @@
       "isNotEmpty": "Yra netuščia",
       "notLike": "Nėra panašus (%)",
       "notContains": "Neturi",
-      "notEquals": "Nelygu"
+      "notEquals": "Nelygu",
+      "anyOf": "Bet kuris iš",
+      "noneOf": "Nė vienas iš"
     },
     "intSearchRanges": {
       "equals": "Lygu",
@@ -742,12 +821,12 @@
       "color": {
         "recent": "Naujausia spalva",
         "more": "Daugiau spalvų",
-        "background": "Buvusi spalva",
-        "foreground": "Srifto spalva",
         "transparent": "Permatoma",
         "setTransparent": "Nustatyti permatomą",
         "reset": "Atstatyti",
-        "resetToDefault": "Atstatyti numatytają"
+        "resetToDefault": "Atstatyti numatytają",
+        "background": "Galinė spalva",
+        "foreground": "Šrifto spalva"
       },
       "shortcut": {
         "shortcuts": "Klaviatūros nuorodos",
@@ -795,10 +874,10 @@
     "phoneNumber": "Galiojantis telefono numeris",
     "array": "Masyvas",
     "arrayOfString": "Styginių masyvas",
-    "valid": "Galioja",
     "noEmptyString": "Nėra tuščios eilutės",
     "max": "Didžiausia vertė",
-    "min": "Mažiausia vertė"
+    "min": "Mažiausia vertė",
+    "valid": "Galiojimas"
   },
   "fieldValidationExplanations": {
     "url_valid": "Netinkama URL reikšmė.",
@@ -813,12 +892,60 @@
     "enum_valid": "Netinkama sąrašo reikšmė. Reikšmė turi būti viena iš apibrėžtų enumo parinkčių. Tuščia reikšmė leidžiama tik tuo atveju, jei laukas turi tuščią parinktį.",
     "multiEnum_valid": "Netinkama daugiareikšmė reikšmė. Vertės turi būti viena iš apibrėžtų lauko parinkčių.",
     "int_valid": "Netinkama sveikojo skaičiaus reikšmė.",
-    "float_valid": "Netinkama skaičiaus reikšmė."
+    "float_valid": "Netinkama skaičiaus reikšmė.",
+    "valid": "Netinkama reikšmė.",
+    "maxLength": "Vertės ilgis viršija didžiausią vertę.",
+    "phone_valid": "Telefono numeris negalioja. Gali būti, kad neteisingas arba tuščias šalies kodas."
   },
   "navbarTabs": {
     "Business": "Verslas",
     "Marketing": "Rinkodara",
     "Support": "Parama",
     "Activities": "Veikla"
+  },
+  "wysiwygLabels": {
+    "cell": "Ląstelės",
+    "align": "Suderinti",
+    "width": "Plotis",
+    "height": "Aukštis",
+    "borderWidth": "Ribos plotis",
+    "borderColor": "Pasienio spalva",
+    "cellPadding": "Ląstelių paminkštinimas",
+    "backgroundColor": "Fono spalva",
+    "verticalAlign": "Vertikalus lygiavimas"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Kairėje pusėje",
+      "center": "Centras",
+      "right": "Dešinė"
+    },
+    "verticalAlign": {
+      "top": "Viršuje",
+      "middle": "Vidurio",
+      "bottom": "Dugnas"
+    }
+  },
+  "detailViewModes": {
+    "detail": "Išsami informacija"
+  },
+  "reactions": {
+    "Smile": "Šypsena",
+    "Surprise": "Staigmena",
+    "Laugh": "Juokitės",
+    "Sad": "Liūdna",
+    "Love": "Meilė",
+    "Like": "Kaip",
+    "Dislike": "Nepatinka"
+  },
+  "recordActions": {
+    "create": "Sukurti",
+    "read": "Skaityti",
+    "edit": "Redaguoti",
+    "delete": "Ištrinti",
+    "stream": "Srautas"
+  },
+  "tabs": {
+    "Stream": "Srautas"
   }
 }

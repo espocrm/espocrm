@@ -19,7 +19,8 @@
     "body": "Laiško tekstas",
     "categories": "Kategorijos",
     "language": "Kalba",
-    "portals": "Portalai"
+    "portals": "Portalai",
+    "bodyPlain": "Kūnas Paprastas"
   },
   "links": {
     "cases": "Atvejai",

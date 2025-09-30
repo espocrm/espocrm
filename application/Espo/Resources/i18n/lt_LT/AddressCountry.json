@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Create AddressCountry": "Sukurti adresą Šalis",
+    "Populate": "Užpildykite"
+  },
+  "fields": {
+    "code": "Kodas",
+    "isPreferred": "Ar pageidautina"
+  },
+  "tooltips": {
+    "code": "ISO 3166-1 alfa-2 kodas.",
+    "isPreferred": "Pageidaujamos šalys pasirenkamajame sąraše rodomos pirmiausia."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Visos esamos šalys bus ištrintos, bus sukurtas numatytasis šalių sąrašas. Operacijos atšaukti nebus galima.\n\nAr esate tikri?"
+  },
+  "strings": {
+    "populateDefaults": "Užpildykite numatytuoju šalių sąrašu"
+  }
+}

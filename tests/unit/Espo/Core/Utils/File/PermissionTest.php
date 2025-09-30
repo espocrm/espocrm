@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,27 +29,27 @@
 
 namespace tests\unit\Espo\Core\Utils\File;
 
+use Espo\Core\Utils\File\Permission;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
-class PermissionTest extends \PHPUnit\Framework\TestCase
+class PermissionTest extends TestCase
 {
     protected $object;
-
     protected $objects;
-
     protected $reflection;
-
     protected $fileList;
 
     protected function setUp() : void
     {
         $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\File\Permission($this->objects['fileManager']);
+        $this->object = new Permission($this->objects['fileManager']);
 
         $this->reflection = new ReflectionHelper($this->object);
 
-        $this->fileList = array(
+        $this->fileList = [
             'application/Espo/Controllers/Email.php',
             'application/Espo/Controllers/EmailAccount.php',
             'application/Espo/Controllers/EmailAddress.php',
@@ -64,7 +64,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
             'application/Espo/Resources/layouts/User/filters.json',
             'application/Espo/Resources/metadata/app/acl.json',
             'application/Espo/Resources/metadata/app/defaultDashboardLayout.json'
-        );
+        ];
     }
 
     protected function tearDown() : void
@@ -102,7 +102,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals( $result, $this->object->arrangePermissionList($this->fileList) );
     }
 
-    public function requiredPermissionsData()
+    static public function requiredPermissionsData()
     {
         return [
             ['data/config.php', '0775', '0664'],
@@ -116,9 +116,7 @@ class PermissionTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider requiredPermissionsData
-     */
+    #[DataProvider('requiredPermissionsData')]
     public function testGetRequiredPermissions($path, $dirPermission, $filePermission)
     {
         $result = $this->object->getRequiredPermissions($path);

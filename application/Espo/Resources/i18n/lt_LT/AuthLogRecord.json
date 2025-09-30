@@ -29,7 +29,10 @@
       "INACTIVE_USER": "Pakviesti naudotoją",
       "IS_PORTAL_USER": "Portalo naudotojas",
       "IS_NOT_PORTAL_USER": "Ne portalo naudotojas",
-      "USER_IS_NOT_IN_PORTAL": "Vartotojas nėra susijęs su portalu"
+      "USER_IS_NOT_IN_PORTAL": "Vartotojas nėra susijęs su portalu",
+      "IS_SYSTEM_USER": "Ar sistemos naudotojas",
+      "FORBIDDEN": "Draudžiama",
+      "WRONG_CODE": "Neteisingas kodas"
     }
   }
 }

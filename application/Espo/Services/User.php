@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,21 +31,14 @@ namespace Espo\Services;
 
 use Espo\Core\Di\LogAware;
 use Espo\Core\Di\LogSetter;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
-use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\PasswordHash;
 use Espo\ORM\Entity;
-use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\SelectBuilder;
-use Espo\Tools\User\UserUtil;
 use Espo\Tools\UserSecurity\Password\Checker as PasswordChecker;
 use Espo\Tools\UserSecurity\Password\Generator as PasswordGenerator;
 use Espo\Tools\UserSecurity\Password\Sender as PasswordSender;
@@ -61,49 +54,11 @@ class User extends Record implements LogAware
 {
     use LogSetter;
 
-    /**
-     * @throws Forbidden
-     */
-    public function getEntity(string $id): ?Entity
-    {
-        /** @var ?UserEntity $entity */
-        $entity = parent::getEntity($id);
-
-        if (!$entity) {
-            return null;
-        }
-
-        if ($entity->isSuperAdmin() && !$this->user->isSuperAdmin()) {
-            throw new Forbidden();
-        }
-
-        if ($entity->isSystem()) {
-            throw new Forbidden();
-        }
-
-        return $entity;
-    }
-
     private function hashPassword(#[SensitiveParameter] string $password): string
     {
         $passwordHash = $this->injectableFactory->create(PasswordHash::class);
 
         return $passwordHash->hash($password);
-    }
-
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
-
-        if (!$this->user->isSuperAdmin()) {
-            unset($data->isSuperAdmin);
-        }
-
-        if (!$this->user->isAdmin()) {
-            if (!$this->acl->checkScope(TeamEntity::ENTITY_TYPE)) {
-                unset($data->defaultTeamId);
-            }
-        }
     }
 
     /**
@@ -216,51 +171,6 @@ class User extends Record implements LogAware
         $this->injectableFactory
             ->create(PasswordSender::class)
             ->sendPassword($user, $password);
-    }
-
-    /**
-     * @throws Conflict
-     */
-    private function processUserExistsChecking(UserEntity $user): void
-    {
-        $util = $this->injectableFactory->create(UserUtil::class);
-
-        if ($util->checkExists($user)) {
-            throw new Conflict('userNameExists');
-        }
-    }
-
-    public function delete(string $id, DeleteParams $params): void
-    {
-        if ($id === $this->user->getId()) {
-            throw new Forbidden("Can't delete own user.");
-        }
-
-        parent::delete($id, $params);
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws NotFound
-     * @throws Conflict
-     */
-    public function restoreDeleted(string $id): void
-    {
-        $entity = $this->getRepository()
-            ->clone(
-                SelectBuilder::create()
-                    ->from(UserEntity::ENTITY_TYPE)
-                    ->withDeleted()
-                    ->build()
-            )
-            ->where([Attribute::ID => $id])
-            ->findOne();
-
-        if ($entity) {
-            $this->processUserExistsChecking($entity);
-        }
-
-        parent::restoreDeleted($id);
     }
 
     private function createPasswordChecker(): PasswordChecker

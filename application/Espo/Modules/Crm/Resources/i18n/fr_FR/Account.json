@@ -8,8 +8,8 @@
     "industry": "Industrie",
     "contactRole": "Titre",
     "campaign": "Campagne",
-    "targetLists": "Listes de cibles",
-    "targetList": "Liste de cibles"
+    "targetLists": "Listes de diffusion",
+    "targetList": "Liste de diffusion"
   },
   "links": {
     "opportunities": "Opportunités",
@@ -18,7 +18,7 @@
     "callsPrimary": "Appels (étendus)",
     "tasksPrimary": "Tâches (étendues)",
     "emailsPrimary": "Emails (étendus)",
-    "targetLists": "Listes de cibles",
+    "targetLists": "Listes de diffusion",
     "campaignLogRecords": "Log de campagne",
     "campaign": "Campagne",
     "portalUsers": "Utilisateurs Portail",

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
 use Espo\Core\Utils\Metadata;
@@ -42,21 +43,22 @@ use Espo\Core\Utils\Module\PathProvider as ModulePathProvider;
 use Espo\Core\Utils\Resource\Reader;
 use Espo\Core\Utils\Resource\PathProvider;
 
-class MetadataTest extends \PHPUnit\Framework\TestCase
+class MetadataTest extends TestCase
 {
     private $object;
-
     private $reflection;
+    private $fileManager;
+    private $customPath;
 
     protected function setUp(): void
     {
         $this->fileManager = new FileManager();
 
-        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
+        $dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
-        $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
+        $log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
-        $GLOBALS['log'] = $this->log;
+        $GLOBALS['log'] = $log;
 
         $module = new Module($this->fileManager);
 
@@ -69,11 +71,11 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $builderHelper = new Metadata\BuilderHelper();
 
-        $builder = new Metadata\Builder($reader, $builderHelper);
+        $builder = new Metadata\Builder($reader);
 
         $this->object = new Metadata(
             $this->fileManager,
-            $this->dataCache,
+            $dataCache,
             $module,
             $builder,
             $builderHelper,

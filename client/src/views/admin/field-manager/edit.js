@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,17 +70,29 @@ class FieldManagerEditView extends View {
         'nonAdminReadOnly',
     ]
 
-    /** @type {Model & {fetchedAttributes?: Record}}*/
+    /**
+     * @type {Model & {fetchedAttributes?: Record}}
+     */
     model
-    /** @type {Record[]} */
+
+    /**
+     * @private
+     * @type {Record[]}
+     */
     paramList
+
+    /**
+     * @private
+     * @type {Record[]}
+     */
+    paramDataList
 
     data() {
         return {
             scope: this.scope,
             field: this.field,
             defs: this.defs,
-            paramList: this.paramList,
+            paramDataList: this.paramDataList,
             type: this.type,
             fieldList: this.fieldList,
             isCustom: this.defs.isCustom,
@@ -210,17 +222,16 @@ class FieldManagerEditView extends View {
             .then(() => {
                 const promiseList = [];
                 this.paramList = [];
-                const paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
+
+                const paramList = Espo.Utils.cloneDeep(this.getFieldManager().getParamList(this.type));
 
                 if (!this.isNew) {
                     const fieldManagerAdditionalParamList =
                         this.getMetadata()
-                            .get([
-                                'entityDefs', this.scope, 'fields',
-                                this.field, 'fieldManagerAdditionalParamList'
-                            ]) || [];
+                            .get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerAdditionalParamList'])
+                            ?? [];
 
-                    fieldManagerAdditionalParamList.forEach((item) =>  {
+                    fieldManagerAdditionalParamList.forEach(item =>  {
                         paramList.push(item);
                     });
                 }
@@ -320,11 +331,12 @@ class FieldManagerEditView extends View {
                         return !(this.globalRestriction.readOnly && item.name === 'required');
                     });
 
-                const customizationDisabled = this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'customizationDisabled']);
+                /** @type {Record} */
+                const fieldDefs = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field]) ?? {};
 
                 if (
-                    customizationDisabled ||
+                    fieldDefs.customizationDisabled ||
+                    fieldDefs.utility ||
                     this.globalRestriction.forbidden
                 ) {
                     this.paramList = [];
@@ -393,6 +405,19 @@ class FieldManagerEditView extends View {
                     promiseList.push(
                         this.createFieldView(o.type, o.name, null, o, options)
                     );
+                });
+
+                this.paramDataList = this.paramList.map(o => {
+                    let label = this.translate(o.name, 'fields', 'Admin');
+
+                    if (o.labelTranslation) {
+                        label = this.getLanguage().translatePath(o.labelTranslation);
+                    }
+
+                    return {
+                        ...o,
+                        label: label,
+                    };
                 });
 
                 Promise.all(promiseList).then(() => callback());
@@ -644,23 +669,37 @@ class FieldManagerEditView extends View {
         }
     }
 
+    /**
+     * @private
+     * @param {string|null} type
+     * @param {string} name
+     * @param {boolean|null} readOnly
+     * @param {Record} params
+     * @param {Record} [options]
+     * @param {function} [callback]
+     * @return {Promise<Bull.View>}
+     */
     createFieldView(type, name, readOnly, params, options, callback) {
         const viewName = (params || {}).view || this.getFieldManager().getViewName(type);
+
+        let labelText = undefined;
+
+        if (params && params.labelTranslation) {
+            labelText = this.getLanguage().translatePath(params.labelTranslation);
+        }
 
         const o = {
             model: this.model,
             selector: `.field[data-name="${name}"]`,
-            defs: {
-                name: name,
-                params: params
-            },
+            name: name,
+            params: params,
             mode: readOnly ? 'detail' : 'edit',
             readOnly: readOnly,
             scope: this.scope,
             field: this.field,
+            labelText: labelText,
+            ...options,
         };
-
-        _.extend(o, options || {});
 
         const promise = this.createView(name, viewName, o, callback);
 

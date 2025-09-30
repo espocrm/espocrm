@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Sender\MessageContainer;
 use Espo\Core\Mail\Sender\TransportPreparatorFactory;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\EntityCollection;
@@ -75,6 +76,7 @@ class Sender
     private $attachmentList = null;
     /** @var array{string, string}[] */
     private array $headers = [];
+    private ?MessageContainer $messageContainer = null;
 
     private const ATTACHMENT_ATTR_CONTENTS = 'contents';
 
@@ -98,6 +100,7 @@ class Sender
         $this->attachmentList = null;
         $this->overrideParams = [];
         $this->headers = [];
+        $this->messageContainer = null;
     }
 
     /**
@@ -181,6 +184,17 @@ class Sender
     {
         /** @noinspection PhpDeprecationInspection */
         return $this->setEnvelopeOptions($options);
+    }
+
+    /**
+     * @since 9.2.0
+     * @internal
+     */
+    public function withMessageContainer(MessageContainer $messageContainer): self
+    {
+        $this->messageContainer = $messageContainer;
+
+        return $this;
     }
 
     /**
@@ -291,7 +305,7 @@ class Sender
 
         $params = array_merge($this->params, $this->overrideParams);
 
-        $this->applyHeaders($message);
+        $this->applyHeaders($email, $message);
         $this->applyFrom($email, $message, $params);
         $this->addRecipientAddresses($email, $message);
         $this->applyReplyTo($email, $message, $params);
@@ -306,6 +320,10 @@ class Sender
         }
 
         $envelope = $this->prepareEnvelope($message);
+
+        if ($this->messageContainer) {
+            $this->messageContainer->message = new Sender\Message($message);
+        }
 
         try {
             $this->transport->send($message, $envelope);
@@ -571,7 +589,7 @@ class Sender
         $message->subject($email->getSubject() ?? '');
     }
 
-    private function applyHeaders(Message $message): void
+    private function applyHeaders(Email $email, Message $message): void
     {
         foreach ($this->headers as $item) {
             $message->getHeaders()->addTextHeader($item[0], $item[1]);
@@ -586,6 +604,10 @@ class Sender
 
                 $message->getHeaders()->addTextHeader($it->getFieldName(), $it->getFieldValue());
             }
+        }
+
+        if ($email->isAutoReply() && !$message->getHeaders()->has('Auto-Submitted')) {
+            $message->getHeaders()->addTextHeader('Auto-Submitted', 'auto-replied');
         }
     }
 

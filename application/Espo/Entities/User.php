@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,8 +40,8 @@ class User extends Person
 {
     public const ENTITY_TYPE = 'User';
 
-    public const ATTRIBUTE_TYPE = 'type';
-    public const ATTRIBUTE_IS_ACTIVE = 'isActive';
+    public const ATTR_TYPE = 'type';
+    public const ATTR_IS_ACTIVE = 'isActive';
 
     public const LINK_ACCOUNTS = 'accounts';
     public const LINK_CONTACT = 'contact';

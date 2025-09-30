@@ -171,7 +171,8 @@
         "authIpAddressCheck": "Restrict access by IP address",
         "authIpAddressWhitelist": "IP Address Whitelist",
         "authIpAddressCheckExcludedUsers": "Users excluded from check",
-        "availableReactions": "Available Reactions"
+        "availableReactions": "Available Reactions",
+        "baselineRole": "Baseline Role"
     },
     "options": {
         "authenticationMethod": {
@@ -288,7 +289,8 @@
         "oidcUsernameClaim": "A claim to use for a username (for user matching and creation).",
         "oidcTeams": "Espo teams mapped against groups/teams/roles of the identity provider. Teams with an empty mapping value will be always assigned to a user (when creating or syncing).",
         "oidcLogoutUrl": "An URL the browser will redirect to after logging out from Espo. Intended for clearing the session information in the browser and doing logging out on the provider side. Usually the URL contains a redirect-URL parameter, to return back to Espo.\n\nAvailable placeholders:\n* `{siteUrl}`\n* `{clientId}`",
-        "quickSearchFullTextAppendWildcard": "Append a wildcard to an autocomplete search query when Full-Text search is enabled. Reduces search performance."
+        "quickSearchFullTextAppendWildcard": "Append a wildcard to an autocomplete search query when Full-Text search is enabled. Reduces search performance.",
+        "baselineRole": "The default role applied to all users. Any additional roles assigned to a user grant permissions on top of this baseline.\n\n**Important**. Changing this role affects all users – review the change carefully to avoid granting unintended permissions."
     },
     "labels": {
         "Group Tab": "Group Tab",
@@ -322,6 +324,7 @@
         "Recovery": "Recovery"
     },
     "messages": {
-        "ldapTestConnection": "The connection successfully established."
+        "ldapTestConnection": "The connection successfully established.",
+        "confirmBaselineRoleChange": "Are you sure you want to change the baseline role? An unconsidered change may grant unintended permissions to all users."
     }
 }

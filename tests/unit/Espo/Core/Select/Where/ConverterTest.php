@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ use Espo\ORM\Defs\EntityDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Metadata as ormMetadata;
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -54,66 +55,74 @@ use PHPUnit\Framework\TestCase;
 
 class ConverterTest extends TestCase
 {
+    private $entityType;
+    private $user;
+    private $scanner;
+    private $itemConverterFactory;
+    private $ormDefs;
+    private $queryBuilder;
+    private $converter;
+
     protected function setUp() : void
     {
         $this->entityType = 'Test';
 
         $this->user = $this->createMock(User::class);
 
-        $this->config = $this->createMock(Config::class);
-        $this->applicationConfig = $this->createMock(Config\ApplicationConfig::class);
-        $this->metadata = $this->createMock(Metadata::class);
+        $config = $this->createMock(Config::class);
+        $applicationConfig = $this->createMock(Config\ApplicationConfig::class);
+        $metadata = $this->createMock(Metadata::class);
 
         $this->scanner = $this->createMock(Scanner::class);
-        $this->randomStringGenerator = $this->createMock(RandomStringGenerator::class);
+        $randomStringGenerator = $this->createMock(RandomStringGenerator::class);
         $this->itemConverterFactory = $this->createMock(ItemConverterFactory::class);
 
-        $this->entityManager = $this->createMock(EntityManager::class);
-        $this->ormMetadata = $this->createMock(ormMetadata::class);
+        $entityManager = $this->createMock(EntityManager::class);
+        $ormMetadata = $this->createMock(ormMetadata::class);
 
-        $this->baseQueryBuilder = $this->createMock(BaseQueryBuilder::class);
+        $baseQueryBuilder = $this->createMock(BaseQueryBuilder::class);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->any())
             ->method('getMetadata')
-            ->willReturn($this->ormMetadata);
+            ->willReturn($ormMetadata);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->any())
             ->method('getQueryBuilder')
-            ->willReturn($this->baseQueryBuilder);
+            ->willReturn($baseQueryBuilder);
 
         $this->ormDefs = $this->createMock(ORMDefs::class);
 
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
 
-        $this->randomStringGenerator
+        $randomStringGenerator
             ->expects($this->any())
             ->method('generate')
             ->willReturn('Random');
 
-        $this->applicationConfig
+        $applicationConfig
             ->expects($this->any())
             ->method('getTimeZone')
             ->willReturn('UTC');
 
-        $this->dateTimeItemTransformer = new DefaultDateTimeItemTransformer($this->config, $this->applicationConfig);
+        $dateTimeItemTransformer = new DefaultDateTimeItemTransformer($config, $applicationConfig);
 
-        $this->itemConverter = new ItemGeneralConverter(
+        $itemConverter = new ItemGeneralConverter(
             $this->entityType,
             $this->user,
-            $this->dateTimeItemTransformer,
+            $dateTimeItemTransformer,
             $this->scanner,
             $this->itemConverterFactory,
-            $this->randomStringGenerator,
+            $randomStringGenerator,
             $this->ormDefs,
-            $this->config,
-            $this->metadata,
-            $this->applicationConfig,
+            $config,
+            $metadata,
+            $applicationConfig,
         );
 
         $this->converter = new Converter(
-            $this->itemConverter,
+            $itemConverter,
             $this->scanner
         );
     }
@@ -277,12 +286,20 @@ class ConverterTest extends TestCase
             ],
         ]);
 
+        $c = $this->exactly(2);
+
         $this->scanner
+            ->expects($c)
             ->method('apply')
-            ->withConsecutive(
-                [$this->isInstanceOf(QueryBuilder::class), $sqItem],
-                [$this->queryBuilder, $item]
-            );
+            ->willReturnCallback(function ($qb, $it) use ($c, $sqItem, $item) {
+                if ($c->numberOfInvocations() === 1) {
+                    $this->assertEquals($sqItem, $it);
+                }
+
+                if ($c->numberOfInvocations() === 2) {
+                    $this->assertEquals($item, $it);
+                }
+            });
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
 
@@ -346,20 +363,12 @@ class ConverterTest extends TestCase
             ->expects($this->never())
             ->method('distinct');
 
-        $this->queryBuilder
-            ->method('leftJoin')
-            ->withConsecutive(
-                [
-                    $link,
-                    $alias,
-                ]
-            );
 
         $expected = [
             'id=s' => Select::fromRaw([
                 'select' => ['id'],
                 'from' => 'Test',
-                'leftJoins' => [
+                'joins' => [
                     [
                         'test',
                         $alias,
@@ -367,6 +376,7 @@ class ConverterTest extends TestCase
                         [
                             'noLeftAlias' => true,
                             'onlyMiddle' => true,
+                            'type' => JoinType::left,
                         ],
                     ],
                 ],

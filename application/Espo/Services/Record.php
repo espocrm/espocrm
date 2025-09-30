@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Entity;
 use Espo\Core\Record\Service as RecordService;
 use Espo\Core\Utils\Util;
@@ -41,21 +42,24 @@ use Espo\Core\Utils\Util;
  */
 class Record extends RecordService
 {
-    public function __construct(string $entityType = '')
+    /**
+     * @internal
+     */
+    protected function initEntityType(): void
     {
-        parent::__construct($entityType);
-
-        if (!$this->entityType) {
-            // Detecting the entity type by the class-name.
-            $name = get_class($this);
-
-            $matches = null;
-
-            if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
-                $name = $matches[1];
-            }
-
-            $this->entityType = Util::normalizeScopeName($name);
+        if ($this->entityType) {
+            return;
         }
+
+        // Detecting the entity type by the class-name.
+        $name = get_class($this);
+
+        $matches = null;
+
+        if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
+            $name = $matches[1];
+        }
+
+        $this->entityType = Util::normalizeScopeName($name);
     }
 }

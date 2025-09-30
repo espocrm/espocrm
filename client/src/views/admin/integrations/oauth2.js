@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,10 @@
 
 import IntegrationsEditView from 'views/admin/integrations/edit';
 
-// noinspection JSUnusedGlobalSymbols
+/**
+ * @deprecated As of v9.2.
+ * @todo Remove in v9.3.
+ */
 export default class IntegrationsOauth2EditView extends IntegrationsEditView {
 
     template = 'admin/integrations/oauth2'

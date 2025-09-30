@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "Ziņa",
+    "code": "Kods",
+    "level": "Līmenis",
+    "exceptionClass": "Izņēmuma klase",
+    "file": "Faili",
+    "line": "Līnija",
+    "requestMethod": "Pieprasījuma metode",
+    "requestResourcePath": "Pieprasījuma resursu ceļš"
+  },
+  "presetFilters": {
+    "errors": "Kļūdas"
+  }
+}

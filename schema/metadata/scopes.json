@@ -249,6 +249,10 @@
             "description": "Whether the entity can be displayed on the Calendar.",
             "type": "boolean"
         },
+        "calendarOneDay": {
+            "description": "Display as one-day events in the calendar.",
+            "type": "boolean"
+        },
         "activity": {
             "description": "Whether the entity can be displayed on the Activities panel.",
             "type": "boolean"
@@ -314,6 +318,10 @@
             "items": {
                 "type": "string"
             }
+        },
+        "lastViewed": {
+            "type": "boolean",
+            "description": "Force to be available in Last Viewed."
         },
         "entityManager": {
             "description": "Entity manager items availability.",

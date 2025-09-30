@@ -14,6 +14,20 @@
                 ]
             },
             "description": "List of classes that loads additional data for PDF. Classes should implement the interface Espo\\Tools\\Pdf\\DataLoader. Use __APPEND__ for extending."
+        },
+        "pdfA": {
+            "type": "boolean",
+            "description": "Use PDF/A. Since v9.2."
+        },
+        "attachmentProviderClassNameList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            },
+            "description": "Attachment providers. Should implement `Espo\\Tools\\Pdf\\AttachmentProvider`. Since v9.2."
         }
     }
 }

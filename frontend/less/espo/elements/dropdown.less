@@ -311,3 +311,33 @@ ul.dropdown-menu {
         display: none;
     }
 }
+
+.textcomplete-dropdown {
+    .textcomplete-item {
+        > span {
+            display: block;
+            cursor: pointer;
+            padding: var(--4px) var(--20px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            img.avatar {
+                margin-right: var(--5px);
+            }
+        }
+
+        &:hover {
+            > span {
+                background-color: var(--dropdown-link-hover-bg);
+            }
+        }
+    }
+
+    &:not(:has(> li:hover)) {
+        .textcomplete-item {
+            &.active {
+                background-color: var(--gray-lighter);
+            }
+        }
+    }
+}

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ namespace Espo\Tools\App;
 
 use Espo\Core\Mail\ConfigDataProvider as EmailConfigDataProvider;
 use Espo\Core\Utils\ThemeManager;
+use Espo\Entities\Email;
 use Espo\Entities\Settings;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -72,6 +73,7 @@ class SettingsService
         private ThemeManager $themeManager,
         private Config\SystemConfig $systemConfig,
         private EmailConfigDataProvider $emailConfigDataProvider,
+        private Acl\Cache\Clearer $aclCacheClearer,
     ) {}
 
     /**
@@ -237,6 +239,10 @@ class SettingsService
             $this->dataManager->clearCache();
         }
 
+        if (property_exists($data, 'baselineRoleId')) {
+            $this->aclCacheClearer->clearForAllInternalUsers();
+        }
+
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
             $this->populateDatabaseWithCurrencyRates();
         }
@@ -368,8 +374,8 @@ class SettingsService
         }
 
         if (
-            !$this->acl->checkScope('Email', 'create') ||
-            !$this->config->get('outboundEmailIsShared')
+            !$this->acl->checkScope(Email::ENTITY_TYPE, Acl\Table::ACTION_CREATE) ||
+            !$this->emailConfigDataProvider->isSystemOutboundAddressShared()
         ) {
             unset($data->outboundEmailFromAddress);
             unset($data->outboundEmailFromName);

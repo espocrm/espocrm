@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -82,12 +82,14 @@ class LayoutDetailView extends LayoutGridView {
                 'danger',
                 'warning',
                 'info',
+                'primary',
             ],
             style: {
                 'info': 'info',
                 'success': 'success',
                 'danger': 'danger',
                 'warning': 'warning',
+                'primary': 'primary',
             },
             default: 'default',
             translation: 'LayoutManager.options.style',
@@ -124,12 +126,14 @@ class LayoutDetailView extends LayoutGridView {
                 'success',
                 'danger',
                 'warning',
+                'primary',
             ],
             style: {
                 'info': 'info',
                 'success': 'success',
                 'danger': 'danger',
                 'warning': 'warning',
+                'primary': 'primary',
             },
             default: 'info',
             translation: 'LayoutManager.options.style',
@@ -378,44 +382,42 @@ class LayoutDetailView extends LayoutGridView {
 
         const fieldList = [];
 
-        layout.forEach(panel => {
-            panel.rows.forEach(row => {
-                row.forEach(cell => {
-                    if (cell !== false && cell !== null) {
-                        if (cell.name) {
-                            fieldList.push(cell.name);
-                        }
+        for (const panel of layout) {
+            for (const row of panel.rows) {
+                for (const cell of row) {
+                    if (cell !== false && cell !== null && cell.name) {
+                        fieldList.push(cell.name);
                     }
-                });
-            });
-        });
+                }
+            }
+        }
 
         let incompatibleFieldList = [];
 
         let isIncompatible = false;
 
-        fieldList.forEach(field => {
-            if (isIncompatible) {
-                return;
-            }
-
+        for (const field of fieldList) {
             const defs = /** @type {Record} */
-                this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
+                this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) ?? {};
 
-            const targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
+            const targetFieldList = defs.detailLayoutIncompatibleFieldList ?? [];
 
             targetFieldList.forEach(itemField => {
                 if (isIncompatible) {
                     return;
                 }
 
-                if (~fieldList.indexOf(itemField)) {
+                if (fieldList.includes(itemField)) {
                     isIncompatible = true;
 
                     incompatibleFieldList = [field].concat(targetFieldList);
                 }
             });
-        });
+
+            if (isIncompatible) {
+                break;
+            }
+        }
 
         if (isIncompatible) {
             Espo.Ui.error(

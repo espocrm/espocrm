@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Tools\Stream\Service as StreamService;
@@ -97,6 +98,12 @@ class HookProcessor
         $notificator = $this->getNotificator($entityType);
 
         $params = AssignmentNotificatorParams::create()->withRawOptions($options);
+
+        $saveContext = SaveContext::obtainFromRawOptions($options);
+
+        if ($saveContext) {
+            $params = $params->withActionId($saveContext->getActionId());
+        }
 
         $notificator->process($entity, $params);
     }

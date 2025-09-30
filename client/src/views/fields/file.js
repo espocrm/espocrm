@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -467,22 +467,33 @@ class FileFieldView extends LinkFieldView {
                 .addClass(containerClassName)
                 .append(
                     $('<div>')
-                        .addClass('attachment-block')
+                        .addClass('attachment-block attachment-block-preview')
                         .append($item)
                 )
                 .get(0).outerHTML;
         }
 
-        return $('<span>')
-            .append(
-                $('<span>').addClass('fas fa-paperclip text-soft small'),
-                ' ',
-                $('<a>')
-                    .attr('href', this.getDownloadUrl(id))
-                    .attr('target', '_BLANK')
-                    .text(name)
-            )
-            .get(0).innerHTML;
+        const container = document.createElement('div');
+        container.classList.add('attachment-block');
+
+        container.append(
+            (() => {
+                const span = document.createElement('span');
+                span.classList.add('fas', 'fa-paperclip', 'text-soft', 'small');
+
+                return span;
+            })(),
+            (() => {
+                const a = document.createElement('a');
+                a.target = '_blank';
+                a.textContent = name;
+                a.href = this.getDownloadUrl(id);
+
+                return a;
+            })(),
+        );
+
+        return container.outerHTML;
     }
 
     getImageUrl(id, size) {

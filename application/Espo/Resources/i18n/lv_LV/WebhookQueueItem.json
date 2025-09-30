@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "event": "Pasākums",
+    "target": "Mērķis",
+    "data": "Dati",
+    "status": "Statuss",
+    "processedAt": "Apstrādāts vietnē",
+    "attempts": "Mēģinājumi",
+    "processAt": "Process pie"
+  },
+  "options": {
+    "status": {
+      "Pending": "Gaida",
+      "Success": "Panākumi",
+      "Failed": "Neveiksmīgs"
+    }
+  }
+}

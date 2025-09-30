@@ -1,31 +1,35 @@
 [
     {
-        "label":"",
         "rows":[
             [
                 {
-                    "name":"name"
+                    "name": "name"
                 },
                 {
-                    "name":"oneOff"
+                    "name": "status"
                 }
             ],
             [
                 {
                     "name": "category"
                 },
-                false
-            ],
-            [{"name":"subject","fullWidth":true}],
-            [
                 {
-                    "name":"insertField",
-                    "view": "views/email-template/fields/insert-field",
-                    "fullWidth":true
+                    "name": "oneOff"
                 }
             ],
-            [{"name":"body","fullWidth":true}],
-            [{"name":"attachments"},{"name":"isHtml"}]
+            [
+                {
+                    "name": "subject"
+                }
+            ],
+            [
+                {
+                    "name": "insertField",
+                    "view": "views/email-template/fields/insert-field"
+                }
+            ],
+            [{"name": "body"}],
+            [{"name": "attachments"}, {"name":"isHtml"}]
         ]
     }
 ]

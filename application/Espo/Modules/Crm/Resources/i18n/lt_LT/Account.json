@@ -103,5 +103,9 @@
     "customers": "Klientai",
     "partners": "Partneriai",
     "recentlyCreated": "Neseniai sukurta"
+  },
+  "tabs": {
+    "Account": "Sąskaita",
+    "Support": "Parama"
   }
 }

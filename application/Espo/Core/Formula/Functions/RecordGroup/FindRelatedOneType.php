@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,25 +29,33 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
-
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\Core\Di;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\RelationType;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindRelatedOneType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware,
-    Di\MetadataAware
+    Di\MetadataAware,
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
     use Di\MetadataSetter;
+    use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     public function process(ArgumentList $args)
     {
@@ -98,7 +106,13 @@ class FindRelatedOneType extends BaseFunction implements
 
         $relationType = $entity->getRelationParam($link, 'type');
 
-        if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
+        if (
+            in_array($relationType, [
+                RelationType::BELONGS_TO,
+                RelationType::HAS_ONE,
+                RelationType::BELONGS_TO_PARENT,
+            ])
+        ) {
             $relatedEntity = $entityManager
                 ->getRDBRepository($entityType)
                 ->getRelation($entity, $link)
@@ -119,7 +133,7 @@ class FindRelatedOneType extends BaseFunction implements
                 $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'ASC';
             }
         } else {
-            $order = $order ?? 'ASC';
+            $order = $order ?? Order::ASC;
         }
 
         $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
@@ -134,8 +148,9 @@ class FindRelatedOneType extends BaseFunction implements
             $this->throwError("Not supported link '$link'.");
         }
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($foreignEntityType);
 
         $whereClause = [];
@@ -143,17 +158,11 @@ class FindRelatedOneType extends BaseFunction implements
         if (count($args) <= 6) {
             $filter = null;
 
-            if (count($args) == 6) {
+            if (count($args) === 6) {
                 $filter = $this->evaluate($args[5]);
             }
 
-            if ($filter && !is_string($filter)) {
-                $this->throwError("Bad filter.");
-            }
-
-            if ($filter) {
-                $builder->withPrimaryFilter($filter);
-            }
+            (new FindQueryUtil())->applyFilter($builder, $filter, 6);
         } else {
             $i = 5;
 
@@ -167,13 +176,17 @@ class FindRelatedOneType extends BaseFunction implements
             }
         }
 
-        $queryBuilder = $builder->buildQueryBuilder();
+        try {
+            $queryBuilder = $builder->buildQueryBuilder();
+        } catch (BadRequest|Forbidden $e) {
+            throw new Error($e->getMessage(), 0, $e);
+        }
 
         if (!empty($whereClause)) {
             $queryBuilder->where($whereClause);
         }
 
-        if ($relationType === 'hasChildren') {
+        if ($relationType === RelationType::HAS_CHILDREN) {
             $queryBuilder->where([
                 $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,21 +29,26 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Select\Select\Applier as SelectApplier,
-    Select\SearchParams,
-    Select\Select\MetadataProvider,
-    Utils\FieldUtil,
-};
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Select\Applier as SelectApplier;
+use Espo\Core\Select\Select\MetadataProvider;
+use Espo\Core\Utils\FieldUtil;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Entity,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class SelectApplierTest extends \PHPUnit\Framework\TestCase
+class SelectApplierTest extends TestCase
 {
+    private $metadataProvider;
+    private $queryBuilder;
+    private $applier;
+    private $entityType;
+    private $fieldUtil;
+    private $searchParams;
+    private $user;
+
     protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);
@@ -139,8 +144,7 @@ class SelectApplierTest extends \PHPUnit\Framework\TestCase
         $this->metadataProvider
             ->expects($this->any())
             ->method('hasAttribute')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
                     [
                         [$this->entityType, 'id', true],
                         [$this->entityType, 'testSelect', true],
@@ -151,7 +155,6 @@ class SelectApplierTest extends \PHPUnit\Framework\TestCase
                         [$this->entityType, 'testDependency', true],
                         [$this->entityType, 'testText', true],
                     ]
-                )
             );
 
         $this->metadataProvider
@@ -162,18 +165,16 @@ class SelectApplierTest extends \PHPUnit\Framework\TestCase
         $this->metadataProvider
             ->expects($this->any())
             ->method('getAttributeType')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [$this->entityType, 'id', Entity::ID],
-                        [$this->entityType, 'testSelect', Entity::VARCHAR],
-                        [$this->entityType, 'testOrder', Entity::VARCHAR],
-                        [$this->entityType, 'testAcl', Entity::VARCHAR],
-                        [$this->entityType, 'testAclPortal', Entity::VARCHAR],
-                        [$this->entityType, 'testDependency', Entity::VARCHAR],
-                        [$this->entityType, 'testText', Entity::TEXT],
-                    ]
-                )
+            ->willReturnMap(
+                [
+                    [$this->entityType, 'id', Entity::ID],
+                    [$this->entityType, 'testSelect', Entity::VARCHAR],
+                    [$this->entityType, 'testOrder', Entity::VARCHAR],
+                    [$this->entityType, 'testAcl', Entity::VARCHAR],
+                    [$this->entityType, 'testAclPortal', Entity::VARCHAR],
+                    [$this->entityType, 'testDependency', Entity::VARCHAR],
+                    [$this->entityType, 'testText', Entity::TEXT],
+                ]
             );
 
         $expected = [

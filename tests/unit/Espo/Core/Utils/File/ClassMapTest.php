@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,29 +40,27 @@ use Espo\Core\Utils\Module\PathProvider;
 
 class ClassMapTest extends TestCase
 {
-    /**
-     * @var ClassMap
-     */
-    protected $classMap;
+    /** @var ClassMap */
+    private $classMap;
+    private $dataCache;
 
     protected $reflection;
+
+    private $systemConfig;
 
     private $customPath = 'tests/unit/testData/EntryPoints/Espo/Custom/';
     private $corePath = 'tests/unit/testData/EntryPoints/Espo/';
     private $modulePath = 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/';
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var Module */
     private $module;
 
     protected function setUp(): void
     {
-        $this->fileManager = new FileManager();
+        $fileManager = new FileManager();
 
         $this->systemConfig = $this->createMock(Config\SystemConfig::class);
         $this->module = $this->createMock(Module::class);
-
         $this->dataCache = $this->createMock(DataCache::class);
 
         $pathProvider = $this->createMock(PathProvider::class);
@@ -92,7 +90,7 @@ class ClassMapTest extends TestCase
             ->willReturn(['Crm']);
 
         $this->classMap = new ClassMap(
-            $this->fileManager,
+            $fileManager,
             $this->module,
             $this->dataCache,
             $pathProvider,
@@ -106,7 +104,7 @@ class ClassMapTest extends TestCase
     {
         $expected = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'TestEntry' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\TestEntry',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
         ];
 
@@ -124,20 +122,20 @@ class ClassMapTest extends TestCase
         $this->systemConfig
             ->expects($this->exactly(2))
             ->method('useCache')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->module
             ->expects($this->once())
             ->method('getOrderedList')
-            ->will($this->returnValue(
+            ->willReturn(
                 ['Crm']
-            ));
+            );
 
         $cacheKey = 'entryPoints';
 
         $result = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'TestEntry' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\TestEntry',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
        ];
 
@@ -156,7 +154,7 @@ class ClassMapTest extends TestCase
         $this->systemConfig
             ->expects($this->once())
             ->method('useCache')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $cacheKey = 'entryPoints';
 
@@ -184,20 +182,20 @@ class ClassMapTest extends TestCase
         $this->systemConfig
             ->expects($this->exactly(2))
             ->method('useCache')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->module
             ->expects($this->once())
             ->method('getOrderedList')
-            ->will($this->returnValue(
+            ->willReturn(
                 ['Crm']
-            ));
+            );
 
         $cacheKey = 'entryPoints';
 
         $result = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'TestEntry' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\TestEntry',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
         ];
 

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Notification;
 
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
@@ -65,7 +66,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
         ) {
             $userIds = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
             /** @var string[] $fetchedIds */
-            $fetchedIds = $entity->getFetched(self:: FIELD_ASSIGNED_USERS . 'Ids') ?? [];
+            $fetchedIds = $entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Ids') ?? [];
 
             foreach ($userIds as $userId) {
                 if (in_array($userId, $fetchedIds)) {
@@ -113,19 +114,21 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
             return;
         }
 
-        $this->entityManager->createEntity(Notification::ENTITY_TYPE, [
-            'type' => Notification::TYPE_ASSIGN,
-            'userId' => $assignedUserId,
-            'data' => [
+        $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+        $notification
+            ->setType(Notification::TYPE_ASSIGN)
+            ->setUserId($assignedUserId)
+            ->setData([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),
                 'entityName' => $entity->get(Field::NAME),
                 'isNew' => $entity->isNew(),
                 'userId' => $this->user->getId(),
                 'userName' => $this->user->getName(),
-            ],
-            'relatedType' => $entity->getEntityType(),
-            'relatedId' => $entity->getId(),
-        ]);
+            ])
+            ->setRelated(LinkParent::createFromEntity($entity));
+
+        $this->entityManager->saveEntity($notification);
     }
 }

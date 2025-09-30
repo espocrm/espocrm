@@ -350,7 +350,6 @@
             "additionalAttributeList": ["columns"],
             "layoutDetailDisabled": true,
             "view": "views/user/fields/teams",
-            "default": "javascript: return {teamsIds: []}",
             "audited": true
         },
         "roles": {

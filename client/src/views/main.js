@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,8 @@
 /** @module views/main */
 
 import View from 'view';
+import {inject} from 'di';
+import ShortcutManager from 'helpers/site/shortcut-manager';
 
 /**
  * A base main view. The detail, edit, list views to be extended from.
@@ -109,6 +111,13 @@ class MainView extends View {
      * @type {?Object.<string, string|function (KeyboardEvent): void>}
      */
     shortcutKeys = null
+
+    /**
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
 
     /** @inheritDoc */
     events = {
@@ -236,37 +245,23 @@ class MainView extends View {
         }
     }
 
-    setupFinal() {
-        if (this.shortcutKeys) {
-            this.events['keydown.main'] = e => {
-                const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                if (typeof this.shortcutKeys[key] === 'function') {
-                    this.shortcutKeys[key].call(this, e.originalEvent);
-
-                    return;
-                }
-
-                const actionName = this.shortcutKeys[key];
-
-                if (!actionName) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
-
-                if (typeof this[methodName] === 'function') {
-                    this[methodName]();
-
-                    return;
-                }
-
-                this[actionName]();
-            };
+    /**
+     * @private
+     */
+    initShortcuts() {
+        if (!this.shortcutKeys) {
+            return;
         }
+
+        this.shortcutManager.add(this, this.shortcutKeys);
+
+        this.once('remove', () => {
+            this.shortcutManager.remove(this);
+        });
+    }
+
+    setupFinal() {
+        this.initShortcuts();
     }
 
     /**
@@ -804,7 +799,9 @@ class MainView extends View {
      * @public
      * @param {Object.<string, *>} params Routing params.
      */
-    setupReuse(params) {}
+    setupReuse(params) {
+        this.initShortcuts();
+    }
 }
 
 export default MainView;

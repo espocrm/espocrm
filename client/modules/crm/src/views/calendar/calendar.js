@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,8 +51,31 @@ class CalendarView extends View {
 
     eventAttributes = []
     colors = {}
-    allDayScopeList = ['Task']
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    allDayScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
     scopeList = ['Meeting', 'Call', 'Task']
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    onlyDateScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    enabledScopeList
+
     header = true
     modeList = []
     fullCalendarModeList = [
@@ -144,6 +167,32 @@ class CalendarView extends View {
         },
     }
 
+
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     *     scrollToNowSlots?: boolean,
+     *     $container?: JQuery,
+     *     suppressLoadingAlert?: boolean,
+     *     slotDuration?: number,
+     *     scrollHour?: number,
+     *     teamIdList?: string[],
+     *     containerSelector?: string,
+     *     height?: number,
+     *     enabledScopeList?: string[],
+     *     header?: boolean,
+     *     onSave?: function(),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     data() {
         return {
             mode: this.mode,
@@ -178,11 +227,19 @@ class CalendarView extends View {
         this.modeList = this.getMetadata()
             .get('clientDefs.Calendar.modeList') || this.modeList;
 
-        this.scopeList = this.getConfig()
-            .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+        this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
 
-        this.allDayScopeList = this.getMetadata()
-            .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
+        this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') ?? [];
+
+        this.scopeList.forEach(scope => {
+            if (this.getMetadata().get(`scopes.${scope}.calendarOneDay`) && !this.allDayScopeList.includes(scope)) {
+                this.allDayScopeList.push(scope);
+            }
+        });
+
+        this.onlyDateScopeList = this.scopeList.filter(scope => {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.dateStart.type`) === 'date';
+        });
 
         this.slotDuration = this.options.slotDuration ||
             this.getPreferences().get('calendarSlotDuration') ||
@@ -527,13 +584,13 @@ class CalendarView extends View {
         let start;
         let end;
 
-        if (o.dateStart) {
+        if (o.dateStart || o.dateStartDate) {
             start = !o.dateStartDate ?
                 this.getDateTime().toMoment(o.dateStart) :
                 this.dateToMoment(o.dateStartDate);
         }
 
-        if (o.dateEnd) {
+        if (o.dateEnd || o.dateEndDate) {
             end = !o.dateEndDate ?
                 this.getDateTime().toMoment(o.dateEnd) :
                 this.dateToMoment(o.dateEndDate);
@@ -711,7 +768,7 @@ class CalendarView extends View {
             event.allDay = true;
             event.allDayCopy = event.allDay;
 
-            if (!afterDrop) {
+            if (!afterDrop && end) {
                 end.add(1, 'days')
             }
 
@@ -905,7 +962,9 @@ class CalendarView extends View {
             eventClick: async info => {
                 const event = info.event;
 
+                /** @type {string} */
                 const scope = event.extendedProps.scope;
+                /** @type {string} */
                 const recordId = event.extendedProps.recordId;
 
                 const helper = new RecordModal();
@@ -917,6 +976,16 @@ class CalendarView extends View {
                     entityType: scope,
                     id: recordId,
                     removeDisabled: false,
+                    beforeSave: () => {
+                        if (this.options.onSave) {
+                            this.options.onSave();
+                        }
+                    },
+                    beforeDestroy: () => {
+                        if (this.options.onSave) {
+                            this.options.onSave();
+                        }
+                    },
                     afterSave: (model, o) => {
                         if (!o.bypassClose) {
                             modalView.close();
@@ -945,11 +1014,17 @@ class CalendarView extends View {
 
                 this.fetchEvents(fromStr, toStr, callback);
             },
-            eventDrop: info => {
+            eventDrop: async info => {
                 const event = /** @type {EventImpl} */info.event;
                 const delta = info.delta;
 
                 const scope = event.extendedProps.scope;
+
+                if (this.onlyDateScopeList.includes(scope)) {
+                    info.revert();
+
+                    return;
+                }
 
                 if (!event.allDay && event.extendedProps.allDayCopy) {
                     info.revert();
@@ -1024,21 +1099,26 @@ class CalendarView extends View {
 
                 Espo.Ui.notify(this.translate('saving', 'messages'));
 
-                this.getModelFactory().create(scope, model => {
-                    model.id = props.recordId;
+                const model = await this.getModelFactory().create(scope);
+                model.id = props.recordId;
 
-                    model.save(attributes, {patch: true})
-                        .then(() => {
-                            Espo.Ui.notify(false);
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
 
-                            this.applyPropsToEvent(event, props);
-                        })
-                        .catch(() => {
-                            info.revert();
-                        });
-                });
+                try {
+                    await model.save(attributes, {patch: true});
+                } catch (e) {
+                    info.revert();
+
+                    return;
+                }
+
+                Espo.Ui.notify();
+
+                this.applyPropsToEvent(event, props);
             },
-            eventResize: info => {
+            eventResize: async info => {
                 const event = info.event;
 
                 const attributes = {
@@ -1049,20 +1129,25 @@ class CalendarView extends View {
 
                 Espo.Ui.notify(this.translate('saving', 'messages'));
 
-                this.getModelFactory().create(event.extendedProps.scope, model => {
-                    model.id = event.extendedProps.recordId;
+                const model = await this.getModelFactory().create(event.extendedProps.scope);
+                model.id = event.extendedProps.recordId;
 
-                    model.save(attributes, {patch: true})
-                        .then(() => {
-                            Espo.Ui.notify(false);
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
 
-                            event.setExtendedProp('dateEnd', attributes.dateEnd);
-                            event.setExtendedProp('duration', duration);
-                        })
-                        .catch(() => {
-                            info.revert();
-                        });
-                });
+                try {
+                    await model.save(attributes, {patch: true})
+                } catch (e) {
+                    info.revert();
+
+                    return;
+                }
+
+                Espo.Ui.notify();
+
+                event.setExtendedProp('dateEnd', attributes.dateEnd);
+                event.setExtendedProp('duration', duration);
             },
             eventAllow: (info, event) => {
                 if (event.allDay && !info.allDay) {
@@ -1181,7 +1266,7 @@ class CalendarView extends View {
      *   [dateEndDate]: ?string,
      * }} [values]
      */
-    createEvent(values) {
+    async createEvent(values) {
         values = values || {};
 
         if (
@@ -1201,35 +1286,43 @@ class CalendarView extends View {
             attributes.assignedUserName = this.options.userName || this.options.userId;
         }
 
+        const scopeList = this.enabledScopeList.filter(it => !this.onlyDateScopeList.includes(it));
+
         Espo.Ui.notifyWait();
 
-        this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+        const view = await this.createView('dialog', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
-            enabledScopeList: this.enabledScopeList,
+            enabledScopeList: scopeList,
             scopeList: this.scopeList,
             allDay: values.allDay,
             dateStartDate: values.dateStartDate,
             dateEndDate: values.dateEndDate,
             dateStart: values.dateStart,
             dateEnd: values.dateEnd,
-        }, view => {
-            view.render();
-
-            Espo.Ui.notify(false);
-
-            let added = false;
-
-            this.listenTo(view, 'after:save', model => {
-                if (!added) {
-                    this.addModel(model);
-                    added = true;
-
-                    return;
-                }
-
-                this.updateModel(model);
-            });
         });
+
+        let added = false;
+
+        this.listenTo(view, 'before:save', () => {
+            if (this.options.onSave) {
+                this.options.onSave();
+            }
+        });
+
+        this.listenTo(view, 'after:save', model => {
+            if (!added) {
+                this.addModel(model);
+                added = true;
+
+                return;
+            }
+
+            this.updateModel(model);
+        });
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     /**

@@ -33,7 +33,6 @@
     "Install": "Instalēt",
     "Configuration Instructions": "Konfigurācijas norādījumi",
     "phpVersion": "PHP versija",
-    "requiredMysqlVersion": "MySQL versija",
     "dbHostName": "Resursdatora nosaukums",
     "dbName": "Datubāzes nosaukums",
     "dbUserName": "Datubāzes lietotājvārds",
@@ -48,7 +47,10 @@
     "extension is missing": "trūkst pagarinājuma",
     "headerTitle": "EspoCRM uzstādīšana",
     "Crontab setup instructions": "Ja netiks palaisti plānotie darbi, ienākošie e-pasti, paziņojumi un atgādinājumi nedarbosies. Šeit varat izlasīt {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "iestatīšanas instrukcijas"
+    "Setup instructions": "iestatīšanas instrukcijas",
+    "requiredMysqlVersion": "MySQL versija",
+    "requiredMariadbVersion": "MariaDB versija",
+    "requiredPostgresqlVersion": "PostgreSQL versija"
   },
   "fields": {
     "Choose your language": "Izvēlieties valodu",

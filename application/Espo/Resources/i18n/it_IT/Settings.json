@@ -151,7 +151,8 @@
     "emailScheduledBatchCount": "Numero massimo di email programmate inviate per ogni gruppo",
     "passwordStrengthSpecialCharacterCount": "Numero di caratteri speciali richiesti nella password",
     "availableReactions": "Reazioni disponibili",
-    "outboundEmailFromAddress": "Indirizzo e-mail di sistema"
+    "outboundEmailFromAddress": "Indirizzo e-mail di sistema",
+    "baselineRole": "Ruolo di base"
   },
   "tooltips": {
     "recordsPerPage": "Numero di record inizialmente mostrati in vista lista.",
@@ -237,7 +238,8 @@
     "emailAddressIsOptedOutByDefault": "Quando si crea un nuovo record, l'indirizzo e-mail viene contrassegnato come opt-out.",
     "oidcGroupClaim": "Un claim da utilizzare per il mapping dei team.",
     "quickSearchFullTextAppendWildcard": "Aggiunge una wildcard a una query di ricerca con completamento automatico quando è abilitata la ricerca a tutto testo. Riduce le prestazioni della ricerca.",
-    "outboundEmailFromAddress": "Le e-mail di sistema saranno inviate da questo indirizzo e-mail. È necessario impostare e configurare correttamente un [account e-mail di gruppo](#InboundEmail) con lo stesso indirizzo e-mail per inviare le e-mail."
+    "outboundEmailFromAddress": "Le e-mail di sistema saranno inviate da questo indirizzo e-mail. È necessario impostare e configurare correttamente un [account e-mail di gruppo](#InboundEmail) con lo stesso indirizzo e-mail per inviare le e-mail.",
+    "baselineRole": "Il ruolo predefinito applicato a tutti gli utenti. Qualsiasi ruolo aggiuntivo assegnato a un utente concede autorizzazioni oltre a quelle di base.\n\n**Importante**. La modifica di questo ruolo ha effetto su tutti gli utenti – esaminare attentamente la modifica per evitare di concedere autorizzazioni non desiderate."
   },
   "labels": {
     "System": "Sistema",
@@ -268,7 +270,8 @@
     "Scheduled Send": "Invio Programmato"
   },
   "messages": {
-    "ldapTestConnection": "La connessione è stata stabilita con successo"
+    "ldapTestConnection": "La connessione è stata stabilita con successo",
+    "confirmBaselineRoleChange": "Sei sicuro di voler modificare il ruolo di base? Una modifica non valutata attentamente potrebbe concedere autorizzazioni indesiderate a tutti gli utenti."
   },
   "options": {
     "currencyFormat": {

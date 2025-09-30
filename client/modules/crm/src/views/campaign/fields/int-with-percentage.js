@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,20 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/fields/int-with-percentage', ['views/fields/int'], function (Dep) {
+import IntFieldView from 'views/fields/int';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends IntFieldView {
 
-        getValueForDisplay: function () {
-            var percentageFieldName = this.name.substr(0, this.name.length - 5) + 'Percentage';
-            var value = this.model.get(this.name) ;
-            var percentageValue = this.model.get(percentageFieldName);
+    setup() {
+        this.percentageField = this.name.substr(0, this.name.length - 5) + 'Percentage';
 
-            if (percentageValue !== null && typeof percentageValue !== 'undefined' && percentageValue) {
-                value += ' ' + '(' + this.model.get(percentageFieldName) + '%)';
-            }
+        super.setup();
+    }
 
-            return value;
-        },
-    });
-});
+    getAttributeList() {
+        const list = super.getAttributeList();
+
+        if (this.model.hasField(this.percentageField)) {
+            list.push(this.percentageField);
+        }
+
+        return list;
+    }
+
+    getValueForDisplay() {
+        const percentageFieldName = this.percentageField;
+
+        let value = this.model.get(this.name);
+        const percentageValue = this.model.get(percentageFieldName);
+
+        if (
+            percentageValue != null &&
+            percentageValue
+        ) {
+            value += ' ' + '(' + this.model.get(percentageFieldName) + '%)';
+        }
+
+        return value;
+    }
+}

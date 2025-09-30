@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -100,8 +100,7 @@ class BeforeSaveValidate implements SaveHook
      */
     private function validateDataItem(string $scope, Role|PortalRole $entity, bool|stdClass $item): void
     {
-        $key = $entity instanceof PortalRole ?
-            'aclPortal' : 'acl';
+        $key = $entity instanceof PortalRole ? 'aclPortal' : 'acl';
 
         $type = $this->metadata->get("scopes.$scope.$key");
 
@@ -133,8 +132,7 @@ class BeforeSaveValidate implements SaveHook
             Table::ACTION_STREAM,
         ];
 
-        $levels = $entity instanceof PortalRole ?
-            $this->portalLevelList : $this->levelList;
+        $isPortal = $entity instanceof PortalRole;
 
         foreach ($actions as $action) {
             if (!property_exists($item, $action)) {
@@ -143,10 +141,36 @@ class BeforeSaveValidate implements SaveHook
 
             $level = $item->$action;
 
-            if (!in_array($level, $levels)) {
+            $this->checkActionLevel($scope, $action, $level, $isPortal);
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function checkActionLevel(string $scope, string $action, string $level, bool $isPortal): void
+    {
+        if ($action === Table::ACTION_CREATE) {
+            if (!in_array($level, [Table::LEVEL_YES, Table::LEVEL_NO])) {
                 throw new BadRequest("Level `$level` is not allowed for action *$action* for *$scope*.");
             }
+
+            return;
         }
+
+        $mapKey = $isPortal ? 'aclPortalActionLevelListMap' : 'aclActionLevelListMap';
+        $key = $isPortal ? 'aclPortalLevelList' : 'aclLevelList';
+        $defaultLevels = $isPortal ? $this->portalLevelList : $this->levelList;
+
+        $levels = $this->metadata->get("scopes.$scope.$mapKey.$action") ??
+            $this->metadata->get("scopes.$scope.$key") ??
+            $defaultLevels;
+
+        if (in_array($level, $levels)) {
+            return;
+        }
+
+        throw new BadRequest("Level `$level` is not allowed for action *$action* for *$scope*.");
     }
 
     /**

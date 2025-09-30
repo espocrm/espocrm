@@ -4,5 +4,8 @@
     "Connected": "Savienots",
     "Disconnect": "Atvienojiet",
     "Disconnected": "Atvienots"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Integrācijas '{integration}' ārējais konts ir atspējots, jo nav iespējams izveidot savienojumu."
   }
 }

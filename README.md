@@ -20,23 +20,23 @@ You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
 ### Requirements
 
 * PHP 8.2 - 8.4;
-* MySQL 5.7 (and later), or MariaDB 10.2 (and later);
+* MySQL 8.0 (and later), or MariaDB 10.3 (and later);
 * PostgreSQL 15 (and later).
 
 For more information about server configuration, see [this article](https://docs.espocrm.com/administration/server-configuration/).
 
 ### Why EspoCRM?
 
-* **Open-source transparency**. EspoCRM’s source code is open and accessible, so anyone can inspect it and see how data is being managed within the CRM.
-* **Customization freedom**. You can develop features, create custom entities, fields, relationships, buttons to make the CRM fit your specific needs.
-* **Clean user interface**. EspoCRM offers an uncluttered, minimalist, and fast user interface, which is easy to navigate and has a short learning curve.
-* **Straightforward REST API**. It can be easily integrated with other applications using a REST API.
+* Open-source transparency. EspoCRM's source code is open and accessible, so anyone can inspect it and see how data is being managed within the CRM.
+* Customization freedom. You can develop features, create custom entities, fields, relationships, buttons to make the system fit your specific needs. EspoCRM is more than a CRM – it's a platform for building custom business applications.
+* Clean user interface. EspoCRM offers an uncluttered, minimalist, and fast user interface, which is easy to navigate and has a short learning curve.
+* Straightforward REST API. It can be easily integrated with other applications using a REST API.
 
 ### Who is EspoCRM for?
 
-* **Startups, small & medium-sized businesses**. It’s an affordable solution that is flexible and fully customizable.
-* **Developers & tech enthusiasts**. You can extend functionalities, build extensions, and create custom integrations.
-* **Anyone seeking a free CRM**. If you're looking for a user-friendly and secure CRM platform, it can be a good option.
+* Startups, small & medium-sized businesses. It's an affordable solution that is flexible and fully customizable.
+* Developers & tech enthusiasts. You can extend functionalities, build extensions, and create custom integrations.
+* Anyone seeking a free CRM. If you're looking for a user-friendly and secure CRM platform, it can be a good option.
 
 ### Installing stable version
 

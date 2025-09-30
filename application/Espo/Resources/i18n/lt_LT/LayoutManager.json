@@ -1,20 +1,22 @@
 {
   "fields": {
-    "width": "Ilgis (%)",
     "link": "Nuoroda",
     "notSortable": "Nerūšiuojama",
     "align": "Lygiuoti",
     "panelName": "Panelės pavadinimas",
     "style": "Stilius",
-    "sticked": "Prikabinta",
     "isLarge": "Didelis šrifto dydis",
     "dynamicLogicVisible": "Sąlygos, dėl kurių skydas matomas",
     "hidden": "Paslėptas",
     "dynamicLogicStyled": "Taikomas sąlygų sudarymo stilius",
-    "widthPx": "Plotis (px)",
     "noLabel": "Be etiketės",
     "tabLabel": "Skirtuko etiketė",
-    "tabBreak": "Skirtukų pertraukiklis"
+    "tabBreak": "Skirtukų pertraukiklis",
+    "width": "Plotis",
+    "noteText": "Pastaba Tekstas",
+    "noteStyle": "Pastaba Stilius",
+    "isMuted": "Prislopinta spalva",
+    "sticked": "Lipkite į viršų"
   },
   "options": {
     "align": {
@@ -44,8 +46,8 @@
     "tabBreak": "Atskiras skirtukas skydeliui ir visiems tolesniems skydeliams iki kito skirtuko lūžio.",
     "noLabel": "Nerodykite stulpelio etiketės antraštėje.",
     "notSortable": "Išjungiama galimybė rūšiuoti pagal stulpelį.",
-    "width": "Stulpelio plotis procentais. Rekomenduojama turėti vieną stulpelį, kurio plotis nenustatytas, paprastai tai būna *Vardas* laukas.",
-    "widthPx": "Stulpelio plotis pikseliais. Veikia tik tuo atveju, jei nenustatyta (%) reikšmė. Nustato fiksuotą stulpelio plotį."
+    "width": "Stulpelio plotis. Rekomenduojama turėti vieną stulpelį, kurio plotis nenurodytas, paprastai tai turėtų būti *Vardas* laukas.",
+    "noteText": "Tekstas, kuris bus rodomas skydelyje. Palaikomas Markdown."
   },
   "messages": {
     "cantBeEmpty": "Maketas negali būti tuščias.",

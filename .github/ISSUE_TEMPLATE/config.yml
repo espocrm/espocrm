@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: EspoCRM forum
+  - name: Upgrade issue
+    url: https://forum.espocrm.com/forum/installation-and-upgrade-help
+    about: "If something went wrong with an upgrade."
+  - name: Feature request
+    url: https://forum.espocrm.com/forum/feature-requests
+    about: "Use our forum for feature requests."
+  - name: Forum
     url: https://forum.espocrm.com/
-    about: "Use our forum for help requests and questions not related to product development. We don't provide support on GitHub."
+    about: "Use our forum for help requests and questions. We don't provide support on GitHub."

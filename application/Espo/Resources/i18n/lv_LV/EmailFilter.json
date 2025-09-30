@@ -9,7 +9,8 @@
     "emailFolder": "Mape",
     "groupEmailFolder": "Grupas e-pasta mape",
     "markAsRead": "Atzīmēt kā izlasītu",
-    "bodyContainsAll": "Ķermenis satur visu"
+    "bodyContainsAll": "Ķermenis satur visu",
+    "skipNotification": "Izlaist paziņojumu"
   },
   "labels": {
     "Create EmailFilter": "Izveidot e-pasta filtru",

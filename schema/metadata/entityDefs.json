@@ -635,6 +635,10 @@
                             "max": {
                                 "type": "integer",
                                 "description": "A maximum value."
+                            },
+                            "disableFormatting": {
+                                "type": "boolean",
+                                "description": "Disable number formatting."
                             }
                         }
                     }
@@ -748,6 +752,30 @@
                             "entity": {
                                 "type": "string",
                                 "description": "An entity type. To be specified if there's no corresponding link defined."
+                            },
+                            "createButton": {
+                                "type": "boolean",
+                                "description": "To display the create button."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "linkMultiple"},
+                                    {"const": "linkOne"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "noLoad": {
+                                "type": "boolean",
+                                "description": "Do not load the field."
                             }
                         }
                     }
@@ -1021,6 +1049,10 @@
                     "type": "boolean",
                     "description": "Indicates that access to the field through a link is not feasible."
                 },
+                "filtersEnabled": {
+                    "type": "boolean",
+                    "description": "Indicates that the field can be used in filters regardless directAccessDisabled being true. To be used only with directAccessDisabled."
+                },
                 "importDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to import the field."
@@ -1078,7 +1110,14 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "Additional attributes for a field. Attribute name will be derived by concatenation with the field name."
+                    "description": "Additional attributes for a field. Attribute names will be derived by concatenating specified names with the field name."
+                },
+                "fullNameAdditionalAttributeList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Additional attributes for a field. As of v9.2."
                 },
                 "dependeeAttributeList": {
                     "type": "array",
@@ -1101,7 +1140,8 @@
                         },
                         "joins": {
                             "description": "JOINs",
-                            "type": "array"
+                            "type": "array",
+                            "$ref": "#/definitions/joins"
                         }
                     }
                 },
@@ -1462,6 +1502,20 @@
                                 "type": "object",
                                 "additionalProperties": true,
                                 "description": "Join conditions."
+                            },
+                            {
+                                "type": "object",
+                                "description": "Parameters.",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "description": "A join type",
+                                        "enum": [
+                                            "inner",
+                                            "left"
+                                        ]
+                                    }
+                                }
                             }
                         ]
                     }

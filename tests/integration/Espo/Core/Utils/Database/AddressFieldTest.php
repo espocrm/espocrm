@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,11 @@
 
 namespace tests\integration\Espo\Core\Utils\Database;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class AddressFieldTest extends Base
 {
-    public function fieldlist()
+    static public function fieldList()
     {
         return [
             ['testAddressStreet', 255],
@@ -42,9 +44,7 @@ class AddressFieldTest extends Base
         ];
     }
 
-    /**
-     * @dataProvider fieldlist
-     */
+    #[DataProvider('fieldList')]
     public function testColumn($fieldName, $length)
     {
         $column = $this->getColumnInfo('Test', $fieldName);

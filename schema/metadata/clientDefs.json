@@ -53,6 +53,10 @@
             "type": "boolean",
             "description": "Disables remove."
         },
+        "forceListViewSettings": {
+            "type": "boolean",
+            "description": "Force list view settings for non-object entity types. As of v9.2.0."
+        },
         "views": {
             "description": "View classes. Available views: list, detail, edit, listRelated.",
             "type": "object",
@@ -478,11 +482,11 @@
                     },
                     "selectHandler": {
                         "type": "string",
-                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise. \n\nPromise value:\n```{bool?: string[], primary?: string, orderBy?: string, order?: 'asc'|'desc', advanced: Record}```"
+                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise.  Optionally, extend from `handlers/select-related`. \n\nPromise value:\n```{bool?: string[], primary?: string, orderBy?: string, order?: 'asc'|'desc', advanced: Record}```"
                     },
                     "createHandler": {
                         "type": "string",
-                        "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise."
+                        "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise. Optionally, extend from `handlers/create-related`."
                     },
                     "selectFieldHandler": {
                         "type": "string",
@@ -523,34 +527,37 @@
                         "description": "Attributes to carry over to a related record when creating. Mapping Parent => Related."
                     },
                     "buttonList": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": "A name."
-                            },
-                            "acl": {
-                                "description": "An ACL action access to which is required for the action.",
-                                "type": "string",
-                                "enum": [
-                                    "create",
-                                    "read",
-                                    "edit",
-                                    "delete",
-                                    "stream"
-                                ]
-                            },
-                            "label": {
-                                "type": "string",
-                                "description": "A translatable label."
-                            },
-                            "handler": {
-                                "type": "string",
-                                "description": "A frontend handler. A view is passed to the constructor."
-                            },
-                            "actionFunction": {
-                                "type": "string",
-                                "description": "An action method in the handler."
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "A name."
+                                },
+                                "acl": {
+                                    "description": "An ACL action access to which is required for the action.",
+                                    "type": "string",
+                                    "enum": [
+                                        "create",
+                                        "read",
+                                        "edit",
+                                        "delete",
+                                        "stream"
+                                    ]
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "A translatable label."
+                                },
+                                "handler": {
+                                    "type": "string",
+                                    "description": "A frontend handler. A view is passed to the constructor."
+                                },
+                                "actionFunction": {
+                                    "type": "string",
+                                    "description": "An action method in the handler."
+                                }
                             }
                         },
                         "description": "Header buttons. As of v8.4."
@@ -590,6 +597,10 @@
                             }
                         },
                         "description": "Header dropdown actions. As of v8.4."
+                    },
+                    "allResultDisabled": {
+                        "type": "boolean",
+                        "description": "Disable the ability to select all results. Important for non-standard relationship panels. As of v9.2."
                     }
                 }
             }

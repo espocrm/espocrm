@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,61 +29,48 @@
 
 namespace tests\unit\Espo\Core\Job;
 
+use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Job\JobScheduler;
+use Espo\Core\Job\JobScheduler\Creator;
 use Espo\Core\Job\QueueName;
-use Espo\Core\Utils\DateTime;
 use Espo\Core\Job\Job\Data;
-
-use Espo\ORM\EntityManager;
-
-use Espo\Entities\Job as JobEntity;
-
+use PHPUnit\Framework\TestCase;
 use tests\unit\testClasses\Core\Job\TestJob;
-use tests\unit\testClasses\Core\Job\TestJobDataLess;
 
 use DateTimeImmutable;
 use DateInterval;
 
-class JobSchedulerTest extends \PHPUnit\Framework\TestCase
+class JobSchedulerTest extends TestCase
 {
-    private $entityManager;
+    private ?JobScheduler\Creator $creator = null;
 
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManager::class);
+        $this->creator = $this->createMock(JobScheduler\Creator::class);
     }
 
     public function testSchedule1(): void
     {
-        $scheduler = new JobScheduler($this->entityManager);
-
-        $jobEntity = $this->createMock(JobEntity::class);
+        $scheduler = new JobScheduler($this->creator);
 
         $time = new DateTimeImmutable();
 
         $delay = DateInterval::createFromDateString('1 minute');
 
-        $this->entityManager
-            ->expects($this->once())
-            ->method('createEntity')
-            ->with(
-                JobEntity::ENTITY_TYPE,
-                [
-                    'name' => TestJob::class,
-                    'className' => TestJob::class,
-                    'queue' => QueueName::Q0,
-                    'group' => null,
-                    'data' => (object) [
-                        'test' => '1',
-                    ],
-                    'executeTime' => $time->modify('+1 minute')->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                    'targetId' => null,
-                    'targetType' => null,
-                ]
-            )
-            ->willReturn($jobEntity);
+        $expectedData = new Creator\Data(
+            className: TestJob::class,
+            queue: QueueName::Q0,
+            group: null,
+            data: new Data((object) ['test' => '1']),
+            time: DateTimeField::fromDateTime($time)->addMinutes(1),
+        );
 
-        $jobEntityReturned = $scheduler
+        $this->creator
+            ->expects($this->once())
+            ->method('create')
+            ->with($expectedData);
+
+        $scheduler
             ->setClassName(TestJob::class)
             ->setQueue(QueueName::Q0)
             ->setData([
@@ -92,37 +79,26 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
             ->setTime($time)
             ->setDelay($delay)
             ->schedule();
-
-        $this->assertSame($jobEntityReturned, $jobEntity);
     }
 
     public function testSchedule2(): void
     {
-        $scheduler = new JobScheduler($this->entityManager);
-
-        $jobEntity = $this->createMock(JobEntity::class);
+        $scheduler = new JobScheduler($this->creator);
 
         $time = new DateTimeImmutable();
 
-        $this->entityManager
+        $expectedData = new Creator\Data(
+            className: TestJob::class,
+            queue: null,
+            group: 'g-1',
+            data: (new Data((object) ['test' => '1']))->withTargetType('TestType')->withTargetId('test-id'),
+            time: DateTimeField::fromDateTime($time),
+        );
+
+        $this->creator
             ->expects($this->once())
-            ->method('createEntity')
-            ->with(
-                JobEntity::ENTITY_TYPE,
-               [
-                    'name' => TestJob::class,
-                    'className' => TestJob::class,
-                    'queue' => null,
-                    'group' => 'g-1',
-                    'data' => (object) [
-                        'test' => '1',
-                    ],
-                    'executeTime' => $time->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                    'targetId' => 'test-id',
-                    'targetType' => 'TestType',
-                ]
-            )
-            ->willReturn($jobEntity);
+            ->method('create')
+            ->with($expectedData);
 
         $data = Data
             ::create([
@@ -131,40 +107,11 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
             ->withTargetId('test-id')
             ->withTargetType('TestType');
 
-        $jobEntityReturned = $scheduler
+        $scheduler
             ->setClassName(TestJob::class)
             ->setGroup('g-1')
             ->setData($data)
             ->setTime($time)
             ->schedule();
-
-        $this->assertSame($jobEntityReturned, $jobEntity);
-    }
-
-    public function testSchedule3(): void
-    {
-        $scheduler = new JobScheduler($this->entityManager);
-
-        $jobEntity = $this->createMock(JobEntity::class);
-
-        $this->entityManager
-            ->expects($this->once())
-            ->method('createEntity')
-            ->with(
-                JobEntity::ENTITY_TYPE,
-                $this->callback(
-                    function (array $data): bool {
-                        return is_string($data['executeTime']);
-                    }
-                )
-            )
-            ->willReturn($jobEntity);
-
-
-        $jobEntityReturned = $scheduler
-            ->setClassName(TestJobDataLess::class)
-            ->schedule();
-
-        $this->assertSame($jobEntityReturned, $jobEntity);
     }
 }

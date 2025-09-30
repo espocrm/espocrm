@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,15 +33,18 @@ use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
 use Espo\Core\Mail\FiltersMatcher;
 use Espo\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 
-class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
+class FiltersMatcherTest extends TestCase
 {
     private $object;
+    private $entityManager;
+    private $emailDefs;
+    private $filterDefs;
 
     protected function setUp() : void
     {
         $this->object = new FiltersMatcher();
-
         $this->entityManager = $this->createMock(EntityManager::class);
 
         $this->emailDefs = [

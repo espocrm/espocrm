@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,23 +29,31 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Select\Where\Checker,
-    Select\Where\Params,
-    Select\Where\Converter,
-    Select\Where\ConverterFactory,
-    Select\Where\CheckerFactory,
-    Select\Where\Item as WhereItem,
-    Select\Where\Applier as WhereApplier,
-};
+use Espo\Core\Select\Where\Applier as WhereApplier;
+use Espo\Core\Select\Where\Checker;
+use Espo\Core\Select\Where\CheckerFactory;
+use Espo\Core\Select\Where\Converter;
+use Espo\Core\Select\Where\ConverterFactory;
+use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Select\Where\Params;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class WhereApplierTest extends \PHPUnit\Framework\TestCase
+class WhereApplierTest extends TestCase
 {
+    private $user;
+    private $queryBuilder;
+    private $whereItem;
+    private $converterFactory;
+    private $converter;
+    private $checkerFactory;
+    private $checker;
+    private $params;
+    private $entityType;
+    private $applier;
+
     protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);

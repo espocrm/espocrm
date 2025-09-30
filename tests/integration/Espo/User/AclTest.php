@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use Espo\Core\AclManager;
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\Date;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
@@ -44,6 +45,8 @@ use Espo\Core\Select\Where\Item as WhereItem;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Entities\Role;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
@@ -619,7 +622,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ->getByClass(ServiceContainer::class)
             ->getByClass(User::class);
 
-        $this->expectException(Forbidden::class);
+        $this->expectException(BadRequest::class);
 
         $searchParams = SearchParams
             ::create()
@@ -863,5 +866,48 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ->findOne();
 
         $this->assertNotNull($entity3Found);
+    }
+
+    public function testBaselineRole(): void
+    {
+        $em = $this->getEntityManager();
+
+        $role = $em->getRDBRepositoryByClass(Role::class)->getNew();
+
+        $role->setRawFieldData([
+            Contact::ENTITY_TYPE => [
+                'address' => [
+                    Table::ACTION_READ => Table::LEVEL_YES,
+                    Table::ACTION_EDIT => Table::LEVEL_NO,
+                ],
+            ]
+        ]);
+
+        $em->saveEntity($role);
+
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->set('baselineRoleId', $role->getId());
+        $configWriter->save();
+
+        $this->prepareTestUser();
+
+        $this->auth('test');
+        $this->reCreateApplication();
+
+        $user = $this->getContainer()->getByClass(User::class);
+
+        $aclManager = $this->getContainer()->getByClass(AclManager::class);
+
+        $this->assertTrue(
+            $aclManager->checkField($user, Contact::ENTITY_TYPE, 'address')
+        );
+
+        $this->assertFalse(
+            $aclManager->checkField($user, Contact::ENTITY_TYPE, 'address', Table::ACTION_EDIT)
+        );
+
+        $this->assertTrue(
+            $aclManager->checkScope($user, Contact::ENTITY_TYPE)
+        );
     }
 }

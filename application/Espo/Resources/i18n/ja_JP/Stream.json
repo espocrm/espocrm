@@ -1,8 +1,8 @@
 {
   "messages": {
-    "infoMention": "投稿でユーザーをメンションするには、**@username** と入力します。",
+    "infoMention": "投稿でユーザーをメンションするには、**@username** と入力します",
     "infoSyntax": "利用可能なマークダウン構文",
-    "couldNotAddFollowerUserHasNoAccessToStream": "ユーザー「{userName}」をフォロワーに追加できませんでした。このユーザーにはレコードへの「ストリーム」アクセス権がありません。"
+    "couldNotAddFollowerUserHasNoAccessToStream": "ユーザー「{userName}」をフォロワーに追加できませんでしたこのユーザーにはレコードへの「ストリーム」アクセス権がありません"
   },
   "syntaxItems": {
     "code": "コード",

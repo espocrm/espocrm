@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,10 +73,10 @@ class CreateRelatedHelper {
 
         if (handler) {
             const Handler = await Espo.loader.requirePromise(handler);
-            /** @type {{getAttributes: function(import('model').default): Promise<Record>}} */
+            /** @type {import('handlers/create-related').default} */
             const handlerObj = new Handler(this.view.getHelper());
 
-            const additionalAttributes = await handlerObj.getAttributes(model);
+            const additionalAttributes = await handlerObj.getAttributes(model, link);
 
             attributes = {...attributes, ...additionalAttributes};
         }

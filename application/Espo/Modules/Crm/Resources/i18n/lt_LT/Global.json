@@ -36,7 +36,8 @@
     "Activities": "Veikla",
     "KnowledgeBaseArticle": "Žinių bazės straipsnis",
     "KnowledgeBaseCategory": "Žinių bazės kategorija",
-    "CampaignLogRecord": "Kampanijos žurnalo įrašas"
+    "CampaignLogRecord": "Kampanijos žurnalo įrašas",
+    "TargetListCategory": "Tikslinio sąrašo kategorija"
   },
   "scopeNamesPlural": {
     "Account": "Įmonės",
@@ -59,7 +60,8 @@
     "Activities": "Veikla",
     "KnowledgeBaseArticle": "Žinių bazė",
     "KnowledgeBaseCategory": "Žinių bazės kategorijos",
-    "CampaignLogRecord": "Kampanijos žurnalo įrašai"
+    "CampaignLogRecord": "Kampanijos žurnalo įrašai",
+    "TargetListCategory": "Tikslinio sąrašo kategorijos"
   },
   "dashlets": {
     "Leads": "Mano potencialūs klientai",
@@ -122,7 +124,7 @@
     "eventAttendee": "{naudotojas} pridėjo jus prie {subjekto tipo} {entity}"
   },
   "streamMessages": {
-    "eventConfirmationAccepted": "{vietos gavėjas} sutiko dalyvauti {įstaigosType} {subjektas}",
+    "eventConfirmationAccepted": "{invitee} sutiko dalyvauti {entityType} {entity}",
     "eventConfirmationDeclined": "{vietėjas} atsisakė dalyvauti {subjekto tipo} veikloje {entitetas}",
     "eventConfirmationTentative": "{vietėjas} nesiryžta dalyvauti {subjekto tipo} veikloje {įstaiga}",
     "eventConfirmationAcceptedThis": "{vietos gavėjas} pritarė dalyvavimui",

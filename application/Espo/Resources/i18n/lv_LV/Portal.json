@@ -20,7 +20,10 @@
     "customUrl": "Pielāgotais vietrādis URL",
     "customId": "Pielāgots ID",
     "layoutSet": "Izkārtojuma komplekts",
-    "authenticationProvider": "Autentifikācijas nodrošinātājs"
+    "authenticationProvider": "Autentifikācijas nodrošinātājs",
+    "authTokenLifetime": "Autentificēšanas žetona darbības laiks (stundas)",
+    "authTokenMaxIdleTime": "Auth žetons Maksimālais dīkstāves laiks (stundas)",
+    "applicationName": "Pieteikuma nosaukums"
   },
   "links": {
     "users": "Lietotāji",

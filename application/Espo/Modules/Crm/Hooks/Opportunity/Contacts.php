@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Opportunity;
 
 use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Entity;
@@ -62,8 +63,10 @@ class Contacts implements AfterSave
             ->getRelation($entity, 'contacts');
 
         if (!$contactId) {
-            if ($fetchedContactId) {
-                $relation->unrelateById($fetchedContactId);
+            if ($fetchedContactId && $relation->isRelatedById($fetchedContactId)) {
+                $relation->unrelateById($fetchedContactId, [
+                    SaveContext::NAME => $options->get(SaveContext::NAME),
+                ]);
             }
 
             return;
@@ -85,6 +88,8 @@ class Contacts implements AfterSave
             return;
         }
 
-        $relation->relateById($contactId);
+        $relation->relateById($contactId, null, [
+            SaveContext::NAME => $options->get(SaveContext::NAME),
+        ]);
     }
 }

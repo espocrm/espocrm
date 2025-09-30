@@ -34,7 +34,7 @@
     "keepFetchedEmailsUnread": "Conserver les e-mails non lus",
     "smtpAuthMechanism": "Mécanisme d'authentification SMTP",
     "security": "Sécurité",
-    "groupEmailFolder": "Dossier eMail de groupe",
+    "groupEmailFolder": "Dossier email du groupe",
     "connectedAt": "Connecté à",
     "excludeFromReply": "Exclure de la réponse",
     "isSystem": "Est Système"
@@ -52,7 +52,7 @@
   "links": {
     "filters": "Filtre",
     "assignToUser": "Attribuer à l'utilisateur",
-    "groupEmailFolder": "Dossier eMail de groupe"
+    "groupEmailFolder": "Dossier email du groupe"
   },
   "options": {
     "status": {

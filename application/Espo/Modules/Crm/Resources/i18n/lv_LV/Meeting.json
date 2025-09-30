@@ -16,7 +16,8 @@
     "dateStartDate": "Datums Sākums (visu dienu)",
     "dateEndDate": "Beigu datums (visu dienu)",
     "isAllDay": "Vai ir visas dienas",
-    "sourceEmail": "Avots E-pasts"
+    "sourceEmail": "Avots E-pasts",
+    "joinUrl": "Pievienoties URL"
   },
   "options": {
     "status": {

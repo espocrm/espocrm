@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,7 +77,13 @@ class WebSocketManager {
     checkWakeThresholdInterval = 5
 
     /**
-     * @param {module:models/settings} config A config.
+     * @private
+     * @type {boolean}
+     */
+    enabled = false
+
+    /**
+     * @param {import('models/settings').default} config A config.
      */
     constructor(config) {
         /**
@@ -415,6 +421,24 @@ class WebSocketManager {
 
             this.schedulePing();
         }, this.pingInterval * 1000);
+    }
+
+    /**
+     * @internal
+     * @since 9.2.0
+     */
+    setEnabled() {
+        this.enabled = true;
+    }
+
+    /**
+     * Is enabled.
+     *
+     * @return {boolean}
+     * @since 9.2.0
+     */
+    isEnabled() {
+        return this.enabled;
     }
 }
 

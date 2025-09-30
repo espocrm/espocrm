@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,9 +42,18 @@ use Espo\Core\Select\Where\ItemGeneralConverter;
 use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
+class ConverterFactoryTest extends TestCase
 {
+    private $injectableFactory;
+    private $metadata;
+    private $user;
+    private $factory;
+    private $itemConverter;
+    private $dateTimeItemTransformer;
+
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
@@ -92,19 +101,16 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $bindingData1 = new BindingData();
 
         $binder1 = new Binder($bindingData1);
-
         $binder1
             ->bindInstance(User::class, $this->user);
-
         $binder1
             ->for($className1)
             ->bindValue('$entityType', $entityType);
-
         $binder1
             ->for(DefaultDateTimeItemTransformer::class)
             ->bindValue('$entityType', $entityType);
 
-        $bindingContainer1 = new BindingContainer($bindingData1);
+        $bc1 = new BindingContainer($bindingData1);
 
         $bindingData2 = new BindingData();
 
@@ -112,18 +118,16 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $binder2
             ->bindInstance(User::class, $this->user);
-
         $binder2
             ->for($className2)
             ->bindValue('$entityType', $entityType)
             ->bindInstance(DateTimeItemTransformer::class, $this->dateTimeItemTransformer);
-
         $binder2
             ->for(ItemGeneralConverter::class)
             ->bindValue('$entityType', $entityType)
             ->bindInstance(DateTimeItemTransformer::class, $this->dateTimeItemTransformer);
 
-        $bindingContainer2 = new BindingContainer($bindingData2);
+        $bc2 = new BindingContainer($bindingData2);
 
         $bindingData3 = new BindingData();
 
@@ -135,30 +139,39 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
             ->bindValue('$entityType', $entityType)
             ->bindInstance(ItemConverter::class, $this->itemConverter);
 
-        $bindingContainer = new BindingContainer($bindingData3);
+        $bc3 = new BindingContainer($bindingData3);
+
+        $c = $this->exactly(3);
 
         $this->injectableFactory
-            ->expects($this->exactly(3))
+            ->expects($c)
             ->method('createWithBinding')
-            ->withConsecutive(
-                [
-                    $className1,
-                    $bindingContainer1,
-                ],
-                [
-                    $className2,
-                    $bindingContainer2,
-                ],
-                [
-                    $className3,
-                    $bindingContainer,
-                ]
-            )
-            ->willReturnOnConsecutiveCalls(
-                $this->dateTimeItemTransformer,
-                $this->itemConverter,
-                $object
-            );
+            ->willReturnCallback(function ($className, $bc) use
+                ($c, $object, $className1, $className2, $className3, $bc1, $bc2, $bc3) {
+
+                if ($c->numberOfInvocations() === 1) {
+                    $this->assertEquals($className1, $className);
+                    $this->assertEquals($bc1, $bc);
+
+                    return $this->dateTimeItemTransformer;
+                }
+
+                if ($c->numberOfInvocations() === 2) {
+                    $this->assertEquals($className2, $className);
+                    $this->assertEquals($bc2, $bc);
+
+                    return $this->itemConverter;
+                }
+
+                if ($c->numberOfInvocations() === 3) {
+                    $this->assertEquals($className3, $className);
+                    $this->assertEquals($bc3, $bc);
+
+                    return $object;
+                }
+
+                throw new RuntimeException();
+            });
 
         $resultObject = $this->factory->create($entityType, $this->user);
 

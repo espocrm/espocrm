@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Portal;
 
+use Espo\Core\Application\ApplicationParams;
 use Espo\Entities\Portal;
 use Espo\ORM\EntityManager;
 use Espo\Core\Exceptions\Forbidden;
@@ -47,22 +48,25 @@ class Application extends BaseApplication
      * @throws NotFound
      * @noinspection PhpMissingParentConstructorInspection
      */
-    public function __construct(?string $portalId)
-    {
+    public function __construct(
+        ?string $portalId,
+        ?ApplicationParams $params = null,
+    ) {
         date_default_timezone_set('UTC');
 
-        $this->initContainer();
+        $this->initContainer($params);
         $this->initPortal($portalId);
         $this->initAutoloads();
         $this->initPreloads();
     }
 
-    protected function initContainer(): void
+    protected function initContainer(?ApplicationParams $params): void
     {
         $container = (new ContainerBuilder())
             ->withConfigClassName(Config::class)
             ->withContainerClassName(PortalContainer::class)
             ->withContainerConfigurationClassName(PortalContainerConfiguration::class)
+            ->withParams($params)
             ->build();
 
         if (!$container instanceof PortalContainer) {

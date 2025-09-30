@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,31 +35,35 @@ use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Exceptions\ExecutionException;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Type\RelationType;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindRelatedManyType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware,
     Di\MetadataAware,
-    Di\InjectableFactoryAware
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
     use Di\MetadataSetter;
     use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     /**
      * @throws Error
-     * @throws BadRequest
      * @throws TooFewArguments
      * @throws BadArgumentType
-     * @throws Forbidden
      * @throws ExecutionException
      */
     public function process(ArgumentList $args)
@@ -136,7 +140,13 @@ class FindRelatedManyType extends BaseFunction implements
 
         $relationType = $entity->getRelationParam($link, 'type');
 
-        if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
+        if (
+            in_array($relationType, [
+                RelationType::BELONGS_TO,
+                RelationType::HAS_ONE,
+                RelationType::BELONGS_TO_PARENT,
+            ])
+        ) {
             $this->throwError("Not supported link type '$relationType'.");
         }
 
@@ -152,8 +162,9 @@ class FindRelatedManyType extends BaseFunction implements
             $this->throwError("Not supported link '$link'.");
         }
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($foreignEntityType);
 
         $whereClause = [];
@@ -164,13 +175,7 @@ class FindRelatedManyType extends BaseFunction implements
                 $filter = $args[6];
             }
 
-            if ($filter && !is_string($filter)) {
-                $this->throwError("Bad filter.");
-            }
-
-            if ($filter) {
-                $builder->withPrimaryFilter($filter);
-            }
+            (new FindQueryUtil())->applyFilter($builder, $filter, 7);
         } else {
             $i = 6;
 
@@ -184,13 +189,17 @@ class FindRelatedManyType extends BaseFunction implements
             }
         }
 
-        $queryBuilder = $builder->buildQueryBuilder();
+        try {
+            $queryBuilder = $builder->buildQueryBuilder();
+        } catch (BadRequest|Forbidden $e) {
+            throw new Error($e->getMessage(), 0, $e);
+        }
 
         if (!empty($whereClause)) {
             $queryBuilder->where($whereClause);
         }
 
-        if ($relationType === 'hasChildren') {
+        if ($relationType === RelationType::HAS_CHILDREN) {
             $queryBuilder->where([
                 $foreignLink . 'Id' => $entity->getId(),
                 $foreignLink . 'Type' => $entity->getEntityType(),

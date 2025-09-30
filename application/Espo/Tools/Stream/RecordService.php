@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,6 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
-use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
@@ -64,7 +63,6 @@ class RecordService
         private NoteAccessControl $noteAccessControl,
         private Helper $helper,
         private QueryHelper $queryHelper,
-        private Metadata $metadata,
         private NoteHelper $noteHelper,
         private MassNotePreparator $massNotePreparator,
         private SelectBuilderFactory $selectBuilderFactory,
@@ -149,7 +147,6 @@ class RecordService
         $this->applyPortalAccess($builder, $where);
         $this->applyAccess($builder, $id, $scope, $where);
         $this->applyIgnore($where);
-        $this->applyStatusIgnore($scope, $where);
 
         $builder->where($where);
 
@@ -382,24 +379,6 @@ class RecordService
         ];
     }
 
-    /**
-     * @param array<string|int, mixed> $where
-     */
-    private function applyStatusIgnore(string $scope, array &$where): void
-    {
-        $field = $this->metadata->get("scopes.$scope.statusField");
-
-        if (!$field) {
-            return;
-        }
-
-        if ($this->acl->checkField($scope, $field)) {
-            return;
-        }
-
-        $where[] = ['type!=' => Note::TYPE_STATUS];
-    }
-
     private function prepareNote(Note $note, string $scope, string $id): void
     {
         if (
@@ -537,7 +516,6 @@ class RecordService
         $this->applyPortalAccess($builder, $where);
         $this->applyAccess($builder, $id, $scope, $where);
         $this->applyIgnore($where);
-        $this->applyStatusIgnore($scope, $where);
 
         $builder->where($where);
 

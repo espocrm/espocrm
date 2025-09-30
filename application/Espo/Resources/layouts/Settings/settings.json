@@ -46,12 +46,11 @@
         "tabBreak": true,
         "tabLabel": "$label:General",
         "rows": [
-            [{"name": "cleanupDeletedRecords"}, {"name": "emailAddressIsOptedOutByDefault"}],
-            [{"name": "aclAllowDeleteCreated"}, {"name": "b2cMode"}],
-            [{"name": "exportDisabled"}, false],
+            [{"name": "cleanupDeletedRecords"}, false],
+            [{"name": "b2cMode"}, false],
+            [{"name": "emailAddressIsOptedOutByDefault"}, false],
             [{"name": "pdfEngine"}, false]
         ]
-
     },
     {
         "label": "Search",
@@ -87,5 +86,14 @@
             [{"name": "availableReactions"}, {"name": "followCreatedEntities"}],
             [{"name": "streamEmailWithContentEntityTypeList"}, false]
         ]
+    },
+    {
+        "tabBreak": true,
+        "tabLabel": "$label:Access",
+        "rows": [
+            [{"name": "baselineRole"}, false],
+            [{"name": "aclAllowDeleteCreated"}, {"name": "exportDisabled"}]
+        ]
+
     }
 ]

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 namespace Espo\Core\Mail\Account\GroupAccount\Hooks;
 
 use Espo\Core\Name\Field;
-use Laminas\Mail\Message;
+use Espo\Core\Name\Link;
 
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory as GroupAccountFactory;
 use Espo\Core\Mail\SenderParams;
@@ -96,7 +96,7 @@ class AfterFetch implements AfterFetchInterface
         }
 
         if ($account->createCase()) {
-            if ($beforeFetchResult->get('isAutoReply')) {
+            if ($beforeFetchResult->get('isAutoSubmitted')) {
                 return;
             }
 
@@ -116,7 +116,10 @@ class AfterFetch implements AfterFetchInterface
         }
 
         if ($account->autoReply()) {
-            if ($beforeFetchResult->get('skipAutoReply')) {
+            if (
+                $beforeFetchResult->get('isAutoSubmitted') ||
+                $beforeFetchResult->get('skipAutoReply')
+            ) {
                 return;
             }
 
@@ -243,26 +246,22 @@ class AfterFetch implements AfterFetchInterface
 
             $subject = $replyData->getSubject();
 
-            if ($case) {
-                $subject = '[#' . $case->get('number'). '] ' . $subject;
+            if ($case && $case->getNumber() !== null) {
+                $subject = "[#{$case->getNumber()}] $subject";
             }
 
-            /** @var Email $reply */
             $reply = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
             $reply
                 ->addToAddress($fromAddress)
                 ->setSubject($subject)
                 ->setBody($replyData->getBody())
-                ->setIsHtml($replyData->isHtml());
-
-            if ($email->has('teamsIds')) {
-                $reply->set('teamsIds', $email->get('teamsIds'));
-            }
+                ->setIsHtml($replyData->isHtml())
+                ->setIsAutoReply()
+                ->setTeams($email->getTeams());
 
             if ($email->getParentId() && $email->getParentType()) {
-                $reply->set('parentId', $email->getParentId());
-                $reply->set('parentType', $email->getParentType());
+                $reply->setParent($email->getParent());
             }
 
             $this->entityManager->saveEntity($reply);
@@ -543,7 +542,7 @@ class AfterFetch implements AfterFetchInterface
 
         $contact = $this->entityManager
             ->getRDBRepository(Contact::ENTITY_TYPE)
-            ->join('emailAddresses', 'emailAddressesMultiple')
+            ->join(Link::EMAIL_ADDRESSES, 'emailAddressesMultiple')
             ->where([
                 'emailAddressesMultiple.id' => $email->get('fromEmailAddressId'),
             ])
@@ -555,7 +554,7 @@ class AfterFetch implements AfterFetchInterface
             if (!$case->get('accountId')) {
                 $lead = $this->entityManager
                     ->getRDBRepository(Lead::ENTITY_TYPE)
-                    ->join('emailAddresses', 'emailAddressesMultiple')
+                    ->join(Link::EMAIL_ADDRESSES, 'emailAddressesMultiple')
                     ->where([
                         'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
                     ])

@@ -3,7 +3,8 @@
     "Dynamic Logic": "Dinamiskā loģika",
     "Name": "Vārds/nosaukums",
     "Label": "Etiķete",
-    "Type": "Tips"
+    "Type": "Tips",
+    "View Details": "Skatīt informāciju"
   },
   "options": {
     "dateTimeDefault": {
@@ -98,7 +99,11 @@
     "displayAsList": "Katrs vienums jaunā rindā.",
     "optionsVarchar": "Automātiski papildināmo vērtību saraksts.",
     "currencyDecimal": "Izmantojiet decimāldaļskaitļa DB tipu. Lietotnē vērtības tiks attēlotas kā virknes. Ja ir nepieciešama precizitāte, atzīmējiet šo parametru.",
-    "optionsReference": "Atkārtoti izmantojiet citas jomas opcijas."
+    "optionsReference": "Atkārtoti izmantojiet citas jomas opcijas.",
+    "readOnlyAfterCreate": "Lauka vērtību var norādīt, veidojot jaunu ierakstu. Pēc tam lauks kļūst tikai lasāms. To joprojām var aprēķināt pēc formulas.",
+    "linkReadOnly": "Lauka vērtību lietotājs nevar norādīt. Bet to var aprēķināt pēc formulas.\n\nTas arī atslēgs iespēju izveidot saistītu ierakstu no attiecību paneļiem.",
+    "relateOnImport": "Importējot ar šo lauku, ieraksts automātiski tiks saistīts ar atbilstošu ārējo ierakstu. Šo funkcionalitāti izmantojiet tikai tad, ja ārējais lauks tiek uzskatīts par unikālu.",
+    "preview": "Rādīt priekšskatījuma pogu. Piemērojams, ja ir iespējota funkcija Markdown."
   },
   "fieldParts": {
     "address": {
@@ -155,6 +160,12 @@
   "messages": {
     "fieldNameIsNotAllowed": "Lauka nosaukums '{field}' nav atļauts.",
     "fieldAlreadyExists": "Lauks '{field}' jau pastāv laukā '{entityType}'.",
-    "linkWithSameNameAlreadyExists": "Saite ar nosaukumu '{field}' jau pastāv sadaļā '{entityType}'."
+    "linkWithSameNameAlreadyExists": "Saite ar nosaukumu '{field}' jau pastāv sadaļā '{entityType}'.",
+    "confirmRemove": "Vai esat pārliecināts, ka vēlaties noņemt *{lauks}* lauku?\n\nLauka dzēšana neizdzēš datus no datubāzes. Dati no datubāzes tiks noņemti, ja tiks veikta cieta pārbūve.",
+    "fieldCreatedAddToLayouts": "Ir izveidots lauks. Tagad to var pievienot [izkārtojumiem]({link})",
+    "namingFieldLinkConflict": "Nosaukums '{field}' konfliktē ar saiti."
+  },
+  "otherFields": {
+    "attributes": "Atribūti"
   }
 }

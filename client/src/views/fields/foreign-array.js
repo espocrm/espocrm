@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,49 +27,14 @@
  ************************************************************************/
 
 import ArrayFieldView from 'views/fields/array';
+import ForeignEnumFieldView from 'views/fields/foreign-enum';
 
 class ForeignArrayFieldView extends ArrayFieldView {
 
     type = 'foreign'
 
     setupOptions() {
-        this.params.options = [];
-
-        const field = this.params.field;
-        const link = this.params.link;
-
-        if (!field || !link) {
-            return;
-        }
-
-        const scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
-
-        if (!scope) {
-            return;
-        }
-
-        let {
-            optionsPath,
-            translation,
-            options,
-            isSorted,
-            displayAsLabel,
-            style,
-        } = this.getMetadata()
-            .get(['entityDefs', scope, 'fields', field]);
-
-        options = optionsPath ? this.getMetadata().get(optionsPath) : options;
-
-        this.params.options = Espo.Utils.clone(options) || [];
-        this.params.translation = translation;
-        this.params.isSorted = isSorted || false;
-        this.params.displayAsLabel = displayAsLabel || false;
-        this.styleMap = style || {};
-
-        this.translatedOptions = Object.fromEntries(
-            this.params.options
-                .map(item => [item, this.getLanguage().translateOption(item, field, scope)])
-        );
+        ForeignEnumFieldView.prototype.setupOptions.call(this);
     }
 }
 

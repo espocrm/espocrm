@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,86 +47,95 @@ use Espo\Core\Select\Where\Params as WhereParams;
 
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class SelectBuilderTest extends \PHPUnit\Framework\TestCase
+class SelectBuilderTest extends TestCase
 {
-    /**
-     * @var SelectBuilder
-     */
+    /** @var SelectBuilder */
     private $selectBuilder;
+
+    private $additionalApplier;
+    private $entityType;
+    private $whereApplier;
+    private $orderApplier;
+    private $limitApplier;
+    private $accessControlFilterApplier;
+    private $textFilterApplier;
+    private $primaryFilterApplier;
+    private $boolFilterListApplier;
 
     protected function setUp(): void
     {
-        $this->user = $this->createMock(User::class);
-        $this->applierFactory = $this->createMock(ApplierFactory::class);
+        $user = $this->createMock(User::class);
+        $applierFactory = $this->createMock(ApplierFactory::class);
 
         $this->entityType = 'Test';
 
         $this->whereApplier = $this->createMock(WhereApplier::class);
-        $this->selectApplier = $this->createMock(SelectApplier::class);
+        $selectApplier = $this->createMock(SelectApplier::class);
         $this->orderApplier =  $this->createMock(OrderApplier::class);
         $this->limitApplier = $this->createMock(LimitApplier::class);
         $this->accessControlFilterApplier = $this->createMock(AccessControlFilterApplier::class);
-        $this->textFilterApplier = $selectApplier = $this->createMock(TextFilterApplier::class);
-        $this->primaryFilterApplier = $selectApplier = $this->createMock(PrimaryFilterApplier::class);
-        $this->boolFilterListApplier = $selectApplier = $this->createMock(BoolFilterListApplier::class);
-        $this->additionalApplier = $selectApplier = $this->createMock(AdditionalApplier::class);
+        $this->textFilterApplier = $this->createMock(TextFilterApplier::class);
+        $this->primaryFilterApplier = $this->createMock(PrimaryFilterApplier::class);
+        $this->boolFilterListApplier = $this->createMock(BoolFilterListApplier::class);
+        $this->additionalApplier = $this->createMock(AdditionalApplier::class);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createWhere')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->whereApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createSelect')
-            ->with($this->entityType, $this->user)
-            ->willReturn($this->selectApplier);
+            ->with($this->entityType, $user)
+            ->willReturn($selectApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createOrder')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->orderApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createLimit')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->limitApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createAccessControlFilter')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->accessControlFilterApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createTextFilter')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->textFilterApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createPrimaryFilter')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->primaryFilterApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createBoolFilterList')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->boolFilterListApplier);
 
-        $this->applierFactory
+        $applierFactory
             ->expects($this->any())
             ->method('createAdditional')
-            ->with($this->entityType, $this->user)
+            ->with($this->entityType, $user)
             ->willReturn($this->additionalApplier);
 
-        $this->selectBuilder = new SelectBuilder($this->user, $this->applierFactory);
+        $this->selectBuilder = new SelectBuilder($user, $applierFactory);
     }
 
     public function testBuild1()

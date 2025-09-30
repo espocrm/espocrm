@@ -166,7 +166,8 @@
     "passwordStrengthSpecialCharacterCount": "Anzahl der erforderlichen Sonderzeichen im Passwort",
     "availableReactions": "Verfügbare Reaktionen",
     "outboundEmailFromAddress": "System-E-Mail-Adresse",
-    "oidcUserInfoEndpoint": "OIDC-UserInfo-Endpunkt"
+    "oidcUserInfoEndpoint": "OIDC-UserInfo-Endpunkt",
+    "baselineRole": "Baseline-Rolle"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -253,7 +254,8 @@
     "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opted-Out markiert.",
     "oidcGroupClaim": "Ein Claim, der für die Teamzuordnung genutzt wird.",
     "quickSearchFullTextAppendWildcard": "Fügen Sie einen Platzhalter an eine Autovervollständigung-Suchanfrage an, wenn die Volltextsuche aktiviert ist. Verringert die Suchleistung.",
-    "outboundEmailFromAddress": "System-E-Mails werden von dieser E-Mail-Adresse aus versandt. Ein [Gruppen-E-Mail-Konto](#InboundEmail) mit der gleichen E-Mail-Adresse muss eingerichtet und ordnungsgemäß konfiguriert sein, um E-Mails zu versenden."
+    "outboundEmailFromAddress": "System-E-Mails werden von dieser E-Mail-Adresse aus versandt. Ein [Gruppen-E-Mail-Konto](#InboundEmail) mit der gleichen E-Mail-Adresse muss eingerichtet und ordnungsgemäß konfiguriert sein, um E-Mails zu versenden.",
+    "baselineRole": "Die Standardrolle, die für alle Benutzer gilt. Alle zusätzlichen Rollen, die einem Benutzer zugewiesen werden, gewähren zusätzlich zu dieser Basisberechtigung weitere Berechtigungen.\n\n**Wichtig**. Eine Änderung dieser Rolle wirkt sich auf alle Benutzer aus – überprüfen Sie die Änderung sorgfältig, um zu vermeiden, dass unbeabsichtigte Berechtigungen erteilt werden."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",
@@ -284,7 +286,8 @@
     "Scheduled Send": "Geplanter Versand"
   },
   "messages": {
-    "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."
+    "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt.",
+    "confirmBaselineRoleChange": "Sind Sie sicher, dass Sie die Baseline-Rolle ändern möchten? Eine unüberlegte Änderung kann allen Benutzern unbeabsichtigte Berechtigungen gewähren."
   },
   "options": {
     "streamEmailNotificationsTypeList": {

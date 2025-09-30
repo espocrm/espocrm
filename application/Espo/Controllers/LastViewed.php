@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Tools\ActionHistory\Service as Service;
 
@@ -43,6 +45,10 @@ class LastViewed
     public function __construct(private SearchParamsFetcher $searchParamsFetcher, private Service $service)
     {}
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionIndex(Request $request): stdClass
     {
         $searchParams = $this->searchParamsFetcher->fetch($request);

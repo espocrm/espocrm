@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,11 +42,17 @@ class AutoloadTest extends TestCase
 {
     private ?Config\SystemConfig $systemConfig = null;
 
+    private $metadata;
+    private $fileManager;
+    private $loader;
+    private $pathProvider;
+    private $autoload;
+
     protected function setUp(): void
     {
         $this->systemConfig = $this->createMock(Config\SystemConfig::class);
         $this->metadata = $this->createMock(Metadata::class);
-        $this->dataCache = $this->createMock(DataCache::class);
+        $dataCache = $this->createMock(DataCache::class);
         $this->fileManager = $this->createMock(FileManager::class);
         $this->loader = $this->createMock(Loader::class);
         $this->pathProvider = $this->createMock(PathProvider::class);
@@ -55,7 +61,7 @@ class AutoloadTest extends TestCase
 
         $this->autoload = new Autoload(
             $this->metadata,
-            $this->dataCache,
+            $dataCache,
             $this->fileManager,
             $this->loader,
             $this->pathProvider,
@@ -103,15 +109,15 @@ class AutoloadTest extends TestCase
         $this->fileManager
             ->expects($this->any())
             ->method('isFile')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         ['application/Espo/Resources/autoload.json', false],
                         ['application/Espo/Modules/M1/Resources/autoload.json', true],
                         ['application/Espo/Modules/M2/Resources/autoload.json', true],
                         ['custom/Espo/Custom/Resources/autoload.json', false],
                     ]
-                )
+
             );
 
         $data1 = [
@@ -139,13 +145,11 @@ class AutoloadTest extends TestCase
         $this->fileManager
             ->expects($this->any())
             ->method('getContents')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['application/Espo/Modules/M1/Resources/autoload.json', json_encode($data1)],
-                        ['application/Espo/Modules/M2/Resources/autoload.json', json_encode($data2)],
-                    ]
-                )
+            ->willReturnMap(
+                [
+                    ['application/Espo/Modules/M1/Resources/autoload.json', json_encode($data1)],
+                    ['application/Espo/Modules/M2/Resources/autoload.json', json_encode($data2)],
+                ]
             );
 
         $this->loader

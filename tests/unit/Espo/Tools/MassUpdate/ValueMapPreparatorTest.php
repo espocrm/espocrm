@@ -4,7 +4,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,12 +36,13 @@ use Espo\Tools\MassUpdate\Action;
 
 use Espo\ORM\Entity;
 use Espo\ORM\Defs as OrmDefs;
+use PHPUnit\Framework\TestCase;
 
-class ValueMapPreparatorTest extends \PHPUnit\Framework\TestCase
+class ValueMapPreparatorTest extends TestCase
 {
     public function testPrepare1(): void
     {
-        $preprator = new ValueMapPreparator(
+        $preparator = new ValueMapPreparator(
             $this->createMock(OrmDefs::class)
         );
 
@@ -70,8 +71,7 @@ class ValueMapPreparatorTest extends \PHPUnit\Framework\TestCase
         $entity
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($attribute) {
                         $map = [
                             'a1' => ['0'],
@@ -88,10 +88,9 @@ class ValueMapPreparatorTest extends \PHPUnit\Framework\TestCase
 
                         return $map[$attribute] ?? null;
                     }
-                )
             );
 
-        $values = $preprator->prepare($entity, $data);
+        $values = $preparator->prepare($entity, $data);
 
         $this->assertEquals(['0', '1', '2'], $values->a1);
         $this->assertEquals(['0'], $values->a2);

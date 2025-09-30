@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,10 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Defs\Params\RelationParam;
+use RuntimeException;
 
 /**
  * Saves a link-multiple field or has-many relation set in a link stub attribute.
@@ -199,8 +201,18 @@ class LinkMultipleSaver
                 if (!in_array($id, $existingIdList)) {
                     $toCreateIdList[] = $id;
                 }
+
+                if (!is_string($id)) {
+                    throw new RuntimeException("Non-string ID in link-multiple.");
+                }
+
+                if ($id === '') {
+                    throw new RuntimeException("An entity ID value in link-multiple.");
+                }
             }
         }
+
+        $saveContext = SaveContext::obtainFromRawOptions($params->getRawOptions());
 
         foreach ($toCreateIdList as $id) {
             $data = null;
@@ -219,6 +231,7 @@ class LinkMultipleSaver
                 SaveOption::SKIP_HOOKS => $skipHooks,
                 SaveOption::SILENT => $entity->isNew(),
                 self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
+                SaveContext::NAME => $saveContext,
             ]);
         }
 
@@ -226,6 +239,7 @@ class LinkMultipleSaver
             $repository->getRelation($entity, $name)->unrelateById($id, [
                 SaveOption::SKIP_HOOKS => $skipHooks,
                 self::RELATE_OPTION => $entity->hasLinkMultipleField($name),
+                SaveContext::NAME => $saveContext,
             ]);
         }
 

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,14 +35,22 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error as FormulaError;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
+use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Order;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindOneType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware
+    Di\InjectableFactoryAware,
+    Di\UserAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
+    use Di\InjectableFactorySetter;
+    use Di\UserSetter;
 
     public function process(ArgumentList $args)
     {
@@ -52,10 +60,11 @@ class FindOneType extends BaseFunction implements
 
         $entityType = $this->evaluate($args[0]);
         $orderBy = $this->evaluate($args[1]);
-        $order = $this->evaluate($args[2]) ?? 'ASC';
+        $order = $this->evaluate($args[2]) ?? Order::ASC;
 
-        $builder = $this->selectBuilderFactory
+        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
+            ->forUser($this->user)
             ->from($entityType);
 
         $whereClause = [];
@@ -63,17 +72,11 @@ class FindOneType extends BaseFunction implements
         if (count($args) <= 4) {
             $filter = null;
 
-            if (count($args) == 4) {
+            if (count($args) === 4) {
                 $filter = $this->evaluate($args[3]);
             }
 
-            if ($filter && !is_string($filter)) {
-                $this->throwBadArgumentType(4, 'string');
-            }
-
-            if ($filter) {
-                $builder->withPrimaryFilter($filter);
-            }
+            (new FindQueryUtil())->applyFilter($builder, $filter, 4);
         } else {
             $i = 3;
 

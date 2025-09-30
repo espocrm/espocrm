@@ -2,7 +2,7 @@
 
 www.espocrm.com
 
-Copyright © 2014-2025 EspoCRM: Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko.
+Copyright © 2014-2025 EspoCRM, Inc.
 
 EspoCRM is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -13,3 +13,7 @@ You should have received a copy of the GNU Affero General Public License along w
 The interactive user interfaces in modified source and object code versions of this program must display Appropriate Legal Notices, as required under Section 5 of the GNU Affero General Public License version 3.
 
 In accordance with Section 7(b) of the GNU Affero General Public License version 3, these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+
+---
+
+Authors: Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko.

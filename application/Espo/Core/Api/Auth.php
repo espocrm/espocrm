@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -112,7 +112,8 @@ class Auth
 
         $showDialog =
             ($this->isEntryPoint || !$this->isXMLHttpRequest($request)) &&
-            !$request->getHeader('Referer');
+            !$request->getHeader('Referer') &&
+            $request->getMethod() !== Method::POST;
 
         $this->handleUnauthorized($response, null, $showDialog);
 
@@ -167,7 +168,8 @@ class Auth
         if ($result->isFail()) {
             $showDialog =
                 $this->isEntryPoint &&
-                !$request->getHeader('Referer');
+                !$request->getHeader('Referer') &&
+                $request->getMethod() !== Method::POST;
 
             $this->handleUnauthorized($response, $result, $showDialog);
         }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,15 +42,8 @@ abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 {
     use Di\DateTimeSetter;
 
-    /**
-     * @var bool
-     */
-    protected $timeOnly = false;
-
-    /**
-     * @var string
-     */
-    protected $intervalTypeString;
+    protected bool $timeOnly = false;
+    protected string $intervalTypeString;
 
     public function process(ArgumentList $args)
     {

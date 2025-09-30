@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ namespace Espo\Classes\FieldProcessing\LeadCapture;
 
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Util;
@@ -48,7 +49,8 @@ class ExampleLoader implements Loader
     public function __construct(
         private FieldUtil $fieldUtil,
         private ApplicationConfig $applicationConfig,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
+        private Config $config,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -136,7 +138,7 @@ class ExampleLoader implements Loader
     private function processFormUrl(LeadCapture $entity): void
     {
         $formId = $entity->getFormId();
-        $siteUrl = $this->applicationConfig->getSiteUrl();
+        $siteUrl = $this->getSiteUrl();
 
         if (!$entity->hasFormEnabled() || !$formId) {
             /** @noinspection PhpRedundantOptionalArgumentInspection */
@@ -148,5 +150,10 @@ class ExampleLoader implements Loader
         $formUrl = "$siteUrl?entryPoint=leadCaptureForm&id=$formId";
 
         $entity->set('formUrl', $formUrl);
+    }
+
+    private function getSiteUrl(): string
+    {
+        return $this->config->get('leadCaptureSiteUrl') ?? $this->applicationConfig->getSiteUrl();
     }
 }

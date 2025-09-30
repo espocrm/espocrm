@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ namespace Espo\Tools\Pdf;
 
 use DateTime;
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -42,6 +43,7 @@ use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Attachment;
 use Espo\Entities\Template as TemplateEntity;
@@ -56,40 +58,19 @@ class MassService
     private const ATTACHMENT_MASS_PDF_ROLE = 'Mass Pdf';
     private const REMOVE_MASS_PDF_PERIOD = '1 hour';
 
-    private ServiceContainer $serviceContainer;
-    private Config $config;
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private DataLoaderManager $dataLoaderManager;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private Builder $builder;
-    private Language $defaultLanguage;
-    private JobSchedulerFactory $jobSchedulerFactory;
-    private FileStorageManager $fileStorageManager;
-
     public function __construct(
-        ServiceContainer $serviceContainer,
-        Config $config,
-        EntityManager $entityManager,
-        Acl $acl,
-        DataLoaderManager $dataLoaderManager,
-        SelectBuilderFactory $selectBuilderFactory,
-        Builder $builder,
-        Language $defaultLanguage,
-        JobSchedulerFactory $jobSchedulerFactory,
-        FileStorageManager $fileStorageManager
-    ) {
-        $this->serviceContainer = $serviceContainer;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->dataLoaderManager = $dataLoaderManager;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->builder = $builder;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-        $this->fileStorageManager = $fileStorageManager;
-    }
+        private ServiceContainer $serviceContainer,
+        private Config $config,
+        private EntityManager $entityManager,
+        private Acl $acl,
+        private DataLoaderManager $dataLoaderManager,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private Builder $builder,
+        private Language $defaultLanguage,
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private FileStorageManager $fileStorageManager,
+        private Metadata $metadata,
+    ) {}
 
     /**
      * Generate a PDF for multiple records.
@@ -98,6 +79,7 @@ class MassService
      * @throws Error
      * @throws NotFound
      * @throws Forbidden
+     * @throws BadRequest
      */
     public function generate(
         string $entityType,
@@ -152,6 +134,10 @@ class MassService
             ->find();
 
         $idDataMap = IdDataMap::create();
+
+        $pdfA = $this->metadata->get("pdfDefs.$entityType.pdfA") ?? false;
+
+        $params = $params->withPdfA($pdfA);
 
         foreach ($collection as $entity) {
             $service->loadAdditionalFields($entity);

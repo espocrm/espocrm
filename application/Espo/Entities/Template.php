@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,8 @@ class Template extends Entity
 {
     public const ENTITY_TYPE = 'Template';
 
+    public const STATUS_ACTIVE = 'Active';
+
     public function getTargetEntityType(): string
     {
         $entityType = $this->get('entityType');
@@ -45,5 +47,10 @@ class Template extends Entity
         }
 
         return $entityType;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->get('status') === self::STATUS_ACTIVE;
     }
 }

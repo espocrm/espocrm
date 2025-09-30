@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,20 +41,25 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Repository\Option\RemoveOption;
 use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
 use Espo\Core\Record\ConcurrencyControl\OptimisticProcessor;
 use Espo\Core\Record\Defaults\Populator as DefaultsPopulator;
 use Espo\Core\Record\Defaults\PopulatorFactory as DefaultsPopulatorFactory;
+use Espo\Core\Record\Deleted\DefaultRestorer;
+use Espo\Core\Record\Deleted\Restorer;
 use Espo\Core\Record\DynamicLogic\InputFilterProcessor;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Record\Input\Data;
 use Espo\Core\Record\Input\Filter;
 use Espo\Core\Record\Input\FilterProvider;
 use Espo\Core\Select\Primary\Filters\One;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
@@ -68,6 +73,7 @@ use Espo\Core\Record\Duplicator\EntityDuplicator;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Di;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
@@ -104,7 +110,6 @@ class Service implements Crud,
     Di\FieldUtilAware,
     Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
-    Di\SelectBuilderFactoryAware,
     Di\AssignmentCheckerManagerAware
 {
     use Di\ConfigSetter;
@@ -117,7 +122,6 @@ class Service implements Crud,
     use Di\FieldUtilSetter;
     use Di\FieldValidationManagerSetter;
     use Di\RecordServiceContainerSetter;
-    use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
 
     protected string $entityType;
@@ -151,10 +155,20 @@ class Service implements Crud,
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
-    public function __construct(string $entityType = '')
-    {
+    public function __construct(
+        protected SelectBuilderFactory $selectBuilderFactory,
+        string $entityType = '',
+    ) {
         $this->entityType = $entityType;
+
+        $this->initEntityType();
     }
+
+    /**
+     * @internal
+     */
+    protected function initEntityType(): void
+    {}
 
     /**
      * @return RDBRepository<TEntity>
@@ -235,8 +249,7 @@ class Service implements Crud,
     public function getEntity(string $id): ?Entity
     {
         try {
-            $builder = $this->selectBuilderFactory
-                ->create()
+            $builder = $this->selectBuilderFactory->create()
                 ->from($this->entityType)
                 ->withSearchParams(
                     SearchParams::create()
@@ -399,6 +412,55 @@ class Service implements Crud,
         $manager = $this->injectableFactory->create(SanitizeManager::class);
 
         $manager->process($this->entityType, $data);
+
+        $this->sanitizeInputForeign($data);
+    }
+
+    private function sanitizeInputForeign(stdClass $data): void
+    {
+        $entityDefs = $this->entityManager->getDefs()->getEntity($this->entityType);
+
+        /** @var array<string, Entity> $map */
+        $map = [];
+
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            if ($fieldDefs->getType() !== FieldType::FOREIGN) {
+                continue;
+            }
+
+            $link = $fieldDefs->getParam(FieldParam::LINK);
+            $foreignField = $fieldDefs->getParam(FieldParam::FIELD);
+
+            if (!$link || !$foreignField) {
+                continue;
+            }
+
+            $foreignEntityType = $entityDefs->tryGetRelation($link)?->tryGetForeignEntityType();
+
+            if (!$foreignEntityType) {
+                continue;
+            }
+
+            $id = $data->{$link . 'Id'} ?? null;
+
+            if (!is_string($id)) {
+                continue;
+            }
+
+            if (!array_key_exists($link, $map)) {
+                $map[$link] = $this->entityManager->getEntityById($foreignEntityType, $id);
+            }
+
+            $foreignEntity = $map[$link] ?? null;
+
+            if (!$foreignEntity) {
+                continue;
+            }
+
+            $field = $fieldDefs->getName();
+
+            $data->$field = $foreignEntity->get($foreignField);
+        }
     }
 
     protected function filterInput(stdClass $data): void
@@ -797,7 +859,7 @@ class Service implements Crud,
         /** @noinspection PhpDeprecationInspection */
         $this->beforeDeleteEntity($entity);
 
-        $this->getRepository()->remove($entity);
+        $this->getRepository()->remove($entity, [RemoveOption::API => true]);
 
         /** @noinspection PhpDeprecationInspection */
         $this->afterDeleteEntity($entity);
@@ -833,16 +895,18 @@ class Service implements Crud,
 
         $preparedSearchParams = $this->prepareSearchParams($searchParams);
 
-        $selectBuilder = $this->selectBuilderFactory->create();
-
-        $query = $selectBuilder
-            ->from($this->entityType)
-            ->withStrictAccessControl()
-            ->withSearchParams($preparedSearchParams)
-            ->withAdditionalApplierClassNameList(
-                $this->createSelectApplierClassNameListProvider()->get($this->entityType)
-            )
-            ->build();
+        try {
+            $query = $this->selectBuilderFactory->create()
+                ->from($this->entityType)
+                ->withStrictAccessControl()
+                ->withSearchParams($preparedSearchParams)
+                ->withAdditionalApplierClassNameList(
+                    $this->createSelectApplierClassNameListProvider()->get($this->entityType)
+                )
+                ->build();
+        } catch (Forbidden $e) {
+            throw new BadRequest($e->getMessage(), 400, $e);
+        }
 
         $collection = $this->getRepository()
             ->clone($query)
@@ -898,11 +962,12 @@ class Service implements Crud,
      *
      * @throws NotFound If not found.
      * @throws Forbidden If no access.
+     * @throws Conflict If a conflict occurred.
      */
     public function restoreDeleted(string $id): void
     {
         if (!$this->user->isAdmin()) {
-            throw new Forbidden();
+            throw new Forbidden("Only admin can restore.");
         }
 
         $entity = $this->getEntityEvenDeleted($id);
@@ -911,24 +976,14 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        if (!$entity->get(Attribute::DELETED)) {
-            throw new Forbidden("No 'deleted' attribute.");
-        }
+        /** @var class-string<Restorer<Entity>> $restorerClassName */
+        $restorerClassName = $this->metadata->get("recordDefs.$this->entityType.deletedRestorerClassName") ??
+            DefaultRestorer::class;
 
-        $this->entityManager->getTransactionManager()
-            ->run(function () use ($entity) {
-                $this->getRepository()->restoreDeleted($entity->getId());
+        /** @var Restorer<Entity> $restorer */
+        $restorer = $this->injectableFactory->createWithBinding($restorerClassName, $this->createBinding());
 
-                if (
-                    $entity->hasAttribute('deleteId') &&
-                    $this->metadata->get("entityDefs.$this->entityType.deleteId")
-                ) {
-                    $this->entityManager->refreshEntity($entity);
-
-                    $entity->set('deleteId', '0');
-                    $this->getRepository()->save($entity, [SaveOption::SILENT => true]);
-                }
-            });
+        $restorer->restore($entity);
     }
 
     public function getMaxSelectTextAttributeLength(): ?int
@@ -1027,7 +1082,11 @@ class Service implements Crud,
             $selectBuilder->withWherePermissionCheck();
         }
 
-        $query = $selectBuilder->build();
+        try {
+            $query = $selectBuilder->build();
+        } catch (Forbidden $e) {
+            throw new BadRequest($e->getMessage(), 400, $e);
+        }
 
         $collection = $this->entityManager
             ->getRDBRepository($this->entityType)

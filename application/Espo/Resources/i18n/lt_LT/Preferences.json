@@ -28,17 +28,25 @@
     "followCreatedEntities": "Automatiškai sekti sukurtus įrašus",
     "followCreatedEntityTypeList": "Automatiškai sekti specialių vedinių tipų sukurtus įrašus",
     "emailUseExternalClient": "Naudokite išorinį el. Pašto klientą",
-    "scopeColorsDisabled": "Išjunkite spalvų apimtį",
-    "tabColorsDisabled": "Išjungti kortelių spalvas",
     "assignmentNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą programėlėje",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą el. paštu",
     "dashboardLocked": "Užrakinti prietaisų skydelį",
-    "textSearchStoringDisabled": "Išjungti teksto filtro saugojimą"
+    "textSearchStoringDisabled": "Išjungti teksto filtro saugojimą",
+    "calendarSlotDuration": "Kalendoriaus laiko tarpsnis Trukmė",
+    "calendarScrollHour": "Kalendoriaus slinkimas į valandą",
+    "defaultRemindersTask": "Numatytuosius užduočių priminimus",
+    "addCustomTabs": "Pridėti pasirinktinius skirtukus",
+    "reactionNotifications": "Programėlės pranešimai apie reakcijas",
+    "pageContentWidth": "Turinio plotis"
   },
   "options": {
     "weekStart": {
       "0": "Sekmadienis",
       "1": "Pirmadienis"
+    },
+    "pageContentWidth": {
+      "": "Normalus",
+      "Wide": "Platus"
     }
   },
   "labels": {
@@ -51,6 +59,12 @@
     "autoFollowEntityTypeList": "Automatiškai sekti visus naujus sukurtus įrašus (sukurtus bet kurio vartotojo) pasirinktų vedinių tipų, kad galėtumėte matyti sraute esančią informaciją ir gauti pranešimus apie visus sistemos įrašus.",
     "doNotFillAssignedUserIfNotRequired": "Kurdamas įrašą priskirtas vartotojas nebus užpildytas, nebent laukelis yra privalomas.",
     "followCreatedEntities": "Kuriant naujus įrašus jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui.",
-    "followCreatedEntityTypeList": "Kai kuriate naujus pasirinktų subjektų tipų įrašus, jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui."
+    "followCreatedEntityTypeList": "Kai kuriate naujus pasirinktų subjektų tipų įrašus, jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui.",
+    "addCustomTabs": "Jei pažymėta, pasirinktiniai skirtukai bus pridėti prie numatytųjų skirtukų. Priešingu atveju vietoj numatytųjų skirtukų bus naudojami pasirinktiniai skirtukai."
+  },
+  "tabFields": {
+    "label": "Etiketė",
+    "iconClass": "Ikona",
+    "color": "Spalva"
   }
 }

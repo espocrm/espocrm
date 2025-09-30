@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,19 +29,21 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\DataCache,
-    Utils\File\Manager as FileManager,
-};
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
 
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use InvalidArgumentException;
 
-class DataCacheTest extends \PHPUnit\Framework\TestCase
+class DataCacheTest extends TestCase
 {
+    private $fileManager;
+    private $dataCache;
+
     protected function setUp() : void
     {
-        $this->fileManager = $this->getMockBuilder(FileManager::class)->disableOriginalConstructor()->getMock();
+        $this->fileManager = $this->createMock(FileManager::class);
 
         $this->dataCache = new DataCache($this->fileManager);
     }

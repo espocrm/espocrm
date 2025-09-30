@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ namespace Espo\Tools\Stream;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;
@@ -61,8 +62,6 @@ class HookProcessor
     private $hasStreamCache = [];
     /** @var array<string, bool> */
     private $isLinkObservableInStreamCache = [];
-    /** @var ?array<string, ?string> */
-    private $statusFields = null;
 
     private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
 
@@ -159,7 +158,7 @@ class HookProcessor
             $type = $relation->getType();
 
             if ($type === Entity::BELONGS_TO) {
-                $this->handleCreateRelatedBelongsTo($entity, $relation, $notifiedEntityTypeList);
+                $this->handleCreateRelatedBelongsTo($entity, $relation, $notifiedEntityTypeList, $options);
 
                 continue;
             }
@@ -181,11 +180,13 @@ class HookProcessor
 
     /**
      * @param string[] $notifiedEntityTypeList
+     * @param array<string, mixed> $options
      */
     private function handleCreateRelatedBelongsTo(
         Entity $entity,
         RelationDefs $defs,
-        array &$notifiedEntityTypeList
+        array &$notifiedEntityTypeList,
+        array $options,
     ): void {
 
         if (
@@ -213,7 +214,7 @@ class HookProcessor
             return;
         }
 
-        $this->service->noteCreateRelated($entity, $foreignEntityType, $id);
+        $this->service->noteCreateRelated($entity, $foreignEntityType, $id, $options);
 
         $notifiedEntityTypeList[] = $foreignEntityType;
     }
@@ -453,16 +454,6 @@ class HookProcessor
 
         if (empty($options[SaveOption::SKIP_AUDITED])) {
             $this->service->handleAudited($entity, $options);
-
-            $statusField = $this->getStatusField($entity->getEntityType());
-
-            if (
-                $statusField &&
-                $entity->get($statusField) &&
-                $entity->isAttributeChanged($statusField)
-            ) {
-                $this->service->noteStatus($entity, $statusField, $options);
-            }
         }
 
         $multipleField = $this->metadata->get(['streamDefs', $entity->getEntityType(), 'followingUsersField']) ??
@@ -560,38 +551,6 @@ class HookProcessor
         }
     }
 
-    private function getStatusField(string $entityType): ?string
-    {
-        return $this->getStatusFields()[$entityType] ?? null;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getStatusFields(): array
-    {
-        if (is_null($this->statusFields)) {
-            $this->statusFields = [];
-
-            /** @var array<string, array<string, mixed>> $scopes */
-            $scopes = $this->metadata->get('scopes', []);
-
-            foreach ($scopes as $scope => $data) {
-                /** @var ?string $statusField */
-                $statusField = $data['statusField'] ?? null;
-
-                if (!$statusField) {
-                    continue;
-                }
-
-                $this->statusFields[$scope] = $statusField;
-            }
-        }
-
-        /** @var array<string, string> */
-        return $this->statusFields;
-    }
-
     /**
      * @param array<string, mixed> $options
      */
@@ -617,12 +576,26 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
+        $saveContext = SaveContext::obtainFromRawOptions($options);
+
         if ($audited) {
-            $this->service->noteRelate($foreignEntity, $entity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteRelate($foreignEntity, $entity, $options)
+                );
+            } else {
+                $this->service->noteRelate($foreignEntity, $entity, $options);
+            }
         }
 
         if ($auditedForeign) {
-            $this->service->noteRelate($entity, $foreignEntity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteRelate($entity, $foreignEntity, $options)
+                );
+            } else {
+                $this->service->noteRelate($entity, $foreignEntity, $options);
+            }
         }
     }
 
@@ -650,15 +623,29 @@ class HookProcessor
         $audited = $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         $auditedForeign = $this->metadata->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'audited']);
 
+        $saveContext = SaveContext::obtainFromRawOptions($options);
+
         if ($audited) {
-            $this->service->noteUnrelate($foreignEntity, $entity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteUnrelate($foreignEntity, $entity, $options)
+                );
+            } else {
+                $this->service->noteUnrelate($foreignEntity, $entity, $options);
+            }
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
         }
 
         if ($auditedForeign) {
-            $this->service->noteUnrelate($entity, $foreignEntity);
+            if ($saveContext) {
+                $saveContext->addDeferredAction(
+                    fn () => $this->service->noteUnrelate($entity, $foreignEntity, $options)
+                );
+            } else {
+                $this->service->noteUnrelate($entity, $foreignEntity, $options);
+            }
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.

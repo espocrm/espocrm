@@ -4,4 +4,4 @@
     title="Powered by EspoCRM"
     rel="noopener" target="_blank"
     tabindex="-1"
->EspoCRM</a></p>
+>EspoCRM, Inc.</a></p>

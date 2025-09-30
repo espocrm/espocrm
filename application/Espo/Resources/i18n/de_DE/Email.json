@@ -55,7 +55,8 @@
     "sendAt": "Senden um",
     "toEmailAddresses": "An E-Mail-Adressen",
     "bccEmailAddresses": "BCC E-Mail-Adressen",
-    "replyToEmailAddresses": "Antwort-an-E-Mail-Adressen"
+    "replyToEmailAddresses": "Antwort-an-E-Mail-Adressen",
+    "isAutoReply": "Ist Autoantwort"
   },
   "links": {
     "replied": "Beantwortet",

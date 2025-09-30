@@ -6,7 +6,8 @@
     "redirectUri": "Weiterleitungs URI",
     "siteKey": "Website-Schlüssel",
     "secretKey": "Geheimer Schlüssel",
-    "scoreThreshold": "Zahl Schwellenwert"
+    "scoreThreshold": "Zahl Schwellenwert",
+    "mapId": "Karten-ID"
   },
   "messages": {
     "selectIntegration": "Wählen Sie eine Integration aus dem Menü.",

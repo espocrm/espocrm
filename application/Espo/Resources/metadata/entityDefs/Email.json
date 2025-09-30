@@ -408,7 +408,8 @@
             "type": "bool",
             "readOnly": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true
+            "layoutDefaultSidePanelDisabled": true,
+            "layoutDetailDisabled": true
         },
         "parent": {
             "type": "linkParent",
@@ -442,6 +443,13 @@
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Email\\SendAt\\Future"
             ]
+        },
+        "isAutoReply": {
+            "type": "bool",
+            "readOnly": true,
+            "fieldManagerParamList": [],
+            "layoutDefaultSidePanelDisabled": true,
+            "layoutDetailDisabled": true
         },
         "createdAt": {
             "type": "datetime",
@@ -541,9 +549,12 @@
             "readOnly": true,
             "columns": {
                 "inTrash": "inTrash",
-                "folderId": "folderId"
+                "folderId": "folderId",
+                "inArchive": "inArchive",
+                "isRead": "isRead"
             },
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "additionalAttributeList": ["columns"]
         },
         "assignedUsers": {
             "type": "linkMultiple",

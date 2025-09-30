@@ -31,7 +31,11 @@
     "textFilterClassName": "Espo\\Classes\\Select\\Email\\TextFilter",
     "textFilterUseContainsAttributeList": ["name"],
     "selectAttributesDependencyMap": {
-        "subject": ["name"],
+        "subject": [
+            "name",
+            "isAutoReply",
+            "hasAttachment"
+        ],
         "personStringData": ["fromString", "fromEmailAddressId"],
         "replyToName": ["replyToString"]
     }

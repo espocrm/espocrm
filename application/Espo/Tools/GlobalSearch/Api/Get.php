@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Tools\GlobalSearch\Service;
 
 /**
@@ -41,8 +42,10 @@ use Espo\Tools\GlobalSearch\Service;
  */
 class Get implements Action
 {
-    public function __construct(private Service $service)
-    {}
+    public function __construct(
+        private Service $service,
+        private SearchParamsFetcher $searchParamsFetcher,
+    ) {}
 
     public function process(Request $request): Response
     {
@@ -52,10 +55,10 @@ class Get implements Action
             throw new BadRequest("No `q` parameter.");
         }
 
-        $offset = intval($request->getQueryParam('offset'));
-        $maxSize = $request->hasQueryParam('maxSize') ?
-            intval($request->getQueryParam('maxSize')):
-            null;
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
 
         $result = $this->service->find($query, $offset, $maxSize);
 

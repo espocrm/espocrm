@@ -1,5 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/consoleCommands",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://www.espocrm.com/schema/metadata/app/containerServices.json",
     "title": "app/containerServices",
     "description": "Definitions of container services. https://docs.espocrm.com/development/di/#container-services",

@@ -4,7 +4,7 @@
     "to": "A",
     "subject": "Objet",
     "bodyContains": "Corps de texte contient",
-    "groupEmailFolder": "Dossier eMail du groupe",
+    "groupEmailFolder": "Dossier email du groupe",
     "markAsRead": "Marquer comme lu",
     "bodyContainsAll": "Corps contient tout",
     "skipNotification": "Ignorer la notification"
@@ -22,7 +22,7 @@
   },
   "links": {
     "emailFolder": "Dossier",
-    "groupEmailFolder": "Dossier eMail du groupe"
+    "groupEmailFolder": "Dossier email du groupe"
   },
   "options": {
     "action": {

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,20 +37,49 @@ export default class DebounceHelper {
      * @type {boolean}
      * @private
      */
-    _blocked = false
+    blocked = false
 
     /**
-     *
      * @type {boolean}
      * @private
      */
-    _calledWhenBlocked = false
+    blockedInProcess = false
 
+    /**
+     * @type {boolean}
+     * @private
+     */
+    calledWhenProcessBlocked = false
+
+    /**
+     * @type {number}
+     * @private
+     */
+    interval = 500
+
+    /**
+     * @type {number}
+     * @private
+     */
+    blockInterval = 1000
+
+    /**
+     * @type {number}
+     * @private
+     */
+    blockedCallCount = 0
+
+    /**
+     * @type {number|null}
+     * @private
+     */
+    blockTimeoutId = null
 
     /**
      * @param {{
      *     handler: function(...*),
-     *     interval: number,
+     *     interval?: number,
+     *     blockInterval?: number,
      * }} options
      * @param options
      */
@@ -61,11 +90,8 @@ export default class DebounceHelper {
          */
         this.handler = options.handler;
 
-        /**
-         * @private
-         * @type {number}
-         */
-        this.interval = options.interval;
+        this.interval = options.interval ?? this.interval;
+        this.blockInterval = options.blockInterval ?? this.blockInterval;
     }
 
     /**
@@ -75,21 +101,27 @@ export default class DebounceHelper {
      */
     process() {
         const handle = () => {
-            if (this._blocked) {
-                this._calledWhenBlocked = true;
+            if (this.blocked) {
+                this.blockedCallCount ++;
+
+                return;
+            }
+
+            if (this.blockedInProcess) {
+                this.calledWhenProcessBlocked = true;
 
                 return;
             }
 
             this.handler(arguments);
 
-            this._blocked = true;
+            this.blockedInProcess = true;
 
             setTimeout(() => {
-                const reRun = this._calledWhenBlocked;
+                const reRun = this.calledWhenProcessBlocked;
 
-                this._blocked = false;
-                this._calledWhenBlocked = false;
+                this.blockedInProcess = false;
+                this.calledWhenProcessBlocked = false;
 
                 if (reRun) {
                     handle();
@@ -98,5 +130,28 @@ export default class DebounceHelper {
         };
 
         handle();
+    }
+
+    /**
+     * Block for a while.
+     *
+     * @since 9.2.0
+     */
+    block() {
+        this.blocked = true;
+
+        if (this.blockTimeoutId) {
+            clearTimeout(this.blockTimeoutId);
+        }
+
+        this.blockTimeoutId = setTimeout(() => {
+            this.blocked = false;
+            const toProcess = this.blockedCallCount > 1;
+            this.blockedCallCount = 0;
+
+            if (toProcess) {
+                this.process();
+            }
+        }, this.blockInterval)
     }
 }

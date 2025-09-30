@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,12 @@
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Core\Templates\Entities\Company as CompanyEntity;
+use Espo\Services\Record;
+
 /**
- * @extends \Espo\Services\Record<\Espo\Core\Templates\Entities\Company>
+ * @extends Record<CompanyEntity>
  */
-class Company extends \Espo\Services\Record
+class Company extends Record
 {
 }

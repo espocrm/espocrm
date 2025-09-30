@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,6 +44,8 @@ class CommandManagerTest extends TestCase
     private ?InjectableFactory $injectableFactory = null;
     private ?Metadata $metadata = null;
     private ?CommandManager $manager = null;
+
+    private $command;
 
     protected function setUp() : void
     {

@@ -30,7 +30,8 @@
     "opportunityAmountCurrency": "Iespēju summas valūta",
     "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
     "acceptanceStatusCalls": "Akcepta statuss (zvani)",
-    "convertedAt": "Pārveidots pie"
+    "convertedAt": "Pārveidots pie",
+    "originalEmail": "Sākotnējais e-pasta vēstule"
   },
   "links": {
     "targetLists": "Mērķa adresātu saraksti",
@@ -64,7 +65,7 @@
   },
   "presetFilters": {
     "active": "Aktīvs",
-    "actual": "Faktiskais",
-    "converted": "Konvertēts"
+    "converted": "Konvertēts",
+    "actual": "Atvērt"
   }
 }

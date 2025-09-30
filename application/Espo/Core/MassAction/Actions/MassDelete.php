@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Core\MassAction\Actions;
 
+use Espo\Core\ORM\Repository\Option\RemoveOption;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Utils\Log;
@@ -70,7 +71,7 @@ class MassDelete implements MassAction
             throw new Forbidden("No mass-update permission.");
         }
 
-        $service = $this->serviceFactory->create($entityType);
+        $service = $this->serviceFactory->createForUser($entityType, $this->user);
 
         $repository = $this->entityManager->getRDBRepository($entityType);
 
@@ -92,8 +93,9 @@ class MassDelete implements MassAction
 
             try {
                 $repository->remove($entity, [
-                    SaveOption::MASS_UPDATE => true,
-                    SaveOption::MODIFIED_BY_ID => $this->user->getId(),
+                    RemoveOption::MASS_REMOVE => true,
+                    RemoveOption::MODIFIED_BY_ID => $this->user->getId(),
+                    SaveOption::MASS_UPDATE => true, // Legacy.
                 ]);
             } catch (Exception $e) {
                 $this->log->info("Mass delete exception. Record: {id}.", [
@@ -104,7 +106,6 @@ class MassDelete implements MassAction
                 continue;
             }
 
-            /** @var string $id */
             $id = $entity->getId();
 
             $ids[] = $id;

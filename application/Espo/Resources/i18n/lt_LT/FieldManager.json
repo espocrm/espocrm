@@ -3,7 +3,8 @@
     "Dynamic Logic": "Dinaminė logika",
     "Name": "Vardas",
     "Label": "Etiketė",
-    "Type": "Tipas"
+    "Type": "Tipas",
+    "View Details": "Peržiūrėti informaciją"
   },
   "options": {
     "dateTimeDefault": {
@@ -98,7 +99,11 @@
     "displayAsList": "Kiekvienas elementas įrašomas į naują eilutę.",
     "optionsVarchar": "Automatinio užbaigimo reikšmių sąrašas.",
     "currencyDecimal": "Naudokite dešimtainės trupmenos DB tipą. Programoje reikšmės bus pateikiamos kaip eilutės. Pažymėkite šį parametrą, jei reikalingas tikslumas.",
-    "optionsReference": "Pakartotinai naudokite kitos srities parinktis."
+    "optionsReference": "Pakartotinai naudokite kitos srities parinktis.",
+    "readOnlyAfterCreate": "Lauko reikšmę galima nurodyti kuriant naują įrašą. Vėliau laukas tampa tik skaitymui skirtu lauku. Jį vis dar galima apskaičiuoti pagal formulę.",
+    "linkReadOnly": "Naudotojas negali nurodyti lauko reikšmės. Tačiau ją galima apskaičiuoti pagal formulę.\n\nTaip pat bus išjungta galimybė sukurti susijusį įrašą iš ryšių skydelių.",
+    "relateOnImport": "Importuojant su šiuo lauku, įrašas automatiškai susiejamas su atitinkamu užsienio įrašu. Šią funkciją naudokite tik tuo atveju, jei užsienio laukas laikomas unikaliu.",
+    "preview": "Rodyti peržiūros mygtuką. Taikoma, jei įjungta funkcija Markdown."
   },
   "fieldParts": {
     "address": {
@@ -156,6 +161,12 @@
   "messages": {
     "fieldNameIsNotAllowed": "Lauko pavadinimas \"{field}\" neleidžiamas.",
     "fieldAlreadyExists": "Laukas \"{field}\" jau egzistuoja laukelyje \"{entityType}\".",
-    "linkWithSameNameAlreadyExists": "Nuoroda su pavadinimu \"{field}\" jau egzistuoja \"{entityType}\"."
+    "linkWithSameNameAlreadyExists": "Nuoroda su pavadinimu \"{field}\" jau egzistuoja \"{entityType}\".",
+    "confirmRemove": "Ar tikrai norite pašalinti lauką *{field}*?\n\nLauko pašalinimas nepašalina duomenų iš duomenų bazės. Duomenys iš duomenų bazės bus pašalinti, jei paleisite kietąjį atstatymą.",
+    "fieldCreatedAddToLayouts": "Sukurtas laukas. Dabar galite jį pridėti prie [layouts]({link})",
+    "namingFieldLinkConflict": "Pavadinimas \"{field}\" prieštarauja nuorodai."
+  },
+  "otherFields": {
+    "attributes": "Atributai"
   }
 }

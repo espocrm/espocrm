@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,11 +56,11 @@ class Email extends Database implements
 {
     use Di\EmailFilterManagerSetter;
 
-    private const ADDRESS_FROM = 'from';
-    private const ADDRESS_TO = 'to';
-    private const ADDRESS_CC = 'cc';
-    private const ADDRESS_BCC = 'bcc';
-    private const ADDRESS_REPLY_TO = 'replyTo';
+    private const ADDRESS_FROM = EmailEntity::ADDRESS_FROM;
+    private const ADDRESS_TO = EmailEntity::ADDRESS_TO;
+    private const ADDRESS_CC = EmailEntity::ADDRESS_CC;
+    private const ADDRESS_BCC = EmailEntity::ADDRESS_BCC;
+    private const ADDRESS_REPLY_TO = EmailEntity::ADDRESS_REPLY_TO;
 
     private const ATTR_FROM_EMAIL_ADDRESS_ID = 'fromEmailAddressId';
     private const ATTR_FROM_EMAIL_ADDRESS_NAME = 'fromEmailAddressName';
@@ -571,7 +571,8 @@ class Email extends Database implements
 
         if (
             $user instanceof UserEntity &&
-            $entity->getStatus() !== EmailEntity::STATUS_DRAFT
+            $entity->getStatus() !== EmailEntity::STATUS_DRAFT &&
+            $user->getType() !== UserEntity::TYPE_PORTAL
         ) {
             $entity->setSentBy($user);
         }

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ class ListExpandedRecordView extends ListRecordView {
     header = false
     _internalLayout = null
     checkedList = null
-    listContainerEl = '.list > ul'
+    listContainerEl = '> .list > ul'
     columnResize = false
 
     init() {
@@ -192,13 +192,19 @@ class ListExpandedRecordView extends ListRecordView {
         const rows = internalLayout.rows || [];
 
         rows.forEach(row => {
-            row.forEach(col => {
-                col.fullSelector = this.getCellSelector(model, col);
+            row.forEach(cell => {
+                //cell.fullSelector = this.getCellSelector(model, cell);
+
+                cell.options ??= {};
+                cell.options.fullSelector = this.getCellSelector(model, cell)
             });
         });
 
         if (internalLayout.right) {
-            internalLayout.right.fullSelector = this.getCellSelector(model, internalLayout.right);
+            //internalLayout.right.fullSelector = this.getCellSelector(model, internalLayout.right);
+
+            internalLayout.right.options ??= {};
+            internalLayout.right.options.fullSelector = this.getCellSelector(model, internalLayout.right);
         }
     }
 

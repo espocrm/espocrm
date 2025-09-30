@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -308,36 +308,34 @@ class RecordController extends Controller {
      *     attributes?: Record,
      * } | Record} [options]
      */
-    create(options) {
-        options = options || {};
-
+    async create(options = {}) {
         const optionsOptions = options.options || {};
 
-        this.getModel().then(model => {
-            if (options.relate) {
-                model.setRelate(options.relate);
-            }
+        const model = await this.getModel();
 
-            const o = {
-                scope: this.name,
-                model: model,
-                returnUrl: options.returnUrl,
-                returnDispatchParams: options.returnDispatchParams,
-                params: options,
-            };
+        if (options.relate) {
+            model.setRelate(options.relate);
+        }
 
-            for (const k in optionsOptions) {
-                o[k] = optionsOptions[k];
-            }
+        const o = {
+            scope: this.name,
+            model: model,
+            returnUrl: options.returnUrl,
+            returnDispatchParams: options.returnDispatchParams,
+            params: options,
+        };
 
-            if (options.attributes) {
-                model.set(options.attributes);
-            }
+        for (const k in optionsOptions) {
+            o[k] = optionsOptions[k];
+        }
 
-            this.prepareModelCreate(model, options);
+        if (options.attributes) {
+            model.set(options.attributes);
+        }
 
-            this.main(this.getViewName('edit'), o);
-        });
+        this.prepareModelCreate(model, options);
+
+        this.main(this.getViewName('edit'), o);
     }
 
     /**

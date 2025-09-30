@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -360,6 +360,12 @@ class DatetimeFieldView extends DateFieldView {
 
         return data;
     }
+
+    /**
+     * Not implemented. For datetimeOptions too.
+     * When implementing, keep in mind the duration field.
+     */
+    onAfterChange() {}
 }
 
 export default DatetimeFieldView;

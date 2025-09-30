@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,53 +29,60 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
-use Espo\{
-    Core\Exceptions\Forbidden,
-    Core\Exceptions\BadRequest,
-    Core\Select\Where\Checker,
-    Core\Select\Where\Item,
-    Core\Select\Where\Params,
-    Core\Acl,
-    ORM\EntityManager,
-    ORM\BaseEntity as Entity,
-};
+use Espo\Core\Acl;
+use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Where\Checker;
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\Params;
+use Espo\ORM\BaseEntity as Entity;
+use Espo\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
 
-class CheckerTest extends \PHPUnit\Framework\TestCase
+class CheckerTest extends TestCase
 {
+    /** @var Checker|null */
+    protected $checker = null;
+    /** @var EntityManager|null */
+    protected $entityManager = null;
+    /** @var Acl|null  */
+    protected $acl = null;
+
+    protected ?string $entityType = null;
+    protected ?string $foreignEntityType = null;
+
+    private $entity;
+    private $params;
+
     protected function setUp() : void
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->acl = $this->createMock(Acl::class);
 
         $this->entityType = 'Test';
-
-        $this->foreignEntityType = 'Test';
+        $this->foreignEntityType = 'TestForeign';
 
         $this->checker = new Checker(
             $this->entityType,
             $this->entityManager,
-            $this->acl
+            $this->acl,
         );
 
         $this->params = $this->createMock(Params::class);
-
         $this->entity = $this->createMock(Entity::class);
-
-        $this->foreignEntity = $this->createMock(Entity::class);
-
-        $this->entityManager
-            ->expects($this->any())
-            ->method('getNewEntity')
-            ->with($this->entityType)
-            ->willReturn($this->entity);
+        $foreignEntity = $this->createMock(Entity::class);
 
         $this->entityManager
             ->expects($this->any())
             ->method('getNewEntity')
-            ->with($this->foreignEntityType)
-            ->willReturn($this->foreignEntity);
+            ->willReturnMap([
+                [$this->entityType, $this->entity],
+                [$this->foreignEntityType, $foreignEntity],
+            ]);
     }
 
+    /** @noinspection PhpUnhandledExceptionInspection */
     public function testAttributeExistence1()
     {
         $this->params
@@ -110,15 +117,12 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->entity
+            ->expects(self::any())
             ->method('hasAttribute')
-            ->withConsecutive(
-                ['test1'],
-                ['test2']
-            )
-            ->willReturnOnConsecutiveCalls(
-                true,
-                true
-            );
+            ->willReturnMap([
+                ['test1', true],
+                ['test2', true],
+            ]);
 
         $this->entity
             ->expects($this->once())
@@ -129,6 +133,7 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         $this->checker->check($item, $this->params);
     }
 
+    /** @noinspection PhpUnhandledExceptionInspection */
     public function testAttributeExistence2()
     {
         $this->params
@@ -153,19 +158,18 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->entity
+            ->expects(self::any())
             ->method('hasAttribute')
-            ->withConsecutive(
-                ['test1']
-            )
-            ->willReturnOnConsecutiveCalls(
-                false
-            );
+            ->willReturnMap([
+                ['test1', false]
+            ]);
 
         $this->expectException(BadRequest::class);
 
         $this->checker->check($item, $this->params);
     }
 
+    /** @noinspection PhpUnhandledExceptionInspection */
     public function testAttributeExistence3()
     {
         $this->params
@@ -200,7 +204,8 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         $this->checker->check($item, $this->params);
     }
 
-    public function testPrermissions1()
+    /** @noinspection PhpUnhandledExceptionInspection */
+    public function testPermissions1()
     {
         $this->params
             ->expects($this->any())
@@ -252,15 +257,11 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
 
         $this->acl
             ->expects($this->any())
-            ->method('checkScope')
-            ->with($this->foreignEntityType)
-            ->willReturn(true);
-
-        $this->acl
-            ->expects($this->any())
             ->method('getScopeForbiddenAttributeList')
-            ->with($this->entityType)
-            ->willReturn([]);
+            ->willReturnMap([
+                [$this->entityType, Table::ACTION_READ, Table::LEVEL_NO, []],
+                [$this->foreignEntityType, Table::ACTION_READ, Table::LEVEL_NO, []],
+            ]);
 
         $this->acl
             ->expects($this->any())
@@ -277,15 +278,31 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         $this->acl
             ->expects($this->any())
             ->method('checkScope')
-            ->with($this->entityType)
+            ->with($this->foreignEntityType)
             ->willReturn(true);
+
+        $foreign = $this->createMock(Entity::class);
+
+        $this->entityManager
+            ->expects($this->any())
+            ->method('getEntityById')
+            ->willReturnMap([
+                [$this->foreignEntityType, 'value3', $foreign]
+            ]);
+
+        $this->acl
+            ->expects($this->any())
+            ->method('checkEntityRead')
+            ->willReturnMap([
+                [$foreign, true]
+            ]);
 
         $this->checker->check($item, $this->params);
 
         $this->assertTrue(true);
     }
 
-    public function testPrermissions2()
+    public function testPermissions2()
     {
         $this->params
             ->expects($this->any())
@@ -327,10 +344,12 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException(Forbidden::class);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->checker->check($item, $this->params);
     }
 
-    public function testPrermissions3()
+    /** @noinspection PhpUnhandledExceptionInspection */
+    public function testPermissions3()
     {
         $this->params
             ->expects($this->any())
@@ -381,7 +400,8 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         $this->checker->check($item, $this->params);
     }
 
-    public function testPrermissions4()
+    /** @noinspection PhpUnhandledExceptionInspection */
+    public function testPermissions4()
     {
         $this->params
             ->expects($this->any())
@@ -432,6 +452,7 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         $this->checker->check($item, $this->params);
     }
 
+    /** @noinspection PhpUnhandledExceptionInspection */
     public function testComplexExpressions1()
     {
         $this->params

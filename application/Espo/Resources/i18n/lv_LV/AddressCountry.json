@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Create AddressCountry": "Izveidot adresi Valsts",
+    "Populate": "Ievietojiet"
+  },
+  "fields": {
+    "code": "Kods",
+    "isPreferred": "Vai tiek dota priekšroka"
+  },
+  "tooltips": {
+    "code": "ISO 3166-1 divburtu kods.",
+    "isPreferred": "Vēlamās valstis atlases sarakstā parādās pirmās."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Visas esošās valstis tiks dzēstas, tiks izveidots noklusējuma valstu saraksts. Šo operāciju nebūs iespējams atgriezt.\n\nVai esat pārliecināts?"
+  },
+  "strings": {
+    "populateDefaults": "Aizpildīt noklusējuma valstu sarakstu"
+  }
+}

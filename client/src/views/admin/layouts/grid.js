@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -409,6 +409,7 @@ class LayoutGridView extends LayoutBaseView {
             update: () => {
                 this.setIsChanged();
             },
+            cursor: 'grabbing',
         });
 
         // noinspection JSUnresolvedReference
@@ -420,6 +421,7 @@ class LayoutGridView extends LayoutBaseView {
             update: () => {
                 this.setIsChanged();
             },
+            cursor: 'grabbing',
         });
 
         // noinspection JSUnresolvedReference
@@ -428,8 +430,13 @@ class LayoutGridView extends LayoutBaseView {
         const $li = $('#layout ul.cells > li');
 
         // noinspection JSValidateTypes
-        $li.draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
-            .css('cursor', 'pointer');
+        $li.draggable({
+            revert: 'invalid',
+            revertDuration: 200,
+            zIndex: 10,
+            cursor: 'grabbing',
+        })
+            .css('cursor', '');
 
         $li.droppable().droppable('destroy');
 

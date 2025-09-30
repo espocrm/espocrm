@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,11 @@
 
 namespace tests\integration\Espo\Core\Utils\Database;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class CurrencyFieldTest extends Base
 {
-    public function fieldList(): array
+    static public function fieldList(): array
     {
         return [
             ['testCurrency', 'double', null, null],
@@ -39,9 +41,7 @@ class CurrencyFieldTest extends Base
         ];
     }
 
-    /**
-     * @dataProvider fieldList
-     */
+    #[DataProvider('fieldList')]
     public function testColumns($fieldName, $type, $length, $collation): void
     {
         $column = $this->getColumnInfo('Test', $fieldName);

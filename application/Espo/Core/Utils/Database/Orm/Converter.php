@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -85,8 +85,8 @@ class Converter
         FieldParam::AUTOINCREMENT => AttributeParam::AUTOINCREMENT,
         'entity' => 'entity',
         FieldParam::NOT_STORABLE => AttributeParam::NOT_STORABLE,
-        'link' => AttributeParam::RELATION,
-        'field' => AttributeParam::FOREIGN,
+        FieldParam::LINK => AttributeParam::RELATION,
+        FieldParam::FIELD => AttributeParam::FOREIGN,
         'unique' => 'unique',
         'index' => 'index',
         FieldParam::DEFAULT => AttributeParam::DEFAULT,

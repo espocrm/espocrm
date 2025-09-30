@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,6 +53,11 @@ class Binding implements BindingProcessor
 
     private function bindServices(Binder $binder): void
     {
+        $binder->bindService(
+            'Espo\\Core\\Application\\ApplicationParams',
+            'applicationParams'
+        );
+
         $binder->bindService(
             'Espo\\Core\\InjectableFactory',
             'injectableFactory'
@@ -126,11 +131,6 @@ class Binding implements BindingProcessor
         $binder->bindService(
             'Espo\\Core\\Authentication\\AuthToken\\Manager',
             'authTokenManager'
-        );
-
-        $binder->bindService(
-            'Espo\\Core\\Select\\SelectBuilderFactory',
-            'selectBuilderFactory'
         );
 
         $binder->bindService(
@@ -255,6 +255,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Utils\\Database\\ConfigDataProvider',
             'Espo\\Core\\Utils\\Database\\DefaultConfigDataProvider'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Job\\JobScheduler\\Creator',
+            'Espo\\Core\\Job\\JobScheduler\\Creators\\EntityCreator',
+        );
     }
 
     private function bindMisc(Binder $binder): void
@@ -311,6 +316,11 @@ class Binding implements BindingProcessor
         $binder->bindImplementation(
             'Espo\\Core\\Mail\\Importer',
             'Espo\\Core\\Mail\\Importer\\DefaultImporter'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer\\AutoReplyDetector',
+            'Espo\\Core\\Mail\\Importer\\DefaultAutoReplyDetector'
         );
     }
 

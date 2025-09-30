@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,10 +30,10 @@ import ListRelatedView from 'views/list-related';
 
 export default class ActivitiesListView extends ListRelatedView {
 
-
     createButton = false
     unlinkDisabled = true
     filtersDisabled = true
+    allResultDisabled = true;
 
     setup() {
         this.rowActionsView = 'views/record/row-actions/default';

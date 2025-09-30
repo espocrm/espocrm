@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1460,13 +1460,17 @@ class ItemGeneralConverter implements ItemConverter
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $alias =  $link . 'LinkedWithFilter' . $this->randomStringGenerator->generate();
+        $alias = $link . 'LinkedWithFilter' . $this->randomStringGenerator->generate();
 
-        if (!$value && !is_array($value)) {
-            throw new BadRequest("Bad where item. Empty value.");
+        if (!is_array($value)) {
+            $value = [$value];
         }
 
-        // @todo Add check for foreign record existence.
+        foreach ($value as $it) {
+            if (!is_string($it) && !is_int($it)) {
+                throw new BadRequest("Bad where item. Bad array item.");
+            }
+        }
 
         $relationType = $defs->getType();
 
@@ -1536,10 +1540,16 @@ class ItemGeneralConverter implements ItemConverter
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $alias =  $link . 'NotLinkedWithFilter' . $this->randomStringGenerator->generate();
+        $alias = $link . 'NotLinkedWithFilter' . $this->randomStringGenerator->generate();
 
-        if (is_null($value)) {
-            throw new BadRequest("Bad where item. Empty value.");
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+
+        foreach ($value as $it) {
+            if (!is_string($it) && !is_int($it)) {
+                throw new BadRequest("Bad where item. Bad array item.");
+            }
         }
 
         $relationType = $defs->getType();
@@ -1613,6 +1623,12 @@ class ItemGeneralConverter implements ItemConverter
 
         if (!is_array($value)) {
             $value = [$value];
+        }
+
+        foreach ($value as $it) {
+            if (!is_string($it) && !is_int($it)) {
+                throw new BadRequest("Bad where item. Bad array item.");
+            }
         }
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);

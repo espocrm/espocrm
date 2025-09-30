@@ -85,7 +85,8 @@
             "type": "currencyConverted",
             "readOnly": true,
             "importDisabled": true,
-            "customizationInlineEditDisabledDisabled": true
+            "customizationInlineEditDisabledDisabled": true,
+            "detailLayoutIncompatibleFieldList": []
         }
     },
     "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\Currency",

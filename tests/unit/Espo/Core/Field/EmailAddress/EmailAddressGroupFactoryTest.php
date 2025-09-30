@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,31 +29,23 @@
 
 namespace tests\unit\Espo\Core\Field\EmailAddress;
 
-use Espo\Core\{
-    Field\EmailAddress\EmailAddressGroupFactory,
-    Utils\Metadata,
-};
+use Espo\Core\Field\EmailAddress\EmailAddressGroupFactory;
+use Espo\Core\Utils\Metadata;
 
-use Espo\ORM\{
-    EntityManager,
-    Entity,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
+class EmailAddressGroupFactoryTest extends TestCase
 {
     /**
      * @var Metadata
      */
     private $metadata;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
 
     /**
      * @var EmailAddressRepository
@@ -69,13 +61,13 @@ class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
     {
         $this->metadata = $this->createMock(Metadata::class);
 
-        $this->entityManager = $this->createMock(EntityManager::class);
+        $entityManager = $this->createMock(EntityManager::class);
 
         $this->emailAddressRepository = $this->createMock(EmailAddressRepository::class);
 
-        $this->factory = new EmailAddressGroupFactory($this->metadata, $this->entityManager);
+        $this->factory = new EmailAddressGroupFactory($this->metadata, $entityManager);
 
-        $this->entityManager
+        $entityManager
             ->expects($this->any())
             ->method('getRepository')
             ->with('EmailAddress')
@@ -175,20 +167,20 @@ class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->method('has')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', false],
                     ['test', true],
-                ])
+                ]
             );
 
         $entity
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', null],
                     ['test', 'ONE@test.com'],
-                ])
+                ]
             );
 
         $group = $this->factory->createFromEntity($entity, 'test');
@@ -294,20 +286,20 @@ class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->method('has')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', false],
                     ['test', true],
-                ])
+                ]
             );
 
         $entity
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', null],
                     ['test', null],
-                ])
+                ]
             );
 
         $group = $this->factory->createFromEntity($entity, 'test');

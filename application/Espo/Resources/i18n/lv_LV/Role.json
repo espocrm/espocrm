@@ -12,7 +12,10 @@
     "followerManagementPermission": "Sekotāju pārvaldības atļauja",
     "data": "Dati",
     "fieldData": "Lauka dati",
-    "messagePermission": "Ziņojuma atļauja"
+    "messagePermission": "Ziņojuma atļauja",
+    "auditPermission": "Audita atļauja",
+    "mentionPermission": "Pieminēt atļauju",
+    "userCalendarPermission": "Lietotāja kalendāra atļauja"
   },
   "links": {
     "users": "Lietotāji",
@@ -56,10 +59,13 @@
     "followerManagementPermission": "Ļauj pārvaldīt konkrētu ierakstu sekotājus.",
     "messagePermission": "Ļauj sūtīt ziņojumus citiem lietotājiem.\n\n* visiem - var sūtīt visiem\n* komanda - var sūtīt tikai komandas biedriem\n* nē - nevar sūtīt",
     "assignmentPermission": "Ļauj piešķirt ierakstus citiem lietotājiem.\n\n* visi - bez ierobežojuma\n* komanda - var piešķirt tikai komandas biedriem\n* nē - var piešķirt tikai sev",
-    "userPermission": "Ļauj apskatīt citu lietotāju aktivitātes, kalendāru un plūsmu.\n\n* visi - var apskatīt visus\n* komanda - var apskatīt tikai komandas biedru aktivitātes.\n* nē - nevar skatīt",
     "portalPermission": "Piekļuve portāla informācijai, iespēja publicēt ziņojumus portāla lietotājiem.",
     "groupEmailAccountPermission": "Piekļuve grupas e-pasta kontiem, iespēja sūtīt e-pastus no grupas SMTP.",
     "exportPermission": "Ļauj eksportēt ierakstus.",
-    "massUpdatePermission": "Iespēja veikt ierakstu masveida atjaunināšanu."
+    "massUpdatePermission": "Iespēja veikt ierakstu masveida atjaunināšanu.",
+    "auditPermission": "Ļauj apskatīt revīzijas žurnālu.",
+    "mentionPermission": "Ļauj straumē minēt citus lietotājus.\n\n* visi - var pieminēt visus\n* komanda - var minēt tikai komandas biedrus\n* nē - nevar pieminēt",
+    "userPermission": "Ļauj apskatīt citu lietotāju plūsmu. Ļauj lietotājiem apskatīt citiem lietotājiem pieejas līmeņus konkrētiem ierakstiem.",
+    "userCalendarPermission": "Ļauj apskatīt citu lietotāju kalendārus."
   }
 }

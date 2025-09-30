@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -267,32 +267,26 @@ class RequestWrapper implements ApiRequest
 
     public function isGet(): bool
     {
-        return $this->getMethod() === 'GET';
+        return $this->getMethod() === Method::GET;
     }
 
     public function isPut(): bool
     {
-        return $this->getMethod() === 'PUT';
-    }
-
-    /** @noinspection PhpUnused */
-    public function isUpdate(): bool
-    {
-        return $this->getMethod() === 'UPDATE';
+        return $this->getMethod() === Method::PUT;
     }
 
     public function isPost(): bool
     {
-        return $this->getMethod() === 'POST';
+        return $this->getMethod() === Method::POST;
     }
 
     public function isPatch(): bool
     {
-        return $this->getMethod() === 'PATCH';
+        return $this->getMethod() === Method::PATCH;
     }
 
     public function isDelete(): bool
     {
-        return $this->getMethod() === 'DELETE';
+        return $this->getMethod() === Method::DELETE;
     }
 }

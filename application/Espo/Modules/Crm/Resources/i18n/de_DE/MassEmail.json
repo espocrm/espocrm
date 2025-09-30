@@ -50,7 +50,7 @@
     "storeSentEmails": "E-Mails werden in CRM gespeichert."
   },
   "presetFilters": {
-    "actual": "Aktuell",
-    "complete": "Fertig"
+    "complete": "Fertig",
+    "actual": "Aktiv"
   }
 }

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -94,7 +94,9 @@ export default class CollaboratorsFieldView extends LinkMultipleFieldView {
         if (avatarHtml) {
             const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
 
-            itemElement.prepend(img);
+            const textElement = itemElement.querySelector('.text');
+
+            textElement?.prepend(img);
         }
 
         return itemElement;

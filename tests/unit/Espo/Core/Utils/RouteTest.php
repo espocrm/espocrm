@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,18 +43,21 @@ class RouteTest extends TestCase
     private $route;
     private $filesPath = 'tests/unit/testData/Routes';
 
+    private $pathProvider;
+    private $metadata;
+
     protected function setUp(): void
     {
-        $this->fileManager = new FileManager();
+        $fileManager = new FileManager();
 
         $this->metadata = $this->createMock(Metadata::class);
-        $this->dataCache = $this->createMock(DataCache::class);
+        $dataCache = $this->createMock(DataCache::class);
         $this->pathProvider = $this->createMock(PathProvider::class);
 
         $this->route = new Route(
             $this->metadata,
-            $this->fileManager,
-            $this->dataCache,
+            $fileManager,
+            $dataCache,
             $this->pathProvider,
             $this->createMock(Config\SystemConfig::class),
         );

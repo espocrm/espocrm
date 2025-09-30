@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,9 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\File\Exceptions\FileError;
 use Espo\Core\Utils\File\Exceptions\PermissionError;
-
 use stdClass;
 use Throwable;
+use const PHP_OS;
 
 class Manager
 {
@@ -114,9 +114,9 @@ class Manager
             return $result;
         }
 
-        $cdir = scandir($path) ?: [];
+        $dirItems = scandir($path) ?: [];
 
-        foreach ($cdir as $value) {
+        foreach ($dirItems as $value) {
             if (in_array($value, [".", ".."])) {
                 continue;
             }
@@ -222,13 +222,13 @@ class Manager
     public function getContents(string $path): string
     {
         if (!file_exists($path)) {
-            throw new FileError("File '{$path}' does not exist.");
+            throw new FileError("File '$path' does not exist.");
         }
 
         $contents = file_get_contents($path);
 
         if ($contents === false) {
-            throw new FileError("Could not open file '{$path}'.");
+            throw new FileError("Could not open file '$path'.");
         }
 
         return $contents;
@@ -257,13 +257,13 @@ class Manager
      * Get array or stdClass data from PHP file.
      * If a file is not yet written, it will wait until it's ready.
      *
-     * @return array<mixed, mixed>|stdClass
+     * @return array<int|string, mixed>|stdClass
      * @throws FileError
      */
     public function getPhpSafeContents(string $path)
     {
         if (!file_exists($path)) {
-            throw new FileError("Can't get contents from non-existing file '{$path}'.");
+            throw new FileError("Can't get contents from non-existing file '$path'.");
         }
 
         if (!strtolower(substr($path, -4)) == '.php') {
@@ -284,7 +284,7 @@ class Manager
             $counter ++;
         }
 
-        throw new FileError("Bad data stored in file '{$path}'.");
+        throw new FileError("Bad data stored in file '$path'.");
     }
 
     /**
@@ -306,14 +306,14 @@ class Manager
         }
 
         if (!$result) {
-            $result = (file_put_contents($path, $data, $flags) !== false);
+            $result = file_put_contents($path, $data, $flags) !== false;
         }
 
         if ($result) {
             $this->opcacheInvalidate($path);
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
@@ -368,7 +368,7 @@ class Manager
 
         $result = rename($tmpPath, $path);
 
-        if (!$result && stripos(\PHP_OS, 'WIN') === 0) {
+        if (!$result && stripos(PHP_OS, 'WIN') === 0) {
             $result = $this->renameInLoop($tmpPath, $path);
         }
 
@@ -376,7 +376,7 @@ class Manager
             $this->removeFile($tmpPath);
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     private function renameInLoop(string $source, string $destination): bool
@@ -441,14 +441,14 @@ class Manager
         }
 
         if (!is_array($currentData)) {
-            throw new FileError("Neither array nor object in '{$path}'.");
+            throw new FileError("Neither array nor object in '$path'.");
         }
 
         $mergedData = Util::merge($currentData, $data);
 
         $stringData = Json::encode($mergedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        return (bool) $this->putContents($path, $stringData);
+        return $this->putContents($path, $stringData);
     }
 
     /**
@@ -483,7 +483,7 @@ class Manager
             return $this->unlink($path);
         }
 
-        return (bool) $this->putJsonContents($path, $unsettedData);
+        return $this->putJsonContents($path, $unsettedData);
     }
 
     /**
@@ -514,18 +514,15 @@ class Manager
             return true;
         }
 
-        $umask = umask(0);
-
         $result = mkdir($path, $permission);
-
-        if ($umask) {
-            umask($umask);
-        }
 
         if (!$result && is_dir($path)) {
             // Dir can be created by a concurrent process.
             return true;
         }
+
+        // Needs if umask was applied.
+        @chmod($path, $permission);
 
         if (!empty($defaultPermissions['user'])) {
             $this->getPermissionUtils()->chown($path);
@@ -757,7 +754,7 @@ class Manager
     public function removeInDir(string $path, bool $removeWithDir = false): bool
     {
         /** @var string[] $fileList */
-        $fileList = $this->getFileList($path, false);
+        $fileList = $this->getFileList($path);
 
         $result = true;
 
@@ -886,7 +883,7 @@ class Manager
         $size = filesize($path);
 
         if ($size === false) {
-            throw new FileError("Could not get file size for `{$path}`.");
+            throw new FileError("Could not get file size for `$path`.");
         }
 
         return $size;
@@ -901,7 +898,7 @@ class Manager
     }
 
     /**
-     * Check whether a file. If doesn't exist, check by path info.
+     * Check whether a file. If it doesn't exist, check by path info.
      */
     private function isFilenameIsFile(string $path): bool
     {
@@ -951,7 +948,7 @@ class Manager
 
             $fileName = substr($fileName, 0, $dotIndex);
         } else {
-            if (substr($extension, 0, 1) != '.') {
+            if (!str_starts_with($extension, '.')) {
                 $extension = '.' . $extension;
             }
 
@@ -1023,12 +1020,9 @@ class Manager
      */
     private function varExport($variable, int $level = 0): string
     {
-        $tab = '';
         $tabElement = '  ';
 
-        for ($i = 0; $i <= $level; $i++) {
-            $tab .= $tabElement;
-        }
+        $tab = str_repeat($tabElement, $level + 1);
 
         $prevTab = substr($tab, 0, strlen($tab) - strlen($tabElement));
 
@@ -1164,6 +1158,6 @@ class Manager
 
         try {
             opcache_invalidate($filepath, $force);
-        } catch (Throwable $e) {}
+        } catch (Throwable) {}
     }
 }

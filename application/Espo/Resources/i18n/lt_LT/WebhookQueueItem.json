@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "event": "Renginys",
+    "target": "Tikslinė",
+    "data": "Duomenys",
+    "status": "Statusas",
+    "processedAt": "Perdirbta",
+    "attempts": "Bandymai",
+    "processAt": "Procesas ne"
+  },
+  "options": {
+    "status": {
+      "Pending": "Laukiama",
+      "Success": "Sėkmė",
+      "Failed": "Nepavyko"
+    }
+  }
+}

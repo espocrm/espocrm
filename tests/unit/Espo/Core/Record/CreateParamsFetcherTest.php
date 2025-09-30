@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,9 @@ namespace tests\unit\Espo\Core\Record;
 
 use Espo\Core\Record\CreateParamsFetcher;
 use Espo\Core\Api\RequestWrapper;
+use PHPUnit\Framework\TestCase;
 
-class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
+class CreateParamsFetcherTest extends TestCase
 {
     public function test1(): void
     {
@@ -45,11 +46,11 @@ class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request
             ->method('getHeader')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['X-Skip-Duplicate-Check', 'true'],
                     ['X-Duplicate-Source-Id', null],
-                ])
+                ]
             );
 
         $params = (new CreateParamsFetcher())->fetch($request);
@@ -67,11 +68,11 @@ class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request
             ->method('getHeader')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['X-Skip-Duplicate-Check', 'false'],
                     ['X-Duplicate-Source-Id', null],
-                ])
+                ]
             );
 
         $params = (new CreateParamsFetcher())->fetch($request);
@@ -102,11 +103,11 @@ class CreateParamsFetcherTest extends \PHPUnit\Framework\TestCase
 
         $request
             ->method('getHeader')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['X-Skip-Duplicate-Check', 'TRUE'],
                     ['X-Duplicate-Source-Id', null],
-                ])
+                ]
             );
 
         $params = (new CreateParamsFetcher())->fetch($request);

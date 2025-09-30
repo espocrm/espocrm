@@ -30,7 +30,10 @@
       "INACTIVE_USER": "Neaktīvs lietotājs",
       "IS_PORTAL_USER": "Portāla lietotājs",
       "IS_NOT_PORTAL_USER": "Nav portāla lietotājs",
-      "USER_IS_NOT_IN_PORTAL": "Lietotājs nav saistīts ar portālu"
+      "USER_IS_NOT_IN_PORTAL": "Lietotājs nav saistīts ar portālu",
+      "IS_SYSTEM_USER": "Vai sistēmas lietotājs",
+      "FORBIDDEN": "Aizliegts",
+      "WRONG_CODE": "Nepareizs kods"
     }
   }
 }

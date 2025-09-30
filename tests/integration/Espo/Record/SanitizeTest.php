@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
@@ -55,6 +56,12 @@ class SanitizeTest extends BaseTestCase
         $this->getDataManager()->rebuild();
 
         $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user->setUserName('test');
+        $em->saveEntity($user);
 
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
@@ -157,7 +164,7 @@ class SanitizeTest extends BaseTestCase
                 'name' => 'Test',
                 'dateStart' => '2030-12-10 10:11:12',
                 'dateEnd' => '2030-12-10T10:11:12-01:00',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10 10:11:12', $meeting->get('dateStart'));
@@ -173,7 +180,7 @@ class SanitizeTest extends BaseTestCase
                 'name' => 'Test',
                 'dateStartDate' => '2030-12-10T10:11:12-01:00',
                 'dateEnd' => '2030-12-10T10:11:12-01:00',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
@@ -186,7 +193,7 @@ class SanitizeTest extends BaseTestCase
             ->create((object) [
                 'name' => 'Test',
                 'dateStartDate' => '2030-12-10',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
@@ -200,7 +207,7 @@ class SanitizeTest extends BaseTestCase
             ->create((object) [
                 'name' => 'Test',
                 'closeDate' => '2030-12-10T10:11:12-01:00',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
                 'probability' => 10,
                 'amount' => 1.0,
             ], CreateParams::create());
@@ -214,11 +221,35 @@ class SanitizeTest extends BaseTestCase
             ->create((object) [
                 'name' => 'Test',
                 'closeDate' => '2030-12-10',
-                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'assignedUserId' => $user->getId(),
                 'probability' => 10,
                 'amount' => 1.0,
             ], CreateParams::create());
 
         $this->assertEquals('2030-12-10', $meeting->get('closeDate'));
+    }
+
+    public function testForeign(): void
+    {
+        $account = $this->getEntityManager()->createEntity(Account::ENTITY_TYPE, [
+            'type' => Account::TYPE_CUSTOMER,
+        ]);
+
+        $serviceContainer = $this->getContainer()->getByClass(ServiceContainer::class);
+
+        $contactService = $serviceContainer->getByClass(Contact::class);
+
+        $data = (object) [
+            'lastName' => 'C-1',
+            'accountId' => $account->getId(),
+        ];
+        $contactService->sanitizeInput($data);
+        $this->assertEquals(Account::TYPE_CUSTOMER, $data->accountType ?? null);
+
+        $data = (object) [
+            'lastName' => 'C-2',
+        ];
+        $contactService->sanitizeInput($data);
+        $this->assertEquals(null, $data->accountType ?? null);
     }
 }

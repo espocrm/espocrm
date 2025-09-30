@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,15 +29,19 @@
 
 namespace tests\unit\Espo\Core\Select\Text;
 
-use Espo\Core\{
-    Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer,
-    Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams,
-    Select\Text\MetadataProvider,
-    Utils\Config,
-};
+use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
+use Espo\Core\Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer;
+use Espo\Core\Select\Text\MetadataProvider;
+use Espo\Core\Utils\Config;
+use PHPUnit\Framework\TestCase;
 
-class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
+class FullTextSearchDataComposerTest extends TestCase
 {
+    private $config;
+    private $metadataProvider;
+    private $entityType;
+    private $fullTextSearchDataComposer;
+
     protected function setUp(): void
     {
         $this->config = $this->createMock(Config::class);
@@ -59,39 +63,36 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
         $this->config
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         ['fullTextSearchDisabled', false],
                         ['fullTextSearchMinLength', 4],
                     ]
-                )
             );
 
         $this->metadataProvider
             ->expects($this->any())
             ->method('isFieldNotStorable')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         [$this->entityType, 'field1', false],
                         [$this->entityType, 'field2', false],
                         [$this->entityType, 'field3', false],
                     ]
-                )
             );
 
         $this->metadataProvider
             ->expects($this->any())
             ->method('isFullTextSearchSupportedForField')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         [$this->entityType, 'field1', true],
                         [$this->entityType, 'field2', true],
                         [$this->entityType, 'field3', false],
                     ]
-                )
             );
 
         $this->metadataProvider
@@ -138,13 +139,12 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
         $this->config
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         ['fullTextSearchDisabled', false],
                         ['fullTextSearchMinLength', 4],
                     ]
-                )
             );
 
         $params = FullTextSearchDataComposerParams::create();
@@ -161,13 +161,12 @@ class FullTextSearchDataComposerTest extends \PHPUnit\Framework\TestCase
         $this->config
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
+
                     [
                         ['fullTextSearchDisabled', true],
                         ['fullTextSearchMinLength', 4],
                     ]
-                )
             );
 
         $params = FullTextSearchDataComposerParams::create();

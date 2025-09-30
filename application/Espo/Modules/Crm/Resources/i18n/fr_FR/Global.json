@@ -11,12 +11,12 @@
     "Case": "Ticket",
     "DocumentFolder": "Dossier",
     "Campaign": "Campagne",
-    "TargetList": "Liste de cibles",
+    "TargetList": "Liste de diffusion",
     "MassEmail": "Emails groupé",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Article de la base de connaissance",
     "KnowledgeBaseCategory": "Catégorie de la base de connaissance",
-    "TargetListCategory": "Catégorie de liste cible"
+    "TargetListCategory": "Catégorie de liste diffusion"
   },
   "scopeNamesPlural": {
     "Account": "Comptes",
@@ -30,14 +30,14 @@
     "Case": "Tickets",
     "DocumentFolder": "Dossiers",
     "Campaign": "Campagnes",
-    "TargetList": "Listes de cibles",
+    "TargetList": "Listes de diffusion",
     "MassEmail": "Emails groupés",
     "EmailQueueItem": "File d'attente",
     "Activities": "Activités",
     "KnowledgeBaseArticle": "Base de connaissance",
     "KnowledgeBaseCategory": "Catégories de la base de connaissance",
     "CampaignLogRecord": "Logs",
-    "TargetListCategory": "Catégories de liste cible"
+    "TargetListCategory": "Catégories de liste diffusion"
   },
   "dashlets": {
     "Leads": "Mes prospects",

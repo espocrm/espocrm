@@ -30,7 +30,6 @@
     "Install": "Diegimas",
     "Configuration Instructions": "Konfigūracijos instrukcijos",
     "phpVersion": "PHP versija",
-    "requiredMysqlVersion": "MySQL versija",
     "dbHostName": "Serverio pavadinimas",
     "dbName": "Duomenų bazės pavadinimas",
     "dbUserName": "Duomenų bazės vartotojo vardas",
@@ -45,7 +44,10 @@
     "extension is missing": "trūksta plėtinio",
     "headerTitle": "\"EspoCRM\" diegimas",
     "Crontab setup instructions": "Nevykdant suplanuotų užduočių neveiks gaunamieji el. laiškai, pranešimai ir priminimai. Čia galite perskaityti {SETUP_INSTRUKCIJOS}.",
-    "Setup instructions": "sąrankos instrukcijos"
+    "Setup instructions": "sąrankos instrukcijos",
+    "requiredMysqlVersion": "\"MySQL\" versija",
+    "requiredMariadbVersion": "MariaDB versija",
+    "requiredPostgresqlVersion": "\"PostgreSQL\" versija"
   },
   "fields": {
     "Choose your language": "Pasirinkite kalb?",

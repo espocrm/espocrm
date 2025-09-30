@@ -1,5 +1,24 @@
 [
-    {"name": "name", "link": true},
-    {"name": "assignedUser", "width": 20},
-    {"name": "createdAt", "width": 20}
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "assignedUser",
+        "width": 20
+    },
+    {
+        "name": "status",
+        "width": 13
+    },
+    {
+        "name": "oneOff",
+        "width": 11,
+        "hidden": true
+    },
+    {
+        "name": "createdAt",
+        "width": 18,
+        "hidden": true
+    }
 ]

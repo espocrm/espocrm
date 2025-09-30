@@ -11,5 +11,6 @@
     "aclPortalFieldLevelDisabled": true,
     "customizable": false,
     "importable": true,
-    "disabled": false
+    "disabled": false,
+    "lastViewed": true
 }

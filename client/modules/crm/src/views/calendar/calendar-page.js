@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,12 +28,17 @@
 
 import View from 'view';
 import CalendarEditViewModal from 'crm:views/calendar/modals/edit-view';
+import {inject} from 'di';
+import ShortcutManager from 'helpers/site/shortcut-manager';
+import DebounceHelper from 'helpers/util/debounce';
+import WebSocketManager from 'web-socket-manager';
+import Utils from 'utils';
 
 class CalendarPage extends View {
 
     template = 'crm:calendar/calendar-page'
 
-    el = '#main'
+    //el = '#main'
 
     fullCalendarModeList = [
         'month',
@@ -54,6 +59,38 @@ class CalendarPage extends View {
             this.editCustomView();
         },
     }
+
+    /**
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
+
+    /**
+     * @private
+     * @type {DebounceHelper|null}
+     */
+    webSocketDebounceHelper = null
+
+    /**
+     * @private
+     * @type {number}
+     */
+    webSocketDebounceInterval = 500
+
+    /**
+     * @private
+     * @type {number}
+     */
+    webSocketBlockInterval = 1000
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     /**
      * A shortcut-key => action map.
@@ -84,6 +121,14 @@ class CalendarPage extends View {
         },
         /** @this CalendarPage */
         'ArrowRight': function (e) {
+            this.handleShortcutKeyArrowRight(e);
+        },
+        /** @this CalendarPage */
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyArrowLeft(e);
+        },
+        /** @this CalendarPage */
+        'Control+ArrowRight': function (e) {
             this.handleShortcutKeyArrowRight(e);
         },
         /** @this CalendarPage */
@@ -132,6 +177,20 @@ class CalendarPage extends View {
         },
     }
 
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     setup() {
         this.mode = this.mode || this.options.mode || null;
         this.date = this.date || this.options.date || null;
@@ -160,20 +219,66 @@ class CalendarPage extends View {
             }
         }
 
-        this.events['keydown.main'] = e => {
-            const key = Espo.Utils.getKeyFromKeyEvent(e);
+        this.shortcutManager.add(this, this.shortcutKeys);
 
-            if (typeof this.shortcutKeys[key] === 'function') {
-                this.shortcutKeys[key].call(this, e.originalEvent);
-            }
-        }
+        this.on('remove', () => {
+            this.shortcutManager.remove(this);
+        });
 
         if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
             this.setupCalendar();
-        }
-        else if (this.mode === 'timeline') {
+        } else if (this.mode === 'timeline') {
             this.setupTimeline();
         }
+        this.initWebSocket();
+    }
+
+    /**
+     * @private
+     */
+    initWebSocket() {
+        if (this.options.userId && this.getUser().id !== this.options.userId) {
+            return;
+        }
+
+        this.webSocketDebounceHelper = new DebounceHelper({
+            interval: this.webSocketDebounceInterval,
+            blockInterval: this.webSocketBlockInterval,
+            handler: () => this.handleWebSocketUpdate(),
+        });
+
+        if (!this.webSocketManager.isEnabled()) {
+            const testHandler = () => this.webSocketDebounceHelper.process();
+
+            this.on('remove', () => window.removeEventListener('calendar-update', testHandler));
+
+            // For testing purpose.
+            window.addEventListener('calendar-update', testHandler);
+
+            return;
+        }
+
+        this.webSocketManager.subscribe('calendarUpdate', () => this.webSocketDebounceHelper.process());
+
+        this.on('remove', () => this.webSocketManager.unsubscribe('calendarUpdate'));
+    }
+
+    /**
+     * @private
+     */
+    handleWebSocketUpdate() {
+        this.getCalendarView()?.actionRefresh({suppressLoadingAlert: true});
+    }
+
+    /**
+     * @private
+     */
+    onSave() {
+        if (!this.webSocketDebounceHelper) {
+            return;
+        }
+
+        this.webSocketDebounceHelper.block()
     }
 
     afterRender() {
@@ -206,6 +311,9 @@ class CalendarPage extends View {
         this.getRouter().navigate(url, {trigger: trigger});
     }
 
+    /**
+     * @private
+     */
     setupCalendar() {
         const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
             'crm:views/calendar/calendar';
@@ -216,6 +324,7 @@ class CalendarPage extends View {
             userName: this.options.userName,
             mode: this.mode,
             fullSelector: '#main > .calendar-container',
+            onSave: () => this.onSave(),
         }, view => {
             let initial = true;
 
@@ -252,6 +361,9 @@ class CalendarPage extends View {
         });
     }
 
+    /**
+     * @private
+     */
     setupTimeline() {
         const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
             'crm:views/calendar/timeline';
@@ -261,6 +373,7 @@ class CalendarPage extends View {
             userId: this.options.userId,
             userName: this.options.userName,
             fullSelector: '#main > .calendar-container',
+            onSave: () => this.onSave(),
         }, view => {
             let initial = true;
 
@@ -344,6 +457,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyHome(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         e.preventDefault();
 
         this.getCalendarView().actionToday();
@@ -354,6 +471,17 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyArrowLeft(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
+        if (
+            e.target instanceof HTMLElement &&
+            e.target.parentElement instanceof HTMLLIElement
+        ) {
+            return;
+        }
+
         e.preventDefault();
 
         this.getCalendarView().actionPrevious();
@@ -364,6 +492,17 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyArrowRight(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
+        if (
+            e.target instanceof HTMLElement &&
+            e.target.parentElement instanceof HTMLLIElement
+        ) {
+            return;
+        }
+
         e.preventDefault();
 
         this.getCalendarView().actionNext();
@@ -374,6 +513,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyMinus(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         if (!this.getCalendarView().actionZoomOut) {
             return;
         }
@@ -388,6 +531,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyPlus(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         if (!this.getCalendarView().actionZoomIn) {
             return;
         }
@@ -403,6 +550,10 @@ class CalendarPage extends View {
      * @param {Number} digit
      */
     handleShortcutKeyDigit(e, digit) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         const modeList = this.getCalendarView().hasView('modeButtons') ?
             this.getCalendarView()
                 .getModeButtonsView()
@@ -432,6 +583,10 @@ class CalendarPage extends View {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyControlSpace(e) {
+        if (Utils.isKeyEventInTextInput(e)) {
+            return;
+        }
+
         if (!this.getCalendarView().createEvent) {
             return;
         }

@@ -5,6 +5,7 @@
     "mergeDisabled": true,
     "exportDisabled": true,
     "textFilterDisabled": true,
+    "forceListViewSettings": true,
     "menu": {
         "list": {
             "dropdown": [

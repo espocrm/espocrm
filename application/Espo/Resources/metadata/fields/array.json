@@ -49,6 +49,11 @@
             "tooltip": true
         },
         {
+            "name": "itemsEditable",
+            "type": "bool",
+            "tooltip": true
+        },
+        {
             "name": "pattern",
             "type": "varchar",
             "tooltip": true,

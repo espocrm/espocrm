@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -175,20 +175,20 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->method('has')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', false],
                     ['test', true],
-                ])
+                ]
             );
 
         $entity
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', null],
                     ['test', '+1'],
-                ])
+                ]
             );
 
         $group = $this->factory->createFromEntity($entity, 'test');
@@ -296,20 +296,20 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $entity
             ->method('has')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', false],
                     ['test', true],
-                ])
+                ]
             );
 
         $entity
             ->method('get')
-            ->will(
-                $this->returnValueMap([
+            ->willReturnMap(
+                [
                     ['testData', null],
                     ['test', null],
-                ])
+                ]
             );
 
         $group = $this->factory->createFromEntity($entity, 'test');

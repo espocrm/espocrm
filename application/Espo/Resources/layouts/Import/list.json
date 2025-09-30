@@ -1,5 +1,6 @@
 [
-    {"name":"createdAt", "width":50, "link": true},
-    {"name":"entityType"},
-    {"name":"createdBy"}
+    {"name":"createdAt", "link": true},
+    {"name":"status", "width": 20},
+    {"name":"entityType", "width": 20},
+    {"name":"createdBy", "width": 20}
 ]

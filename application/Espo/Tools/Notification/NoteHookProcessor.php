@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use Espo\Core\Acl\Table;
 
 use Espo\Core\Name\Field;
 use Espo\ORM\Name\Attribute;
+use Espo\Tools\Notification\HookProcessor\Params;
 use Espo\Tools\Stream\Service as StreamService;
 
 use Espo\ORM\EntityManager;
@@ -59,10 +60,10 @@ class NoteHookProcessor
         private InternalAclManager $internalAclManager
     ) {}
 
-    public function afterSave(Note $note): void
+    public function afterSave(Note $note, Params $params): void
     {
         if ($note->getParentType() && $note->getParentId()) {
-            $this->afterSaveParent($note);
+            $this->afterSaveParent($note, $params);
 
             return;
         }
@@ -70,7 +71,7 @@ class NoteHookProcessor
         $this->afterSaveNoParent($note);
     }
 
-    private function afterSaveParent(Note $note): void
+    private function afterSaveParent(Note $note, Params $params): void
     {
         $parentType = $note->getParentType();
         $parentId = $note->getParentId();
@@ -159,7 +160,7 @@ class NoteHookProcessor
             $notifyUserIdList[] = $user->getId();
         }
 
-        $this->processNotify($note, array_unique($notifyUserIdList));
+        $this->processNotify($note, array_unique($notifyUserIdList), $params);
     }
 
     private function afterSaveNoParent(Note $note): void
@@ -186,15 +187,13 @@ class NoteHookProcessor
 
         if ($targetType === Note::TARGET_ALL) {
             $this->afterSaveTargetAll($note);
-
-            return;
         }
     }
 
     /**
      * @param string[] $userIdList
      */
-    private function processNotify(Note $note, array $userIdList): void
+    private function processNotify(Note $note, array $userIdList, ?Params $params = null): void
     {
         $filteredUserIdList = array_filter(
             $userIdList,
@@ -230,7 +229,7 @@ class NoteHookProcessor
             return;
         }
 
-        $this->service->notifyAboutNote($filteredUserIdList, $note);
+        $this->service->notifyAboutNote($filteredUserIdList, $note, $params);
     }
 
     private function afterSaveTargetUsers(Note $note): void

@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Izveidot kalendāru",
-    "Ranges": "Diapazoni"
+    "Create WorkingTimeCalendar": "Izveidot kalendāru"
   },
   "fields": {
     "timeZone": "Laika josla",
@@ -18,6 +17,6 @@
     "weekday6TimeRanges": "Sat grafiks"
   },
   "links": {
-    "ranges": "Diapazoni"
+    "ranges": "Izņēmumi"
   }
 }

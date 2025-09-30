@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,5 +63,13 @@ class ApplicationConfig
     public function getLanguage(): string
     {
         return $this->config->get('language') ?? 'en_US';
+    }
+
+    /**
+     * @since 9.2.0
+     */
+    public function getRecordsPerPage(): int
+    {
+        return (int) $this->config->get('recordsPerPage');
     }
 }

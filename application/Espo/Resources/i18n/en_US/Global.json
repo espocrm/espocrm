@@ -271,6 +271,7 @@
         "No": "No",
         "Select All Results": "Select All Results",
         "Value": "Value",
+        "Edit Item": "Edit Item",
         "Current version": "Current version",
         "List View": "List View",
         "Tree View": "Tree View",
@@ -390,6 +391,7 @@
         "massRemoveResult": "{count} records have been removed",
         "massRemoveResultSingle": "{count} record has been removed",
         "noRecordsRemoved": "No records were removed",
+        "changesLossConfirmation": "Unsaved changes will be lost. Are you sure?",
         "clickToRefresh": "Click to refresh",
         "writeYourCommentHere": "Write your comment here",
         "writeMessageToUser": "Write a message to {user}",
@@ -453,7 +455,8 @@
     "presetFilters": {
         "followed": "Followed",
         "all": "All",
-        "starred": "Starred"
+        "starred": "Starred",
+        "active": "Active"
     },
     "massActions": {
         "delete": "Delete",

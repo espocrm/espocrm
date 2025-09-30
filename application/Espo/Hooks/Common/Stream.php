@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,13 +42,6 @@ use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\ORM\Repository\Option\UnrelateOptions;
 use Espo\Tools\Stream\HookProcessor;
 
-/**
- * @implements BeforeSave<Entity>
- * @implements AfterSave<Entity>
- * @implements AfterRemove<Entity>
- * @implements AfterRelate<Entity>
- * @implements AfterUnrelate<Entity>
- */
 class Stream implements BeforeSave, AfterSave, AfterRemove, AfterRelate, AfterUnrelate
 {
     public static int $order = 9;

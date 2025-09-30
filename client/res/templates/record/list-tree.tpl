@@ -11,7 +11,10 @@
 <div class="no-data">{{translate 'No Data'}}</div>
 {{/if}}
 
-<div class="list list-expanded list-tree{{#if noData}} hidden{{/if}}">
+<div
+    class="list list-expanded list-tree {{#if noData}} hidden {{/if}}"
+    {{#if isEditable}} data-editable="true" {{/if}}
+>
     {{#if showRoot}}
     <div class="root-item">
     <a

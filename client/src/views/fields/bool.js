@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class BoolFieldView extends BaseFieldView {
      */
 
     /**
-     * @typedef {Object} module:views/fields/varchar~params
+     * @typedef {Object} module:views/fields/bool~params
      */
 
     /**

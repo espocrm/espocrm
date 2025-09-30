@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,17 +54,22 @@ use Espo\ORM\Query\Update;
 
 use Espo\ORM\QueryComposer\Util;
 use LogicException;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
 require_once 'tests/unit/testData/DB/MockDBResult.php';
 
-class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
+class MysqlQueryComposerTest extends TestCase
 {
     protected ?QueryComposer $query = null;
     protected $pdo = null;
     protected ?EntityFactory $entityFactory = null;
+
+    private $queryBuilder;
+    private $metadata;
+    private $entityManager;
 
     protected function setUp(): void
     {
@@ -74,7 +79,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->pdo
             ->expects($this->any())
             ->method('quote')
-            ->will($this->returnCallback(function() {
+            ->willReturnCallback(function() {
                 $args = func_get_args();
 
                 $s = $args[0];
@@ -82,7 +87,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
                 $s = str_replace("'", "\'", $s);
 
                 return "'" . $s . "'";
-            }));
+            });
 
         $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
 
@@ -102,8 +107,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->entityFactory
             ->expects($this->any())
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function () {
                         $args = func_get_args();
 
@@ -113,31 +117,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
                         return new $className($args[0], $defs, $this->entityManager);
                     }
-                )
             );
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
-
-        $entityFactory = $this->entityFactory;
-
-        $this->post = $entityFactory->create('Post');
-        $this->comment = $entityFactory->create('Comment');
-        $this->tag = $entityFactory->create('Tag');
-        $this->note = $entityFactory->create('Note');
-
-        $this->contact = $entityFactory->create('Contact');
-        $this->account = $entityFactory->create('Account');
-    }
-
-    protected function tearDown() : void
-    {
-        unset($this->query);
-        unset($this->pdo);
-        unset($this->post);
-        unset($this->tag);
-        unset($this->note);
-        unset($this->contact);
-        unset($this->account);
     }
 
     public function testDelete1()
@@ -616,7 +598,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id', 'name', 'postName'],
-            'leftJoins' => ['post'],
+            'leftJoins' => ['post'], // bc
         ]));
 
         $this->assertEquals($expectedSql, $sql);
@@ -624,11 +606,12 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id', 'name'],
-            'leftJoins' => ['post']
+            'joins' => ['post']
         ]));
+
         $expectedSql =
             "SELECT comment.id AS `id`, comment.name AS `name` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
+            "JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -713,30 +696,31 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id', 'postId', 'post.name', 'COUNT:id'],
-            'leftJoins' => ['post'],
+            'joins' => ['post'],
             'groupBy' => ['postId', 'post.name']
         ]));
 
         $expectedSql =
             "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, ".
             "COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
+            "JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY comment.post_id, post.name";
+
         $this->assertEquals($expectedSql, $sql);
 
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
             'select' => ['id', 'COUNT:id', 'MONTH:post.createdAt'],
-            'leftJoins' => ['post'],
+            'joins' => ['post'],
             'groupBy' => ['MONTH:post.createdAt']
         ]));
 
         $expectedSql =
             "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, ".
             "DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
-            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
+            "JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";
 
@@ -1080,6 +1064,104 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
                 ->withConditions(
                     Expression::value(true)
                 )
+            )
+            ->withDeleted()
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($select)
+        );
+    }
+
+    public function testJoinOrder1(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "LEFT JOIN LATERAL (SELECT post.id AS `id` FROM `post` LIMIT 0, 1) AS `a` ON TRUE " .
+            "JOIN LATERAL (SELECT post.id AS `id` FROM `post` LIMIT 0, 1) AS `b` ON TRUE";
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->leftJoin(
+                Join::createWithSubQuery(
+                    SelectBuilder::create()
+                        ->select('id')
+                        ->from('Post')
+                        ->limit(0, 1)
+                        ->withDeleted()
+                        ->build(),
+                    'a',
+                )
+                    ->withLateral()
+                    ->withConditions(
+                        Expression::value(true)
+                    )
+            )
+            ->join(
+                Join::createWithSubQuery(
+                    SelectBuilder::create()
+                        ->select('id')
+                        ->from('Post')
+                        ->limit(0, 1)
+                        ->withDeleted()
+                        ->build(),
+                    'b',
+                )
+                    ->withLateral()
+                    ->withConditions(
+                        Expression::value(true)
+                    )
+            )
+            ->withDeleted()
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($select)
+        );
+    }
+
+    public function testJoinOrder2(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "JOIN LATERAL (SELECT post.id AS `id` FROM `post` LIMIT 0, 1) AS `a` ON TRUE " .
+            "LEFT JOIN LATERAL (SELECT post.id AS `id` FROM `post` LIMIT 0, 1) AS `b` ON TRUE";
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                Join::createWithSubQuery(
+                    SelectBuilder::create()
+                        ->select('id')
+                        ->from('Post')
+                        ->limit(0, 1)
+                        ->withDeleted()
+                        ->build(),
+                    'a',
+                )
+                    ->withLateral()
+                    ->withConditions(
+                        Expression::value(true)
+                    )
+            )
+            ->leftJoin(
+                Join::createWithSubQuery(
+                    SelectBuilder::create()
+                        ->select('id')
+                        ->from('Post')
+                        ->limit(0, 1)
+                        ->withDeleted()
+                        ->build(),
+                    'b',
+                )
+                    ->withLateral()
+                    ->withConditions(
+                        Expression::value(true)
+                    )
             )
             ->withDeleted()
             ->build();
@@ -1562,28 +1644,34 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
     public function testOrderBy1()
     {
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Comment',
-            'select' => array('COUNT:id', 'YEAR:post.createdAt'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('YEAR:post.createdAt'),
-            'orderBy' => 2
-        ]));
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Comment')
+                ->select(['COUNT:id', 'YEAR:post.createdAt'])
+                ->leftJoin('post')
+                ->group('YEAR:post.createdAt')
+                ->order(2)
+                ->build()
+        );
+
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at) ".
             "ORDER BY 2 ASC";
+
         $this->assertEquals($expectedSql, $sql);
 
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Comment',
-            'select' => ['COUNT:id', 'post.name'],
-            'leftJoins' => ['post'],
-            'groupBy' => ['post.name'],
-            'orderBy' => 'LIST:post.name:Test,Hello',
-        ]));
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Comment')
+                ->select(['COUNT:id', 'post.name'])
+                ->leftJoin('post')
+                ->group('post.name')
+                ->order(Order::createByPositionInList(Expression::column('post.name'), ['Test', 'Hello']))
+                ->build()
+        );
 
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, post.name AS `post.name` FROM `comment` " .
@@ -1591,18 +1679,21 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE comment.deleted = 0 " .
             "GROUP BY post.name ".
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
+
         $this->assertEquals($expectedSql, $sql);
 
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Comment',
-            'select' => ['COUNT:id', 'YEAR:post.createdAt', 'post.name'],
-            'leftJoins' => ['post'],
-            'groupBy' => ['YEAR:post.createdAt', 'post.name'],
-            'orderBy' => [
-                [2, 'DESC'],
-                ['LIST:post.name:Test,Hello']
-            ]
-        ]));
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Comment')
+                ->select(['COUNT:id', 'YEAR:post.createdAt', 'post.name'])
+                ->leftJoin('post')
+                ->group('YEAR:post.createdAt')
+                ->group('post.name')
+                ->order(2, Order::DESC)
+                ->order(Order::createByPositionInList(Expression::column('post.name'), ['Test', 'Hello']))
+                ->build()
+        );
+
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:id`, YEAR(post.created_at) AS `YEAR:post.createdAt`, ".
             "post.name AS `post.name` ".
@@ -1611,6 +1702,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at), post.name ".
             "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
+
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1747,21 +1839,22 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
     public function testForeign()
     {
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Comment',
-            'select' => array('COUNT:comment.id', 'postId', 'postName'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('postId'),
-            'whereClause' => array(
-                'post.createdById' => 'id_1'
-            ),
-        ]));
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()->from('Comment')
+                ->select(['COUNT:comment.id', 'postId', 'postName'])
+                ->leftJoin('post')
+                ->group('postId')
+                ->where(['post.createdById' => 'id_1'])
+                ->build()
+        );
+
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` ".
             "FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id";
+
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -2131,12 +2224,24 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ]
         ]));
 
+        $sql = $this->query->composeSelect(
+            SelectBuilder::create()
+                ->from('Comment')
+                ->select(['COUNT:comment.id', 'postId', 'postName'])
+                ->leftJoin('post')
+                ->where(['post.createdById' => 'id_1'])
+                ->having(['COUNT:comment.id>' => 1])
+                ->group('postId')
+                ->build()
+        );
+
         $expectedSql =
             "SELECT COUNT(comment.id) AS `COUNT:comment.id`, comment.post_id AS `postId`, post.name AS `postName` " .
             "FROM `comment` LEFT JOIN `post` AS `post` ON comment.post_id = post.id AND post.deleted = 0 " .
             "WHERE post.created_by_id = 'id_1' AND comment.deleted = 0 " .
             "GROUP BY comment.post_id " .
             "HAVING COUNT(comment.id) > 1";
+
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -2343,7 +2448,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
-            "JOIN `test` AS `t` ON t.id = test_where.id ".
+            "LEFT JOIN `test` AS `t` ON t.id = test_where.id ".
             "WHERE (" .
                 "((test_where.test = 'hello\\' test') OR (test_where.test = '1') OR (test_where.test = LOWER('hello\\' test')))" .
             ")";
@@ -2419,6 +2524,29 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testCustomWhereLeftJoin()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                'test3' => 1,
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "LEFT JOIN `test` AS `t` ON t.id = test_where.id ".
+            "WHERE (test_where.test = 1)";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testCustomOrder1()
     {
         $queryBuilder = new QueryBuilder();
@@ -2434,7 +2562,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT test_where.id AS `id` ".
             "FROM `test_where` ".
-            "JOIN `test` AS `t` ON t.id = test_where.id ".
+            "LEFT JOIN `test` AS `t` ON t.id = test_where.id ".
             "ORDER BY test_where.test DESC, t.id DESC";
 
         $this->assertEquals($expectedSql, $sql);

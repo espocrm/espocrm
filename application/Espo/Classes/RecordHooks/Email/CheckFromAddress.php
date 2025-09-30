@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,8 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Account\SendingAccountProvider;
+use Espo\Core\Mail\ConfigDataProvider;
 use Espo\Core\Record\Hook\SaveHook;
-use Espo\Core\Utils\Config;
 use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
@@ -47,8 +47,8 @@ class CheckFromAddress implements SaveHook
     public function __construct(
         private User $user,
         private SendingAccountProvider $sendingAccountProvider,
-        private Config $config,
         private Acl $acl,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
     public function process(Entity $entity): void
@@ -88,12 +88,11 @@ class CheckFromAddress implements SaveHook
 
         if (
             $system &&
-            $this->config->get('outboundEmailIsShared') &&
-            $system->getEmailAddress()
+            $this->configDataProvider->isSystemOutboundAddressShared() &&
+            $system->getEmailAddress() &&
+            $fromAddress === strtolower($system->getEmailAddress())
         ) {
-            if ($fromAddress === strtolower($system->getEmailAddress())) {
-                return;
-            }
+            return;
         }
 
         throw new Forbidden("Not allowed 'from' address.");

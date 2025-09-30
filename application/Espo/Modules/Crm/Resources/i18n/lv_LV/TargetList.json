@@ -10,14 +10,17 @@
     "excludingActionList": "Neieskaitot",
     "optedOutCount": "Neizvēlētais adrešu skaits",
     "targetStatus": "Mērķa adresāta statuss",
-    "isOptedOut": "Nav izvēlēts"
+    "isOptedOut": "Nav izvēlēts",
+    "sourceCampaign": "Avota kampaņa",
+    "category": "Kategorija"
   },
   "links": {
     "accounts": "Konti",
     "contacts": "Kontakti",
     "leads": "Potenciālie klienti",
     "campaigns": "Kampaņas",
-    "massEmails": "Masveida e-pasti"
+    "massEmails": "Masveida e-pasti",
+    "category": "Kategorija"
   },
   "options": {
     "type": {

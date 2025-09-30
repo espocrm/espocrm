@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import ListView from 'views/list';
+import Utils from 'utils';
 
 class EmailListView extends ListView {
 
@@ -337,6 +338,10 @@ class EmailListView extends ListView {
 
     initEmailShortcuts() {
         this.shortcutKeys['Control+Delete'] = e => {
+            if (Utils.isKeyEventInTextInput(e)) {
+                return;
+            }
+
             if (!this.hasSelectedRecords()) {
                 return;
             }
@@ -348,6 +353,10 @@ class EmailListView extends ListView {
         };
 
         this.shortcutKeys['Control+Backspace'] = e => {
+            if (Utils.isKeyEventInTextInput(e)) {
+                return;
+            }
+
             if (!this.hasSelectedRecords()) {
                 return;
             }
@@ -404,6 +413,8 @@ class EmailListView extends ListView {
 
     /** @inheritDoc */
     setupReuse(params) {
+        super.setupReuse(params);
+
         this.applyRoutingParams(params);
         this.initDroppable();
         this.initStickableFolders();
@@ -744,7 +755,7 @@ class EmailListView extends ListView {
      * @param {KeyboardEvent} e
      */
     handleShortcutKeyCtrlSpace(e) {
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 

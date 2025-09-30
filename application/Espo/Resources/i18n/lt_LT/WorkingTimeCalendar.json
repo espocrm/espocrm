@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Sukurti kalendorių",
-    "Ranges": "Diapazonai"
+    "Create WorkingTimeCalendar": "Sukurti kalendorių"
   },
   "fields": {
     "timeZone": "Laiko juosta",
@@ -22,6 +21,6 @@
     "weekday6TimeRanges": "Šeštadienio tvarkaraštis"
   },
   "links": {
-    "ranges": "Diapazonai"
+    "ranges": "Išimtys"
   }
 }

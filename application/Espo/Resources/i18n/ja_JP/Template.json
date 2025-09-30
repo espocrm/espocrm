@@ -26,8 +26,8 @@
     "Create Template": "テンプレートを作成"
   },
   "tooltips": {
-    "footer": "ページ番号を印刷するには {pageNumber} を使用します。",
-    "variables": "必要なプレースホルダーをヘッダー、本文、またはフッターにコピーして貼り付けます。"
+    "footer": "ページ番号を印刷するには {pageNumber} を使用します",
+    "variables": "必要なプレースホルダーをヘッダー、本文、またはフッターにコピーして貼り付けます"
   },
   "options": {
     "pageOrientation": {

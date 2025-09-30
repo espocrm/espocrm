@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -119,7 +119,7 @@ class TextFieldView extends BaseFieldView {
     previewButtonElement
 
     /**
-     * @private
+     * @protected
      * @type {HTMLTextAreaElement}
      */
     textAreaElement
@@ -151,6 +151,8 @@ class TextFieldView extends BaseFieldView {
 
             if (this.textAreaElement) {
                 this.textAreaElement.removeEventListener('keydown', this.onKeyDownMarkdownBind);
+
+                this.textAreaElement = undefined;
             }
         });
 
@@ -354,6 +356,12 @@ class TextFieldView extends BaseFieldView {
     }
 
     afterRender() {
+        this.textAreaElement = undefined;
+
+        if (this.mode === this.MODE_EDIT) {
+            this.textAreaElement = this.element ? this.element.querySelector('textarea') : undefined;
+        }
+
         super.afterRender();
 
         if (this.isReadMode()) {
@@ -396,8 +404,6 @@ class TextFieldView extends BaseFieldView {
 
             this.previewButtonElement = this.element ?
                 this.element.querySelector('a[data-action="previewText"]') : undefined;
-
-            this.textAreaElement = this.element ? this.element.querySelector('textarea') : undefined;
 
             const textAreaElement = this.textAreaElement
 
@@ -616,8 +622,12 @@ class TextFieldView extends BaseFieldView {
      * @param {KeyboardEvent} event
      */
     onKeyDownMarkdown(event) {
-        if (Espo.Utils.getKeyFromKeyEvent(event) !== 'Enter') {
+        const key = Espo.Utils.getKeyFromKeyEvent(event);
+
+        if (key !== 'Enter') {
             this._lastEnteredKeyIsEnter = false;
+
+            this.handleKeyDownMarkdown(event, key);
 
             return;
         }
@@ -679,6 +689,70 @@ class TextFieldView extends BaseFieldView {
         target.selectionStart = target.selectionEnd = target.value.length - after.length;
 
         this.controlTextareaHeight();
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} event
+     * @param {string} key
+     */
+    handleKeyDownMarkdown(event, key) {
+        const target = event.target;
+
+        if (!(target instanceof HTMLTextAreaElement)) {
+            return;
+        }
+
+        /**
+         * @param {string} wrapper
+         */
+        const toggleWrap = (wrapper) => {
+            const {selectionStart, selectionEnd} = target;
+
+            let text = target.value.substring(selectionStart, selectionEnd);
+
+            if (text === '') {
+                return;
+            }
+
+            let textPrevious = text;
+
+            text = text.trimStart();
+
+            const startPart = textPrevious.substring(0, textPrevious.length - text.length);
+
+            textPrevious = text;
+
+            text = text.trimEnd();
+
+            const endPart = textPrevious.substring(text.length);
+
+            if (text.startsWith(wrapper) && text.endsWith(wrapper)) {
+                text = text.slice(wrapper.length, - wrapper.length);
+            } else {
+                text = wrapper + text + wrapper;
+            }
+
+            const newText = startPart + text + endPart;
+
+            // noinspection JSDeprecatedSymbols
+            document.execCommand('insertText', false, newText);
+
+            const newStart = selectionStart + startPart.length;
+
+            target.setSelectionRange(newStart, newStart + text.length);
+
+            event.preventDefault();
+            event.stopPropagation();
+        };
+
+        if (key === 'Control+KeyB') {
+            toggleWrap('**');
+        }
+
+        if (key === 'Control+KeyI') {
+            toggleWrap('_');
+        }
     }
 }
 

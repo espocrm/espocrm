@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,73 +29,48 @@
 
 namespace tests\unit\Espo\Core;
 
-use Espo\Core\{
-    Acl\Permission,
-    AclManager,
-    Acl\Table,
-    Acl\AccessChecker\AccessCheckerFactory,
-    Acl\OwnershipChecker\OwnershipCheckerFactory,
-    Acl\OwnerUserFieldProvider,
-    Acl\Table\TableFactory,
-    Acl\GlobalRestriction,
-    Acl\Map\MapFactory,
-    ORM\EntityManager};
+use Espo\Core\Acl\AccessChecker\AccessCheckerFactory;
+use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Map\MapFactory;
+use Espo\Core\Acl\OwnershipChecker\OwnershipCheckerFactory;
+use Espo\Core\Acl\OwnerUserFieldProvider;
+use Espo\Core\Acl\Permission;
+use Espo\Core\Acl\Table;
+use Espo\Core\Acl\Table\TableFactory;
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
 
-use Espo\Entities\{
-    User,
-};
+use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
 
-class AclManagerTest extends \PHPUnit\Framework\TestCase
+class AclManagerTest extends TestCase
 {
-    /**
-     * @var AclManager
-     */
+    /** @var AclManager */
     private $aclManager;
-
-    /**
-     * @var AccessCheckerFactory
-     */
-    private $accessCheckerFactory;
-
-    /**
-     * @var OwnershipCheckerFactory
-     */
-    private $ownershipCheckerFactory;
-
-    /**
-     * @var TableFactory
-     */
+    /** @var TableFactory */
     private $tableFactory;
-
-    /**
-     * @var GlobalRestriction
-     */
-    private $globalRestriction;
-
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    private $mapFactory;
+    private $table;
 
     protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);
         $this->table = $this->createMock(Table::class);
 
-        $this->accessCheckerFactory = $this->createMock(AccessCheckerFactory::class);
-        $this->ownershipCheckerFactory = $this->createMock(OwnershipCheckerFactory::class);
+        $accessCheckerFactory = $this->createMock(AccessCheckerFactory::class);
+        $ownershipCheckerFactory = $this->createMock(OwnershipCheckerFactory::class);
         $this->tableFactory = $this->createMock(TableFactory::class);
-        $this->mapFactory = $this->createMock(MapFactory::class);
-        $this->globalRestriction = $this->createMock(GlobalRestriction::class);
+        $mapFactory = $this->createMock(MapFactory::class);
+        $globalRestriction = $this->createMock(GlobalRestriction::class);
 
         $this->aclManager = new AclManager(
-            $this->accessCheckerFactory,
-            $this->ownershipCheckerFactory,
+            $accessCheckerFactory,
+            $ownershipCheckerFactory,
             $this->tableFactory,
-            $this->mapFactory,
-            $this->globalRestriction,
+            $mapFactory,
+            $globalRestriction,
             $this->createMock(OwnerUserFieldProvider::class),
             $this->createMock(EntityManager::class)
         );

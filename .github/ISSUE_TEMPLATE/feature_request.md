@@ -1,6 +1,6 @@
 ---
-name: Feature request
-about: For high-level features, create feature requests on our forum. For low-level (framework) – here on GitHub.
+name: Feature request for framework
+about: For low-level features. For high-level features, create feature requests on our forum.
 title: ''
 labels: ''
 assignees: ''

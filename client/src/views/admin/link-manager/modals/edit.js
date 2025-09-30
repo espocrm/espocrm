@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -159,6 +159,7 @@ class LinkManagerEditModalView extends ModalView {
             }
 
             this.model.set('linkType', linkType);
+            this.model.set('entity', this.scope);
             this.model.set('entityForeign', entityForeign);
             this.model.set('link', link);
             this.model.set('linkForeign', linkForeign);
@@ -235,12 +236,15 @@ class LinkManagerEditModalView extends ModalView {
 
         entityList.unshift('');
 
-        this.createView('entity', 'views/fields/varchar', {
+        this.createView('entity', 'views/fields/enum', {
             model: model,
             mode: 'edit',
             selector: '.field[data-name="entity"]',
-            defs: {
-                name: 'entity'
+            name: 'entity',
+            params: {
+                required: true,
+                options: entityList,
+                translation: 'Global.scopeNames',
             },
             readOnly: true,
         });
@@ -249,13 +253,11 @@ class LinkManagerEditModalView extends ModalView {
             model: model,
             mode: 'edit',
             selector: '.field[data-name="entityForeign"]',
-            defs: {
-                name: 'entityForeign',
-                params: {
-                    required: true,
-                    options: entityList,
-                    translation: 'Global.scopeNames',
-                }
+            name: 'entityForeign',
+            params: {
+                required: true,
+                options: entityList,
+                translation: 'Global.scopeNames',
             },
             readOnly: !isNew,
         });

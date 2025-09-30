@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -678,6 +678,40 @@ Espo.Utils = {
         }
 
         return key;
+    },
+
+    /**
+     * Check whether the pressed key is in a text input.
+     *
+     * @param {KeyboardEvent} e A key event.
+     * @return {boolean}
+     * @since 9.2.0
+     */
+    isKeyEventInTextInput: function (e) {
+        if (!(e.target instanceof HTMLElement)) {
+            return false;
+        }
+
+        if (e.target.tagName === 'TEXTAREA') {
+            return true;
+        }
+
+        if (e.target instanceof HTMLInputElement) {
+            if (
+                e.target.type === 'radio' ||
+                e.target.type === 'checkbox'
+            ) {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (e.target.classList.contains('note-editable')) {
+            return true;
+        }
+
+        return false;
     },
 
     /**

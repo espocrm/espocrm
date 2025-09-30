@@ -14,7 +14,8 @@
     "dateCompleted": "Įvykdymo data",
     "attachments": "Prisegtukai",
     "reminders": "Priminimai",
-    "contact": "kontaktas"
+    "contact": "kontaktas",
+    "originalEmail": "Originalus el. paštas"
   },
   "links": {
     "attachments": "Prisegtukai",
@@ -43,11 +44,11 @@
     "overdue": "pradelstas"
   },
   "presetFilters": {
-    "actual": "Esamos",
     "completed": "Užbaigtos",
     "todays": "Šiandienos",
     "overdue": "Vėluoja",
-    "deferred": "Atidėta"
+    "deferred": "Atidėta",
+    "actual": "Atviras"
   },
   "nameOptions": {
     "replyToEmail": "Atsakyti į el. laišką"

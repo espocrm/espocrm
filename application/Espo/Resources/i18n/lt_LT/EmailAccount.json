@@ -22,7 +22,8 @@
     "smtpPassword": "SMTP slaptažodis",
     "useImap": "Tikrinti paštą",
     "smtpAuthMechanism": "SMTP autentifikavimo mechanizmas",
-    "security": "Apsauga"
+    "security": "Apsauga",
+    "connectedAt": "Prijungtas prie"
   },
   "links": {
     "filters": "Filtrai",
@@ -45,12 +46,16 @@
   },
   "messages": {
     "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio",
-    "connectionIsOk": "Geras ryšys"
+    "connectionIsOk": "Geras ryšys",
+    "imapNotConnected": "Nepavyko prisijungti prie [IMAP paskyros](#EmailAccount/view/{id})."
   },
   "tooltips": {
     "monitoredFolders": "Keli aplankai turėtų būti atskirti kableliais.\n\nGalite pridėti \"Išsiųsti\" aplanką, kad sinchronizuotumėte el. laiškus, siunčiamus iš išorinio el. pašto kliento.",
     "storeSentEmails": "Siunčiami el. aiškai bus saugomi IMAP serveryje. El pašto adreso laukelis turi atitikti el pašto adresą, iš kurio bus siunčiamas laiškas",
     "useSmtp": "Galimybė siųsti el. laiškus.",
     "emailAddress": "Naudotojo įrašas (priskirtas naudotojas) turi turėti tą patį el. pašto adresą, kad būtų galima naudoti šią el. pašto paskyrą siuntimui."
+  },
+  "presetFilters": {
+    "active": "Aktyvus"
   }
 }

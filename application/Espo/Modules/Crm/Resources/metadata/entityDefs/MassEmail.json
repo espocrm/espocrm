@@ -52,6 +52,7 @@
         "emailTemplate": {
             "type": "link",
             "required": true,
+            "createButton": true,
             "view": "crm:views/mass-email/fields/email-template"
         },
         "campaign": {

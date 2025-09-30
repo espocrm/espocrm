@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -87,6 +87,10 @@ class DateFieldView extends BaseFieldView {
         'before',
     ]
 
+    /**
+     * @protected
+     * @type {string[]}
+     */
     searchTypeList = [
         'lastSevenDays',
         'ever',
@@ -111,6 +115,39 @@ class DateFieldView extends BaseFieldView {
         'between',
     ]
 
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    searchWithPrimaryTypeList = [
+        'on',
+        'notOn',
+        'after',
+        'before',
+    ]
+
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    searchWithRangeTypeList = [
+        'between',
+    ]
+
+    /**
+     * @protected
+     * @type {string[]}
+     */
+    searchWithAdditionalNumberTypeList = [
+        'lastXDays',
+        'nextXDays',
+        'olderThanXDays',
+        'afterXDays',
+    ]
+
+    /**
+     * @inheritDoc
+     */
     initialSearchIsNotIdle = true
 
     /**
@@ -118,6 +155,12 @@ class DateFieldView extends BaseFieldView {
      * @type {import('ui/datepicker').default}
      */
     datepicker
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    useNumericFormat
 
     setup() {
         super.setup();
@@ -144,12 +187,13 @@ class DateFieldView extends BaseFieldView {
 
                 // Timeout prevents the picker popping one when the duration field adjusts the date end.
                 setTimeout(() => {
+                    this.onAfterChange();
+
                     this.datepicker.setStartDate(this.getStartDateForDatePicker());
                 }, 100);
             });
         }
 
-        /** @protected */
         this.useNumericFormat = this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat;
     }
 
@@ -173,7 +217,7 @@ class DateFieldView extends BaseFieldView {
             data.dateValue = this.getDateTime().toDisplayDate(value);
             data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
-            if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(this.getSearchType())) {
+            if (this.searchWithAdditionalNumberTypeList.includes(this.getSearchType())) {
                 data.number = this.searchParams.value;
             }
         }
@@ -193,7 +237,11 @@ class DateFieldView extends BaseFieldView {
     setupSearch() {
         this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
             this.handleSearchType(target.value);
+
+            this.trigger('change');
         });
+
+        this.addHandler('change', 'input.number', () => this.trigger('change'));
     }
 
     stringifyDateValue(value) {
@@ -301,11 +349,10 @@ class DateFieldView extends BaseFieldView {
     }
 
     afterRender() {
-        if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
-            this.$element = this.$el.find(`[data-name="${this.name}"]`);
+        if (this.isEditMode() || this.isSearchMode()) {
+            this.mainInputElement = this.element?.querySelector(`[data-name="${this.name}"]`);
 
-            /** @type {HTMLElement} */
-            const element = this.$element.get(0);
+            this.$element = $(this.mainInputElement);
 
             const options = {
                 format: this.getDateTime().dateFormat,
@@ -316,35 +363,34 @@ class DateFieldView extends BaseFieldView {
 
             this.datepicker = undefined;
 
-            if (element) {
-                this.datepicker = new Datepicker(element, {
+            if (this.mainInputElement instanceof HTMLInputElement) {
+                this.datepicker = new Datepicker(this.mainInputElement, {
                     ...options,
                     onChange: () => this.trigger('change'),
                 });
             }
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.$el.find('select.search-type').on('change', () => this.trigger('change'));
-                this.$el.find('input.number').on('change', () => this.trigger('change'));
+            if (this.isSearchMode()) {
+                const additionalGroup = this.element?.querySelector('.input-group.additional');
 
-                const element = this.$el.find('.input-group.additional').get(0);
-
-                if (element) {
-                    new Datepicker(element, options)
+                if (additionalGroup) {
+                    new Datepicker(additionalGroup, options)
 
                     this.initDatePickerEventHandlers('input.filter-from');
                     this.initDatePickerEventHandlers('input.filter-to');
                 }
             }
 
-            this.$element.parent().find('button.date-picker-btn').on('click', () => {
-                this.datepicker.show();
-            });
+            const button = this.mainInputElement?.parentNode.querySelector('button.date-picker-btn');
 
-            if (this.mode === this.MODE_SEARCH) {
-                const $searchType = this.$el.find('select.search-type');
+            if (button instanceof HTMLElement) {
+                button.addEventListener('click', () => this.datepicker.show());
+            }
 
-                this.handleSearchType($searchType.val());
+            if (this.isSearchMode()) {
+                const type = this.fetchSearchType();
+
+                this.handleSearchType(type);
             }
         }
     }
@@ -354,36 +400,58 @@ class DateFieldView extends BaseFieldView {
      * @param {string} selector
      */
     initDatePickerEventHandlers(selector) {
-        const $input = this.$el.find(selector);
+        const input = this.element?.querySelector(selector);
 
-        $input.on('change', /** Record */e => {
+        if (!(input instanceof HTMLInputElement)) {
+            return;
+        }
+
+        $(input).on('change', /** Record */e => {
             this.trigger('change');
 
             if (e.isTrigger) {
-                if (document.activeElement !== $input.get(0)) {
-                    $input.focus();
+                if (document.activeElement !== input) {
+                    input.focus({preventScroll: true});
                 }
             }
         });
     }
 
+    /**
+     * @protected
+     * @param {string} type
+     */
     handleSearchType(type) {
-        this.$el.find('div.primary').addClass('hidden');
-        this.$el.find('div.additional').addClass('hidden');
-        this.$el.find('div.additional-number').addClass('hidden');
+        const primary = this.element?.querySelector('div.primary');
+        const additional = this.element?.querySelector('div.additional');
+        const additionalNumber = this.element?.querySelector('div.additional-number');
 
-        if (['on', 'notOn', 'after', 'before'].includes(type)) {
-            this.$el.find('div.primary').removeClass('hidden');
+        primary?.classList.add('hidden');
+        additional?.classList.add('hidden');
+        additionalNumber?.classList.add('hidden');
+
+        if (this.searchWithPrimaryTypeList.includes(type)) {
+            primary?.classList.remove('hidden');
+
+            return;
         }
-        else if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(type)) {
-            this.$el.find('div.additional-number').removeClass('hidden');
+
+        if (this.searchWithAdditionalNumberTypeList.includes(type)) {
+            additionalNumber?.classList.remove('hidden');
+
+            return;
         }
-        else if (type === 'between') {
-            this.$el.find('div.primary').addClass('hidden');
-            this.$el.find('div.additional').removeClass('hidden');
+
+        if (this.searchWithRangeTypeList.includes(type)) {
+            additional?.classList.remove('hidden');
         }
     }
 
+    /**
+     * @protected
+     * @param {string} string
+     * @return {string|-1}
+     */
     parseDate(string) {
         return this.getDateTime().fromDisplayDate(string);
     }
@@ -400,22 +468,29 @@ class DateFieldView extends BaseFieldView {
         return this.parseDate(string);
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     fetch() {
         const data = {};
 
-        data[this.name] = this.parse(this.$element.val());
+        data[this.name] = this.parse(this.mainInputElement?.value ?? '');
 
         return data;
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     fetchSearch() {
         const type = this.fetchSearchType();
 
-        if (type === 'between') {
-            const valueFrom = this.parseDate(this.$el.find('input.filter-from').val());
-            const valueTo = this.parseDate(this.$el.find('input.filter-to').val());
+        if (this.searchWithRangeTypeList.includes(type)) {
+            const inputFrom = this.element?.querySelector('input.filter-from');
+            const inputTo = this.element?.querySelector('input.filter-to');
+
+            const valueFrom = inputFrom instanceof HTMLInputElement ? this.parseDate(inputFrom.value) : undefined;
+            const valueTo = inputTo instanceof HTMLInputElement ? this.parseDate(inputTo.value) : undefined;
 
             if (!valueFrom || !valueTo) {
                 return null;
@@ -431,24 +506,28 @@ class DateFieldView extends BaseFieldView {
             };
         }
 
-        let data;
-        const value = this.parseDate(this.$element.val());
+        if (this.searchWithAdditionalNumberTypeList.includes(type)) {
+            const input = this.element?.querySelector('input.number');
 
-        if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(type)) {
-            const number = this.$el.find('input.number').val();
+            const number = input instanceof HTMLInputElement ? input.value : undefined;
 
-            data = {
+            return {
                 type: type,
                 value: number,
                 date: true,
             };
         }
-        else if (['on', 'notOn', 'after', 'before'].includes(type)) {
+
+        if (this.searchWithPrimaryTypeList.includes(type)) {
+            const input = this.element?.querySelector(`[data-name="${this.name}"]`);
+
+            const value = input instanceof HTMLInputElement ? this.parseDate(input.value) : undefined;
+
             if (!value) {
                 return null;
             }
 
-            data = {
+            return {
                 type: type,
                 value: value,
                 data: {
@@ -456,22 +535,20 @@ class DateFieldView extends BaseFieldView {
                 },
             };
         }
-        else if (type === 'isEmpty') {
-            data = {
+
+        if (type === 'isEmpty') {
+            return {
                 type: 'isNull',
                 data: {
                     type: type,
                 },
             };
         }
-        else {
-            data = {
-                type: type,
-                date: true,
-            };
-        }
 
-        return data;
+        return {
+            type: type,
+            date: true,
+        };
     }
 
     getSearchType() {
@@ -566,6 +643,28 @@ class DateFieldView extends BaseFieldView {
             this.showValidationMessage(msg);
 
             return true;
+        }
+    }
+
+    /**
+     * @protected
+     * @since 9.2.0
+     */
+    onAfterChange() {
+        /** @type {string} */
+        const from = this.model.attributes[this.params.after];
+        /** @type {string} */
+        const currentValue = this.model.attributes[this.name];
+
+        if (!from || !currentValue || from.length !== currentValue.length) {
+            return;
+        }
+
+        if (
+            this.getDateTime().toMomentDate(currentValue)
+                .isBefore(this.getDateTime().toMomentDate(from))
+        ) {
+            this.model.set(this.name, from);
         }
     }
 }

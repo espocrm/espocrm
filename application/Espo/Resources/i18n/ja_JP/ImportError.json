@@ -18,7 +18,7 @@
     }
   },
   "tooltips": {
-    "lineNumber": "元の CSV 内の行番号。",
-    "exportLineNumber": "エクスポート CSV 内の行番号。"
+    "lineNumber": "元の CSV 内の行番号",
+    "exportLineNumber": "エクスポート CSV 内の行番号"
   }
 }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,7 +86,14 @@ class DevModeJsFileListProvider
         $amdId = $item->amdId ?? null;
 
         if ($amdId) {
-            return 'client/lib/original/' . $amdId . '.js';
+            $file = $amdId;
+
+            if (str_starts_with($amdId, '@')) {
+                $file = substr($amdId, 1);
+                $file = str_replace('/', '-', $file);
+            }
+
+            return 'client/lib/original/' . $file . '.js';
         }
 
         $src = $item->src ?? null;

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ class CheckEmailAccounts implements Job
         try {
             $this->service->fetch($targetId);
         } catch (Throwable $e) {
-            throw new RuntimeException("CheckInboundEmails job failed, $targetId; {$e->getMessage()}", 0, $e);
+            throw new RuntimeException("CheckEmailAccounts job failed, $targetId; {$e->getMessage()}", 0, $e);
         }
     }
 }

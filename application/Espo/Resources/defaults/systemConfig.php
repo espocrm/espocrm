@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -189,6 +189,7 @@ return [
         'adminNotificationsCronIsNotConfigured',
         'adminNotificationsNewExtensionVersion',
         'leadCaptureAllowOrigin',
+        'leadCaptureSiteUrl',
         'cronDisabled',
         'defaultPortalId',
         'cleanupDeletedRecords',
@@ -284,9 +285,9 @@ return [
         'post_max_size' => '20M',
         'upload_max_filesize' => '20M',
     ],
-    'requiredMysqlVersion' => '5.7.0',
+    'requiredMysqlVersion' => '8.0.0',
     'recommendedMysqlParams' => [],
-    'requiredMariadbVersion' => '10.2.2',
+    'requiredMariadbVersion' => '10.3.0',
     'requiredPostgresqlVersion' => '15.0',
     'recommendedMariadbParams' => [],
     /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/

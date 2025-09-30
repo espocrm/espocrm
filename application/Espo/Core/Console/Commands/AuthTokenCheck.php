@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,9 +47,12 @@ class AuthTokenCheck implements Command
 
     public function run(Params $params, IO $io): void
     {
-        $token = $params->getArgument(0);
+        $io->setExitStatus(1);
 
-        if (empty($token)) {
+        $token = $params->getArgument(0);
+        $userId = $params->getArgument(1);
+
+        if (!$token) {
             return;
         }
 
@@ -67,14 +70,16 @@ class AuthTokenCheck implements Command
             return;
         }
 
-        $userId = $authToken->getUserId();
+        if ($userId && $authToken->getUserId() !== $userId) {
+            return;
+        }
 
         $user = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(User::class)
             ->select(Attribute::ID)
             ->where([
-                Attribute::ID => $userId,
-                'isActive' => true,
+                Attribute::ID => $authToken->getUserId(),
+                User::ATTR_IS_ACTIVE => true,
             ])
             ->findOne();
 
@@ -83,5 +88,6 @@ class AuthTokenCheck implements Command
         }
 
         $io->write($user->getId());
+        $io->setExitStatus(0);
     }
 }

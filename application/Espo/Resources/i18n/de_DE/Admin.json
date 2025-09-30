@@ -216,7 +216,8 @@
     "preview": "Vorschau",
     "attachmentField": "Feld für Anhänge",
     "dynamicLogicReadOnlySaved": "Gespeicherte Zustandsbedingungen, die das Feld schreibgeschützt machen",
-    "notStorable": "Nicht speicherbar"
+    "notStorable": "Nicht speicherbar",
+    "itemsEditable": "Element bearbeitbar"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",

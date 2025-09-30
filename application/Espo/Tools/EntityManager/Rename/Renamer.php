@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -627,15 +627,14 @@ class Renamer
                 $data->$to = $data->$from;
                 unset($data->$from);
 
-
-                $role->set('data', $data);
+                $role->setRawData($data);
             }
 
             if (isset($fieldData->$from)) {
                 $fieldData->$to = $fieldData->$from;
                 unset($fieldData->$from);
 
-                $role->set('fieldData', $fieldData);
+                $role->setRawFieldData($fieldData);
             }
 
             $this->entityManager->saveEntity($role);
@@ -654,14 +653,14 @@ class Renamer
                 $data->$to = $data->$from;
                 unset($data->$from);
 
-                $role->set('data', $data);
+                $role->setRawData($data);
             }
 
             if (isset($fieldData->$from)) {
                 $fieldData->$to = $fieldData->$from;
                 unset($fieldData->$from);
 
-                $role->set('fieldData', $fieldData);
+                $role->setRawFieldData($fieldData);
             }
 
             $this->entityManager->saveEntity($role);

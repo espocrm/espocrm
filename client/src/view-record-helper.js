@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,14 @@ import {Events} from 'bullbone';
 class ViewRecordHelper {
 
     /**
+     * @private
+     * @type {{
+     *     isChanged: boolean,
+     * }}
+     */
+    state
+
+    /**
      * @param {Object.<string, *>} [defaultFieldStates] Default field states.
      * @param {Object.<string, *>} [defaultPanelStates] Default panel states.
      */
@@ -61,6 +69,10 @@ class ViewRecordHelper {
         this.hiddenPanels = {};
         /** @private */
         this.fieldOptionListMap = {};
+
+        this.state = {
+            isChanged: false,
+        };
     }
 
     /**
@@ -208,6 +220,26 @@ class ViewRecordHelper {
      */
     hasFieldOptionList(field) {
         return (field in this.fieldOptionListMap);
+    }
+
+    /**
+     * Is changed.
+     *
+     * @return {boolean}
+     * @since 9.2.0
+     */
+    isChanged() {
+        return this.state.isChanged;
+    }
+
+    /**
+     * Set is changed.
+     *
+     * @param {boolean} isChanged
+     * @since 9.2.0
+     */
+    setIsChanged(isChanged) {
+        this.state.isChanged = isChanged;
     }
 }
 

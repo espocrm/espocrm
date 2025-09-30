@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,12 @@ class GlobalStreamView extends View {
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-7 col-xs-5">
-                    <h3>{{translate 'GlobalStream' category='scopeNames'}}</h3>
+                    <h3>
+                        <span
+                            data-action="fullRefresh"
+                            style="user-select: none; cursor: pointer"
+                        >{{translate 'GlobalStream' category='scopeNames'}}</span>
+                    </h3>
                 </div>
                 <div class="col-sm-5 col-xs-7"></div>
             </div>
@@ -51,22 +56,23 @@ class GlobalStreamView extends View {
         </div>
     `
 
-    /** @type {import('collections/note').default} */
     collection
 
     setup() {
         this.wait(
-            this.getCollectionFactory().create('Note')
-                .then(/** import('collections/note').default */collection => {
-                    this.collection = collection;
-                    this.collection.url = 'GlobalStream';
-                    this.collection.maxSize = this.getConfig().get('recordsPerPage');
-                    this.collection.paginationByNumber = true;
+            (async () => {
+                this.collection = await this.getCollectionFactory().create('Note');
 
-                    this.setupSearchManager();
-                    this.createSearchView();
-                })
+                this.collection.url = 'GlobalStream';
+                this.collection.maxSize = this.getConfig().get('recordsPerPage');
+                this.collection.paginationByNumber = true;
+
+                this.setupSearchManager();
+                await this.createSearchView();
+            })()
         );
+
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     setupSearchManager() {
@@ -112,6 +118,17 @@ class GlobalStreamView extends View {
                         this.listView.render();
                     });
             });
+    }
+
+    /**
+     * @private
+     */
+    async actionFullRefresh() {
+        Espo.Ui.notifyWait();
+
+        await this.collection.fetch();
+
+        Espo.Ui.notify();
     }
 }
 

@@ -45,6 +45,7 @@
     "applicationName": "Nom de l'application",
     "ldapUserPhoneNumberAttribute": "Attribut du numéro de téléphone de l'utilisateur",
     "assignmentNotificationsEntityList": "Fonctionnalités à notifier lors de l'attribution",
+    "portalStreamEmailNotifications": "Notifications des mises à jour dans le flux pour les utilisateurs du portail",
     "calendarEntityList": "Liste Calendrier",
     "activitiesEntityList": "Liste Activités",
     "historyEntityList": "Liste Historique",

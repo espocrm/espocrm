@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -540,7 +540,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
                 options[p[0]] = true;
 
                 if (p.length > 1) {
-                    options[p[0]] = p[1];
+                    options[p[0]] = decodeURIComponent(p[1]);
                 }
             });
         }

@@ -30,11 +30,15 @@ div.list-kanban > div > table {
             .create-button {
                 float: right;
                 position: relative;
-                right: 10px;
+                right: var(--10px);
                 color: var(--text-white-color);
                 &:hover,
                 &:active {
                     color: var(--text-white-color);
+                }
+
+                > .fas {
+                    vertical-align: middle;
                 }
             }
 
@@ -178,6 +182,9 @@ div.list-kanban > div > table {
 .list-kanban-container {
     overflow-x: auto;
     overflow-y: hidden;
+
+    // Fixes a dragging issue in Safari. https://github.com/espocrm/espocrm/issues/3447
+    -webkit-user-select: none;
 }
 
 .list-kanban {

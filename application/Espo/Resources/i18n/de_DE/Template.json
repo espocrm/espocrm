@@ -39,6 +39,10 @@
     },
     "pageFormat": {
       "Custom": "Benutzer"
+    },
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
     }
   }
 }

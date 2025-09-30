@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,11 +46,9 @@ class TabListFieldView extends ArrayFieldView {
             }
         });
 
-        this.events['click [data-action="editGroup"]'] = e => {
-            const id = $(e.currentTarget).parent().data('value').toString();
-
-            this.editGroup(id);
-        };
+        this.addActionHandler('editGroup', (e, target) => {
+            this.editGroup(target.dataset.value);
+        })
     }
 
     generateItemId() {
@@ -132,38 +130,109 @@ class TabListFieldView extends ArrayFieldView {
         return super.getItemHtml(value);
     }
 
+    /**
+     *
+     * @param {{id: string, text?: string|null, type: string}} item
+     * @return {string | jQuery}
+     */
     getGroupItemHtml(item) {
-        const label = item.text || '';
+        const labelElement = document.createElement('span');
+        labelElement.textContent = item.text ?? '';
 
-        const $label = $('<span>').text(label);
-
-        let $icon = null;
+        let icon;
 
         if (item.type === 'group') {
-            $icon = $('<span>')
-                .addClass('far fa-list-alt')
-                .addClass('text-muted')
+            icon = document.createElement('span');
+            icon.className = 'far fa-list-alt text-muted';
         }
 
         if (item.type === 'url') {
-            $icon = $('<span>')
-                .addClass('fas fa-link fa-sm')
-                .addClass('text-muted')
+            icon = document.createElement('span');
+            icon.className = 'fas fa-link fa-sm text-muted';
         }
 
         if (item.type === 'divider') {
-            $label.addClass('text-soft')
-                .addClass('text-italic');
+            labelElement.classList.add('text-soft', 'text-italic');
         }
 
-        const $item = $('<span>').append($label);
+        const itemElement = document.createElement('span');
+        itemElement.append(labelElement);
+        itemElement.className = 'text';
 
-        if ($icon) {
-            $item.prepend(
-                $icon,
-                ' '
-            )
+        if (icon) {
+            icon.style.marginRight = 'var(--4px)';
+
+            itemElement.prepend(icon);
         }
+
+        const div = document.createElement('div');
+        div.className = 'list-group-item';
+        div.dataset.value = item.id;
+        div.style.cursor = 'default';
+
+        div.append(
+            (() => {
+                const span = document.createElement('span');
+                span.className = 'drag-handle';
+                span.append(
+                    (() => {
+                        const span = document.createElement('span');
+                        span.className = 'fas fa-grip fa-sm';
+
+                        return span;
+                    })(),
+                );
+
+                return span;
+            })(),
+            (() => {
+                const span = document.createElement('span');
+                span.className = 'item-button'
+                span.append(
+                    (() => {
+                        const a = document.createElement('a');
+                        a.role = 'button';
+                        a.tabIndex = 0;
+                        a.dataset.value = item.id;
+                        a.dataset.action = 'editGroup';
+                        a.append(
+                            (() => {
+                                const span = document.createElement('span');
+                                span.className = 'fas fa-pencil-alt fa-sm';
+
+                                return span;
+                            })(),
+                        );
+
+                        return a;
+                    })(),
+                )
+
+                return span;
+            })(),
+            itemElement,
+            (() => {
+                const a = document.createElement('a');
+                a.role = 'button';
+                a.tabIndex = 0;
+                a.classList.add('pull-right');
+                a.dataset.value = item.id;
+                a.dataset.action = 'removeValue';
+                a.append(
+                    (() => {
+                        const span = document.createElement('span');
+                        span.className = 'fas fa-times'
+
+                        return span;
+                    })(),
+                );
+
+                return a;
+            })(),
+        );
+
+        return div.outerHTML;
+
 
         return $('<div>')
             .addClass('list-group-item')

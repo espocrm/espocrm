@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,48 +32,43 @@ import BaseFieldView from 'views/fields/base';
 
 class MeetingRemindersField extends BaseFieldView {
 
-    dateField = 'dateStart'
-
     detailTemplate = 'crm:meeting/fields/reminders/detail'
     listTemplate = 'crm:meeting/fields/reminders/detail'
     editTemplate = 'crm:meeting/fields/reminders/edit'
 
-    events = {
-        /** @this MeetingRemindersField */
-        'click [data-action="addReminder"]': function () {
-            const type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
-            const seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default') || 0;
+    /**
+     * @private
+     * @type {string}
+     */
+    dateField = 'dateStart'
 
-            const item = {
-                type: type,
-                seconds: seconds,
-            };
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isDateTimeOptional
 
-            this.reminderList.push(item);
-
-            this.addItemHtml(item);
-            this.trigger('change');
-
-            this.focusOnButton();
-        },
-        /** @this MeetingRemindersField */
-        'click [data-action="removeReminder"]': function (e) {
-            const $reminder = $(e.currentTarget).closest('.reminder');
-            const index = $reminder.index();
-
-            $reminder.remove();
-
-            this.reminderList.splice(index, 1);
-
-            this.focusOnButton();
-        },
-    }
+    /**
+     * @private
+     * @type {number}
+     */
+    minAllDaySeconds = 120 * 60
 
     getAttributeList() {
         return [this.name];
     }
 
     setup() {
+        this.addActionHandler('addReminder', () => this.actionAddReminder());
+
+        this.addActionHandler('removeReminder', (e, target) => {
+            const element = target.closest('.reminder');
+
+            const index = Array.from(element.parentElement.childNodes).indexOf(element);
+
+            this.removeReminder(index);
+        });
+
         this.setupReminderList();
 
         this.listenTo(this.model, 'change:' + this.name, () => {
@@ -93,8 +88,13 @@ class MeetingRemindersField extends BaseFieldView {
                 this.reRender();
             }
         });
+
+        this.isDateTimeOptional = this.model.getFieldParam(this.dateField, 'type') === 'datetimeOptional';
     }
 
+    /**
+     * @private
+     */
     setupReminderList() {
         if (this.model.isNew() && !this.model.get(this.name) && this.model.entityType !== 'Preferences') {
             let param = 'defaultReminders';
@@ -128,16 +128,30 @@ class MeetingRemindersField extends BaseFieldView {
             .focus({preventScroll: true});
     }
 
+    /**
+     * @private
+     * @param {string} type
+     * @param {number} index
+     */
     updateType(type, index) {
         this.reminderList[index].type = type;
         this.trigger('change');
     }
 
+    /**
+     * @private
+     * @param {number} seconds
+     * @param {number} index
+     */
     updateSeconds(seconds, index) {
         this.reminderList[index].seconds = seconds;
         this.trigger('change');
     }
 
+    /**
+     * @private
+     * @param {{type: string, seconds: number}} item
+     */
     addItemHtml(item) {
         const $item = $('<div>').addClass('input-group').addClass('reminder');
 
@@ -169,8 +183,12 @@ class MeetingRemindersField extends BaseFieldView {
         const limitDate = this.model.get(this.dateField) ?
             this.getDateTime().toMoment(this.model.get(this.dateField)) : null;
 
-        /** @var {Number[]} secondsList */
-        const secondsList = Espo.Utils.clone(this.secondsList);
+        /** @var {number[]} secondsList */
+        let secondsList = Espo.Utils.clone(this.secondsList);
+
+        if (this.isDateTimeOptional && this.model.attributes[this.dateField + 'Date']) {
+            secondsList = secondsList.filter(seconds => !seconds || seconds >= this.minAllDaySeconds);
+        }
 
         if (!secondsList.includes(item.seconds)) {
             secondsList.push(item.seconds);
@@ -302,10 +320,21 @@ class MeetingRemindersField extends BaseFieldView {
         });
     }
 
+    /**
+     * @private
+     * @param {number} seconds
+     * @param {moment.Moment} limitDate
+     * @return {boolean}
+     */
     isBefore(seconds, limitDate) {
         return moment.utc().add(seconds, 'seconds').isBefore(limitDate);
     }
 
+    /**
+     * @private
+     * @param {number} totalSeconds
+     * @return {string}
+     */
     stringifySeconds(totalSeconds) {
         if (!totalSeconds) {
             return this.translate('on time', 'labels', 'Meeting');
@@ -340,6 +369,11 @@ class MeetingRemindersField extends BaseFieldView {
         return parts.join(' ') + ' ' + this.translate('before', 'labels', 'Meeting');
     }
 
+    /**
+     * @private
+     * @param {{type: string, seconds: number}} item
+     * @return {string}
+     */
     getDetailItemHtml(item) {
         return $('<div>')
             .append(
@@ -368,6 +402,44 @@ class MeetingRemindersField extends BaseFieldView {
         data[this.name] = Espo.Utils.cloneDeep(this.reminderList);
 
         return data;
+    }
+
+    /**
+     * @private
+     */
+    actionAddReminder() {
+        const type = this.getMetadata().get('entityDefs.Reminder.fields.type.default');
+        const seconds = this.getMetadata().get('entityDefs.Reminder.fields.seconds.default') || 0;
+
+        const item = {
+            type: type,
+            seconds: seconds,
+        };
+
+        this.reminderList.push(item);
+
+        this.addItemHtml(item);
+        this.trigger('change');
+
+        this.focusOnButton();
+    }
+
+    /**
+     * @private
+     * @param {number} index
+     */
+    removeReminder(index) {
+        const element = this.element.querySelectorAll('.reminder')[index] ?? null;
+
+        if (!element) {
+            return;
+        }
+
+        element.parentElement.removeChild(element);
+
+        this.reminderList.splice(index, 1);
+
+        this.focusOnButton();
     }
 }
 

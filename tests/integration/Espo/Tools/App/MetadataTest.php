@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,6 +55,6 @@ class MetadataTest extends BaseTestCase
         $data = $this->getInjectableFactory()->create(MetadataService::class)->getDataForFrontend();
 
         $this->assertIsArray($data?->entityDefs?->Lead?->fields?->source?->options);
-        $this->assertNull($data->entityDefs->Lead->fields?->name);
+        $this->assertNull($data->entityDefs->Lead->fields?->name ?? null);
     }
 }

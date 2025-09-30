@@ -16,7 +16,8 @@
     "dateStartDate": "Data Pradžia (visą dieną)",
     "dateEndDate": "Data Pabaiga (visą dieną)",
     "isAllDay": "Ar visą dieną",
-    "sourceEmail": "Šaltinis El. paštas"
+    "sourceEmail": "Šaltinis El. paštas",
+    "joinUrl": "Prisijungti prie URL"
   },
   "options": {
     "status": {

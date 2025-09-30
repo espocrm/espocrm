@@ -11,7 +11,9 @@
     "description": "Aprašymas",
     "lead": "Potencialus klientas",
     "attachments": "Prisegtukai",
-    "inboundEmail": "Grupės el. Pašto sąskaita"
+    "inboundEmail": "Grupės el. Pašto sąskaita",
+    "originalEmail": "Originalus el. paštas",
+    "isInternal": "Paslėpta nuo portalo"
   },
   "links": {
     "account": "Įmonė",

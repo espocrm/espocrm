@@ -1,9 +1,10 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
+
 /************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +28,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Binding\BindingContainerBuilder;
@@ -43,7 +46,6 @@ use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
-use Espo\Core\Repositories\Database as DatabaseRepository;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\ORM\Entity as Entity;
@@ -57,25 +59,29 @@ use tests\unit\ContainerMocker;
 
 class FormulaTest extends TestCase
 {
+    private $entity;
+    private $entityManager;
+    private $applicationConfig;
+    private $container;
+
     protected function setUp() : void
     {
         $this->entity = $this->getEntityMock();
-        $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $this->repository = $this->getMockBuilder(DatabaseRepository::class)->disableOriginalConstructor()->getMock();
+        $this->entityManager = $this->createMock(EntityManager::class);
 
         date_default_timezone_set('UTC');
 
-        $this->dateTime = new DateTime();
+        $dateTime = new DateTime();
 
-        $this->number = new NumberUtil();
+        $number = new NumberUtil();
 
-        $this->config = $this->createMock(Config::class);
-        $this->config
+        $config = $this->createMock(Config::class);
+        $config
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap([
+            ->willReturnMap([
                 ['timeZone', null, 'UTC']
-            ]));
+            ]);
 
         $this->applicationConfig = $this->createMock(Config\ApplicationConfig::class);
         $this->applicationConfig
@@ -83,29 +89,27 @@ class FormulaTest extends TestCase
             ->method('getTimeZone')
             ->willReturn('UTC');
 
-        $this->user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
+        $user = $this->createMock(User::class);
+        $log = $this->createMock(Log::class);
 
-        $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
+        $user->set('id', '1');
 
-        $this->user->set('id', '1');
-
-        $this->user
+        $user
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap([
+            ->willReturnMap([
                 ['id', '1']
-            ]));
-
+            ]);
 
         $containerMocker = new ContainerMocker($this);
 
         $this->container = $containerMocker->create([
             'entityManager' => $this->entityManager,
-            'dateTime' => $this->dateTime,
-            'number' => $this->number,
-            'config' => $this->config,
-            'user' => $this->user,
-            'log' => $this->log,
+            'dateTime' => $dateTime,
+            'number' => $number,
+            'config' => $config,
+            'user' => $user,
+            'log' => $log,
         ]);
     }
 
@@ -173,7 +177,7 @@ class FormulaTest extends TestCase
         $entity
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
     }
 
     protected function setEntityFetchedAttributes($entity, $attributes)
@@ -186,7 +190,7 @@ class FormulaTest extends TestCase
         $entity
             ->expects($this->any())
             ->method('getFetched')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
     }
 
     function testAttribute()
@@ -274,7 +278,7 @@ class FormulaTest extends TestCase
         $this->entity
             ->expects($this->once())
             ->method('isAttributeChanged')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $result = $this->createProcessor()->process($item);
 
@@ -302,7 +306,7 @@ class FormulaTest extends TestCase
         $this->entity
             ->expects($this->once())
             ->method('isAttributeChanged')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $result = $this->createProcessor()->process($item);
 
@@ -2232,6 +2236,24 @@ class FormulaTest extends TestCase
         '));
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals('2017-01-01 19:30:00', $actual);
+
+        $item = new Argument(self::stringToNode('
+            {
+                "type": "datetime\\\\addSeconds",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "2025-01-01 20:00:00"
+                    },
+                    {
+                        "type": "value",
+                        "value": -30
+                    }
+                ]
+            }
+        '));
+        $actual = $this->createProcessor()->process($item);
+        $this->assertEquals('2025-01-01 19:59:30', $actual);
     }
 
     function testDatetimeClosestTime()

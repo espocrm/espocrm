@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,14 +28,37 @@
 
 const BuildUtils = {
     /**
-     * @param {Array} libs
+     * @param {{
+     *     src?: string,
+     *     dest?: string,
+     *     bundle?: boolean,
+     *     amdId?: string,
+     *     suppressAmd?: boolean,
+     *     minify?: boolean,
+     *     prepareCommand?: string,
+     *     name?: string,
+     *     files?: {
+     *         src: string,
+     *         dest: string,
+     *     }[],
+     * }[]} libs
+     * @param {boolean} [skipPreparable]
      * @return {{src: string, file: string}[]}
      */
-    getBundleLibList: function(libs) {
+    getBundleLibList: function(libs, skipPreparable = false) {
         const list = [];
 
+        /**
+         *
+         * @param {{amdId?: string, src: string}} item
+         * @return {*|string}
+         */
         const getFile = item => {
             if (item.amdId) {
+                if (item.amdId.startsWith('@')) {
+                    return item.amdId.slice(1).replace('/', '-') + '.js';
+                }
+
                 return item.amdId + '.js';
             }
 
@@ -44,6 +67,10 @@ const BuildUtils = {
 
         libs.filter(item => item.bundle)
             .forEach(item => {
+                if (item.prepareCommand && skipPreparable) {
+                    return;
+                }
+
                 if (item.files) {
                     item.files.forEach(item => list.push({
                         src: item.src,
@@ -67,8 +94,9 @@ const BuildUtils = {
     },
 
     getPreparedBundleLibList: function (libs) {
-        return BuildUtils.getBundleLibList(libs)
-            .map(item => 'client/lib/original/' + item.file);
+        const items = BuildUtils.getBundleLibList(libs);
+
+        return items.map(item => 'client/lib/original/' + item.file);
     },
 
     destToOriginalDest: function (dest) {

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,6 +80,9 @@ class Cleanup implements JobDataLess
     private string $cleanupAttachmentsFromPeriod = '6 months';
     private string $cleanupBackupPeriod = '2 month';
     private string $cleanupDeletedRecordsPeriod = '2 months';
+
+    private const LIMIT = 5000;
+    private const SCHEDULED_JOB_LOG_LIMIT = 10;
 
     public function __construct(
         private Config $config,
@@ -171,29 +174,23 @@ class Cleanup implements JobDataLess
 
     private function cleanupScheduledJobLog(): void
     {
-        /** @var iterable<ScheduledJobLogRecord> $scheduledJobList */
         $scheduledJobList = $this->entityManager
-            ->getRDBRepository(ScheduledJob::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(ScheduledJob::class)
             ->select([Attribute::ID])
             ->find();
 
         foreach ($scheduledJobList as $scheduledJob) {
             $scheduledJobId = $scheduledJob->getId();
 
-            /** @var iterable<ScheduledJobLogRecord> $ignoreLogRecordList */
             $ignoreLogRecordList = $this->entityManager
-                ->getRDBRepository(ScheduledJobLogRecord::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(ScheduledJobLogRecord::class)
                 ->select([Attribute::ID])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
                 ])
                 ->order(Field::CREATED_AT, 'DESC')
-                ->limit(0, 10)
+                ->limit(0, self::SCHEDULED_JOB_LOG_LIMIT)
                 ->find();
-
-            if (!is_countable($ignoreLogRecordList)) {
-                continue;
-            }
 
             if (!count($ignoreLogRecordList)) {
                 continue;
@@ -287,190 +284,14 @@ class Cleanup implements JobDataLess
     private function cleanupAttachments(): void
     {
         $period = '-' . $this->config->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
-
         $datetime = $this->createDateTimeFromPeriod($period);
 
-        $collection = $this->entityManager
-            ->getRDBRepository(Attachment::ENTITY_TYPE)
-            ->sth()
-            ->where([
-                'OR' => [
-                    [
-                        'role' => [
-                            Attachment::ROLE_EXPORT_FILE,
-                            'Mail Merge',
-                            'Mass Pdf',
-                        ]
-                    ]
-                ],
-                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-            ])
-            ->limit(0, 5000)
-            ->find();
-
-        foreach ($collection as $entity) {
-            $this->entityManager->removeEntity($entity);
-        }
-
-        if ($this->config->get('cleanupOrphanAttachments')) {
-            try {
-                $orphanQueryBuilder = $this->selectBuilderFactory
-                    ->create()
-                    ->from(Attachment::ENTITY_TYPE)
-                    ->withPrimaryFilter('orphan')
-                    ->buildQueryBuilder();
-            } catch (BadRequest|Forbidden $e) {
-                throw new RuntimeException('', 0, $e);
-            }
-
-            $orphanQueryBuilder->where([
-                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-                'createdAt>' => '2018-01-01 00:00:00',
-            ]);
-
-            $collection = $this->entityManager
-                ->getRDBRepository(Attachment::ENTITY_TYPE)
-                ->clone($orphanQueryBuilder->build())
-                ->sth()
-                ->limit(0, 5000)
-                ->find();
-
-            foreach ($collection as $entity) {
-                $this->entityManager->removeEntity($entity);
-            }
-        }
-
-        $fromPeriod = '-' . $this->config->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
-
-        $datetimeFrom = $this->createDateTimeFromPeriod($fromPeriod);
-
-        /** @var string[] $scopeList */
-        $scopeList = array_keys($this->metadata->get(['scopes']));
-
-        foreach ($scopeList as $scope) {
-            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
-                continue;
-            }
-
-            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== Note::ENTITY_TYPE) {
-                continue;
-            }
-
-            if (!$this->metadata->get(['entityDefs', $scope, 'fields', Field::MODIFIED_AT])) {
-                continue;
-            }
-
-            $hasAttachmentField = false;
-
-            if ($scope === Note::ENTITY_TYPE) {
-                $hasAttachmentField = true;
-            }
-
-            if (!$hasAttachmentField) {
-                foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $defs) {
-                    if (empty($defs['type'])) {
-                        continue;
-                    }
-
-                    if (
-                        in_array($defs['type'], [
-                            FieldType::FILE,
-                            FieldType::IMAGE,
-                            FieldType::ATTACHMENT_MULTIPLE,
-                        ])
-                    ) {
-                        $hasAttachmentField = true;
-
-                        break;
-                    }
-                }
-            }
-
-            if (!$hasAttachmentField) {
-                continue;
-            }
-
-            if (!$this->entityManager->hasRepository($scope)) {
-                continue;
-            }
-
-            $repository = $this->entityManager->getRepository($scope);
-
-            if (!method_exists($repository, 'find')) {
-                continue;
-            }
-
-            if (!method_exists($repository, 'clone')) {
-                continue;
-            }
-
-            $query = $this->entityManager
-                ->getQueryBuilder()
-                ->select()
-                ->from($scope)
-                ->withDeleted()
-                ->where([
-                    Attribute::DELETED => true,
-                    'modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-                    'modifiedAt>' => $datetimeFrom->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-                ])
-                ->build();
-
-            $deletedEntityList = $repository
-                ->clone($query)
-                ->sth()
-                ->find();
-
-            foreach ($deletedEntityList as $deletedEntity) {
-                $attachmentToRemoveList = $this->entityManager
-                    ->getRDBRepository(Attachment::ENTITY_TYPE)
-                    ->sth()
-                    ->where([
-                        'OR' => [
-                            [
-                                'relatedType' => $scope,
-                                'relatedId' => $deletedEntity->getId(),
-                            ],
-                            [
-                                'parentType' => $scope,
-                                'parentId' => $deletedEntity->getId(),
-                            ]
-                        ]
-                    ])
-                    ->find();
-
-                foreach ($attachmentToRemoveList as $attachmentToRemove) {
-                    $this->entityManager->removeEntity($attachmentToRemove);
-                }
-            }
-        }
-
-        $isBeingUploadedCollection = $this->entityManager
-            ->getRDBRepository(Attachment::ENTITY_TYPE)
-            ->sth()
-            ->where([
-                'isBeingUploaded' => true,
-                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-            ])
-            ->find();
-
-        foreach ($isBeingUploadedCollection as $e) {
-            $this->entityManager->removeEntity($e);
-        }
-
-        $delete = $this->entityManager
-            ->getQueryBuilder()
-            ->delete()
-            ->from(Attachment::ENTITY_TYPE)
-            ->where([
-                Attribute::DELETED => true,
-                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($delete);
+        $this->deleteTemporaryAttachments($datetime);
+        $this->deleteOrphanAttachments($datetime);
+        $this->deleteRelatedToDeletedAttachments($datetime);
+        $this->deleteBeingUploadedAttachments($datetime);
+        $this->fullDeleteDeletedAttachments($datetime);
     }
-
 
     private function cleanupNotifications(): void
     {
@@ -774,5 +595,202 @@ class Cleanup implements JobDataLess
                 ->getRDBRepository(ArrayValue::ENTITY_TYPE)
                 ->deleteFromDb($arrayValue->getId());
         }
+    }
+
+    private function deleteOrphanAttachments(DateTime $datetime): void
+    {
+        if (!$this->config->get('cleanupOrphanAttachments')) {
+            return;
+        }
+
+        try {
+            $orphanQueryBuilder = $this->selectBuilderFactory
+                ->create()
+                ->from(Attachment::ENTITY_TYPE)
+                ->withPrimaryFilter('orphan')
+                ->buildQueryBuilder();
+        } catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException('', 0, $e);
+        }
+
+        $orphanQueryBuilder->where([
+            'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+            'createdAt>' => '2018-01-01 00:00:00',
+        ]);
+
+        $collection = $this->entityManager
+            ->getRDBRepository(Attachment::ENTITY_TYPE)
+            ->clone($orphanQueryBuilder->build())
+            ->sth()
+            ->limit(0, self::LIMIT)
+            ->find();
+
+        foreach ($collection as $entity) {
+            $this->entityManager->removeEntity($entity);
+        }
+    }
+
+    private function deleteTemporaryAttachments(DateTime $datetime): void
+    {
+        $collection = $this->entityManager
+            ->getRDBRepository(Attachment::ENTITY_TYPE)
+            ->sth()
+            ->where([
+                'OR' => [
+                    [
+                        'role' => [
+                            Attachment::ROLE_EXPORT_FILE,
+                            'Mail Merge',
+                            'Mass Pdf',
+                        ]
+                    ]
+                ],
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+            ])
+            ->limit(0, self::LIMIT)
+            ->find();
+
+        foreach ($collection as $entity) {
+            $this->entityManager->removeEntity($entity);
+        }
+    }
+
+    private function deleteBeingUploadedAttachments(DateTime $datetime): void
+    {
+        $isBeingUploadedCollection = $this->entityManager
+            ->getRDBRepository(Attachment::ENTITY_TYPE)
+            ->sth()
+            ->where([
+                'isBeingUploaded' => true,
+                'createdAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+            ])
+            ->find();
+
+        foreach ($isBeingUploadedCollection as $e) {
+            $this->entityManager->removeEntity($e);
+        }
+    }
+
+    private function deleteRelatedToDeletedAttachments(DateTime $datetime): void
+    {
+        $fromPeriod = '-' . $this->config->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
+
+        $datetimeFrom = $this->createDateTimeFromPeriod($fromPeriod);
+
+        /** @var string[] $scopeList */
+        $scopeList = array_keys($this->metadata->get(['scopes']));
+
+        foreach ($scopeList as $scope) {
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                continue;
+            }
+
+            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== Note::ENTITY_TYPE) {
+                continue;
+            }
+
+            if (!$this->metadata->get(['entityDefs', $scope, 'fields', Field::MODIFIED_AT])) {
+                continue;
+            }
+
+            $hasAttachmentField = false;
+
+            if ($scope === Note::ENTITY_TYPE) {
+                $hasAttachmentField = true;
+            }
+
+            if (!$hasAttachmentField) {
+                foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $defs) {
+                    if (empty($defs['type'])) {
+                        continue;
+                    }
+
+                    if (
+                        in_array($defs['type'], [
+                            FieldType::FILE,
+                            FieldType::IMAGE,
+                            FieldType::ATTACHMENT_MULTIPLE,
+                        ])
+                    ) {
+                        $hasAttachmentField = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (!$hasAttachmentField) {
+                continue;
+            }
+
+            if (!$this->entityManager->hasRepository($scope)) {
+                continue;
+            }
+
+            $repository = $this->entityManager->getRepository($scope);
+
+            if (!method_exists($repository, 'find')) {
+                continue;
+            }
+
+            if (!method_exists($repository, 'clone')) {
+                continue;
+            }
+
+            $query = $this->entityManager
+                ->getQueryBuilder()
+                ->select(['id'])
+                ->from($scope)
+                ->withDeleted()
+                ->where([
+                    Attribute::DELETED => true,
+                    'modifiedAt<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+                    'modifiedAt>' => $datetimeFrom->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+                ])
+                ->build();
+
+            $deletedEntities = $repository
+                ->clone($query)
+                ->sth()
+                ->find();
+
+            foreach ($deletedEntities as $deletedEntity) {
+                $attachmentToRemoveList = $this->entityManager
+                    ->getRDBRepository(Attachment::ENTITY_TYPE)
+                    ->sth()
+                    ->where([
+                        'OR' => [
+                            [
+                                'relatedType' => $scope,
+                                'relatedId' => $deletedEntity->getId(),
+                            ],
+                            [
+                                'parentType' => $scope,
+                                'parentId' => $deletedEntity->getId(),
+                            ]
+                        ]
+                    ])
+                    ->find();
+
+                foreach ($attachmentToRemoveList as $attachmentToRemove) {
+                    $this->entityManager->removeEntity($attachmentToRemove);
+                }
+            }
+        }
+    }
+
+    private function fullDeleteDeletedAttachments(DateTime $datetime): void
+    {
+        $delete = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
+            ->from(Attachment::ENTITY_TYPE)
+            ->where([
+                Attribute::DELETED => true,
+                Field::CREATED_AT . '<' => $datetime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 }

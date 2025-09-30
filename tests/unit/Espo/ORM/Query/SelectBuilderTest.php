@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,17 +29,17 @@
 
 namespace tests\unit\Espo\ORM\Query;
 
-use Espo\ORM\{
-    Query\SelectBuilder,
-    Query\Part\Condition as Cond,
-    Query\Part\Expression as Expr,
-    Query\Part\Selection,
-    Query\Part\Order,
-    Query\Part\Join,
-    Query\Part\WhereClause,
-};
+use PHPUnit\Framework\TestCase;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\SelectBuilder;
+use RuntimeException;
 
-class SelectBuilderTest extends \PHPUnit\Framework\TestCase
+class SelectBuilderTest extends TestCase
 {
     /**
      * @var SelectBuilder
@@ -410,7 +410,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $builder = new SelectBuilder();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $builder
             ->from('Test')
@@ -478,10 +478,17 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->leftJoin('link1')
             ->leftJoin('link1')
             ->leftJoin('link2')
-            ->build()
-            ->getRaw();
+            ->build();
 
-        $this->assertEquals(['link1', 'link2'], $params['leftJoins']);
+        $this->assertEquals(
+            [
+                Join::create('link1')
+                    ->withLeft(),
+                Join::create('link2')
+                    ->withLeft()
+            ],
+            $params->getJoins()
+        );
     }
 
     public function testLeftJoin2()
@@ -495,10 +502,12 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             [
                 Join::create('link1', 'alias1')
-                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
-                Join::create('link2', 'alias2'),
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test']))
+                    ->withLeft(),
+                Join::create('link2', 'alias2')
+                    ->withLeft(),
             ],
-            $query->getLeftJoins()
+            $query->getJoins()
         );
     }
 
@@ -520,10 +529,12 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             [
                 Join::create('link1', 'alias1')
-                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
-                Join::create('link2', 'alias2'),
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test']))
+                    ->withLeft(),
+                Join::create('link2', 'alias2')
+                    ->withLeft(),
             ],
-            $query->getLeftJoins()
+            $query->getJoins()
         );
     }
 
@@ -537,7 +548,13 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->build()
             ->getRaw();
 
-        $this->assertEquals(['link1', 'link2'], $params['joins']);
+        $this->assertEquals(
+            [
+                ['link1', null, null, ['type' => null]],
+                ['link2', null, null, ['type' => null]],
+            ],
+            $params['joins']
+        );
     }
 
     public function testJoin2()
@@ -551,8 +568,10 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             [
                 Join::create('link1', 'alias1')
-                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
-                Join::create('link2', 'alias2'),
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test']))
+                    ->withInner(),
+                Join::create('link2', 'alias2')
+                    ->withInner(),
             ],
             $query->getJoins()
         );
@@ -572,8 +591,10 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             [
                 Join::create('link1', 'alias1')
-                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
-                Join::create('link2', 'alias2'),
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test']))
+                    ->withInner(),
+                Join::create('link2', 'alias2')
+                    ->withInner(),
             ],
             $query->getJoins()
         );
@@ -617,24 +638,20 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 [
                     'table1.testId=:' => 'id'
                 ],
-                ['noLeftAlias' => true]
-            ]
-        ];
-
-        $expectedLeftJoins = [
+                ['noLeftAlias' => true, 'type' => null]
+            ],
             [
                 'Table2',
                 'table2',
                 [
                     'table2.testId=:' => 'id'
                 ],
-                ['noLeftAlias' => true]
+                ['noLeftAlias' => true, 'type' => Join\JoinType::left]
             ]
         ];
 
         $this->assertEquals($expectedWhere, $raw['whereClause']);
         $this->assertEquals($expectedJoins, $raw['joins']);
-        $this->assertEquals($expectedLeftJoins, $raw['leftJoins']);
     }
 
     public function testExists1(): void

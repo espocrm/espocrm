@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,8 +46,11 @@ export default class extends LinkFieldView {
     setup() {
         super.setup();
 
-        this.foreignScope = this.getMetadata()
-            .get(['entityDefs', this.options.scope, 'links', this.options.field, 'entity']);
+        const entityType = this.options.scope;
+        const field = this.options.field;
+
+        this.foreignScope = this.getMetadata().get(['entityDefs', entityType, 'links', field, 'entity']) ??
+            this.getMetadata().get(`entityDefs.${entityType}.fields.${field}.entity`);
     }
 
     fetch() {

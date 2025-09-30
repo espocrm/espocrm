@@ -16,9 +16,6 @@
   "tooltips": {
     "oneOff": "Seleziona se hai intenzione di utilizzare questo modello una sola volta. Ad esempio, per Email Massive."
   },
-  "presetFilters": {
-    "actual": "Attivo"
-  },
   "placeholderTexts": {
     "optOutLink": "Un link di cancellazione dell'iscrizione",
     "today": "Data odierna",
@@ -28,5 +25,14 @@
   },
   "messages": {
     "infoText": "Segnaposti disponibili:\n\n{optOutUrl} &#8211; URL per un link di disiscrizione;\n\n{optOutLink} &#8211; un link di disiscrizione."
+  },
+  "options": {
+    "status": {
+      "Active": "Attivo",
+      "Inactive": "Inattivo"
+    }
+  },
+  "presetFilters": {
+    "actual": "Attivo"
   }
 }

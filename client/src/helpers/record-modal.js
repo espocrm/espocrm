@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,11 +88,13 @@ class RecordModalHelper {
      *   rootUrl?: string,
      *   fullFormUrl?: string,
      *   layoutName?: string,
+     *   beforeSave?: function(import('model').default, Record),
      *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
+     *   beforeDestroy?: function(import('model').default),
      *   afterDestroy?: function(import('model').default),
      *   beforeRender?: function(import('views/modals/detail').default),
      *   onClose?: function(),
-     *   collapseDisabled: boolean,
+     *   collapseDisabled?: boolean,
      * }} params
      * @return {Promise<import('views/modals/detail').default>}
      */
@@ -139,14 +141,24 @@ class RecordModalHelper {
         // @todo Revise.
         view.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
 
+        if (params.beforeSave) {
+            modalView.listenTo(modalView, 'before:save', (model, o) => {
+                params.beforeSave(model, o);
+            });
+        }
+
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {
                 params.afterSave(model, {...o});
             });
         }
 
+        if (params.beforeDestroy) {
+            modalView.listenToOnce(modalView, 'before:delete', model => params.beforeDestroy(model));
+        }
+
         if (params.afterDestroy) {
-            modalView.listenToOnce(modalView, 'after:destroy', model => params.afterDestroy(model));
+            modalView.listenToOnce(modalView, 'after:delete', model => params.afterDestroy(model));
         }
 
         if (params.beforeRender) {
@@ -177,6 +189,7 @@ class RecordModalHelper {
      *   fullFormUrl?: string,
      *   returnUrl?: string,
      *   layoutName?: string,
+     *   beforeSave?: function(import('model').default, Record),
      *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
      *   beforeRender?: function(import('views/modals/edit').default),
      *   onClose?: function(),
@@ -185,7 +198,7 @@ class RecordModalHelper {
      *       action: string|null,
      *       options: {isReturn?: boolean} & Record,
      *   },
-     *   collapseDisabled: boolean,
+     *   collapseDisabled?: boolean,
      * }} params
      * @return {Promise<import('views/modals/edit').default>}
      * @since 9.1.0
@@ -239,6 +252,12 @@ class RecordModalHelper {
 
         // @todo Revise.
         modalView.listenToOnce(modalView, 'remove', () => view.clearView('modal'));
+
+        if (params.beforeSave) {
+            modalView.listenTo(modalView, 'before:save', (model, o) => {
+                params.beforeSave(model, o);
+            });
+        }
 
         if (params.afterSave) {
             modalView.listenTo(modalView, 'after:save', (model, /** Record */o) => {

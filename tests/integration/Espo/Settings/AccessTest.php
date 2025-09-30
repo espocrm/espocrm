@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,7 +71,7 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
             ->getConfigData();
 
         $this->assertTrue(property_exists($data, 'version'));
-        $this->assertTrue(property_exists($data, 'outboundEmailFromAddress'));
+        $this->assertFalse(property_exists($data, 'outboundEmailFromAddress'));
         $this->assertFalse(property_exists($data, 'jobPeriod'));
         $this->assertFalse(property_exists($data, 'cryptKey'));
     }

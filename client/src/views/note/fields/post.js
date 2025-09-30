@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,10 +27,16 @@
  ************************************************************************/
 
 import TextFieldView from 'views/fields/text';
-// noinspection ES6UnusedImports
-import Textcomplete from 'lib!jquery-textcomplete';
+import {Textcomplete} from '@textcomplete/core';
+import {TextareaEditor}  from '@textcomplete/textarea';
 
 class NotePostFieldView extends TextFieldView {
+
+    /**
+     * @private
+     * @type {Textcomplete}
+     */
+    textcomplete
 
     setup() {
         super.setup();
@@ -38,6 +44,14 @@ class NotePostFieldView extends TextFieldView {
         this.insertedImagesData = {};
 
         this.addHandler('paste', 'textarea', (/** ClipboardEvent */event) => this.handlePaste(event));
+    }
+
+    onRemove() {
+        super.onRemove();
+
+        if (this.textcomplete) {
+            this.textcomplete.destroy();
+        }
     }
 
     /**
@@ -139,35 +153,69 @@ class NotePostFieldView extends TextFieldView {
             return url;
         };
 
-        // noinspection JSUnresolvedReference
-        this.$element.textcomplete([{
-            match: /(^|\s)@(\w[\w@.-]*)$/,
-            index: 2, // @todo Revise.
-            search: (term, callback) => {
-                if (term.length === 0) {
-                    callback([]);
+        const editor = new TextareaEditor(this.textAreaElement);
 
-                    return;
+        let bypass = false;
+
+        this.textcomplete = new Textcomplete(
+            editor,
+            [
+                {
+                    match: /(^|\s)@(\w[\w@.-]*)$/,
+                    index: 2,
+                    search: (term, callback) => {
+                        if (term.length === 0 || bypass) {
+                            callback([]);
+
+                            return;
+                        }
+
+                        Espo.Ajax.getRequest(buildUserListUrl(term))
+                            .then(data => callback(data.list));
+                    },
+                    template: mention => {
+                        const avatar = this.getHelper().getAvatarHtml(mention.id, 'medium', 16, 'avatar-link');
+                        const name = this.getHelper().escapeString(mention.name);
+                        const username = this.getHelper().escapeString(mention.userName);
+
+                        return `${avatar + name} <span class="text-muted">@${username}</span>`;
+                    },
+                    replace: it => {
+                        return '$1@' + it.userName + '';
+                    },
                 }
-
-                Espo.Ajax.getRequest(buildUserListUrl(term))
-                    .then(data => callback(data.list));
-            },
-            template: mention => {
-                return this.getHelper().getAvatarHtml(mention.id, 'medium', 16, 'avatar-link') +
-                    this.getHelper().escapeString(mention.name) +
-                    ' <span class="text-muted">@' +
-                    this.getHelper().escapeString(mention.userName) + '</span>';
-            },
-            replace: o => {
-                return '$1@' + o.userName + '';
-            },
-        }], {zIndex: 1100});
-
-        this.on('remove', () => {
-            if (this.$element.length) {
-                this.$element.textcomplete('destroy');
+            ],
+            {
+                dropdown: {
+                    item: {
+                        className: "textcomplete-item",
+                        activeClassName: "textcomplete-item active",
+                    },
+                    style: {
+                        zIndex: '1100',
+                    },
+                }
             }
+        );
+
+        this.textcomplete.on('select', () => {
+            bypass = true;
+
+            setTimeout(() => {
+                bypass = false;
+            }, 100);
+        });
+
+        this.textAreaElement.addEventListener('blur', () => {
+            bypass = true;
+
+            setTimeout(() => {
+                bypass = false;
+            }, 200);
+
+            setTimeout(() => {
+                this.textcomplete?.hide();
+            }, 150);
         });
     }
 

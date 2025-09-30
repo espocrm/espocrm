@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Notification;
 
+use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Entities\Note;
@@ -41,6 +42,7 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
+use Espo\Tools\Notification\HookProcessor\Params;
 
 class Service
 {
@@ -53,62 +55,65 @@ class Service
 
     public function notifyAboutMentionInPost(string $userId, Note $note): void
     {
-        $this->entityManager->createEntity(Notification::ENTITY_TYPE, [
-            'type' => Notification::TYPE_MENTION_IN_POST,
-            'data' => [
-                'noteId' => $note->getId(),
-            ],
-            'userId' => $userId,
-            'relatedId' => $note->getId(),
-            'relatedType' => Note::ENTITY_TYPE,
-        ]);
+        $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+        $notification
+            ->setType(Notification::TYPE_MENTION_IN_POST)
+            ->setData(['noteId' => $note->getId()])
+            ->setUserId($userId)
+            ->setRelated(LinkParent::createFromEntity($note));
+
+        $this->entityManager->saveEntity($notification);
     }
 
     /**
      * @param string[] $userIdList
+     * @param ?Params $params Parameters. As of v9.2.0.
      */
-    public function notifyAboutNote(array $userIdList, Note $note): void
+    public function notifyAboutNote(array $userIdList, Note $note, ?Params $params = null): void
     {
         $related = null;
 
         if ($note->getRelatedType() === Email::ENTITY_TYPE) {
             $related = $this->entityManager
                 ->getRDBRepository(Email::ENTITY_TYPE)
-                ->select([Attribute::ID, 'sentById', 'createdById'])
+                ->select([
+                    Attribute::ID,
+                    'sentById',
+                    'createdById',
+                ])
                 ->where([Attribute::ID => $note->getRelatedId()])
                 ->findOne();
         }
 
         $now = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->create();
+        $collection = $this->entityManager->getCollectionFactory()->create();
 
-        $userList = $this->entityManager
+        $users = $this->entityManager
             ->getRDBRepository(User::ENTITY_TYPE)
-            ->select([Attribute::ID, 'type'])
+            ->select([
+                Attribute::ID,
+                User::ATTR_TYPE,
+            ])
             ->where([
-                'isActive' => true,
+                User::ATTR_IS_ACTIVE => true,
                 Attribute::ID => $userIdList,
             ])
             ->find();
 
-        foreach ($userList as $user) {
-            $userId = $user->getId();
-
+        foreach ($users as $user) {
             if (!$this->checkUserNoteAccess($user, $note)) {
                 continue;
             }
 
-            if ($note->get('createdById') === $user->getId()) {
+            if ($note->getCreatedById() === $user->getId()) {
                 continue;
             }
 
             if (
-                $related &&
-                $related->getEntityType() === Email::ENTITY_TYPE &&
-                $related->get('sentById') === $user->getId()
+                $related instanceof Email &&
+                $related->getSentBy()?->getId() === $user->getId()
             ) {
                 continue;
             }
@@ -117,21 +122,30 @@ class Service
                 continue;
             }
 
-            $notification = $this->entityManager->getNewEntity(Notification::ENTITY_TYPE);
+            $actionId = $params?->actionId;
 
-            $notification->set([
-                Attribute::ID => $this->idGenerator->generate(),
-                'data' => [
-                    'noteId' => $note->getId(),
-                ],
-                'type' => Notification::TYPE_NOTE,
-                'userId' => $userId,
-                Field::CREATED_AT => $now,
-                'relatedId' => $note->getId(),
-                'relatedType' => Note::ENTITY_TYPE,
-                'relatedParentId' => $note->getParentId(),
-                'relatedParentType' => $note->getParentType(),
-            ]);
+            if (
+                in_array($note->getType(), [Note::TYPE_ASSIGN, Note::TYPE_CREATE]) &&
+                ($note->getData()->assignedUserId ?? null) === $user->getId()
+            ) {
+                // Do not group notifications about assignment.
+                $actionId = null;
+            }
+
+            $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+            $notification
+                ->set(Attribute::ID, $this->idGenerator->generate())
+                ->set(Field::CREATED_AT, $now)
+                ->setData(['noteId' => $note->getId()])
+                ->setType(Notification::TYPE_NOTE)
+                ->setUserId($user->getId())
+                ->setRelated(LinkParent::createFromEntity($note))
+                ->setRelatedParent(
+                    $note->getParentType() && $note->getParentId() ?
+                        LinkParent::create($note->getParentType(), $note->getParentId()) : null
+                )
+                ->setActionId($actionId);
 
             $collection[] = $notification;
         }
@@ -160,16 +174,12 @@ class Service
             return true;
         }
 
-        if ($note->getRelatedType()) {
-            if (!$this->aclManager->checkScope($user, $note->getRelatedType())) {
-                return false;
-            }
+        if ($note->getRelatedType() && !$this->aclManager->checkScope($user, $note->getRelatedType())) {
+            return false;
         }
 
-        if ($note->getParentType()) {
-            if (!$this->aclManager->checkScope($user, $note->getParentType())) {
-                return false;
-            }
+        if ($note->getParentType() && !$this->aclManager->checkScope($user, $note->getParentType())) {
+            return false;
         }
 
         return true;

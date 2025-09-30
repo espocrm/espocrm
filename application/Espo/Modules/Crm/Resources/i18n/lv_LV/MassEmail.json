@@ -52,7 +52,6 @@
     "storeSentEmails": "E-pasti tiks uzglabāti CRM sistēmā."
   },
   "presetFilters": {
-    "actual": "Faktiskais",
     "complete": "Pabeigts"
   }
 }

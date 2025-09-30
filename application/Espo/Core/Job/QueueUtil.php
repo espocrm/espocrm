@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Job;
 
+use Countable;
 use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -36,9 +37,9 @@ use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Status;
 use Espo\Entities\Job as JobEntity;
-use Espo\ORM\Collection;
 
 use DateTime;
+use Espo\ORM\Collection;
 use Espo\ORM\Name\Attribute;
 use Exception;
 use LogicException;
@@ -73,9 +74,9 @@ class QueueUtil
     }
 
     /**
-     * @return Collection<JobEntity>
+     * @return Collection<JobEntity>&Countable
      */
-    public function getPendingJobList(Params $params): Collection
+    public function getPendingJobs(Params $params): Collection
     {
         $queue = $params->getQueue();
         $group = $params->getGroup();

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Select\EmailTemplate\PrimaryFilters;
 
+use Espo\Entities\EmailTemplate;
 use Espo\ORM\Query\SelectBuilder;
 
 use Espo\Core\Select\Primary\Filter;
@@ -38,7 +39,8 @@ class Actual implements Filter
     public function apply(SelectBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            'oneOff!=' => true
+            'oneOff!=' => true,
+            'status' => EmailTemplate::STATUS_ACTIVE,
         ]);
     }
 }

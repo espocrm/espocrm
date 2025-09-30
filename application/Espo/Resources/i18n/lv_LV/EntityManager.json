@@ -4,7 +4,8 @@
     "Relationships": "Relācijas",
     "Schedule": "Grafiks",
     "Log": "Reģistrs",
-    "Layouts": "Izkārtojumi"
+    "Layouts": "Izkārtojumi",
+    "Parameters": "Parametri"
   },
   "fields": {
     "name": "Nosaukums/vārds",
@@ -18,8 +19,6 @@
     "linkForeign": "Ārējā saite",
     "link": "Saite",
     "labelForeign": "Ārējā etiķete",
-    "sortBy": "Noklusējuma pasūtījums (lauks)",
-    "sortDirection": "Noklusējuma pasūtījums (virziens)",
     "relationName": "Vidējais tabulas nosaukums",
     "linkMultipleField": "Saites lauku kopa",
     "linkMultipleFieldForeign": "Ārējās saites lauku kopa",
@@ -45,7 +44,17 @@
     "layout": "Izkārtojums",
     "author": "Autors",
     "module": "Modulis",
-    "version": "Versija"
+    "version": "Versija",
+    "selectFilter": "Atlasiet filtru",
+    "primaryFilters": "Primārie filtri",
+    "stars": "Zvaigznes",
+    "preserveAuditLog": "Saglabāt revīzijas žurnālu",
+    "assignedUsers": "Vairāki piešķirti lietotāji",
+    "collaborators": "Sadarbības partneri",
+    "aclContactLink": "ACL Kontaktinformācija Saite",
+    "aclAccountLink": "ACL konta saite",
+    "sortBy": "Noklusējuma pasūtījuma lauks",
+    "sortDirection": "Noklusējuma pasūtījuma virziens"
   },
   "options": {
     "type": {
@@ -69,6 +78,9 @@
     "sortDirection": {
       "asc": "Augošā secībā",
       "desc": "Dilstošā secībā"
+    },
+    "module": {
+      "Custom": "Pielāgots"
     }
   },
   "messages": {
@@ -80,12 +92,13 @@
     "beforeSaveApiScript": "Skripts, kas tiek izsaukts API izveides un atjaunināšanas pieprasījumos, pirms tiek saglabāta vienība. Izmanto pielāgotai validācijai un dublēšanās pārbaudei.",
     "nameIsAlreadyUsed": "Nosaukums '{vārds}' jau ir izmantots.",
     "nameIsNotAllowed": "Vārds '{vārds}' nav atļauts.",
-    "nameIsTooLong": "Nosaukums ir pārāk garš."
+    "nameIsTooLong": "Nosaukums ir pārāk garš.",
+    "confirmRemoveLink": "Vai esat pārliecināts, ka vēlaties dzēst *{link}* attiecības?",
+    "urlHashCopiedToClipboard": "Uz starpliktuvi tiek kopēts URL fragments *{nosaukums}* filtram. To var pievienot navigācijas joslai."
   },
   "tooltips": {
     "statusField": "Šī lauka atjauninājumi ir reģistrēti straumēšanā.",
     "textFilterFields": "Teksta meklēšanā lietotie lauki.",
-    "stream": "Vai vienībai ir straumēšana.",
     "disabled": "Atzīmējiet, ka šī vienība jūsu sistēmā nav nepieciešama.",
     "linkAudited": "Saistītā ieraksta izveide un sasaistīšana ar esošu ierakstu tiks reģistrēta straumēšanā.",
     "linkMultipleField": "Lauku kopa sasaiste ir ērts veids, kā rediģēt relācijas . Nelietojiet to, ja iespējams liels saistīto ierakstu skaits.",
@@ -94,6 +107,15 @@
     "countDisabled": "Kopējais skaits netiks parādīts saraksta skatā. Var samazināt ielādes laiku, ja DB tabula ir liela.",
     "optimisticConcurrencyControl": "Novērš rakstīšanas konfliktus.",
     "duplicateCheckFieldList": "Kādus laukus pārbaudīt, veicot dublēšanās pārbaudi.",
-    "updateDuplicateCheck": "Veiciet dublējošu ierakstu pārbaudi, atjauninot ierakstu."
+    "updateDuplicateCheck": "Veiciet dublējošu ierakstu pārbaudi, atjauninot ierakstu.",
+    "linkSelectFilter": "Galvenais filtrs, kas pēc noklusējuma jāpiemēro, izvēloties ierakstu.",
+    "stars": "Iespēja ierakstīt ierakstus ar zvaigznīti. Zvaigznītes lietotāji var izmantot, lai atzīmētu ierakstus.",
+    "aclContactLink": "Saite ar Kontaktpersona, kas jāizmanto, piemērojot piekļuves kontroli portāla lietotājiem.",
+    "aclAccountLink": "Saite ar Konts, kas jāizmanto, piemērojot piekļuves kontroli portāla lietotājiem.",
+    "collaborators": "Iespēja kopīgot ierakstus ar konkrētiem lietotājiem.",
+    "assignedUsers": "Iespēja ierakstam piešķirt vairākus lietotājus.\n\nŅemiet vērā, ka pēc parametra iespējošanas esošie piešķirtie lietotāji netiks pārnesti uz jauno lauku *Piešķirti lietotāji*.",
+    "preserveAuditLog": "Aizliedz revīzijas žurnāla tīrīšanu. Šis parametrs ir piemērojams tikai tad, ja ir atspējota funkcija Stream. Ja Stream ir iespējots, audita žurnāla ieraksti netiek dzēsti.",
+    "stream": "Vai vienībai ir Stream.",
+    "linkParamReadOnly": "Saiti, kas paredzēta tikai lasīšanai, nevar rediģēt, izmantojot API pieprasījumus *link* un *unlink*. Nebūs iespējams saistīt un atcelt ierakstus, izmantojot attiecību paneli. Joprojām ir iespējams rediģēt tikai lasāmās saites, izmantojot saites un saites-daudzkārtējo lauku."
   }
 }

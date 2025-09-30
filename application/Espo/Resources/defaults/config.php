@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,7 +67,7 @@ return [
     'baseCurrency' => 'USD',
     'currencyRates' => [],
     'currencyNoJoinMode' => false,
-    'outboundEmailIsShared' => true,
+    'outboundEmailIsShared' => false,
     'outboundEmailFromName' => 'EspoCRM',
     'outboundEmailFromAddress' => null,
     'smtpServer' => null,
@@ -176,7 +176,7 @@ return [
     'adminNotificationsNewExtensionVersion' => true,
     'assignmentEmailNotifications' => false,
     'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
-    'assignmentNotificationsEntityList' => ['Call', 'Email'],
+    'assignmentNotificationsEntityList' => ['Meeting', 'Call', 'Email'],
     "portalStreamEmailNotifications" => true,
     'streamEmailNotificationsEntityList' => ['Case'],
     'streamEmailNotificationsTypeList' => ['Post', 'Status', 'EmailReceived'],
@@ -184,6 +184,7 @@ return [
     'emailMessageMaxSize' => 10,
     'emailRecipientAddressMaxCount' => 100,
     'notificationsCheckInterval' => 10,
+    'notificationGrouping' => true,
     'popupNotificationsCheckInterval' => 15,
     'maxEmailAccountCount' => 2,
     'followCreatedEntities' => false,

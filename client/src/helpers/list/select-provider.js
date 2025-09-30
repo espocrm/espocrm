@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,18 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import LayoutManager from 'layout-manager';
+import Metadata from 'metadata';
+import FieldManager from 'field-manager';
+
 class SelectProvider {
 
+
     /**
-     * @param {module:layout-manager} layoutManager
-     * @param {module:metadata} metadata
-     * @param {module:field-manager} fieldManager
+     * @type {LayoutManager}
+     * @private
      */
-    constructor(layoutManager, metadata, fieldManager) {
-        this.layoutManager = layoutManager;
-        this.metadata = metadata;
-        this.fieldManager = fieldManager;
-    }
+    @inject(LayoutManager)
+    layoutManager
+
+    /**
+     * @type {Metadata}
+     * @private
+     */
+    @inject(Metadata)
+    metadata
+
+    /**
+     * @type {FieldManager}
+     * @private
+     */
+    @inject(FieldManager)
+    fieldManager
 
     /**
      * Get select attributes.
@@ -61,27 +77,29 @@ class SelectProvider {
      *
      * @param {string} entityType
      * @param {module:views/record/list~columnDefs[]} listLayout
+     * @param {import('helpers/list/settings').default} [settings]
      * @return {string[]}
      */
-    getFromLayout(entityType, listLayout) {
-        let list = [];
+    getFromLayout(entityType, listLayout, settings) {
+        const list = [];
 
         listLayout.forEach(item => {
             if (!item.name) {
                 return;
             }
 
-            const field = item.name;
-            const fieldType = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
-
-            if (!fieldType) {
+            if (settings?.isColumnHidden(item.name, item.hidden)) {
                 return;
             }
 
-            list = [
-                this.fieldManager.getEntityTypeFieldAttributeList(entityType, field),
-                ...list
-            ];
+            const field = item.name;
+            const type = this.metadata.get(`entityDefs.${entityType}.fields.${field}.type`);
+
+            if (!type) {
+                return;
+            }
+
+            list.push(...this.fieldManager.getEntityTypeFieldAttributeList(entityType, field));
         });
 
         return list;

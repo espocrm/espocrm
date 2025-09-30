@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create WorkingTimeRange": "Sukurti diapazoną",
-    "Calendars": "Kalendoriai"
+    "Calendars": "Kalendoriai",
+    "Create WorkingTimeRange": "Sukurti išimtį"
   },
   "fields": {
     "timeRanges": "Tvarkaraštis",
@@ -23,5 +23,9 @@
   },
   "presetFilters": {
     "actual": "Tikrasis"
+  },
+  "tooltips": {
+    "calendars": "Kalendoriai, kuriems taikoma išimtis. Išimtis bus taikoma visiems pasirinktų kalendorių naudotojams.\n\nPalikite lauką tuščią, jei išimtis turi būti taikoma tik konkretiems naudotojams.",
+    "users": "Konkretūs naudotojai, kuriems taikoma išimtis."
   }
 }

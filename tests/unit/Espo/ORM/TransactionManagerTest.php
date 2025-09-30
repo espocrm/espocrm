@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,56 +29,50 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    TransactionManager,
-    QueryComposer\MysqlQueryComposer,
-};
-
+use Espo\ORM\QueryComposer\MysqlQueryComposer;
+use Espo\ORM\TransactionManager;
 use PDO;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class TransactionManagerTest extends \PHPUnit\Framework\TestCase
+class TransactionManagerTest extends TestCase
 {
+    private $pdo;
+    private $manager;
+
     protected function setUp() : void
     {
-        $this->pdo = $this->getMockBuilder(PDO::class)->disableOriginalConstructor()->getMock();
+        $this->pdo = $this->createMock(PDO::class);
+        $composer = $this->createMock(MysqlQueryComposer::class);
 
-        $this->composer = $this->getMockBuilder(MysqlQueryComposer::class)->disableOriginalConstructor()->getMock();
-
-        $this->composer
+        $composer
             ->expects($this->any())
             ->method('composeCreateSavepoint')
-            ->will(
-                $this->returnCallback(
-                    function ($name) {
-                        return 'SAVEPOINT ' . $name;
-                    }
-                )
+            ->willReturnCallback(
+                function ($name) {
+                    return 'SAVEPOINT ' . $name;
+                }
             );
 
-        $this->composer
+        $composer
             ->expects($this->any())
             ->method('composeReleaseSavepoint')
-            ->will(
-                $this->returnCallback(
-                    function ($name) {
-                        return 'RELEASE SAVEPOINT ' . $name;
-                    }
-                )
+            ->willReturnCallback(
+                function ($name) {
+                    return 'RELEASE SAVEPOINT ' . $name;
+                }
             );
 
-        $this->composer
+        $composer
             ->expects($this->any())
             ->method('composeRollbackToSavepoint')
-            ->will(
-                $this->returnCallback(
-                    function ($name) {
-                        return 'ROLLBACK TO SAVEPOINT ' . $name;
-                    }
-                )
+            ->willReturnCallback(
+                function ($name) {
+                    return 'ROLLBACK TO SAVEPOINT ' . $name;
+                }
             );
 
-        $this->manager = new TransactionManager($this->pdo, $this->composer);
+        $this->manager = new TransactionManager($this->pdo, $composer);
     }
 
     public function testStartOnce()
@@ -96,15 +90,30 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->exactly(1))
             ->method('beginTransaction');
 
+        $invokedCount = $this->exactly(4);
+
         $this->pdo
-            ->expects($this->exactly(4))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['SAVEPOINT POINT_1'],
-                ['SAVEPOINT POINT_2'],
-                ['RELEASE SAVEPOINT POINT_2'],
-                ['ROLLBACK TO SAVEPOINT POINT_1'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('SAVEPOINT POINT_1', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('SAVEPOINT POINT_2', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 3) {
+                    $this->assertEquals('RELEASE SAVEPOINT POINT_2', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 4) {
+                    $this->assertEquals('ROLLBACK TO SAVEPOINT POINT_1', $sql);
+                }
+
+                return 1;
+            });
 
        $this->pdo
             ->expects($this->exactly(1))
@@ -121,13 +130,22 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testNestedRollback()
     {
+        $invokedCount = $this->exactly(2);
+
         $this->pdo
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['SAVEPOINT POINT_1'],
-                ['ROLLBACK TO SAVEPOINT POINT_1'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('SAVEPOINT POINT_1', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('ROLLBACK TO SAVEPOINT POINT_1', $sql);
+                }
+
+                return 1;
+            });
 
         $this->pdo
             ->expects($this->once())
@@ -207,13 +225,22 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('beginTransaction');
 
+        $invokedCount = $this->exactly(2);
+
         $this->pdo
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('exec')
-            ->withConsecutive(
-                ['SAVEPOINT POINT_1'],
-                ['RELEASE SAVEPOINT POINT_1'],
-            );
+            ->willReturnCallback(function ($sql) use ($invokedCount) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals('SAVEPOINT POINT_1', $sql);
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals('RELEASE SAVEPOINT POINT_1', $sql);
+                }
+
+                return 1;
+            });
 
         $this->pdo
             ->expects($this->once())

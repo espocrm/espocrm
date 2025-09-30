@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,6 +52,7 @@ use Espo\Core\Mail\Sender;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
+use Espo\Core\Name\Link;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
@@ -67,7 +68,6 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Stream\Service as StreamService;
 use Exception;
-use Laminas\Mail\Message;
 use LogicException;
 
 use const FILTER_VALIDATE_EMAIL;
@@ -77,6 +77,8 @@ use const FILTER_VALIDATE_EMAIL;
  */
 class SendService
 {
+    private const LINK_EMAIL_ADDRESSES = Link::EMAIL_ADDRESSES;
+
     /** @var string[] */
     private array $notAllowedStatusList = [
         Email::STATUS_ARCHIVED,
@@ -127,7 +129,7 @@ class SendService
             throw new BadRequest("Empty To address.");
         }
 
-        $systemIsShared = $this->config->get('outboundEmailIsShared');
+        $systemIsShared = $this->configDataProvider->isSystemOutboundAddressShared();
         $systemFromName = $this->config->get('outboundEmailFromName');
         $systemFromAddress = $this->configDataProvider->getSystemOutboundAddress();
 
@@ -139,7 +141,7 @@ class SendService
             // @todo Use getEmailAddressGroup.
             /** @var Collection<EmailAddress> $emailAddressCollection */
             $emailAddressCollection = $this->entityManager
-                ->getRelation($user, 'emailAddresses')
+                ->getRelation($user, self::LINK_EMAIL_ADDRESSES)
                 ->find();
 
             foreach ($emailAddressCollection as $ea) {
@@ -212,13 +214,13 @@ class SendService
 
         $this->validateEmailAddresses($entity);
 
-        $message = new Message();
+        $messageContainer = new Sender\MessageContainer();
 
         if (
             $groupAccount instanceof GroupAccount && $groupAccount->storeSentEmails() ||
             $personalAccount instanceof PersonalAccount && $personalAccount->storeSentEmails()
         ) {
-            $sender->withMessage($message);
+            $sender->withMessageContainer($messageContainer);
         }
 
         $this->applyReplied($entity, $sender);
@@ -260,7 +262,7 @@ class SendService
 
         $this->entityManager->saveEntity($entity, [Email::SAVE_OPTION_IS_JUST_SENT => true]);
 
-        $this->store($message, $groupAccount, $personalAccount);
+        $this->store($messageContainer, $groupAccount, $personalAccount);
 
         if ($parent) {
             $this->streamService->noteEmailSent($parent, $entity);
@@ -291,8 +293,18 @@ class SendService
         return $params;
     }
 
-    private function store(Message $message, ?Account $groupAccount, ?Account $personalAccount): void
-    {
+    private function store(
+        Sender\MessageContainer $messageContainer,
+        ?Account $groupAccount,
+        ?Account $personalAccount,
+    ): void {
+
+        $message = $messageContainer->message;
+
+        if (!$message) {
+            return;
+        }
+
         if ($groupAccount instanceof GroupAccount && $groupAccount->storeSentEmails()) {
             $id = $groupAccount->getId() ?? null;
 

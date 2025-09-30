@@ -1,3 +1,5 @@
 {
-    "entity": true
+    "entity": true,
+    "exportFormatList": ["csv"],
+    "importable": true
 }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,18 +29,17 @@
 
 namespace tests\integration\Espo\Core\Select;
 
-use Espo\Core\{
-    Application,
-    Container,
-    Select\SelectManagerFactory,
-};
+use Espo\Core\Application;
+use Espo\Core\Select\SelectManagerFactory;
+use tests\integration\Core\BaseTestCase;
 
-class LegacyTest extends \tests\integration\Core\BaseTestCase
+class LegacyTest extends BaseTestCase
 {
     /**
      * @var SelectManagerFactory
      */
     private $selectManagerFactory;
+
 
     protected function setUp(): void
     {
@@ -67,7 +66,7 @@ class LegacyTest extends \tests\integration\Core\BaseTestCase
 
         $this->selectManagerFactory = $injectableFactory->create(SelectManagerFactory::class);
 
-        $this->user = $app->getContainer()->get('user');
+        $app->getContainer()->get('user');
 
         return $app;
     }

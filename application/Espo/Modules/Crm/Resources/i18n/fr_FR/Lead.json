@@ -19,8 +19,8 @@
     "createdAccount": "Compte",
     "createdOpportunity": "Opportunité",
     "campaign": "Campagne",
-    "targetLists": "Listes de cibles",
-    "targetList": "Liste de cibles",
+    "targetLists": "Listes de diffusion",
+    "targetList": "Liste de diffusion",
     "industry": "Industrie",
     "acceptanceStatus": "Statut d'acceptation",
     "acceptanceStatusMeetings": "Statut d'acceptation (Rendez-vous)",
@@ -29,7 +29,7 @@
     "originalEmail": "Email original"
   },
   "links": {
-    "targetLists": "Listes de cibles",
+    "targetLists": "Listes de diffusion",
     "campaignLogRecords": "Journaux de campagne",
     "campaign": "Campagne",
     "createdAccount": "Compte",

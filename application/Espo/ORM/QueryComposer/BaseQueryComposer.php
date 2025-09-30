@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@ use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Query;
 use Espo\ORM\Query\SelectingQuery;
 use Espo\ORM\Query\Select;
@@ -758,21 +759,20 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if ($includeBelongsTo) {
             $joinsPart = $this->getBelongsToJoinsPart(
-                $entity,
-                $params['select'],
-                array_merge($params['joins'], $params['leftJoins']),
-                $params
+                entity: $entity,
+                select: $params['select'],
+                explicitJoins: array_merge($params['joins'], $params['leftJoins']),
+                params: $params,
             );
         }
 
         if (!empty($params['joins']) && is_array($params['joins'])) {
             // @todo array unique
             $joinsItemPart = $this->getJoinsTypePart(
-                $entity,
-                $params['joins'],
-                false,
-                $params['joinConditions'],
-                $params
+                entity: $entity,
+                joins: $params['joins'],
+                params: $params,
+                joinConditions: $params['joinConditions'],
             );
 
             if (!empty($joinsItemPart)) {
@@ -784,14 +784,14 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
+        // For bc.
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
-            // @todo array unique
             $joinsItemPart = $this->getJoinsTypePart(
-                $entity,
-                $params['leftJoins'],
-                true,
-                $params['joinConditions'],
-                $params
+                entity: $entity,
+                joins: $params['leftJoins'],
+                params: $params,
+                joinConditions: $params['joinConditions'],
+                isLeft: true,
             );
 
             if (!empty($joinsItemPart)) {
@@ -803,7 +803,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        // @todo remove custom join
+        // @todo Remove custom join.
         if (!empty($params['customJoin'])) {
             if (!empty($joinsPart)) {
                 $joinsPart .= ' ';
@@ -1527,6 +1527,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!empty($defs['leftJoins'])) {
             foreach ($defs['leftJoins'] as $j) {
+                if (is_string($j)) {
+                    $j = [$j];
+                }
+
                 $jAlias = $this->obtainJoinAlias($j);
 
                 if ($alias) {
@@ -1537,7 +1541,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     $j[1] = $jAlias;
                 }
 
-                foreach ($params['leftJoins'] as $jE) {
+                foreach ($params['joins'] as $jE) {
                     $jEAlias = $this->obtainJoinAlias($jE);
 
                     if ($jEAlias === $jAlias) {
@@ -1545,33 +1549,42 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
 
-                if ($alias) {
-                    if (count($j) >= 3) {
-                        $conditions = [];
+                if ($alias && count($j) >= 3 && is_array($j[2])) {
+                    $conditions = [];
 
-                        foreach ($j[2] as $k => $value) {
-                            if (is_string($value)) {
-                                $value = str_replace('{alias}', $alias, $value);
-                            }
-
-                            /** @var string $left */
-                            $left = $k;
-                            $left = str_replace('{alias}', $alias, $left);
-
-                            $conditions[$left] = $value;
+                    foreach ($j[2] as $k => $value) {
+                        if (is_string($value)) {
+                            $value = str_replace('{alias}', $alias, $value);
                         }
 
-                        $j[2] = $conditions;
+                        /** @var string $left */
+                        $left = $k;
+                        $left = str_replace('{alias}', $alias, $left);
+
+                        $conditions[$left] = $value;
                     }
+
+                    $j[2] = $conditions;
                 }
 
-                $params['leftJoins'][] = $j;
+                $j[1] ??= null;
+                $j[2] ??= null;
+                $j[3] ??= [];
+
+                $j[3]['type'] = JoinType::left;
+
+                $params['joins'][] = $j;
             }
         }
 
         if (!empty($defs['joins'])) {
             foreach ($defs['joins'] as $j) {
+                if (is_string($j)) {
+                    $j = [$j];
+                }
+
                 $jAlias = $this->obtainJoinAlias($j);
+
                 $jAlias = str_replace('{alias}', $alias ?? '', $jAlias);
 
                 if (isset($j[1])) {
@@ -1586,25 +1599,31 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
 
-                if ($alias) {
-                    if (count($j) >= 3) {
-                        $conditions = [];
+                if ($alias && count($j) >= 3 && is_array($j[2])) {
+                    $conditions = [];
 
-                        foreach ($j[2] as $k => $value) {
-                            if (is_string($value)) {
-                                $value = str_replace('{alias}', $alias, $value);
-                            }
-
-                            /** @var string $left */
-                            $left = $k;
-                            $left = str_replace('{alias}', $alias, $left);
-
-                            $conditions[$left] = $value;
+                    foreach ($j[2] as $k => $value) {
+                        if (is_string($value)) {
+                            $value = str_replace('{alias}', $alias, $value);
                         }
 
-                        $j[2] = $conditions;
+                        /** @var string $left */
+                        $left = $k;
+                        $left = str_replace('{alias}', $alias, $left);
+
+                        $conditions[$left] = $value;
                     }
+
+                    $j[2] = $conditions;
                 }
+
+                $j[1] ??= null;
+                $j[2] ??= null;
+                $j[3] ??= [];
+
+                $joinType = $j[3]['type'] ?? null;
+
+                $j[3]['type'] = $joinType ? JoinType::from($joinType) : JoinType::inner;
 
                 $params['joins'][] = $j;
             }
@@ -2034,11 +2053,16 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param string[]|array<string[]> $select
-     * @param string[] $skipList
+     * @param string[] $explicitJoins
      * @param array<string, mixed> $params
      */
-    protected function getBelongsToJoinsPart(Entity $entity, ?array $select, array $skipList, array $params): string
-    {
+    protected function getBelongsToJoinsPart(
+        Entity $entity,
+        ?array $select,
+        array $explicitJoins,
+        array $params,
+    ): string {
+
         $joinsArr = [];
 
         $relationsToJoin = [];
@@ -2082,11 +2106,28 @@ abstract class BaseQueryComposer implements QueryComposer
                 continue;
             }
 
-            if (in_array($relationName, $skipList)) {
+            if (in_array($relationName, $explicitJoins)) {
+                // Never suppose to happen.
                 continue;
+            } else {
+                foreach ($explicitJoins as $skipItem) {
+                    if (!is_array($skipItem)) {
+                        continue;
+                    }
+
+                    if (
+                        ($skipItem[0] ?? null) === $relationName &&
+                        (
+                            ($skipItem[1] ?? null) === null ||
+                            ($skipItem[1] ?? null) === $relationName
+                        )
+                    ) {
+                        continue 2;
+                    }
+                }
             }
 
-            foreach ($skipList as $sItem) {
+            foreach ($explicitJoins as $sItem) {
                 if (is_array($sItem) && count($sItem) > 1) {
                     if ($sItem[1] === $relationName) {
                         continue 2;
@@ -2834,19 +2875,9 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($leftJoins as $j) {
             $jAlias = $this->obtainJoinAlias($j);
 
-            foreach ($params['leftJoins'] as $jE) {
-                $jEAlias = $this->obtainJoinAlias($jE);
-
-                if ($jEAlias === $jAlias) {
-                    continue 2;
-                }
+            if (is_string($j)) {
+                $j = [$j];
             }
-
-            $params['leftJoins'][] = $j;
-        }
-
-        foreach ($joins as $j) {
-            $jAlias = $this->obtainJoinAlias($j);
 
             foreach ($params['joins'] as $jE) {
                 $jEAlias = $this->obtainJoinAlias($jE);
@@ -2855,6 +2886,38 @@ abstract class BaseQueryComposer implements QueryComposer
                     continue 2;
                 }
             }
+
+            $j[1] ??= null;
+            $j[2] ??= null;
+            $j[3] ??= [];
+
+            $j[3]['type'] = JoinType::left;
+
+            $params['joins'][] = $j;
+        }
+
+        foreach ($joins as $j) {
+            $jAlias = $this->obtainJoinAlias($j);
+
+            if (is_string($j)) {
+                $j = [$j];
+            }
+
+            foreach ($params['joins'] as $jE) {
+                $jEAlias = $this->obtainJoinAlias($jE);
+
+                if ($jEAlias === $jAlias) {
+                    continue 2;
+                }
+            }
+
+            $j[1] ??= null;
+            $j[2] ??= null;
+            $j[3] ??= [];
+
+            $joinType = $j[3]['type'] ?? null;
+
+            $j[3]['type'] = $joinType ? JoinType::from($joinType) : JoinType::inner;
 
             $params['joins'][] = $j;
         }
@@ -2982,16 +3045,16 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string, mixed> $params
      * @param array<string|int, mixed> $joinConditions
      * @param array<string, mixed[]> $joins
+     * @param array<string, mixed> $params
      */
     protected function getJoinsTypePart(
         Entity $entity,
         array $joins,
-        bool $isLeft,
+        array $params,
         $joinConditions,
-        array $params
+        bool $isLeft = false,
     ): string {
 
         $joinSqlList = [];
@@ -2999,6 +3062,8 @@ abstract class BaseQueryComposer implements QueryComposer
         foreach ($joins as $item) {
             $itemConditions = [];
             $itemParams = [];
+
+            $isItemLeft = $isLeft;
 
             if (is_array($item)) {
                 $target = $item[0];
@@ -3015,6 +3080,10 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 } else {
                     $alias = $target;
+                }
+
+                if (($itemParams['type'] ?? null) === JoinType::left) {
+                    $isItemLeft = true;
                 }
 
                 if ($target instanceof Select && !is_string($alias)) {
@@ -3036,13 +3105,13 @@ abstract class BaseQueryComposer implements QueryComposer
             }
 
             $sql = $this->getJoinItemPart(
-                $entity,
-                $target,
-                $isLeft,
-                $conditions,
-                $alias,
-                $itemParams,
-                $params
+                entity: $entity,
+                target: $target,
+                isLeft: $isItemLeft,
+                conditions: $conditions,
+                alias: $alias,
+                joinParams: $itemParams,
+                params: $params,
             );
 
             if ($sql) {

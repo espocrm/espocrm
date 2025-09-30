@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,10 @@ use Espo\Core\Field\DateTime;
 use Espo\Tools\WorkingTime\Calendar;
 use Espo\Tools\WorkingTime\CalendarUtility;
 use Espo\Tools\WorkingTime\Extractor;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class CalendarUtilityTest extends \PHPUnit\Framework\TestCase
+class CalendarUtilityTest extends TestCase
 {
     protected Calendar $calendar;
     protected Extractor $extractor;
@@ -149,34 +151,41 @@ class CalendarUtilityTest extends \PHPUnit\Framework\TestCase
 
     public function testFindClosestWorkingTime1(): void
     {
-        $time = DateTime::fromString('2023-01-01 00:00:00');
+        $point = DateTime::fromString('2023-01-01 00:00:00');
+
+        $invokedCount = $this->exactly(2);
 
         $this->extractor
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('extract')
-            ->withConsecutive(
-                [
-                    $this->calendar,
-                    $time,
-                    $time->modify('+10 days')
-                ],
-                [
-                    $this->calendar,
-                    $time->modify('+10 days'),
-                    $time->modify('+20 days'),
-                ]
-            )
-            ->willReturnOnConsecutiveCalls(
-                [],
-                [
-                    [
-                        DateTime::fromString('2023-01-11 01:00:00'),
-                        DateTime::fromString('2023-01-11 02:00:00')
-                    ],
-                ]
-            );
+            ->willReturnCallback(function ($calendar, $a, $b) use ($invokedCount, $point) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($this->calendar, $calendar);
+                    $this->assertEquals($point, $a);
+                    $this->assertEquals($point->modify('+10 days'), $b);
 
-        $found = $this->calendarUtility->findClosestWorkingTime($time);
+                    return [];
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($this->calendar, $calendar);
+                    $this->assertEquals($point->modify('+10 days'), $a);
+                    $this->assertEquals($point->modify('+20 days'), $b);
+
+                    return [
+                        [
+                            DateTime::fromString('2023-01-11 01:00:00'),
+                            DateTime::fromString('2023-01-11 02:00:00')
+                        ],
+                    ];
+                }
+
+                throw new RuntimeException();
+            });
+
+
+
+        $found = $this->calendarUtility->findClosestWorkingTime($point);
 
         $this->assertEquals(DateTime::fromString('2023-01-11 01:00:00'), $found);
     }
@@ -201,30 +210,35 @@ class CalendarUtilityTest extends \PHPUnit\Framework\TestCase
 
         $point = $time->withTime(0, 0, 0)->modify('+1 day');
 
+        $invokedCount = $this->exactly(2);
+
         $this->extractor
-            ->expects($this->exactly(2))
+            ->expects($invokedCount)
             ->method('extractAllDay')
-            ->withConsecutive(
-                [
-                    $this->calendar,
-                    $point,
-                    $point->modify('+30 days')
-                ],
-                [
-                    $this->calendar,
-                    $point->modify('+30 days'),
-                    $point->modify('+60 days'),
-                ]
-            )
-            ->willReturnOnConsecutiveCalls(
-                [],
-                [
-                    [
-                        DateTime::fromString('2023-04-01 00:00:00'),
-                        DateTime::fromString('2023-04-01 00:00:00')
-                    ],
-                ]
-            );
+            ->willReturnCallback(function ($calendar, $a, $b) use ($invokedCount, $point) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($this->calendar, $calendar);
+                    $this->assertEquals($point, $a);
+                    $this->assertEquals($point->modify('+30 days'), $b);
+
+                    return [];
+                }
+
+                if ($invokedCount->numberOfInvocations() === 2) {
+                    $this->assertEquals($this->calendar, $calendar);
+                    $this->assertEquals($point->modify('+30 days'), $a);
+                    $this->assertEquals($point->modify('+60 days'), $b);
+
+                    return [
+                        [
+                            DateTime::fromString('2023-04-01 00:00:00'),
+                            DateTime::fromString('2023-04-01 00:00:00')
+                        ],
+                    ];
+                }
+
+                throw new RuntimeException();
+            });
 
         $found = $this->calendarUtility->addWorkingDays($time, 1);
 
@@ -237,28 +251,31 @@ class CalendarUtilityTest extends \PHPUnit\Framework\TestCase
 
         $point = $time->withTime(0, 0, 0)->modify('+1 day');
 
+        $invokedCount = $this->exactly(1);
+
         $this->extractor
-            ->expects($this->exactly(1))
+            ->expects($invokedCount)
             ->method('extractAllDay')
-            ->withConsecutive(
-                [
-                    $this->calendar,
-                    $point,
-                    $point->modify('+30 days')
-                ],
-            )
-            ->willReturnOnConsecutiveCalls(
-                [
-                    [
-                        DateTime::fromString('2023-01-02 00:00:00'),
-                        DateTime::fromString('2023-01-03 00:00:00')
-                    ],
-                    [
-                        DateTime::fromString('2023-01-03 00:00:00'),
-                        DateTime::fromString('2023-01-04 00:00:00')
-                    ],
-                ]
-            );
+            ->willReturnCallback(function ($calendar, $a, $b) use ($invokedCount, $point) {
+                if ($invokedCount->numberOfInvocations() === 1) {
+                    $this->assertEquals($this->calendar, $calendar);
+                    $this->assertEquals($point, $a);
+                    $this->assertEquals($point->modify('+30 days'), $b);
+
+                    return                 [
+                        [
+                            DateTime::fromString('2023-01-02 00:00:00'),
+                            DateTime::fromString('2023-01-03 00:00:00')
+                        ],
+                        [
+                            DateTime::fromString('2023-01-03 00:00:00'),
+                            DateTime::fromString('2023-01-04 00:00:00')
+                        ],
+                    ];
+                }
+
+                throw new RuntimeException();
+            });
 
         $found = $this->calendarUtility->addWorkingDays($time, 2);
 

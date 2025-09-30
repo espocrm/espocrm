@@ -346,6 +346,11 @@
         "actionClassName": "Espo\\Tools\\Stream\\Api\\GetNoteReactors"
     },
     {
+        "route": "/Notification/:id/group",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Notification\\Api\\GetGroup"
+    },
+    {
         "route": "/EmailTemplate/:id/prepare",
         "method": "post",
         "actionClassName": "Espo\\Tools\\EmailTemplate\\Api\\PostPrepare"

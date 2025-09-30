@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1049,18 +1049,20 @@ class BaseMapper implements RDBMapper
 
                 $sth = $this->queryExecutor->execute($selectQuery);
 
+                $update = [
+                    self::ATTR_DELETED => false,
+                    ...$data,
+                ];
+
                 // @todo Leave one INSERT for better performance.
 
                 if ($sth->rowCount() === 0) {
                     $values = $where;
                     $columns = array_keys($values);
 
-                    $update = [self::ATTR_DELETED => false];
-
                     foreach ($data as $column => $value) {
                         $columns[] = $column;
                         $values[$column] = $value;
-                        $update[$column] = $value;
                     }
 
                     $insertQuery = InsertBuilder::create()
@@ -1070,15 +1072,9 @@ class BaseMapper implements RDBMapper
                         ->updateSet($update)
                         ->build();
 
-                    $sth = $this->queryExecutor->execute($insertQuery);
+                    $this->queryExecutor->execute($insertQuery);
 
                     return true;
-                }
-
-                $update = [self::ATTR_DELETED => false];
-
-                foreach ($data as $column => $value) {
-                    $update[$column] = $value;
                 }
 
                 $updateQuery = UpdateBuilder::create()

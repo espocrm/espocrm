@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,22 @@
 const fs = require('fs');
 const buildUtils = require('../build-utils');
 
+/**
+ * @type {{
+ *     src?: string,
+ *     dest?: string,
+ *     bundle?: boolean,
+ *     amdId?: string,
+ *     suppressAmd?: boolean,
+ *     minify?: boolean,
+ *     prepareCommand?: string,
+ *     name?: string,
+ *     files?: {
+ *         src: string,
+ *         dest: string,
+ *     }[],
+ * }[]}
+ */
 const libs = require('./../../frontend/libs.json');
 
 const stripSourceMappingUrl = path => {

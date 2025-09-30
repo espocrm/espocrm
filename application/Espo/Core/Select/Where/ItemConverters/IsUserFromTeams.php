@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,8 +66,14 @@ class IsUserFromTeams implements ItemConverter
             return WhereClause::create();
         }
 
-        if (is_array($value) && count($value) == 1) {
-            $value = $value[0];
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+
+        foreach ($value as $it) {
+            if (!is_string($it) && !is_int($it)) {
+                throw new BadRequest("Bad where item. Bad array item.");
+            }
         }
 
         $entityDefs = $this->ormDefs->getEntity($this->entityType);

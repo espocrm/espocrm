@@ -24,6 +24,18 @@
             "translation": "Global.scopeNames",
             "view": "views/template/fields/entity-type"
         },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ],
+            "default": "Active",
+            "style": {
+                "Inactive": "info"
+            },
+            "maxLength": 8
+        },
         "leftMargin": {
             "type": "float",
             "default": 10

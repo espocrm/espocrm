@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,16 +33,15 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
+use tests\integration\Core\BaseTestCase;
 
-abstract class Base extends \tests\integration\Core\BaseTestCase
+abstract class Base extends BaseTestCase
 {
     protected ?string $dataFile = 'InitData.php';
     protected ?string $pathToFiles = 'Core/Database/customFiles';
 
     protected function beforeSetUp(): void
-    {
-        //$this->fullReset();
-    }
+    {}
 
     protected function getColumnInfo($entityName, $fieldName)
     {

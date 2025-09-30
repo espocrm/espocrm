@@ -27,7 +27,8 @@
             "type": "int",
             "min": 0,
             "max": 65535,
-            "default": 993
+            "default": 993,
+            "disableFormatting": true
         },
         "security": {
             "type": "enum",
@@ -109,7 +110,8 @@
             "type": "int",
             "min": 0,
             "max": 65535,
-            "default": 587
+            "default": 587,
+            "disableFormatting": true
         },
         "smtpAuth": {
             "type": "bool",

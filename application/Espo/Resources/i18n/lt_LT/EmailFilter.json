@@ -9,7 +9,8 @@
     "emailFolder": "Aplankas",
     "groupEmailFolder": "Grupės el. pašto aplankas",
     "markAsRead": "Pažymėti kaip perskaitytą",
-    "bodyContainsAll": "Kūnas apima viską"
+    "bodyContainsAll": "Kūnas apima viską",
+    "skipNotification": "Praleisti pranešimą"
   },
   "labels": {
     "Create EmailFilter": "Sukurti el.pašto filtrą",

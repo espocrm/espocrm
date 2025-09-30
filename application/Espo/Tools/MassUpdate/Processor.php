@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,7 +88,7 @@ class Processor
             throw new Forbidden("No mass-update permission.");
         }
 
-        $service = $this->serviceFactory->create($entityType);
+        $service = $this->serviceFactory->createForUser($entityType, $this->user);
 
         $filteredData = $this->filterData($entityType, $data, $service);
 

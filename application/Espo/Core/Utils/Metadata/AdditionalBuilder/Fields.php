@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ class Fields implements AdditionalBuilder
             return;
         }
 
-        $fieldDefinitionList = Util::objectToArray($data->fields);
+        $defs = Util::objectToArray($data->fields);
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
             if (isset($data->entityDefs->$entityType->collection)) {
@@ -75,10 +75,10 @@ class Fields implements AdditionalBuilder
             }
 
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->builderHelper->getAdditionalFieldList(
-                    $field,
-                    Util::objectToArray($fieldDefsItem),
-                    $fieldDefinitionList
+                $additionalFields = $this->builderHelper->getAdditionalFields(
+                    field: $field,
+                    params: Util::objectToArray($fieldDefsItem),
+                    defs: $defs,
                 );
 
                 if (!$additionalFields) {

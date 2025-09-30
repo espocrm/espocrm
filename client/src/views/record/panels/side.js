@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -115,6 +115,12 @@ class SidePanelView extends View {
      */
     defs
 
+    /**
+     * @protected
+     * @type {import('views/record/base').default}
+     */
+    recordViewObject
+
     events = {
         /** @this SidePanelView */
         'click .action': function (e) {
@@ -152,8 +158,9 @@ class SidePanelView extends View {
         this.readOnly = this.readOnly || this.options.readOnly;
         this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
 
-        /** @type {import('views/record/base').default} */
-        this.recordViewObject = this.options.recordViewObject;
+        this.recordViewObject = /** @type {import('views/record/base').default} */
+
+        this.options.recordViewObject;
     }
 
     setup() {

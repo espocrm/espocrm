@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -134,6 +134,7 @@ class Collection {
 
     /**
      * @deprecated
+     * @type {module:search-manager~whereItem[]|null}
      */
     whereAdditional = null
 
@@ -154,7 +155,7 @@ class Collection {
     /**
      * A where function.
      *
-     * @type {function(): Object[]}
+     * @type {function(): module:search-manager~whereItem[]}
      */
     whereFunction
 
@@ -897,10 +898,10 @@ class Collection {
     /**
      * Get a where clause.
      *
-     * @returns {Object[]}
+     * @returns {module:search-manager~whereItem[]}
      */
     getWhere() {
-        let where = (this.where || []).concat(this.whereAdditional || []);
+        let where = (this.where ?? []).concat(this.whereAdditional || []);
 
         if (this.whereFunction) {
             where = where.concat(this.whereFunction() || []);

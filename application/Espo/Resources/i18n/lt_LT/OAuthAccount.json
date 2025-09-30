@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create OAuthAccount": "Sukurti \"OAuth\" paskyrą",
+    "Connection": "Ryšys"
+  },
+  "fields": {
+    "provider": "Teikėjas",
+    "hasAccessToken": "Turi prieigos žetoną",
+    "user": "Vartotojas",
+    "providerIsActive": "Teikėjas yra aktyvus",
+    "data": "Duomenys"
+  },
+  "links": {
+    "provider": "Teikėjas"
+  }
+}

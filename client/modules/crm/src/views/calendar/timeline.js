@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,8 +42,33 @@ class TimelineView extends View {
 
     eventAttributes = []
     colors = {}
-    scopeList = []
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    allDayScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    scopeList = ['Meeting', 'Call', 'Task']
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    enabledScopeList
+
+    /**
+     * @private
+     * @type {string[]}
+     */
+    onlyDateScopeList
+
     header = true
+
     modeList = []
     defaultMode = 'timeline'
     maxRange = 120
@@ -123,6 +148,28 @@ class TimelineView extends View {
         },
     }
 
+    /**
+     * @param {{
+     *     userId?: string,
+     *     userName?: string|null,
+     *     mode?: string|null,
+     *     date?: string|null,
+     *     $container?: JQuery,
+     *     suppressLoadingAlert?: boolean,
+     *     containerSelector?: string,
+     *     enabledScopeList?: string[],
+     *     calendarType?: string,
+     *     userList?: string[],
+     *     header?: boolean,
+     *     onSave?: function(),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     data() {
         const calendarTypeDataList = this.getCalendarTypeDataList();
 
@@ -144,14 +191,19 @@ class TimelineView extends View {
 
         this.$container = this.options.$container;
 
-        this.colors = Espo.Utils
-            .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
-        this.modeList = this.getMetadata()
-            .get('clientDefs.Calendar.modeList') || this.modeList || [];
-        this.scopeList = this.getConfig()
-            .get('calendarEntityList') || Espo.Utils.clone(this.scopeList) || [];
-        this.allDayScopeList = this.getMetadata()
-            .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList || [];
+        this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors || {});
+
+        this.modeList = this.getMetadata().get('clientDefs.Calendar.modeList') || this.modeList || [];
+
+        this.scopeList = this.getConfig().get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+
+        this.allDayScopeList = this.getMetadata().get('clientDefs.Calendar.allDayScopeList') ?? [];
+
+        this.scopeList.forEach(scope => {
+            if (this.getMetadata().get(`scopes.${scope}.calendarOneDay`) && !this.allDayScopeList.includes(scope)) {
+                this.allDayScopeList.push(scope);
+            }
+        });
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
@@ -187,6 +239,10 @@ class TimelineView extends View {
              if (color) {
                 this.colors[item] = color;
             }
+        });
+
+        this.onlyDateScopeList = this.scopeList.filter(scope => {
+            return this.getMetadata().get(`entityDefs.${scope}.fields.dateStart.type`) === 'date';
         });
 
         if (this.options.calendarType) {
@@ -381,7 +437,7 @@ class TimelineView extends View {
             event[attr] = o[attr];
         });
 
-        if (o.dateStart) {
+        if (o.dateStart || o.dateStartDate) {
             if (!o.dateStartDate) {
                 event.start = this.getDateTime().toMoment(o.dateStart);
             } else {
@@ -389,7 +445,7 @@ class TimelineView extends View {
             }
         }
 
-        if (o.dateEnd) {
+        if (o.dateEnd || o.dateEndDate) {
             if (!o.dateEndDate) {
                 event.end = this.getDateTime().toMoment(o.dateEnd);
             } else {
@@ -397,7 +453,7 @@ class TimelineView extends View {
             }
         }
 
-        if (o.dateStartDate && !~this.allDayScopeList.indexOf(o.scope)) {
+        if (o.dateStartDate && !this.allDayScopeList.includes(o.scope) && event.end) {
             event.end = event.end.clone().add(1, 'days');
         }
 
@@ -405,7 +461,7 @@ class TimelineView extends View {
             return event;
         }
 
-        if (~this.allDayScopeList.indexOf(o.scope)) {
+        if (this.allDayScopeList.includes(o.scope)) {
             event.type = 'box';
 
             if (event.end) {
@@ -550,13 +606,14 @@ class TimelineView extends View {
                         onTag: (tag, html) => html,
                     },
                 },
-                moment: date => {
+                moment: /** Record */date => {
                     const m = moment(date);
 
                     if (date && date.noTimeZone) {
                         return m;
                     }
 
+                    // noinspection JSUnresolvedReference
                     return m.tz(this.getDateTime().getTimeZone());
                 },
                 format: this.getFormatObject(),
@@ -638,7 +695,12 @@ class TimelineView extends View {
         });
     }
 
-    createEvent(dateStart, userId) {
+    /**
+     * @private
+     * @param {string} dateStart
+     * @param {string} [userId]
+     */
+    async createEvent(dateStart, userId) {
         if (!dateStart) {
             const time = (this.timeline.getWindow().end - this.timeline.getWindow().start) / 2 +
                 this.timeline.getWindow().start;
@@ -669,20 +731,27 @@ class TimelineView extends View {
             attributes.assignedUserName = userName || userId;
         }
 
+        const scopeList = this.enabledScopeList.filter(it => !this.onlyDateScopeList.includes(it));
+
         Espo.Ui.notifyWait();
 
-        this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+        const view = await this.createView('dialog', 'crm:views/calendar/modals/edit', {
             attributes: attributes,
-            enabledScopeList: this.enabledScopeList,
+            enabledScopeList: scopeList,
             scopeList: this.scopeList
-        }, (view) => {
-            view.render();
-            view.notify(false);
-
-            this.listenTo(view, 'after:save', () => {
-                this.runFetch();
-            });
         });
+
+        this.listenTo(view, 'before:save', () => {
+            if (this.options.onSave) {
+                this.options.onSave();
+            }
+        });
+
+        this.listenTo(view, 'after:save', () => this.runFetch());
+
+        await view.render();
+
+        Espo.Ui.notify();
     }
 
     /**
@@ -700,6 +769,16 @@ class TimelineView extends View {
             entityType: scope,
             id: id,
             removeDisabled: false,
+            beforeSave: () => {
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
+            },
+            beforeDestroy: () => {
+                if (this.options.onSave) {
+                    this.options.onSave();
+                }
+            },
             afterSave: (model, o) => {
                 if (!o.bypassClose) {
                     modalView.close();
@@ -903,7 +982,7 @@ class TimelineView extends View {
     }
 
     fetchEvents(from, to, callback) {
-        if (!this.options.noFetchLoadingMessage) {
+        if (!this.options.suppressLoadingAlert) {
             Espo.Ui.notifyWait();
         }
 

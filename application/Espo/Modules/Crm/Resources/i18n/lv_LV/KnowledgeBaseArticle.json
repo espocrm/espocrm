@@ -19,7 +19,8 @@
     "body": "Pamatteksts",
     "categories": "Kategorijas",
     "language": "Valoda",
-    "portals": "Portāli"
+    "portals": "Portāli",
+    "bodyPlain": "Ķermeņa virsma Plain"
   },
   "links": {
     "cases": "Lietas",

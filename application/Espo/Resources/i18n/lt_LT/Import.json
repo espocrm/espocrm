@@ -68,8 +68,8 @@
     "confirmRemoveDuplicates": "Tai visam laikui ištrins visus importuotus įrašus, kurie buvo pripažinti kaip pasikartojantys. Ar tikrai?",
     "removeImportLog": "Tai ištrins importo žurnalą. Visi importuoti įrašai bus saugomi. Naudok jį, jei esate tikri, kad importas yra gerai.",
     "confirmRemoveImportLog": "Taip bus ištrintas importo žurnalas. Visi importuoti įrašai bus išsaugoti. Negalėsite grąžinti importo rezultatų. Ar esate tikri?",
-    "noErrors": "Klaidų nėra.",
-    "importRunning": "Importas veikia..."
+    "importRunning": "Importas veikia...",
+    "noErrors": "Klaidų nėra"
   },
   "fields": {
     "file": "Failas",
@@ -105,5 +105,8 @@
   },
   "links": {
     "errors": "Klaidos"
+  },
+  "params": {
+    "phoneNumberCountry": "Telefono šalies kodas"
   }
 }

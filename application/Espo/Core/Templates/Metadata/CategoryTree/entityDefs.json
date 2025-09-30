@@ -7,8 +7,7 @@
         },
         "order": {
             "type": "int",
-            "required": true,
-            "default": 1
+            "minValue": 1
         },
         "description": {
             "type": "text"

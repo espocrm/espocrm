@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,12 +61,20 @@ class UserWithAvatarFieldView extends UserFieldView {
     setup() {
         super.setup();
 
-        this.addHandler('keydown', `input[data-name="${this.nameName}"]`, (e, target) => {
+        this.addHandler('keydown', `input[data-name="${this.nameName}"]`, (/** KeyboardEvent */e, target) => {
+            if (e.code === 'Enter') {
+                return;
+            }
+
             target.classList.add('being-typed');
         });
 
         this.addHandler('change', `input[data-name="${this.nameName}"]`, (e, target) => {
             setTimeout(() => target.classList.remove('being-typed'), 200);
+        });
+
+        this.addHandler('blur', `input[data-name="${this.nameName}"]`, (e, target) => {
+            target.classList.remove('being-typed');
         });
 
         this.on('change', () => {

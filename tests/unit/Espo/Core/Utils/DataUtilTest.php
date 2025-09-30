@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -126,6 +126,67 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals($expectedResultData, $data1);
+    }
+
+    public function testUnsetRemoveEmpty(): void
+    {
+        $data = (object) [
+            'scopeNames' => (object) [
+                'a' => 'test',
+                'b' => 'test',
+            ],
+            'scopeNamesPlural' => (object) [
+                'a' => 'test',
+                'b' => 'test',
+            ],
+        ];
+
+        DataUtil::unsetByKey($data, [['lists', 'k']], true);
+
+        $this->assertEquals(
+            (object) [
+                'scopeNames' => (object) [
+                    'a' => 'test',
+                    'b' => 'test',
+                ],
+                'scopeNamesPlural' => (object) [
+                    'a' => 'test',
+                    'b' => 'test',
+                ],
+            ],
+            $data
+        );
+    }
+
+    public function testSetByPath(): void
+    {
+        $data = (object) [
+            'scopeNames' => (object) [
+                'a' => 'A',
+                'b' => 'B',
+            ],
+            'scopeNamesPlural' => (object) [
+                'a' => 'As',
+                'b' => 'Bs',
+            ],
+        ];
+
+        DataUtil::setByPath($data, ['scopeNamesPlural', 'c'], 'Cs');
+
+        $this->assertEquals(
+            (object) [
+                'scopeNames' => (object) [
+                    'a' => 'A',
+                    'b' => 'B',
+                ],
+                'scopeNamesPlural' => (object) [
+                    'a' => 'As',
+                    'b' => 'Bs',
+                    'c' => 'Cs',
+                ],
+            ],
+            $data
+        );
     }
 
     public function testUnsetByValue()

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,11 +30,13 @@
 namespace Espo\Tools\LabelManager;
 
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Di;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Language;
 
+use RuntimeException;
 use stdClass;
 
 class LabelManager implements
@@ -48,9 +50,7 @@ class LabelManager implements
     use Di\FileManagerSetter;
     use Di\DataCacheSetter;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $ignoreList = [
         'Global.sets',
     ];
@@ -88,13 +88,14 @@ class LabelManager implements
     {
         $languageObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
+            'noFallback' => true,
         ]);
 
         $data = $languageObj->get($scope);
 
-        if (empty($data)) {
+        /*if (empty($data)) {
             return (object) [];
-        }
+        }*/
 
         if ($this->metadata->get(['scopes', $scope, 'entity'])) {
             if (empty($data['fields'])) {
@@ -103,7 +104,8 @@ class LabelManager implements
 
             foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $field => $item) {
                 if (!array_key_exists($field, $data['fields'])) {
-                    $data['fields'][$field] = $languageObj->get('Global.fields.' . $field);
+                    $data['fields'][$field] = $languageObj->get("Global.fields.$field");
+
                     if (is_null($data['fields'][$field])) {
                         $data['fields'][$field] = '';
                     }
@@ -116,7 +118,8 @@ class LabelManager implements
 
             foreach ($this->metadata->get(['entityDefs', $scope, 'links']) as $link => $item) {
                 if (!array_key_exists($link, $data['links'])) {
-                    $data['links'][$link] = $languageObj->get('Global.links.' . $link);
+                    $data['links'][$link] = $languageObj->get("Global.links.$link");
+
                     if (is_null($data['links'][$link])) {
                         $data['links'][$link] = '';
                     }
@@ -155,12 +158,13 @@ class LabelManager implements
                     continue;
                 }
 
-                $optionsData[$option] = $option;
+                $optionsData[$option] = '';
 
-                if (array_key_exists($option, $data['options'][$field])) {
-                    if (!empty($data['options'][$field][$option])) {
-                        $optionsData[$option] = $data['options'][$field][$option];
-                    }
+                if (
+                    array_key_exists($option, $data['options'][$field]) &&
+                    isset($data['options'][$field][$option])
+                ) {
+                    $optionsData[$option] = $data['options'][$field][$option];
                 }
             }
             $data['options'][$field] = $optionsData;
@@ -197,17 +201,17 @@ class LabelManager implements
         $finalData = [];
 
         foreach ($data as $category => $item) {
-            if (in_array($scope . '.' . $category, $this->ignoreList)) {
+            if (in_array("$scope.$category", $this->ignoreList)) {
                 continue;
             }
 
             foreach ($item as $key => $categoryItem) {
                 if (is_array($categoryItem)) {
                     foreach ($categoryItem as $subKey => $subItem) {
-                        $finalData[$category][$category .'[.]' . $key .'[.]' . $subKey] = $subItem;
+                        $finalData[$category]["{$category}[.]{$key}[.]$subKey"] = $subItem;
                     }
                 } else {
-                    $finalData[$category][$category .'[.]' . $key] = $categoryItem;
+                    $finalData[$category]["{$category}[.]$key"] = $categoryItem;
                 }
             }
         }
@@ -222,74 +226,108 @@ class LabelManager implements
     {
         $languageObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
+            'noFallback' => true,
         ]);
 
-        $languageOriginalObj = $this->injectableFactory->createWith(Language::class, [
+        $languageNoCustomObj = $this->injectableFactory->createWith(Language::class, [
             'language' => $language,
+            'noFallback' => true,
             'noCustom' => true,
         ]);
 
-        $returnDataHash = [];
+        $languageMainObj = $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+        ]);
+
+        $customData = $languageObj->getScopeCustom($scope) ?? (object) [];
+
+        $listPaths = [];
+        $lists = [];
 
         foreach ($labels as $key => $value) {
             $arr = explode('[.]', $key);
             $category = $arr[0];
             $name = $arr[1];
 
-            $setPath = [$scope, $category, $name];
-
-            $setValue = null;
-
-            if (count($arr) == 2) {
+            if (count($arr) === 2) {
                 if ($value !== '') {
-                    $languageObj->set($scope, $category, $name, $value);
-                    $setValue = $value;
+                    DataUtil::setByPath($customData, [$category, $name], $value);
                 } else {
-                    $setValue = $languageOriginalObj->get(implode('.', [$scope, $category, $name]));
-                    if (is_null($setValue) && $scope !== 'Global') {
-                        $setValue = $languageOriginalObj->get(implode('.', ['Global', $category, $name]));
-                    }
-
-                    $languageObj->delete($scope, $category, $name);
+                    DataUtil::unsetByKey($customData, [[$category, $name]], true);
+                    /** @var stdClass $customData */
                 }
-            } else if (count($arr) == 3) {
-                $name = $arr[1];
-                $attribute = $arr[2];
 
-                $data = $languageObj->get($scope . '.' . $category . '.' . $name);
-
-                $setPath[] = $attribute;
-
-                if (is_array($data)) {
-                    if ($value !== '') {
-                        $data[$attribute] = $value;
-                        $setValue = $value;
-                    } else {
-                        $dataOriginal = $languageOriginalObj->get($scope . '.' . $category . '.' . $name);
-
-                        if (is_array($dataOriginal) && isset($dataOriginal[$attribute])) {
-                            $data[$attribute] = $dataOriginal[$attribute];
-                            $setValue = $dataOriginal[$attribute];
-                        }
-                    }
-
-                    $languageObj->set($scope, $category, $name, $data);
-                }
+                continue;
             }
 
-            if (!is_null($setValue)) {
-                $frontKey = implode('[.]', $setPath);
+            if (count($arr) !== 3) {
+                continue;
+            }
 
-                $returnDataHash[$frontKey] = $setValue;
+            $attribute = $arr[2];
+
+            $stringPath = "$category.$name";
+
+            $setValue = $lists[$stringPath] ?? $languageMainObj->get([$scope, $category, $name]);
+
+            if (is_array($setValue) && array_is_list($setValue)) {
+                if (!in_array($stringPath, $listPaths)) {
+                    $listPaths[] = $stringPath;
+                }
+
+                $index = intval($attribute);
+
+                $list = $setValue;
+
+                if ($value === '') {
+                    $originalList = $languageNoCustomObj->get([$scope, $category, $name]);
+
+                    if (!array_is_list($originalList)) {
+                        throw new RuntimeException("Not a list.");
+                    }
+
+                    if (!array_key_exists($index, $originalList)) {
+                        throw new RuntimeException("No value in original list.");
+                    }
+
+                    $value = $originalList[$index];
+                }
+
+                if (!array_key_exists($index, $list)) {
+                    throw new RuntimeException("No value in list.");
+                }
+
+                $list[$index] = $value;
+
+                DataUtil::setByPath($customData, [$category, $name], $list);
+                /** @var stdClass $customData */
+
+                $lists[$stringPath] = $list;
+
+                continue;
+            }
+
+            if ($value !== '') {
+                DataUtil::setByPath($customData, [$category, $name, $attribute], $value);
+            } else {
+                DataUtil::unsetByKey($customData, [[$category, $name, $attribute]], true);
+                /** @var stdClass $customData */
             }
         }
 
-        $languageObj->save();
+        foreach ($lists as $path => $list) {
+            $originalList = $languageNoCustomObj->get("$scope.$path");
 
-        if ($returnDataHash === []) {
-            return (object) [];
+            if ($originalList === $list) {
+                DataUtil::unsetByKey($customData, [$path], true);
+                /** @var stdClass $customData */
+            }
         }
 
-        return json_decode(Json::encode($returnDataHash));
+        //die;
+
+        $languageObj->saveScopeCustom($scope, $customData);
+
+        return $this->getScopeData($language, $scope);
     }
 }

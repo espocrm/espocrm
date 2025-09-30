@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,10 @@ import ActionItemSetup from 'helpers/action-item-setup';
 import StickyBarHelper from 'helpers/record/misc/sticky-bar';
 import SelectTemplateModalView from 'views/modals/select-template';
 import DebounceHelper from 'helpers/util/debounce';
+import {inject} from 'di';
+import ShortcutManager from 'helpers/site/shortcut-manager';
+import WebSocketManager from 'web-socket-manager';
+import Utils from 'utils';
 
 /**
  * A detail record view.
@@ -67,13 +71,23 @@ class DetailRecordView extends BaseRecordView {
      * @property {Object.<string, *>} [dataObject] Additional data.
      * @property {Record} [rootData] Data from the root view.
      * @property {boolean} [shortcutKeysEnabled] Enable shortcut keys.
+     * @property {boolean} [webSocketDisabled] Disable WebSocket. As of v9.2.0.
      */
+
+    /**
+     * @private
+     * @type {ShortcutManager}
+     */
+    @inject(ShortcutManager)
+    shortcutManager
 
     /**
      * @param {module:views/record/detail~options | Object.<string, *>} options Options.
      */
     constructor(options) {
         super(options);
+
+        this.options = options;
     }
 
     /** @inheritDoc */
@@ -555,6 +569,13 @@ class DetailRecordView extends BaseRecordView {
      * @type {number}
      */
     _webSocketDebounceInterval = 500
+
+    /**
+     * @private
+     * @type {WebSocketManager}
+     */
+    @inject(WebSocketManager)
+    webSocketManager
 
     /**
      * A shortcut-key => action map.
@@ -2001,8 +2022,9 @@ class DetailRecordView extends BaseRecordView {
         });
 
         if (
+            !this.options.webSocketDisabled &&
             !this.isNew &&
-            !!this.getHelper().webSocketManager &&
+            this.webSocketManager.isEnabled() &&
             this.getMetadata().get(['scopes', this.entityType, 'object'])
         ) {
             this.subscribeToWebSocket();
@@ -2046,9 +2068,7 @@ class DetailRecordView extends BaseRecordView {
                         continue;
                     }
 
-                    this.attributes[attribute] = Espo.Utils.cloneDeep(
-                        m.get(attribute)
-                    );
+                    this.attributes[attribute] = Espo.Utils.cloneDeep(m.get(attribute));
                 }
 
                 return;
@@ -2265,39 +2285,23 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
+    /**
+     * @private
+     */
+    initShortcuts() {
+        if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
+            this.shortcutManager.add(this, this.shortcutKeys);
+
+            this.once('remove', () => {
+                this.shortcutManager.remove(this);
+            });
+        }
+    }
+
     setupFinal() {
         this.build();
 
-        if (this.shortcutKeys && this.options.shortcutKeysEnabled) {
-            this.events['keydown.record-detail'] = e => {
-                const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                if (typeof this.shortcutKeys[key] === 'function') {
-                    this.shortcutKeys[key].call(this, e.originalEvent);
-
-                    return;
-                }
-
-                const actionName = this.shortcutKeys[key];
-
-                if (!actionName) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
-
-                if (typeof this[methodName] === 'function') {
-                    this[methodName]();
-
-                    return;
-                }
-
-                this[actionName]();
-            };
-        }
+        this.initShortcuts();
 
         if (!this.options.focusForCreate) {
             this.once('after:render', () => this.focusOnFirstDiv());
@@ -2306,6 +2310,7 @@ class DetailRecordView extends BaseRecordView {
 
     setIsChanged() {
         this.isChanged = true;
+        this.recordHelper.setIsChanged(true);
 
         if (this.confirmLeaveDisabled) {
             return;
@@ -2316,6 +2321,7 @@ class DetailRecordView extends BaseRecordView {
 
     setIsNotChanged() {
         this.isChanged = false;
+        this.recordHelper.setIsChanged(false);
 
         if (this.confirmLeaveDisabled) {
             return;
@@ -3576,7 +3582,7 @@ class DetailRecordView extends BaseRecordView {
         this.recordUpdateWebSocketTopic = topic;
         this.isSubscribedToWebSocket = true;
 
-        this.getHelper().webSocketManager.subscribe(topic, () => this._webSocketDebounceHelper.process());
+        this.webSocketManager.subscribe(topic, () => this._webSocketDebounceHelper.process());
     }
 
     /**
@@ -3587,7 +3593,9 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        this.getHelper().webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
+        this.webSocketManager.unsubscribe(this.recordUpdateWebSocketTopic);
+
+        this.isSubscribedToWebSocket = false;
     }
 
     /**
@@ -4086,15 +4094,13 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
         if (!this.hasAvailableActionItem('edit')) {
             return;
         }
-
-        $(e.currentTarget)
 
         e.preventDefault();
         e.stopPropagation();
@@ -4206,7 +4212,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
@@ -4239,7 +4245,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        if (Utils.isKeyEventInTextInput(e)) {
             return;
         }
 
@@ -4264,6 +4270,14 @@ class DetailRecordView extends BaseRecordView {
      */
     getMode() {
         return this.mode;
+    }
+
+    /**
+     * @internal
+     * @since 9.2.0
+     */
+    setupReuse() {
+        this.initShortcuts();
     }
 }
 

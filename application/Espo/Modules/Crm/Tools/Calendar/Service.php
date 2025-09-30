@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,6 +61,7 @@ use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
+use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 use Espo\Tools\WorkingTime\Calendar as WorkingCalendar;
 use Espo\Tools\WorkingTime\CalendarFactory as WorkingCalendarFactory;
@@ -274,15 +275,30 @@ class Service
 
         $seed = $this->entityManager->getNewEntity($scope);
 
+        if ($seed->getAttributeType('dateStart') === AttributeType::DATE) {
+            $dateStartSelect = ['null', 'dateStart'];
+            $dateEndSelect = ['null', 'dateEnd'];
+            $dateStartDateSelect = ['dateStart', 'dateStartDate'];
+            $dateEndDateSelect = ['dateEnd', 'dateEndDate'];
+
+        } else {
+            $dateStartSelect = ['dateStart', 'dateStart'];
+            $dateEndSelect = ['dateEnd', 'dateEnd'];
+            $dateStartDateSelect = ($seed->hasAttribute('dateStartDate') ?
+                ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']);
+            $dateEndDateSelect = ($seed->hasAttribute('dateEndDate') ?
+                ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']);
+        }
+
         $select = [
             ['"' . $scope . '"', 'scope'],
             'id',
             'name',
-            ['dateStart', 'dateStart'],
-            ['dateEnd', 'dateEnd'],
+            $dateStartSelect,
+            $dateEndSelect,
             ($seed->hasAttribute('status') ? ['status', 'status'] : ['null', 'status']),
-            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']),
-            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']),
+            $dateStartDateSelect,
+            $dateEndDateSelect,
             ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
             ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
             Field::CREATED_AT,

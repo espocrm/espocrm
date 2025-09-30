@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use Espo\Core\Job\JobManager;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Job\QueueName;
 
+use Espo\Entities\Job as JobEntity;
 use Espo\ORM\EntityManager;
 use tests\integration\Core\BaseTestCase;
 use tests\integration\testClasses\Job\Job as TestJob;
@@ -70,7 +71,7 @@ class JobTest extends BaseTestCase
 
     public function testScheduler(): void
     {
-        $job = $this->schedulerFactory
+        $this->schedulerFactory
             ->create()
             ->setClassName(TestJob::class)
             ->setQueue(QueueName::Q0)
@@ -78,9 +79,14 @@ class JobTest extends BaseTestCase
 
         $this->jobManager->processQueue(QueueName::Q0, 10);
 
-        $jobReloaded = $this->entityManager->getEntityById('Job', $job->getId());
+        $job = $this->entityManager
+            ->getRDBRepositoryByClass(JobEntity::class)
+            ->where(['className' => TestJob::class])
+            ->findOne();
 
-        $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
+        $this->assertNotNull($job);
+
+        $this->assertEquals(Status::SUCCESS, $job->getStatus());
     }
 
     public function testProcessQueueNoGroup(): void

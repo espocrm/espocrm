@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,6 +81,7 @@ export default class AttachmentInsertSourceFromHelper {
             filters = this.view['getSelectFilters' + source]() || {};
         }
 
+        // @todo EntityType => link mapping defined in metadata for automatic filtering.
         if (this.model.attributes.parentId && this.model.attributes.parentType === 'Account') {
             if (
                 this.metadata.get(`entityDefs.${source}.fields.account.type`) === 'link' &&

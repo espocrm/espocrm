@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -288,6 +288,17 @@ class PersonNameFieldView extends VarcharFieldView {
         }
 
         return name;
+    }
+
+    focusOnInlineEdit() {
+        /** @type {HTMLElement|null} */
+        const input = this.element.querySelector('input.form-control[type="text"]');
+
+        if (!input) {
+            return;
+        }
+
+        input.focus({preventScroll: true});
     }
 }
 

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -237,6 +237,14 @@ class BaseFieldView extends View {
     readOnly = false
 
     /**
+     * Read-only locked.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    readOnlyLocked = false
+
+    /**
      * A label text.
      *
      * @type {string}
@@ -279,9 +287,9 @@ class BaseFieldView extends View {
     /**
      * A view-record helper.
      *
-     * @type {module:view-record-helper}
+     * @type {import('view-record-helper').default|null}
      */
-    recordHelper
+    recordHelper = null
 
     /**
      * @type {JQuery|null}
@@ -291,12 +299,21 @@ class BaseFieldView extends View {
     $label = null
 
     /**
-     * A form element.
+     * A main form element. Use `mainInputElement` instead.
      *
      * @type {JQuery|null}
      * @protected
      */
     $element = null
+
+    /**
+     * A main form element.
+     *
+     * @protected
+     * @type {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement|null}
+     * @since 9.2.0
+     */
+    mainInputElement = null
 
     /**
      * Is searchable once a search filter is added (no need to type or selecting anything).
@@ -348,13 +365,12 @@ class BaseFieldView extends View {
         return this.$el.parent();
     }
 
-    // noinspection JSUnusedGlobalSymbols
     /**
-     * @deprecated
-     * @returns {JQuery}
+     * @protected
+     * @returns {HTMLElement|null}
      */
     getCellElement() {
-        return this.get$cell();
+        return this.get$cell().get(0) ?? null;
     }
 
     /**
@@ -445,9 +461,13 @@ class BaseFieldView extends View {
         }
 
         if (!this.isReady) {
-            this.mode = 'detail';
+            if (!this.mode || !this._initCalled) {
+                this.mode = 'detail';
 
-            return Promise.resolve();
+                return Promise.resolve();
+            }
+
+            return this.setDetailMode();
         }
 
         if (this.isEditMode()) {
@@ -712,6 +732,12 @@ class BaseFieldView extends View {
         return this.prepare();
     }
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    _initCalled = false
+
     /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
@@ -727,7 +753,7 @@ class BaseFieldView extends View {
         this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
         this.entityType = this.model.entityType || this.model.name;
 
-        this.recordHelper = this.options.recordHelper;
+        this.recordHelper = this.options.recordHelper ?? null;
         this.dataObject = Espo.Utils.clone(this.options.dataObject || {});
 
         if (!this.labelText) {
@@ -789,6 +815,8 @@ class BaseFieldView extends View {
         }
 
         this.mode = undefined;
+
+        this._initCalled = true;
 
         this.wait(
             this.setMode(mode)
@@ -1085,53 +1113,60 @@ class BaseFieldView extends View {
         return this.searchTypeList;
     }
 
+
+
     /**
      * @private
      * @internal
      */
     initInlineEdit() {
-        const $cell = this.get$cell();
+        const cell = this.getCellElement();
 
-        const $editLink = $('<a>')
-            .attr('role', 'button')
-            .addClass('pull-right inline-edit-link hidden')
-            .append(
-                $('<span>').addClass('fas fa-pencil-alt fa-sm')
-            );
+        const edit = document.createElement('a');
+        edit.role = 'button';
+        edit.classList.add('pull-right', 'inline-edit-link' ,'hidden');
+        edit.append(
+            (() => {
+                const span = document.createElement('span');
+                span.classList.add('fas', 'fa-pencil-alt', 'fa-sm');
 
-        if ($cell.length === 0) {
+                return span;
+            })()
+        )
+
+        if (!cell) {
             this.listenToOnce(this, 'after:render', () => this.initInlineEdit());
 
             return;
         }
 
-        $cell.prepend($editLink);
+        cell.prepend(edit);
 
-        $editLink.on('click', () => this.inlineEdit());
+        edit.addEventListener('click', () => this.inlineEdit());
 
-        $cell
-            .on('mouseenter', (e) => {
-                e.stopPropagation();
+        cell.addEventListener('mouseenter', e => {
+            e.stopPropagation();
 
-                if (this.disabled || this.readOnly) {
-                    return;
-                }
+            if (this.disabled || this.readOnly) {
+                return;
+            }
 
-                if (this.isDetailMode()) {
-                    $editLink.removeClass('hidden');
-                }
-            })
-            .on('mouseleave', (e) => {
-                e.stopPropagation();
+            if (this.isDetailMode()) {
+                edit.classList.remove('hidden');
+            }
+        });
 
-                if (this.isDetailMode()) {
-                    $editLink.addClass('hidden');
-                }
-            });
+        cell.addEventListener('mouseleave', e => {
+            e.stopPropagation();
+
+            if (this.isDetailMode()) {
+                edit.classList.add('hidden');
+            }
+        });
 
         this.on('after:render', () => {
             if (!this.isDetailMode()) {
-                $editLink.addClass('hidden');
+                edit.classList.add('hidden');
             }
         });
     }
@@ -1142,15 +1177,11 @@ class BaseFieldView extends View {
      * @protected
      */
     initElement() {
-        this.$element = this.$el.find('[data-name="' + this.name + '"]');
+        this.mainInputElement = this.element?.querySelector(`[data-name="${this.name}"]`) ??
+            this.element?.querySelector(`[name="${this.name}"]`) ??
+            this.element?.querySelector('.main-element');
 
-        if (!this.$element.length) {
-            this.$element = this.$el.find('[name="' + this.name + '"]');
-        }
-
-        if (!this.$element.length) {
-            this.$element = this.$el.find('.main-element');
-        }
+        this.$element = this.mainInputElement ? $(this.mainInputElement) : $();
 
         if (this.isEditMode()) {
             this.$element.on('change', () => {
@@ -1376,6 +1407,10 @@ class BaseFieldView extends View {
     inlineEditClose(noReset) {
         this.trigger('inline-edit-off', {noReset: noReset});
 
+        if (this.recordHelper) {
+            this.recordHelper.off('continue-inline-edit');
+        }
+
         this.$el.off('keydown.inline-edit');
 
         this._isInlineEditMode = false;
@@ -1405,64 +1440,72 @@ class BaseFieldView extends View {
      *
      * @return {Promise}
      */
-    inlineEdit() {
+    async inlineEdit() {
+        if (this.recordHelper && this.recordHelper.isChanged()) {
+            await this.confirm({
+                message: this.translate('changesLossConfirmation', 'messages'),
+                cancelCallback: this.recordHelper.trigger('continue-inline-edit'),
+            });
+        }
+
         this.trigger('edit', this);
 
         this.initialAttributes = this.model.getClonedAttributes();
 
         this._isInlineEditMode = true;
 
-        const promise = this.setEditMode()
-            .then(() => this.reRender(true))
-            .then(() => this.addInlineEditLinks())
-            .then(() => {
-                this.$el.on('keydown.inline-edit', e => {
-                    const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                    if (key === 'Control+Enter') {
-                        e.stopPropagation();
-
-                        if (document.activeElement instanceof HTMLInputElement) {
-                            // Fields may need to fetch data first.
-                            document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
-                        }
-
-                        this.fetchToModel();
-                        this.inlineEditSave();
-
-                        setTimeout(() => {
-                            this.get$cell().focus();
-                        }, 100);
-
-                        return;
-                    }
-
-                    if (key === 'Escape') {
-                        e.stopPropagation();
-
-                        this.inlineEditClose()
-                            .then(() => {
-                                this.get$cell().focus();
-                            });
-
-                        return;
-                    }
-
-                    if (key === 'Control+KeyS') {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        this.fetchToModel();
-                        this.inlineEditSave({bypassClose: true});
-                    }
-                });
-
-                setTimeout(() => this.focusOnInlineEdit(), 10);
-            });
-
         this.trigger('inline-edit-on');
 
-        return promise;
+        await this.setEditMode();
+        await this.reRender(true);
+        await this.addInlineEditLinks();
+
+        if (this.recordHelper) {
+            this.recordHelper.on('continue-inline-edit', () => this.focusOnInlineEdit())
+        }
+
+        this.$el.on('keydown.inline-edit', e => {
+            const key = Espo.Utils.getKeyFromKeyEvent(e);
+
+            if (key === 'Control+Enter') {
+                e.stopPropagation();
+
+                if (document.activeElement instanceof HTMLInputElement) {
+                    // Fields may need to fetch data first.
+                    document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
+                }
+
+                this.fetchToModel();
+                this.inlineEditSave();
+
+                setTimeout(() => {
+                    this.get$cell().focus();
+                }, 100);
+
+                return;
+            }
+
+            if (key === 'Escape') {
+                e.stopPropagation();
+
+                this.inlineEditClose()
+                    .then(() => {
+                        this.get$cell().focus();
+                    });
+
+                return;
+            }
+
+            if (key === 'Control+KeyS') {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.fetchToModel();
+                this.inlineEditSave({bypassClose: true});
+            }
+        });
+
+        setTimeout(() => this.focusOnInlineEdit(), 10);
     }
 
     /**

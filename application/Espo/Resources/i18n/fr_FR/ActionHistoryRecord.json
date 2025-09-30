@@ -1,4 +1,9 @@
 {
+  "options": {
+    "action": {
+      "update": "Mettre à jour"
+    }
+  },
   "fields": {
     "authLogRecord": "Enregistrement du journal d'authentification",
     "userType": "Type d'utilisateur"

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,5 +44,21 @@ class Role extends Entity
     public function getRawFieldData(): stdClass
     {
         return $this->get('fieldData') ?? (object) [];
+    }
+
+    /**
+     * @param array<string, mixed>|stdClass $data
+     */
+    public function setRawData(array|stdClass $data): self
+    {
+        return $this->set('data', $data);
+    }
+
+    /**
+     * @param array<string, mixed>|stdClass $fieldData
+     */
+    public function setRawFieldData(array|stdClass $fieldData): self
+    {
+        return $this->set('fieldData', $fieldData);
     }
 }

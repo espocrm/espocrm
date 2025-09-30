@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -548,7 +548,7 @@ class EmailFieldView extends VarcharFieldView {
 
         if (
             this.model.collection &&
-            ('patentModel' in this.model.collection) &&
+            ('parentModel' in this.model.collection) &&
             this.model.collection.parentModel
         ) {
             if (this.checkParentTypeAvailability(this.model.collection.parentModel.entityType)) {

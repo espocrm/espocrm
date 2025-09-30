@@ -19,7 +19,8 @@
     "headerPosition": "Posizione Intestazione",
     "printHeader": "Stampa Intestazione",
     "title": "Titolo",
-    "style": "Stile"
+    "style": "Stile",
+    "status": "Stato"
   },
   "labels": {
     "Create Template": "Crea Modello"
@@ -40,6 +41,10 @@
     },
     "pageFormat": {
       "Custom": "Personalizzato"
+    },
+    "status": {
+      "Active": "Attivo",
+      "Inactive": "Inattivo"
     }
   }
 }

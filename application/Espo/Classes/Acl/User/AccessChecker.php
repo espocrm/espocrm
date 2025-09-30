@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,16 +70,16 @@ class AccessChecker implements AccessEntityCREDSChecker
             return false;
         }
 
-        if ($entity->isPortal()) {
-            if ($this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES) {
-                return true;
-            }
-
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
 
-        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+        if ($entity->isSystem()) {
             return false;
+        }
+
+        if ($entity->isPortal()) {
+            return $this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES;
         }
 
         return $this->defaultAccessChecker->checkEntityRead($user, $entity, $data);

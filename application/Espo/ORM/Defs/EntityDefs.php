@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -360,7 +360,7 @@ class EntityDefs
 
     private function loadAttribute(string $name): ?AttributeDefs
     {
-        $raw = $this->data[EntityParam::ATTRIBUTES][$name] ?? $this->data['fields'][$name] ?? null;
+        $raw = $this->data[EntityParam::ATTRIBUTES][$name] ?? null;
 
         if (!$raw) {
             return null;

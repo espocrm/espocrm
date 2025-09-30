@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
+use Espo\Core\Name\Link;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\EmailAddress;
@@ -49,6 +50,8 @@ class Saver implements SaverInterface
     private const ATTR_EMAIL_ADDRESS_DATA = 'emailAddressData';
     private const ATTR_EMAIL_ADDRESS_IS_OPTED_OUT = 'emailAddressIsOptedOut';
     private const ATTR_EMAIL_ADDRESS_IS_INVALID = 'emailAddressIsInvalid';
+
+    private const LINK_EMAIL_ADDRESSES = Link::EMAIL_ADDRESSES;
 
     public function __construct(
         private EntityManager $entityManager,
@@ -421,7 +424,7 @@ class Saver implements SaverInterface
 
             if ($emailAddressOld) {
                 $this->entityManager
-                    ->getRelation($entity, 'emailAddresses')
+                    ->getRelation($entity, self::LINK_EMAIL_ADDRESSES)
                     ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
             }
         }
@@ -493,13 +496,13 @@ class Saver implements SaverInterface
 
             if ($emailAddressOld) {
                 $entityRepository
-                    ->getRelation($entity, 'emailAddresses')
+                    ->getRelation($entity, self::LINK_EMAIL_ADDRESSES)
                     ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
             }
         }
 
         $entityRepository
-            ->getRelation($entity, 'emailAddresses')
+            ->getRelation($entity, self::LINK_EMAIL_ADDRESSES)
             ->relate($emailAddressNew, null, [SaveOption::SKIP_HOOKS => true]);
 
         if ($entity->has(self::ATTR_EMAIL_ADDRESS_IS_OPTED_OUT)) {

@@ -4,7 +4,10 @@
     "clientId": "Klienta ID",
     "clientSecret": "Klienta noslēpums",
     "redirectUri": "Novirzīšanas URI",
-    "apiKey": "API atslēga"
+    "apiKey": "API atslēga",
+    "siteKey": "Vietnes atslēga",
+    "secretKey": "Slepenā atslēga",
+    "scoreThreshold": "Rezultātu slieksnis"
   },
   "messages": {
     "selectIntegration": "Atlasīt integrāciju no izvēlnes.",
@@ -15,6 +18,7 @@
   },
   "help": {
     "Google": "**Iegūt OAuth 2.0 akreditācijas datus no Google Izstrādātāju konsoles.**\n\nApmeklējiet [Google Developers Console](https://console.developers.google.com/project), lai iegūtu OAuth 2.0 akreditācijas datus, piemēram, klienta ID un klienta noslēpumu, kas ir zināmi gan Google, gan EspoCRM lietojumprogrammai.",
-    "GoogleMaps": "Iegūstiet API atslēgu [šeit](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Iegūstiet API atslēgu [šeit](https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Saņemiet vietnes atslēgu un slepeno atslēgu no [Google](https://www.google.com/recaptcha/)."
   }
 }

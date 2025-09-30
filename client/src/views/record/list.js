@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -98,6 +98,9 @@ class ListRecordView extends View {
      * @property {boolean} [columnResize] Column resize. Actual only if the settings is enabled.
      * @property {function(import('model').default[])} [onSelect] An on-select callback. Actual if selectable.
      *     As of v9.1.0.
+     * @property {boolean} [forceSettings] Force settings. As of v9.2.0.
+     * @property {boolean} [forceAllResultSelectable] Force select all result. As of v9.2.0.
+     * @property {module:search-manager~whereItem} [allResultWhereItem] Where item for select all result. As of v9.2.0.
      */
 
     /**
@@ -105,6 +108,8 @@ class ListRecordView extends View {
      */
     constructor(options) {
         super(options);
+
+        this.options = options;
     }
 
     /** @inheritDoc */
@@ -605,6 +610,12 @@ class ListRecordView extends View {
      * @since 9.1.1
      */
     collectionEventSyncList
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    noAllResultMassActions
 
     /** @inheritDoc */
     events = {
@@ -1196,11 +1207,10 @@ class ListRecordView extends View {
             };
 
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.getWhereForAllResult();
                 data.searchParams = this.collection.data || null;
                 data.searchData = this.collection.data || {}; // for bc;
-            }
-            else {
+            } else {
                 data.ids = this.checkedList;
             }
         }
@@ -1318,7 +1328,7 @@ class ListRecordView extends View {
             const data = {};
 
             if (this.allResultIsChecked) {
-                data.where = this.collection.getWhere();
+                data.where = this.getWhereForAllResult();
                 data.searchParams = this.collection.data || {};
                 data.selectData = data.searchData; // for bc;
                 data.byWhere = true; // for bc
@@ -1363,16 +1373,35 @@ class ListRecordView extends View {
         }
     }
 
+    /**
+     * Get the where clause for all result.
+     *
+     * @return {module:search-manager~whereItem[]}
+     * @since 9.2.0
+     */
+    getWhereForAllResult() {
+        const where = [...this.collection.getWhere()];
+
+        if (this.options.allResultWhereItem) {
+            where.push(this.options.allResultWhereItem);
+        }
+
+        return where;
+    }
+
+    /**
+     * @private
+     * @return {Record}
+     */
     getMassActionSelectionPostData() {
         const data = {};
 
         if (this.allResultIsChecked) {
-            data.where = this.collection.getWhere();
+            data.where = this.getWhereForAllResult();
             data.searchParams = this.collection.data || {};
             data.selectData = this.collection.data || {}; // for bc;
             data.byWhere = true; // for bc;
-        }
-        else {
+        } else {
             data.ids = [];
 
             for (const i in this.checkedList) {
@@ -1761,7 +1790,7 @@ class ListRecordView extends View {
             scope: this.scope,
             entityType: this.entityType,
             ids: ids,
-            where: this.collection.getWhere(),
+            where: this.getWhereForAllResult(),
             searchParams: this.collection.data,
             byWhere: this.allResultIsChecked,
             totalCount: this.collection.total,
@@ -1854,7 +1883,7 @@ class ListRecordView extends View {
         this.createView('modalConvertCurrency', 'views/modals/mass-convert-currency', {
             entityType: this.entityType,
             ids: ids,
-            where: this.collection.getWhere(),
+            where: this.getWhereForAllResult(),
             searchParams: this.collection.data,
             byWhere: this.allResultIsChecked,
             totalCount: this.collection.total,
@@ -1935,7 +1964,7 @@ class ListRecordView extends View {
             this.massActionList.unshift(item) :
             this.massActionList.push(item);
 
-        if (allResult && this.collection.url === this.entityType) {
+        if (allResult && !this.noAllResultMassActions) {
             toBeginning ?
                 this.checkAllResultMassActionList.unshift(item) :
                 this.checkAllResultMassActionList.push(item);
@@ -2051,6 +2080,10 @@ class ListRecordView extends View {
 
         if (!this.massActionList.length && !this.selectable) {
             this.checkboxes = false;
+        }
+
+        if (this.options.forceSettings) {
+            this.forceSettings = true;
         }
 
         /**
@@ -2336,7 +2369,7 @@ class ListRecordView extends View {
             follow: {groupIndex: 4},
             unfollow: {groupIndex: 4},
             convertCurrency: {groupIndex: 6},
-            printToPdf: {groupIndex: 8},
+            printPdf: {groupIndex: 8},
             ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
             ...this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {},
         };
@@ -2365,27 +2398,27 @@ class ListRecordView extends View {
             this.massActionList.push(item);
         });
 
+        this.noAllResultMassActions = this.collection.url !== this.entityType && !this.options.forceAllResultSelectable;
+
         this.checkAllResultMassActionList = this.checkAllResultMassActionList
             .filter(item => this.massActionList.includes(item));
 
         metadataCheckAllMassActionList.forEach(item => {
-            if (this.collection.url !== this.entityType) {
+            if (this.noAllResultMassActions || !this.massActionList.includes(item)) {
                 return;
             }
 
-            if (~this.massActionList.indexOf(item)) {
-                const defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
-                    this.massActionDefs[item] || {};
+            const defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
+                this.massActionDefs[item] || {};
 
-                if (
-                    !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                    !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
-                ) {
-                    return;
-                }
-
-                this.checkAllResultMassActionList.push(item);
+            if (
+                !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
+                !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
+            ) {
+                return;
             }
+
+            this.checkAllResultMassActionList.push(item);
         });
 
         metadataMassActionList
@@ -2476,8 +2509,8 @@ class ListRecordView extends View {
             }
         }
 
-        if (this.collection.url !== this.entityType) {
-            Espo.Utils.clone(this.checkAllResultMassActionList).forEach((item) => {
+        if (this.noAllResultMassActions) {
+            Espo.Utils.clone(this.checkAllResultMassActionList).forEach(item => {
                 this.removeAllResultMassAction(item);
             });
         }
@@ -2592,36 +2625,37 @@ class ListRecordView extends View {
     /**
      * Get a select-attribute list.
      *
-     * @param {function(string[]):void} callback A callback.
-     *
-     * @todo Return promise. But support callback for bc.
+     * @param {function(string[]): void} [callback] A callback. For bc.
+     * @return {Promise<string[]|null>}
      */
-    getSelectAttributeList(callback) {
+    async getSelectAttributeList(callback) {
+        callback ??= () => {};
+
         if (this.scope === null) {
             callback(null);
 
-            return;
+            return null;
         }
 
-        if (this.listLayout) {
-            const attributeList = this.fetchAttributeListFromLayout();
+        if (!this.listLayout) {
+            await new Promise(resolve => {
+                this._loadListLayout(listLayout => {
+                    this.listLayout = listLayout;
 
-            callback(attributeList);
-
-            return;
+                    resolve();
+                });
+            });
         }
 
-        this._loadListLayout(listLayout => {
-            this.listLayout = listLayout;
+        const attributeList = this.fetchAttributeListFromLayout();
 
-            let attributeList = this.fetchAttributeListFromLayout();
+        if (this.mandatorySelectAttributeList) {
+            attributeList.push(...this.mandatorySelectAttributeList);
+        }
 
-            if (this.mandatorySelectAttributeList) {
-                attributeList = attributeList.concat(this.mandatorySelectAttributeList);
-            }
+        callback(attributeList);
 
-            callback(attributeList);
-        });
+        return attributeList;
     }
 
     /**
@@ -2629,13 +2663,9 @@ class ListRecordView extends View {
      * @return {string[]}
      */
     fetchAttributeListFromLayout() {
-        const selectProvider = new SelectProvider(
-            this.getHelper().layoutManager,
-            this.getHelper().metadata,
-            this.getHelper().fieldManager
-        );
+        const selectProvider = new SelectProvider();
 
-        return selectProvider.getFromLayout(this.entityType, this.listLayout);
+        return selectProvider.getFromLayout(this.entityType, this.listLayout, this._listSettingsHelper);
     }
 
     /**
@@ -3116,6 +3146,8 @@ class ListRecordView extends View {
      */
     prepareInternalLayout(internalLayout, model) {
         internalLayout.forEach(item => {
+            // @todo Revise whether has any effect.
+            //     Has to be in options instead? item.options.fullSelector;
             item.fullSelector = this.getCellSelector(model, item);
 
             if (this.header && item.options && item.options.defs) {
@@ -3403,6 +3435,14 @@ class ListRecordView extends View {
             model: model,
             rootUrl: rootUrl,
             editDisabled: this.quickEditDisabled,
+            beforeSave: m => {
+                if (!model) {
+                    // @todo Revise.
+                    return;
+                }
+
+                this.trigger('before:save', m);
+            },
             afterSave: m => {
                 if (!model) {
                     return;
@@ -3468,6 +3508,9 @@ class ListRecordView extends View {
                 model: model,
                 fullFormDisabled: data.noFullForm,
                 rootUrl: rootUrl,
+                beforeSave: m => {
+                    this.trigger('before:save', m);
+                },
                 afterSave: m => {
                     const model = this.collection.get(m.id);
 
@@ -3740,6 +3783,14 @@ class ListRecordView extends View {
             return;
         }
 
+        if (options.action === 'toggleColumn' || options.action === 'resetToDefault') {
+            const selectAttributes = await this.getSelectAttributeList();
+
+            if (selectAttributes) {
+                this.collection.data.select = selectAttributes.join(',');
+            }
+        }
+
         if (
             options.action === 'toggleColumn' &&
             !this._listSettingsHelper.getHiddenColumnMap()[options.column] &&
@@ -3760,7 +3811,7 @@ class ListRecordView extends View {
 
         await this.collection.fetch();
 
-        Espo.Ui.notify(false);
+        Espo.Ui.notify();
     }
 
     /**

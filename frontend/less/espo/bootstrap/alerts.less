@@ -2,10 +2,6 @@
 // Alerts
 // --------------------------------------------------
 
-
-// Base styles
-// -------------------------
-
 .alert {
   margin-bottom: var(--line-height-computed);
   border: 1px solid transparent;
@@ -26,24 +22,4 @@
   > p + p {
     margin-top: 5px;
   }
-}
-
-// Alternate styles
-//
-// Generate contextual modifier classes for colorizing the alert.
-
-.alert-success {
-  .alert-variant-espo(@alert-success-bg; @alert-success-border; @alert-success-text);
-}
-
-.alert-info {
-  .alert-variant-espo(@alert-info-bg; @alert-info-border; @alert-info-text);
-}
-
-.alert-warning {
-  .alert-variant-espo(@alert-warning-bg; @alert-warning-border; @alert-warning-text);
-}
-
-.alert-danger {
-  .alert-variant-espo(@alert-danger-bg; @alert-danger-border; @alert-danger-text);
 }

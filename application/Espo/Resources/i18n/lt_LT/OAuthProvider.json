@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "Sukurti \"OAuth\" teikėją"
+  },
+  "fields": {
+    "isActive": "Yra aktyvus",
+    "clientId": "Kliento ID",
+    "clientSecret": "Kliento paslaptis",
+    "authorizationEndpoint": "Autorizavimo galinis taškas",
+    "tokenEndpoint": "Žetono galinis taškas",
+    "authorizationRedirectUri": "Autorizavimo nukreipimo URI",
+    "scopes": "Apimtys",
+    "scopeSeparator": "Apimties separatorius",
+    "hasAccessToken": "Turi prieigos žetoną",
+    "authorizationPrompt": "Autorizavimo užklausa",
+    "authorizationParams": "Autorizavimo parametrai"
+  },
+  "links": {
+    "accounts": "Sąskaitos"
+  },
+  "tooltips": {
+    "authorizationParams": "Papildomi užklausos parametrai, siunčiami į autorizavimo galinį tašką. Nurodoma JSON formatu."
+  }
+}

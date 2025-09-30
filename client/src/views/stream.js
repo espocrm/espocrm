@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,6 +70,7 @@ class StreamView extends View {
 
         this.addActionHandler('createPost', () => this.actionCreatePost());
         this.addHandler('keydown.stream', '', /** KeyboardEvent */event => this.onKeyDown(event));
+        this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
     }
 
     afterRender() {
@@ -210,6 +211,17 @@ class StreamView extends View {
 
             this.actionCreatePost();
         }
+    }
+
+    /**
+     * @private
+     */
+    async actionFullRefresh() {
+        Espo.Ui.notifyWait();
+
+        await this.collection.fetch();
+
+        Espo.Ui.notify();
     }
 }
 

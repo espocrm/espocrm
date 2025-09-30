@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -157,35 +157,31 @@ class FieldManager {
      * @returns {string[]}
      */
     getActualAttributeList(fieldType, fieldName) {
-        const fieldNames = [];
+        const output = [];
 
-        if (fieldType in this.defs) {
-            if ('actualFields' in this.defs[fieldType]) {
-                const actualFields = this.defs[fieldType].actualFields;
-
-                let naming = 'suffix';
-
-                if ('naming' in this.defs[fieldType]) {
-                    naming = this.defs[fieldType].naming;
-                }
-
-                if (naming === 'prefix') {
-                    actualFields.forEach(f => {
-                        fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
-                    });
-                }
-                else {
-                    actualFields.forEach(f => {
-                        fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
-                    });
-                }
-            }
-            else {
-                fieldNames.push(fieldName);
-            }
+        if (!(fieldType in this.defs)) {
+            return [];
         }
 
-        return fieldNames;
+        if ('actualFields' in this.defs[fieldType]) {
+            const actualFields = this.defs[fieldType].actualFields;
+
+            let naming = 'suffix';
+
+            if ('naming' in this.defs[fieldType]) {
+                naming = this.defs[fieldType].naming;
+            }
+
+            if (naming === 'prefix') {
+                actualFields.forEach(it => output.push(it + Espo.Utils.upperCaseFirst(fieldName)));
+            } else {
+                actualFields.forEach(it => output.push(fieldName + Espo.Utils.upperCaseFirst(it)));
+            }
+        } else {
+            output.push(fieldName);
+        }
+
+        return output;
     }
 
     /**
@@ -198,37 +194,37 @@ class FieldManager {
      * @returns {string[]}
      */
     getNotActualAttributeList(fieldType, fieldName) {
-        const fieldNames = [];
-
-        if (fieldType in this.defs) {
-            if ('notActualFields' in this.defs[fieldType]) {
-                const notActualFields = this.defs[fieldType].notActualFields;
-
-                let naming = 'suffix';
-
-                if ('naming' in this.defs[fieldType]) {
-                    naming = this.defs[fieldType].naming;
-                }
-
-                if (naming === 'prefix') {
-                    notActualFields.forEach(f => {
-                        if (f === '') {
-                            fieldNames.push(fieldName);
-                        }
-                        else {
-                            fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
-                        }
-                    });
-                }
-                else {
-                    notActualFields.forEach(f => {
-                        fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
-                    });
-                }
-            }
+        if (!(fieldType in this.defs)) {
+            return [];
         }
 
-        return fieldNames;
+        if (!('notActualFields' in this.defs[fieldType])) {
+            return [];
+        }
+
+        const notActualFields = this.defs[fieldType].notActualFields;
+
+        let naming = 'suffix';
+
+        if ('naming' in this.defs[fieldType]) {
+            naming = this.defs[fieldType].naming;
+        }
+
+        const output = [];
+
+        if (naming === 'prefix') {
+            notActualFields.forEach(it => {
+                if (it === '') {
+                    output.push(fieldName);
+                } else {
+                    output.push(it + Espo.Utils.upperCaseFirst(fieldName));
+                }
+            });
+        } else {
+            notActualFields.forEach(it => output.push(fieldName + Espo.Utils.upperCaseFirst(it)));
+        }
+
+        return output;
     }
 
     /**
@@ -247,7 +243,8 @@ class FieldManager {
 
         return _.union(
             this.getAttributeList(type, field),
-            this._getEntityTypeFieldAdditionalAttributeList(entityType, field)
+            this._getEntityTypeFieldAdditionalAttributeList(entityType, field),
+            this._getEntityTypeFieldFullNameAdditionalAttributeList(entityType, field),
         );
     }
 
@@ -267,7 +264,8 @@ class FieldManager {
 
         return _.union(
             this.getActualAttributeList(type, field),
-            this._getEntityTypeFieldAdditionalAttributeList(entityType, field)
+            this._getEntityTypeFieldAdditionalAttributeList(entityType, field),
+            this._getEntityTypeFieldFullNameAdditionalAttributeList(entityType, field),
         );
     }
 
@@ -387,14 +385,6 @@ class FieldManager {
     }
 
     /**
-     * @deprecated Since v5.7.
-     * @todo Remove.
-     */
-    getScopeFieldList(entityType) {
-        return this.getEntityTypeFieldList(entityType);
-    }
-
-    /**
      * Get a field parameter value.
      *
      * @param {string} entityType An entity type.
@@ -424,7 +414,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getParamList`.
-     * @todo Remove.
+     * @todo Remove in v10.0.
      */
     getParams(fieldType) {
         return this.getParamList(fieldType);
@@ -432,7 +422,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getAttributeList`.
-     * @todo Remove.
+     * @todo Remove in v10.0.
      */
     getAttributes(fieldType, fieldName) {
         return this.getAttributeList(fieldType, fieldName);
@@ -440,7 +430,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getActualAttributeList`.
-     * @todo Remove.
+     * @todo Remove in v10.0.
      */
     getActualAttributes(fieldType, fieldName) {
         return this.getActualAttributeList(fieldType, fieldName);
@@ -448,6 +438,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getNotActualAttributeList`.
+     * @todo Remove in v10.0.
      */
     getNotActualAttributes(fieldType, fieldName) {
         return this.getNotActualAttributeList(fieldType, fieldName);
@@ -487,10 +478,20 @@ class FieldManager {
 
     /**
      * @deprecated Use `isEntityTypeFieldAvailable`.
-     * @todo Remove.
+     * @todo Remove in v10.0.
      */
     isScopeFieldAvailable(entityType, field) {
         return this.isEntityTypeFieldAvailable(entityType, field);
+    }
+
+    /**
+     * @param {string} entityType
+     * @param {string} field
+     * @return {string[]}
+     * @private
+     */
+    _getEntityTypeFieldFullNameAdditionalAttributeList(entityType, field) {
+        return this.metadata.get(`entityDefs.${entityType}.fields.${field}.fullNameAdditionalAttributeList`) ?? [];
     }
 }
 

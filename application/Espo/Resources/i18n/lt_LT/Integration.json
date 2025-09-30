@@ -4,17 +4,22 @@
     "clientId": "Kliento ID",
     "clientSecret": "Kliento užuomina",
     "redirectUri": "Nukreipti URL",
-    "apiKey": "API raktas"
+    "apiKey": "API raktas",
+    "siteKey": "Svetainės raktas",
+    "secretKey": "Slaptasis raktas",
+    "scoreThreshold": "Vertinimo riba"
   },
   "messages": {
     "selectIntegration": "Pasirinkite integraciją iš meniu.",
     "noIntegrations": "Nėra galimų integracijų"
   },
   "titles": {
-    "GoogleMaps": "Google žemėlapiai"
+    "GoogleMaps": "Google žemėlapiai",
+    "GoogleReCaptcha": "\"Google\" reCAPTCHA"
   },
   "help": {
     "Google": "**Gauti OAuth 2.0 įgaliojimus iš \"Google\" programuotojų konsolės.**\n\nApsilankykite [Google Developers Console](https://console.developers.google.com/project), kad gautumėte OAuth 2.0 įgaliojimus, pavyzdžiui, kliento ID ir kliento paslaptį, kurie žinomi ir \"Google\", ir \"EspoCRM\" programai.",
-    "GoogleMaps": "Gauti API raktą [čia] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Gauti API raktą [čia] (https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Svetainės raktą ir slaptąjį raktą gaukite iš [Google] (https://www.google.com/recaptcha/)."
   }
 }

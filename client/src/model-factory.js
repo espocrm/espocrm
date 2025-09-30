@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,14 +40,6 @@ class ModelFactory {
     }
 
     /**
-     * Used by default value expressions.
-     * @public
-     * @type {module:date-time|null}
-     * @internal
-     */
-    dateTime = null
-
-    /**
      * Create a model.
      *
      * @param {string} entityType An entity type.
@@ -63,7 +55,6 @@ class ModelFactory {
                 const model = new Seed({}, {
                     entityType: entityType,
                     defs: this.metadata.get(['entityDefs', entityType]) || {},
-                    dateTime: this.dateTime,
                 });
 
                 if (callback) {

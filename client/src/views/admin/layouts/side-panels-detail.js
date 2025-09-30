@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Copyright (C) 2014-2025 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,12 +52,14 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
                 'danger',
                 'warning',
                 'info',
+                'primary',
             ],
             style: {
                 'info': 'info',
                 'success': 'success',
                 'danger': 'danger',
                 'warning': 'warning',
+                'primary': 'primary',
             },
             default: 'default',
             translation: 'LayoutManager.options.style',
