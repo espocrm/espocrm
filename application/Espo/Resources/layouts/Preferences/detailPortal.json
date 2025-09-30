@@ -30,7 +30,7 @@
             [{"name": "receiveStreamEmailNotifications"}, false],
             [
                 {"name": "reactionNotifications"},
-                false
+                {"name": "reactionNotificationsNotFollowed"}
             ]
         ]
     }

@@ -41,6 +41,9 @@ use Espo\Tools\Stream\Service;
 
 class NotificationService
 {
+    /** @var array<string, ?Preferences>  */
+    private array $preferencesMap = [];
+
     public function __construct(
         private EntityManager $entityManager,
         private User $user,
@@ -57,7 +60,11 @@ class NotificationService
 
         $parent = $note->getParent();
 
-        if ($parent && !$this->streamService->checkIsFollowed($parent, $note->getCreatedById())) {
+        if (
+            $parent &&
+            !$this->isEnabledForUserForNotFollowed($recipientId) &&
+            !$this->streamService->checkIsFollowed($parent, $note->getCreatedById())
+        ) {
             return;
         }
 
@@ -90,9 +97,16 @@ class NotificationService
 
     private function isEnabledForUser(string $recipientId): bool
     {
-        $recipientPreferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($recipientId);
+        $recipientPreferences = $this->getPreferences($recipientId);
 
         return $recipientPreferences && $recipientPreferences->get('reactionNotifications');
+    }
+
+    private function isEnabledForUserForNotFollowed(string $recipientId): bool
+    {
+        $recipientPreferences = $this->getPreferences($recipientId);
+
+        return $recipientPreferences && $recipientPreferences->get('reactionNotificationsNotFollowed');
     }
 
     public function removeNoteUnread(Note $note, User $user, ?string $type = null): void
@@ -115,5 +129,14 @@ class NotificationService
 
             $this->entityManager->removeEntity($notification);
         }
+    }
+
+    private function getPreferences(string $id): ?Preferences
+    {
+        if (!array_key_exists($id, $this->preferencesMap)) {
+            $this->preferencesMap[$id] = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($id);
+        }
+
+        return $this->preferencesMap[$id];
     }
 }

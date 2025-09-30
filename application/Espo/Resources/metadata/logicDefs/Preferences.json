@@ -1,11 +1,41 @@
 {
     "fields": {
+        "tabList": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "useCustomTabList"
+                    }
+                ]
+            }
+        },
+        "addCustomTabs": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "useCustomTabList"
+                    }
+                ]
+            }
+        },
         "assignmentEmailNotificationsIgnoreEntityTypeList": {
             "visible": {
                 "conditionGroup": [
                     {
                         "type": "isTrue",
                         "attribute": "receiveAssignmentEmailNotifications"
+                    }
+                ]
+            }
+        },
+        "reactionNotificationsNotFollowed": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "reactionNotifications"
                     }
                 ]
             }

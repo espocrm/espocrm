@@ -45,32 +45,9 @@ class PreferencesEditRecordView extends EditRecordView {
         }
     ]
 
-    dynamicLogicDefs = {
-        fields: {
-            'tabList': {
-                visible: {
-                    conditionGroup: [
-                        {
-                            type: 'isTrue',
-                            attribute: 'useCustomTabList',
-                        }
-                    ]
-                }
-            },
-            'addCustomTabs': {
-                visible: {
-                    conditionGroup: [
-                        {
-                            type: 'isTrue',
-                            attribute: 'useCustomTabList',
-                        }
-                    ]
-                }
-            },
-        },
-    }
-
     setup() {
+        this.dynamicLogicDefs = Espo.Utils.cloneDeep(this.getMetadata().get(`logicDefs.Preferences`));
+
         super.setup();
 
         const model = /** @type {import('models/preferences').default} */this.model;
@@ -123,20 +100,14 @@ class PreferencesEditRecordView extends EditRecordView {
         let hideNotificationPanel = true;
 
         if (!this.getConfig().get('assignmentEmailNotifications') || model.isPortal()) {
-            this.hideField('receiveAssignmentEmailNotifications');
-            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            this.hideField('receiveAssignmentEmailNotifications', true);
+            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList', true);
         } else {
             hideNotificationPanel = false;
-
-            this.controlAssignmentEmailNotificationsVisibility();
-
-            this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', () => {
-                this.controlAssignmentEmailNotificationsVisibility();
-            });
         }
 
         if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
-            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList', true);
         }
 
         if (
@@ -201,14 +172,6 @@ class PreferencesEditRecordView extends EditRecordView {
             this.hideField('tabColorsDisabled');
         } else {
             this.showField('tabColorsDisabled');
-        }
-    }
-
-    controlAssignmentEmailNotificationsVisibility() {
-        if (this.model.get('receiveAssignmentEmailNotifications')) {
-            this.showField('assignmentEmailNotificationsIgnoreEntityTypeList');
-        } else {
-            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
         }
     }
 

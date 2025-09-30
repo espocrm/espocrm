@@ -142,7 +142,7 @@
             ],
             [
                 {"name": "reactionNotifications"},
-                false
+                {"name": "reactionNotificationsNotFollowed"}
             ]
         ]
     }
