@@ -109,7 +109,7 @@ class ConfigWriter
         $internalConfigPath = $this->config->getInternalConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
-            throw new RuntimeException("Config file '{$configPath}' not found.");
+            throw new RuntimeException("Config file '$configPath' not found.");
         }
 
         $data = $this->fileManager->getPhpContents($configPath);
