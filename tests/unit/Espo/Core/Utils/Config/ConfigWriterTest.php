@@ -46,6 +46,7 @@ class ConfigWriterTest extends TestCase
 
     private $configPath;
     private $internalConfigPath;
+    private $stateConfigPath;
 
     protected function setUp(): void
     {
@@ -61,8 +62,9 @@ class ConfigWriterTest extends TestCase
             $this->internalConfigHelper
         );
 
-        $this->configPath = 'somepath';
-        $this->internalConfigPath = 'internalSomepath';
+        $this->configPath = 'somePath';
+        $this->internalConfigPath = 'internalSomePath';
+        $this->stateConfigPath = 'stateSomePath';
 
         $this->config
             ->expects($this->any())
@@ -73,6 +75,11 @@ class ConfigWriterTest extends TestCase
             ->expects($this->any())
             ->method('getInternalConfigPath')
             ->willReturn($this->internalConfigPath);
+
+        $this->config
+            ->expects($this->any())
+            ->method('getStateConfigPath')
+            ->willReturn($this->stateConfigPath);
     }
 
     public function testSave1(): void
@@ -121,6 +128,7 @@ class ConfigWriterTest extends TestCase
             ->willReturnMap([
                 [$this->configPath, true],
                 [$this->internalConfigPath, false],
+                [$this->stateConfigPath, false],
             ]);
 
         $this->fileManager
@@ -145,6 +153,7 @@ class ConfigWriterTest extends TestCase
         $this->configWriter->set('k2', 'v2');
 
         $this->internalConfigHelper
+            ->expects($this->any())
             ->method('isParamForInternalConfig')
             ->willReturnMap(
                 [
@@ -154,8 +163,19 @@ class ConfigWriterTest extends TestCase
                 ]
             );
 
+        $this->internalConfigHelper
+            ->expects($this->any())
+            ->method('isParamForStateConfig')
+            ->willReturnMap(
+                [
+                    ['k1', false],
+                    ['k2', false],
+                    ['cacheTimestamp', true],
+                ]
+            );
+
         $this->helper
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('generateMicrotime')
             ->willReturn(1.0);
 
@@ -170,16 +190,16 @@ class ConfigWriterTest extends TestCase
             ->willReturnMap([
                 [$this->configPath, true],
                 [$this->internalConfigPath, true],
+                [$this->stateConfigPath, true],
             ]);
 
         $this->fileManager
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(6))
             ->method('getPhpContents')
             ->willReturnMap([
                 [$this->configPath, []],
                 [$this->internalConfigPath, []],
-                [$this->internalConfigPath, []],
-                [$this->configPath, []],
+                [$this->stateConfigPath, []],
             ]);
 
         $this->fileManager
@@ -192,7 +212,156 @@ class ConfigWriterTest extends TestCase
                 ],
                 [
                     $this->configPath,
-                    ['k1' => 'v1', 'cacheTimestamp' => 1, 'microtime' => 1.0]
+                    ['k1' => 'v1', 'microtime' => 1.0]
+                ],
+                [
+                    $this->stateConfigPath,
+                    ['cacheTimestamp' => 1, 'microtimeState' => 1.0]
+                ],
+            ]);
+
+        $this->configWriter->save();
+    }
+
+    public function testSave3(): void
+    {
+        $this->configWriter->set('k1', 'v1');
+        $this->configWriter->set('k2', 'v2');
+
+        $this->internalConfigHelper
+            ->expects($this->any())
+            ->method('isParamForInternalConfig')
+            ->willReturnMap(
+                [
+                    ['k1', false],
+                    ['k2', true],
+                    ['cacheTimestamp', false],
+                ]
+            );
+
+        $this->internalConfigHelper
+            ->expects($this->any())
+            ->method('isParamForStateConfig')
+            ->willReturnMap(
+                [
+                    ['k1', false],
+                    ['k2', false],
+                    ['cacheTimestamp', true],
+                ]
+            );
+
+        $this->helper
+            ->expects($this->exactly(3))
+            ->method('generateMicrotime')
+            ->willReturn(1.0);
+
+        $this->helper
+            ->expects($this->once())
+            ->method('generateCacheTimestamp')
+            ->willReturn(1);
+
+        $this->fileManager
+            ->expects(self::any())
+            ->method('isFile')
+            ->willReturnMap([
+                [$this->configPath, true],
+                [$this->internalConfigPath, true],
+                [$this->stateConfigPath, true],
+            ]);
+
+        $this->fileManager
+            ->expects($this->exactly(6))
+            ->method('getPhpContents')
+            ->willReturnMap([
+                [$this->configPath, []],
+                [$this->internalConfigPath, []],
+                [$this->stateConfigPath, []],
+            ]);
+
+        $this->fileManager
+            ->expects(self::any())
+            ->method('putPhpContents')
+            ->willReturnMap([
+                [
+                    $this->internalConfigPath,
+                    ['k2' => 'v2', 'microtimeInternal' => 1.0]
+                ],
+                [
+                    $this->configPath,
+                    ['k1' => 'v1', 'microtime' => 1.0]
+                ],
+                [
+                    $this->stateConfigPath,
+                    ['cacheTimestamp' => 1, 'microtimeState' => 1.0]
+                ],
+            ]);
+
+        $this->configWriter->save();
+    }
+
+    public function testsRemove1(): void
+    {
+        $this->configWriter->remove('k1');
+
+        $this->internalConfigHelper
+            ->expects($this->any())
+            ->method('isParamForInternalConfig')
+            ->willReturnMap(
+                [
+                    ['k1', false],
+                    ['cacheTimestamp', false],
+                ]
+            );
+
+        $this->internalConfigHelper
+            ->expects($this->any())
+            ->method('isParamForStateConfig')
+            ->willReturnMap(
+                [
+                    ['k1', false],
+                    ['cacheTimestamp', false],
+                ]
+            );
+
+        $this->helper
+            ->expects($this->once())
+            ->method('generateCacheTimestamp')
+            ->willReturn(1);
+
+        $this->fileManager
+            ->expects(self::any())
+            ->method('isFile')
+            ->willReturnMap([
+                [$this->configPath, true],
+                [$this->internalConfigPath, true],
+                [$this->stateConfigPath, true],
+            ]);
+
+        $this->fileManager
+            ->expects(self::any())
+            ->method('isFile')
+            ->willReturnMap([
+                [$this->configPath, true],
+                [$this->internalConfigPath, true],
+                [$this->stateConfigPath, true],
+            ]);
+
+        $this->fileManager
+            ->expects($this->exactly(4))
+            ->method('getPhpContents')
+            ->willReturnMap([
+                [$this->configPath, ['k1' => 'v1', 'k2' => 'v2']],
+                [$this->internalConfigPath, []],
+                [$this->stateConfigPath, []],
+            ]);
+
+        $this->fileManager
+            ->expects($this->exactly(1))
+            ->method('putPhpContents')
+            ->willReturnMap([
+                [
+                    $this->configPath,
+                    ['k2' => 'v2', 'microtime' => 1.0]
                 ],
             ]);
 
