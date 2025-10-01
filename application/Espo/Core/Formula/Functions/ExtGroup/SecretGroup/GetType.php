@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\UtilGroup;
+namespace Espo\Core\Formula\Functions\ExtGroup\SecretGroup;
 
 use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
@@ -35,7 +35,7 @@ use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Tools\AppSecret\SecretProvider;
 
-class GetSecretType implements Func
+class GetType implements Func
 {
     public function __construct(private SecretProvider $secretProvider) {}
 
