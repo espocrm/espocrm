@@ -411,6 +411,11 @@
             "returnType": "string"
         },
         {
+            "name": "util\\getSecret",
+            "insertText": "util\\getSecret(STRING)",
+            "returnType": "string"
+        },
+        {
             "name": "object\\create",
             "insertText": "object\\create()",
             "returnType": "object"
@@ -644,6 +649,7 @@
         "ext\\acl\\getPermissionLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetPermissionLevelType",
         "util\\base64Encode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64EncodeType",
         "util\\base64Decode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64DecodeType",
+        "util\\getSecret": "Espo\\Core\\Formula\\Functions\\UtilGroup\\GetSecretType",
         "ext\\oauth\\getAccessToken": "Espo\\Core\\Formula\\Functions\\ExtGroup\\OauthGroup\\GetAccessTokenType"
     }
 }
