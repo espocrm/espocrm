@@ -185,7 +185,7 @@ class EntityManagerEditView extends View {
                     }
 
                     if (fieldDefs[item].type === 'enum' &&
-                        (!('notSortable' in fieldDefs[item]) || fieldDefs[item].notSortable === false)
+                        (!('notStorable' in fieldDefs[item]) || fieldDefs[item].notStorable === false)
                     ) {
                         return true;
                     }
