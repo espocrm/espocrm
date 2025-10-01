@@ -51,12 +51,6 @@ class GetSecretType implements Func
             throw BadArgumentType::create(1, 'string');
         }
 
-        $result = $this->secretProvider->get($string);
-
-        if ($result === null) {
-            return false;
-        }
-
-        return $result;
+        return $this->secretProvider->get($string);
     }
 }
