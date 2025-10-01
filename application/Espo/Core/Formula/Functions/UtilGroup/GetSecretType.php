@@ -39,7 +39,7 @@ class GetSecretType implements Func
 {
     public function __construct(private SecretProvider $secretProvider) {}
 
-    public function process(EvaluatedArgumentList $arguments): string
+    public function process(EvaluatedArgumentList $arguments): mixed
     {
         if (count($arguments) < 1) {
             throw TooFewArguments::create(1);
