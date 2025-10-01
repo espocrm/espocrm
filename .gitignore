@@ -7,6 +7,7 @@
 /data/config-internal.php
 /data/config-override.php
 /data/config-internal-override.php
+/data/state.php
 /data/tmp/*
 /build
 /node_modules

@@ -46,6 +46,7 @@ class Config
     private string $internalConfigPath = 'data/config-internal.php';
     private string $overrideConfigPath = 'data/config-override.php';
     private string $internalOverrideConfigPath = 'data/config-internal-override.php';
+    private string $stateConfigPath = 'data/state.php';
     private string $cacheTimestamp = 'cacheTimestamp';
     /** @var string[] */
     protected $associativeArrayAttributeList = [
@@ -81,10 +82,20 @@ class Config
      * A path to the internal config file.
      *
      * @todo Move to ConfigData.
+     * @internal
      */
     public function getInternalConfigPath(): string
     {
         return $this->internalConfigPath;
+    }
+
+    /**
+     * @todo Move to ConfigData.
+     * @internal
+     */
+    public function getStateConfigPath(): string
+    {
+        return $this->stateConfigPath;
     }
 
     /**
@@ -302,13 +313,15 @@ class Config
         $internalData = $this->readFile($this->internalConfigPath);
         $overrideData = $this->readFile($this->overrideConfigPath);
         $internalOverrideData = $this->readFile($this->internalOverrideConfigPath);
+        $stateConfigData = $this->readFile($this->stateConfigPath);
 
         $this->data = $this->mergeData(
-            $systemData,
-            $data,
-            $internalData,
-            $overrideData,
-            $internalOverrideData
+            systemData: $systemData,
+            data: $data,
+            internalData: $internalData,
+            overrideData: $overrideData,
+            internalOverrideData: $internalOverrideData,
+            stateData: $stateConfigData,
         );
 
         $this->internalParamList = array_values(array_merge(
@@ -325,6 +338,7 @@ class Config
      * @param array<string, mixed> $internalData
      * @param array<string, mixed> $overrideData
      * @param array<string, mixed> $internalOverrideData
+     * @param array<string, mixed> $stateData
      * @return array<string, mixed>
      */
     private function mergeData(
@@ -332,7 +346,8 @@ class Config
         array $data,
         array $internalData,
         array $overrideData,
-        array $internalOverrideData
+        array $internalOverrideData,
+        array $stateData,
     ): array {
 
         /** @var array<string, mixed> $mergedData */
@@ -344,8 +359,13 @@ class Config
         /** @var array<string, mixed> $mergedData */
         $mergedData = Util::merge($mergedData, $overrideData);
 
-        /** @var array<string, mixed> */
-        return Util::merge($mergedData, $internalOverrideData);
+        /** @var array<string, mixed> $mergedData */
+        $mergedData = Util::merge($mergedData, $internalOverrideData);
+
+        /** @var array<string, mixed> $mergedData */
+        $mergedData = Util::merge($mergedData, $stateData);
+
+        return $mergedData;
     }
 
     /**

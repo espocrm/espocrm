@@ -43,6 +43,7 @@ class ConfigTest extends TestCase
     private $configPath = 'tests/unit/testData/cache/config.php';
     private $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
     private $internalConfigPath = 'tests/unit/testData/cache/config-internal.php';
+    private $stateConfigPath = 'tests/unit/testData/cache/state.php';
 
     private $reflection;
     private $fileManager;
@@ -63,11 +64,7 @@ class ConfigTest extends TestCase
         $this->reflection->setProperty('configPath', $this->configPath);
         $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
         $this->reflection->setProperty('internalConfigPath', $this->internalConfigPath);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->config = NULL;
+        $this->reflection->setProperty('stateConfigPath', $this->stateConfigPath);
     }
 
     public function testLoadConfig()
@@ -123,6 +120,7 @@ class ConfigTest extends TestCase
                     ['data/config-internal.php', true],
                     ['application/Espo/Resources/defaults/systemConfig.php', true],
                     ['data/config-override.php', false],
+                    ['data/state.php', true],
                     ['data/config-internal-override.php', false],
                 ]
             );
@@ -145,6 +143,7 @@ class ConfigTest extends TestCase
                 [
                     ['data/config.php', $data],
                     ['data/config-internal.php', $dataInternal],
+                    ['data/state.php', []],
                     ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
                 ]
             );
@@ -181,6 +180,7 @@ class ConfigTest extends TestCase
                     ['data/config-internal.php', true],
                     ['application/Espo/Resources/defaults/systemConfig.php', true],
                     ['data/config-override.php', false],
+                    ['data/state.php', true],
                     ['data/config-internal-override.php', false],
                 ]
             );
@@ -208,6 +208,7 @@ class ConfigTest extends TestCase
                 [
                     ['data/config.php', $data],
                     ['data/config-internal.php', $dataInternal],
+                    ['data/state.php', []],
                     ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
                 ]
             );
@@ -239,6 +240,7 @@ class ConfigTest extends TestCase
                     ['data/config.php', true],
                     ['data/config-internal.php', true],
                     ['data/config-override.php', true],
+                    ['data/state.php', true],
                     ['data/config-internal-override.php', true],
                 ]
             );
@@ -273,6 +275,7 @@ class ConfigTest extends TestCase
                     ['data/config.php', $data],
                     ['data/config-internal.php', $dataInternal],
                     ['data/config-override.php', $dataOverride],
+                    ['data/state.php', []],
                     ['data/config-internal-override.php', $dataInternalOverride],
                 ]
             );

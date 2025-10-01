@@ -107,6 +107,7 @@ class ConfigWriter
 
         $configPath = $this->config->getConfigPath();
         $internalConfigPath = $this->config->getInternalConfigPath();
+        $stateConfigPath = $this->config->getStateConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
             throw new RuntimeException("Config file '$configPath' not found.");
@@ -117,6 +118,9 @@ class ConfigWriter
         $dataInternal = $this->fileManager->isFile($internalConfigPath) ?
             $this->fileManager->getPhpContents($internalConfigPath) : [];
 
+        $dataState = $this->fileManager->isFile($stateConfigPath) ?
+            $this->fileManager->getPhpContents($stateConfigPath) : [];
+
         if (!is_array($data)) {
             throw new RuntimeException("Could not read config.");
         }
@@ -125,12 +129,45 @@ class ConfigWriter
             throw new RuntimeException("Could not read config-internal.");
         }
 
+        if (!is_array($dataState)) {
+            throw new RuntimeException("Could not read state.");
+        }
+
         $toSaveInternal = false;
+        $toSaveState = false;
+        $toSaveMain = false;
+
+        foreach (array_merge(array_keys($changedData), $this->removeParamList) as $key) {
+            if (array_key_exists($key, $data)) {
+                $toSaveMain = true;
+            }
+
+            if (array_key_exists($key, $dataInternal)) {
+                $toSaveInternal = true;
+            }
+
+            if (array_key_exists($key, $dataState)) {
+                $toSaveState = true;
+            }
+        }
 
         foreach ($changedData as $key => $value) {
+            if ($this->internalConfigHelper->isParamForStateConfig($key)) {
+                $dataState[$key] = $value;
+
+                unset($data[$key]);
+                unset($dataInternal[$key]);
+
+                $toSaveState = true;
+
+                continue;
+            }
+
             if ($this->internalConfigHelper->isParamForInternalConfig($key)) {
                 $dataInternal[$key] = $value;
+
                 unset($data[$key]);
+                unset($dataState[$key]);
 
                 $toSaveInternal = true;
 
@@ -138,25 +175,38 @@ class ConfigWriter
             }
 
             $data[$key] = $value;
+
+            unset($dataState[$key]);
+            unset($dataInternal[$key]);
+
+            $toSaveMain = true;
         }
 
         foreach ($this->removeParamList as $key) {
-            if ($this->internalConfigHelper->isParamForInternalConfig($key)) {
-                unset($dataInternal[$key]);
-
-                $toSaveInternal = true;
-
-                continue;
+            if (array_key_exists($key, $data)) {
+                unset($data[$key]);
             }
 
-            unset($data[$key]);
+            if (array_key_exists($key, $dataInternal)) {
+                unset($dataInternal[$key]);
+            }
+
+            if (array_key_exists($key, $dataState)) {
+                unset($dataState[$key]);
+            }
         }
 
         if ($toSaveInternal) {
             $this->saveData($internalConfigPath, $dataInternal, 'microtimeInternal');
         }
 
-        $this->saveData($configPath, $data, 'microtime');
+        if ($toSaveMain) {
+            $this->saveData($configPath, $data, 'microtime');
+        }
+
+        if ($toSaveState) {
+            $this->saveData($stateConfigPath, $dataState, 'microtimeState');
+        }
 
         $this->changedData = [];
         $this->removeParamList = [];
