@@ -105,46 +105,10 @@ class EditStreamView extends BaseRecordView {
         }
     }
 
-    data() {
-        const data = super.data();
-
-        data.interactiveMode = this.options.interactiveMode;
-
-        return data;
-    }
-
     setup() {
         super.setup();
 
         this.seed = this.model.clone();
-
-        if (this.options.interactiveMode) {
-            this.events['focus textarea[data-name="post"]'] = () => {
-                this.enablePostingMode();
-            };
-
-            this.addHandler('keydown', 'textarea[data-name="post"]', /** KeyboardEvent */e => {
-                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    this.post();
-                }
-
-                // Don't hide to be able to focus on the upload button.
-                /*if (e.code === 'Tab') {
-                    let $text = $(e.currentTarget);
-
-                    if ($text.val() === '') {
-                        this.disablePostingMode();
-                    }
-                }*/
-            });
-
-            this.events['click button.post'] = () => {
-                this.post();
-            };
-        }
 
         const optionList = ['self'];
 
@@ -280,17 +244,6 @@ class EditStreamView extends BaseRecordView {
 
     afterSave() {
         Espo.Ui.success(this.translate('Posted'));
-
-        if (this.options.interactiveMode) {
-            this.model.clear();
-            this.model.set('targetType', 'self');
-            this.model.set('type', 'Post');
-
-            this.disablePostingMode();
-            this.enablePostButton();
-
-            this.getFieldView('post').$element.prop('rows', 1);
-        }
     }
 
     afterNotValid() {

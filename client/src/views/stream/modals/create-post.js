@@ -30,7 +30,9 @@ import ModalView from 'views/modal';
 
 class CreatePostModalView extends ModalView {
 
-    templateContent = '<div class="record">{{{record}}}</div>'
+    templateContent = `
+        <div class="record no-side-margin">{{{record}}}</div>
+    `
 
     shortcutKeys = {
         'Control+Enter': 'post',
