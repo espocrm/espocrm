@@ -184,9 +184,9 @@ class EntityManagerEditView extends View {
                         return;
                     }
 
-                    if (fieldDefs[item].type === 'enum' &&
-                        (!('notStorable' in fieldDefs[item]) || fieldDefs[item].notStorable === false)
-                    ) {
+                    const isNotStorable = !('notStorable' in fieldDefs[item]) || fieldDefs[item].notStorable === false;
+
+                    if (fieldDefs[item].type === 'enum' && isNotStorable) {
                         return true;
                     }
                 })
