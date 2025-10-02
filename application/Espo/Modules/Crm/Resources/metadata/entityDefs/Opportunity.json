@@ -227,6 +227,7 @@
             "type": "enum",
             "notStorable": true,
             "orderDisabled": true,
+            "directUpdateDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutAvailabilityList": ["listForContact"],

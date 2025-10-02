@@ -86,7 +86,11 @@
         },
         "user": {
             "type": "index",
-            "columns": ["userId", "createdAt"]
+            "columns": ["userId", "number"]
+        },
+        "userIdReadRelatedParentType": {
+            "type": "index",
+            "columns": ["userId", "deleted", "read", "relatedParentType"]
         }
     }
 }

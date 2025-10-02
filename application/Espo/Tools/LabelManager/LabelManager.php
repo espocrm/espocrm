@@ -216,7 +216,7 @@ class LabelManager implements
             }
         }
 
-        return json_decode(Json::encode($finalData));
+        return json_decode(Json::encode((object) $finalData));
     }
 
     /**
