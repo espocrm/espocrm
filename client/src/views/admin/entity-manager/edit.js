@@ -131,7 +131,8 @@ class EntityManagerEditView extends View {
         }
 
         if (scope) {
-            const fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
+            /** @type {Record.<string, Record>} */
+            const fieldDefs = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
 
             this.orderableFieldList = Object.keys(fieldDefs)
                 .filter(item => {
