@@ -631,6 +631,11 @@
             "insertText": "ext\\oauth\\getAccessToken(ID)",
             "returnType": "string",
             "unsafe": true
+        },
+        {
+            "name": "ext\\appSecret\\get",
+            "insertText": "ext\\appSecret\\get(STRING)",
+            "returnType": "string"
         }
     ],
     "functionClassNameMap": {
@@ -642,6 +647,7 @@
         "ext\\acl\\checkScope": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\CheckScopeType",
         "ext\\acl\\getLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetLevelType",
         "ext\\acl\\getPermissionLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetPermissionLevelType",
+        "ext\\appSecret\\get": "Espo\\Core\\Formula\\Functions\\ExtGroup\\SecretGroup\\GetType",
         "util\\base64Encode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64EncodeType",
         "util\\base64Decode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64DecodeType",
         "ext\\oauth\\getAccessToken": "Espo\\Core\\Formula\\Functions\\ExtGroup\\OauthGroup\\GetAccessTokenType"
