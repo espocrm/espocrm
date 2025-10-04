@@ -32,13 +32,15 @@ namespace Espo\Core\Utils;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Resource\FileReader;
 use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
+use Espo\Core\Utils\Metadata;
 
 class TemplateFileManager
 {
     public function __construct(
         private Config $config,
         private FileManager $fileManager,
-        private FileReader $fileReader
+        private FileReader $fileReader,
+        private Metadata $metadata,
     ) {}
 
     public function getTemplate(
@@ -48,9 +50,19 @@ class TemplateFileManager
         ?string $defaultModuleName = null
     ): string {
 
+        $templates = $this->metadata->get(['app', 'templates']);
+
+        $moduleName = null;
+
+        if (isset($templates[$type]) && isset($templates[$type]["module"])) {
+            $moduleName = $templates[$type]["module"];
+        } else {
+            $moduleName = $defaultModuleName;
+        }
+
         $params = FileReaderParams::create()
             ->withScope($entityType)
-            ->withModuleName($defaultModuleName);
+            ->withModuleName($moduleName);
 
         if ($entityType) {
             $path1 = $this->getPath($type, $name, $entityType);
