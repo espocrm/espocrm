@@ -248,10 +248,8 @@ class ClientManager
             $params[$k] = $v;
         }
 
-        $client = new $className($oauth2Client, $params, $this);
-
         if ($this->injectableFactory) {
-            $this->injectableFactory->createWith($className, [
+            $client = $this->injectableFactory->createWith($className, [
                 'client' => $oauth2Client,
                 'params' => $params,
                 'manager' => $this,
