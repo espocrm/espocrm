@@ -52,12 +52,10 @@ class TemplateFileManager
 
         $templates = $this->metadata->get(['app', 'templates']);
 
-        $moduleName = null;
+        $moduleName = $defaultModuleName;
 
         if (isset($templates[$type]) && isset($templates[$type]["module"])) {
             $moduleName = $templates[$type]["module"];
-        } else {
-            $moduleName = $defaultModuleName;
         }
 
         $params = FileReaderParams::create()
