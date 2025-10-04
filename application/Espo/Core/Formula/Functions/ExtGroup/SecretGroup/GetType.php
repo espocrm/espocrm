@@ -31,15 +31,20 @@ namespace Espo\Core\Formula\Functions\ExtGroup\SecretGroup;
 
 use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Tools\AppSecret\SecretProvider;
 
+/**
+ * @noinspection PhpUnused
+ */
 class GetType implements Func
 {
-    public function __construct(private SecretProvider $secretProvider) {}
+    public function __construct(private SecretProvider $secretProvider)
+    {}
 
-    public function process(EvaluatedArgumentList $arguments): mixed
+    public function process(EvaluatedArgumentList $arguments): string
     {
         if (count($arguments) < 1) {
             throw TooFewArguments::create(1);
@@ -51,6 +56,12 @@ class GetType implements Func
             throw BadArgumentType::create(1, 'string');
         }
 
-        return $this->secretProvider->get($string);
+        $secret = $this->secretProvider->get($string);
+
+        if ($secret === null) {
+            throw new Error("No secret '$string'.");
+        }
+
+        return $secret;
     }
 }
