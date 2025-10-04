@@ -50,16 +50,16 @@ class GetType implements Func
             throw TooFewArguments::create(1);
         }
 
-        $string = $arguments[0];
+        $name = $arguments[0];
 
-        if (!is_string($string)) {
+        if (!is_string($name)) {
             throw BadArgumentType::create(1, 'string');
         }
 
-        $secret = $this->secretProvider->get($string);
+        $secret = $this->secretProvider->get($name);
 
         if ($secret === null) {
-            throw new Error("No secret '$string'.");
+            throw new Error("No secret '$name'.");
         }
 
         return $secret;
