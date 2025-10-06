@@ -47,12 +47,11 @@ class TemplateFileManager
         string $type,
         string $name,
         ?string $entityType = null,
-        ?string $defaultModuleName = null
     ): string {
 
         $templates = $this->metadata->get(['app', 'templates']);
 
-        $moduleName = $defaultModuleName;
+        $moduleName = null;
 
         if (isset($templates[$type]) && isset($templates[$type]["module"])) {
             $moduleName = $templates[$type]["module"];
