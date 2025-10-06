@@ -33,7 +33,7 @@ use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
 use Espo\Core\Select\Text\Filter\Data as FilterData;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\WhereItem;
@@ -62,8 +62,10 @@ class Applier
         private ConfigProvider $config
     ) {}
 
-    /** @noinspection PhpUnusedParameterInspection */
-    public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params): void
+    /**
+     * @noinspection PhpUnusedParameterInspection
+     */
+    public function apply(SelectBuilder $queryBuilder, string $filter, FilterParams $params): void
     {
         $forceFullText = false;
         $skipFullText = false;
@@ -97,7 +99,7 @@ class Applier
         return $composer->compose($filter, $params);
     }
 
-    private function processFullTextSearch(QueryBuilder $queryBuilder, FullTextSearchData $data): WhereItem
+    private function processFullTextSearch(SelectBuilder $queryBuilder, FullTextSearchData $data): WhereItem
     {
         $expression = $data->getExpression();
 
@@ -203,7 +205,7 @@ class Applier
             ->withFullTextSearchWhereItem($fullTextWhere);
     }
 
-    private function applyFilter(QueryBuilder $queryBuilder, FilterData $filterData): void
+    private function applyFilter(SelectBuilder $queryBuilder, FilterData $filterData): void
     {
         $filterObj = $this->filterFactory->create($this->entityType, $this->user);
 

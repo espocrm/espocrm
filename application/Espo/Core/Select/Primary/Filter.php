@@ -29,12 +29,12 @@
 
 namespace Espo\Core\Select\Primary;
 
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 /**
  * A primary filter.
  */
 interface Filter
 {
-    public function apply(QueryBuilder $queryBuilder): void;
+    public function apply(SelectBuilder $queryBuilder): void;
 }

@@ -34,7 +34,7 @@ use Espo\Core\Select\OrmSelectBuilder;
 use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
 use Espo\ORM\Query\Select;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\WhereClause;
 
@@ -53,7 +53,7 @@ class Applier
      * @param string[] $boolFilterNameList
      * @throws BadRequest
      */
-    public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList): void
+    public function apply(SelectBuilder $queryBuilder, array $boolFilterNameList): void
     {
         $orGroupBuilder = new OrGroupBuilder();
 
@@ -80,7 +80,7 @@ class Applier
      * @throws BadRequest
      */
     private function applyBoolFilter(
-        QueryBuilder $queryBuilder,
+        SelectBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,
         string $filterName
     ): void {
@@ -110,7 +110,7 @@ class Applier
         throw new BadRequest("No bool filter '$filterName' for '$this->entityType'.");
     }
 
-    private function handleMultiple(Select $queryBefore, QueryBuilder $queryBuilder): void
+    private function handleMultiple(Select $queryBefore, SelectBuilder $queryBuilder): void
     {
         $queryAfter = $queryBuilder->build();
 

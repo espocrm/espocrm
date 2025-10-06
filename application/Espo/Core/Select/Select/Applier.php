@@ -35,7 +35,7 @@ use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 class Applier
 {
@@ -60,7 +60,7 @@ class Applier
         private MetadataProvider $metadataProvider
     ) {}
 
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams): void
+    public function apply(SelectBuilder $queryBuilder, SearchParams $searchParams): void
     {
         $attributeList = $this->getSelectAttributeList($searchParams);
 

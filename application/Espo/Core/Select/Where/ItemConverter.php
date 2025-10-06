@@ -31,7 +31,7 @@ namespace Espo\Core\Select\Where;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 /**
  * Converts a where item to a where clause item (for ORM).
@@ -41,5 +41,5 @@ interface ItemConverter
     /**
      * @throws BadRequest
      */
-    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem;
+    public function convert(SelectBuilder $queryBuilder, Item $item): WhereClauseItem;
 }

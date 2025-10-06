@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Primary;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\OrmSelectBuilder;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Entities\User;
 
 class Applier
@@ -47,7 +47,7 @@ class Applier
     /**
      * @throws BadRequest
      */
-    public function apply(QueryBuilder $queryBuilder, string $filterName): void
+    public function apply(SelectBuilder $queryBuilder, string $filterName): void
     {
         if ($this->primaryFilterFactory->has($this->entityType, $filterName)) {
             $filter = $this->primaryFilterFactory->create($this->entityType, $this->user, $filterName);

@@ -33,14 +33,14 @@ use Espo\Core\Select\AccessControl\Filter;
 use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Entities\User;
 use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 class PortalOnlyOwn implements Filter
 {
     public function __construct(private User $user, private FieldHelper $fieldHelper)
     {}
 
-    public function apply(QueryBuilder $queryBuilder): void
+    public function apply(SelectBuilder $queryBuilder): void
     {
         if ($this->fieldHelper->hasCreatedByField()) {
             $queryBuilder->where([

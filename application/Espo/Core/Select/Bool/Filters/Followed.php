@@ -35,14 +35,14 @@ use Espo\Entities\User;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\WhereClause;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 class Followed implements Filter
 {
     public function __construct(private string $entityType, private User $user)
     {}
 
-    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
+    public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
         $alias = 'subscriptionFollowedBoolFilter';
 

@@ -37,7 +37,7 @@ use Espo\ORM\Defs;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 /**
  * @noinspection PhpUnused
@@ -53,7 +53,7 @@ class OnlyMy implements Filter
         private Defs $defs
     ) {}
 
-    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
+    public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
         if ($this->user->isPortal()) {
             $orGroupBuilder->add(
@@ -75,7 +75,7 @@ class OnlyMy implements Filter
             $key1 = $relationDefs->getMidKey();
             $key2 = $relationDefs->getForeignMidKey();
 
-            $subQuery = QueryBuilder::create()
+            $subQuery = SelectBuilder::create()
                 ->select(Attribute::ID)
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, 'assignedUsersMiddle', [

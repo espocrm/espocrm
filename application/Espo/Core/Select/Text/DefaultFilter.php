@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Text;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\Text\Filter\Data;
 use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\Where\Comparison as Cmp;
@@ -49,7 +49,7 @@ class DefaultFilter implements Filter
         private ConfigProvider $config
     ) {}
 
-    public function apply(QueryBuilder $queryBuilder, Data $data): void
+    public function apply(SelectBuilder $queryBuilder, Data $data): void
     {
         $orGroupBuilder = OrGroup::createBuilder();
 
@@ -78,7 +78,7 @@ class DefaultFilter implements Filter
      * @todo AttributeFilterFactory.
      */
     private function applyAttribute(
-        QueryBuilder $queryBuilder,
+        SelectBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,
         string $attribute,
         Data $data
@@ -147,7 +147,7 @@ class DefaultFilter implements Filter
         );
     }
 
-    private function getAttributeTypeAndApplyJoin(QueryBuilder $queryBuilder, string $attribute): string
+    private function getAttributeTypeAndApplyJoin(SelectBuilder $queryBuilder, string $attribute): string
     {
         if (str_contains($attribute, '.')) {
             [$link, $foreignField] = explode('.', $attribute);

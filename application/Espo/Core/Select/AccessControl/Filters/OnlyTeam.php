@@ -36,7 +36,7 @@ use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
 use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 /**
  * @noinspection PhpUnused
@@ -50,7 +50,7 @@ class OnlyTeam implements Filter
         private Defs $defs
     ) {}
 
-    public function apply(QueryBuilder $queryBuilder): void
+    public function apply(SelectBuilder $queryBuilder): void
     {
         if (!$this->fieldHelper->hasTeamsField()) {
             $queryBuilder->where([Attribute::ID => null]);
@@ -58,7 +58,7 @@ class OnlyTeam implements Filter
             return;
         }
 
-        $subQueryBuilder = QueryBuilder::create()
+        $subQueryBuilder = SelectBuilder::create()
             ->select(Attribute::ID)
             ->from($this->entityType)
             ->leftJoin(Team::RELATIONSHIP_ENTITY_TEAM, 'entityTeam', [

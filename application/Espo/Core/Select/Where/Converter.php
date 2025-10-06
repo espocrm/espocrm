@@ -37,7 +37,7 @@ use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Where\Comparison;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -54,7 +54,7 @@ class Converter
     /**
      * @throws BadRequest
      */
-    public function convert(QueryBuilder $queryBuilder, Item $item, ?Converter\Params $params = null): WhereItem
+    public function convert(SelectBuilder $queryBuilder, Item $item, ?Converter\Params $params = null): WhereItem
     {
         if ($params && $params->useSubQueryIfMany() && $this->hasRelatedMany($queryBuilder, $item)) {
             return $this->convertSubQuery($queryBuilder, $item);
@@ -83,7 +83,7 @@ class Converter
         return WhereClause::fromRaw($whereClause);
     }
 
-    private function hasRelatedMany(QueryBuilder $queryBuilder, Item $item): bool
+    private function hasRelatedMany(SelectBuilder $queryBuilder, Item $item): bool
     {
         $entityType = $queryBuilder->build()->getFrom();
 
@@ -119,7 +119,7 @@ class Converter
      * @return array<int|string, mixed>
      * @throws BadRequest
      */
-    private function processItem(QueryBuilder $queryBuilder, Item $item): array
+    private function processItem(SelectBuilder $queryBuilder, Item $item): array
     {
         return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
     }
@@ -127,11 +127,11 @@ class Converter
     /**
      * @throws BadRequest
      */
-    private function convertSubQuery(QueryBuilder $queryBuilder, Item $item): Comparison
+    private function convertSubQuery(SelectBuilder $queryBuilder, Item $item): Comparison
     {
         $entityType = $queryBuilder->build()->getFrom() ?? throw new RuntimeException();
 
-        $subQueryBuilder = QueryBuilder::create()
+        $subQueryBuilder = SelectBuilder::create()
             ->from($entityType)
             ->select(Attribute::ID);
 
