@@ -25,9 +25,11 @@
             role="button"
             tabindex="0"
             data-action="expandDetails"
-            class="text-soft"
-        ><span class="fas fa-chevron-down"></span></a><span style="user-select: none"> </span>
-        <span class="fields text-muted small">{{fieldsString}}</span>
+            class="text-muted no-underline"
+        ><span class="fas fa-chevron-down text-soft" data-role="icon"></span>
+            <span style="user-select: none"> </span>
+            <span class="fields small">{{fieldsString}}</span>
+        </a>
     </div>
 {{/if}}
 
