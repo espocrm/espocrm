@@ -121,6 +121,11 @@ Espo.Utils = {
             });
         }
         else if (typeof view[method] === 'function') {
+            if (view?.events[`click [data-action="${action}"]`]) {
+                // Prevents from firing if a handler is already assigned. Important.
+                return false;
+            }
+
             view[method].call(view, data, event);
 
             event.preventDefault();
