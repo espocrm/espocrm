@@ -108,6 +108,7 @@ class View extends BullView {
      * @param {module:view~actionHandlerCallback} handler A handler.
      */
     addActionHandler(action, handler) {
+        // The key should be in sync with one in Utils.handleAction.
         const fullAction = `click [data-action="${action}"]`;
 
         this.events[fullAction] = e => {
