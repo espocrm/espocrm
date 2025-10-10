@@ -32,6 +32,7 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Select\Primary\Filters\All;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
@@ -151,6 +152,7 @@ class FindRelatedOneType extends BaseFunction implements
         $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
             ->forUser($this->user)
+            ->withPrimaryFilter(All::NAME)
             ->from($foreignEntityType);
 
         $whereClause = [];

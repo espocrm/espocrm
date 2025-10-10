@@ -38,6 +38,7 @@ use Espo\Core\Formula\Exceptions\Error as FormulaError;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
+use Espo\Core\Select\Primary\Filters\All;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -92,6 +93,7 @@ class FindManyType implements Func
 
         $builder = $this->selectBuilderFactory
             ->create()
+            ->withPrimaryFilter(All::NAME)
             ->from($entityType);
 
         $whereClause = [];
