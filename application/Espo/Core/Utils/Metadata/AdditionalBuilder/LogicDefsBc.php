@@ -129,6 +129,12 @@ class LogicDefsBc implements AdditionalBuilder
                     $item = $subDefs->$subKey;
 
                     $logicDefs->$key ??= (object) [];
+
+                    // Fix if corrupted.
+                    if (is_array($logicDefs->$key)) {
+                        $logicDefs->$key = (object) [];
+                    }
+
                     $logicDefs->$key->$name ??= (object) [];
 
                     $logicDefs->$key->$name->$subKey = $item !== null ?
