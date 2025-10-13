@@ -186,13 +186,21 @@ class Email extends Database implements
             return;
         }
 
+        $setFetched = !$entity->isAttributeChanged($type . 'EmailAddressesNames');
+
         $addresses = [];
 
         foreach (get_object_vars($names) as $address) {
             $addresses[] = $address;
         }
 
-        $entity->set($type, implode(';', $addresses));
+        $value = implode(';', $addresses);
+
+        $entity->set($type, $value);
+
+        if ($setFetched) {
+            $entity->setFetched($type, $value);
+        }
     }
 
     /**
@@ -289,6 +297,10 @@ class Email extends Database implements
         $entity->set('nameHash', $nameHash);
         $entity->set('typeHash', $typeHash);
         $entity->set('idHash', $idHash);
+
+        $entity->setFetched('nameHash', $nameHash);
+        $entity->setFetched('typeHash', $typeHash);
+        $entity->setFetched('idHash', $idHash);
     }
 
     /**
