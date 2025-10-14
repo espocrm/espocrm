@@ -89,6 +89,10 @@
                             {
                                 "type": "isTrue",
                                 "attribute": "ldapAuth"
+                            }, {
+                                "type": "equals",
+                                "attribute": "authenticationMethod",
+                                "value": "LDAP"
                             }
                         ]
                     }
