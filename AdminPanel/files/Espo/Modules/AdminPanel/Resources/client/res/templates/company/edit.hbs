@@ -1,0 +1,25 @@
+<div class="edit-container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{translate 'Edit Company' scope='Company'}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="name">{{translate 'name' scope='Company'}}</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{model.attributes.name}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">{{translate 'address' scope='Company'}}</label>
+                        <textarea class="form-control" id="address" name="address">{{model.attributes.address}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">{{translate 'phone' scope='Company'}}</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{model.attributes.phone}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

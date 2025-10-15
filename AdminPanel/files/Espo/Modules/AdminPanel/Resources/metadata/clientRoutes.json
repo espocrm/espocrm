@@ -1,0 +1,34 @@
+[
+    {
+        "route": "Company/list",
+        "params": {
+            "controller": "Company",
+            "action": "list",
+            "scope": "Company"
+        }
+    },
+    {
+        "route": "Company/view/:id",
+        "params": {
+            "controller": "Company",
+            "action": "detail",
+            "scope": "Company"
+        }
+    },
+    {
+        "route": "Company/edit/:id",
+        "params": {
+            "controller": "Company",
+            "action": "edit",
+            "scope": "Company"
+        }
+    },
+    {
+        "route": "Company/create",
+        "params": {
+            "controller": "Company",
+            "action": "edit",
+            "scope": "Company"
+        }
+    }
+]

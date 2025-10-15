@@ -1,0 +1,20 @@
+<div class="list-container">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{{translate 'name' scope='Company'}}</th>
+                <th>{{translate 'address' scope='Company'}}</th>
+                <th>{{translate 'phone' scope='Company'}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each collection.models}}
+            <tr>
+                <td><a href="#Company/view/{{id}}">{{name}}</a></td>
+                <td>{{address}}</td>
+                <td>{{phone}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

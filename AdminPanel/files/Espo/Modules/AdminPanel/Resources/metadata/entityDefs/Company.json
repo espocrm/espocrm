@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 255,
+            "required": true
+        },
+        "address": {
+            "type": "text"
+        },
+        "phone": {
+            "type": "varchar",
+            "maxLength": 50
+        }
+    },
+    "links": {},
+    "collection": {
+        "sortBy": "name",
+        "asc": true
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Admin Panel",
+  "version": "1.0.0",
+  "acceptableVersions": [
+    ">=7.4.0"
+  ],
+  "php": [
+    ">=8.1"
+  ],
+  "releaseDate": "2025-10-15",
+  "author": "Jules",
+  "description": "Admin panel to control all users and companies data and roles and permissions."
+}
