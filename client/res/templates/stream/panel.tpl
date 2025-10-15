@@ -3,7 +3,7 @@
     <div class="buttons-panel margin hide floated-row clearfix">
         <div>
             <button class="btn btn-primary btn-xs-wide post">{{translate 'Post'}}</button>
-            {{#if allowInternalNotes}}
+            {{~#if allowInternalNotes~}}
                 <span
                     style="cursor: pointer;"
                     class="internal-mode-switcher{{#if isInternalNoteMode}} enabled{{/if}} action"
@@ -12,7 +12,7 @@
                 >
                     <span class="fas fa-lock"></span>
                 </span>
-            {{/if}}
+            {{~/if~}}
         </div>
         <div class="attachments-container">
             {{{attachments}}}
