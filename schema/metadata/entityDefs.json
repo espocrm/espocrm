@@ -993,6 +993,26 @@
                     },
                     "description": "Parameters available in the Entity Manager tool when editing the field. Specify an empty array to disable all parameters."
                 },
+                "fieldManagerAdditionalParamList": {
+                    "type": "array",
+                    "items": {
+                        "allOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "A parameter name."
+                                    }
+                                }
+                            },
+                            {
+                                "$ref": "entityDefs.json#/definitions/fieldDefs"
+                            }
+                        ]
+                    },
+                    "description": "Additional field parameters available in the Entity Manager."
+                },
                 "layoutAvailabilityList": {
                     "type": "array",
                     "items": {
