@@ -35,6 +35,37 @@
     .record .record-grid {
         grid-column-gap: var(--padding-base-horizontal);
     }
+
+    @media screen and (min-width: @screen-sm-min) {
+        .record-container,
+        .edit-container {
+            &.no-side-margin {
+                > div {
+                    > .record-grid-wide {
+                        margin-right: var(--panel-padding);
+
+                        > .left {
+                            > .middle {
+                                > .panel {
+
+                                    &:not(.middle):not(.last),
+                                    &.first {
+                                        border-top-right-radius: var(--panel-border-radius);
+                                    }
+
+                                    &:not(.middle):not(.first),
+                                    &.last {
+                                        border-bottom-right-radius: var(--panel-border-radius);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @media screen and (max-width: @screen-sm-max) {
