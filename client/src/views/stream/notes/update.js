@@ -92,7 +92,7 @@ class UpdateNoteStreamView extends NoteStreamView {
             const statusValue = data.value;
 
             this.statusStyle = this.getMetadata()
-                .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
+                    .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
                 'default';
 
             this.statusText = this.getLanguage()
@@ -150,6 +150,9 @@ class UpdateNoteStreamView extends NoteStreamView {
                     mode: 'detail',
                     inlineEditDisabled: true,
                     selector: `.row[data-name="${field}"] .cell-was`,
+                    auditData: {
+                        type: 'was',
+                    },
                 });
 
                 this.createView(field + 'Became', viewName, {
@@ -159,6 +162,9 @@ class UpdateNoteStreamView extends NoteStreamView {
                     mode: 'detail',
                     inlineEditDisabled: true,
                     selector: `.row[data-name="${field}"] .cell-became`,
+                    auditData: {
+                        type: 'became',
+                    },
                 });
 
                 this.fieldDataList.push({
