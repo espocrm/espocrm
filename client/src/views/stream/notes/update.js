@@ -101,7 +101,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
         this.wait(true);
 
-        this.getModelFactory().create(parentType, model => {
+        this.getModelFactory().create(parentType).then(model => {
             const modelWas = model;
             const modelBecame = model.clone();
 
@@ -116,7 +116,9 @@ class UpdateNoteStreamView extends NoteStreamView {
 
             fields.forEach(field => {
                 const type = model.getFieldType(field) || 'base';
-                const viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
+
+                const viewName = model.getFieldParam(field, 'auditView') ??
+                    model.getFieldParam(field, 'view') ??
                     this.getFieldManager().getViewName(type);
 
                 const attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
@@ -143,10 +145,8 @@ class UpdateNoteStreamView extends NoteStreamView {
 
                 this.createView(field + 'Was', viewName, {
                     model: modelWas,
+                    name: field,
                     readOnly: true,
-                    defs: {
-                        name: field
-                    },
                     mode: 'detail',
                     inlineEditDisabled: true,
                     selector: `.row[data-name="${field}"] .cell-was`,
@@ -154,10 +154,8 @@ class UpdateNoteStreamView extends NoteStreamView {
 
                 this.createView(field + 'Became', viewName, {
                     model: modelBecame,
+                    name: field,
                     readOnly: true,
-                    defs: {
-                        name: field,
-                    },
                     mode: 'detail',
                     inlineEditDisabled: true,
                     selector: `.row[data-name="${field}"] .cell-became`,
@@ -174,7 +172,6 @@ class UpdateNoteStreamView extends NoteStreamView {
             this.wait(false);
         });
     }
-
 
     toggleDetails() {
         const target = this.element.querySelector('[data-action="expandDetails"]');

@@ -1279,6 +1279,10 @@
                     "type": "boolean",
                     "description": "Linking and unlinking will be logged in the Stream. Available for hasMany."
                 },
+                "auditView": {
+                    "type": "string",
+                    "description": "A view used for audit. If not specified, the ordinary view is used. As of v9.2.3."
+                },
                 "readOnly": {
                     "type": "boolean",
                     "description": "Read-only links cannot be edited via link and unlink requests. But they can be edited via link and link-multiple fields."
