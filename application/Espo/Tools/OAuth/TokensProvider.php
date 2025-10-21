@@ -67,8 +67,8 @@ class TokensProvider
         if (
             $account->getRefreshToken() &&
             $account->getExpiresAt() &&
-            $account->getExpiresAt()->isGreaterThan(
-                DateTime::createNow()->addSeconds(- self::EXPIRATION_LEAD_TIME)
+            $account->getExpiresAt()->isLessThan(
+                DateTime::createNow()->addSeconds(self::EXPIRATION_LEAD_TIME)
             )
         ) {
             $this->refresh($account);
