@@ -31,8 +31,10 @@ namespace Espo\Classes\RecordHooks\Email;
 
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Name\Field;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Email;
 use Espo\Entities\User;
@@ -54,7 +56,8 @@ class BeforeUpdate implements SaveHook
     public function __construct(
         private User $user,
         private EntityManager $entityManager,
-        private FieldUtil $fieldUtil
+        private FieldUtil $fieldUtil,
+        private Metadata $metadata,
     ) {}
 
     public function process(Entity $entity): void
@@ -125,15 +128,21 @@ class BeforeUpdate implements SaveHook
 
     private function clearEntityForUpdate(Email $email): void
     {
-        $fieldDefsList = $this->entityManager
+        $entityDefs = $this->entityManager
             ->getDefs()
-            ->getEntity(Email::ENTITY_TYPE)
-            ->getFieldList();
+            ->getEntity(Email::ENTITY_TYPE);
 
-        foreach ($fieldDefsList as $fieldDefs) {
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
             $field = $fieldDefs->getName();
 
             if ($fieldDefs->getParam('isCustom')) {
+                continue;
+            }
+
+            if (
+                $fieldDefs->getType() === FieldType::LINK_MULTIPLE &&
+                $this->metadata->get("entityDefs.Email.links.$field.isCustom")
+            ) {
                 continue;
             }
 
@@ -144,7 +153,9 @@ class BeforeUpdate implements SaveHook
             $attributeList = $this->fieldUtil->getAttributeList(Email::ENTITY_TYPE, $field);
 
             foreach ($attributeList as $attribute) {
-                $email->clear($attribute);
+                if ($email->isAttributeChanged($attribute) && $email->isAttributeWritten($attribute)) {
+                    $email->set($attribute, $email->getFetched($attribute));
+                }
             }
         }
     }

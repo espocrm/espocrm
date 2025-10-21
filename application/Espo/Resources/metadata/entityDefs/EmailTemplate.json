@@ -2,21 +2,25 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": true
+            "required": true,
+            "audited": true
         },
         "subject": {
-            "type": "varchar"
+            "type": "varchar",
+            "audited": true
         },
         "body": {
             "type": "wysiwyg",
             "view": "views/email-template/fields/body",
             "useIframe": true,
-            "attachmentField": "attachments"
+            "attachmentField": "attachments",
+            "audited": true
         },
         "isHtml": {
             "type": "bool",
             "default": true,
-            "inlineEditDisabled": true
+            "inlineEditDisabled": true,
+            "audited": true
         },
         "status": {
             "type": "enum",
@@ -28,7 +32,8 @@
             "style": {
                 "Inactive": "info"
             },
-            "maxLength": 8
+            "maxLength": 8,
+            "audited": true
         },
         "oneOff": {
             "type": "bool",
@@ -36,7 +41,8 @@
             "tooltip": true
         },
         "attachments": {
-            "type": "attachmentMultiple"
+            "type": "attachmentMultiple",
+            "audited": true
         },
         "category": {
             "type": "link",
@@ -47,7 +53,8 @@
             "view": "views/fields/assigned-user"
         },
         "teams": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "audited": true
         },
         "createdAt": {
             "type": "datetime",

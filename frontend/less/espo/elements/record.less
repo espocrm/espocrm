@@ -13,7 +13,7 @@
     }
 
     &.record-grid-small {
-        grid-template-columns: minmax(auto, 60%) minmax(auto, 40%);
+        grid-template-columns: minmax(auto, 61%) minmax(auto, 39%);
     }
 
     max-width: var(--record-grid-max-width);
@@ -34,6 +34,38 @@
 .modal-body {
     .record .record-grid {
         grid-column-gap: var(--padding-base-horizontal);
+    }
+
+    @media screen and (min-width: @screen-sm-min) {
+        .record,
+        .record-container,
+        .edit-container {
+            &.no-side-margin {
+                > div {
+                    > .record-grid-wide {
+                        margin-right: var(--panel-padding);
+
+                        > .left {
+                            > .middle {
+                                > .panel {
+
+                                    &:not(.middle):not(.last),
+                                    &.first {
+                                        border-top-right-radius: var(--panel-border-radius);
+                                    }
+
+                                    &:not(.middle):not(.first),
+                                    &.last {
+                                        border-bottom-right-radius: var(--panel-border-radius);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

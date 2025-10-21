@@ -993,6 +993,26 @@
                     },
                     "description": "Parameters available in the Entity Manager tool when editing the field. Specify an empty array to disable all parameters."
                 },
+                "fieldManagerAdditionalParamList": {
+                    "type": "array",
+                    "items": {
+                        "allOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "A parameter name."
+                                    }
+                                }
+                            },
+                            {
+                                "$ref": "entityDefs.json#/definitions/fieldDefs"
+                            }
+                        ]
+                    },
+                    "description": "Additional field parameters available in the Entity Manager."
+                },
                 "layoutAvailabilityList": {
                     "type": "array",
                     "items": {
@@ -1258,6 +1278,10 @@
                 "audited": {
                     "type": "boolean",
                     "description": "Linking and unlinking will be logged in the Stream. Available for hasMany."
+                },
+                "auditView": {
+                    "type": "string",
+                    "description": "A view used for audit. If not specified, the ordinary view is used. As of v9.2.3."
                 },
                 "readOnly": {
                     "type": "boolean",

@@ -95,7 +95,7 @@ class Entity extends BaseEntity
             throw new LogicException("No entity-manager.");
         }
 
-        $toSetFetched = !$this->isNew() && !$this->hasFetched($idAttribute);
+        $toSetFetched = !$this->isNew() && !$this->isAttributeChanged($idAttribute);
 
         if (!$parentId || !$parentType) {
             /** @noinspection PhpRedundantOptionalArgumentInspection */

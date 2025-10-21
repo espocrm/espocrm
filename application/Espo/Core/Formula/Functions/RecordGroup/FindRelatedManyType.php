@@ -41,6 +41,7 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\Primary\Filters\All;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
@@ -165,6 +166,7 @@ class FindRelatedManyType extends BaseFunction implements
         $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
             ->create()
             ->forUser($this->user)
+            ->withPrimaryFilter(All::NAME)
             ->from($foreignEntityType);
 
         $whereClause = [];

@@ -92,7 +92,7 @@ class UpdateNoteStreamView extends NoteStreamView {
             const statusValue = data.value;
 
             this.statusStyle = this.getMetadata()
-                .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
+                    .get(`entityDefs.${parentType}.fields.${statusField}.style.${statusValue}`) ||
                 'default';
 
             this.statusText = this.getLanguage()
@@ -101,7 +101,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
         this.wait(true);
 
-        this.getModelFactory().create(parentType, model => {
+        this.getModelFactory().create(parentType).then(model => {
             const modelWas = model;
             const modelBecame = model.clone();
 
@@ -116,7 +116,9 @@ class UpdateNoteStreamView extends NoteStreamView {
 
             fields.forEach(field => {
                 const type = model.getFieldType(field) || 'base';
-                const viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
+
+                const viewName = model.getFieldParam(field, 'auditView') ??
+                    model.getFieldParam(field, 'view') ??
                     this.getFieldManager().getViewName(type);
 
                 const attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
@@ -143,24 +145,26 @@ class UpdateNoteStreamView extends NoteStreamView {
 
                 this.createView(field + 'Was', viewName, {
                     model: modelWas,
+                    name: field,
                     readOnly: true,
-                    defs: {
-                        name: field
-                    },
                     mode: 'detail',
                     inlineEditDisabled: true,
                     selector: `.row[data-name="${field}"] .cell-was`,
+                    auditData: {
+                        type: 'was',
+                    },
                 });
 
                 this.createView(field + 'Became', viewName, {
                     model: modelBecame,
+                    name: field,
                     readOnly: true,
-                    defs: {
-                        name: field,
-                    },
                     mode: 'detail',
                     inlineEditDisabled: true,
                     selector: `.row[data-name="${field}"] .cell-became`,
+                    auditData: {
+                        type: 'became',
+                    },
                 });
 
                 this.fieldDataList.push({
@@ -175,16 +179,17 @@ class UpdateNoteStreamView extends NoteStreamView {
         });
     }
 
-
     toggleDetails() {
         const target = this.element.querySelector('[data-action="expandDetails"]');
 
-        const $details = this.$el.find('> .details');
-        const $fields = this.$el.find('> .stream-details-container > .fields');
+        const detailsElement = this.element.querySelector(':scope > .details');
+        const fieldElement = this.element.querySelector(':scope > .stream-details-container > .fields');
+
+        const iconElement = target.querySelector('[data-role="icon"]');
 
         if (!this.isExpanded) {
-            $details.removeClass('hidden');
-            $fields.addClass('hidden');
+            detailsElement.classList.remove('hidden');
+            fieldElement?.classList.add('hidden');
 
             this.fieldList.forEach(field => {
                 const wasField = this.getView(field + 'Was');
@@ -196,21 +201,19 @@ class UpdateNoteStreamView extends NoteStreamView {
                 }
             });
 
-            $(target).find('span')
-                .removeClass('fa-chevron-down')
-                .addClass('fa-chevron-up');
+            iconElement.classList.remove('fa-chevron-down');
+            iconElement.classList.add('fa-chevron-up');
 
             this.isExpanded = true;
 
             return;
         }
 
-        $details.addClass('hidden');
-        $fields.removeClass('hidden');
+        detailsElement.classList.add('hidden');
+        fieldElement?.classList.remove('hidden');
 
-        $(target).find('span')
-            .addClass('fa-chevron-down')
-            .removeClass('fa-chevron-up');
+        iconElement.classList.remove('fa-chevron-up');
+        iconElement.classList.add('fa-chevron-down');
 
         this.isExpanded = false;
     }

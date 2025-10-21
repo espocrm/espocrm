@@ -271,7 +271,7 @@
 
 @media screen and (min-width: @screen-md-min) {
     .modal-dialog {
-        width: ~"min(var(--900px), 90vw)";
+        width: ~"min(calc(var(--900px) + var(--30px)), 90vw)";
     }
 
     .dialog-confirm > .modal-dialog,
@@ -348,8 +348,12 @@
 }
 
 
-.modal.dialog-record {
-    .modal-body {
-        scrollbar-gutter: stable;
+.modal {
+    &.dialog-record,
+    &:has(> .modal-dialog > .modal-content > .modal-body > .record.no-side-margin),
+    &:has(> .modal-dialog > .modal-content > .modal-body > .record-container.no-side-margin) {
+        .modal-body {
+            scrollbar-gutter: stable;
+        }
     }
 }

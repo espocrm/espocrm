@@ -126,6 +126,24 @@ class Email extends Entity
         return parent::has($attribute);
     }
 
+    public function getFetched(string $attribute): mixed
+    {
+        if ($attribute === 'subject') {
+            return $this->getFetched(Field::NAME);
+        }
+
+        return parent::getFetched($attribute);
+    }
+
+    public function isAttributeChanged(string $name): bool
+    {
+        if ($name === 'subject') {
+            $name = Field::NAME;
+        }
+
+        return parent::isAttributeChanged($name);
+    }
+
     /** @noinspection PhpUnused */
     protected function _setSubject(?string $value): void
     {

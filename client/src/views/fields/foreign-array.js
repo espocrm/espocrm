@@ -28,10 +28,30 @@
 
 import ArrayFieldView from 'views/fields/array';
 import ForeignEnumFieldView from 'views/fields/foreign-enum';
+import Helper from 'helpers/misc/foreign-field';
 
 class ForeignArrayFieldView extends ArrayFieldView {
 
     type = 'foreign'
+
+    /**
+     * @private
+     * @type {string}
+     */
+    foreignEntityType
+
+    setup() {
+        const helper = new Helper(this);
+        const foreignParams = helper.getForeignParams();
+
+        for (const param in foreignParams) {
+            this.params[param] = foreignParams[param];
+        }
+
+        this.foreignEntityType = helper.getEntityType();
+
+        super.setup();
+    }
 
     setupOptions() {
         ForeignEnumFieldView.prototype.setupOptions.call(this);

@@ -448,10 +448,6 @@ input.numeric-text {
     font-variant-numeric: tabular-nums;
 }
 
-.filter .selectize-input {
-    min-height: var(--input-height-small);
-}
-
 .btn.active {
     box-shadow: none;
 }
@@ -642,60 +638,6 @@ input.global-search-input {
     margin-right: var(--panel-padding);
 }
 
-.cell > .field {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-}
-
-.field .row {
-    margin-left: calc(var(--3px) * -1) !important;
-    margin-right: calc(var(--3px) * -1) !important;
-
-    > div {
-        padding-left: var(--3px) !important;
-        padding-right: var(--3px) !important;
-    }
-}
-
-.field .form-control,
-.field .btn {
-    margin-bottom: var(--3px);
-}
-
-.field .input-group .form-control,
-.field .input-group .btn {
-    margin-bottom: 0;
-}
-
-.field .input-group {
-    margin-bottom: var(--3px);
-}
-
-.field .link-container {
-    margin-bottom: 0;
-
-    &:not(.no-input) {
-        > .list-group-item:last-child {
-            border-bottom-width: 0;
-        }
-
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-
-        > .list-group-item:last-child {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom-width: 0;
-        }
-    }
-
-    > .list-group-item {
-        .text:empty:before {
-            content: "\200b";
-        }
-    }
-}
-
 .list-group {
     border-radius: var(--border-radius);
 
@@ -798,20 +740,6 @@ input.global-search-input {
     }
 }
 
-.field {
-    .list-group .list-group-item {
-        background-color: var(--panel-bg);
-    }
-
-    .list-group {
-        background-color: var(--default-border-color);
-    }
-}
-
-.panel-body .field > .link-container > .list-group-item {
-    background-color: @panel-bg;
-}
-
 .panel-body .list-group-item {
     background-color: @panel-bg;
 
@@ -820,214 +748,6 @@ input.global-search-input {
     }
 }
 
-.field {
-    .link-container {
-        .list-group-item {
-            > div {
-                margin: calc(var(--6px) * -1) 0 calc(var(--6px) * -1);
-            }
-
-            > div > div {
-                margin: var(--6px) 0;
-            }
-
-            .form-control,
-            .btn {
-                margin-top: var(--2px);
-                margin-bottom: 0;
-            }
-
-            > span.text {
-                width: calc(100% - var(--18px));
-                display: inline-block;
-            }
-
-            > span.drag-handle {
-                display: inline-block;
-                width: var(--18px);
-                color: var(--text-muted-color);
-                cursor: grab;
-                vertical-align: top;
-
-                &:active {
-                    cursor: grabbing;
-                }
-            }
-
-            > span.item-button {
-                display: inline-block;
-                width: var(--18px);
-                vertical-align: top;
-            }
-
-            &:has(> .item-button) {
-                > span.text {
-                    width: calc(100% - var(--36px));
-                }
-            }
-
-            &:has(> .drag-handle) {
-                > span.text {
-                    width: calc(100% - var(--36px));
-                }
-            }
-
-            &:has(> .item-button):has(> .drag-handle) {
-                > span.text {
-                    width: calc(100% - var(--36px) - var(--18px));
-                }
-            }
-
-            > a[role="button"] {
-                margin-top: var(--1px);
-                margin-left: var(--2px);
-            }
-        }
-
-        .link-group-item-with-columns {
-            > div > .btn-group {
-                margin-top: 0;
-                margin-bottom: 0;
-                .caret {
-                    border-top-color: var(--gray-light);
-                }
-            }
-        }
-    }
-}
-
-.field, .cell {
-    .checklist-label {
-        color: @text-color;
-        margin-bottom: 0;
-        padding-left: var(--7px);
-    }
-
-    .checklist-item-container {
-        margin-bottom: var(--2px);
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        > input[type=checkbox] {
-            float: left;
-        }
-
-        > input[type=checkbox]:not(:disabled) + label {
-            cursor: pointer;
-        }
-
-        user-select: none;
-    }
-
-    .multi-enum-item-label-container {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        padding-bottom: var(--4px);
-
-        &:last-child {
-            padding-bottom: var(--1px);
-        }
-
-        .label-md {
-            line-height: 1.5;
-        }
-    }
-}
-
-.field {
-    > .label {
-        white-space: normal;
-    }
-}
-
-.filter > .form-group .field {
-    .link-container {
-        font-size: var(--font-size-small);
-        .fa-times {
-            font-size: var(--12px);
-        }
-        > .list-group-item {
-            padding-top: var(--4px);
-            padding-bottom: var(--4px);
-            line-height: var(--20px);
-        }
-    }
-    .input-group {
-        input {
-            font-size: var(--font-size-small);
-            height: var(--input-height-small);
-            min-height: var(--input-height-small);
-        }
-
-        button.btn {
-            font-size: var(--font-size-small);
-            height: var(--input-height-small);
-        }
-    }
-}
-
-.link-container {
-    > .list-group-item {
-        .link-item-column {
-            float: right;
-            display: inline-block;
-            width: 40%;
-            > .selectize-control {
-                width: 100%;
-            }
-        }
-
-        > a.pull-right {
-            margin-left: var(--4px);
-        }
-
-        &,
-        > .text {
-            > img.avatar {
-                margin-right: var(--7px);
-                top: var(--2px);
-            }
-        }
-
-
-        .link-item-name {
-            > img.avatar {
-                margin-right: var(--7px);
-                top: var(--2px);
-            }
-        }
-    }
-}
-
-.filter .field .link-container .list-group-item a[role="button"] {
-    margin-top: 0;
-    margin-left: var(--2px);
-}
-
-.field .link-container > .list-group-item.link-with-role > a[role="button"],
-.field .link-container > .list-group-item.link-with-role > div > a[role="button"] {
-    margin-top: var(--7px);
-}
-
-.field .link-container > .list-group-item.link-group-item-with-columns,
-.field .link-container > .list-group-item.link-group-item-with-primary {
-    > div:nth-child(1) {
-        display: inline-block;
-        width: calc(~"100% - 23px");
-        float: left;
-        input.form-control {
-            width: 100%;
-        }
-    }
-    > div:nth-child(2) {
-        display: inline-block;
-        width: var(--23px);
-        float: right;
-        vertical-align: top;
-    }
-}
 
 #main > .list-container {
     > .no-data {
@@ -1247,14 +967,6 @@ input.global-search-input {
             display: block;
         }
     }
-}
-
-.filter a.remove-filter {
-    display: none;
-}
-
-.filter:hover a.remove-filter {
-    display: block;
 }
 
 optgroup {
@@ -3415,7 +3127,7 @@ table.table td.cell .html-container {
 .post-container {
     .internal-mode-switcher {
         color: var(--text-muted-color);
-        margin-left: var(--10px);
+        margin-left: var(--14px);
         display: inline-block;
         position: relative;
         top: var(--2px);
@@ -4557,3 +4269,17 @@ body > .autocomplete-suggestions.text-search-suggestions {
 @import "elements/popup-notification.less";
 @import "elements/grid.less";
 @import "elements/animation.less";
+
+.compact-form {
+    --input-height-base: var(--input-height-small);
+    --line-height-computed: var(--line-height-small);
+    --line-height-base: var(--line-height-small);
+    --font-size-base: var(--font-size-small);
+    --padding-base-vertical: var(--padding-small-vertical);
+    --padding-base-horizontal: var(--padding-small-horizontal);
+
+    --icon-size-base: var(--icon-size-small);
+    --icon-line-height-base: var(--icon-line-height-small);
+
+    --btn-icon-width: var(--btn-icon-width-small);
+}

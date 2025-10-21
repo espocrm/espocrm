@@ -27,14 +27,32 @@
  ************************************************************************/
 
 import EnumFieldView from 'views/fields/enum';
+import Helper from 'helpers/misc/foreign-field';
 
 class ForeignEnumFieldView extends EnumFieldView {
 
     type = 'foreign'
 
-    setupOptions() {
-        this.params.options = [];
+    /**
+     * @private
+     * @type {string}
+     */
+    foreignEntityType
 
+    setup() {
+        const helper = new Helper(this);
+        const foreignParams = helper.getForeignParams();
+
+        for (const param in foreignParams) {
+            this.params[param] = foreignParams[param];
+        }
+
+        this.foreignEntityType = helper.getEntityType();
+
+        super.setup();
+    }
+
+    setupOptions() {
         const field = this.params.field;
         const link = this.params.link;
 
@@ -42,47 +60,15 @@ class ForeignEnumFieldView extends EnumFieldView {
             return;
         }
 
-        const entityType = this.getMetadata().get(`entityDefs.${this.model.entityType}.links.${link}.entity`);
-
-        if (!entityType) {
-            return;
-        }
-
-        /**
-         * @type {{
-         *     optionsPath?: string|null,
-         *     optionsReference?: string|null,
-         *     translation?: string|null,
-         *     options?: string[],
-         *     isSorted?: boolean,
-         *     displayAsLabel?: boolean,
-         *     style?: Record,
-         *     labelType?: string,
-         * }}
-         */
-        const fieldDefs = this.getMetadata().get(`entityDefs.${entityType}.fields.${field}`);
-
-        if (!fieldDefs) {
-            return;
-        }
-
-        let {
-            optionsPath,
-            optionsReference,
-            translation,
-            options,
-            isSorted,
-            displayAsLabel,
-            style,
-            labelType,
-        } = fieldDefs;
+        let optionsPath = this.params.optionsPath;
+        const optionsReference = this.params.optionsReference;
+        let options = this.params.options;
+        const style = this.params.style;
 
         if (!optionsPath && optionsReference) {
             const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
-
-            style = this.getMetadata().get(`entityDefs.${refEntityType}.fields.${refField}.style`) ?? {};
         }
 
         if (optionsPath) {
@@ -90,14 +76,10 @@ class ForeignEnumFieldView extends EnumFieldView {
         }
 
         this.params.options = Espo.Utils.clone(options) ?? [];
-        this.params.translation = translation;
-        this.params.isSorted = isSorted ?? false;
-        this.params.displayAsLabel = displayAsLabel ?? false;
-        this.params.labelType = labelType;
         this.styleMap = style ?? {};
 
         const pairs = this.params.options
-            .map(item => [item, this.getLanguage().translateOption(item, field, entityType)])
+            .map(item => [item, this.getLanguage().translateOption(item, field, this.foreignEntityType)])
 
         this.translatedOptions = Object.fromEntries(pairs);
     }

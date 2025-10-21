@@ -31,9 +31,6 @@ import Detail from 'views/email-template/record/detail';
 
 export default class extends EditRecordView {
 
-    isWide = true
-    sideView = false
-
     setup() {
         super.setup();
         Detail.prototype.listenToInsertField.call(this);

@@ -119,6 +119,7 @@ class MasterSiteView extends View {
         }
 
         body.dataset.isDark = this.getThemeManager().getParam('isDark') ?? false;
+        body.dataset.themeName = this.getThemeManager().getName();
 
         const footerView = this.getView('footer');
 

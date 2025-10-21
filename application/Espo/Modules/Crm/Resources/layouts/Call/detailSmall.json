@@ -1,15 +1,14 @@
 [
 	{
-		"label":"",
 		"rows":[
-			[{"name":"name", "fullWidth": true}],
+			[{"name":"name"}],
 			[{"name":"status"}, {"name":"direction"}],
-			[{"name":"dateStart", "fullWidth": true}],
-			[{"name":"duration", "fullWidth": true}],
-			[{"name":"dateEnd", "fullWidth": true}],
-			[{"name":"parent", "fullWidth": true}],
-			[{"name":"reminders", "fullWidth": true}],
-			[{"name":"description", "fullWidth": true}]
+			[{"name":"dateStart"}],
+			[{"name":"duration"}, false],
+			[{"name":"dateEnd"}],
+			[{"name":"parent"}],
+			[{"name":"reminders"}],
+			[{"name":"description"}]
 		]
 	}
 ]

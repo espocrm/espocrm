@@ -63,26 +63,26 @@ class UserGeneratePasswordFieldView extends BaseFieldView {
 
         this.strengthParams = this.options.strengthParams || {};
 
-        this.passwordStrengthLength = this.strengthParams.passwordStrengthLength ||
-            this.getConfig().get('passwordStrengthLength');
+        this.passwordStrengthLength = this.strengthParams.passwordStrengthLength ??
+            this.getConfig().get('passwordStrengthLength') ?? null;
 
-        this.passwordStrengthLetterCount = this.strengthParams.passwordStrengthLetterCount ||
-            this.getConfig().get('passwordStrengthLetterCount');
+        this.passwordStrengthLetterCount = this.strengthParams.passwordStrengthLetterCount ??
+            this.getConfig().get('passwordStrengthLetterCount') ?? null;
 
-        this.passwordStrengthNumberCount = this.strengthParams.passwordStrengthNumberCount ||
-            this.getConfig().get('passwordStrengthNumberCount');
+        this.passwordStrengthNumberCount = this.strengthParams.passwordStrengthNumberCount ??
+            this.getConfig().get('passwordStrengthNumberCount') ?? null;
 
-        this.passwordStrengthSpecialCharacterCount = this.strengthParams.passwordStrengthSpecialCharacterCount ||
-            this.getConfig().get('passwordStrengthSpecialCharacterCount');
+        this.passwordStrengthSpecialCharacterCount = this.strengthParams.passwordStrengthSpecialCharacterCount ??
+            this.getConfig().get('passwordStrengthSpecialCharacterCount') ?? null;
 
-        this.passwordGenerateLength = this.strengthParams.passwordGenerateLength ||
-            this.getConfig().get('passwordGenerateLength');
+        this.passwordGenerateLength = this.strengthParams.passwordGenerateLength ??
+            this.getConfig().get('passwordGenerateLength') ?? null;
 
-        this.passwordGenerateLetterCount = this.strengthParams.passwordGenerateLetterCount ||
-            this.getConfig().get('passwordGenerateLetterCount');
+        this.passwordGenerateLetterCount = this.strengthParams.passwordGenerateLetterCount ??
+            this.getConfig().get('passwordGenerateLetterCount') ?? null;
 
-        this.passwordGenerateNumberCount = this.strengthParams.passwordGenerateNumberCount ||
-            this.getConfig().get('passwordGenerateNumberCount');
+        this.passwordGenerateNumberCount = this.strengthParams.passwordGenerateNumberCount ??
+            this.getConfig().get('passwordGenerateNumberCount') ?? null;
     }
 
     fetch() {

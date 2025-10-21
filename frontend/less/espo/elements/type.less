@@ -152,7 +152,7 @@ label {
 
 .label-md {
     font-weight: normal;
-    font-size: 100%;
+    font-size: var(--font-size-base);
     padding: var(--1px) var(--7px) var(--2px);
     top: 0;
     line-height: 1.8;
@@ -267,6 +267,13 @@ a.text-default {
         > .far {
             color: var(--text-gray-color);
         }
+    }
+}
+
+a.no-underline {
+    &:hover,
+    &:focus {
+        text-decoration: none;
     }
 }
 

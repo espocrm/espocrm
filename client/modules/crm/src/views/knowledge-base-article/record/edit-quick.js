@@ -26,11 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/knowledge-base-article/record/edit-quick', ['views/record/edit-small'], function (Dep) {
+import EditRecordView from 'views/record/edit';
 
-    return Dep.extend({
+export default class extends EditRecordView {
 
-    	isWide: true,
-        sideView: false,
-    });
-});
+}
