@@ -27,17 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-// Aliases for backward compatibility or patches.
-$map = [
-    'Espo\\Core\\Hooks\\Base' => 'Espo\\Core\\Hook\\Deprecations\\BaseHook',
-    'Doctrine\\DBAL\\Platforms\\Keywords\\MariaDb102Keywords' => 'Espo\\Core\\Utils\\Database\\Dbal\\Platforms\\Keywords\\MariaDb102Keywords',
-];
+namespace Espo\Core\Utils\Database\Dbal\Platforms\Keywords;
 
-/** @phpstan-ignore-next-line  */
-foreach ($map as $alias => $className) {
-    if (!class_exists($className)) {
-        continue;
+use Doctrine\DBAL\Platforms\Keywords\MariaDBKeywords;
+
+/**
+ * 'LEAD' happened to be a reserved words on some environments.
+ */
+final class MariaDb102Keywords extends MariaDBKeywords
+{
+    /** @deprecated */
+    public function getName(): string
+    {
+        return 'MariaDb102';
     }
 
-    class_alias($className, $alias);
+    protected function getKeywords(): array
+    {
+        return [
+            ...parent::getKeywords(),
+            'LEAD',
+        ];
+    }
 }
