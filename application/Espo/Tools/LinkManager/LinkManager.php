@@ -139,8 +139,11 @@ class LinkManager
                 throw new Error("Relation name is too long.");
             }
 
-            if (preg_match('/[^a-z]/', $relationName[0])) {
-                throw new Error("Relation name should start with a lower case letter.");
+            if ($this->nameUtil->linkNameIsBad($relationName)) {
+                $message = "Relation name should contain only letters and numbers, " .
+                    "start with a lower case letter.";
+
+                throw new Error($message);
             }
 
             if ($this->metadata->get(['scopes', ucfirst($relationName)])) {
@@ -178,6 +181,13 @@ class LinkManager
             $this->isNameTooLong($linkForeign)
         ) {
             throw new Error("Link name is too long.");
+        }
+
+        if ($this->nameUtil->linkNameIsBad($link) || $this->nameUtil->linkNameIsBad($linkForeign)) {
+            $message = "Link name should contain only letters and numbers, " .
+                "start with a lower case letter.";
+
+            throw new Error($message);
         }
 
         if (preg_match('/[^a-z]/', $link[0])) {
