@@ -108,10 +108,10 @@ class EmailReminder
     private function getTemplates(CoreEntity $entity): array
     {
         $subjectTpl = $this->templateFileManager
-            ->getTemplate('reminder', 'subject', $entity->getEntityType(), 'Crm');
+            ->getTemplate('reminder', 'subject', $entity->getEntityType());
 
         $bodyTpl = $this->templateFileManager
-            ->getTemplate('reminder', 'body', $entity->getEntityType(), 'Crm');
+            ->getTemplate('reminder', 'body', $entity->getEntityType());
 
         return [$subjectTpl, $bodyTpl];
     }
