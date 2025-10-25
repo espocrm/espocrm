@@ -986,6 +986,10 @@
                     "type": "boolean",
                     "description": "Disables the ability to customize the field in the Entity Manager tool."
                 },
+                "dynamicLogicDisabled": {
+                    "type": "boolean",
+                    "description": "Dynamic logic cannot be customized."
+                },
                 "fieldManagerParamList": {
                     "type": "array",
                     "items": {
