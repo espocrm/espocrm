@@ -7,6 +7,7 @@
 	"module":"Crm",
     "customizable": true,
     "stream": true,
+    "stars": true,
     "importable": true,
     "notifications": true,
     "object": true,
