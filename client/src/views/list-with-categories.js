@@ -902,6 +902,16 @@ class ListWithCategories extends ListView {
 
         Espo.Ui.notify();
     }
+
+    /**
+     * @protected
+     */
+    async actionFullRefresh() {
+        await Promise.all([
+            super.actionFullRefresh(),
+            this.nestedCategoriesCollection?.fetch(),
+        ]);
+    }
 }
 
 export default ListWithCategories;
