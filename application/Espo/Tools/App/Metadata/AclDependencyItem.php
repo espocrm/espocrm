@@ -31,10 +31,14 @@ namespace Espo\Tools\App\Metadata;
 
 class AclDependencyItem
 {
+    /**
+     * @param ?string[] $anyScopeList
+     */
     public function __construct(
         private string $target,
-        private string $scope,
-        private ?string $field
+        private ?string $scope,
+        private ?string $field,
+        private ?array $anyScopeList = null,
     ) {}
 
     /**
@@ -45,7 +49,7 @@ class AclDependencyItem
         return $this->target;
     }
 
-    public function getScope(): string
+    public function getScope(): ?string
     {
         return $this->scope;
     }
@@ -53,5 +57,14 @@ class AclDependencyItem
     public function getField(): ?string
     {
         return $this->field;
+    }
+
+    /**
+     * @return ?string[]
+     * @since 9.2.5
+     */
+    public function getAnyScopeList(): ?array
+    {
+        return $this->anyScopeList;
     }
 }

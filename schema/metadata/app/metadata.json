@@ -44,21 +44,21 @@
         },
         "aclDependencies": {
             "type": "object",
-            "description": "Rules making a metadata sections available for a user when they don't have access to a scope.",
+            "description": "Rules making a metadata sections available for the user when they don't have access to the scope.",
             "additionalProperties": {
                 "description": "A metadata path, items are separated by dots.",
                 "properties": {
                     "scope": {
                         "type": "string",
-                        "description": "If a user have access to the scope, they will have access to a metadata section defined by a key."
+                        "description": "If the user has access to the scope, they will have access to the metadata section defined by the key."
                     },
                     "field": {
                         "type": "string",
-                        "description": "If a user have access to the field (of a scope), they will have access to a metadata section defined by a key."
+                        "description": "If the user has access to the field (of the scope), they will have access to the metadata section defined by the key."
                     },
                     "anyScopeList": {
                         "type": "array",
-                        "description": "Not supported. TBD.",
+                        "description": "If the user has access to any of the list scopes, they will have access to the metadata section defined by the key. As of v9.2.5.",
                         "items": {
                             "type": "string"
                         }

@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Tools\App;
 
+use Espo\Core\Utils\Metadata;
 use Espo\Tools\App\MetadataService;
 use tests\integration\Core\BaseTestCase;
 
@@ -36,6 +37,20 @@ class MetadataTest extends BaseTestCase
 {
     public function testAclDependency(): void
     {
+        $metadata = $this->getContainer()->getByClass(Metadata::class);
+
+        $metadata->set('app', 'metadata', [
+            'aclDependencies' => [
+                'entityDefs.Campaign' => [
+                    'anyScopeList' => ['Opportunity'],
+                ],
+            ],
+        ]);
+
+        $metadata->save();
+
+        $this->reCreateApplication();
+
         $this->createUser('tester', [
             'data' => [
                 'Lead' => false,
@@ -55,6 +70,7 @@ class MetadataTest extends BaseTestCase
         $data = $this->getInjectableFactory()->create(MetadataService::class)->getDataForFrontend();
 
         $this->assertIsArray($data?->entityDefs?->Lead?->fields?->source?->options);
-        $this->assertNull($data->entityDefs->Lead->fields?->name ?? null);
+        $this->assertNull($data->entityDefs->Lead->fields->name ?? null);
+        $this->assertNotNull($data?->entityDefs->Campaign ?? null);
     }
 }
