@@ -83,7 +83,7 @@
     "fields": {
         "date": {
             "type": "date",
-            "disabled": true
+            "utility": true
         }
     },
     "validationList": [

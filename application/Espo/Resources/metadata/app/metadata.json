@@ -51,6 +51,7 @@
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\Fields",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\FilterFields",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\DeleteIdField",
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\DisableAssignedUser",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\StreamUpdatedAtField",
         "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\LogicDefsBc"
     ]

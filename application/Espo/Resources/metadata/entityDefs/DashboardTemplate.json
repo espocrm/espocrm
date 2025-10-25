@@ -13,7 +13,7 @@
         },
         "dashletsOptions": {
             "type": "jsonObject",
-            "disabled": true
+            "utility": true
         },
         "createdAt": {
             "type": "datetime",
