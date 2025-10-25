@@ -58,7 +58,7 @@
                     },
                     "anyScopeList": {
                         "type": "array",
-                        "description": "If the user has access to any of the list scopes, they will have access to the metadata section defined by the key. As of v9.2.5.",
+                        "description": "If the user has access to any of the listed scopes, they will have access to the metadata section defined by the key. As of v9.2.5.",
                         "items": {
                             "type": "string"
                         }
