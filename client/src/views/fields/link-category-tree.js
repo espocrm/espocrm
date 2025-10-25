@@ -34,6 +34,11 @@ class LinkCategoryTreeFieldView extends LinkFieldView {
     autocompleteDisabled = false
 
     getUrl() {
+        if (this.getMetadata().get(`scopes.${this.entityType}.type`) === 'CategoryTree') {
+            // Can be used for the 'parent' field of the category entity type.
+            return super.getUrl();
+        }
+
         const id = this.model.get(this.idName);
 
         if (!id) {

@@ -178,20 +178,32 @@ class MetadataService
         foreach ($this->aclDependencyProvider->get() as $dependencyItem) {
             $aclScope = $dependencyItem->getScope();
             $aclField = $dependencyItem->getField();
+            $anyScopeList = $dependencyItem->getAnyScopeList();
 
-            if (!$aclScope) {
-                continue;
+            if ($anyScopeList) {
+                $skip = true;
+
+                foreach ($anyScopeList as $itemScope) {
+                    if ($this->acl->tryCheck($itemScope)) {
+                        $skip = false;
+
+                        break;
+                    }
+                }
+
+                if ($skip) {
+                    continue;
+                }
             }
 
-            if (!$this->acl->tryCheck($aclScope)) {
-                continue;
-            }
+            if ($aclScope) {
+                if (!$this->acl->tryCheck($aclScope)) {
+                    continue;
+                }
 
-            if (
-                $aclField &&
-                in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))
-            ) {
-                continue;
+                if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
+                    continue;
+                }
             }
 
             $targetArr = explode('.', $dependencyItem->getTarget());

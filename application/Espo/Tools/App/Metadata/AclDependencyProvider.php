@@ -95,15 +95,13 @@ class AclDependencyProvider
         $data = [];
 
         foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
+            $anyScopeList = $item['anyScopeList'] ?? null;
             $scope = $item['scope'] ?? null;
             $field = $item['field'] ?? null;
 
-            if (!$scope) {
-                continue;
-            }
-
             $data[] = [
                 'target' => $target,
+                'anyScopeList' => $anyScopeList,
                 'scope' => $scope,
                 'field' => $field,
             ];
@@ -196,8 +194,14 @@ class AclDependencyProvider
             $target = $rawItem['target'] ?? null;
             $scope = $rawItem['scope'] ?? null;
             $field = $rawItem['field'] ?? null;
+            $anyScopeList = $rawItem['anyScopeList'] ?? null;
 
-            $list[] = new AclDependencyItem($target, $scope, $field);
+            $list[] = new AclDependencyItem(
+                target: $target,
+                scope: $scope,
+                field: $field,
+                anyScopeList: $anyScopeList,
+            );
         }
 
         return $list;
