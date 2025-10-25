@@ -110,7 +110,10 @@ class MassUpdateModalView extends ModalView {
                 this.fieldList = [];
 
                 layout.forEach(field => {
-                    if (forbiddenList.includes(field)) {
+                    if (
+                        forbiddenList.includes(field) ||
+                        this.getMetadata().get(`entityDefs.${this.entityType}.fields.${field}.disabled`)
+                    ) {
                         return;
                     }
 
