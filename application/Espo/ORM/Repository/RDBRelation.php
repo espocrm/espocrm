@@ -96,6 +96,8 @@ class RDBRelation
     }
 
     /**
+     * Create a select builder.
+     *
      * @return Builder<TEntity>
      *
      * @since 9.2.5

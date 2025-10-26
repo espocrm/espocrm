@@ -234,7 +234,7 @@ class RDBRepository implements Repository
      */
     public function find(): EntityCollection|SthCollection
     {
-        return $this->createSelectBuilder()->find();
+        return $this->createBuilder()->find();
     }
 
     /**
@@ -273,7 +273,7 @@ class RDBRepository implements Repository
      */
     public function count(): int
     {
-        return $this->createSelectBuilder()->count();
+        return $this->createBuilder()->count();
     }
 
     /**
@@ -283,7 +283,7 @@ class RDBRepository implements Repository
      */
     public function max(string $attribute)
     {
-        return $this->createSelectBuilder()->max($attribute);
+        return $this->createBuilder()->max($attribute);
     }
 
     /**
@@ -293,7 +293,7 @@ class RDBRepository implements Repository
      */
     public function min(string $attribute)
     {
-        return $this->createSelectBuilder()->min($attribute);
+        return $this->createBuilder()->min($attribute);
     }
 
     /**
@@ -303,7 +303,7 @@ class RDBRepository implements Repository
      */
     public function sum(string $attribute)
     {
-        return $this->createSelectBuilder()->sum($attribute);
+        return $this->createBuilder()->sum($attribute);
     }
 
     /**
@@ -334,7 +334,7 @@ class RDBRepository implements Repository
      */
     public function join($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->join($target, $alias, $conditions);
+        return $this->createBuilder()->join($target, $alias, $conditions);
     }
 
     /**
@@ -348,7 +348,7 @@ class RDBRepository implements Repository
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->leftJoin($target, $alias, $conditions);
+        return $this->createBuilder()->leftJoin($target, $alias, $conditions);
     }
 
     /**
@@ -358,7 +358,7 @@ class RDBRepository implements Repository
      */
     public function distinct(): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->distinct();
+        return $this->createBuilder()->distinct();
     }
 
     /**
@@ -368,7 +368,7 @@ class RDBRepository implements Repository
      */
     public function forUpdate(): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->forUpdate();
+        return $this->createBuilder()->forUpdate();
     }
 
     /**
@@ -378,7 +378,7 @@ class RDBRepository implements Repository
      */
     public function sth(): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->sth();
+        return $this->createBuilder()->sth();
     }
 
     /**
@@ -395,7 +395,7 @@ class RDBRepository implements Repository
      */
     public function where($clause = [], $value = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->where($clause, $value);
+        return $this->createBuilder()->where($clause, $value);
     }
 
     /**
@@ -412,7 +412,7 @@ class RDBRepository implements Repository
      */
     public function having($clause = [], $value = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->having($clause, $value);
+        return $this->createBuilder()->having($clause, $value);
     }
 
     /**
@@ -432,7 +432,7 @@ class RDBRepository implements Repository
      */
     public function order($orderBy = Attribute::ID, $direction = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->order($orderBy, $direction);
+        return $this->createBuilder()->order($orderBy, $direction);
     }
 
     /**
@@ -442,7 +442,7 @@ class RDBRepository implements Repository
      */
     public function limit(?int $offset = null, ?int $limit = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->limit($offset, $limit);
+        return $this->createBuilder()->limit($offset, $limit);
     }
 
     /**
@@ -462,7 +462,7 @@ class RDBRepository implements Repository
      */
     public function select($select = [], ?string $alias = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->select($select, $alias);
+        return $this->createBuilder()->select($select, $alias);
     }
 
     /**
@@ -479,20 +479,35 @@ class RDBRepository implements Repository
      */
     public function group($groupBy): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->group($groupBy);
+        return $this->createBuilder()->group($groupBy);
     }
 
     /**
      * Create a select builder.
      *
      * @return RDBSelectBuilder<TEntity>
+     *
+     * @since 9.2.5
      */
-    protected function createSelectBuilder(): RDBSelectBuilder
+    public function createBuilder(): RDBSelectBuilder
     {
         /** @var RDBSelectBuilder<TEntity> $builder */
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType);
 
         return $builder;
+    }
+
+    /**
+     * Create a select builder.
+     *
+     * @return RDBSelectBuilder<TEntity>
+     *
+     * @deprecated Since v9.2.5. Use `createBuilder` instead.
+     * @todo Remove in v10.0.
+     */
+    protected function createSelectBuilder(): RDBSelectBuilder
+    {
+        return $this->createBuilder();
     }
 
     /**
