@@ -61,6 +61,12 @@ class RelationConverter
         RelationParam::INDEXES,
     ];
 
+    /** @var string[] */
+    private $manyMergeParams = [
+        RelationParam::ORDER_BY,
+        RelationParam::ORDER,
+    ];
+
     public function __construct(
         private Metadata $metadata,
         private InjectableFactory $injectableFactory,
@@ -112,7 +118,7 @@ class RelationConverter
         $raw = $convertedEntityDefs->toAssoc();
 
         if (isset($raw[EntityParam::RELATIONS][$name])) {
-            $this->mergeParams($raw[EntityParam::RELATIONS][$name], $params, $foreignParams ?? []);
+            $this->mergeParams($raw[EntityParam::RELATIONS][$name], $params, $foreignParams ?? [], $linkType);
             $this->correct($raw[EntityParam::RELATIONS][$name]);
         }
 
@@ -172,9 +178,18 @@ class RelationConverter
      * @param array<string, mixed> $params
      * @param array<string, mixed> $foreignParams
      */
-    private function mergeParams(array &$relationDefs, array $params, array $foreignParams): void
+    private function mergeParams(array &$relationDefs, array $params, array $foreignParams, string $linkType): void
     {
-        foreach ($this->mergeParams as $name) {
+        $mergeParams = $this->mergeParams;
+
+        if (
+            $linkType === RelationType::HAS_MANY ||
+            $linkType === RelationType::HAS_CHILDREN
+        ) {
+            $mergeParams = array_merge($mergeParams, $this->manyMergeParams);
+        }
+
+        foreach ($mergeParams as $name) {
             $additionalParam = $this->getMergedParam($name, $params, $foreignParams);
 
             if ($additionalParam === null) {
@@ -227,6 +242,13 @@ class RelationConverter
      */
     private function correct(array &$relationDefs): void
     {
+        if (
+            isset($relationDefs[RelationParam::ORDER]) &&
+            is_string($relationDefs[RelationParam::ORDER])
+        ) {
+            $relationDefs[RelationParam::ORDER] = strtoupper($relationDefs[RelationParam::ORDER]);
+        }
+
         if (!isset($relationDefs[RelationParam::ADDITIONAL_COLUMNS])) {
             return;
         }

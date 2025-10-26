@@ -32,12 +32,14 @@ namespace Espo\ORM\Relation;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Defs\Defs;
 use Espo\ORM\Defs\Params\RelationParam;
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Mapper\RDBMapper;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Repository\RDBRelationSelectBuilder;
 use Espo\ORM\Type\RelationType;
 use LogicException;
 use RuntimeException;
@@ -293,22 +295,11 @@ class RDBRelations implements Relations
             ->getEntity($this->getEntity()->getEntityType())
             ->getRelation($relation);
 
-        $orderBy = null;
-        $order = null;
+        $builder = $this->entityManager
+            ->getRelation($this->getEntity(), $relation)
+            ->createBuilder();
 
-        if ($relationDefs->getParam('orderBy')) {
-            $orderBy = $relationDefs->getParam('orderBy');
-
-            if ($relationDefs->getParam('order')) {
-                $order = strtoupper($relationDefs->getParam('order')) === Order::DESC ? Order::DESC : Order::ASC;
-            }
-        }
-
-        $builder = $this->entityManager->getRelation($this->getEntity(), $relation);
-
-        if ($orderBy) {
-            $builder->order($orderBy, $order);
-        }
+        $this->applyOrder($relationDefs, $builder);
 
         $collection = $builder->find();
 
@@ -397,5 +388,22 @@ class RDBRelations implements Relations
         $foreignEntity->setAsPartiallyLoaded();
 
         return $foreignEntity;
+    }
+
+    private function applyOrder(RelationDefs $relationDefs, RDBRelationSelectBuilder $builder): void
+    {
+        $orderBy = $relationDefs->getParam(RelationParam::ORDER_BY);
+
+        if (!$orderBy) {
+            return;
+        }
+
+        $order = $relationDefs->getParam(RelationParam::ORDER);
+
+        if ($order !== null) {
+            $order = strtoupper($order) === Order::DESC ? Order::DESC : Order::ASC;
+        }
+
+        $builder->order($orderBy, $order);
     }
 }

@@ -96,6 +96,16 @@ class RDBRelation
     }
 
     /**
+     * @return Builder<TEntity>
+     *
+     * @since 9.2.5
+     */
+    public function createBuilder(): Builder
+    {
+        return $this->createSelectBuilder();
+    }
+
+    /**
      * Create a select builder.
      *
      * @return Builder<TEntity>

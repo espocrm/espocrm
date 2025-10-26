@@ -93,4 +93,18 @@ class RelationParam
      * Deferred load.
      */
     public const DEFERRED_LOAD = 'deferredLoad';
+
+    /**
+     * Default order by. Applied on the entity level.
+     *
+     * @since 9.2.5
+     */
+    public const ORDER_BY = 'orderBy';
+
+    /**
+     * Default order. Applied on the entity level.
+     *
+     * @since 9.2.5
+     */
+    public const ORDER = 'order';
 }

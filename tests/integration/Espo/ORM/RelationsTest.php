@@ -29,8 +29,10 @@
 
 namespace tests\integration\Espo\ORM;
 
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Task;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\EntityCollection;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Opportunity;
@@ -231,5 +233,72 @@ class RelationsTest extends BaseTestCase
         $em->refreshEntity($lead2);
 
         $this->assertEquals(null, $lead2->get('createdAccountId'));
+    }
+
+    public function testOrder(): void
+    {
+        $em = $this->getEntityManager();
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'a1']);
+        $account2 = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'a2']);
+
+        $contact = $em->createEntity(Contact::ENTITY_TYPE);
+
+        $this->assertInstanceOf(Contact::class, $contact);
+
+        $em->getRelation($contact, 'accounts')->relate($account1);
+        $em->getRelation($contact, 'accounts')->relate($account2);
+
+        //
+
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', Contact::ENTITY_TYPE, [
+            'links' => [
+                'accounts' => [
+                    RelationParam::ORDER_BY => 'name',
+                    RelationParam::ORDER => 'desc',
+                ]
+            ]
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $contact = $em->getRDBRepositoryByClass(Contact::class)->getById($contact->getId());
+        $this->assertNotNull($contact);
+
+        $accounts = $contact->getAccounts();
+
+        $this->assertCount(2, $accounts);
+        $this->assertEquals('a2', $accounts[0]->getName());
+        $this->assertEquals('a1', $accounts[1]->getName());
+
+        //
+
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', Contact::ENTITY_TYPE, [
+            'links' => [
+                'accounts' => [
+                    RelationParam::ORDER_BY => 'name',
+                    RelationParam::ORDER => 'asc',
+                ]
+            ]
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $contact = $em->getRDBRepositoryByClass(Contact::class)->getById($contact->getId());
+        $this->assertNotNull($contact);
+
+        $accounts = $contact->getAccounts();
+
+        $this->assertCount(2, $accounts);
+        $this->assertEquals('a1', $accounts[0]->getName());
+        $this->assertEquals('a2', $accounts[1]->getName());
     }
 }
