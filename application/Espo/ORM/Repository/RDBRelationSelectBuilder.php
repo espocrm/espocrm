@@ -53,7 +53,7 @@ use InvalidArgumentException;
 /**
  * Builds select parameters for related records for RDB repository.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 class RDBRelationSelectBuilder
 {
