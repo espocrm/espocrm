@@ -85,8 +85,10 @@ class Currency implements FieldConverter
 
             $defaultValue = $fieldDefs->getParam(AttributeParam::DEFAULT);
 
-            if ($defaultValue !== null) {
-                $amountDefs = $amountDefs->withParam(AttributeParam::DEFAULT, (string) $defaultValue);
+            if (is_int($defaultValue) || is_float($defaultValue)) {
+                $defaultValue = number_format($defaultValue, $scale, '.', '');
+
+                $amountDefs = $amountDefs->withParam(AttributeParam::DEFAULT, $defaultValue);
             }
         }
 
