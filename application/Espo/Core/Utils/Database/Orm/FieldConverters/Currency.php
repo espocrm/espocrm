@@ -82,6 +82,12 @@ class Currency implements FieldConverter
                 ->withDbType($dbType)
                 ->withParam(AttributeParam::PRECISION, $precision)
                 ->withParam(AttributeParam::SCALE, $scale);
+
+            $defaultValue = $fieldDefs->getParam(AttributeParam::DEFAULT);
+
+            if ($defaultValue !== null) {
+                $amountDefs = $amountDefs->withParam(AttributeParam::DEFAULT, (string) $defaultValue);
+            }
         }
 
         if ($fieldDefs->isNotStorable()) {
