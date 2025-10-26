@@ -51,7 +51,7 @@ use RuntimeException;
 /**
  * An access point for a specific relation of a record.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 class RDBRelation
 {
