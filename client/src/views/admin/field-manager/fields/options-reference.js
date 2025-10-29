@@ -44,8 +44,8 @@ export default class extends EnumFieldView {
         const entityTypeList = Object.keys(this.getMetadata().get(['entityDefs']))
             .filter(item => this.getMetadata().get(['scopes', item, 'object']))
             .sort((s1, s2) => {
-                return this.getLanguage().translate(s1, 'scopesName')
-                    .localeCompare(this.getLanguage().translate(s2, 'scopesName'));
+                return this.getLanguage().translate(s1, 'scopeNames')
+                    .localeCompare(this.getLanguage().translate(s2, 'scopeNames'));
             });
 
         this.translatedOptions = {};
