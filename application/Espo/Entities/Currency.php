@@ -29,7 +29,11 @@
 
 namespace Espo\Entities;
 
-class Currency extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Currency extends Entity
 {
     public const ENTITY_TYPE = 'Currency';
+
+    public const FIELD_RATE = 'rate';
 }

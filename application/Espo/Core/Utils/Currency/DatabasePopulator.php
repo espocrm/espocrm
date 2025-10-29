@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Utils\Currency;
 
+use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Entities\Currency;
 use Espo\ORM\EntityManager;
-use Espo\Core\Utils\Config;
 use Espo\ORM\Name\Attribute;
 
 /**
@@ -39,22 +39,26 @@ use Espo\ORM\Name\Attribute;
  */
 class DatabasePopulator
 {
+    private const PRECISION = 5;
+
     public function __construct(
-        private Config $config,
-        private EntityManager $entityManager)
-    {}
+        private EntityManager $entityManager,
+        private ConfigDataProvider $configDataProvider,
+    ) {}
 
     public function process(): void
     {
-        $defaultCurrency = $this->config->get('defaultCurrency');
-        $baseCurrency = $this->config->get('baseCurrency');
-        $currencyRates = $this->config->get('currencyRates');
+        $defaultCurrency = $this->configDataProvider->getDefaultCurrency();
+        $baseCurrency = $this->configDataProvider->getBaseCurrency();
+        $currencyRates = $this->configDataProvider->getCurrencyRates()->toAssoc();
 
         if ($defaultCurrency !== $baseCurrency) {
             $currencyRates = $this->exchangeRates($baseCurrency, $defaultCurrency, $currencyRates);
         }
 
         $currencyRates[$defaultCurrency] = 1.00;
+
+        $this->entityManager->getTransactionManager()->start();
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
@@ -66,9 +70,11 @@ class DatabasePopulator
         foreach ($currencyRates as $currencyName => $rate) {
             $this->entityManager->createEntity(Currency::ENTITY_TYPE, [
                 Attribute::ID => $currencyName,
-                'rate' => $rate,
+                Currency::FIELD_RATE => $rate,
             ]);
         }
+
+        $this->entityManager->getTransactionManager()->commit();
     }
 
     /**
@@ -77,8 +83,7 @@ class DatabasePopulator
      */
     private function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates): array
     {
-        $precision = 5;
-        $defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], $precision);
+        $defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], self::PRECISION);
 
         $exchangedRates = [];
         $exchangedRates[$baseCurrency] = $defaultCurrencyRate;
@@ -86,7 +91,7 @@ class DatabasePopulator
         unset($currencyRates[$baseCurrency], $currencyRates[$defaultCurrency]);
 
         foreach ($currencyRates as $currencyName => $rate) {
-            $exchangedRates[$currencyName] = round($rate * $defaultCurrencyRate, $precision);
+            $exchangedRates[$currencyName] = round($rate * $defaultCurrencyRate, self::PRECISION);
         }
 
         return $exchangedRates;
