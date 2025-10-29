@@ -41,6 +41,7 @@ class InternalConfigHelper
         'version',
         'latestVersion',
         'latestExtensionVersions',
+        'currencyRates',
     ];
 
     public function __construct(private Config $config, private Metadata $metadata)
