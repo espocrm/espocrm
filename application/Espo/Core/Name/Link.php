@@ -35,4 +35,5 @@ namespace Espo\Core\Name;
 class Link
 {
     public const EMAIL_ADDRESSES = 'emailAddresses';
+    public const PHONE_NUMBERS = 'phoneNumbers';
 }

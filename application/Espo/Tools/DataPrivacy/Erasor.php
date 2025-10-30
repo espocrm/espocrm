@@ -36,11 +36,15 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker;
 use Espo\Core\FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker;
 use Espo\Core\Name\Field;
+use Espo\Core\Name\Link;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Di;
 use Espo\Entities\Attachment;
+use Espo\Entities\EmailAddress;
+use Espo\Entities\PhoneNumber;
+use Traversable;
 
 class Erasor implements
 
@@ -63,7 +67,7 @@ class Erasor implements
     public function __construct(
         private RecordServiceContainer $recordServiceContainer,
         private EmailAddressAccessChecker $emailAddressAccessChecker,
-        private PhoneNumberAccessChecker $phoneNumberAccessChecker
+        private PhoneNumberAccessChecker $phoneNumberAccessChecker,
     ) {}
 
     /**
@@ -107,15 +111,18 @@ class Erasor implements
             $attributeList = $fieldUtil->getActualAttributeList($entityType, $field);
 
             if ($type === FieldType::EMAIL) {
-                $emailAddressList = $entity->get('emailAddresses');
+                /** @var Traversable<int, EmailAddress> $emailAddresses */
+                $emailAddresses = $this->entityManager
+                    ->getRelation($entity, Link::EMAIL_ADDRESSES)
+                    ->find();
 
-                foreach ($emailAddressList as $emailAddress) {
+                foreach ($emailAddresses as $emailAddress) {
                     if (
-                        $this->emailAddressAccessChecker
-                            ->checkEdit($this->user, $emailAddress, $entity)
+                        $this->emailAddressAccessChecker->checkEdit($this->user, $emailAddress, $entity)
                     ) {
                         $emailAddress->set(Field::NAME, 'ERASED:' . $emailAddress->getId());
-                        $emailAddress->set('optOut', true);
+                        $emailAddress->setOptedOut(true);
+
                         $this->entityManager->saveEntity($emailAddress);
                     }
                 }
@@ -124,15 +131,20 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            } else if ($type === FieldType::PHONE) {
-                $phoneNumberList = $entity->get('phoneNumbers');
+            }
 
-                foreach ($phoneNumberList as $phoneNumber) {
+            if ($type === FieldType::PHONE) {
+                /** @var Traversable<int, PhoneNumber> $phoneNumbers */
+                $phoneNumbers = $this->entityManager
+                    ->getRelation($entity, Link::PHONE_NUMBERS)
+                    ->find();
+
+                foreach ($phoneNumbers as $phoneNumber) {
                     if (
-                        $this->phoneNumberAccessChecker
-                            ->checkEdit($this->user, $phoneNumber, $entity)
+                        $this->phoneNumberAccessChecker->checkEdit($this->user, $phoneNumber, $entity)
                     ) {
                         $phoneNumber->set(Field::NAME, 'ERASED:' . $phoneNumber->getId());
+                        $phoneNumber->setOptedOut(true);
 
                         $this->entityManager->saveEntity($phoneNumber);
                     }
@@ -142,7 +154,9 @@ class Erasor implements
                 $entity->clear($field . 'Data');
 
                 continue;
-            } else if ($type === FieldType::FILE || $type === FieldType::IMAGE) {
+            }
+
+            if ($type === FieldType::FILE || $type === FieldType::IMAGE) {
                 $attachmentId = $entity->get($field . 'Id');
 
                 if ($attachmentId) {
