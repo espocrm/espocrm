@@ -216,6 +216,10 @@ class ConditionChecker
 
         if ($type === Type::GreaterThan) {
             if (is_string($setValue) || is_string($value)) {
+                if (!(is_string($setValue) && is_string($value))) {
+                    return false;
+                }
+
                 return $this->compare($setValue, $value) > 0;
             }
 
@@ -224,6 +228,10 @@ class ConditionChecker
 
         if ($type === Type::LessThan) {
             if (is_string($setValue) || is_string($value)) {
+                if (!(is_string($setValue) && is_string($value))) {
+                    return false;
+                }
+
                 return $this->compare($setValue, $value) < 0;
             }
 
@@ -232,6 +240,10 @@ class ConditionChecker
 
         if ($type === Type::GreaterThanOrEquals) {
             if (is_string($setValue) || is_string($value)) {
+                if (!(is_string($setValue) && is_string($value))) {
+                    return false;
+                }
+
                 return $this->compare($setValue, $value) >= 0;
             }
 
@@ -240,6 +252,10 @@ class ConditionChecker
 
         if ($type === Type::LessThanOrEquals) {
             if (is_string($setValue) || is_string($value)) {
+                if (!(is_string($setValue) && is_string($value))) {
+                    return false;
+                }
+
                 return $this->compare($setValue, $value) <= 0;
             }
 
