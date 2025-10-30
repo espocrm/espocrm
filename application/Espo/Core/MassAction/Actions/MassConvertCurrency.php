@@ -48,6 +48,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Tools\Currency\Conversion\EntityConverterFactory;
 use RuntimeException;
+use Throwable;
 
 /**
  * @noinspection PhpUnused
@@ -123,7 +124,7 @@ class MassConvertCurrency implements MassAction
 
             try {
                 $converter->convert($entity, $targetCurrency, $rates);
-            } catch (Forbidden $e) {
+            } catch (Forbidden|BadRequest $e) {
                 $this->log->info("Could not convert currency for {id}.", [
                     'id' => $entity->getId(),
                     'exception' => $e,
