@@ -1098,6 +1098,10 @@ class KanbanRecordView extends ListRecordView {
      * @param {Record} o Options.
      */
     onChangeGroup(model, value, o) {
+        if (o.action === 'fetch') {
+            return;
+        }
+
         const id = model.id;
         const group = model.get(this.statusField);
 
