@@ -27,46 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\RecordGroup;
+namespace Espo\Core\Formula\Utils;
 
-use Espo\Core\Formula\EvaluatedArgumentList;
-use Espo\Core\Formula\Exceptions\BadArgumentType;
-use Espo\Core\Formula\Exceptions\TooFewArguments;
-use Espo\Core\Formula\Func;
-use Espo\Core\Formula\Utils\EntityUtil;
-use Espo\ORM\EntityManager;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
-class DeleteType implements Func
+/**
+ * @internal
+ * @since 9.3.0
+ */
+class EntityUtil
 {
-    public function __construct(private EntityManager $entityManager) {}
-
-    public function process(EvaluatedArgumentList $arguments): mixed
+    /**
+     * @throws NotAllowedUsage
+     */
+    public static function checkUpdateAccess(Entity $entity): void
     {
-        if (count($arguments) < 2) {
-            throw TooFewArguments::create(2);
+        if ($entity instanceof User) {
+            $restrictedTypeList = self::getUserRestrictedTypeList();
+
+            if (
+                $entity->isAttributeChanged(User::ATTR_TYPE) &&
+                (
+                    in_array($entity->getFetched(User::ATTR_TYPE), $restrictedTypeList) ||
+                    in_array($entity->getType(), $restrictedTypeList)
+                )
+            ) {
+                throw new NotAllowedUsage("Cannot change user type.");
+            }
         }
+    }
 
-        $entityType = $arguments[0];
-        $id = $arguments[1];
-
-        if (!is_string($entityType)) {
-            throw BadArgumentType::create(1, 'string');
+    /**
+     * @throws NotAllowedUsage
+     */
+    public static function checkRemoveAccess(Entity $entity): void
+    {
+        if ($entity instanceof User) {
+            if (in_array($entity->getType(), self::getUserRestrictedTypeList())) {
+                throw new NotAllowedUsage("Cannot remove the user.");
+            }
         }
+    }
 
-        if (!is_string($id)) {
-            throw BadArgumentType::create(2, 'string');
-        }
-
-        $entity = $this->entityManager->getEntityById($entityType, $id);
-
-        if (!$entity) {
-            return null;
-        }
-
-        EntityUtil::checkRemoveAccess($entity);
-
-        $this->entityManager->removeEntity($entity);
-
-        return null;
+    /**
+     * @return string[]
+     */
+    private static function getUserRestrictedTypeList(): array
+    {
+        return [
+            User::TYPE_SUPER_ADMIN,
+            User::TYPE_SYSTEM,
+        ];
     }
 }

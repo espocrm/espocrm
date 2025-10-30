@@ -30,7 +30,9 @@
 namespace Espo\Core\Formula\Functions;
 
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\ORM\Name\Attribute;
+use stdClass;
 
 class SetAttributeType extends Base
 {
@@ -38,7 +40,7 @@ class SetAttributeType extends Base
      * @return mixed
      * @throws Error
      */
-    public function process(\stdClass $item)
+    public function process(stdClass $item)
     {
         if (count($item->value) < 2) {
             throw new Error("SetAttribute: Too few arguments.");
@@ -56,7 +58,11 @@ class SetAttributeType extends Base
 
         $value = $this->evaluate($item->value[1]);
 
-        $this->getEntity()->set($name, $value);
+        $entity = $this->getEntity();
+
+        $entity->set($name, $value);
+
+        EntityUtil::checkUpdateAccess($entity);
 
         return $value;
     }
