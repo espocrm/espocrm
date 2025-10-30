@@ -34,7 +34,7 @@
         </div>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><h4 class="panel-title">{{translate 'Properties' scope='Import'}}</h4></div>
+        <div class="panel-heading"><h4 class="panel-title">{{translate 'Parameters' scope='Import'}}</h4></div>
         <div class="panel-body panel-body-form">
             <div id="import-properties">
                 <div class="row">
