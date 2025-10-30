@@ -298,17 +298,11 @@ class IntFieldView extends BaseFieldView {
      * @return {number|null}
      */
     getMinValue() {
-        let minValue = this.model.getFieldParam(this.name, 'min') ?? null;
-
-        if (minValue != null) {
-            minValue = null;
-        }
-
         if ('min' in this.params) {
-            minValue = this.params.min;
+            return this.params.min;
         }
-
-        return minValue;
+        
+        return this.model.getFieldParam(this.name, 'min') ?? null;
     }
 
     // noinspection JSUnusedGlobalSymbols
