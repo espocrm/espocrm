@@ -1295,4 +1295,196 @@ class CheckerTest extends TestCase
 
         $this->assertTrue($checker->check($item));
     }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDecimalGreaterThan(): void
+    {
+        $map = [
+            'value' => '1.0',
+        ];
+
+        $checker = new ConditionChecker($this->initEntity($map));
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'greaterThan',
+                        'attribute' => 'value',
+                        'value' => '0.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'greaterThan',
+                        'attribute' => 'value',
+                        'value' => '1.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'greaterThan',
+                        'attribute' => 'value',
+                        'value' => '2.0',
+                    ]
+                ])
+            )
+        );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDecimalLessThan(): void
+    {
+        $map = [
+            'value' => '1.0',
+        ];
+
+        $checker = new ConditionChecker($this->initEntity($map));
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'lessThan',
+                        'attribute' => 'value',
+                        'value' => '2.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'lessThan',
+                        'attribute' => 'value',
+                        'value' => '1.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'lessThan',
+                        'attribute' => 'value',
+                        'value' => '0.0',
+                    ]
+                ])
+            )
+        );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDecimalGreaterThanOrEquals(): void
+    {
+        $map = [
+            'value' => '1.0',
+        ];
+
+        $checker = new ConditionChecker($this->initEntity($map));
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'greaterThanOrEquals',
+                        'attribute' => 'value',
+                        'value' => '0.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'greaterThanOrEquals',
+                        'attribute' => 'value',
+                        'value' => '1.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'greaterThanOrEquals',
+                        'attribute' => 'value',
+                        'value' => '2.0',
+                    ]
+                ])
+            )
+        );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDecimalLessThanOrEquals(): void
+    {
+        $map = [
+            'value' => '1',
+        ];
+
+        $checker = new ConditionChecker($this->initEntity($map));
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'lessThanOrEquals',
+                        'attribute' => 'value',
+                        'value' => '2.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertTrue(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'lessThanOrEquals',
+                        'attribute' => 'value',
+                        'value' => '1.0',
+                    ]
+                ])
+            )
+        );
+
+        $this->assertFalse(
+            $checker->check(
+                Item::fromGroupDefinition([
+                    (object) [
+                        'type' => 'lessThanOrEquals',
+                        'attribute' => 'value',
+                        'value' => '0.0',
+                    ]
+                ])
+            )
+        );
+    }
 }

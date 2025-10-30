@@ -1,0 +1,60 @@
+{
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "default",
+            "type": "decimal"
+        },
+        {
+            "name": "min",
+            "type": "decimal"
+        },
+        {
+            "name": "max",
+            "type": "decimal"
+        },
+        {
+            "name": "decimalPlaces",
+            "type": "int"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
+            "name": "precision",
+            "type": "int",
+            "hidden": true
+        },
+        {
+            "name": "scale",
+            "type": "int",
+            "hidden": true
+        }
+    ],
+    "filter": true,
+    "validationList": [
+        "required",
+        "min",
+        "max"
+    ],
+    "mandatoryValidationList": [
+        "valid"
+    ],
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\Decimal"
+    ],
+    "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\Decimal"
+}

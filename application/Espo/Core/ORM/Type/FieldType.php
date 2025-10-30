@@ -64,4 +64,9 @@ class FieldType
     public const JSON_ARRAY = 'jsonArray';
     public const JSON_OBJECT = 'jsonObject';
     public const PASSWORD = 'password';
+
+    /**
+     * @since 9.3.0
+     */
+    public const DECIMAL = 'decimal';
 }

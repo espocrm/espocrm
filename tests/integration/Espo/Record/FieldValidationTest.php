@@ -32,6 +32,7 @@ namespace tests\integration\Espo\Record;
 use Espo\Core\Application;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\FieldValidation\Type;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
@@ -573,6 +574,147 @@ class FieldValidationTest extends BaseTestCase
             $isThrown = true;
         }
 
+        $this->assertFalse($isThrown);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDecimal(): void
+    {
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', 'Account', [
+            'fields' => [
+                'test' => [
+                    'type' => FieldType::DECIMAL,
+                    'min' => '-1.0',
+                    'max' => '100.0',
+                ]
+            ],
+        ]);
+        $metadata->save();
+
+        $this->getDataManager()->rebuild();
+
+        $this->reCreateApplication();
+
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Account::class);
+
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-0',
+                'test' => null,
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertFalse($isThrown);
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-1',
+                'test' => '10.0',
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertFalse($isThrown);
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-2',
+                'test' => '-1.0',
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertFalse($isThrown);
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-3',
+                'test' => '100.0',
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertFalse($isThrown);
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-4',
+                'test' => '-10.0',
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertTrue($isThrown);
+
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-5',
+                'test' => '100.1',
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertTrue($isThrown);
+
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-6',
+                'test' => 'abc',
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertTrue($isThrown);
+
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-7',
+                'test' => ['test'],
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertTrue($isThrown);
+
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-8',
+                'test' => 10.0,
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
+        $this->assertFalse($isThrown);
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        $isThrown = false;
+        try {
+            $service->create((object) [
+                'name' => 'Test-9',
+                'test' => 10,
+            ], CreateParams::create());
+        } catch (BadRequest) {
+            $isThrown = true;
+        }
         $this->assertFalse($isThrown);
     }
 }

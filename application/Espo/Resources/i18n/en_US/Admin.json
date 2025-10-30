@@ -124,6 +124,7 @@
         "personName": "Person Name",
         "autoincrement": "Auto-increment",
         "bool": "Boolean",
+        "decimal": "Decimal",
         "currency": "Currency",
         "currencyConverted": "Currency (Converted)",
         "date": "Date",

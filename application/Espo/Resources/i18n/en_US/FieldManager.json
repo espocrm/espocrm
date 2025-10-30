@@ -137,6 +137,7 @@
     },
     "fieldInfo": {
         "varchar": "A single-line text.",
+        "decimal": "A decimal number with fixed-point precision.",
         "enum": "Selectbox, only one value can be selected.",
         "text": "A multiline text with markdown support.",
         "date": "Date w/o time.",

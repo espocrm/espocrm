@@ -600,6 +600,15 @@
                                         ]
                                     }
                                 }
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "anyOf": [
+                                            {"const": "decimal"}
+                                        ]
+                                    }
+                                }
                             }
                         ]
                     },

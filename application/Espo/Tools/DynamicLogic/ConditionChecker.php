@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\DynamicLogic;
 
+use Espo\Core\Currency\CalculatorUtil;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Utils\DateTime\SystemClock;
@@ -214,18 +215,34 @@ class ConditionChecker
         }
 
         if ($type === Type::GreaterThan) {
+            if (is_string($setValue) || is_string($value)) {
+                return $this->compare($setValue, $value) > 0;
+            }
+
             return $setValue > $value;
         }
 
         if ($type === Type::LessThan) {
+            if (is_string($setValue) || is_string($value)) {
+                return $this->compare($setValue, $value) < 0;
+            }
+
             return $setValue < $value;
         }
 
         if ($type === Type::GreaterThanOrEquals) {
+            if (is_string($setValue) || is_string($value)) {
+                return $this->compare($setValue, $value) >= 0;
+            }
+
             return $setValue >= $value;
         }
 
         if ($type === Type::LessThanOrEquals) {
+            if (is_string($setValue) || is_string($value)) {
+                return $this->compare($setValue, $value) <= 0;
+            }
+
             return $setValue <= $value;
         }
 
@@ -345,5 +362,21 @@ class ConditionChecker
             ->setTimezone($this->getTimeZone());
 
         return Date::fromDateTime($dateTime);
+    }
+
+
+    /**
+     * @throws BadCondition
+     */
+    private function compare(mixed $arg1, mixed $arg2): int
+    {
+        $arg1 = (string) $arg1;
+        $arg2 = (string) $arg2;
+
+        if (!is_numeric($arg1) || !is_numeric($arg2)) {
+            throw new BadCondition();
+        }
+
+        return CalculatorUtil::compare($arg1, $arg2);
     }
 }

@@ -179,6 +179,17 @@
                 "lessThanOrEquals"
             ]
         },
+        "decimal": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": [
+                "isEmpty",
+                "isNotEmpty",
+                "greaterThan",
+                "lessThan",
+                "greaterThanOrEquals",
+                "lessThanOrEquals"
+            ]
+        },
         "currency": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": [
