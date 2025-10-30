@@ -708,6 +708,12 @@ select.form-control.native-select {
                 }
             }
 
+            &:has(> .item-button.btn-group):has(> .drag-handle) {
+                > span.text {
+                    width: calc(100% - var(--36px) - var(--26px));
+                }
+            }
+
             > a[role="button"] {
                 margin-top: var(--1px);
                 margin-left: var(--2px);

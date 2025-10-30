@@ -140,7 +140,7 @@ export default class extends ArrayFieldView {
         const item = div.querySelector('.list-group-item');
 
         const group = document.createElement('div');
-        group.classList.add('btn-group', 'pull-right');
+        group.classList.add('btn-group', 'pull-right', 'item-button');
 
         const button = document.createElement('button');
         button.classList.add('btn', 'btn-link', 'btn-sm', 'dropdown-toggle');
