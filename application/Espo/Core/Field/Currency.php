@@ -132,8 +132,10 @@ class Currency
 
     /**
      * Multiply by a multiplier.
+     *
+     * @param float|int|numeric-string $multiplier
      */
-    public function multiply(float|int $multiplier): self
+    public function multiply(float|int|string $multiplier): self
     {
         $amount = CalculatorUtil::multiply(
             $this->getAmountAsString(),
@@ -145,8 +147,10 @@ class Currency
 
     /**
      * Divide by a divider.
+     *
+     * @param float|int|numeric-string $divider
      */
-    public function divide(float|int $divider): self
+    public function divide(float|int|string $divider): self
     {
         $amount = CalculatorUtil::divide(
             $this->getAmountAsString(),
