@@ -27,35 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Tools\Pdf;
 
-use Espo\Core\ORM\Entity;
-use UnexpectedValueException;
+use Psr\Http\Message\StreamInterface;
 
-class Template extends Entity
+/**
+ * @since 9.3.0
+ */
+class Result implements Contents
 {
-    public const ENTITY_TYPE = 'Template';
+    public function __construct(
+        private Contents $contents,
+        private ?string $filename
+    ) {}
 
-    public const STATUS_ACTIVE = 'Active';
-
-    public function getTargetEntityType(): string
+    public function getStream(): StreamInterface
     {
-        $entityType = $this->get('entityType');
-
-        if ($entityType === null) {
-            throw new UnexpectedValueException();
-        }
-
-        return $entityType;
+        return $this->contents->getStream();
     }
 
-    public function isActive(): bool
+    public function getString(): string
     {
-        return $this->get('status') === self::STATUS_ACTIVE;
+        return $this->contents->getString();
     }
 
+    public function getLength(): int
+    {
+        return $this->contents->getLength();
+    }
+
+    /**
+     * If null, it means that the template does not define the file name.
+     */
     public function getFilename(): ?string
     {
-        return $this->get('filename');
+        return $this->filename;
     }
 }

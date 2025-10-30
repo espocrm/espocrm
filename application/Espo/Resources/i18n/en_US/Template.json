@@ -21,7 +21,8 @@
         "fontFace": "Font",
         "title": "Title",
         "style": "Style",
-        "status": "Status"
+        "status": "Status",
+        "filename": "Filename"
     },
     "links": {
     },
@@ -48,6 +49,7 @@
         "fontFace": {}
     },
     "tooltips": {
+        "filename": "An optional filename. Entity attributes can be used as placeholders.\n\nAdditional placeholder:\n- `{{today}}`\n\nExample:\n`Document_{{today}}_{{name}}`",
         "footer": "Use {pageNumber} to print page number.",
         "variables": "Copy-paste needed placeholder to Header, Body or Footer."
     }

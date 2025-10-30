@@ -37,12 +37,16 @@ use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Entity;
 use Espo\Tools\Pdf\Params;
 use Espo\Core\Di;
-
+use Espo\Tools\Pdf\Result;
 use Espo\Tools\Pdf\Service;
 use Exception;
 
+/**
+ * @noinspection PhpUnused
+ */
 class GenerateType extends BaseFunction implements
     Di\EntityManagerAware,
     Di\InjectableFactoryAware,
@@ -92,38 +96,29 @@ class GenerateType extends BaseFunction implements
         }
 
         if (!$entity) {
-            $this->log("Record {$entityType} {$id} does not exist.");
+            $this->log("Record $entityType $id does not exist.");
 
             throw new Error();
         }
 
-        /** @var ?Template $template */
-        $template = $em->getEntityById(Template::ENTITY_TYPE, $templateId);
+        $template = $em->getRDBRepositoryByClass(Template::class)->getById($templateId);
 
         if (!$template) {
-            $this->log("Template {$templateId} does not exist.");
+            $this->log("Template $templateId does not exist.");
 
             throw new Error();
-        }
-
-        if ($fileName) {
-            if (!str_ends_with($fileName, '.pdf')) {
-                $fileName .= '.pdf';
-            }
-        } else {
-            $fileName = Util::sanitizeFileName($entity->get(Field::NAME)) . '.pdf';
         }
 
         $params = Params::create()->withAcl(false);
 
-        try {
-            $service = $this->injectableFactory->create(Service::class);
+        $service = $this->injectableFactory->create(Service::class);
 
-            $contents = $service->generate(
-                $entity->getEntityType(),
-                $entity->getId(),
-                $template->getId(),
-                $params
+        try {
+            $result = $service->generate(
+                entityType: $entity->getEntityType(),
+                id: $entity->getId(),
+                templateId: $template->getId(),
+                params: $params,
             );
         } catch (Exception $e) {
             $this->log("Error while generating. Message: " . $e->getMessage() . ".", 'error');
@@ -131,20 +126,41 @@ class GenerateType extends BaseFunction implements
             throw new Error();
         }
 
-        /** @var Attachment $attachment */
-        $attachment = $em->getNewEntity(Attachment::ENTITY_TYPE);
+        $fileName = $this->prepareFilename($fileName, $result, $entity);
+
+        $attachment = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
 
         $attachment
             ->setName($fileName)
             ->setType('application/pdf')
-            ->setSize($contents->getStream()->getSize())
+            ->setSize($result->getStream()->getSize())
             ->setRelated(LinkParent::create($entityType, $id))
             ->setRole(Attachment::ROLE_ATTACHMENT);
 
         $em->saveEntity($attachment);
 
-        $this->fileStorageManager->putStream($attachment, $contents->getStream());
+        $this->fileStorageManager->putStream($attachment, $result->getStream());
 
         return $attachment->getId();
+    }
+
+    private function composeFilename(Entity $entity): string
+    {
+        $defaultName = $entity->get(Field::NAME) ?? $entity->getId();
+
+        return Util::sanitizeFileName($defaultName) . '.pdf';
+    }
+
+    private function prepareFilename(mixed $fileName, Result $result, Entity $entity): string
+    {
+        if ($fileName) {
+            if (!str_ends_with($fileName, '.pdf')) {
+                $fileName .= '.pdf';
+            }
+
+            return $fileName;
+        }
+
+        return $result->getFilename() ?? $this->composeFilename($entity);
     }
 }

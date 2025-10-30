@@ -120,6 +120,11 @@
         },
         "title": {
             "type": "varchar"
+        },
+        "filename": {
+            "type": "varchar",
+            "maxLength": 150,
+            "tooltip": true
         }
     },
     "links": {

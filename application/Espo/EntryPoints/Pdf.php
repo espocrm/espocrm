@@ -38,6 +38,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Template;
+use Espo\ORM\Entity;
 use Espo\Tools\Pdf\Service;
 
 class Pdf implements EntryPoint
@@ -69,11 +70,9 @@ class Pdf implements EntryPoint
             throw new NotFound("Template not found.");
         }
 
-        $contents = $this->service->generate($entityType, $entityId, $templateId);
+        $result = $this->service->generate($entityType, $entityId, $templateId);
 
-        $fileName = Util::sanitizeFileName($entity->get(Field::NAME) ?? 'unnamed');
-
-        $fileName = $fileName . '.pdf';
+        $fileName = $result->getFilename() ?? $this->composeFileName($entity);
 
         $response
             ->setHeader('Content-Type', 'application/pdf')
@@ -83,9 +82,16 @@ class Pdf implements EntryPoint
             ->setHeader('Content-Disposition', 'inline; filename="' . basename($fileName) . '"');
 
         if (!$request->getServerParam('HTTP_ACCEPT_ENCODING')) {
-            $response->setHeader('Content-Length', (string) $contents->getStream()->getSize());
+            $response->setHeader('Content-Length', (string) $result->getStream()->getSize());
         }
 
-        $response->writeBody($contents->getStream());
+        $response->writeBody($result->getStream());
+    }
+
+    private function composeFileName(Entity $entity): string
+    {
+        $defaultName = $entity->get(Field::NAME) ?? $entity->getId();
+
+        return Util::sanitizeFileName($defaultName) . '.pdf';
     }
 }

@@ -35,11 +35,11 @@
     },
     {
         "rows": [
-            [{"name": "title"}, false],
+            [{"name": "title"}, {"name": "filename"}],
             [{"name":"printHeader"}, {"name":"headerPosition"}],
-            [{"name":"header","fullWidth":true}],
+            [{"name":"header"}],
             [{"name":"printFooter"}, {"name":"footerPosition"}],
-            [{"name":"footer","fullWidth":true}],
+            [{"name":"footer"}],
             [{"name": "style"}]
         ]
     }

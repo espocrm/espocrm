@@ -35,8 +35,11 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
 use Espo\Entities\Template as TemplateEntity;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Pdf\Data\DataLoaderManager;
 
@@ -52,6 +55,7 @@ class Service
         private Config $config,
         private Builder $builder,
         private Metadata $metadata,
+        private DateTime $dateTime,
     ) {}
 
     /**
@@ -72,8 +76,8 @@ class Service
         string $id,
         string $templateId,
         ?Params $params = null,
-        ?Data $data = null
-    ): Contents {
+        ?Data $data = null,
+    ): Result {
 
         $params = $params ?? Params::create()->withAcl(true);
 
@@ -130,6 +134,44 @@ class Service
             ->setEngine($engine)
             ->build();
 
-        return $printer->printEntity($entity, $params, $data);
+        $contents = $printer->printEntity($entity, $params, $data);
+
+        $filename = $this->prepareFilename($entity, $template, $params);
+
+        return new Result($contents, $filename);
+    }
+
+    private function prepareFilename(Entity $entity, TemplateEntity $template, Params $params): ?string
+    {
+        $filename = $template->getFilename() ?? null;
+
+        if (!$filename) {
+            return null;
+        }
+
+        $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList($entity->getEntityType());
+
+        foreach ($entity->getAttributeList() as $attribute) {
+            $value = $entity->get($attribute);
+
+            if (!is_scalar($value)) {
+                continue;
+            }
+
+            if ($params->applyAcl() && in_array($attribute, $forbiddenAttributeList)) {
+                continue;
+            }
+
+            $filename = str_replace('{{' . $attribute . '}}', (string) $value, $filename);
+        }
+
+        $today = $this->dateTime->getTodayString(null, DateTime::SYSTEM_DATE_FORMAT);
+        $filename = str_replace('{{today}}', $today, $filename);
+
+        if (!str_ends_with(strtolower($filename), '.pdf')) {
+            $filename .= '.pdf';
+        }
+
+        return Util::sanitizeFileName($filename) ?: null;
     }
 }
