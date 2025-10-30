@@ -114,7 +114,7 @@ class Erasor implements
                         $this->emailAddressAccessChecker
                             ->checkEdit($this->user, $emailAddress, $entity)
                     ) {
-                        $emailAddress->set(Field::NAME, 'ERASED:' . $emailAddress->id);
+                        $emailAddress->set(Field::NAME, 'ERASED:' . $emailAddress->getId());
                         $emailAddress->set('optOut', true);
                         $this->entityManager->saveEntity($emailAddress);
                     }
@@ -132,7 +132,7 @@ class Erasor implements
                         $this->phoneNumberAccessChecker
                             ->checkEdit($this->user, $phoneNumber, $entity)
                     ) {
-                        $phoneNumber->set(Field::NAME, 'ERASED:' . $phoneNumber->id);
+                        $phoneNumber->set(Field::NAME, 'ERASED:' . $phoneNumber->getId());
 
                         $this->entityManager->saveEntity($phoneNumber);
                     }
