@@ -80,7 +80,7 @@
     "gridstack": "github:yurikuzn/gridstack.js#5.1.1.e3",
     "handlebars": "^4.7.7",
     "intl-tel-input": "^18.2.1",
-    "jquery": "^3.7.0",
+    "jquery": "^3.7.1",
     "jquery-ui-espo": "github:yurikuzn/jquery-ui-espo#0.2.2",
     "jquery-ui-touch-punch": "^0.2.3",
     "js-base64": "^3.7.2",
