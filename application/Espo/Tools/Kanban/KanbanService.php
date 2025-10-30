@@ -82,6 +82,7 @@ class KanbanService
     /**
      * @param string[] $ids
      * @throws Forbidden
+     * @throws Error
      */
     public function order(string $entityType, string $group, array $ids): void
     {

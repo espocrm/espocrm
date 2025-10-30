@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\Kanban;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Entities\KanbanOrder;
 use Espo\Core\ORM\EntityManager;
@@ -50,7 +52,8 @@ class OrdererProcessor
     public function __construct(
         private EntityManager $entityManager,
         private Metadata $metadata,
-        private RecordIdGenerator $idGenerator
+        private RecordIdGenerator $idGenerator,
+        private MetadataProvider $metadataProvider,
     ) {}
 
     public function setEntityType(string $entityType): self
@@ -89,6 +92,9 @@ class OrdererProcessor
 
     /**
      * @param string[] $ids
+     *
+     * @throws ForbiddenSilent
+     * @throws Error
      */
     public function order(array $ids): void
     {
@@ -194,21 +200,25 @@ class OrdererProcessor
             ->commit();
     }
 
+    /**
+     * @throws Error
+     * @throws ForbiddenSilent
+     */
     private function validate(): void
     {
-        if (! $this->entityType) {
+        if (!$this->entityType) {
             throw new LogicException("No entity type.");
         }
 
-        if (! $this->group) {
+        if (!$this->group) {
             throw new LogicException("No group.");
         }
 
-        if (! $this->userId) {
+        if (!$this->userId) {
             throw new LogicException("No user ID.");
         }
 
-        if (! $this->metadata->get(['scopes', $this->entityType, 'object'])) {
+        if (!$this->metadata->get(['scopes', $this->entityType, 'object'])) {
             throw new LogicException("Not allowed entity type.");
         }
 
@@ -218,17 +228,16 @@ class OrdererProcessor
             throw new LogicException("Order is disabled.");
         }
 
-        $statusField = $this->metadata->get(['scopes', $this->entityType, 'statusField']);
+        $statusField = $this->metadataProvider->getStatusField($this->entityType);
 
-        if (! $statusField) {
+        if (!$statusField) {
             throw new LogicException("Not status field.");
         }
 
-        $statusList = $this->metadata
-            ->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']) ?? [];
+        $statusList = $this->metadataProvider->getStatusList($this->entityType);
 
         if (!in_array($this->group, $statusList)) {
-            throw new LogicException("Group is not available in status list.");
+            throw new ForbiddenSilent("Group is not available in status list.");
         }
     }
 }

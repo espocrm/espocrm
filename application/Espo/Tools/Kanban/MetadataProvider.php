@@ -29,46 +29,59 @@
 
 namespace Espo\Tools\Kanban;
 
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\Id\RecordIdGenerator;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata;
 
-class Orderer
+class MetadataProvider
 {
     public function __construct(
-        private EntityManager $entityManager,
         private Metadata $metadata,
-        private RecordIdGenerator $idGenerator,
-        private MetadataProvider $metadataProvider,
     ) {}
 
-    public function setEntityType(string $entityType): OrdererProcessor
+
+    /**
+     * @return string[]
+     * @throws Error
+     */
+    public function getStatusList(string $entityType): array
     {
-        return $this->createProcessor()->setEntityType($entityType);
+        $field = $this->getStatusField($entityType);
+
+        $statusList = $this->metadata->get("entityDefs.$entityType.fields.$field.options");
+        $optionsReference = $this->metadata->get("entityDefs.$entityType.fields.$field.optionsReference");
+
+        if (is_string($optionsReference) && str_contains($optionsReference, '.')) {
+            [$refEntityType, $refField] = explode('.', $optionsReference);
+
+            $statusList = $this->metadata->get("entityDefs.$refEntityType.fields.$refField.options");
+        }
+
+        if (!$statusList) {
+            throw new Error("No options for status field for entity type '$entityType'.");
+        }
+
+        return $statusList;
     }
 
-    public function setGroup(string $group): OrdererProcessor
+    /**
+     * @throws Error
+     */
+    public function getStatusField(string $entityType): string
     {
-        return $this->createProcessor()->setGroup($group);
+        $statusField = $this->metadata->get("scopes.$entityType.statusField");
+
+        if (!$statusField) {
+            throw new Error("No status field for entity type '$entityType'.");
+        }
+
+        return $statusField;
     }
 
-    public function setUserId(string $userId): OrdererProcessor
+    /**
+     * @return string[]
+     */
+    public function getStatusIgnoreList(string $entityType): array
     {
-        return $this->createProcessor()->setUserId($userId);
-    }
-
-    public function setMaxNumber(?int $maxNumber): OrdererProcessor
-    {
-        return $this->createProcessor()->setMaxNumber($maxNumber);
-    }
-
-    public function createProcessor(): OrdererProcessor
-    {
-        return new OrdererProcessor(
-            entityManager: $this->entityManager,
-            metadata: $this->metadata,
-            idGenerator: $this->idGenerator,
-            metadataProvider: $this->metadataProvider,
-        );
+        return $this->metadata->get("scopes.$entityType.kanbanStatusIgnoreList") ?? [];
     }
 }

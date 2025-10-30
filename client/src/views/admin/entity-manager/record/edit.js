@@ -168,8 +168,18 @@ export default class EntityManagerEditRecordView extends EditRecordView {
     setKanbanStatusIgnoreListOptions() {
         const statusField = this.model.get('statusField');
 
-        const optionList =
-            this.getMetadata().get(['entityDefs', this.subjectEntityType, 'fields', statusField, 'options']) || [];
+        let optionList = this.getMetadata()
+            .get(`entityDefs.${this.subjectEntityType}.fields.${statusField}.options`) ?? [];
+
+        const optionsReference = this.getMetadata()
+            .get(`entityDefs.${this.subjectEntityType}.fields.${statusField}.optionsReference`);
+
+        if (optionsReference) {
+            const [entityType, field] = optionsReference.split('.');
+
+            optionList = this.getMetadata()
+                .get(`entityDefs.${entityType}.fields.${field}.options`) ?? [];
+        }
 
         this.setFieldOptionList('kanbanStatusIgnoreList', optionList);
 

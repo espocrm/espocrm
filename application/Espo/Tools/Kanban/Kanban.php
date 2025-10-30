@@ -39,7 +39,6 @@ use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
-use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
@@ -56,12 +55,12 @@ class Kanban
     private int $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
 
     public function __construct(
-        private Metadata $metadata,
         private SelectBuilderFactory $selectBuilderFactory,
         private EntityManager $entityManager,
         private ListLoadProcessor $listLoadProcessor,
         private RecordServiceContainer $recordServiceContainer,
         private ApplierClassNameListProvider $applierClassNameListProvider,
+        private MetadataProvider $metadataProvider,
     ) {}
 
     public function setEntityType(string $entityType): self
@@ -149,9 +148,9 @@ class Kanban
             )
             ->build();
 
-        $statusField = $this->getStatusField();
-        $statusList = $this->getStatusList();
-        $statusIgnoreList = $this->getStatusIgnoreList();
+        $statusField = $this->metadataProvider->getStatusField($this->entityType);
+        $statusList = $this->metadataProvider->getStatusList($this->entityType);
+        $statusIgnoreList = $this->metadataProvider->getStatusIgnoreList($this->entityType);
 
         $groupList = [];
 
@@ -245,50 +244,5 @@ class Kanban
             ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
         return new Result($groupList, $total);
-    }
-
-    /**
-     * @throws Error
-     */
-    private function getStatusField(): string
-    {
-        assert(is_string($this->entityType));
-
-        $statusField = $this->metadata->get(['scopes', $this->entityType, 'statusField']);
-
-        if (!$statusField) {
-            throw new Error("No status field for entity type '$this->entityType'.");
-        }
-
-        return $statusField;
-    }
-
-    /**
-     * @return string[]
-     * @throws Error
-     */
-    private function getStatusList(): array
-    {
-        assert(is_string($this->entityType));
-
-        $statusField = $this->getStatusField();
-
-        $statusList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
-
-        if (empty($statusList)) {
-            throw new Error("No options for status field for entity type '$this->entityType'.");
-        }
-
-        return $statusList;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getStatusIgnoreList(): array
-    {
-        assert(is_string($this->entityType));
-
-        return $this->metadata->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
     }
 }

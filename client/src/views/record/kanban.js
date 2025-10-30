@@ -91,6 +91,12 @@ class KanbanRecordView extends ListRecordView {
     seedCollection
 
     /**
+     * @private
+     * @type {Record.<string, string>}
+     */
+    styleMap
+
+    /**
      * Layout item definitions.
      *
      * @typedef module:views/record/kanban~layoutItemDefs
@@ -364,12 +370,7 @@ class KanbanRecordView extends ListRecordView {
                 this.orderDisabled = true;
             }
         }
-
-        this.statusField = this.options.statusField || this.getMetadata().get(['scopes', this.scope, 'statusField']);
-
-        if (!this.statusField) {
-            throw new Error(`No status field for entity type '${this.scope}'.`);
-        }
+        this.setupStatusField();
 
         this.seedCollection = this.collection.clone();
         this.seedCollection.reset();
@@ -439,6 +440,30 @@ class KanbanRecordView extends ListRecordView {
          * @type {boolean}
          */
         this.hasStars = this.getMetadata().get(`scopes.${this.entityType}.stars`) || false;
+    }
+
+    /**
+     * @private
+     */
+    setupStatusField() {
+        this.statusField = this.options.statusField || this.getMetadata().get(['scopes', this.scope, 'statusField']);
+
+        if (!this.statusField) {
+            throw new Error(`No status field for entity type '${this.scope}'.`);
+        }
+
+        this.styleMap = /** @type {Record.<string, string>} */
+            this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.style`) ?? {};
+
+        const optionsReference =
+            this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.optionsReference`);
+
+        if (optionsReference) {
+            const [entityType, field] = optionsReference.split('.');
+
+            this.styleMap = /** @type {Record.<string, string>} */
+                this.getMetadata().get(`entityDefs.${entityType}.fields.${field}.style`) ?? {};
+        }
     }
 
     afterRender() {
@@ -955,8 +980,7 @@ class KanbanRecordView extends ListRecordView {
                     });
                 });
 
-                const style = item.style ||
-                    this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.style.${item.name}`);
+                const style = item.style || this.styleMap[item.name];
 
                 const label = item.label ||
                     this.getLanguage().translateOption(item.name, this.statusField, this.scope);
