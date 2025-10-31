@@ -143,7 +143,8 @@
             "view": "views/fields/currency-converted"
         },
         "account": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "contacts": {
             "type": "linkMultiple",
@@ -205,7 +206,8 @@
             "type": "enum",
             "view": "crm:views/opportunity/fields/lead-source",
             "customizationOptionsDisabled": true,
-            "optionsReference": "Lead.source"
+            "optionsReference": "Lead.source",
+            "audited": true
         },
         "closeDate": {
             "type": "date",
@@ -216,7 +218,8 @@
             "type": "text"
         },
         "campaign": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "originalLead": {
             "type": "linkOne",

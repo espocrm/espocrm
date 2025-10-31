@@ -65,7 +65,8 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/assigned-user"
+            "view": "views/fields/assigned-user",
+            "audited": true
         },
         "teams": {
             "type": "linkMultiple",

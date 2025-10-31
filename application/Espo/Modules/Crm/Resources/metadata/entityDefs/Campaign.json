@@ -22,7 +22,8 @@
             "displayAsLabel": true,
             "labelType": "state",
             "customizationOptionsDisabled": true,
-            "customizationOptionsReferenceDisabled": true
+            "customizationOptionsReferenceDisabled": true,
+            "audited": true
         },
         "type": {
             "type": "enum",
@@ -38,19 +39,22 @@
             "default": "Email",
             "maxLength": 64,
             "customizationOptionsDisabled": true,
-            "customizationOptionsReferenceDisabled": true
+            "customizationOptionsReferenceDisabled": true,
+            "audited": true
         },
         "startDate": {
             "type": "date",
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Campaign\\StartDate\\BeforeEndDate"
-            ]
+            ],
+            "audited": true
         },
         "endDate": {
             "type": "date",
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Campaign\\EndDate\\AfterStartDate"
-            ]
+            ],
+            "audited": true
         },
         "description": {
             "type": "text"
@@ -83,11 +87,13 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/assigned-user"
+            "view": "views/fields/assigned-user",
+            "audited": true
         },
         "teams": {
             "type": "linkMultiple",
-            "view": "views/fields/teams"
+            "view": "views/fields/teams",
+            "audited": true
         },
         "targetLists": {
             "type": "linkMultiple",

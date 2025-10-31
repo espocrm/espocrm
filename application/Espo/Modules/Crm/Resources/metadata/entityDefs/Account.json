@@ -23,7 +23,8 @@
         "type": {
             "type": "enum",
             "options": ["", "Customer", "Investor", "Partner", "Reseller"],
-            "customizationOptionsReferenceDisabled": true
+            "customizationOptionsReferenceDisabled": true,
+            "audited": true
         },
         "industry": {
             "type": "enum",

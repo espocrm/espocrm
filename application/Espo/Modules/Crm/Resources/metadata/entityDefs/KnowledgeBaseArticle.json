@@ -28,13 +28,15 @@
                 }
             ],
             "activeOptions": ["Published"],
-            "customizationOptionsReferenceDisabled": true
+            "customizationOptionsReferenceDisabled": true,
+            "audited": true
         },
         "language": {
             "type": "enum",
             "view": "crm:views/knowledge-base-article/fields/language",
             "customizationOptionsDisabled": true,
-            "customizationOptionsReferenceDisabled": true
+            "customizationOptionsReferenceDisabled": true,
+            "audited": true
         },
         "type": {
             "type": "enum",
@@ -43,14 +45,17 @@
         },
         "portals": {
             "type": "linkMultiple",
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "publishDate": {
-            "type": "date"
+            "type": "date",
+            "audited": true
         },
         "expirationDate": {
             "type": "date",
-            "after": "publishDate"
+            "after": "publishDate",
+            "audited": true
         },
         "order": {
             "type": "int",
@@ -86,7 +91,8 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/assigned-user"
+            "view": "views/fields/assigned-user",
+            "audited": true
         },
         "teams": {
             "type": "linkMultiple",

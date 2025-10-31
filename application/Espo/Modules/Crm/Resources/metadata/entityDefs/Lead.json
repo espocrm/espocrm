@@ -123,7 +123,8 @@
             "isPersonalData": true
         },
         "doNotCall": {
-            "type": "bool"
+            "type": "bool",
+            "audited": true
         },
         "description": {
             "type": "text"
