@@ -25,7 +25,8 @@
                 ".csv",
                 ".md",
                 ".txt"
-            ]
+            ],
+            "audited": true
         },
         "status": {
             "type": "enum",
@@ -56,16 +57,19 @@
         "type": {
             "type": "enum",
             "options": ["", "Contract", "NDA", "EULA", "License Agreement"],
-            "customizationOptionsReferenceDisabled": true
+            "customizationOptionsReferenceDisabled": true,
+            "audited": true
         },
         "publishDate": {
             "type": "date",
             "required": true,
-            "default": "javascript: return this.dateTime.getToday();"
+            "default": "javascript: return this.dateTime.getToday();",
+            "audited": true
         },
         "expirationDate": {
             "type": "date",
-            "after": "publishDate"
+            "after": "publishDate",
+            "audited": true
         },
         "description": {
             "type": "text"
@@ -116,7 +120,8 @@
         },
         "folder": {
             "type": "link",
-            "view": "views/fields/link-category-tree"
+            "view": "views/fields/link-category-tree",
+            "audited": true
         }
     },
     "links": {
