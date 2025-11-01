@@ -763,7 +763,7 @@
                     }
 
                     console.warn(`Could not obtain ${id}.`);
-                });
+                }, errorCallback);
 
                 return;
             }
@@ -792,9 +792,10 @@
          * @private
          * @param {string} url
          * @param {function} callback
+         * @param {function|null} [errorCallback]
          * @return {Promise}
          */
-        _addScript(url, callback) {
+        _addScript(url, callback, errorCallback = null) {
             const script = document.createElement('script');
 
             script.src = url;
@@ -802,6 +803,10 @@
 
             script.addEventListener('error', e => {
                 console.error(`Could not load script '${url}'.`, e);
+
+                if (errorCallback) {
+                    errorCallback();
+                }
             });
 
             document.head.appendChild(script);
