@@ -5,7 +5,7 @@
     "homepage": "https://github.com/espocrm/espocrm.git",
     "license": "AGPL-3.0-or-later",
     "require": {
-        "php": ">=8.2.0 <8.5.0",
+        "php": ">=8.3.0 <8.5.0",
         "ext-openssl": "*",
         "ext-json": "*",
         "ext-zip": "*",
