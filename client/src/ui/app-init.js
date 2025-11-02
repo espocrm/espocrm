@@ -112,8 +112,14 @@ function uiAppInit() {
 
         const $dashletBody = $(target).closest('.dashlet-body');
 
-        if ($dashletBody.length) {
-            const $body = $dashletBody;
+        const fixPosition = e.target.parentElement.classList.contains('fix-position');
+
+        if ($dashletBody.length || fixPosition) {
+            let $body = $dashletBody;
+
+            if (fixPosition) {
+                $body = $(window);
+            }
 
             $(target).removeClass('dropup');
 
@@ -152,10 +158,10 @@ function uiAppInit() {
                 right: 'auto',
             });
 
-            return;
+            //return;
         }
 
-        if (e.target.parentElement.classList.contains('fix-overflow')) {
+        /*if (e.target.parentElement.classList.contains('fix-overflow')) {
             $(target).removeClass('dropup');
 
             const isRight = e.target.classList.contains('pull-right');
@@ -187,7 +193,7 @@ function uiAppInit() {
                 left: left,
                 right: 'auto',
             });
-        }
+        }*/
     });
 }
 

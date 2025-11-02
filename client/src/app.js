@@ -691,6 +691,14 @@ class App {
             if (!className) {
                 const module = this.metadata.get(`scopes.${name}.module`);
 
+                if (!/^[A-Za-z0-9]+$/.test(name)) {
+                    console.error(`Bad controller name ${name}.`);
+
+                    this.baseController.error404();
+
+                    return;
+                }
+
                 className = Utils.composeClassName(module, name, 'controllers');
             }
 
