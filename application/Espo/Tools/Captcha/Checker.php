@@ -80,11 +80,19 @@ class Checker
 
         $response = curl_exec($ch);
 
-        curl_close($ch);
-
         if (!is_string($response)) {
-            throw new RuntimeException("Bad CURL response.");
+            $message = "CURL failure.";
+
+            $curlError = curl_error($ch);
+
+            if ($curlError) {
+                $message .= " " . $curlError;
+            }
+
+            throw new RuntimeException($message);
         }
+
+        curl_close($ch);
 
         $responseData = Json::decode($response, true);
 
