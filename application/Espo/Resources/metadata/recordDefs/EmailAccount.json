@@ -14,6 +14,10 @@
         "Espo\\Classes\\Record\\InboundEmail\\PasswordsInputFilter"
     ],
     "beforeCreateHookClassNameList": [
-        "Espo\\Classes\\RecordHooks\\EmailAccount\\BeforeCreate"
+        "Espo\\Classes\\RecordHooks\\EmailAccount\\BeforeCreate",
+        "Espo\\Classes\\RecordHooks\\EmailAccount\\BeforeSave"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\EmailAccount\\BeforeSave"
     ]
 }

@@ -381,4 +381,9 @@ class Account implements AccountInterface
         /** @var DateTime */
         return $this->entity->getValueObject('connectedAt');
     }
+
+    public function getMappedEmailFolder(string $folder): ?Link
+    {
+        return null;
+    }
 }

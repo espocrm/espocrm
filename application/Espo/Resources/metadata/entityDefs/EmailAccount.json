@@ -47,12 +47,20 @@
             "view": "views/email-account/fields/folders",
             "displayAsList": true,
             "noEmptyString": true,
-            "duplicateIgnore": true
+            "duplicateIgnore": true,
+            "tooltip": true,
+            "fullNameAdditionalAttributeList": ["folderMap"]
         },
         "sentFolder": {
             "type": "varchar",
             "view": "views/email-account/fields/folder",
             "duplicateIgnore": true
+        },
+        "folderMap": {
+            "type": "jsonObject",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\EmailAccount\\FolderMap\\Valid"
+            ]
         },
         "storeSentEmails": {
             "type": "bool",

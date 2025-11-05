@@ -201,6 +201,11 @@ class Account implements AccountInterface
         return $this->entity->getEmailFolder();
     }
 
+    public function getMappedEmailFolder(string $folder): ?Link
+    {
+        return $this->entity->getMappedEmailFolder($folder);
+    }
+
     /**
      * @return string[]
      */

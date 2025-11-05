@@ -117,6 +117,20 @@ class EmailAccount extends Entity
         return $this->getValueObject('emailFolder');
     }
 
+    public function getMappedEmailFolder(string $folder): ?Link
+    {
+        /** @var stdClass $map */
+        $map = $this->get('folderMap') ?? (object) [];
+
+        $folderId = $map->$folder ?? null;
+
+        if (!$folderId) {
+            return null;
+        }
+
+        return Link::create($folderId);
+    }
+
     /**
      * @return string[]
      */

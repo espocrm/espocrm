@@ -105,7 +105,7 @@ class Fetcher
         Account $account,
         string $folderOriginal,
         Storage $storage,
-        Collection $filterList
+        Collection $filterList,
     ): void {
 
         $fetchData = $account->getFetchData();
@@ -132,11 +132,11 @@ class Fetcher
         $previousLastUniqueId = $lastUniqueId;
 
         $idList = $this->getIdList(
-            $account,
-            $storage,
-            $lastUniqueId,
-            $lastDate,
-            $forceByDate
+            account: $account,
+            storage: $storage,
+            lastUID: $lastUniqueId,
+            lastDate: $lastDate,
+            forceByDate: $forceByDate,
         );
 
         if (count($idList) === 1 && $lastUniqueId) {
@@ -162,7 +162,13 @@ class Fetcher
                 }
             }
 
-            $email = $this->fetchEmail($account, $storage, $id, $filterList);
+            $email = $this->fetchEmail(
+                account: $account,
+                storage: $storage,
+                id: $id,
+                filterList: $filterList,
+                mappedEmailFolderId: $account->getMappedEmailFolder($folderOriginal)?->getId(),
+            );
 
             $isLast = $counter === count($idList) - 1;
             $isLastInPortion = $counter === $portionLimit - 1;
@@ -254,7 +260,8 @@ class Fetcher
         Account $account,
         Storage $storage,
         int $id,
-        Collection $filterList
+        Collection $filterList,
+        ?string $mappedEmailFolderId,
     ): ?Email {
 
         $teamIdList = $account->getTeams()->getIdList();
@@ -265,11 +272,7 @@ class Fetcher
 
         $fetchOnlyHeader = $this->checkFetchOnlyHeader($storage, $id);
 
-        $folderData = [];
-
-        if ($userId && $account->getEmailFolder()) {
-            $folderData[$userId] = $account->getEmailFolder()->getId();
-        }
+        $folderData = $this->prepareFolderData($userId, $mappedEmailFolderId, $account);
 
         $flags = null;
 
@@ -455,5 +458,25 @@ class Fetcher
         return array_values(
             array_diff($flags, [Flag::RECENT])
         );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function prepareFolderData(?string $userId, ?string $mappedEmailFolderId, Account $account): array
+    {
+        if (!$userId) {
+            return [];
+        }
+
+        $folderData = [];
+
+        if ($mappedEmailFolderId) {
+            $folderData[$userId] = $mappedEmailFolderId;
+        } else if ($account->getEmailFolder()) {
+            $folderData[$userId] = $account->getEmailFolder()->getId();
+        }
+
+        return $folderData;
     }
 }

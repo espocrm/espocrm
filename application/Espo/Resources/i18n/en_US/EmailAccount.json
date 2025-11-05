@@ -23,7 +23,8 @@
         "smtpSecurity": "SMTP Security",
         "smtpAuthMechanism": "SMTP Auth Mechanism",
         "smtpUsername": "SMTP Username",
-        "smtpPassword": "SMTP Password"
+        "smtpPassword": "SMTP Password",
+        "folderMap": "Folder Mapping"
     },
     "links": {
         "filters": "Filters",
@@ -60,6 +61,7 @@
         "active": "Active"
     },
     "messages": {
+        "noFolder": "Mapped folder does not exist.",
         "couldNotConnectToImap": "Could not connect to IMAP server",
         "connectionIsOk": "Connection is Ok",
         "imapNotConnected": "Could not connect to [IMAP account](#EmailAccount/view/{id})."
@@ -67,7 +69,7 @@
     "tooltips": {
         "useSmtp": "The ability to send emails.",
         "emailAddress": "The user record (assigned user) should have the same email address to be able to use this email account for sending.",
-        "monitoredFolders": "Multiple folders should be separated by comma.\n\nYou can add a 'Sent' folder to sync emails sent from an external email client.",
+        "monitoredFolders": "Select IMAP folders to import. Optionally, map them to Espo folders.\n\nYou can add the 'Sent' folder to sync emails sent from an external email client.",
         "storeSentEmails": "Sent emails will be stored on the IMAP server. Email Address field should match the address emails will be sent from."
     }
 }

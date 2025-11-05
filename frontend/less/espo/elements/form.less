@@ -615,6 +615,12 @@ select.form-control.native-select {
         &:hover {
             background-color: var(--dropdown-link-hover-bg);
         }
+
+        &:empty {
+            &::checkmark {
+                display: none;
+            }
+        }
     }
 
     &::picker-icon {
@@ -647,6 +653,14 @@ select.form-control.native-select {
 
     &:has(option.text-primary:checked) {
         color: var(--state-primary-text);
+    }
+
+    &.input-sm {
+        line-height: var(--20px);
+
+        &::picker-icon {
+            top: var(--minus-1px);
+        }
     }
 }
 
@@ -699,6 +713,19 @@ select.form-control.native-select {
             &:has(> .drag-handle) {
                 > span.text {
                     width: calc(100% - var(--36px));
+                }
+            }
+
+            &:has(> .item-input-container) {
+                > span.text {
+                    width: calc(50%);
+                }
+
+                > .item-input-container {
+                    float: right;
+                    display: inline-block;
+                    width: calc(50% - var(--40px));
+                    padding-right: var(--5px);
                 }
             }
 

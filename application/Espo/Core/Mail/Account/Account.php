@@ -164,4 +164,12 @@ interface Account
      * Get the last connection time;
      */
     public function getConnectedAt(): ?DateTime;
+
+
+    /**
+     * Get an email folder mapped to the email folder.
+     *
+     * @since 9.3.0
+     */
+    public function getMappedEmailFolder(string $folder): ?Link;
 }

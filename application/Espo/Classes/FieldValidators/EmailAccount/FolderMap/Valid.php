@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,27 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import FoldersView from 'views/email-account/fields/folders';
+namespace Espo\Classes\FieldValidators\EmailAccount\FolderMap;
 
-export default class InboundEmailGroupFolderFieldView extends FoldersView {
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Entities\EmailAccount;
+use Espo\Entities\EmailFolder;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use stdClass;
 
-    // noinspection JSUnusedGlobalSymbols
-    getFoldersUrl = 'InboundEmail/action/getFolders'
+/**
+ * @implements Validator<EmailAccount>
+ */
+class Valid implements Validator
+{
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
-    // noinspection JSUnusedGlobalSymbols
-    noFolderMap = true
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
+    {
+        $map = $entity->get('folderMap');
 
-    /*async fetchEmailFolders() {
-        if (!this.model.attributes.assignedUserId) {
-            return [];
+        if ($map === null) {
+            return null;
         }
 
-        const collection = await this.getCollectionFactory().create('GroupEmailFolder');
+        if (!$map instanceof stdClass) {
+            return Failure::create();
+        }
 
-        collection.data.select = ['id', 'name'].join(',');
+        foreach (get_object_vars($map) as $folderId) {
+            if ($folderId === null) {
+                continue;
+            }
 
-        await collection.fetch();
+            if (!is_string($folderId)) {
+                return Failure::create();
+            }
 
-        return collection.models.map(m => ({id: m.id, name: m.attributes.name}));
-    }*/
+            $folderEntry = $this->entityManager->getRepositoryByClass(EmailFolder::class)->getById($folderId);
+
+            if (!$folderEntry) {
+                return Failure::create();
+            }
+        }
+
+        return null;
+    }
 }
