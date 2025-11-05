@@ -363,7 +363,15 @@ class Client
         $response = curl_exec($ch);
 
         if ($response === false) {
-            throw new Exception("Curl failure.");
+            $message = "Curl failure.";
+
+            $curlError = curl_error($ch);
+
+            if ($curlError) {
+                $message .= " " . $curlError;
+            }
+
+            throw new Exception($message);
         }
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
