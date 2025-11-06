@@ -94,6 +94,10 @@ class EvaluatedArgumentList implements Iterator, Countable, ArrayAccess, Seekabl
     #[\ReturnTypeWillChange]
     public function current()
     {
+        if (!$this->valid()) {
+            return null;
+        }
+
         return $this->getArgumentByIndex($this->position);
     }
 

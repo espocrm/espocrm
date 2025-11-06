@@ -94,6 +94,10 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
     #[\ReturnTypeWillChange]
     public function current()
     {
+        if (!$this->valid()) {
+            return null;
+        }
+
         return $this->getArgumentByIndex($this->position);
     }
 
