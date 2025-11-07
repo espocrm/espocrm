@@ -44,7 +44,7 @@ class DefaultsPreparator {
      * Prepare default attributes.
      *
      * @param {import('model').default} model A model.
-     * @return {Promise<Record>}
+     * @return {Promise<Object.<string, *>>}
      */
     prepare(model) {
         return Promise.resolve({});
