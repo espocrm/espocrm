@@ -217,6 +217,13 @@ class LinkFieldView extends BaseFieldView {
      */
     linkClass
 
+    /**
+     * @protected
+     * @type {string}
+     * @since 9.2.5
+     */
+    foreignNameAttribute
+
     /** @inheritDoc */
     events = {
         /** @this LinkFieldView */
@@ -364,6 +371,10 @@ class LinkFieldView extends BaseFieldView {
             this.model.getFieldParam(this.name, 'entity') ||
             this.model.getLinkParam(this.name, 'entity');
 
+        this.foreignNameAttribute = this.model.getLinkParam(this.name, 'foreignName') ??
+            this.getMetadata().get(`clientDefs.${this.foreignScope}.nameAttribute`) ??
+            'name';
+
         if ('createDisabled' in this.options) {
             this.createDisabled = this.options.createDisabled;
         }
@@ -407,12 +418,12 @@ class LinkFieldView extends BaseFieldView {
      * @return {Promise|void}
      */
     select(model) {
-        this.$elementName.val(model.get('name') || model.id);
-        this.$elementId.val(model.get('id'));
+        this.$elementName.val(model.get(this.foreignNameAttribute) || model.id);
+        this.$elementId.val(model.id);
 
         if (this.mode === this.MODE_SEARCH) {
-            this.searchData.idValue = model.get('id');
-            this.searchData.nameValue = model.get('name') || model.id;
+            this.searchData.idValue = model.id;
+            this.searchData.nameValue = model.get(this.foreignNameAttribute) || model.id;
         }
 
         this.trigger('change');
@@ -611,7 +622,7 @@ class LinkFieldView extends BaseFieldView {
         if (!this.forceSelectAllAttributes) {
             const mandatorySelectAttributeList = this.getMandatorySelectAttributeList();
 
-            let select = ['id', 'name'];
+            let select = ['id', this.foreignNameAttribute];
 
             if (mandatorySelectAttributeList) {
                 select = select.concat(mandatorySelectAttributeList);
@@ -824,12 +835,20 @@ class LinkFieldView extends BaseFieldView {
         const list = [];
 
         response.list.forEach(item => {
+            const name = item[this.foreignNameAttribute] || item.name || item.id;
+
+            const attributes = item;
+
+            if (this.foreignNameAttribute !== 'name') {
+                attributes[this.foreignNameAttribute] = name;
+            }
+
             list.push({
                 id: item.id,
-                name: item.name || item.id,
+                name: name,
                 data: item.id,
-                value: item.name || item.id,
-                attributes: item,
+                value: name,
+                attributes: attributes,
             });
         });
 
@@ -1365,7 +1384,7 @@ class LinkFieldView extends BaseFieldView {
      */
     selectOneOf(models) {
         models.forEach(model => {
-            this.addLinkOneOf(model.id, model.get('name'));
+            this.addLinkOneOf(model.id, model.get(this.foreignNameAttribute));
         });
     }
 }
