@@ -749,6 +749,28 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "linkParent"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "entityList": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "Entity types supported by the link."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "link"},
                                     {"const": "linkMultiple"},
                                     {"const": "linkOne"}
