@@ -61,6 +61,10 @@
             "description": "A resolver is responsible for choosing an access filter. Should implement Espo\\Core\\Select\\AccessControl\\FilterResolver interface.",
             "type": "string"
         },
+        "portalAccessControlFilterResolverClassName": {
+            "description": "A resolver is responsible for choosing an access filter for portals. Should implement Espo\\Core\\Select\\AccessControl\\FilterResolver interface.",
+            "type": "string"
+        },
         "textFilterClassName": {
             "description": "A class that processes the text filter search. Should implement Espo\\Core\\Select\\Text\\Filter interface.",
             "type": "string"
