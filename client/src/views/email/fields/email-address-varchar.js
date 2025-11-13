@@ -482,9 +482,9 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
 
             $text.append(
                 $('<span>').text(name),
-                ' ',
+                '<span class="no-select"> </span>',
                 $('<span>').addClass('text-muted middle-dot'),
-                ' '
+                '<span class="no-select"> </span>'
             );
         }
 
