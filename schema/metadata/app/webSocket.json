@@ -19,7 +19,7 @@
                     },
                     "accessCheckCommand": {
                         "type": "string",
-                        "description": "A console command that will be used to check whether a topic is allowed for a user when they attempting to subscribe. Patameter placeholders starts with the colon :. The userId parameter contains a user ID. If access checking is not needed, omit this parameter."
+                        "description": "A console command that will be used to check whether a topic is allowed for a user when they attempting to subscribe. Parameter placeholders starts with the colon :. The userId parameter contains a user ID. If access checking is not needed, omit this parameter."
                     }
                 }
             }
