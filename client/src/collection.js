@@ -174,7 +174,7 @@ class Collection {
     parentModel
 
     /**
-     * @param {Model[]|null} [models] Models.
+     * @param {Model[]|Record<string, *>[]|null} [models] Models.
      * @param {{
      *     entityType?: string,
      *     model?: Model.prototype,
