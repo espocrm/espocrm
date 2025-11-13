@@ -148,7 +148,11 @@ class EditRecordView extends DetailRecordView {
             this.wait(promise);
 
             // @todo Revise. Possible race condition issues.
-            promise.then(() => super.setupBeforeFinal());
+            promise.then(() => {
+                super.setupBeforeFinal();
+
+                this.processDynamicLogic();
+            });
         }
 
         if (this.model.isNew()) {
