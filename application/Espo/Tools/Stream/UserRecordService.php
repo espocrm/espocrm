@@ -389,7 +389,7 @@ class UserRecordService
                 [
                     'entityType:' => 'parentType',
                     'entityId:' => 'parentId',
-                    'subscription.userId' => $user->getId(),
+                    'subscriptionExclude.userId' => $user->getId(),
                 ]
             )
             ->where([
