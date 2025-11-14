@@ -938,7 +938,7 @@ class SearchView extends View {
 
         this.$el
             .find('ul.filter-menu a.preset[data-name="'+presetName+'"]')
-            .prepend('<span class="fas fa-check pull-right"></span>');
+            .prepend('<span class="fas fa-check check-icon pull-right"></span>');
     }
 
     manageBoolFilters() {

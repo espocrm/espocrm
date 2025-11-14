@@ -1,5 +1,5 @@
 [
-    {"name":"name","link":true, "width": "40"},
+    {"name":"name", "link":true, "width": 40},
     {"name":"account"},
     {"name":"emailAddress", "notSortable": true}
 ]

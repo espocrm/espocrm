@@ -256,6 +256,10 @@ class ArrayFieldView extends BaseFieldView {
             this.allowCustomOptions = true;
         }
 
+        if (this.params.allowCustomOptions === false) {
+            this.allowCustomOptions = false;
+        }
+
         if (this.type === 'array') {
             this.validations.push('noInputValue')
         }

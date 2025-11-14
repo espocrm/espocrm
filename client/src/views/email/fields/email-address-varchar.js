@@ -420,7 +420,38 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         return true;
     }
 
+    /**
+     *
+     * @param {string} address
+     * @param {string} name
+     * @param {string} [type]
+     * @param {string} [id]
+     */
     addAddress(address, name, type, id) {
+        if (name === '') {
+            const nameHash = this.model.attributes.nameHash ?? {};
+
+            if (address in nameHash) {
+                name = nameHash[address];
+            }
+        }
+
+        if (type === undefined) {
+            const typeHash = this.model.attributes.typeHash ?? {};
+
+            if (address in typeHash) {
+                type = typeHash[address];
+            }
+        }
+
+        if (id === undefined) {
+            const idHash = this.model.attributes.idHash ?? {};
+
+            if (address in idHash) {
+                id = idHash[address];
+            }
+        }
+
         if (this.justAddedAddress) {
             this.deleteAddress(this.justAddedAddress);
         }
@@ -482,9 +513,9 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
 
             $text.append(
                 $('<span>').text(name),
-                ' ',
+                '<span class="no-select"> </span>',
                 $('<span>').addClass('text-muted middle-dot'),
-                ' '
+                '<span class="no-select"> </span>'
             );
         }
 
