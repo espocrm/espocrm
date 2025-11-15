@@ -327,7 +327,7 @@ class SelectManager
      *
      * @return array Where clause for ORM.
      */
-    public function convertWhere(array $where, bool $ignoreAdditionaFilterTypes = false, array &$result = []) : array
+    public function convertWhere(array $where, bool $ignoreAdditionalFilterTypes = false, array &$result = []) : array
     {
         $whereClause = [];
 
@@ -343,7 +343,7 @@ class SelectManager
                     $whereClause[] = $part;
                 }
             } else {
-                if (!$ignoreAdditionaFilterTypes && in_array($type, $this->additionalFilterTypeList)) {
+                if (!$ignoreAdditionalFilterTypes && in_array($type, $this->additionalFilterTypeList)) {
                     if (!empty($item['value'])) {
                         $methodName = 'apply' . ucfirst($type);
 
