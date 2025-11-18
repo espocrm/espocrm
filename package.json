@@ -37,7 +37,7 @@
     "chromedriver": "^127.0.1",
     "espo-frontend-build-tools": "github:espocrm/frontend-build-tools#0.2.2",
     "fstream": ">=1.0.12",
-    "glob": "^10.2.6",
+    "glob": "^11.1.0",
     "grunt": "^1.5.3",
     "grunt-contrib-clean": "~2.0.0",
     "grunt-contrib-concat": "^2.0.0",
