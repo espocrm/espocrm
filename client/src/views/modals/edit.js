@@ -30,6 +30,7 @@
 
 import ModalView from 'views/modal';
 import Backbone from 'backbone';
+import DefaultsPopulator from 'helpers/model/defaults-populator';
 
 /**
  * A quick edit modal.
@@ -212,7 +213,7 @@ class EditModalView extends ModalView {
 
         this.waitForView('edit');
 
-        this.getModelFactory().create(this.entityType, model => {
+        this.getModelFactory().create(this.entityType, async model => {
             if (this.id) {
                 if (this.sourceModel) {
                     model = this.model = this.sourceModel.clone();
@@ -233,6 +234,8 @@ class EditModalView extends ModalView {
 
                 return;
             }
+
+            await new DefaultsPopulator().populate(model);
 
             this.model = model;
 

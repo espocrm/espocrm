@@ -29,6 +29,7 @@
 /** @module controllers/record */
 
 import Controller from 'controller';
+import DefaultsPopulator from 'helpers/model/defaults-populator';
 
 /**
  * A record controller.
@@ -328,6 +329,8 @@ class RecordController extends Controller {
         for (const k in optionsOptions) {
             o[k] = optionsOptions[k];
         }
+
+        await new DefaultsPopulator().populate(model);
 
         if (options.attributes) {
             model.set(options.attributes);

@@ -33,7 +33,6 @@ import ViewRecordHelper from 'view-record-helper';
 import DynamicLogic from 'dynamic-logic';
 import _ from 'underscore';
 import $ from 'jquery';
-import DefaultsPopulator from 'helpers/model/defaults-populator';
 
 /**
  * A base record view. To be extended.
@@ -686,7 +685,7 @@ class BaseRecordView extends View {
         }
 
         this.listenTo(this.model, 'sync', () => {
-             this.attributes = this.model.getClonedAttributes();
+            this.attributes = this.model.getClonedAttributes();
         });
 
         this.initDependency();
@@ -1303,15 +1302,12 @@ class BaseRecordView extends View {
     }
 
     /**
-     * Populate defaults.
-     *
      * @return {Promise|undefined}
+     *
+     * @deprecated As of v9.3.0.
+     * @todo Remove in v10.0.
      */
-    populateDefaults() {
-        const populator = new DefaultsPopulator();
-
-        return populator.populate(this.model);
-    }
+    populateDefaults() {}
 
     // noinspection JSUnusedGlobalSymbols
     /**

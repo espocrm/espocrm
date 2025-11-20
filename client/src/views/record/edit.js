@@ -144,10 +144,10 @@ class EditRecordView extends DetailRecordView {
             super.setupBeforeFinal();
         }
 
+        // @todo To be removed.
         if (promise) {
             this.wait(promise);
 
-            // @todo Revise. Possible race condition issues.
             promise.then(() => {
                 super.setupBeforeFinal();
 
