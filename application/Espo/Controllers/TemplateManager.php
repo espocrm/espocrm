@@ -160,7 +160,7 @@ class TemplateManager
         $returnData->body = $templateFileManager->getTemplate($data->name, 'body', $scope);
 
         if ($hasSubject) {
-            $returnData->subject = $templateFileManager->getTemplate($data->name, 'subject');
+            $returnData->subject = $templateFileManager->getTemplate($data->name, 'subject', $scope);
         }
 
         return $returnData;
