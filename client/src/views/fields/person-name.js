@@ -50,6 +50,13 @@ class PersonNameFieldView extends VarcharFieldView {
         'pattern',
     ]
 
+    /**
+     * @protected
+     * @type {string}
+     * @since 9.3.0
+     */
+    salutationField
+
     data() {
         const data = super.data();
 
@@ -59,6 +66,7 @@ class PersonNameFieldView extends VarcharFieldView {
         data.lastValue = this.model.get(this.lastField);
         data.middleValue = this.model.get(this.middleField);
         data.salutationOptions = this.salutationOptions;
+        data.salutationField = this.salutationField;
 
         if (this.isEditMode()) {
             data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
