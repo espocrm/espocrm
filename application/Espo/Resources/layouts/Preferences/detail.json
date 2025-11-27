@@ -67,6 +67,10 @@
             [
                 {"name": "followCreatedEntities"},
                 {"name": "followCreatedEntityTypeList"}
+            ],
+            [
+                {"name": "followAsCollaborator"},
+                false
             ]
         ]
     },

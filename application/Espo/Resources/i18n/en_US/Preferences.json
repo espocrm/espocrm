@@ -35,6 +35,7 @@
         "followEntityOnStreamPost": "Auto-follow record after posting in Stream",
         "followCreatedEntities": "Auto-follow created records",
         "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
+        "followAsCollaborator": "Auto-follow when added as a collaborator",
         "emailUseExternalClient": "Use an external email client",
         "textSearchStoringDisabled": "Disable text filter storing",
         "calendarSlotDuration": "Calendar Slot Duration",

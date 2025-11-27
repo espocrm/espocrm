@@ -211,6 +211,10 @@
             "default": [],
             "tooltip": true
         },
+        "followAsCollaborator": {
+            "type": "bool",
+            "default": true
+        },
         "emailUseExternalClient": {
             "type": "bool",
             "default": false

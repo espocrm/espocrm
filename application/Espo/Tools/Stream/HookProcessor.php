@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Acl\AssignmentChecker\Helper;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveContext;
@@ -52,6 +53,7 @@ use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Tools\Stream\Service as Service;
 use Espo\Tools\Stream\Jobs\AutoFollow as AutoFollowJob;
 use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
+use Espo\Tools\User\PreferencesProvider;
 
 /**
  * Handles operations with entities.
@@ -71,7 +73,9 @@ class HookProcessor
         private Service $service,
         private User $user,
         private Preferences $preferences,
-        private JobSchedulerFactory $jobSchedulerFactory
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private Helper $helper,
+        private PreferencesProvider $preferencesProvider,
     ) {}
 
     public function beforeSave(Entity $entity, SaveOptions $options): void
@@ -346,11 +350,11 @@ class HookProcessor
 
         if ($entity->isNew()) {
             $this->afterSaveStreamNew($entity, $options);
-
-            return;
+        } else {
+            $this->afterSaveStreamNotNew($entity, $options);
         }
 
-        $this->afterSaveStreamNotNew($entity, $options);
+        $this->followAddedCollaborators($entity);
     }
 
     /**
@@ -679,5 +683,32 @@ class HookProcessor
         }
 
         $entity->set(Field::STREAM_UPDATED_AT, DateTime::createNow()->toString());
+    }
+
+    private function followAddedCollaborators(CoreEntity $entity): void
+    {
+        if (
+            !$this->helper->hasCollaboratorsField($entity->getEntityType()) ||
+            !$entity->isAttributeChanged(Field::COLLABORATORS . 'Ids')
+        ) {
+            return;
+        }
+
+        $currentUserIds = $entity->getLinkMultipleIdList(Field::COLLABORATORS);
+        $previousUserIds = $entity->getFetchedLinkMultipleIdList(Field::COLLABORATORS);
+
+        $addedUserIds = array_diff($currentUserIds, $previousUserIds);
+
+        $userIds = array_filter($addedUserIds, fn ($userId) => $this->toFollowUserAsCollaborator($userId));
+        $userIds = array_values($userIds);
+
+        $this->service->followEntityMass($entity, $userIds);
+    }
+
+    private function toFollowUserAsCollaborator(string $userId): bool
+    {
+        $preferences = $this->preferencesProvider->tryGet($userId);
+
+        return $preferences?->get('followAsCollaborator') === true;
     }
 }
