@@ -33,6 +33,7 @@ use Espo\Core\Acl\AssignmentChecker\Helper;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\Notification\AssignmentNotificator\Params;
+use Espo\Core\Notification\UserEnabledChecker;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
@@ -44,6 +45,7 @@ class CollaboratorsNotificator
         private Helper $helper,
         private EntityManager $entityManager,
         private User $user,
+        private UserEnabledChecker $userEnabledChecker,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -85,16 +87,22 @@ class CollaboratorsNotificator
 
     private function toProcessUser(Entity $entity, string $userId): bool
     {
+        $entityType = $entity->getEntityType();
+
         if ($userId === $this->user->getId()) {
             return false;
         }
 
-        if ($this->helper->hasAssignedUsersField($entity->getEntityType())) {
+        if ($this->helper->hasAssignedUsersField($entityType)) {
             return !in_array($userId, $entity->getLinkMultipleIdList(Field::ASSIGNED_USERS));
         }
 
-        if ($this->helper->hasAssignedUserField($entity->getEntityType())) {
+        if ($this->helper->hasAssignedUserField($entityType)) {
             return $userId !== $entity->get(Field::ASSIGNED_USER . 'Id');
+        }
+
+        if (!$this->userEnabledChecker->checkAssignment($entityType, $userId)) {
+            return false;
         }
 
         return true;

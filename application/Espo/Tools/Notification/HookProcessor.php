@@ -75,8 +75,8 @@ class HookProcessor
         }
 
         $this->processAssignment($entity, $options);
+        $this->processCollaborating($entity, $options);
 
-        $this->collaboratorsNotificator->process($entity, $this->createParams($options));
     }
 
     /**
@@ -97,11 +97,9 @@ class HookProcessor
             return;
         }
 
-        $assignmentNotificationsEntityList = $this->config->get('assignmentNotificationsEntityList') ?? [];
-
         if (
             (!$force || !$hasStream) &&
-            !in_array($entityType, $assignmentNotificationsEntityList)
+            !in_array($entityType, $this->getAssignmentEnabledEntityTypeList())
         ) {
             return;
         }
@@ -234,5 +232,29 @@ class HookProcessor
         }
 
         return $params;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAssignmentEnabledEntityTypeList(): array
+    {
+        return $this->config->get('assignmentNotificationsEntityList') ?? [];
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function processCollaborating(CoreEntity $entity, array $options): void
+    {
+        // If stream is enabled, then always process. Otherwise, use the parameter for 'assignment'.
+        if (
+            !$this->checkHasStream($entity->getEntityType()) &&
+            !in_array($entity->getEntityType(), $this->getAssignmentEnabledEntityTypeList())
+        ) {
+            return;
+        }
+
+        $this->collaboratorsNotificator->process($entity, $this->createParams($options));
     }
 }
