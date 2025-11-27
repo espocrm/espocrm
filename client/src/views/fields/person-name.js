@@ -59,6 +59,7 @@ class PersonNameFieldView extends VarcharFieldView {
         data.lastValue = this.model.get(this.lastField);
         data.middleValue = this.model.get(this.middleField);
         data.salutationOptions = this.salutationOptions;
+        data.salutationField = this.salutationField;
 
         if (this.isEditMode()) {
             data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
