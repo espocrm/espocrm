@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Htmlizer;
 
+use Espo\Core\Currency\PrecisionProvider;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -104,7 +105,8 @@ class HtmlizerTest extends TestCase
             $this->createMock(Language::class),
             $this->createMock(Config::class),
             $this->createMock(Log::class),
-            $this->createMock(InjectableFactory::class)
+            $this->createMock(InjectableFactory::class),
+            $this->createMock(PrecisionProvider::class)
         );
     }
 
