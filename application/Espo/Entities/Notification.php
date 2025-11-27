@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkParent;
 
 use Espo\Core\ORM\Entity;
@@ -40,6 +41,7 @@ class Notification extends Entity
 
     public const TYPE_ENTITY_REMOVED = 'EntityRemoved';
     public const TYPE_ASSIGN = 'Assign';
+    public const TYPE_COLLABORATING = 'Collaborating';
     public const TYPE_EMAIL_RECEIVED = 'EmailReceived';
     public const TYPE_NOTE = 'Note';
     public const TYPE_MENTION_IN_POST = 'MentionInPost';
@@ -98,12 +100,21 @@ class Notification extends Entity
         return $this;
     }
 
+    public function getCreatedBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('createdBy');
+    }
+
     public function getRelated(): ?LinkParent
     {
         /** @var ?LinkParent */
         return $this->getValueObject('related');
     }
 
+    /**
+     * Note: 'relatedName' is not loaded for a performance reason. Pass 'relatedName' in 'data'.
+     */
     public function setRelated(LinkParent|Entity|null $related): self
     {
         if ($related instanceof LinkParent) {

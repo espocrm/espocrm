@@ -318,6 +318,21 @@ class Helper
             $entityDefs->getRelation(self::FIELD_ASSIGNED_USERS)->getForeignEntityType() === User::ENTITY_TYPE;
     }
 
+    public function hasAssignedUserField(string $entityType): bool
+    {
+        $entityDefs = $this->ormDefs->getEntity($entityType);
+
+        $fieldDefs = $entityDefs->tryGetField(Field::ASSIGNED_USER);
+
+        if (!$fieldDefs) {
+            return false;
+        }
+
+        return $fieldDefs->getType() === FieldType::LINK &&
+            $entityDefs->hasRelation(Field::ASSIGNED_USER) &&
+            $entityDefs->getRelation(Field::ASSIGNED_USER)->getForeignEntityType() === User::ENTITY_TYPE;
+    }
+
     public function hasCollaboratorsField(string $entityType): bool
     {
         if (!$this->metadata->get("scopes.$entityType.collaborators")) {

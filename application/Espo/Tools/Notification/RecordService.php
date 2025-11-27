@@ -121,7 +121,7 @@ class RecordService
         $ids = [];
         $actionIds = [];
 
-        foreach ($collection as  $entity) {
+        foreach ($collection as $entity) {
             $ids[] = $entity->getId();
 
             $groupedCount = null;
@@ -130,6 +130,14 @@ class RecordService
                 $actionIds[] = $entity->getActionId();
 
                 $groupedCount = $groupedCountMap[$entity->getActionId()] ?? 0;
+            }
+
+            if ($entity->getRelated() && $entity->getData()?->relatedName) {
+                $entity->set('relatedName', $entity->getData()->relatedName);
+            }
+
+            if ($entity->getCreatedBy() && $entity->getData()?->createdByName) {
+                $entity->set('createdByName', $entity->getData()->createdByName);
             }
 
             $entity->set('groupedCount', $groupedCount);

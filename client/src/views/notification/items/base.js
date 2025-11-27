@@ -127,6 +127,32 @@ class BaseNotificationItemView extends View {
 
         return ['de_DE', 'nl_NL'].includes(language);
     }
+
+    /**
+     * @protected
+     * @param entityType
+     * @param id
+     * @return {string|null}
+     */
+    getIconHtml(entityType, id) {
+        const iconClass = this.getMetadata().get(`clientDefs.${entityType}.iconClass`);
+        const color = this.getMetadata().get(`clientDefs.${entityType}.color`);
+
+        if (!iconClass) {
+            return null;
+        }
+
+        const span = document.createElement('span');
+        span.className = `action text-muted icon ${iconClass}`;
+        span.style.cursor = 'pointer';
+        span.style.color = color ? color : '';
+        span.title =  this.translate('View');
+        span.dataset.action = 'quickView';
+        span.dataset.id = id;
+        span.dataset.scope = entityType;
+
+        return span.outerHTML;
+    }
 }
 
 export default BaseNotificationItemView;

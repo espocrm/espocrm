@@ -36,6 +36,10 @@ class NotificationContainerFieldView extends BaseFieldView {
     listTemplate = 'notification/fields/container'
     detailTemplate = 'notification/fields/container'
 
+    /**
+     * @private
+     * @type {string[]}
+     */
     types = [
         'Assign',
         'EmailReceived',
@@ -43,6 +47,7 @@ class NotificationContainerFieldView extends BaseFieldView {
         'Message',
         'System',
         'UserReaction',
+        'Collaborating',
     ]
 
     inlineEditDisabled = true

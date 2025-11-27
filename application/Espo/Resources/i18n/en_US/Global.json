@@ -541,6 +541,7 @@
         "entityRemoved": "{user} removed {entityType} {entity}",
         "emailInbox": "{user} added email {entity} to your inbox",
         "userPostReaction": "{user} reacted to your {post}",
+        "addedToCollaborators": "{user} added you as a collaborator to {entityType} {entity}",
         "userPostInParentReaction": "{user} reacted to your {post} in {entityType} {entity}"
     },
     "streamMessages": {

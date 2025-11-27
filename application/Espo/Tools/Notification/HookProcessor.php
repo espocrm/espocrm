@@ -61,7 +61,8 @@ class HookProcessor
         private EntityManager $entityManager,
         private StreamService $streamService,
         private AssignmentNotificatorFactory $notificatorFactory,
-        private User $user
+        private User $user,
+        private CollaboratorsNotificator $collaboratorsNotificator,
     ) {}
 
     /**
@@ -69,11 +70,21 @@ class HookProcessor
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        $entityType = $entity->getEntityType();
-
         if (!$entity instanceof CoreEntity) {
             return;
         }
+
+        $this->processAssignment($entity, $options);
+
+        $this->collaboratorsNotificator->process($entity, $this->createParams($options));
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function processAssignment(CoreEntity $entity, array $options): void
+    {
+        $entityType = $entity->getEntityType();
 
         $hasStream = $this->checkHasStream($entityType);
         $force = $this->forceAssignmentNotificator($entityType);
@@ -97,13 +108,7 @@ class HookProcessor
 
         $notificator = $this->getNotificator($entityType);
 
-        $params = AssignmentNotificatorParams::create()->withRawOptions($options);
-
-        $saveContext = SaveContext::obtainFromRawOptions($options);
-
-        if ($saveContext) {
-            $params = $params->withActionId($saveContext->getActionId());
-        }
+        $params = $this->createParams($options);
 
         $notificator->process($entity, $params);
     }
@@ -213,5 +218,21 @@ class HookProcessor
     private function forceAssignmentNotificator(string $entityType): bool
     {
         return (bool) $this->metadata->get(['notificationDefs', $entityType, 'forceAssignmentNotificator']);
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function createParams(array $options): AssignmentNotificatorParams
+    {
+        $params = AssignmentNotificatorParams::create()->withRawOptions($options);
+
+        $saveContext = SaveContext::obtainFromRawOptions($options);
+
+        if ($saveContext) {
+            $params = $params->withActionId($saveContext->getActionId());
+        }
+
+        return $params;
     }
 }
