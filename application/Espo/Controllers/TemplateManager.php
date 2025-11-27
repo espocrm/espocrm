@@ -73,17 +73,16 @@ class TemplateManager
 
         $scope = $request->getQueryParam('scope');
 
-        $module = $this->metadata->get(['app', 'templates', $name, 'module']);
         $hasSubject = !$this->metadata->get(['app', 'templates', $name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
 
         $returnData = (object) [];
 
-        $returnData->body = $templateFileManager->getTemplate($name, 'body', $scope, $module);
+        $returnData->body = $templateFileManager->getTemplate($name, 'body', $scope);
 
         if ($hasSubject) {
-            $returnData->subject = $templateFileManager->getTemplate($name, 'subject', $scope, $module);
+            $returnData->subject = $templateFileManager->getTemplate($name, 'subject', $scope);
         }
 
         return $returnData;
@@ -146,7 +145,6 @@ class TemplateManager
             $scope = $data->scope;
         }
 
-        $module = $this->metadata->get(['app', 'templates', $data->name, 'module']);
         $hasSubject = !$this->metadata->get(['app', 'templates', $data->name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
@@ -159,10 +157,10 @@ class TemplateManager
 
         $returnData = (object) [];
 
-        $returnData->body = $templateFileManager->getTemplate($data->name, 'body', $scope, $module);
+        $returnData->body = $templateFileManager->getTemplate($data->name, 'body', $scope);
 
         if ($hasSubject) {
-            $returnData->subject = $templateFileManager->getTemplate($data->name, 'subject', $scope, $module);
+            $returnData->subject = $templateFileManager->getTemplate($data->name, 'subject', $scope);
         }
 
         return $returnData;
