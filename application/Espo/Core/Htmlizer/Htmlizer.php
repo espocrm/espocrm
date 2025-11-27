@@ -34,6 +34,7 @@ use DOMDocument;
 use DOMElement;
 use DOMException;
 use DOMXPath;
+use Espo\Core\Currency\PrecisionProvider;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
@@ -73,7 +74,7 @@ use const JSON_PRESERVE_ZERO_FRACTION;
  */
 class Htmlizer
 {
-    private const LINK_LIMIT = 100;
+    private const int LINK_LIMIT = 100;
 
     public function __construct(
         private DateTime $dateTime,
@@ -86,6 +87,7 @@ class Htmlizer
         private Config $config,
         private Log $log,
         private InjectableFactory $injectableFactory,
+        private PrecisionProvider $precisionProvider,
         private ?Acl $acl = null,
         private ?ServiceFactory $serviceFactory = null,
     ) {}
@@ -1061,6 +1063,16 @@ class Htmlizer
                 }
             }
 
+            if ($fieldType === FieldType::CURRENCY) {
+                $code = $data[$attribute . 'Currency'] ?? null;
+
+                if (!is_string($code)) {
+                    $code = null;
+                }
+
+                $data[$attribute] = $this->formatCurrencyValue($data[$attribute], $code);
+            }
+
             $data[$attribute] = $this->format($data[$attribute]);
         }
     }
@@ -1106,5 +1118,20 @@ class Htmlizer
         }
 
         return $data;
+    }
+
+    private function formatCurrencyValue(mixed $value, ?string $code): ?string
+    {
+        if (!is_string($value) && !is_int($value) && !is_float($value)) {
+            return null;
+        }
+
+        if (is_string($value) && !is_numeric($value)) {
+            return null;
+        }
+
+        $precision = $this->precisionProvider->get($code);
+
+        return $this->number->format($value, $precision);
     }
 }

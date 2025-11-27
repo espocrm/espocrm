@@ -13,6 +13,16 @@
                 "description": "A 3-letter ISO 4217 currency code."
             }
         },
+        "precisionMap": {
+            "type": "object",
+            "description": "A currency-code => precision mapping.",
+            "additionalProperties": {
+                "type": "number",
+                "description": "Number of decimal places.",
+                "minimum": 0,
+                "maximum": 4
+            }
+        },
         "list": {
             "type": "array",
             "description": "A list of currencies available in the system. Values defined as 3-letter currency codes in ISO 4217 standard. Use __APPEND__ to add new currencies w/o deleting existing.",
