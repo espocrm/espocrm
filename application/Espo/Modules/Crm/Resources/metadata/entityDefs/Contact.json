@@ -396,6 +396,7 @@
                 "relationName": "contactOpportunity",
                 "nearKey": "contactId"
             },
+            "directUpdateDisabled": true,
             "view": "crm:views/contact/fields/opportunity-role"
         },
         "acceptanceStatus": {
