@@ -3165,7 +3165,7 @@ class ListRecordView extends View {
      * @param {function(module:view):void} [callback] A callback.
      */
     buildRow(i, model, callback) {
-        const key = model.id;
+        const key = model.id ?? i.toString();
 
         this.rowList.push(key);
 
