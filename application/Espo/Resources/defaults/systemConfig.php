@@ -277,6 +277,7 @@ return [
         'xml',
         'xmlwriter',
         'exif',
+        'bcmath',
     ],
     'recommendedPhpParams' => [
         'max_execution_time' => 180,
