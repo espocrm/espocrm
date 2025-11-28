@@ -4,7 +4,6 @@
     "align": "Uitlijnen",
     "panelName": "Paneel naam",
     "style": "Stijl",
-    "sticked": "Vastgezet",
     "isLarge": "Groot lettertype",
     "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is",
     "hidden": "Verborgen",
@@ -13,7 +12,8 @@
     "width": "Breedte",
     "noteText": "Noot tekst",
     "noteStyle": "Noot stijl",
-    "isMuted": "Gedempte kleur"
+    "isMuted": "Gedempte kleur",
+    "sticked": "Blijf boven"
   },
   "options": {
     "align": {

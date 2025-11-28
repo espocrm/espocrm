@@ -14,7 +14,7 @@
     "defaultCurrency": "Standardwährung",
     "customUrl": "Benutzerdefinierte URL",
     "customId": "Benutzerdefinierte ID",
-    "layoutSet": "Layout-Set",
+    "layoutSet": "Layout-Satz",
     "authenticationProvider": "Authentifizierungsanbieter",
     "authTokenLifetime": "Auth Token-Lebensdauer (Stunden)",
     "authTokenMaxIdleTime": "Auth Token Maximale Leerlaufzeit (Stunden)",
@@ -24,7 +24,7 @@
     "users": "Benutzer",
     "portalRoles": "Rollen",
     "notes": "Notizen",
-    "layoutSet": "Layout-Set",
+    "layoutSet": "Layout-Satz",
     "authenticationProvider": "Authentifizierungsanbieter"
   },
   "tooltips": {

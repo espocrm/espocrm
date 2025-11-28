@@ -29,7 +29,8 @@
     "Activities": "Activiteiten",
     "KnowledgeBaseArticle": "Kennisbank artikel",
     "KnowledgeBaseCategory": "Kennisbank categorie",
-    "CampaignLogRecord": "Campagne log record"
+    "CampaignLogRecord": "Campagne log record",
+    "TargetListCategory": "Doellijst Categorie"
   },
   "scopeNamesPlural": {
     "Account": "Relaties",
@@ -50,7 +51,8 @@
     "Activities": "Activiteiten",
     "KnowledgeBaseArticle": "Kennisbank",
     "KnowledgeBaseCategory": "Kennisbank categorieën",
-    "CampaignLogRecord": "Campagne log record"
+    "CampaignLogRecord": "Campagne log record",
+    "TargetListCategory": "Doellijst Categorieën"
   },
   "dashlets": {
     "Leads": "Mijn Leads",

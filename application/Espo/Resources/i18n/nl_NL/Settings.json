@@ -13,16 +13,11 @@
     "currencyList": "Valuta Lijst",
     "language": "Taal",
     "companyLogo": "Bedrijfslogo",
-    "smtpPort": "Poort",
     "ldapPort": "Poort",
-    "smtpSecurity": "Beveiliging",
     "ldapSecurity": "Beveiliging",
-    "smtpUsername": "Gebruikersnaam",
     "emailAddress": "E-mail",
-    "smtpPassword": "Wachtwoord",
     "ldapPassword": "Wachtwoord",
     "outboundEmailFromName": "Van naam",
-    "outboundEmailFromAddress": "Van Adres",
     "outboundEmailIsShared": "Gedeeld",
     "recordsPerPage": "Records per pagina",
     "recordsPerPageSmall": "Records per pagina (klein)",
@@ -134,7 +129,7 @@
     "attachmentUploadChunkSize": "Upload Chunk Grootte (Mb)",
     "workingTimeCalendar": "Werktijd Kalender",
     "oidcClientId": "OIDC Klant ID",
-    "oidcClientSecret": "OIDC cliënt geheim",
+    "oidcClientSecret": "OIDC Geheime Code",
     "oidcAuthorizationRedirectUri": "OIDC autorisatie omleiding URI",
     "oidcAuthorizationEndpoint": "OIDC autorisatie eindpunt",
     "oidcTokenEndpoint": "OIDC token eindpunt",
@@ -166,7 +161,10 @@
     "streamEmailWithContentEntityTypeList": "Entiteiten met e-mail body in stream notes",
     "emailScheduledBatchCount": "Max. aantal geplande e-mails per batch",
     "passwordStrengthSpecialCharacterCount": "Aantal speciale tekens vereist in wachtwoord",
-    "availableReactions": "Beschikbare reacties"
+    "availableReactions": "Beschikbare reacties",
+    "outboundEmailFromAddress": "E-mailadres systeem",
+    "oidcUserInfoEndpoint": "OIDC UserInfo Eindpunt",
+    "baselineRole": "Basisrol"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -235,8 +233,6 @@
     "passwordRecoveryNoExposure": "Het zal niet mogelijk zijn te bepalen of een bepaald e-mailadres in het systeem is geregistreerd.",
     "emailAddressLookupEntityTypeList": "Voor e-mail adres automatisch aanvullen.",
     "emailNotificationsDelay": "Een bericht kan binnen de opgegeven termijn worden bewerkt voordat de kennisgeving wordt verzonden.",
-    "outboundEmailFromAddress": "Het e-mailadres van het systeem.",
-    "smtpServer": "Indien leeg, dan wordt de e-mailaccount van de groep met het corresponderende e-mailadres gebruikt.",
     "busyRangesEntityList": "Waarmee rekening wordt gehouden bij het tonen van bezette tijden in planner en tijdlijn.",
     "recordsPerPageSelect": "Aantal records dat aanvankelijk wordt weergegeven bij het selecteren van records.",
     "workingTimeCalendar": "Een werktijd kalender die standaard op alle gebruikers wordt toegepast.",
@@ -254,7 +250,9 @@
     "authIpAddressWhitelist": "Een lijst van IP-adressen of reeksen in CIDR-notatie.\n\nPortalen worden niet beïnvloed door de beperking.",
     "emailAddressIsOptedOutByDefault": "Bij het aanmaken van een nieuw record wordt het e-mailadres als afgemeld gemarkeerd.",
     "oidcGroupClaim": "Een bewering om te gebruiken voor het in kaart brengen van teams.",
-    "quickSearchFullTextAppendWildcard": "Voeg een wildcard toe aan een autocomplete zoekopdracht wanneer zoeken op volledige tekst is ingeschakeld. Vermindert de zoekprestaties."
+    "quickSearchFullTextAppendWildcard": "Voeg een wildcard toe aan een autocomplete zoekopdracht wanneer zoeken op volledige tekst is ingeschakeld. Vermindert de zoekprestaties.",
+    "outboundEmailFromAddress": "Vanaf dit e-mailadres worden systeeme-mails verzonden. Een [groep e-mailaccount](#InboundEmail) met hetzelfde e-mailadres moet worden ingesteld en correct worden geconfigureerd om e-mails te verzenden.",
+    "baselineRole": "De standaardrol die op alle gebruikers wordt toegepast. Alle extra rollen die aan een gebruiker worden toegewezen, verlenen rechten bovenop deze basis.\n\n**Belangrijk**. Het wijzigen van deze rol heeft gevolgen voor alle gebruikers. Controleer de wijziging zorgvuldig om te voorkomen dat onbedoelde rechten worden verleend."
   },
   "labels": {
     "System": "Systeem",
@@ -286,7 +284,8 @@
     "Scheduled Send": "Geplande verzending"
   },
   "messages": {
-    "ldapTestConnection": "De verbinding is succesvol tot stand gebracht."
+    "ldapTestConnection": "De verbinding is succesvol tot stand gebracht.",
+    "confirmBaselineRoleChange": "Weet u zeker dat u de basisrol wilt wijzigen? Een verkeerde wijziging kan onbedoelde machtigingen aan alle gebruikers verlenen."
   },
   "options": {
     "currencyFormat": {

@@ -73,7 +73,7 @@
     }
   },
   "tooltips": {
-    "audited": "Updates werden im Ereignisverlauf geloggt.",
+    "audited": "Änderungen werden im Ereignisverlauf protokolliert.",
     "required": "Das Feld ist ein Pflichtfeld und darf nicht leer sein.",
     "default": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
     "min": "Min. zulässiger Wert.",

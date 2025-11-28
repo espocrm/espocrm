@@ -20,14 +20,13 @@
     "writeMessage": "Schrijf je bericht hier",
     "pinnedMaxCountExceeded": "Kan geen notities meer vastpinnen. Het maximaal toegestane aantal is {count}."
   },
+  "links": {
+    "superParent": "Behorende bij",
+    "related": "Verwant",
+    "portals": "Portalen",
+    "attachments": "Bijlagen"
+  },
   "options": {
-    "targetType": {
-      "self": "aan mezelf",
-      "users": "voor bepaalde gebruiker (s)",
-      "teams": "naar een specifiek(e) groep(en)",
-      "all": "voor alle interne gebruikers",
-      "portals": "voor portaalgebruikers"
-    },
     "type": {
       "Create": "Creër",
       "CreateRelated": "Gerelateerde creëren",
@@ -36,19 +35,23 @@
       "Unrelate": "Ontkoppel",
       "EmailReceived": "Email ontvangen",
       "EmailSent": "Email verstuurd"
+    },
+    "targetType": {
+      "self": "Zelf",
+      "users": "Gebruikers",
+      "all": "Alle interne gebruikers",
+      "portals": "Portaal Gebruikers"
     }
-  },
-  "links": {
-    "superParent": "Behorende bij",
-    "related": "Verwant",
-    "portals": "Portalen",
-    "attachments": "Bijlagen"
   },
   "labels": {
     "View Posts": "Posts bekijken",
     "View Activity": "Activiteit bekijken",
     "Unpin": "Ontpin",
     "Pinned": "Vastgezet",
-    "Quote Reply": "Quote Beantwoorden"
+    "Quote Reply": "Quote Beantwoorden",
+    "View Attachments": "Bekijk bijlagen"
+  },
+  "otherFields": {
+    "to": "Aan"
   }
 }

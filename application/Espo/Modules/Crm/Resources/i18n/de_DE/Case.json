@@ -9,7 +9,7 @@
     "description": "Beschreibung",
     "lead": "Interessent",
     "attachments": "Anhänge",
-    "inboundEmail": "Gruppen E-Mail Konto",
+    "inboundEmail": "Gruppen-E-Mail-Konto",
     "originalEmail": "Ursprüngliche E-Mail",
     "isInternal": "Vor dem Portal verborgen"
   },
@@ -23,7 +23,7 @@
     "articles": "Wissensbasis Artikel",
     "lead": "Interessent",
     "attachments": "Anhänge",
-    "inboundEmail": "Gruppen E-Mail Konto"
+    "inboundEmail": "Gruppen-E-Mail-Konto"
   },
   "options": {
     "status": {

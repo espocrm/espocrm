@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create OAuthAccount": "Creëer OAuth-account",
+    "Connection": "Connectie"
+  },
+  "fields": {
+    "provider": "Aanbieder",
+    "hasAccessToken": "Heeft toegangstoken",
+    "user": "Gebruiker",
+    "providerIsActive": "Aanbieder is actief"
+  },
+  "links": {
+    "provider": "Aanbieder"
+  }
+}

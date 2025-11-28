@@ -11,13 +11,14 @@
     "entityType": "Type entiteit",
     "primaryFilter": "Primair filter",
     "boolFilterList": "Extra filters",
-    "sortBy": "Sortering (veld)",
-    "sortDirection": "Sortering (richting)",
     "expandedLayout": "Lay-out",
     "dateFilter": "Datumfilter",
     "skipOwn": "Geen eigen records tonen",
     "text": "Tekst",
-    "folder": "Map"
+    "folder": "Map",
+    "includeShared": "Gedeeld opnemen",
+    "sortBy": "Sorteer op",
+    "sortDirection": "Sorteer richting"
   },
   "options": {
     "mode": {
@@ -36,5 +37,9 @@
   },
   "tooltips": {
     "skipOwn": "Acties van uw gebruikersaccount worden niet weergegeven."
+  },
+  "otherFields": {
+    "soft": "Zachte kleur",
+    "small": "Klein lettertype"
   }
 }

@@ -51,7 +51,7 @@
     "storeSentEmails": "E-mails worden opgeslagen in CRM."
   },
   "presetFilters": {
-    "actual": "Actueel",
-    "complete": "Voltooi"
+    "complete": "Voltooi",
+    "actual": "Actief"
   }
 }

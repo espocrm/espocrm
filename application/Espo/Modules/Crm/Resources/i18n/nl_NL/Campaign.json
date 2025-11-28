@@ -40,7 +40,8 @@
       "Email": "E-mail",
       "Television": "Televisie",
       "Newsletter": "Nieuwsbrief",
-      "Mail": "Post"
+      "Mail": "Post",
+      "Informational Email": "Informatieve e-mail"
     },
     "status": {
       "Active": "Actief",
@@ -66,7 +67,8 @@
   },
   "messages": {
     "unsubscribed": "U bent uitgeschreven van onze mailinglijst.",
-    "subscribedAgain": "U bent opnieuw ingeschreven."
+    "subscribedAgain": "U bent opnieuw ingeschreven.",
+    "cannotChangeType": "Kan type niet veranderen."
   },
   "tooltips": {
     "targetLists": "Doelen die berichten zouden moeten ontvangen.",

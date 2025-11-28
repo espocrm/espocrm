@@ -17,7 +17,8 @@
     "body": "Inhoud",
     "categories": "Categorieën",
     "language": "Taal",
-    "portals": "Portalen"
+    "portals": "Portalen",
+    "bodyPlain": "Body gewoon"
   },
   "links": {
     "cases": "Tickets",

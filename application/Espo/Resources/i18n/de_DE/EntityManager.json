@@ -89,13 +89,13 @@
     "urlHashCopiedToClipboard": "Ein URL-Fragment für den Filter *{name}* wird in die Zwischenablage kopiert. Sie können es der Navigationsleiste hinzufügen."
   },
   "tooltips": {
-    "statusField": "Updates dieses Feldes werden im Ereignisverlauf protokolliert.",
+    "statusField": "Änderungen dieses Feldes werden im Ereignisverlauf protokolliert.",
     "textFilterFields": "Von der Textsuche verwendete Felder.",
     "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
     "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Ereignisverlauf protokolliert.",
     "linkMultipleField": "Mehrere Felder verlinken bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Verwenden Sie es nicht, wenn Sie eine große Anzahl von Verknüpfungen haben.",
     "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
-    "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich.",
+    "fullTextSearch": "Ausführung des Neuaufbaus ist erforderlich.",
     "countDisabled": "Die Gesamtzahl wird in der Listenansicht nicht angezeigt. Dies verringert die Ladezeit, wenn die DB-Tabelle sehr groß ist.",
     "optimisticConcurrencyControl": "Verhindert Schreibkonflikte.",
     "duplicateCheckFieldList": "Welche Felder bei der Überprüfung auf Duplikate zu prüfen sind.",

@@ -25,7 +25,8 @@
     "Access": "Toegang",
     "Create Role": "Creëer Functie",
     "Scope Level": "Toepassingsniveau",
-    "Field Level": "Veldniveau"
+    "Field Level": "Veldniveau",
+    "Baseline": "Basislijn"
   },
   "options": {
     "accessList": {

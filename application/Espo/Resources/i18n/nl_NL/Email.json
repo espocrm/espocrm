@@ -38,9 +38,6 @@
     "fromName": "Van naam",
     "fromString": "Van String",
     "isSystem": "Is systeem",
-    "toEmailAddresses": "Naar e-mailadressen",
-    "bccEmailAddresses": "BCC e-mail adressen",
-    "replyToEmailAddresses": "Antwoord Aan e-mail adressen",
     "personStringData": "Persoonlijke Stringgegevens",
     "fromEmailAddress": "Van adres (link)",
     "replyToName": "Antwoord Aan naam",
@@ -55,7 +52,11 @@
     "isUsersSent": "Is door gebruiker verzonden",
     "inArchive": "In Archief",
     "groupStatusFolder": "Groeps Status map",
-    "sendAt": "Verzenden naar"
+    "sendAt": "Verzenden naar",
+    "toEmailAddresses": "Naar e-mailadressen",
+    "bccEmailAddresses": "BCC e-mailadressen",
+    "replyToEmailAddresses": "Reply-To e-mailadressen",
+    "isAutoReply": "Is automatisch antwoord"
   },
   "links": {
     "replied": "Beantwoord",

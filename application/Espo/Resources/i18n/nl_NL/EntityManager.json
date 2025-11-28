@@ -13,8 +13,6 @@
     "entityForeign": "Externe entiteit",
     "linkForeign": "Externe link",
     "labelForeign": "Extern label",
-    "sortBy": "Standaard sortering (veld)",
-    "sortDirection": "Standaard sortering (richting)",
     "relationName": "Middelste tabelnaam",
     "linkMultipleField": "Link meerdere velden",
     "linkMultipleFieldForeign": "Externe link meervoudig veld",
@@ -46,7 +44,9 @@
     "preserveAuditLog": "Auditlogboek bewaren",
     "assignedUsers": "Meerdere toegewezen gebruikers",
     "collaborators": "Medewerkers",
-    "aclContactLink": "ACL contact link"
+    "aclContactLink": "ACL contact link",
+    "sortBy": "Standaard sorteer veld",
+    "sortDirection": "Standaard sorteer richting"
   },
   "options": {
     "type": {

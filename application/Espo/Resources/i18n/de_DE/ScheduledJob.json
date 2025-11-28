@@ -12,7 +12,7 @@
   "options": {
     "job": {
       "Cleanup": "Aufräumen",
-      "CheckInboundEmails": "Gruppen E-Mail Konten überprüfen",
+      "CheckInboundEmails": "Gruppen-E-Mail-Konten überprüfen",
       "CheckEmailAccounts": "Persönliche E-Mail Konten prüfen",
       "SendEmailReminders": "E-Mail Erinnerungen senden",
       "AuthTokenControl": "Auth Token-Überwachung",

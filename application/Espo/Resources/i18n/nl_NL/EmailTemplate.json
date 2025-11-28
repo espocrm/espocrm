@@ -15,9 +15,6 @@
   "tooltips": {
     "oneOff": "Controleer of u deze sjabloon maar één keer gaat gebruiken. Bijv. voor verzamel e-mail."
   },
-  "presetFilters": {
-    "actual": "Actueel"
-  },
   "placeholderTexts": {
     "optOutLink": "een afmeldlink",
     "today": "Datum van vandaag",
@@ -27,5 +24,14 @@
   },
   "messages": {
     "infoText": "Beschikbare plaatshouders:\n\n{optOutUrl} &#8211; URL voor een afmeldlink;\n\n{optOutLink} &#8211; een afmeldlink."
+  },
+  "options": {
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
+    }
+  },
+  "presetFilters": {
+    "actual": "Actief"
   }
 }

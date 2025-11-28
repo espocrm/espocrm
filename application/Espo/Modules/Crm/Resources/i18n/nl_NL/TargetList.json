@@ -11,13 +11,15 @@
     "optedOutCount": "Afgemeld aantal",
     "targetStatus": "Doel status",
     "isOptedOut": "Is afgemeld",
-    "sourceCampaign": "Bron Campagne"
+    "sourceCampaign": "Bron Campagne",
+    "category": "Categorie"
   },
   "links": {
     "accounts": "Relaties",
     "contacts": "Contacten",
     "campaigns": "Campagnes",
-    "massEmails": "Verzamel e-mails"
+    "massEmails": "Verzamel e-mails",
+    "category": "Categorie"
   },
   "options": {
     "type": {

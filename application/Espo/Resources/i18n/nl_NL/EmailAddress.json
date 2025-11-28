@@ -6,7 +6,8 @@
   },
   "fields": {
     "optOut": "Afgemeld",
-    "invalid": "Ongeldig"
+    "invalid": "Ongeldig",
+    "lower": "Kleine letters Naam"
   },
   "presetFilters": {
     "orphan": "Wees"

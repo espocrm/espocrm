@@ -13,8 +13,9 @@
     "current": "huidige",
     "time": "tijd",
     "User List": "Gebruikers lijst",
-    "Manage Users": "Gebruikers beheren",
     "View Calendar": "Bekijk de kalender",
-    "Create Shared View": "Creëer gedeelde weergave"
+    "Create Shared View": "Creëer gedeelde weergave",
+    "Edit Shared View": "Bewerk gedeelde weergave",
+    "Shared Mode Options": "Opties gedeelde modus"
   }
 }

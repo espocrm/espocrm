@@ -21,7 +21,7 @@
     "receiveStreamEmailNotifications": "E-Mail-Benachrichtigungen über Beiträge und Statusaktualisierungen",
     "emailReplyForceHtml": "E-Mail Antwort als HTML",
     "autoFollowEntityTypeList": "Automatisches Abonnieren",
-    "emailReplyToAllByDefault": "Standardmäßig Allen antworten",
+    "emailReplyToAllByDefault": "Standardmäßig allen antworten",
     "doNotFillAssignedUserIfNotRequired": "Zugewiesenen Benutzer bei der Erstellung des Datensatzes nicht vorab ausfüllen",
     "followEntityOnStreamPost": "Der Benutzer abonniert die Einträge nach dem Posten in dessen Ereignisverlauf",
     "followCreatedEntities": "Eigene Einträge abonnieren",

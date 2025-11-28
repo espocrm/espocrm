@@ -31,7 +31,9 @@
     "formSuccessRedirectUrl": "URL om naar door te verwijzen na verzenden van formulier",
     "formLanguage": "Gebruikte taal op formulier",
     "formFrameAncestors": "Toegestane hosts voor formulierinsluiting",
-    "formCaptcha": "Captcha gebruiken"
+    "formCaptcha": "Captcha gebruiken",
+    "formTitle": "Titel formulier",
+    "formTheme": "Formulier Thema"
   },
   "links": {
     "targetList": "Doellijst",

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "isActive": "Is actief",
+    "clientId": "Klant ID",
+    "clientSecret": "Geheime Code",
+    "authorizationEndpoint": "Autorisatie Eindpunt",
+    "tokenEndpoint": "Token Eindpunt",
+    "authorizationRedirectUri": "Autorisatie omleiding URI",
+    "scopes": "Scopen",
+    "hasAccessToken": "Heeft toegangstoken",
+    "authorizationPrompt": "Autorisatievraag",
+    "authorizationParams": "Autorisatieparameters"
+  },
+  "tooltips": {
+    "authorizationParams": "Extra queryparameters die naar het autorisatie-eindpunt moeten worden gestuurd. Opgegeven in JSON-formaat."
+  }
+}

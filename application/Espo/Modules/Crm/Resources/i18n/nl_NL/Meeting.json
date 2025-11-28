@@ -14,7 +14,8 @@
     "dateStartDate": "Startdatum (de hele dag)",
     "dateEndDate": "Datum einde (hele dag)",
     "isAllDay": "Is de hele dag",
-    "sourceEmail": "Bron E-mail"
+    "sourceEmail": "Bron E-mail",
+    "joinUrl": "Aanmeld URL"
   },
   "options": {
     "status": {

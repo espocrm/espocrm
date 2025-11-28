@@ -58,7 +58,9 @@
     "AppLogRecord": "App Log regel",
     "WorkingTimeRange": "Werktijd uitzondering",
     "AddressCountry": "Adres Land",
-    "AppSecret": "App Geheim"
+    "AppSecret": "App Geheim",
+    "OAuthAccount": "OAuth account",
+    "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitem"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -107,7 +109,9 @@
     "WebhookQueueItem": "Webhook wachtrij items",
     "WorkingTimeRange": "Werktijd uitzonderingen",
     "AddressCountry": "Adres Landen",
-    "AppSecret": "App Geheimen"
+    "AppSecret": "App Geheimen",
+    "OAuthAccount": "OAuth accounts",
+    "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitems"
   },
   "labels": {
     "Misc": "Overig",
@@ -290,7 +294,9 @@
     "View User Access": "Toegang gebruiker weergeven",
     "Reacted": "Gereageerd",
     "Reaction Removed": "Reactie verwijderd",
-    "Reactions": "Reacties"
+    "Reactions": "Reacties",
+    "Network error": "Netwerk error",
+    "Edit Item": "Item bewerken"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -369,7 +375,6 @@
     "validationFailure": "Backend validatie fout.\n\nVeld: `{field}`\nValidatie: `{type}`",
     "confirmAppRefresh": "De applicatie is bijgewerkt. Het wordt aanbevolen de pagina te verversen om een goede werking te garanderen.",
     "error404": "De door u opgevraagde url kan niet worden verwerkt.",
-    "error403": "Je hebt geen toegang tot dit gedeelte.",
     "extensionLicenseInvalid": "Ongeldige '{name}' uitbreidingslicentie.",
     "extensionLicenseExpired": "Het '{name}' uitbreidingslicentieabonnement is verlopen.",
     "extensionLicenseSoftExpired": "Het '{name}' uitbreidingslicentieabonnement is verlopen.",
@@ -404,7 +409,11 @@
     "duplicateConflict": "Er bestaat al een record.",
     "confirmMassUpdate": "Weet je zeker dat je geselecteerde records massaal wilt bijwerken?",
     "cannotRemoveCategoryWithChildCategory": "Kan geen categorie verwijderen die een subcategorie heeft.",
-    "cannotRemoveNotEmptyCategory": "Kan een niet-lege categorie niet verwijderen."
+    "cannotRemoveNotEmptyCategory": "Kan een niet-lege categorie niet verwijderen.",
+    "arrayInputNotEmpty": "Item is ingevoerd maar niet toegevoegd",
+    "error403": "Je hebt geen toegang tot dit deel.",
+    "sameRecordIsAlreadyBeingEdited": "Het record wordt al bewerkt.",
+    "changesLossConfirmation": "Niet opgeslagen wijzigingen gaan verloren. Weet u het zeker?"
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -415,7 +424,8 @@
   "presetFilters": {
     "followed": "Gevolgd",
     "all": "Alle",
-    "starred": "Sterren"
+    "starred": "Sterren",
+    "active": "Actief"
   },
   "massActions": {
     "remove": "Verwijderen",
@@ -668,7 +678,9 @@
       "isNotEmpty": "Is niet leeg",
       "notLike": "Niet zoals (%)",
       "notContains": "Bevat niet",
-      "notEquals": "Niet gelijk aan"
+      "notEquals": "Niet gelijk aan",
+      "anyOf": "Een van",
+      "noneOf": "Geen van"
     },
     "intSearchRanges": {
       "equals": "Gelijk aan",

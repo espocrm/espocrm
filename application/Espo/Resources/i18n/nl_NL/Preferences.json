@@ -36,12 +36,17 @@
     "calendarScrollHour": "Kalender blader naar uur",
     "defaultRemindersTask": "Standaard herinneringen voor taken",
     "addCustomTabs": "Aangepaste Tabs toevoegen",
-    "reactionNotifications": "In-app meldingen over reacties"
+    "reactionNotifications": "In-app meldingen over reacties",
+    "pageContentWidth": "Breedte inhoud"
   },
   "options": {
     "weekStart": {
       "0": "Zondag",
       "1": "Maandag"
+    },
+    "pageContentWidth": {
+      "": "Normaal",
+      "Wide": "Breed"
     }
   },
   "labels": {

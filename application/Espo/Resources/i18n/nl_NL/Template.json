@@ -41,6 +41,10 @@
     },
     "pageFormat": {
       "Custom": "Aangepast"
+    },
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
     }
   }
 }

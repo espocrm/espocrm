@@ -7,7 +7,8 @@
     "apiKey": "API sleutel",
     "siteKey": "Site sleutel",
     "secretKey": "Geheime sleutel",
-    "scoreThreshold": "Drempel Score"
+    "scoreThreshold": "Drempel Score",
+    "mapId": "Map-ID"
   },
   "messages": {
     "selectIntegration": "Selecteer een integratie in het menu.",

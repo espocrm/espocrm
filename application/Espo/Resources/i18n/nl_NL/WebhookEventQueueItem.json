@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "target": "Doel",
+    "isProcessed": "Wordt verwerkt",
+    "user": "Gebruiker"
+  },
+  "links": {
+    "target": "Doel",
+    "user": "Gebruiker"
+  }
+}
