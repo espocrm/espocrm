@@ -33,7 +33,7 @@
         "notes": "Notes"
     },
     "tooltips": {
-        "layoutSet": "Provides the ability to have layouts that differ from standard ones.",
+        "layoutSet": "Provides the ability to have layouts that differ from the standard ones.",
         "portalRoles": "Specified Portal Roles will be applied to all users of this portal."
     },
     "labels": {

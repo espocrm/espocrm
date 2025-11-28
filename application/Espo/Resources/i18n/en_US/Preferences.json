@@ -63,9 +63,9 @@
     "tooltips": {
         "addCustomTabs": "If checked, custom tabs will be appended to default tabs. Otherwise, custom tabs will be used instead of default tabs.",
         "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
-        "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
-        "followCreatedEntities": "When create new records, they will be automatically followed even if assigned to another user.",
-        "followCreatedEntityTypeList": "When create new records of selected entity types, they will be followed automatically even if assigned to another user."
+        "doNotFillAssignedUserIfNotRequired": "When creating a new record, the assigned user won't be pre-filled with the own user. If the assigned user field is required, then this parameter has no effect.",
+        "followCreatedEntities": "Created records will be automatically followed, regardless of who they assigned to.",
+        "followCreatedEntityTypeList": "Records of the selected entity types will be automatically followed, regardless of who they assigned to. Use this parameter to follow only specific entity types."
     },
     "tabFields": {
         "label": "Label",

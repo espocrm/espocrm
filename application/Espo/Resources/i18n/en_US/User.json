@@ -90,14 +90,14 @@
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
-        "userName": "Letters a-z, numbers 0-9, dots, hyphens, @-signs and underscores are allowed.",
+        "userName": "Allowed characters: `a-z`, `0-9`, `-_@.`.",
         "isAdmin": "Admin user can access everything.",
-        "isActive": "If unchecked then user won't be able to login.",
+        "isActive": "If unchecked, then the user won't be able to log in.",
         "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
         "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
         "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user.",
         "portals": "Portals which this user has access to.",
-        "layoutSet": "Layouts from a specified set will be applied for the user instead of default ones."
+        "layoutSet": "Layouts from the specified layout set will be applied for the user. The default layouts will be overridden."
     },
     "messages": {
         "2faMethodNotConfigured": "The 2FA method is not fully configured in the system.",
