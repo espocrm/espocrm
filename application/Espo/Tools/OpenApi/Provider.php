@@ -268,7 +268,7 @@ class Provider
     {
         $pathItemRoot = (object) [];
         $pathItemRoot->post = $this->prepareOperationCreate($entityType);
-        $pathItemRoot->get = $this->prepareOperationList($entityType);
+        $pathItemRoot->get = $this->prepareOperationList($params, $entityType);
 
         $pathItemRecord = (object) [
             'parameters' => [
@@ -556,7 +556,7 @@ class Provider
     /**
      * @return array<string, mixed>
      */
-    private function prepareOperationList(string $entityType): array
+    private function prepareOperationList(Params $params, string $entityType): array
     {
         $parameters = [];
 
@@ -574,7 +574,7 @@ class Provider
                 'description' => 'Disable calculation of the total number of records.',
             ];
 
-        $parameters = array_merge($parameters, $this->prepareSearchParameters($entityType));
+        $parameters = array_merge($parameters, $this->prepareSearchParameters($params, $entityType));
 
         return [
             'tags' => [$entityType],
@@ -588,7 +588,7 @@ class Provider
     /**
      * @return string[]
      */
-    private function getSelectAttributeList(string $entityType): array
+    private function getSelectAttributeList(Params $params, string $entityType): array
     {
         $fieldDefsList = $this->defs->getEntity($entityType)->getFieldList();
 
@@ -601,6 +601,10 @@ class Provider
 
         foreach ($fieldDefsList as $fieldDefs) {
             if (in_array($fieldDefs->getName(), $ignoreList)) {
+                continue;
+            }
+
+            if ($params->skipCustom && $fieldDefs->getParam('isCustom')) {
                 continue;
             }
 
@@ -678,7 +682,7 @@ class Provider
     /**
      * @return array<string, mixed>[]
      */
-    private function prepareSearchParameters(string $entityType): array
+    private function prepareSearchParameters(Params $params, string $entityType): array
     {
         $parameters = [
             [
@@ -772,7 +776,7 @@ class Provider
             ];
         }
 
-        $selectAttributeList = $this->getSelectAttributeList($entityType);
+        $selectAttributeList = $this->getSelectAttributeList($params, $entityType);
 
         if ($selectAttributeList) {
             $parameters[] = [
@@ -932,7 +936,7 @@ class Provider
             ]
         ];
 
-        $pathItem['get'] = $this->prepareOperationListLink($entityType, $link, $foreignEntityType);
+        $pathItem['get'] = $this->prepareOperationListLink($params, $entityType, $link, $foreignEntityType);
         $pathItem['post'] = $this->prepareOperationPostLink($entityType, $link, $foreignEntityType);
         $pathItem['delete'] = $this->prepareOperationDeleteLink($entityType, $link, $foreignEntityType);
 
@@ -942,11 +946,16 @@ class Provider
     /**
      * @return array<string, mixed>
      */
-    private function prepareOperationListLink(string $entityType, string $link, string $foreignEntityType): array
-    {
+    private function prepareOperationListLink(
+        Params $params,
+        string $entityType,
+        string $link,
+        string $foreignEntityType,
+    ): array {
+
         $parameters = [];
 
-        $parameters = array_merge($parameters, $this->prepareSearchParameters($foreignEntityType));
+        $parameters = array_merge($parameters, $this->prepareSearchParameters($params, $foreignEntityType));
 
         $operation = [
             'tags' => [$entityType],
