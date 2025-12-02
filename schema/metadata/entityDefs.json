@@ -1120,6 +1120,10 @@
                     "type": "boolean",
                     "description": "Disables the ability perform mass-update on the field. As of v8.4."
                 },
+                "apiSpecDisabled": {
+                    "type": "boolean",
+                    "description": "Disable field definitions in API specification. As of v9.3."
+                },
                 "isPersonalData": {
                     "type": "boolean",
                     "description": "Whether the field may contain personal data."

@@ -9909,9 +9909,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "laminas/laminas-ldap": 20,
         "laminas/laminas-mail": 20,
         "laminas/laminas-mime": 20,
+        "laminas/laminas-ldap": 20,
         "zordius/lightncandy": 20
     },
     "prefer-stable": false,
@@ -9930,6 +9930,6 @@
         "ext-pdo": "*",
         "ext-ctype": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

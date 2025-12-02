@@ -69,4 +69,9 @@ class FieldType
      * @since 9.3.0
      */
     public const DECIMAL = 'decimal';
+
+    /**
+     * @since 9.3.0
+     */
+    public const URL_MULTIPLE = 'urlMultiple';
 }

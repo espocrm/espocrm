@@ -67,7 +67,8 @@
         "AddressCountry": "Address Country",
         "AppSecret": "App Secret",
         "OAuthProvider": "OAuth Provider",
-        "OAuthAccount": "OAuth Account"
+        "OAuthAccount": "OAuth Account",
+        "OpenApi": "OpenAPI"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -125,7 +126,8 @@
         "AddressCountry": "Address Countries",
         "AppSecret": "App Secrets",
         "OAuthProvider": "OAuth Providers",
-        "OAuthAccount": "OAuth Accounts"
+        "OAuthAccount": "OAuth Accounts",
+        "OpenApi": "OpenAPI"
     },
     "labels": {
         "Previous Page": "Previous Page",

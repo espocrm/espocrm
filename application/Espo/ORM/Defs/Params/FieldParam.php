@@ -103,4 +103,39 @@ class FieldParam
      * Foreign field.
      */
     public const FIELD = 'field';
+
+    /**
+     * Required.
+     *
+     * @since 9.3.0
+     */
+    public const REQUIRED = 'required';
+
+    /**
+     * Disabled.
+     *
+     * @since 9.3.0
+     */
+    public const DISABLED = 'disabled';
+
+    /**
+     * Utility. For internal purposes.
+     *
+     * @since 9.3.0
+     */
+    public const UTILITY = 'utility';
+
+    /**
+     * Min value.
+     *
+     * @since 9.3.0
+     */
+    public const MIN = 'min';
+
+    /**
+     * Max value.
+     *
+     * @since 9.3.0
+     */
+    public const MAX = 'max';
 }

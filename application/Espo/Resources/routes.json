@@ -501,6 +501,11 @@
         "actionClassName": "Espo\\Tools\\OAuth\\Api\\DeleteConnection"
     },
     {
+        "method": "get",
+        "route": "/OpenApi",
+        "actionClassName": "Espo\\Tools\\OpenApi\\Api\\GetSpec"
+    },
+    {
         "route": "/:controller/:id",
         "method": "get",
         "params": {
