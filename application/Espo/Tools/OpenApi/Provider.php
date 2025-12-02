@@ -365,6 +365,7 @@ class Provider
                     'description' => 'A record ID of the entity that is being duplicated.',
                 ]
             ],
+            'summary' => "Create $entityType",
             'description' => "Create a new '$entityType' record.",
         ];
 
@@ -445,6 +446,7 @@ class Provider
                 ]
             ],
             'parameters' => $parameters,
+            'summary' => "Update $entityType",
             'description' => "Update an existing '$entityType' record.",
         ];
 
@@ -485,6 +487,7 @@ class Provider
     {
         $operation = [
             'tags' => [$entityType],
+            'summary' => "Remove $entityType",
             'description' => "Remove an existing '$entityType' record.",
         ];
 
@@ -524,6 +527,7 @@ class Provider
 
         $operation = [
             'tags' => [$entityType],
+            'summary' => "Read $entityType",
             'description' => "Read an existing '$entityType' record.",
         ];
 
@@ -575,6 +579,7 @@ class Provider
         return [
             'tags' => [$entityType],
             'parameters' => $parameters,
+            'summary' => "List $entityType",
             'description' => "List $entityType records.",
             'responses' => $this->prepareListResponses($entityType),
         ];
@@ -917,6 +922,7 @@ class Provider
         $operation = [
             'tags' => [$entityType],
             'parameters' => $parameters,
+            'summary' => "List $entityType . $link",
             'description' => "List '$foreignEntityType' records related through the '$link' link.",
         ];
 
@@ -949,6 +955,7 @@ class Provider
                     ]
                 ]
             ],
+            'summary' => "Relate $entityType . $link",
             'description' => "Relate '$foreignEntityType' record though the '$link' link.",
         ];
 
@@ -993,6 +1000,7 @@ class Provider
                     ]
                 ]
             ],
+            'summary' => "Unrelate $entityType . $link",
             'description' => "Unrelate '$foreignEntityType' record related though the '$link' link.",
         ];
 
