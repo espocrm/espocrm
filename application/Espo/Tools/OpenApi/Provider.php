@@ -946,7 +946,7 @@ class Provider
     {
         $parameters = [];
 
-        $parameters = array_merge($parameters, $this->prepareSearchParameters($entityType));
+        $parameters = array_merge($parameters, $this->prepareSearchParameters($foreignEntityType));
 
         $operation = [
             'tags' => [$entityType],
