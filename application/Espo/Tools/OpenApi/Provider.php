@@ -40,11 +40,12 @@ use Espo\ORM\Defs;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\RelationType;
+use Espo\Tools\OpenApi\Provider\Params;
 use ReflectionClass;
 use stdClass;
 
 /**
- * @todo Cache.
+ * @todo Cache. Separate per param.
  */
 class Provider
 {
@@ -56,7 +57,7 @@ class Provider
         private FieldUtil $fieldUtil,
     ) {}
 
-    public function get(): string
+    public function get(Params $params): string
     {
         $spec = (object) [
             'openapi' => '3.1.1',
@@ -66,7 +67,7 @@ class Provider
             ],
             'paths' => [],
             'components' => [
-                'schemas' => $this->buildSchemas(),
+                'schemas' => $this->buildSchemas($params),
                 'securitySchemes' => [
                     'ApiKeyAuth' => [
                         'type' => 'apiKey',
@@ -91,7 +92,7 @@ class Provider
             ]
         ];
 
-        $this->buildCrud($spec);
+        $this->buildCrud($params, $spec);
 
         return Json::encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
@@ -99,14 +100,14 @@ class Provider
     /**
      * @return array<string, array<string, mixed>>
      */
-    private function buildSchemas(): array
+    private function buildSchemas(Params $params): array
     {
         $output = [];
 
-        foreach ($this->getEntityTypeList() as $entityType) {
+        foreach ($this->getEntityTypeList($params) as $entityType) {
             $entitySchemaName = $this->composeEntityTypeObjectSchemaName($entityType);
 
-            $schema = $this->buildEntityTypeObjectSchema($entityType);
+            $schema = $this->buildEntityTypeObjectSchema($params, $entityType);
 
             $required = $schema['required'];
             unset($schema['required']);
@@ -135,7 +136,7 @@ class Provider
     /**
      * @return string[]
      */
-    private function getEntityTypeList(): array
+    private function getEntityTypeList(Params $params): array
     {
         /** @var array<string, array<string, mixed>> $defs */
         $defs = $this->metadata->get('scopes') ?? [];
@@ -148,7 +149,7 @@ class Provider
             $disabled = $it['disabled'] ?? false;
             $module = $it['module'] ?? false;
 
-            if ($module === 'Custom') {
+            if ($params->skipCustom && $module === 'Custom') {
                 continue;
             }
 
@@ -178,7 +179,7 @@ class Provider
     /**
      * @return array{'type': string, 'required': string[], 'properties': array<string, mixed>}
      */
-    private function buildEntityTypeObjectSchema(string $entityType): array
+    private function buildEntityTypeObjectSchema(Params $params, string $entityType): array
     {
         $fieldDefsList = $this->defs->getEntity($entityType)->getFieldList();
 
@@ -205,7 +206,7 @@ class Provider
                 continue;
             }
 
-            if ($fieldDefs->getParam('isCustom')) {
+            if ($params->skipCustom && $fieldDefs->getParam('isCustom')) {
                 continue;
             }
 
@@ -256,14 +257,14 @@ class Provider
         return $builder->build($entityType, $field);
     }
 
-    private function buildCrud(stdClass $spec): void
+    private function buildCrud(Params $params, stdClass $spec): void
     {
-        foreach ($this->getEntityTypeList() as $entityType) {
-            $this->buildCrudForEntityType($spec, $entityType);
+        foreach ($this->getEntityTypeList($params) as $entityType) {
+            $this->buildCrudForEntityType($params, $spec, $entityType);
         }
     }
 
-    private function buildCrudForEntityType(stdClass $spec, string $entityType): void
+    private function buildCrudForEntityType(Params $params, stdClass $spec, string $entityType): void
     {
         $pathItemRoot = (object) [];
         $pathItemRoot->post = $this->prepareOperationCreate($entityType);
@@ -315,7 +316,7 @@ class Provider
         $spec->paths["/$entityType/{id}"] = get_object_vars($pathItemRecord);
 
         if (!$noRead) {
-            $this->addLinks($entityType, $spec);
+            $this->addLinks($params, $entityType, $spec);
         }
     }
 
@@ -826,7 +827,7 @@ class Provider
         return $responses;
     }
 
-    private function addLinks(string $entityType, stdClass $spec): void
+    private function addLinks(Params $params, string $entityType, stdClass $spec): void
     {
         $relationList = $this->defs->getEntity($entityType)->getRelationList();
 
@@ -852,7 +853,7 @@ class Provider
                     $this->metadata->get("entityDefs.$entityType.links.$link.readOnly") ||
                     $this->metadata->get("entityDefs.$entityType.links.$link.disabled")
                 ) ||
-                $defs->getParam('isCustom')
+                $params->skipCustom && $defs->getParam('isCustom')
             ) {
                 continue;
             }
@@ -866,18 +867,18 @@ class Provider
                 continue;
             }
 
-            $this->addLink($entityType, $link, $spec);
+            $this->addLink($params, $entityType, $link, $spec);
         }
     }
 
-    private function addLink(string $entityType, string $link, stdClass $spec): void
+    private function addLink(Params $params, string $entityType, string $link, stdClass $spec): void
     {
         $foreignEntityType = $this->defs
             ->getEntity($entityType)
             ->getRelation($link)
             ->getForeignEntityType();
 
-        if (!in_array($foreignEntityType, $this->getEntityTypeList())) {
+        if (!in_array($foreignEntityType, $this->getEntityTypeList($params))) {
             return;
         }
 

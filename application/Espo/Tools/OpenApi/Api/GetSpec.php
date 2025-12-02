@@ -35,6 +35,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Tools\OpenApi\Provider\Params;
 use Espo\Tools\OpenApi\ProviderFactory;
 
 /**
@@ -55,7 +56,9 @@ class GetSpec implements Action
 
         $provider = $this->providerFactory->create();
 
-        $spec = $provider->get();
+        $skipCustom = $request->getQueryParam('skipCustom') === 'true';
+
+        $spec = $provider->get(new Params(skipCustom: $skipCustom));
 
         return ResponseComposer::empty()
             ->writeBody($spec)
