@@ -574,7 +574,7 @@ class Provider
                 'description' => 'Disable calculation of the total number of records.',
             ];
 
-        $parameters[] = $this->prepareSearchParam($entityType);
+        $parameters = array_merge($parameters, $this->prepareSearchParameters($entityType));
 
         return [
             'tags' => [$entityType],
@@ -676,36 +676,56 @@ class Provider
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, mixed>[]
      */
-    private function prepareSearchParam(string $entityType): array
+    private function prepareSearchParameters(string $entityType): array
     {
-        $searchParamsProperties = [
-            'offset' => [
-                'type' => Type::INTEGER,
-                'minimum' => 0,
+        $parameters = [
+            [
+                'name' => 'offset',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::INTEGER,
+                    'minimum' => 0,
+                ],
                 'description' => 'A pagination offset.',
             ],
-            'maxSize' => [
-                'type' => Type::INTEGER,
-                'minimum' => 0,
-                'maximum' => 200,
+            [
+                'name' => 'maxSize',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::INTEGER,
+                    'minimum' => 0,
+                    'maximum' => 200,
+                ],
                 'description' => 'The maximum number of records to return.',
             ],
-            'orderBy' => [
-                'type' => Type::STRING,
+            [
+                'name' => 'orderBy',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::STRING,
+                ],
                 'description' => 'An attribute (field) to order by.',
             ],
-            'order' => [
-                'type' => Type::STRING,
-                'enum' => [
-                    'asc',
-                    'desc',
+            [
+                'name' => 'order',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::STRING,
+                    'enum' => [
+                        'asc',
+                        'desc',
+                    ],
                 ],
                 'description' => 'An order direction.',
             ],
-            'textFilter' => [
-                'type' => Type::STRING,
+            [
+                'name' => 'textFilter',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::STRING,
+                ],
                 'description' => 'A text filter query. Wildcard (*) is supported.'
             ],
         ];
@@ -724,20 +744,30 @@ class Provider
         );
 
         if ($primaryFilterList) {
-            $searchParamsProperties['primaryFilter'] = [
-                'type' => Type::STRING,
-                'enum' => $primaryFilterList,
+            $parameters[] = [
+                'name' => 'primaryFilter',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::STRING,
+                    'enum' => $primaryFilterList,
+                ],
                 'description' => 'A primary filter.',
             ];
         }
 
         if ($boolFilterList) {
-            $searchParamsProperties['boolFilterList'] = [
-                'type' => Type::ARRAY,
-                'items' => [
-                    'type' => Type::STRING,
-                    'enum' => $boolFilterList,
+            $parameters[] = [
+                'name' => 'boolFilterList',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::ARRAY,
+                    'items' => [
+                        'type' => Type::STRING,
+                        'enum' => $boolFilterList,
+                    ],
                 ],
+                'style' => 'deepObject',
+                'explode' => true,
                 'description' => 'Bool filters.',
             ];
         }
@@ -745,37 +775,38 @@ class Provider
         $selectAttributeList = $this->getSelectAttributeList($entityType);
 
         if ($selectAttributeList) {
-            $searchParamsProperties['select'] = [
-                'type' => Type::ARRAY,
-                'items' => [
-                    'type' => Type::STRING,
-                    'enum' => $selectAttributeList,
+            $parameters[] = [
+                'name' => 'attributeSelect',
+                'in' => 'query',
+                'schema' => [
+                    'type' => Type::ARRAY,
+                    'items' => [
+                        'type' => Type::STRING,
+                        'enum' => $selectAttributeList,
+                    ],
                 ],
+                'style' => 'form',
+                'explode' => false,
                 'description' => 'Attributes to return. Select only the necessary ones to improve performance.',
             ];
         }
 
-        $searchParamsProperties['where'] = [
-            'type' => Type::ARRAY,
-            'items' => [
-                '$ref' => '#/components/schemas/whereItem',
+        $parameters[] = [
+            'name' => 'whereGroup',
+            'in' => 'query',
+            'schema' => [
+                'type' => Type::ARRAY,
+                'items' => [
+                    '$ref' => '#/components/schemas/whereItem',
+                ],
             ],
+            'style' => 'deepObject',
+            'explode' => true,
+
             'description' => 'Where items.',
         ];
 
-        return [
-            'in' => 'query',
-            'name' => 'searchParams',
-            'content' => [
-                'application/json' => [
-                    'schema' => [
-                        'type' => Type::OBJECT,
-                        'properties' => $searchParamsProperties,
-                    ],
-                ],
-            ],
-            'description' => 'Disable calculation of the total number of records.',
-        ];
+        return $parameters;
     }
 
     /**
@@ -915,9 +946,7 @@ class Provider
     {
         $parameters = [];
 
-        $searchParam = $this->prepareSearchParam($foreignEntityType);
-
-        $parameters[] = $searchParam;
+        $parameters = array_merge($parameters, $this->prepareSearchParameters($entityType));
 
         $operation = [
             'tags' => [$entityType],
