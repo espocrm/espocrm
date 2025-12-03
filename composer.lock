@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5bf42f8f172ef06043e93d845ca1241",
+    "content-hash": "52f5655442ca7d4347abe7471431fe2c",
     "packages": [
         {
             "name": "async-aws/core",
@@ -7701,16 +7701,16 @@
         },
         {
             "name": "tholu/php-cidr-match",
-            "version": "0.4",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tholu/php-cidr-match.git",
-                "reference": "50fadb1e43d865167b3ca705fbdbfff87ea5ab96"
+                "reference": "a0e95f8dfc4e7e8a3456be939a5125e3ccce0e59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tholu/php-cidr-match/zipball/50fadb1e43d865167b3ca705fbdbfff87ea5ab96",
-                "reference": "50fadb1e43d865167b3ca705fbdbfff87ea5ab96",
+                "url": "https://api.github.com/repos/tholu/php-cidr-match/zipball/a0e95f8dfc4e7e8a3456be939a5125e3ccce0e59",
+                "reference": "a0e95f8dfc4e7e8a3456be939a5125e3ccce0e59",
                 "shasum": ""
             },
             "require": {
@@ -7748,9 +7748,9 @@
             ],
             "support": {
                 "issues": "https://github.com/tholu/php-cidr-match/issues",
-                "source": "https://github.com/tholu/php-cidr-match/tree/0.4"
+                "source": "https://github.com/tholu/php-cidr-match/tree/0.5"
             },
-            "time": "2022-05-11T06:48:12+00:00"
+            "time": "2024-08-06T15:53:04+00:00"
         },
         {
             "name": "webmozart/assert",

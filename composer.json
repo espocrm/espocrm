@@ -51,7 +51,7 @@
         "chillerlan/php-qrcode": "^4.4",
         "ext-ctype": "*",
         "lasserafn/php-initial-avatar-generator": "^4.4",
-        "tholu/php-cidr-match": "^0.4",
+        "tholu/php-cidr-match": "^0.5",
         "league/oauth2-client": "^2.8",
         "symfony/mailer": "^6",
         "league/html-to-markdown": "^5.1",
