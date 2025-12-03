@@ -131,5 +131,10 @@
         "post-install-cmd": [
             "php dev/vendor-cleanup.php"
         ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        }
     }
 }
