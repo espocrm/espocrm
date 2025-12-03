@@ -20,7 +20,7 @@
         "psr/log": "~3",
         "psr/http-message": "^1.0",
         "psr/container": "^1.1",
-        "slim/slim": "^4.14",
+        "slim/slim": "^4.15",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "^3.4",
         "laminas/laminas-mail": "dev-master#3befe2ed6193c10fb045369bd6473bd70fb9ceac",
