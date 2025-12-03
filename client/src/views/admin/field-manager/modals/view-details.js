@@ -483,6 +483,10 @@ export default class ViewDetailsModalView extends ModalView {
         }
 
         if (this.fieldType === 'phone') {
+            /** @type {string[]} */
+            const types = this.fieldDefs.typeList ?? [];
+            const typesString = types.map(it => `"${it}"`).join('|');
+
             return [
                 {
                     name: this.field,
@@ -492,7 +496,9 @@ export default class ViewDetailsModalView extends ModalView {
                 },
                 {
                     name: this.field + 'Data',
-                    type: '{phoneNumber: string, primary: boolean, optOut: boolean, invalid: boolean}[]',
+                    type: '{phoneNumber: string, primary: boolean, ' +
+                        `type: ${typesString}, ` +
+                        'optOut: boolean, invalid: boolean}[]',
                     notStorable: this.fieldDefs.notStorable || false,
                     readOnly: this.fieldDefs.readOnly || false,
                 },
