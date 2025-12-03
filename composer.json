@@ -26,7 +26,7 @@
         "laminas/laminas-mail": "dev-master#3befe2ed6193c10fb045369bd6473bd70fb9ceac",
         "laminas/laminas-mime": "dev-master#25659453400e0b2970e490dd0e4045f62acf5371",
         "laminas/laminas-ldap": "2.19.x-dev#e7b9fe0e295f3898fb97d08b320654c92849918a",
-        "monolog/monolog": "~3.8",
+        "monolog/monolog": "^3.9",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
         "composer/semver": "^3",
         "spatie/async": "1.5.6",
