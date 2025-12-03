@@ -41,7 +41,7 @@
         "nesbot/carbon": "^3.11.0",
         "zbateson/mail-mime-parser": "^3.0",
         "phpoffice/phpspreadsheet": "^5.0",
-        "doctrine/dbal": "^3.9.3",
+        "doctrine/dbal": "^3.10",
         "league/flysystem-async-aws-s3": "^3.0",
         "johngrogg/ics-parser": "^3.0",
         "phpseclib/phpseclib": "^3.0",
