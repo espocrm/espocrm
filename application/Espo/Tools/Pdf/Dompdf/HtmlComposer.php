@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\Pdf\Dompdf;
 
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\Output\QRMarkupSVG;
+use chillerlan\QRCode\Output\QROutputInterface;
 use Espo\Core\Htmlizer\TemplateRendererFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -40,6 +43,8 @@ use Espo\Tools\Pdf\Template;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+use Picqer\Barcode\Exceptions\UnknownTypeException;
+use RuntimeException;
 
 class HtmlComposer
 {
@@ -265,8 +270,11 @@ class HtmlComposer
 
             $options = new QROptions();
 
-            $options->outputType = QRCode::OUTPUT_MARKUP_SVG;
-            $options->eccLevel = QRCode::ECC_H;
+            // @todo Revise and test after updating the lib.
+            /** @phpstan-ignore-next-line property.protected */
+            $options->outputType = QROutputInterface::MARKUP_SVG;
+            /** @phpstan-ignore-next-line property.protected */
+            $options->eccLevel = EccLevel::H;
 
             $code = (new QRCode($options))->render($value);
 
@@ -286,7 +294,11 @@ class HtmlComposer
         $height = $data['height'] ?? 30;
         $color = $data['color'] ?? '#000';
 
-        $code = (new BarcodeGeneratorSVG())->getBarcode($value, $type, 2, $height, $color);
+        try {
+            $code = (new BarcodeGeneratorSVG())->getBarcode($value, $type, 2, $height, $color);
+        } catch (UnknownTypeException $e) {
+            throw new RuntimeException("Barcode print error.", previous: $e);
+        }
 
         $encoded = base64_encode($code);
 

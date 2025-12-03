@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62ee507d0936a0b75a0515075ec292ea",
+    "content-hash": "68047b8bb5fec096f3a5bae9593892bf",
     "packages": [
         {
             "name": "async-aws/core",
@@ -321,16 +321,16 @@
         },
         {
             "name": "chillerlan/php-qrcode",
-            "version": "4.4.2",
+            "version": "5.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chillerlan/php-qrcode.git",
-                "reference": "345ed8e4ffb56e6b3fcd9f42e3970b9026fa6ce4"
+                "reference": "7b66282572fc14075c0507d74d9837dab25b38d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/345ed8e4ffb56e6b3fcd9f42e3970b9026fa6ce4",
-                "reference": "345ed8e4ffb56e6b3fcd9f42e3970b9026fa6ce4",
+                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/7b66282572fc14075c0507d74d9837dab25b38d6",
+                "reference": "7b66282572fc14075c0507d74d9837dab25b38d6",
                 "shasum": ""
             },
             "require": {
@@ -339,11 +339,15 @@
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phan/phan": "^5.4.5",
+                "chillerlan/php-authenticator": "^4.3.1 || ^5.2.1",
+                "ext-fileinfo": "*",
+                "phan/phan": "^5.5.2",
+                "phpcompatibility/php-compatibility": "10.x-dev",
                 "phpmd/phpmd": "^2.15",
                 "phpunit/phpunit": "^9.6",
                 "setasign/fpdf": "^1.8.2",
-                "squizlabs/php_codesniffer": "^3.11"
+                "slevomat/coding-standard": "^8.23.0",
+                "squizlabs/php_codesniffer": "^4.0.0"
             },
             "suggest": {
                 "chillerlan/php-authenticator": "Yet another Google authenticator! Also creates URIs for mobile apps.",
@@ -353,17 +357,26 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "chillerlan\\QRCode\\": "src/"
+                    "chillerlan\\QRCode\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "MIT",
+                "Apache-2.0"
             ],
             "authors": [
                 {
                     "name": "Kazuhiko Arase",
-                    "homepage": "https://github.com/kazuhikoarase"
+                    "homepage": "https://github.com/kazuhikoarase/qrcode-generator"
+                },
+                {
+                    "name": "ZXing Authors",
+                    "homepage": "https://github.com/zxing/zxing"
+                },
+                {
+                    "name": "Ashot Khanamiryan",
+                    "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder"
                 },
                 {
                     "name": "Smiley",
@@ -375,26 +388,29 @@
                     "homepage": "https://github.com/chillerlan/php-qrcode/graphs/contributors"
                 }
             ],
-            "description": "A QR code generator with a user friendly API. PHP 7.4+",
+            "description": "A QR Code generator and reader with a user-friendly API. PHP 7.4+",
             "homepage": "https://github.com/chillerlan/php-qrcode",
             "keywords": [
                 "phpqrcode",
                 "qr",
                 "qr code",
+                "qr-reader",
                 "qrcode",
-                "qrcode-generator"
+                "qrcode-generator",
+                "qrcode-reader"
             ],
             "support": {
+                "docs": "https://php-qrcode.readthedocs.io",
                 "issues": "https://github.com/chillerlan/php-qrcode/issues",
-                "source": "https://github.com/chillerlan/php-qrcode/tree/4.4.2"
+                "source": "https://github.com/chillerlan/php-qrcode"
             },
             "funding": [
                 {
                     "url": "https://ko-fi.com/codemasher",
-                    "type": "ko_fi"
+                    "type": "Ko-Fi"
                 }
             ],
-            "time": "2024-11-15T15:36:24+00:00"
+            "time": "2025-11-23T23:51:44+00:00"
         },
         {
             "name": "chillerlan/php-settings-container",
@@ -4439,21 +4455,21 @@
         },
         {
             "name": "picqer/php-barcode-generator",
-            "version": "v2.4.2",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picqer/php-barcode-generator.git",
-                "reference": "e9d39681f617705492b609fc3fc58465ef88e8fd"
+                "reference": "fbb1de7454fcc8600133818bc1103abeb86479a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/e9d39681f617705492b609fc3fc58465ef88e8fd",
-                "reference": "e9d39681f617705492b609fc3fc58465ef88e8fd",
+                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/fbb1de7454fcc8600133818bc1103abeb86479a4",
+                "reference": "fbb1de7454fcc8600133818bc1103abeb86479a4",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.1"
+                "php": "^8.2"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.10",
@@ -4476,14 +4492,14 @@
             ],
             "authors": [
                 {
-                    "name": "Nicola Asuni",
-                    "email": "info@tecnick.com",
-                    "homepage": "http://nicolaasuni.tecnick.com"
-                },
-                {
                     "name": "Casper Bakker",
                     "email": "info@picqer.com",
                     "homepage": "https://picqer.com"
+                },
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
                 }
             ],
             "description": "An easy to use, non-bloated, barcode generator in PHP. Creates SVG, PNG, JPG and HTML images from the most used 1D barcode standards.",
@@ -4514,15 +4530,9 @@
             ],
             "support": {
                 "issues": "https://github.com/picqer/php-barcode-generator/issues",
-                "source": "https://github.com/picqer/php-barcode-generator/tree/v2.4.2"
+                "source": "https://github.com/picqer/php-barcode-generator/tree/v3.2.3"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/casperbakker",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-09-18T08:09:33+00:00"
+            "time": "2025-07-29T07:15:20+00:00"
         },
         {
             "name": "psr/cache",
