@@ -47,7 +47,6 @@ use GuzzleHttp\Psr7\Stream;
 use LogicException;
 use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Style\Style;
-use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use OpenSpout\Writer\XLSX\Writer;
@@ -60,7 +59,7 @@ use RuntimeException;
 
 class OpenSpoutProcessor implements ProcessorInterface
 {
-    private const FORMAT = 'xlsx';
+    private const string FORMAT = 'xlsx';
 
     /** @var array<string, CellValuePreparator> */
     private array $preparatorsCache = [];
@@ -79,7 +78,6 @@ class OpenSpoutProcessor implements ProcessorInterface
     /**
      * @throws IOException
      * @throws WriterNotOpenedException
-     * @throws InvalidArgumentException
      */
     public function process(Params $params, Collection $collection): StreamInterface
     {
@@ -100,8 +98,8 @@ class OpenSpoutProcessor implements ProcessorInterface
 
         $writer->openToFile($filePath);
 
-        $sheetView = new SheetView();
-        $sheetView->setFreezeRow(2);
+        $sheetView = (new SheetView())
+            ->withFreezeRow(2);
 
         $writer->getCurrentSheet()->setSheetView($sheetView);
 
@@ -110,7 +108,7 @@ class OpenSpoutProcessor implements ProcessorInterface
         foreach ($params->getFieldList() as $name) {
             $label = $this->translateLabel($params->getEntityType(), $name);
 
-            $headerCells[] = Cell::fromValue($label, (new Style())->setFontBold());
+            $headerCells[] = Cell::fromValue($label, (new Style())->withFontBold(true));
         }
 
         $writer->addRow(new Row($headerCells));
@@ -153,6 +151,10 @@ class OpenSpoutProcessor implements ProcessorInterface
         return $label;
     }
 
+    /**
+     * @throws WriterNotOpenedException
+     * @throws IOException
+     */
     private function processRow(Params $params, Entity $entity, Writer $writer): void
     {
         $cells = [];
@@ -192,8 +194,7 @@ class OpenSpoutProcessor implements ProcessorInterface
         if ($value instanceof Date) {
             $dateFormat = self::convertDateFormat($this->dateTime->getDateFormat());
 
-            $style = new Style();
-            $style->setFormat($dateFormat);
+            $style = (new Style())->withFormat($dateFormat);
 
             return Cell\DateTimeCell::fromValue($value->toDateTime(), $style);
         }
@@ -201,8 +202,7 @@ class OpenSpoutProcessor implements ProcessorInterface
         if ($value instanceof DateTime) {
             $dateTimeFormat = self::convertDateFormat($this->dateTime->getDateTimeFormat());
 
-            $style = new Style();
-            $style->setFormat($dateTimeFormat);
+            $style = (new Style())->withFormat($dateTimeFormat);
 
             return Cell\DateTimeCell::fromValue($value->toDateTime(), $style);
         }
@@ -210,8 +210,7 @@ class OpenSpoutProcessor implements ProcessorInterface
         if ($value instanceof Currency) {
             $format = $this->getCurrencyFormat($value->getCode());
 
-            $style = new Style();
-            $style->setFormat($format);
+            $style = (new Style())->withFormat($format);
 
             return Cell\NumericCell::fromValue($value->getAmount(), $style);
         }
