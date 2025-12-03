@@ -74,4 +74,9 @@ class FieldType
      * @since 9.3.0
      */
     public const URL_MULTIPLE = 'urlMultiple';
+
+    /**
+     * @since 9.3.0
+     */
+    public const BARCODE = 'barcode';
 }

@@ -35,6 +35,7 @@ class FieldSchemaBuilderFactory
     /** @var array<string, class-string<FieldSchemaBuilder>> */
     private array $map = [
         FieldType::VARCHAR => VarcharType::class,
+        FieldType::BARCODE => VarcharType::class,
         FieldType::URL => VarcharType::class,
         FieldType::ENUM => EnumType::class,
         FieldType::TEXT => TextType::class,
