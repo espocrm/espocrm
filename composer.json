@@ -52,7 +52,7 @@
         "ext-ctype": "*",
         "lasserafn/php-initial-avatar-generator": "^4.4",
         "tholu/php-cidr-match": "^0.5",
-        "league/oauth2-client": "^2.8",
+        "league/oauth2-client": "^2.9",
         "symfony/mailer": "^6",
         "league/html-to-markdown": "^5.1",
         "psr/clock": "^1.0",
