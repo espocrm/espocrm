@@ -33,6 +33,7 @@ use Espo\Core\Acl\GlobalRestriction;
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
 use Espo\Core\Select\Where\Item\Type as WhereItemType;
+use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
@@ -42,22 +43,51 @@ use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\RelationType;
 use Espo\Tools\OpenApi\Provider\Params;
 use ReflectionClass;
+use RuntimeException;
 use stdClass;
 
-/**
- * @todo Cache. Separate per param.
- */
 class Provider
 {
+    private const string CACHE_KEY = 'openApiSpec';
+
     public function __construct(
         private Metadata $metadata,
         private Defs $defs,
         private FieldSchemaBuilderFactory $fieldSchemaBuilderFactory,
         private AclManager $aclManager,
         private FieldUtil $fieldUtil,
+        private DataCache $dataCache,
     ) {}
 
     public function get(Params $params): string
+    {
+        $data = $this->getData($params);
+
+        return Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+    private function getData(Params $params): stdClass
+    {
+        $cacheKey = $this->getCacheKey($params);
+
+        if ($this->dataCache->has($cacheKey)) {
+            $data = $this->dataCache->get($cacheKey);
+
+            if (!$data instanceof stdClass) {
+                throw new RuntimeException("Corrupted OpenAPI spec cache file.");
+            }
+
+            return $data;
+        }
+
+        $data = $this->buildData($params);
+
+        $this->dataCache->store($cacheKey, $data);
+
+        return $data;
+    }
+
+    private function buildData(Params $params): stdClass
     {
         $spec = (object) [
             'openapi' => '3.1.1',
@@ -94,7 +124,18 @@ class Provider
 
         $this->buildCrud($params, $spec);
 
-        return Json::encode($spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        return $spec;
+    }
+
+    private function getCacheKey(Params $params): string
+    {
+        $key = self::CACHE_KEY;
+
+        if ($params->skipCustom) {
+            $key .= 'SkipCustom';
+        }
+
+        return $key;
     }
 
     /**
