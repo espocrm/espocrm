@@ -239,6 +239,10 @@ export default class ViewDetailsModalView extends ModalView {
         }
 
         if (this.fieldType === 'currency') {
+            /** @type {string[]} */
+            const codes = this.getConfig().get('currencyList') ?? [];
+            const codesString = codes.map(it => `"${it}"`).join('|');
+
             return [
                 {
                     name: this.field,
@@ -248,7 +252,7 @@ export default class ViewDetailsModalView extends ModalView {
                 },
                 {
                     name: this.field + 'Currency',
-                    type: 'string',
+                    type: codesString,
                     notStorable: this.fieldDefs.notStorable || false || this.fieldDefs.onlyDefaultCurrency,
                     readOnly: this.fieldDefs.readOnly || false,
                 },
