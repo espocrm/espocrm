@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcd3f0a6aa65f644d19ca5d98552b5b7",
+    "content-hash": "2652b24ce372a42ddcf977c5fa22b45f",
     "packages": [
         {
             "name": "async-aws/core",
@@ -1814,50 +1814,32 @@
             "time": "2024-07-18T11:15:46+00:00"
         },
         {
-            "name": "intervention/image",
-            "version": "2.7.2",
+            "name": "intervention/gif",
+            "version": "4.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Intervention/image.git",
-                "reference": "04be355f8d6734c826045d02a1079ad658322dad"
+                "url": "https://github.com/Intervention/gif.git",
+                "reference": "5999eac6a39aa760fb803bc809e8909ee67b451a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/04be355f8d6734c826045d02a1079ad658322dad",
-                "reference": "04be355f8d6734c826045d02a1079ad658322dad",
+                "url": "https://api.github.com/repos/Intervention/gif/zipball/5999eac6a39aa760fb803bc809e8909ee67b451a",
+                "reference": "5999eac6a39aa760fb803bc809e8909ee67b451a",
                 "shasum": ""
             },
             "require": {
-                "ext-fileinfo": "*",
-                "guzzlehttp/psr7": "~1.1 || ^2.0",
-                "php": ">=5.4.0"
+                "php": "^8.1"
             },
             "require-dev": {
-                "mockery/mockery": "~0.9.2",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^7.5.15"
-            },
-            "suggest": {
-                "ext-gd": "to use GD library based image processing.",
-                "ext-imagick": "to use Imagick based image processing.",
-                "intervention/imagecache": "Caching extension for the Intervention Image library"
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^10.0 || ^11.0  || ^12.0",
+                "slevomat/coding-standard": "~8.0",
+                "squizlabs/php_codesniffer": "^3.8"
             },
             "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "Image": "Intervention\\Image\\Facades\\Image"
-                    },
-                    "providers": [
-                        "Intervention\\Image\\ImageServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-master": "2.4-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Intervention\\Image\\": "src/Intervention/Image"
+                    "Intervention\\Gif\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1871,19 +1853,17 @@
                     "homepage": "https://intervention.io/"
                 }
             ],
-            "description": "Image handling and manipulation library with support for Laravel integration",
-            "homepage": "http://image.intervention.io/",
+            "description": "Native PHP GIF Encoder/Decoder",
+            "homepage": "https://github.com/intervention/gif",
             "keywords": [
+                "animation",
                 "gd",
-                "image",
-                "imagick",
-                "laravel",
-                "thumbnail",
-                "watermark"
+                "gif",
+                "image"
             ],
             "support": {
-                "issues": "https://github.com/Intervention/image/issues",
-                "source": "https://github.com/Intervention/image/tree/2.7.2"
+                "issues": "https://github.com/Intervention/gif/issues",
+                "source": "https://github.com/Intervention/gif/tree/4.2.2"
             },
             "funding": [
                 {
@@ -1893,9 +1873,89 @@
                 {
                     "url": "https://github.com/Intervention",
                     "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/interventionphp",
+                    "type": "ko_fi"
                 }
             ],
-            "time": "2022-05-21T17:30:32+00:00"
+            "time": "2025-03-29T07:46:21+00:00"
+        },
+        {
+            "name": "intervention/image",
+            "version": "3.11.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "76e96d3809d53dd8d597005634a733d4b2f6c2c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/76e96d3809d53dd8d597005634a733d4b2f6c2c3",
+                "reference": "76e96d3809d53dd8d597005634a733d4b2f6c2c3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "intervention/gif": "^4.2",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0",
+                "slevomat/coding-standard": "~8.0",
+                "squizlabs/php_codesniffer": "^3.8"
+            },
+            "suggest": {
+                "ext-exif": "Recommended to be able to read EXIF data properly."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io"
+                }
+            ],
+            "description": "PHP Image Processing",
+            "homepage": "https://image.intervention.io",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "resize",
+                "thumbnail",
+                "watermark"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/image/issues",
+                "source": "https://github.com/Intervention/image/tree/3.11.5"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/interventionphp",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2025-11-29T11:18:34+00:00"
         },
         {
             "name": "johngrogg/ics-parser",
@@ -2561,26 +2621,26 @@
         },
         {
             "name": "lasserafn/php-initial-avatar-generator",
-            "version": "4.5",
+            "version": "dev-update-image-lib",
             "source": {
                 "type": "git",
-                "url": "https://github.com/LasseRafn/php-initial-avatar-generator.git",
-                "reference": "1a63213583a8694e781f7476345b096af6a14d08"
+                "url": "https://github.com/yurikuzn/php-initial-avatar-generator.git",
+                "reference": "a46ab8f1427f93c5b37957e739205da7fcca0290"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/LasseRafn/php-initial-avatar-generator/zipball/1a63213583a8694e781f7476345b096af6a14d08",
-                "reference": "1a63213583a8694e781f7476345b096af6a14d08",
+                "url": "https://api.github.com/repos/yurikuzn/php-initial-avatar-generator/zipball/a46ab8f1427f93c5b37957e739205da7fcca0290",
+                "reference": "a46ab8f1427f93c5b37957e739205da7fcca0290",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "intervention/image": "^2.3",
+                "intervention/image": "^3.11",
                 "lasserafn/php-initials": "^3.0",
                 "lasserafn/php-string-script-language": "^0.4",
                 "meyfa/php-svg": "^0.9.0",
                 "overtrue/pinyin": "^4.0",
-                "php": "^7.0|^7.1|^7.2|^7.3|^7.4|^8.0|^8.1|^8.2"
+                "php": "^8.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.5"
@@ -2591,7 +2651,11 @@
                     "LasseRafn\\InitialAvatarGenerator\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "InitialAvatarGenerator\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -2603,22 +2667,21 @@
             ],
             "description": "A package to generate avatars with initials for PHP",
             "keywords": [
-                "Initials",
                 "avatar",
                 "image",
+                "initials",
                 "svg"
             ],
             "support": {
-                "issues": "https://github.com/LasseRafn/php-initial-avatar-generator/issues",
-                "source": "https://github.com/LasseRafn/php-initial-avatar-generator/tree/4.5"
+                "source": "https://github.com/yurikuzn/php-initial-avatar-generator/tree/update-image-lib"
             },
             "funding": [
                 {
-                    "url": "https://opencollective.com/ui-avatars",
-                    "type": "open_collective"
+                    "type": "open_collective",
+                    "url": "https://opencollective.com/ui-avatars"
                 }
             ],
-            "time": "2025-10-06T08:39:05+00:00"
+            "time": "2025-12-03T17:15:59+00:00"
         },
         {
             "name": "lasserafn/php-initials",
@@ -3850,13 +3913,13 @@
             "type": "library",
             "extra": {
                 "hooks": {
-                    "pre-commit": [
-                        "composer test",
-                        "composer fix-style"
-                    ],
                     "pre-push": [
                         "composer test",
                         "composer check-style"
+                    ],
+                    "pre-commit": [
+                        "composer test",
+                        "composer fix-style"
                     ]
                 }
             },
@@ -9844,6 +9907,7 @@
         "laminas/laminas-ldap": 20,
         "laminas/laminas-mail": 20,
         "laminas/laminas-mime": 20,
+        "lasserafn/php-initial-avatar-generator": 20,
         "zordius/lightncandy": 20
     },
     "prefer-stable": false,

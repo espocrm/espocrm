@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 
+use GuzzleHttp\Psr7\Utils;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use LasseRafn\StringScript;
 
@@ -202,7 +203,11 @@ class Avatar extends Image
             ->setHeader('Content-Type', 'image/png')
             ->setHeader('Etag', $etag);
 
-        $response->writeBody($image->stream('png', 100));
+        $pointer = $image->toPng()->toFilePointer();
+
+        $stream = Utils::streamFor($pointer);
+
+        $response->writeBody($stream);
     }
 
     private function composeCacheControlHeader(): string

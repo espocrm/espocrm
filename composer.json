@@ -50,13 +50,13 @@
         "brick/phonenumber": "^0.5.0",
         "picqer/php-barcode-generator": "^3.2",
         "chillerlan/php-qrcode": "^5.0",
-        "lasserafn/php-initial-avatar-generator": "^4.4",
         "tholu/php-cidr-match": "^0.5",
         "league/oauth2-client": "^2.9",
         "symfony/mailer": "^6",
         "league/html-to-markdown": "^5.1",
         "psr/clock": "^1.0",
-        "react/child-process": "^0.6.6"
+        "react/child-process": "^0.6.6",
+        "lasserafn/php-initial-avatar-generator": "dev-update-image-lib#a46ab8f1427f93c5b37957e739205da7fcca0290"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
@@ -107,6 +107,10 @@
         {
             "type": "git",
             "url": "https://github.com/yurikuzn/laminas-ldap.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/yurikuzn/php-initial-avatar-generator.git"
         }
     ],
     "provide": {
