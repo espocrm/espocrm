@@ -38,7 +38,7 @@
         "guzzlehttp/psr7": "^2.7.0",
         "michelf/php-markdown": "^1.9",
         "robthree/twofactorauth": "^1.8",
-        "nesbot/carbon": "^2.72",
+        "nesbot/carbon": "^3.11.0",
         "zbateson/mail-mime-parser": "^3.0",
         "phpoffice/phpspreadsheet": "^5.0",
         "doctrine/dbal": "^3.9.3",
