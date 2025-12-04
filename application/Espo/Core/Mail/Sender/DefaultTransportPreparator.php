@@ -53,14 +53,11 @@ class DefaultTransportPreparator implements TransportPreparator
 
         // 'SSL' is treated as implicit SSL/TLS. 'TLS' is treated as STARTTLS.
         // STARTTLS is the most common method.
-        $scheme = $smtpParams->getSecurity() === 'SSL' ? 'smtps' : 'smtp';
+        $scheme = $smtpParams->getSecurity() === SmtpParams::SECURITY_SSL_TLS ? 'smtps' : 'smtp';
 
-        if ($smtpParams->getSecurity() === 'TLS' && !defined('OPENSSL_VERSION_NUMBER')) {
+        if ($smtpParams->getSecurity() === SmtpParams::SECURITY_START_TLS && !defined('OPENSSL_VERSION_NUMBER')) {
             throw new RuntimeException("OpenSSL is not available.");
         }
-
-        // @todo Use `auto_tls=false` if no security when Symfony v7.1 is installed.
-        // @todo If starttls, it should be enforced.
 
         $transport = (new EsmtpTransportFactory())
             ->create(
@@ -70,6 +67,10 @@ class DefaultTransportPreparator implements TransportPreparator
                     port: $smtpParams->getPort(),
                 )
             );
+
+        if (!$smtpParams->getSecurity() && $transport instanceof EsmtpTransport) {
+            $transport->setAutoTls(false);
+        }
 
         if (!$transport instanceof EsmtpTransport) {
             throw new RuntimeException();

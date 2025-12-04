@@ -57,6 +57,9 @@ class SmtpParams
     public const AUTH_MECHANISM_PLAIN = 'plain';
     public const AUTH_MECHANISM_XOAUTH = 'xoauth';
 
+    public const string SECURITY_SSL_TLS = 'SSL';
+    public const string SECURITY_START_TLS = 'TLS';
+
     /** @var string[] */
     private array $paramList = [
         'server',
