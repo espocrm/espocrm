@@ -30,8 +30,6 @@
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
-use Laminas\Mail\Message;
-
 use Espo\Core\Field\DateTime;
 use Espo\Core\Mail\ConfigDataProvider;
 use Espo\ORM\EntityCollection;

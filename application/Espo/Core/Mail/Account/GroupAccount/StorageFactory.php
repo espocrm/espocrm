@@ -30,10 +30,10 @@
 namespace Espo\Core\Mail\Account\GroupAccount;
 
 use Espo\Core\Mail\Account\CommonStorageFactory;
+use Espo\Core\Mail\Account\Storage;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
-use Espo\Core\Mail\Account\Storage\LaminasStorage;
 use Espo\Core\Mail\Exceptions\NoImap;
 
 class StorageFactory implements StorageFactoryInterface
@@ -42,7 +42,7 @@ class StorageFactory implements StorageFactoryInterface
         private CommonStorageFactory $commonStorageFactory,
     ) {}
 
-    public function create(Account $account): LaminasStorage
+    public function create(Account $account): Storage
     {
         $imapParams = $account->getImapParams();
 
@@ -63,7 +63,7 @@ class StorageFactory implements StorageFactoryInterface
         return $this->createWithParams($params);
     }
 
-    public function createWithParams(Params $params): LaminasStorage
+    public function createWithParams(Params $params): Storage
     {
         return $this->commonStorageFactory->create($params);
     }

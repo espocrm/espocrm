@@ -44,10 +44,6 @@ use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 
-use Laminas\Mail\Headers;
-use Laminas\Mail\Message as LaminasMessage;
-
-use RuntimeException;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Transport\TransportInterface;
@@ -71,7 +67,6 @@ class Sender
     /** @var array<string, mixed> */
     private array $overrideParams = [];
     private ?string $envelopeFromAddress = null;
-    private ?LaminasMessage $laminasMessage = null;
     /** @var ?iterable<Attachment> */
     private $attachmentList = null;
     /** @var array{string, string}[] */
@@ -96,7 +91,6 @@ class Sender
     {
         $this->params = [];
         $this->envelopeFromAddress = null;
-        $this->laminasMessage = null;
         $this->attachmentList = null;
         $this->overrideParams = [];
         $this->headers = [];
@@ -193,19 +187,6 @@ class Sender
     public function withMessageContainer(MessageContainer $messageContainer): self
     {
         $this->messageContainer = $messageContainer;
-
-        return $this;
-    }
-
-    /**
-     * Set a message instance.
-     *
-     * @deprecated As of v9.1. Use `withAddedHeader`.
-     * @todo Remove in v10.0.
-     */
-    public function withMessage(LaminasMessage $message): self
-    {
-        $this->laminasMessage = $message;
 
         return $this;
     }
@@ -312,8 +293,6 @@ class Sender
         $this->applySubject($email, $message);
         $this->applyBody($email, $message);
         $this->applyMessageId($email, $message);
-
-        $this->applyLaminasMessageHeaders($message);
 
         if (!$this->transport) {
             throw new LogicException();
@@ -595,17 +574,6 @@ class Sender
             $message->getHeaders()->addTextHeader($item[0], $item[1]);
         }
 
-        if ($this->laminasMessage) {
-            // For bc.
-            foreach ($this->laminasMessage->getHeaders() as $it) {
-                if ($it->getFieldName() === 'Date') {
-                    continue;
-                }
-
-                $message->getHeaders()->addTextHeader($it->getFieldName(), $it->getFieldValue());
-            }
-        }
-
         if ($email->isAutoReply() && !$message->getHeaders()->has('Auto-Submitted')) {
             $message->getHeaders()->addTextHeader('Auto-Submitted', 'auto-replied');
         }
@@ -624,25 +592,5 @@ class Sender
         ];
 
         return new Envelope(new Address($this->envelopeFromAddress), $recipients);
-    }
-
-    private function applyLaminasMessageHeaders(Message $message): void
-    {
-        if (!$this->laminasMessage) {
-            return;
-        }
-
-        $parts = preg_split("/\R\R/", $message->toString(), 2);
-
-        if (!is_array($parts) || count($parts) < 2) {
-            throw new RuntimeException("Could not split email.");
-        }
-
-        /** @noinspection PhpMultipleClassDeclarationsInspection */
-        $this->laminasMessage
-            ->setHeaders(
-                Headers::fromString($parts[0])
-            )
-            ->setBody($parts[1]);
     }
 }

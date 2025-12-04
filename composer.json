@@ -23,8 +23,6 @@
         "slim/slim": "^4.15",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "^3.4",
-        "laminas/laminas-mail": "dev-master#3befe2ed6193c10fb045369bd6473bd70fb9ceac",
-        "laminas/laminas-mime": "dev-master#25659453400e0b2970e490dd0e4045f62acf5371",
         "laminas/laminas-ldap": "2.20.x-dev#e7b9fe0e295f3898fb97d08b320654c92849918a",
         "monolog/monolog": "^3.9",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
@@ -56,7 +54,8 @@
         "league/html-to-markdown": "^5.1",
         "psr/clock": "^1.0",
         "react/child-process": "^0.6.6",
-        "lasserafn/php-initial-avatar-generator": "dev-update-image-lib#a46ab8f1427f93c5b37957e739205da7fcca0290"
+        "lasserafn/php-initial-avatar-generator": "dev-update-image-lib#a46ab8f1427f93c5b37957e739205da7fcca0290",
+        "directorytree/imapengine": "^1.19"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
@@ -95,14 +94,6 @@
         {
             "type": "git",
             "url": "https://github.com/yurikuzn/lightncandy.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/yurikuzn/laminas-mail.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/yurikuzn/laminas-mime.git"
         },
         {
             "type": "git",

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Importer\Data;
 use Espo\Entities\Email;
 
@@ -37,5 +38,8 @@ use Espo\Entities\Email;
  */
 interface Importer
 {
+    /**
+     * @throws ImapError
+     */
     public function import(Message $message, Data $data): ?Email;
 }

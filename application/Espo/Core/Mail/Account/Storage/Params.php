@@ -36,17 +36,18 @@ use SensitiveParameter;
  */
 class Params
 {
+    /** @since 9.3.0 */
+    public const string SECURITY_SSL = 'SSL';
+    /** @since 9.3.0 */
+    public const string SECURITY_START_TLS = 'TLS';
+
     /** @var ?class-string<object> */
     private ?string $imapHandlerClassName;
 
-    /**
-     * @since 9.3.0
-     */
+    /** @since 9.3.0 */
     public const string AUTH_MECHANISM_PLAIN = 'plain';
 
-    /**
-     * @since 9.3.0
-     */
+    /** @since 9.3.0 */
     public const string AUTH_MECHANISM_XOAUTH = 'xoauth';
 
     /**

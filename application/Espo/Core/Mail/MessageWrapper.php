@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail;
 
 use Espo\Core\Mail\Account\Storage;
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Message\Part;
 
 use RuntimeException;
@@ -42,6 +43,9 @@ class MessageWrapper implements Message
     /** @var ?string[] */
     private ?array $flagList = null;
 
+    /**
+     * @throws ImapError
+     */
     public function __construct(
         private int $id,
         private ?Storage $storage = null,

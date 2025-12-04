@@ -43,8 +43,6 @@ use Espo\Core\Mail\Account\StorageFactory;
 use Espo\Entities\User;
 use Espo\Core\Mail\Sender\Message;
 
-use Laminas\Mail\Exception\ExceptionInterface;
-
 use Exception;
 
 class Service
@@ -154,7 +152,7 @@ class Service
                 'message' => $e->getMessage(),
             ]);
 
-            $message = $e instanceof ExceptionInterface || $e instanceof ImapError ?
+            $message = $e instanceof ImapError ?
                 $e->getMessage() : '';
 
             throw new ErrorSilent($message);
