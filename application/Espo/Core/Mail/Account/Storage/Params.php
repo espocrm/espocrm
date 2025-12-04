@@ -40,7 +40,18 @@ class Params
     private ?string $imapHandlerClassName;
 
     /**
+     * @since 9.3.0
+     */
+    public const string AUTH_MECHANISM_PLAIN = 'plain';
+
+    /**
+     * @since 9.3.0
+     */
+    public const string AUTH_MECHANISM_XOAUTH = 'xoauth';
+
+    /**
      * @param ?class-string<object> $imapHandlerClassName
+     * @param self::AUTH_MECHANISM_* $authMechanism
      */
     public function __construct(
         private ?string $host,
@@ -51,7 +62,8 @@ class Params
         ?string $imapHandlerClassName,
         private ?string $id,
         private ?string $userId,
-        private ?string $emailAddress
+        private ?string $emailAddress,
+        private string $authMechanism = self::AUTH_MECHANISM_PLAIN,
     ) {
         $this->imapHandlerClassName = $imapHandlerClassName;
     }
@@ -107,6 +119,38 @@ class Params
     public function getEmailAddress(): ?string
     {
         return $this->emailAddress;
+    }
+
+    /**
+     * @return self::AUTH_MECHANISM_*
+     * @since 9.3.0
+     */
+    public function getAuthMechanism(): string
+    {
+        return $this->authMechanism;
+    }
+
+    /**
+     * @param self::AUTH_MECHANISM_* $authMechanism
+     * @since 9.3.0
+     */
+    public function withAuthMechanism(string $authMechanism): self
+    {
+        $obj = clone $this;
+        $obj->authMechanism = $authMechanism;
+
+        return $obj;
+    }
+
+    /**
+     * @since 9.3.0
+     */
+    public function withUsername(?string $username): self
+    {
+        $obj = clone $this;
+        $obj->username = $username;
+
+        return $obj;
     }
 
     public function withPassword(#[SensitiveParameter] ?string $password): self
