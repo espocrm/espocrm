@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2652b24ce372a42ddcf977c5fa22b45f",
+    "content-hash": "c2e275954763404b3bd2602051c6c096",
     "packages": [
         {
             "name": "async-aws/core",
@@ -258,37 +258,37 @@
         },
         {
             "name": "cboden/ratchet",
-            "version": "v0.4.4",
+            "version": "0.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ratchetphp/Ratchet.git",
-                "reference": "5012dc954541b40c5599d286fd40653f5716a38f"
+                "reference": "9ac6a412a26d8bae6541ee0b65ffaf78e316b1a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/5012dc954541b40c5599d286fd40653f5716a38f",
-                "reference": "5012dc954541b40c5599d286fd40653f5716a38f",
+                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/9ac6a412a26d8bae6541ee0b65ffaf78e316b1a6",
+                "reference": "9ac6a412a26d8bae6541ee0b65ffaf78e316b1a6",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/psr7": "^1.7|^2.0",
                 "php": ">=5.4.2",
-                "ratchet/rfc6455": "^0.3.1",
-                "react/event-loop": ">=0.4",
+                "ratchet/rfc6455": "^0.4.0 | ^0.3.1",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4",
                 "react/socket": "^1.0 || ^0.8 || ^0.7 || ^0.6 || ^0.5",
-                "symfony/http-foundation": "^2.6|^3.0|^4.0|^5.0|^6.0",
-                "symfony/routing": "^2.6|^3.0|^4.0|^5.0|^6.0"
+                "symfony/http-foundation": "^2.6|^3.0|^4.0|^5.0|^6.0|^7.0",
+                "symfony/routing": "^2.6|^3.0|^4.0|^5.0|^6.0|^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8"
+                "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Ratchet\\": "src/Ratchet"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -307,17 +307,17 @@
             "homepage": "http://socketo.me",
             "keywords": [
                 "Ratchet",
-                "WebSockets",
-                "server",
-                "sockets",
-                "websocket"
+                "Server",
+                "Sockets",
+                "WebSocket",
+                "WebSockets"
             ],
             "support": {
-                "chat": "https://gitter.im/reactphp/reactphp",
                 "issues": "https://github.com/ratchetphp/Ratchet/issues",
-                "source": "https://github.com/ratchetphp/Ratchet/tree/v0.4.4"
+                "chat": "https://gitter.im/reactphp/reactphp",
+                "source": "https://github.com/ratchetphp/Ratchet/tree/0.4.x"
             },
-            "time": "2021-12-14T00:20:41+00:00"
+            "time": "2025-10-25T19:55:26+00:00"
         },
         {
             "name": "chillerlan/php-qrcode",
@@ -9904,11 +9904,12 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "laminas/laminas-ldap": 20,
         "laminas/laminas-mail": 20,
         "laminas/laminas-mime": 20,
-        "lasserafn/php-initial-avatar-generator": 20,
-        "zordius/lightncandy": 20
+        "laminas/laminas-ldap": 20,
+        "zordius/lightncandy": 20,
+        "cboden/ratchet": 20,
+        "lasserafn/php-initial-avatar-generator": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -9926,7 +9927,7 @@
         "ext-pdo": "*",
         "ext-ctype": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.3.0"
     },

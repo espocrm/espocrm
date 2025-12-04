@@ -33,7 +33,7 @@
         "symfony/process": "^6",
         "symfony/http-foundation": "^6",
         "symfony/routing": "^6",
-        "cboden/ratchet": "^0.4.4",
+        "cboden/ratchet": "0.4.x-dev#9ac6a412a26d8bae6541ee0b65ffaf78e316b1a6",
         "react/zmq": "^0.4.0",
         "guzzlehttp/psr7": "^2.7.0",
         "michelf/php-markdown": "^1.9",
@@ -111,6 +111,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/yurikuzn/php-initial-avatar-generator.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ratchetphp/Ratchet.git"
         }
     ],
     "provide": {
