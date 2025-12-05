@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FileStorage\Manager;
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data;
 use Espo\Core\Mail\MessageWrapper;
@@ -40,6 +41,7 @@ use Espo\Core\Mail\Parsers\MailMimeParser;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
+use RuntimeException;
 
 class ImportEmlService
 {
@@ -66,7 +68,11 @@ class ImportEmlService
         $attachment = $this->getAttachment($fileId);
         $contents = $this->fileStorageManager->getContents($attachment);
 
-        $message = new MessageWrapper(1, null, $this->parser, $contents);
+        try {
+            $message = new MessageWrapper(1, null, $this->parser, $contents);
+        } catch (ImapError $e) {
+            throw new RuntimeException(previous: $e);
+        }
 
         $this->checkDuplicate($message);
 

@@ -48,9 +48,9 @@ class FetchDataTest extends \PHPUnit\Framework\TestCase
 
         $data = FetchData::fromRaw($raw);
 
-        $this->assertEquals('10', $data->getLastUniqueId('test'));
+        $this->assertEquals(10, $data->getLastUid('test'));
         $this->assertEquals('2022-01-01 00:00:00', $data->getLastDate('test')->toString());
-        $this->assertEquals(null, $data->getLastUniqueId('not-existing'));
+        $this->assertEquals(null, $data->getLastUid('not-existing'));
         $this->assertEquals(null, $data->getLastDate('not-existing'));
         $this->assertEquals(false, $data->getForceByDate('test'));
         $this->assertEquals($raw, $data->getRaw());
@@ -58,10 +58,10 @@ class FetchDataTest extends \PHPUnit\Framework\TestCase
         $now = DateTime::createNow();
 
         $data->setForceByDate('test', true);
-        $data->setLastUniqueId('test', '11');
+        $data->setLastUid('test', 11);
         $data->setLastDate('test', $now);
 
-        $this->assertEquals('11', $data->getLastUniqueId('test'));
+        $this->assertEquals(11, $data->getLastUid('test'));
         $this->assertEquals(true, $data->getForceByDate('test'));
         $this->assertEquals($now, $data->getLastDate('test'));
     }

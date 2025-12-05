@@ -42,8 +42,6 @@ use Espo\Core\Mail\Sender\Message;
 use Espo\Core\Utils\Log;
 use Exception;
 
-use Laminas\Mail\Exception\ExceptionInterface;
-
 class Service
 {
     public function __construct(
@@ -117,10 +115,10 @@ class Service
                 'message' => $e->getMessage(),
             ]);
 
-            $message = $e instanceof ExceptionInterface || $e instanceof ImapError ?
+            $message = $e instanceof ImapError ?
                 $e->getMessage() : '';
 
-            throw new ErrorSilent($message);
+            throw new ErrorSilent($message, previous: $e);
         }
     }
 

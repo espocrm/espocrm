@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount;
 
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Message\Part;
 
@@ -62,7 +63,11 @@ class BouncedRecognizer
                 return true;
             }
 
-            $content = $message->getRawContent();
+            try {
+                $content = $message->getRawContent();
+            } catch (ImapError) {
+                return false;
+            }
 
             if (
                 str_contains($content, 'message/delivery-status') &&

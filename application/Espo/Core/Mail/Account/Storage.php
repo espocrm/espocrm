@@ -30,49 +30,55 @@
 namespace Espo\Core\Mail\Account;
 
 use Espo\Core\Field\DateTime;
+use Espo\Core\Mail\Exceptions\ImapError;
 
 interface Storage
 {
     /**
-     * Set message flags.
+     * Mark as unseen.
      *
-     * @param string[] $flags
+     * @throws ImapError
      */
-    public function setFlags(int $id, array $flags): void;
+    public function unmarkSeen(int $id): void;
 
     /**
      * Get a message size.
+     *
+     * @throws ImapError
      */
     public function getSize(int $id): int;
 
     /**
      * Get message raw content.
+     *
+     * @throws ImapError
      */
     public function getRawContent(int $id): string;
-
-    /**
-     * Get a message unique ID.
-     */
-    public function getUniqueId(int $id): string;
 
     /**
      * Get IDs from unique ID.
      *
      * @return int[]
+     *
+     * @throws ImapError
      */
-    public function getIdsFromUniqueId(string $uniqueId): array;
+    public function getUidsFromUid(int $id): array;
 
     /**
      * Get IDs since a specific date.
      *
      * @return int[]
+     *
+     * @throws ImapError
      */
-    public function getIdsSinceDate(DateTime $since): array;
+    public function getUidsSinceDate(DateTime $since): array;
 
     /**
      * Get only header and flags. Won't fetch the whole email.
      *
      * @return array{header: string, flags: string[]}
+     *
+     * @throws ImapError
      */
     public function getHeaderAndFlags(int $id): array;
 
@@ -83,16 +89,22 @@ interface Storage
 
     /**
      * @return string[]
+     *
+     * @throws ImapError
      */
     public function getFolderNames(): array;
 
     /**
      * Select a folder.
+     *
+     * @throws ImapError
      */
     public function selectFolder(string $name): void;
 
     /**
      * Store a message.
+     *
+     * @throws ImapError
      */
-    public function appendMessage(string $content, ?string $folder = null): void;
+    public function appendMessage(string $content, string $folder): void;
 }

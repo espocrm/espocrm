@@ -37,8 +37,6 @@ use Espo\Core\Utils\Config;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 
-use Laminas\Mail\Message;
-
 /**
  * A service for email sending. Can send with SMTP parameters of the system email account or with specific parameters.
  * Uses a builder to send with specific parameters.
@@ -122,17 +120,6 @@ class EmailSender
     public function withEnvelopeOptions(array $options): Sender
     {
         return $this->createSender()->withEnvelopeOptions($options);
-    }
-
-    /**
-     * Set a message instance.
-     *
-     * @deprecated As of v9.1. Use `withAddedHeader`.
-     *  @todo Remove in v10.0.
-     */
-    public function withMessage(Message $message): Sender
-    {
-        return $this->createSender()->withMessage($message);
     }
 
     /**

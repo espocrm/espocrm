@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail;
 
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Message\Part;
 
 interface Message
@@ -50,11 +51,15 @@ interface Message
 
     /**
      * Get a raw content part.
+     *
+     * @throws ImapError
      */
     public function getRawContent(): string;
 
     /**
      * Get a full raw message.
+     *
+     * @throws ImapError
      */
     public function getFullRawContent(): string;
 
