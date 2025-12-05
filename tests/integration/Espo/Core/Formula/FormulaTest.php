@@ -697,6 +697,29 @@ class FormulaTest extends BaseTestCase
         $this->assertEquals('test', $value);
     }
 
+    /** @noinspection PhpUnhandledExceptionInspection */
+    public function testRecordRelateWithColumnData(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $em = $this->getContainer()->getByClass(EntityManager::class);
+
+        $a = $em->createEntity('Account');
+        $c = $em->createEntity('Contact');
+
+        $script = "
+            \$data = object\\create();
+            \$data['role'] = 'Tester';
+
+            record\\relate('Account', '{$a->getId()}', 'contacts', '{$c->getId()}', \$data);
+        ";
+
+        $fm->run($script);
+
+        $value = $em->getRelation($a, 'contacts')->getColumnById($c->getId(), 'role');
+
+        $this->assertEquals('Tester', $value);
+    }
+
     public function testExtAccountFindByEmailAddress()
     {
         $fm = $this->getContainer()->get('formulaManager');

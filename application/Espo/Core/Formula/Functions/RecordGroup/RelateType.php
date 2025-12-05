@@ -31,8 +31,8 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
-
 use Espo\Core\Di;
+use stdClass;
 
 class RelateType extends BaseFunction implements
     Di\EntityManagerAware
@@ -49,6 +49,7 @@ class RelateType extends BaseFunction implements
         $id = $this->evaluate($args[1]);
         $link = $this->evaluate($args[2]);
         $foreignId = $this->evaluate($args[3]);
+        $columnData = count($args) > 4 ? $this->evaluate($args[4]) : null;
 
         if (!$entityType || !is_string($entityType)) {
             $this->throwBadArgumentType(1, 'string');
@@ -60,6 +61,14 @@ class RelateType extends BaseFunction implements
 
         if (!$link || !is_string($link)) {
             $this->throwBadArgumentType(3, 'string');
+        }
+
+        if ($columnData !== null && !$columnData instanceof stdClass) {
+            $this->throwBadArgumentType(4, 'object');
+        }
+
+        if ($columnData instanceof stdClass) {
+            $columnData = get_object_vars($columnData);
         }
 
         if (!$foreignId) {
@@ -82,7 +91,7 @@ class RelateType extends BaseFunction implements
 
         if (is_array($foreignId)) {
             foreach ($foreignId as $itemId) {
-                $relation->relateById($itemId);
+                $relation->relateById($itemId, $columnData);
             }
 
             return true;
@@ -92,7 +101,7 @@ class RelateType extends BaseFunction implements
             $this->throwError("foreignId type is wrong.");
         }
 
-        $relation->relateById($foreignId);
+        $relation->relateById($foreignId, $columnData);
 
         return true;
     }
