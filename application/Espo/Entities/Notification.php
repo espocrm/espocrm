@@ -184,4 +184,9 @@ class Notification extends Entity
     {
         return $this->get('actionId');
     }
+
+    public function setGroupedCount(?string $groupedCount): self
+    {
+        return $this->set('groupedCount', $groupedCount);
+    }
 }

@@ -132,7 +132,7 @@ class RecordService
                 $groupedCount = $groupedCountMap[$entity->getActionId()] ?? 0;
             }
 
-            $entity->set('groupedCount', $groupedCount);
+            $entity->setGroupedCount($groupedCount);
         }
 
         $collection = new EntityCollection([...$collection], Notification::ENTITY_TYPE);
