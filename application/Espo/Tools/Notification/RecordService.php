@@ -121,7 +121,11 @@ class RecordService
         $ids = [];
         $actionIds = [];
 
-        foreach ($collection as $entity) {
+        foreach ($collection as $i => $entity) {
+            if ($i === $limit) {
+                break;
+            }
+
             $ids[] = $entity->getId();
 
             $groupedCount = null;
