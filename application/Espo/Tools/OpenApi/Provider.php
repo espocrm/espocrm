@@ -32,11 +32,13 @@ namespace Espo\Tools\OpenApi;
 use Espo\Core\Acl\GlobalRestriction;
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Where\Item\Type as WhereItemType;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Module;
 use Espo\Entities\Team;
 use Espo\ORM\Defs;
 use Espo\ORM\Defs\Params\FieldParam;
@@ -65,10 +67,17 @@ class Provider
         private AclManager $aclManager,
         private FieldUtil $fieldUtil,
         private DataCache $dataCache,
+        private Module $module,
     ) {}
 
+    /**
+     * @throws BadRequest
+     */
     public function get(Params $params): string
     {
+        $this->validateParams($params);
+        $params = $this->sanitizeParams($params);
+
         $data = $this->getData($params);
 
         return Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -139,8 +148,14 @@ class Provider
     {
         $key = self::CACHE_KEY;
 
+        if ($params->module !== null) {
+            $key .= '_' . $params->module;
+
+            return $key;
+        }
+
         if ($params->skipCustom) {
-            $key .= 'SkipCustom';
+            $key .= '_skipCustom';
         }
 
         return $key;
@@ -197,6 +212,10 @@ class Provider
             $entity = $it['entity'] ?? false;
             $disabled = $it['disabled'] ?? false;
             $module = $it['module'] ?? false;
+
+            if ($params->module !== null && $params->module !== $module) {
+                continue;
+            }
 
             if ($params->skipCustom && $module === 'Custom') {
                 continue;
@@ -1113,5 +1132,27 @@ class Provider
         $createOperation['responses'] = $responses;
 
         return $createOperation;
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function validateParams(Params $params): void
+    {
+        if (
+            $params->module !== null &&
+            !in_array($params->module, $this->module->getList())
+        ) {
+            throw new BadRequest("Module does not exist.");
+        }
+    }
+
+    private function sanitizeParams(Params $params): Params
+    {
+        if ($params->module !== null) {
+            $params = $params->withSkipCustom(true);
+        }
+
+        return $params;
     }
 }

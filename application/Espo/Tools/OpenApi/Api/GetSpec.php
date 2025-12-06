@@ -57,8 +57,14 @@ class GetSpec implements Action
         $provider = $this->providerFactory->create();
 
         $skipCustom = $request->getQueryParam('skipCustom') === 'true';
+        $module = $request->getQueryParam('module');
 
-        $spec = $provider->get(new Params(skipCustom: $skipCustom));
+        $params = new Params(
+            skipCustom: $skipCustom,
+            module: $module,
+        );
+
+        $spec = $provider->get($params);
 
         return ResponseComposer::empty()
             ->writeBody($spec)
