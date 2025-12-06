@@ -48,7 +48,8 @@
             "foreign": "teams",
             "columnAttributeMap": {
                 "role": "userRole"
-            }
+            },
+            "apiSpecDisabled": true
         },
         "roles": {
             "type": "hasMany",

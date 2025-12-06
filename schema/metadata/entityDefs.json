@@ -1122,7 +1122,7 @@
                 },
                 "apiSpecDisabled": {
                     "type": "boolean",
-                    "description": "Disable field definitions in API specification. As of v9.3."
+                    "description": "Do not print the field in the API specification. As of v9.3."
                 },
                 "isPersonalData": {
                     "type": "boolean",
@@ -1421,7 +1421,11 @@
                 },
                 "utility": {
                     "type": "boolean",
-                    "description": "The link will be hidden from a user on the UI but not disabled."
+                    "description": "The link will be hidden from the user on the UI but not disabled."
+                },
+                "apiSpecDisabled": {
+                    "type": "boolean",
+                    "description": "Do not print the link in the API specification. As of v9.3."
                 }
             },
             "allOf": [

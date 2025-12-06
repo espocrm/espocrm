@@ -51,6 +51,8 @@ class Provider
 {
     private const string CACHE_KEY = 'openApiSpec';
 
+    private const string PARAM_SPEC_DISABLED = 'apiSpecDisabled';
+
     /** @var string[] */
     private array $mandatoryEntityTypeList = [
         Team::ENTITY_TYPE,
@@ -264,7 +266,7 @@ class Provider
             if (
                 $fieldDefs->getParam(FieldParam::DISABLED) ||
                 $fieldDefs->getParam(FieldParam::UTILITY) ||
-                $fieldDefs->getParam('apiSpecDisabled')
+                $fieldDefs->getParam(self::PARAM_SPEC_DISABLED)
             ) {
                 continue;
             }
@@ -944,7 +946,8 @@ class Provider
                     $this->metadata->get("entityDefs.$entityType.links.$link.readOnly") ||
                     $this->metadata->get("entityDefs.$entityType.links.$link.disabled")
                 ) ||
-                $params->skipCustom && $defs->getParam('isCustom')
+                $params->skipCustom && $defs->getParam('isCustom') ||
+                $this->metadata->get("entityDefs.$entityType.links.$link." . self::PARAM_SPEC_DISABLED)
             ) {
                 continue;
             }
