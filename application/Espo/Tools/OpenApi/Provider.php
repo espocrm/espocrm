@@ -37,6 +37,7 @@ use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Team;
 use Espo\ORM\Defs;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Name\Attribute;
@@ -49,6 +50,11 @@ use stdClass;
 class Provider
 {
     private const string CACHE_KEY = 'openApiSpec';
+
+    /** @var string[] */
+    private array $mandatoryEntityTypeList = [
+        Team::ENTITY_TYPE,
+    ];
 
     public function __construct(
         private Metadata $metadata,
@@ -194,7 +200,11 @@ class Provider
                 continue;
             }
 
-            if (!$object || !$entity) {
+            if (!$entity) {
+                continue;
+            }
+
+            if (!$object && !in_array($scope, $this->mandatoryEntityTypeList)) {
                 continue;
             }
 
