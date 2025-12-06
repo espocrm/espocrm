@@ -106,10 +106,16 @@ class Provider
 
     private function buildData(Params $params): stdClass
     {
+        $title = 'EspoCRM API';
+
+        if ($params->module) {
+            $title = "EspoCRM · $params->module API";
+        }
+
         $spec = (object) [
             'openapi' => '3.1.1',
             'info' => [
-                'title' => 'EspoCRM API',
+                'title' => $title,
                 'version' => '1.0.0',
             ],
             'paths' => [],
