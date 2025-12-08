@@ -89,7 +89,7 @@ class BuilderHelper
         /** @var ?array<string, mixed> $fields */
         $fields = $typeDefs['fields'] ?? null;
         /** @var string $naming */
-        $naming = $typeDefs['naming'] ?? $this->defaultFieldNaming;;
+        $naming = $typeDefs['naming'] ?? $this->defaultFieldNaming;
 
         if (!is_array($fields)) {
             return null;
