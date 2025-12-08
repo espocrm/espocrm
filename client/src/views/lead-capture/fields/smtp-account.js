@@ -44,7 +44,7 @@ export default class extends EnumFieldView {
         const data = super.data();
 
         data.valueIsSet = this.model.has('inboundEmailId');
-        data.isNotEmpty = this.model.has('inboundEmailId');;
+        data.isNotEmpty = this.model.has('inboundEmailId');
 
         data.value = this.getValueForDisplay();
 
