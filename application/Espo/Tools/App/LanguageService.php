@@ -248,6 +248,10 @@ class LanguageService
                 }
             }
 
+            if (!str_contains($target, '.')) {
+                $this->restoreEntityType($data, $languageObj, $target);
+            }
+
             $pointer =& $data;
 
             foreach ($targetArr as $i => $k) {
@@ -268,5 +272,18 @@ class LanguageService
                 $this->unsetEmpty($data, $target);
             }
         }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function restoreEntityType(&$data, LanguageUtil $languageObj, string $target): void
+    {
+        $data['Global'] ??= [];
+        $data['Global']['scopeNames'] ??= [];
+        $data['Global']['scopeNamesPlural'] ??= [];
+
+        $data['Global']['scopeNames'][$target] = $languageObj->translateLabel($target, 'scopeNames');
+        $data['Global']['scopeNamesPlural'][$target] = $languageObj->translateLabel($target, 'scopeNamesPlural');
     }
 }
