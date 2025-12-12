@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,42 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DecimalFieldView from 'views/fields/decimal';
+namespace Espo\Classes\FieldValidators\CurrencyRate\Record;
 
-export default class CurrencyRateRateFieldView extends DecimalFieldView {
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\ORM\Entity;
 
-    // language=Handlebars
-    editTemplateContent = `
-            <div class="input-group">
-            <span class="input-group-addon radius-left" style="width: 24%">1 {{targetCode}} = </span>
-            <span class="input-group-item">
-                <input
-                    type="text"
-                    class="main-element form-control numeric-text"
-                    data-name="{{name}}"
-                    value="{{value}}"
-                    autocomplete="espo-{{name}}"
-                    pattern="[\\-]?[0-9]*"
-                    style="text-align: end;"
-                >
-            </span>
-            <span class="input-group-addon radius-right" style="width: 21%">{{baseCode}}</span>
-        </div>
-    `
+class NonBase implements Validator
+{
 
-    getAttributeList() {
-        return [
-            ...super.getAttributeList(),
-            'baseCode',
-        ];
+    /**
+     * @inheritDoc
+     */
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
+    {
+        // TODO: Implement validate() method.
     }
-
-    data() {
-        return {
-            ...super.data(),
-            baseCode: this.model.attributes.baseCode,
-            targetCode: this.model.attributes.recordName,
-        }
-    }
-
 }

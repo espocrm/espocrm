@@ -3,7 +3,10 @@
         "record": {
             "type": "link",
             "required": true,
-            "readOnlyAfterCreate": true
+            "readOnlyAfterCreate": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\CurrencyRate\\Record\\NonBase"
+            ]
         },
         "baseCode": {
             "type": "varchar",

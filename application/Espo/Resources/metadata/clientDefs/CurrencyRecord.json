@@ -12,7 +12,10 @@
     ],
     "relationshipPanels": {
         "rates": {
-            "layout": "listForRecord"
+            "layout": "listForRecord",
+            "createAttributeMap": {
+                "code": "recordName"
+            }
         }
     }
 }
