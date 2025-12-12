@@ -1,0 +1,9 @@
+{
+    "selectAttributesDependencyMap": {
+        "id": [
+            "recordId",
+            "recordName",
+            "baseCode"
+        ]
+    }
+}

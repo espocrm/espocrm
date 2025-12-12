@@ -1,6 +1,6 @@
 {
     "labels": {
-        "Create CurrencyRecordRate": "Create Currency Rate"
+        "Create CurrencyRecordRate": "Create Exchange Rate"
     },
     "fields": {
         "record": "Currency",

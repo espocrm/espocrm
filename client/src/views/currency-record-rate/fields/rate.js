@@ -31,6 +31,29 @@ import DecimalFieldView from 'views/fields/decimal';
 export default class CurrencyRecordRateRateFieldView extends DecimalFieldView {
 
     // language=Handlebars
+    listTemplateContent = `
+        {{#if isNotEmpty~}}
+            <span class="text-soft">{{targetCode}} = </span>
+            <span class="numeric-text">{{value}}</span>
+            <span class="text-soft">{{baseCode}}</span>
+        {{~/if~}}
+    `
+
+    // language=Handlebars
+    detailTemplateContent = `
+        {{~#if isNotEmpty~}}
+            <span class="text-soft">{{targetCode}} = </span>
+            <span class="numeric-text">{{value}}</span>
+            <span class="text-soft">{{baseCode}}</span>
+        {{~else~}}
+            {{~#if valueIsSet~}}
+                <span class="none-value">{{translate 'None'}}</span>
+            {{~else~}}<span class="loading-value"></span>
+            {{~/if}}
+        {{~/if~}}
+    `
+
+    // language=Handlebars
     editTemplateContent = `
             <div class="input-group">
             <span class="input-group-addon radius-left" style="width: 24%">1 {{targetCode}} = </span>
@@ -53,6 +76,7 @@ export default class CurrencyRecordRateRateFieldView extends DecimalFieldView {
         return [
             ...super.getAttributeList(),
             'baseCode',
+            'recordName',
         ];
     }
 
