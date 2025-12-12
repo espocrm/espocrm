@@ -131,7 +131,8 @@
                                     {"const": "multiEnum"},
                                     {"const": "array"},
                                     {"const": "checklist"},
-                                    {"const": "urlMultiple"}
+                                    {"const": "urlMultiple"},
+                                    {"const": "decimal"}
                                 ]
                             }
                         }
@@ -161,7 +162,8 @@
                                     {"const": "multiEnum"},
                                     {"const": "array"},
                                     {"const": "checklist"},
-                                    {"const": "urlMultiple"}
+                                    {"const": "urlMultiple"},
+                                    {"const": "decimal"}
                                 ]
                             }
                         }
@@ -535,7 +537,8 @@
                                     {"const": "checklist"},
                                     {"const": "file"},
                                     {"const": "image"},
-                                    {"const": "enum"}
+                                    {"const": "enum"},
+                                    {"const": "decimal"}
                                 ]
                             }
                         }
@@ -657,7 +660,8 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
-                                    {"const": "float"}
+                                    {"const": "float"},
+                                    {"const": "decimal"}
                                 ]
                             }
                         }
@@ -677,7 +681,8 @@
                             "type": {
                                 "anyOf": [
                                     {"const": "float"},
-                                    {"const": "currency"}
+                                    {"const": "currency"},
+                                    {"const": "decimal"}
                                 ]
                             }
                         }
@@ -893,7 +898,8 @@
                                 "url",
                                 "urlMultiple",
                                 "varchar",
-                                "wysiwyg"
+                                "wysiwyg",
+                                "decimal"
                             ]
                         }
                     ]
