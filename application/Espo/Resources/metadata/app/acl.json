@@ -64,7 +64,8 @@
             "ImportEml": "Import",
             "WorkingTimeRange": "WorkingTimeCalendar",
             "Stream": true,
-            "CurrencyRecord": "boolean:Currency"
+            "CurrencyRecord": "boolean:Currency",
+            "CurrencyRecordRate": "Currency"
         },
         "fieldLevel": {
         },

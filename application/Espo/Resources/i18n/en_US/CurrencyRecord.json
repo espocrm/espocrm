@@ -6,7 +6,7 @@
         "symbol": "Symbol",
         "isBase": "Is Base",
         "rate": "Rate",
-        "rateDate": "Date"
+        "rateDate": "Rate Date"
     },
     "links": {
         "rates": "Rates"
