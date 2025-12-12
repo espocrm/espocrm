@@ -47,7 +47,7 @@
                                 },
                                 "view": {
                                     "type": "string",
-                                    "description": "A view. Not compatible with `recordView`."
+                                    "description": "A view. Compatible with `recordView` as of v9.3."
                                 },
                                 "tabQuickSearch": {
                                     "type": "boolean",

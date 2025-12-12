@@ -32,6 +32,7 @@ import SettingsEditView from 'views/settings/edit';
 import AdminIndexView from 'views/admin/index';
 import {inject} from 'di';
 import Language from 'language';
+import EditView from 'views/edit';
 
 class AdminController extends Controller {
 
@@ -51,7 +52,7 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionPage(options) {
+    async actionPage(options) {
         const page = options.page;
 
         if (options.options) {
@@ -81,7 +82,7 @@ class AdminController extends Controller {
             throw new Espo.Exceptions.NotFound();
         }
 
-        if (defs.view) {
+        if (defs.view && !defs.recordView) {
             this.main(defs.view, options);
 
             return;
@@ -93,23 +94,32 @@ class AdminController extends Controller {
 
         const model = this.getSettingsModel();
 
-        model.fetch().then(() => {
-            model.id = '1';
+        await model.fetch();
 
-            const editView = new SettingsEditView({
-                model: model,
-                headerTemplate: 'admin/settings/headers/page',
-                recordView: defs.recordView,
-                page: page,
-                label: defs.label,
-                optionsToPass: [
-                    'page',
-                    'label',
-                ],
-            });
+        model.id = '1';
 
-            this.main(editView);
+        const view = defs.view ?? 'views/settings/edit';
+
+        const ViewClass = await Espo.loader.requirePromise(view);
+
+        if (!EditView.isPrototypeOf(ViewClass)) {
+            throw new Error("View should inherit views/edit.");
+        }
+
+        const editView = new ViewClass({
+            model: model,
+            headerTemplate: 'admin/settings/headers/page',
+            recordView: defs.recordView,
+            page: page,
+            label: defs.label,
+            optionsToPass: [
+                'page',
+                'label',
+            ],
         });
+
+        this.main(editView);
+
     }
 
     // noinspection JSUnusedGlobalSymbols

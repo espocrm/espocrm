@@ -34,7 +34,8 @@
                 "label": "Currency",
                 "iconClass": "fas fa-euro-sign",
                 "description": "currency",
-                "recordView": "views/admin/currency"
+                "recordView": "views/admin/currency",
+                "view": "views/admin/currency-main"
             },
             {
                 "url": "#Admin/notifications",
