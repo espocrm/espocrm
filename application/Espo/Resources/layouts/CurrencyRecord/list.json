@@ -2,22 +2,26 @@
     {
         "name": "code",
         "link": true,
-        "width": 15
+        "width": 16
     },
     {
         "name": "label",
-        "width": 18
+        "width": 16
     },
     {
         "name": "symbol",
-        "width": 12
+        "width": 10
     },
     {
         "name": "status",
-        "width": 15
+        "width": 12
     },
     {
         "name": "isBase",
+        "width": 10
+    },
+    {
+        "name": "rateDate",
         "width": 12
     },
     {

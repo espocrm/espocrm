@@ -21,7 +21,9 @@
                 {
                     "name": "rate"
                 },
-                false
+                {
+                    "name": "rateDate"
+                }
             ]
         ]
     }

@@ -36,18 +36,40 @@ use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
+use WeakMap;
 
 /**
  * @since 9.3.0
  */
 class CurrencyRatesProvider
 {
+    /** @var WeakMap<CurrencyRecord, ?CurrencyRecordRate> */
+    private WeakMap $map;
+
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
         private DateTime $dateTime,
-    ) {}
+    ) {
+        $this->map = new WeakMap();
+    }
 
+    public function getCurrentRateEntry(CurrencyRecord $record): ?CurrencyRecordRate
+    {
+        if (!$this->map->offsetExists($record)) {
+            $this->map[$record] = $this->entityManager
+                ->getRDBRepositoryByClass(CurrencyRecordRate::class)
+                ->where([
+                    CurrencyRecordRate::ATTR_RECORD_ID => $record->getId(),
+                    CurrencyRecordRate::FIELD_BASE_CODE => $this->configDataProvider->getBaseCurrency(),
+                    CurrencyRecordRate::FIELD_DATE . '<=' => $this->dateTime->getToday()->toString(),
+                ])
+                ->order(CurrencyRecordRate::FIELD_DATE, Order::DESC)
+                ->findOne();
+        }
+
+        return $this->map[$record];
+    }
 
     /**
      * Get rate against the base currency by a record.

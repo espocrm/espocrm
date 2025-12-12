@@ -49,7 +49,7 @@ class Rate implements Loader
     public function process(Entity $entity, Params $params): void
     {
         $rate = $entity->getCode() !== $this->configDataProvider->getBaseCurrency() ?
-            $this->currencyRatesProvider->getRateByRecord($entity) :
+            $this->currencyRatesProvider->getCurrentRateEntry($entity)?->getRate() :
             '1';
 
         $entity->setRate($rate);

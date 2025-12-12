@@ -33,6 +33,13 @@
             "orderDisabled": true,
             "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Symbol"
         },
+        "rateDate": {
+            "type": "date",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\RateDate"
+        },
         "rate": {
             "type": "decimal",
             "readOnly": true,
