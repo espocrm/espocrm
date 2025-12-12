@@ -33,30 +33,28 @@ use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Entities\Currency;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
+use Espo\Tools\Currency\CurrencyRatesProvider;
+use Espo\Tools\Currency\Exceptions\NotEnabled;
 
 /**
  * Populates currency rates into database.
  */
 class DatabasePopulator
 {
-    private const PRECISION = 5;
+    private const int PRECISION = 6;
 
     public function __construct(
         private EntityManager $entityManager,
         private ConfigDataProvider $configDataProvider,
+        private CurrencyRatesProvider $currencyRatesProvider,
     ) {}
 
     public function process(): void
     {
         $defaultCurrency = $this->configDataProvider->getDefaultCurrency();
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
-        $currencyRates = $this->configDataProvider->getCurrencyRates()->toAssoc();
 
-        if ($defaultCurrency !== $baseCurrency) {
-            $currencyRates = $this->exchangeRates($baseCurrency, $defaultCurrency, $currencyRates);
-        }
-
-        $currencyRates[$defaultCurrency] = 1.00;
+        $currencyRates = $this->prepareRates($defaultCurrency, $baseCurrency);
 
         $this->entityManager->getTransactionManager()->start();
 
@@ -95,5 +93,29 @@ class DatabasePopulator
         }
 
         return $exchangedRates;
+    }
+
+    /**
+     * @return array<string, float>
+     */
+    private function prepareRates(string $defaultCurrency, string $baseCurrency): array
+    {
+        $currencyRates = [];
+
+        foreach ($this->configDataProvider->getCurrencyList() as $itCode) {
+            try {
+                $currencyRates[$itCode] = (float)($this->currencyRatesProvider->getRate($itCode) ?? 1);
+            } catch (NotEnabled) {
+                continue;
+            }
+        }
+
+        if ($defaultCurrency !== $baseCurrency) {
+            $currencyRates = $this->exchangeRates($baseCurrency, $defaultCurrency, $currencyRates);
+        }
+
+        $currencyRates[$defaultCurrency] = 1.00;
+
+        return $currencyRates;
     }
 }

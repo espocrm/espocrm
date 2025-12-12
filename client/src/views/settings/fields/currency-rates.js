@@ -28,23 +28,33 @@
 
 import BaseFieldView from 'views/fields/base';
 
+/**
+ * Not used.
+ * @todo Remove.
+ */
 export default class extends BaseFieldView {
 
     editTemplate = 'settings/fields/currency-rates/edit'
 
+    /**
+     * @private
+     * @type {string}
+     */
+    baseCode
+
     data() {
-        const baseCurrency = this.model.get('baseCurrency');
+        const baseCode = this.baseCode;
         const currencyRates = this.model.get('currencyRates') || {};
 
         const rateValues = {};
 
         (this.model.get('currencyList') || []).forEach(currency => {
-            if (currency !== baseCurrency) {
+            if (currency !== baseCode) {
                 rateValues[currency] = currencyRates[currency];
 
                 if (!rateValues[currency]) {
-                    if (currencyRates[baseCurrency]) {
-                        rateValues[currency] = Math.round(1 / currencyRates[baseCurrency] * 1000) / 1000;
+                    if (currencyRates[baseCode]) {
+                        rateValues[currency] = Math.round(1 / currencyRates[baseCode] * 1000) / 1000;
                     }
 
                     if (!rateValues[currency]) {
@@ -56,36 +66,23 @@ export default class extends BaseFieldView {
 
         return {
             rateValues: rateValues,
-            baseCurrency: baseCurrency,
+            baseCurrency: baseCode,
         };
     }
 
-    fetch() {
-        const data = {};
-        const currencyRates = {};
+    setup() {
+        const sync = () => {
+            this.baseCode = this.model.get('baseCurrency');
+        };
 
-        const baseCurrency = this.model.get('baseCurrency');
+        sync();
 
-        const currencyList = this.model.get('currencyList') || [];
-
-        currencyList.forEach(currency => {
-            if (currency !== baseCurrency) {
-                const value = this.$el.find(`input[data-currency="${currency}"]`).val() || '1';
-
-                currencyRates[currency] = parseFloat(value);
-            }
+        this.listenTo(this.model, 'sync', () => {
+            sync();
         });
+    }
 
-        delete currencyRates[baseCurrency];
-
-        for (const c in currencyRates) {
-            if (!~currencyList.indexOf(c)) {
-                delete currencyRates[c];
-            }
-        }
-
-        data[this.name] = currencyRates;
-
-        return data;
+    fetch() {
+        return {};
     }
 }

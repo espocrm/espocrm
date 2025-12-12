@@ -245,12 +245,9 @@ class SettingsService
             $this->aclCacheClearer->clearForAllInternalUsers();
         }
 
-        if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
-            $this->populateDatabaseWithCurrencyRates();
-        }
-
-        if (isset($data->baseCurrency) || isset($data->currencyList)) {
+        if (isset($data->baseCurrency) || isset($data->currencyList) || isset($data->defaultCurrency)) {
             $this->currencyRecordManager->sync();
+            $this->populateDatabaseWithCurrencyRates();
         }
     }
 

@@ -34,9 +34,13 @@ use Espo\Core\Acl\DefaultAccessChecker;
 use Espo\Core\Acl\ScopeData;
 use Espo\Core\Acl\Table;
 use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Entities\CurrencyRecordRate;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 
+/**
+ * @implements AccessEntityCREDChecker<CurrencyRecordRate>
+ */
 class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
