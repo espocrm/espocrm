@@ -1,0 +1,5 @@
+{
+    "primaryFilterClassNameMap": {
+        "active": "Espo\\Classes\\Select\\User\\CurrencyRecord\\Active"
+    }
+}
