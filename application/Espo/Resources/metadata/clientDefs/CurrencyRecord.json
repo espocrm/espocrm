@@ -1,0 +1,10 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "editDisabled": true,
+    "removeDisabled": true,
+    "nameAttribute": "code",
+    "defaultFilterData": {
+        "primary": "active"
+    }
+}

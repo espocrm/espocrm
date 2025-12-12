@@ -1,0 +1,22 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "code"
+                },
+                {
+                    "name": "status"
+                }
+            ],
+            [
+                {
+                    "name": "label"
+                },
+                {
+                    "name": "isBase"
+                }
+            ]
+        ]
+    }
+]

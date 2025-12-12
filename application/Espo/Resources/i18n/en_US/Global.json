@@ -68,7 +68,9 @@
         "AppSecret": "App Secret",
         "OAuthProvider": "OAuth Provider",
         "OAuthAccount": "OAuth Account",
-        "OpenApi": "OpenAPI"
+        "OpenApi": "OpenAPI",
+        "CurrencyRecord": "Currency Record",
+        "CurrencyRate": "Currency Rate"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -127,7 +129,9 @@
         "AppSecret": "App Secrets",
         "OAuthProvider": "OAuth Providers",
         "OAuthAccount": "OAuth Accounts",
-        "OpenApi": "OpenAPI"
+        "OpenApi": "OpenAPI",
+        "CurrencyRecord": "Currency Records",
+        "CurrencyRate": "Currency Rates"
     },
     "labels": {
         "Previous Page": "Previous Page",

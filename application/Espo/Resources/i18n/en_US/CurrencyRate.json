@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "record": "Record",
+        "baseCode": "Base",
+        "date": "Date",
+        "rate": "Rate",
+        "number": "Number"
+    },
+    "links": {
+        "record": "Record"
+    }
+}

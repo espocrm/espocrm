@@ -1,6 +1,10 @@
 {
     "fields": {
-        "currencyRecord": {
+        "number": {
+            "type": "autoincrement",
+            "dbType": "bigint"
+        },
+        "record": {
             "type": "link",
             "readOnlyAfterCreate": true
         },
@@ -15,7 +19,45 @@
             "readOnlyAfterCreate": true
         },
         "rate": {
-            "type": "decimal"
+            "type": "decimal",
+            "decimalPlaces": 6,
+            "min": 0.000001,
+            "precision": 15,
+            "scale": 8,
+            "required": true,
+            "readOnlyAfterCreate": true
+        },
+        "dateNumber": {
+            "type": "base",
+            "utility": true,
+            "notStorable": true,
+            "readOnly": true,
+            "order": {
+                "order": [
+                    ["date", "{direction}"],
+                    ["number", "{direction}"]
+                ]
+            }
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
         }
+    },
+    "links": {
+        "record": {
+            "type": "belongsTo",
+            "entity": "CurrencyRecord"
+        }
+    },
+    "collection": {
+        "orderBy": "dateNumber",
+        "order": "desc"
     }
 }

@@ -18,10 +18,34 @@
             "style": {
                 "Inactive": "info"
             }
+        },
+        "label": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Label"
+        },
+        "isBase": {
+            "type": "bool",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\IsBase"
+        }
+    },
+    "links": {
+        "rates": {
+            "type": "hasMany",
+            "entity": "CurrencyRate",
+            "foreign": "record",
+            "readOnly": true,
+            "orderBy": "dateNumber",
+            "order": "desc"
         }
     },
     "indexes": {
-        "userNameDeleteId": {
+        "codeDeleteId": {
             "type": "unique",
             "columns": [
                 "code",
@@ -29,5 +53,9 @@
             ]
         }
     },
-    "deleteId": true
+    "deleteId": true,
+    "collection": {
+        "orderBy": "code",
+        "order": "asc"
+    }
 }

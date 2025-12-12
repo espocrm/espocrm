@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "code": "Code",
+        "status": "Status",
+        "label": "Label",
+        "isBase": "Is Base"
+    },
+    "links": {
+        "rates": "Rates"
+    },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    }
+}
