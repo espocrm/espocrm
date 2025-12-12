@@ -16,7 +16,8 @@
             "createAttributeMap": {
                 "code": "recordName"
             },
-            "view": "views/currency-record/record/panels/rates"
+            "view": "views/currency-record/record/panels/rates",
+            "unlinkDisabled": true
         }
     }
 }

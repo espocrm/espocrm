@@ -164,5 +164,8 @@
         "ZAR":"South African Rand",
         "ZMW":"Zambian Kwacha",
         "ZWL": "Zimbabwe Dollar"
+    },
+    "messages": {
+        "rateOnDateAlreadyExists": "A rate on this date already exists."
     }
 }

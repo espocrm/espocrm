@@ -27,63 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Classes\RecordHooks\CurrencyRate;
 
-use Espo\Core\Field\Date;
-use Espo\Core\ORM\Entity;
-use ValueError;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error\Body;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\CurrencyRate;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-class CurrencyRate extends Entity
+/**
+ * @implements SaveHook<CurrencyRate>
+ */
+class BeforeSaveValidation implements SaveHook
 {
-    public const string ENTITY_TYPE = 'CurrencyRate';
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
-    public const string FIELD_DATE = 'date';
-    public const string FIELD_BASE_CODE = 'baseCode';
-    public const string FIELD_RATE = 'rate';
-
-    public const string ATTR_RECORD_ID = 'recordId';
-
-    /**
-     * @return numeric-string
-     */
-    public function getRate(): string
+    public function process(Entity $entity): void
     {
-        /** @var numeric-string */
-        return $this->get(self::FIELD_RATE,) ?? '1';
+        $this->validateDate($entity);
     }
 
     /**
-     * @param numeric-string $rate
+     * @throws Conflict
      */
-    public function setRate(string $rate): self
+    private function validateDate(CurrencyRate $entity): void
     {
-        return $this->set(self::FIELD_RATE, $rate);
-    }
-
-    public function setBaseCode(string $code): self
-    {
-        return $this->set(self::FIELD_BASE_CODE, $code);
-    }
-
-    public function getRecord(): CurrencyRecord
-    {
-        $record = $this->relations->getOne('record');
-
-        if (!$record instanceof CurrencyRecord) {
-            throw new ValueError("No record.");
+        if (!$entity->isNew()) {
+            return;
         }
 
-        return $record;
-    }
+        $recordId = $entity->getRecord()->getId();
+        $date = $entity->getDate();
 
-    public function getDate(): Date
-    {
-        $date = $this->getValueObject(self::FIELD_DATE);
+        $one = $this->entityManager
+            ->getRDBRepositoryByClass(CurrencyRate::class)
+            ->where([
+                CurrencyRate::ATTR_RECORD_ID => $recordId,
+                CurrencyRate::FIELD_DATE => $date->toString(),
+            ])
+            ->findOne();
 
-        if (!$date instanceof Date) {
-            throw new ValueError("No date.");
+        if ($one) {
+            throw Conflict::createWithBody(
+                'rateOnDateAlreadyExists',
+                Body::create()->withMessageTranslation('rateOnDateAlreadyExists', 'Currency')
+            );
         }
-
-        return $date;
     }
 }

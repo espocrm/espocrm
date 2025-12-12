@@ -22,7 +22,7 @@
         "rate": {
             "type": "decimal",
             "decimalPlaces": 6,
-            "min": 0.000001,
+            "min": 0.0001,
             "precision": 15,
             "scale": 8,
             "required": true,
@@ -33,7 +33,17 @@
             "type": "datetime",
             "readOnly": true
         },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
+        },
+        "modifiedBy": {
             "type": "link",
             "readOnly": true,
             "view": "views/fields/user",
@@ -45,6 +55,14 @@
             "type": "belongsTo",
             "entity": "CurrencyRecord",
             "foreignName": "code"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
         }
     },
     "indexes": {
