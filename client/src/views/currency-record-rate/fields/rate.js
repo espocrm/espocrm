@@ -81,11 +81,18 @@ export default class CurrencyRecordRateRateFieldView extends DecimalFieldView {
     }
 
     data() {
+        let baseCode = this.model.attributes.baseCode;
+        let targetCode = this.model.attributes.recordName;
+
+        if (this.model.entityType === 'CurrencyRecord') {
+            baseCode = this.getConfig().get('baseCurrency');
+            targetCode = this.model.attributes.code;
+        }
+
         return {
             ...super.data(),
-            baseCode: this.model.attributes.baseCode,
-            targetCode: this.model.attributes.recordName,
+            baseCode,
+            targetCode,
         }
     }
-
 }

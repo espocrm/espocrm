@@ -10,6 +10,11 @@
     "filterList": [
         "active"
     ],
+    "viewSetupHandlers": {
+        "record/detail": [
+            "handlers/currency-record/record-detail"
+        ]
+    },
     "relationshipPanels": {
         "rates": {
             "layout": "listForRecord",

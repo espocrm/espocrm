@@ -39,7 +39,8 @@
             "notStorable": true,
             "orderDisabled": true,
             "decimalPlaces": 6,
-            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Rate"
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Rate",
+            "view": "views/currency-record-rate/fields/rate"
         },
         "isBase": {
             "type": "bool",
