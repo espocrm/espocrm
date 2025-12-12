@@ -50,7 +50,7 @@ class RecordManager
             $this->syncInTransaction();
         });
 
-        $this->writeToConfig();
+        $this->syncToConfig();
     }
 
     private function syncInTransaction(): void
@@ -108,7 +108,7 @@ class RecordManager
             ->find();
     }
 
-    private function writeToConfig(): void
+    public function syncToConfig(): void
     {
         $rates = [];
 

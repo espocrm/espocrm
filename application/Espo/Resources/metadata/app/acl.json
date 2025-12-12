@@ -157,7 +157,11 @@
                 "delete": "all"
             },
             "Stream": true,
-            "ImportEml": "Import"
+            "ImportEml": "Import",
+            "CurrencyRecordRate": {
+                "read": "yes",
+                "edit": "yes"
+            }
         }
     },
     "valuePermissionList": [

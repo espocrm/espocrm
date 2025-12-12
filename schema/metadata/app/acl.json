@@ -80,11 +80,11 @@
                                 "description": "A 'create' access level."
                             },
                             "read": {
-                                "$ref": "#/definitions/levels",
+                                "$ref": "#/definitions/levelsAll",
                                 "description": "A 'read' access level."
                             },
                             "edit": {
-                                "$ref": "#/definitions/levels",
+                                "$ref": "#/definitions/levelsAll",
                                 "description": "An 'edit' access level."
                             },
                             "delete": {
