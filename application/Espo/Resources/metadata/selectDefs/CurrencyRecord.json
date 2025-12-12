@@ -1,5 +1,5 @@
 {
     "primaryFilterClassNameMap": {
-        "active": "Espo\\Classes\\Select\\User\\CurrencyRecord\\Active"
+        "active": "Espo\\Classes\\Select\\CurrencyRecord\\PrimaryFilters\\Active"
     }
 }

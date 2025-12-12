@@ -27,28 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Classes\Select\CurrencyRecord\PrimaryFilters;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\Select\Primary\Filter;
+use Espo\Entities\CurrencyRecord;
+use Espo\ORM\Query\SelectBuilder;
 
-class CurrencyRate extends Entity
+class Active implements Filter
 {
-    public const string ENTITY_TYPE = 'CurrencyRate';
-
-    /**
-     * @return numeric-string
-     */
-    public function getRate(): string
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        /** @var numeric-string */
-        return $this->get('rate') ?? '1';
-    }
-
-    /**
-     * @param numeric-string $rate
-     */
-    public function setRate(string $rate): self
-    {
-        return $this->set('rate', $rate);
+        $queryBuilder->where([
+            CurrencyRecord::FIELD_STATUS => CurrencyRecord::STATUS_ACTIVE,
+        ]);
     }
 }

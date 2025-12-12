@@ -23,7 +23,8 @@
             "precision": 15,
             "scale": 8,
             "required": true,
-            "audited": true
+            "audited": true,
+            "view": "views/currency-rate/fields/rate"
         },
         "createdAt": {
             "type": "datetime",

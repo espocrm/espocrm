@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,28 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+import DefaultsPreparator from 'handlers/model/defaults-preparator';
+import {inject} from 'di';
+import Settings from 'models/settings';
 
-use Espo\Core\ORM\Entity;
-
-class CurrencyRate extends Entity
-{
-    public const string ENTITY_TYPE = 'CurrencyRate';
-
-    /**
-     * @return numeric-string
-     */
-    public function getRate(): string
-    {
-        /** @var numeric-string */
-        return $this->get('rate') ?? '1';
-    }
+// noinspection JSUnusedGlobalSymbols
+export default class extends DefaultsPreparator {
 
     /**
-     * @param numeric-string $rate
+     * @private
+     * @type {Settings}
      */
-    public function setRate(string $rate): self
-    {
-        return $this->set('rate', $rate);
+    @inject(Settings)
+    config
+
+    async prepare(model) {
+        return {
+            baseCode: this.config.get('baseCurrency'),
+        };
     }
 }
+

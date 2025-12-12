@@ -1,3 +1,4 @@
 {
-    "controller": "controllers/record"
+    "controller": "controllers/record",
+    "modelDefaultsPreparator": "handlers/currency-rate/default-preparator"
 }
