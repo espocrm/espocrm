@@ -27,31 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\FieldProcessing\CurrencyRecord;
+namespace Espo\Tools\Currency\Exceptions;
 
-use Espo\Core\Currency\ConfigDataProvider;
-use Espo\Core\FieldProcessing\Loader;
-use Espo\Core\FieldProcessing\Loader\Params;
-use Espo\Entities\CurrencyRecord;
-use Espo\ORM\Entity;
-use Espo\Tools\Currency\CurrencyRatesProvider;
+use Exception;
 
-/**
- * @implements Loader<CurrencyRecord>
- */
-class Rate implements Loader
-{
-    public function __construct(
-        private CurrencyRatesProvider $currencyRatesProvider,
-        private ConfigDataProvider $configDataProvider,
-    ) {}
-
-    public function process(Entity $entity, Params $params): void
-    {
-        $rate = $entity->getCode() !== $this->configDataProvider->getBaseCurrency() ?
-            $this->currencyRatesProvider->getRateByRecord($entity) :
-            '1';
-
-        $entity->setRate($rate);
-    }
-}
+class NotEnabled extends Exception
+{}

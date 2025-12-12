@@ -66,12 +66,12 @@
         }
     },
     "indexes": {
-        "dateRecordBaseCode": {
+        "recordIdBaseCodeDate": {
             "type": "unique",
             "columns": [
-                "date",
                 "recordId",
                 "baseCode",
+                "date",
                 "deleteId"
             ]
         }

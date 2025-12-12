@@ -130,7 +130,7 @@
         "OAuthProvider": "OAuth Providers",
         "OAuthAccount": "OAuth Accounts",
         "OpenApi": "OpenAPI",
-        "CurrencyRecord": "Currency Records",
+        "CurrencyRecord": "Currencies",
         "CurrencyRecordRate": "Currency Rates"
     },
     "labels": {
