@@ -12,6 +12,7 @@ class CurrencyRecord extends Entity
     public const string FIELD_CODE = 'code';
 
     public const string STATUS_ACTIVE = 'Active';
+    public const string STATUS_INACTIVE = 'Inactive';
 
     public function getCode(): string
     {

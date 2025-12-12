@@ -1,4 +1,7 @@
 {
+    "labels": {
+        "Create CurrencyRate": "Create Currency Rate"
+    },
     "fields": {
         "record": "Record",
         "baseCode": "Base",

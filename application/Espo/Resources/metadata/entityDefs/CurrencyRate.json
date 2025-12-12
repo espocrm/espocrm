@@ -2,6 +2,7 @@
     "fields": {
         "record": {
             "type": "link",
+            "required": true,
             "readOnlyAfterCreate": true
         },
         "baseCode": {
@@ -12,7 +13,8 @@
         "date": {
             "type": "date",
             "required": true,
-            "readOnlyAfterCreate": true
+            "readOnlyAfterCreate": true,
+            "default": "javascript: return this.dateTime.getToday();"
         },
         "rate": {
             "type": "decimal",
@@ -22,18 +24,6 @@
             "scale": 8,
             "required": true,
             "audited": true
-        },
-        "dateNumber": {
-            "type": "base",
-            "utility": true,
-            "notStorable": true,
-            "readOnly": true,
-            "order": {
-                "order": [
-                    ["date", "{direction}"],
-                    ["number", "{direction}"]
-                ]
-            }
         },
         "createdAt": {
             "type": "datetime",
@@ -49,7 +39,8 @@
     "links": {
         "record": {
             "type": "belongsTo",
-            "entity": "CurrencyRecord"
+            "entity": "CurrencyRecord",
+            "foreignName": "code"
         }
     },
     "indexes": {
@@ -65,7 +56,7 @@
     },
     "deleteId": true,
     "collection": {
-        "orderBy": "dateNumber",
+        "orderBy": "date",
         "order": "desc"
     }
 }

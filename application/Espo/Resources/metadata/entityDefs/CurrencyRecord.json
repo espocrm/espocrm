@@ -55,7 +55,7 @@
             "entity": "CurrencyRate",
             "foreign": "record",
             "readOnly": true,
-            "orderBy": "dateNumber",
+            "orderBy": "date",
             "order": "desc"
         }
     },
@@ -70,6 +70,9 @@
     },
     "deleteId": true,
     "collection": {
+        "textFilterFields": [
+            "code"
+        ],
         "orderBy": "code",
         "order": "asc"
     }

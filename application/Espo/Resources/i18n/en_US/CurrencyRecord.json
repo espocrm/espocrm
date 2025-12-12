@@ -3,6 +3,7 @@
         "code": "Code",
         "status": "Status",
         "label": "Label",
+        "symbol": "Symbol",
         "isBase": "Is Base",
         "rate": "Rate"
     },

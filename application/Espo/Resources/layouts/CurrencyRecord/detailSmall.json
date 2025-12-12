@@ -16,6 +16,12 @@
                 {
                     "name": "isBase"
                 }
+            ],
+            [
+                {
+                    "name": "rate"
+                },
+                false
             ]
         ]
     }

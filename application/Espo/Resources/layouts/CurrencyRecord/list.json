@@ -5,12 +5,12 @@
         "width": 15
     },
     {
-        "name": "symbol",
-        "width": 12
+        "name": "label",
+        "width": 18
     },
     {
-        "name": "label",
-        "width": 20
+        "name": "symbol",
+        "width": 12
     },
     {
         "name": "status",
