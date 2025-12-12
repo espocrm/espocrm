@@ -285,7 +285,7 @@
             "properties": {
                 "primary": {
                     "type": "string",
-                    "default": "A primary filter."
+                    "description": "A primary filter."
                 },
                 "bool": {
                     "type": "object",
