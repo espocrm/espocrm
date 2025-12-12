@@ -4,10 +4,11 @@
         "width": 25
     },
     {
-        "name": "rate"
-    },
-    {
         "name": "baseCode",
         "width": 25
+    },
+    {
+        "name": "rate",
+        "align": "right"
     }
 ]

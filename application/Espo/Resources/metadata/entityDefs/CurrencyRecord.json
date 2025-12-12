@@ -26,6 +26,21 @@
             "orderDisabled": true,
             "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Label"
         },
+        "symbol": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Symbol"
+        },
+        "rate": {
+            "type": "decimal",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "decimalPlaces": 6,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Rate"
+        },
         "isBase": {
             "type": "bool",
             "readOnly": true,

@@ -38,8 +38,21 @@ class CurrencyRecord extends Entity
         return $this->set('label', $label);
     }
 
+    public function setSymbol(?string $label): self
+    {
+        return $this->set('symbol', $label);
+    }
+
     public function setIsBase(bool $isBase): self
     {
         return $this->set('isBase', $isBase);
+    }
+
+    /**
+     * @param ?numeric-string $rate
+     */
+    public function setRate(?string $rate): self
+    {
+        return $this->set('rate', $rate);
     }
 }

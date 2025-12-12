@@ -4,7 +4,7 @@ namespace Espo\Classes\FieldProcessing\CurrencyRecord;
 
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
-use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\CurrencyRecord;
 use Espo\ORM\Entity;
 use ValueError;
@@ -12,10 +12,10 @@ use ValueError;
 /**
  * @implements Loader<CurrencyRecord>
  */
-class Label implements Loader
+class Symbol implements Loader
 {
     public function __construct(
-        private Language $defaultLanguage
+        private Metadata $metadata,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -25,9 +25,8 @@ class Label implements Loader
         } catch (ValueError) {
             return;
         }
+        $symbol = $this->metadata->get("app.currency.symbolMap.$code");
 
-        $name = $this->defaultLanguage->translateLabel($code, 'names', 'Currency');
-
-        $entity->setLabel($name);
+        $entity->setSymbol($symbol);
     }
 }

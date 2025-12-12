@@ -1,11 +1,12 @@
 [
     {
         "name": "code",
-        "link": true
+        "link": true,
+        "width": 18
     },
     {
         "name": "label",
-        "width": 30
+        "width": 28
     },
     {
         "name": "status",
@@ -14,5 +15,9 @@
     {
         "name": "isBase",
         "width": 15
+    },
+    {
+        "name": "rate",
+        "align": "right"
     }
 ]

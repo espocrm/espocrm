@@ -1,18 +1,27 @@
 [
     {
         "name": "code",
-        "link": true
+        "link": true,
+        "width": 15
+    },
+    {
+        "name": "symbol",
+        "width": 12
     },
     {
         "name": "label",
-        "width": 30
-    },
-    {
-        "name": "status",
         "width": 20
     },
     {
-        "name": "isBase",
+        "name": "status",
         "width": 15
+    },
+    {
+        "name": "isBase",
+        "width": 12
+    },
+    {
+        "name": "rate",
+        "align": "right"
     }
 ]

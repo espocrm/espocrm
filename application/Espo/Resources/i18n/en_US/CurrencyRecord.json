@@ -3,7 +3,8 @@
         "code": "Code",
         "status": "Status",
         "label": "Label",
-        "isBase": "Is Base"
+        "isBase": "Is Base",
+        "rate": "Rate"
     },
     "links": {
         "rates": "Rates"
