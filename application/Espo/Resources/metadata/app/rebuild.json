@@ -6,6 +6,7 @@
         "Espo\\Core\\Rebuild\\Actions\\ScheduledJobs",
         "Espo\\Core\\Rebuild\\Actions\\ConfigMetadataCheck",
         "Espo\\Core\\Rebuild\\Actions\\GenerateInstanceId",
-        "Espo\\Core\\Rebuild\\Actions\\SetIntegrationDefaults"
+        "Espo\\Core\\Rebuild\\Actions\\SetIntegrationDefaults",
+        "Espo\\Core\\Rebuild\\Actions\\SyncCurrency"
     ]
 }

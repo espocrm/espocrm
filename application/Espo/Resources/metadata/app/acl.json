@@ -63,7 +63,8 @@
             "ImportError": "Import",
             "ImportEml": "Import",
             "WorkingTimeRange": "WorkingTimeCalendar",
-            "Stream": true
+            "Stream": true,
+            "CurrencyRecord": "boolean:Currency"
         },
         "fieldLevel": {
         },

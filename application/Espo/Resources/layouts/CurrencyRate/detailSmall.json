@@ -16,12 +16,6 @@
                 {
                     "name": "rate"
                 }
-            ],
-            [
-                {
-                    "name": "number"
-                },
-                false
             ]
         ]
     }

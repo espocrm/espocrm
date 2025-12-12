@@ -1,5 +1,3 @@
 {
-    "controller": "controllers/record",
-    "createDisabled": true,
-    "removeDisabled": true
+    "controller": "controllers/record"
 }

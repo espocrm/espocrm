@@ -54,6 +54,7 @@ use Espo\Core\Utils\Config\Access;
 use Espo\Entities\Portal;
 use Espo\Repositories\Portal as PortalRepository;
 
+use Espo\Tools\Currency\RecordManager as CurrencyRecordManager;
 use stdClass;
 
 class SettingsService
@@ -74,6 +75,7 @@ class SettingsService
         private Config\SystemConfig $systemConfig,
         private EmailConfigDataProvider $emailConfigDataProvider,
         private Acl\Cache\Clearer $aclCacheClearer,
+        private CurrencyRecordManager $currencyRecordManager,
     ) {}
 
     /**
@@ -245,6 +247,10 @@ class SettingsService
 
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
             $this->populateDatabaseWithCurrencyRates();
+        }
+
+        if (isset($data->baseCurrency) || isset($data->currencyList)) {
+            $this->currencyRecordManager->sync();
         }
     }
 
