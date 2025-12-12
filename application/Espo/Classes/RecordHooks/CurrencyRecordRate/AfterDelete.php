@@ -29,10 +29,13 @@
 
 namespace Espo\Classes\RecordHooks\CurrencyRecordRate;
 
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\Hook\DeleteHook;
 use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\Entity;
+use Espo\Tools\Currency\Exceptions\NotEnabled;
 use Espo\Tools\Currency\RecordManager;
 
 /**
@@ -46,6 +49,12 @@ class AfterDelete implements DeleteHook
 
     public function process(Entity $entity, DeleteParams $params): void
     {
-        $this->recordManager->syncToConfig();
+        $code = $entity->getRecord()->getCode();
+
+        try {
+            $this->recordManager->syncCodeToConfig($code);
+        } catch (NotEnabled $e) {
+            throw new Conflict($e->getMessage(), previous: $e);
+        }
     }
 }

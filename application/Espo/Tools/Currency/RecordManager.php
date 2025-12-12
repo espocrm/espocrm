@@ -34,6 +34,7 @@ use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\CurrencyRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\UpdateBuilder;
+use Espo\Tools\Currency\Exceptions\NotEnabled;
 
 class RecordManager
 {
@@ -121,6 +122,21 @@ class RecordManager
 
             $rates[$code] = (float) $rate;
         }
+
+        $this->configWriter->set('currencyRates', $rates);
+        $this->configWriter->save();
+    }
+
+    /**
+     * @throws NotEnabled
+     */
+    public function syncCodeToConfig(string $code): void
+    {
+        $rates = $this->configDataProvider->getCurrencyRates()->toAssoc();
+
+        $rate = $this->currencyRatesProvider->getRate($code) ?? '1.0';
+
+        $rates[$code] = (float) $rate;
 
         $this->configWriter->set('currencyRates', $rates);
         $this->configWriter->save();

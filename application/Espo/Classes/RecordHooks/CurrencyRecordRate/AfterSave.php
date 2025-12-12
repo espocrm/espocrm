@@ -29,9 +29,11 @@
 
 namespace Espo\Classes\RecordHooks\CurrencyRecordRate;
 
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\Entity;
+use Espo\Tools\Currency\Exceptions\NotEnabled;
 use Espo\Tools\Currency\RecordManager;
 
 /**
@@ -45,6 +47,12 @@ class AfterSave implements SaveHook
 
     public function process(Entity $entity): void
     {
-        $this->recordManager->syncToConfig();
+        $code = $entity->getRecord()->getCode();
+
+        try {
+            $this->recordManager->syncCodeToConfig($code);
+        } catch (NotEnabled $e) {
+            throw new Conflict($e->getMessage(), previous: $e);
+        }
     }
 }
