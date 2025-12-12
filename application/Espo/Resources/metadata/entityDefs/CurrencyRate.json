@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "currencyRecord": {
+            "type": "link",
+            "readOnlyAfterCreate": true
+        },
+        "baseCode": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 3
+        },
+        "date": {
+            "type": "date",
+            "required": true,
+            "readOnlyAfterCreate": true
+        },
+        "rate": {
+            "type": "decimal"
+        }
+    }
+}

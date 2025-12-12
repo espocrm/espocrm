@@ -1,0 +1,33 @@
+{
+    "fields": {
+        "code": {
+            "type": "varchar",
+            "maxLength": 3,
+            "required": true,
+            "readOnly": true,
+            "index": true
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ],
+            "default": "Active",
+            "maxLength": 8,
+            "style": {
+                "Inactive": "info"
+            }
+        }
+    },
+    "indexes": {
+        "userNameDeleteId": {
+            "type": "unique",
+            "columns": [
+                "code",
+                "deleteId"
+            ]
+        }
+    },
+    "deleteId": true
+}
