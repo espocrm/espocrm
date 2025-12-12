@@ -15,7 +15,8 @@
             "layout": "listForRecord",
             "createAttributeMap": {
                 "code": "recordName"
-            }
+            },
+            "view": "views/currency-record/record/panels/rates"
         }
     }
 }

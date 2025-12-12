@@ -1,5 +1,10 @@
 {
     "primaryFilterClassNameMap": {
         "active": "Espo\\Classes\\Select\\CurrencyRecord\\PrimaryFilters\\Active"
+    },
+    "selectAttributesDependencyMap": {
+        "id": [
+            "code"
+        ]
     }
 }

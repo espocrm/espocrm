@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,40 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+import RelationshipPanelView from 'views/record/panels/relationship';
 
-use Espo\Core\ORM\Entity;
-use ValueError;
+export default class RatesPanelView extends RelationshipPanelView {
 
-class CurrencyRate extends Entity
-{
-    public const string ENTITY_TYPE = 'CurrencyRate';
-
-    /**
-     * @return numeric-string
-     */
-    public function getRate(): string
-    {
-        /** @var numeric-string */
-        return $this->get('rate') ?? '1';
-    }
-
-    /**
-     * @param numeric-string $rate
-     */
-    public function setRate(string $rate): self
-    {
-        return $this->set('rate', $rate);
-    }
-
-    public function getRecord(): CurrencyRecord
-    {
-        $record = $this->relations->getOne('record');
-
-        if (!$record instanceof CurrencyRecord) {
-            throw new ValueError("No record.");
+    setup() {
+        if (this.model.attributes.code === this.getConfig().get('baseCurrency')) {
+            this.defs.createDisabled = true;
         }
 
-        return $record;
+        super.setup();
     }
 }

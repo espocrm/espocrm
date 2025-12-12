@@ -29,19 +29,28 @@
 
 namespace Espo\Classes\FieldValidators\CurrencyRate\Record;
 
+use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Core\FieldValidation\Validator;
 use Espo\Core\FieldValidation\Validator\Data;
 use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Entities\CurrencyRate;
 use Espo\ORM\Entity;
 
+/**
+ * @implements Validator<CurrencyRate>
+ */
 class NonBase implements Validator
 {
+    public function __construct(
+        private ConfigDataProvider $configDataProvider,
+    ) {}
 
-    /**
-     * @inheritDoc
-     */
     public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        // TODO: Implement validate() method.
+        if ($entity->getRecord()->getCode() === $this->configDataProvider->getBaseCurrency()) {
+            return Failure::create();
+        }
+
+        return null;
     }
 }
