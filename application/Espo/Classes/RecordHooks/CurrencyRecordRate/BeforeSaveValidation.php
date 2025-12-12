@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,42 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DecimalFieldView from 'views/fields/decimal';
+namespace Espo\Classes\RecordHooks\CurrencyRecordRate;
 
-export default class CurrencyRateRateFieldView extends DecimalFieldView {
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Error\Body;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\CurrencyRecordRate;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-    // language=Handlebars
-    editTemplateContent = `
-            <div class="input-group">
-            <span class="input-group-addon radius-left" style="width: 24%">1 {{targetCode}} = </span>
-            <span class="input-group-item">
-                <input
-                    type="text"
-                    class="main-element form-control numeric-text"
-                    data-name="{{name}}"
-                    value="{{value}}"
-                    autocomplete="espo-{{name}}"
-                    pattern="[\\-]?[0-9]*"
-                    style="text-align: end;"
-                >
-            </span>
-            <span class="input-group-addon radius-right" style="width: 21%">{{baseCode}}</span>
-        </div>
-    `
+/**
+ * @implements SaveHook<CurrencyRecordRate>
+ */
+class BeforeSaveValidation implements SaveHook
+{
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
-    getAttributeList() {
-        return [
-            ...super.getAttributeList(),
-            'baseCode',
-        ];
+    public function process(Entity $entity): void
+    {
+        $this->validateDate($entity);
     }
 
-    data() {
-        return {
-            ...super.data(),
-            baseCode: this.model.attributes.baseCode,
-            targetCode: this.model.attributes.recordName,
+    /**
+     * @throws Conflict
+     */
+    private function validateDate(CurrencyRecordRate $entity): void
+    {
+        if (!$entity->isNew()) {
+            return;
+        }
+
+        $recordId = $entity->getRecord()->getId();
+        $date = $entity->getDate();
+
+        $one = $this->entityManager
+            ->getRDBRepositoryByClass(CurrencyRecordRate::class)
+            ->where([
+                CurrencyRecordRate::ATTR_RECORD_ID => $recordId,
+                CurrencyRecordRate::FIELD_DATE => $date->toString(),
+            ])
+            ->findOne();
+
+        if ($one) {
+            throw Conflict::createWithBody(
+                'rateOnDateAlreadyExists',
+                Body::create()->withMessageTranslation('rateOnDateAlreadyExists', 'Currency')
+            );
         }
     }
-
 }

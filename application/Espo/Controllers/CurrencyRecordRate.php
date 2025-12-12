@@ -27,63 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Controllers;
 
-use Espo\Core\Field\Date;
-use Espo\Core\ORM\Entity;
-use ValueError;
+use Espo\Core\Controllers\RecordBase;
 
-class CurrencyRate extends Entity
-{
-    public const string ENTITY_TYPE = 'CurrencyRate';
-
-    public const string FIELD_DATE = 'date';
-    public const string FIELD_BASE_CODE = 'baseCode';
-    public const string FIELD_RATE = 'rate';
-
-    public const string ATTR_RECORD_ID = 'recordId';
-
-    /**
-     * @return numeric-string
-     */
-    public function getRate(): string
-    {
-        /** @var numeric-string */
-        return $this->get(self::FIELD_RATE,) ?? '1';
-    }
-
-    /**
-     * @param numeric-string $rate
-     */
-    public function setRate(string $rate): self
-    {
-        return $this->set(self::FIELD_RATE, $rate);
-    }
-
-    public function setBaseCode(string $code): self
-    {
-        return $this->set(self::FIELD_BASE_CODE, $code);
-    }
-
-    public function getRecord(): CurrencyRecord
-    {
-        $record = $this->relations->getOne('record');
-
-        if (!$record instanceof CurrencyRecord) {
-            throw new ValueError("No record.");
-        }
-
-        return $record;
-    }
-
-    public function getDate(): Date
-    {
-        $date = $this->getValueObject(self::FIELD_DATE);
-
-        if (!$date instanceof Date) {
-            throw new ValueError("No date.");
-        }
-
-        return $date;
-    }
-}
+/**
+ * @noinspection PhpUnused
+ */
+class CurrencyRecordRate extends RecordBase
+{}

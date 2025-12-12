@@ -52,7 +52,7 @@
     "links": {
         "rates": {
             "type": "hasMany",
-            "entity": "CurrencyRate",
+            "entity": "CurrencyRecordRate",
             "foreign": "record",
             "readOnly": true,
             "orderBy": "date",

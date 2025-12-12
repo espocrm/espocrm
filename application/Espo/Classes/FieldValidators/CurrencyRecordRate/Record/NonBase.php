@@ -27,12 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Classes\FieldValidators\CurrencyRecordRate\Record;
 
-use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Currency\ConfigDataProvider;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Entities\CurrencyRecordRate;
+use Espo\ORM\Entity;
 
 /**
- * @noinspection PhpUnused
+ * @implements Validator<CurrencyRecordRate>
  */
-class CurrencyRate extends RecordBase
-{}
+class NonBase implements Validator
+{
+    public function __construct(
+        private ConfigDataProvider $configDataProvider,
+    ) {}
+
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
+    {
+        if ($entity->getRecord()->getCode() === $this->configDataProvider->getBaseCurrency()) {
+            return Failure::create();
+        }
+
+        return null;
+    }
+}

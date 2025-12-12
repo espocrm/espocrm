@@ -70,7 +70,7 @@
         "OAuthAccount": "OAuth Account",
         "OpenApi": "OpenAPI",
         "CurrencyRecord": "Currency Record",
-        "CurrencyRate": "Currency Rate"
+        "CurrencyRecordRate": "Currency Rate"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -131,7 +131,7 @@
         "OAuthAccount": "OAuth Accounts",
         "OpenApi": "OpenAPI",
         "CurrencyRecord": "Currency Records",
-        "CurrencyRate": "Currency Rates"
+        "CurrencyRecordRate": "Currency Rates"
     },
     "labels": {
         "Previous Page": "Previous Page",

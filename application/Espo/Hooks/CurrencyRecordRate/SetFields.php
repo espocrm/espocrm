@@ -27,16 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\CurrencyRate;
+namespace Espo\Hooks\CurrencyRecordRate;
 
 use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\Entities\CurrencyRate;
+use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @implements BeforeSave<CurrencyRate>
+ * @implements BeforeSave<CurrencyRecordRate>
  */
 class SetFields implements BeforeSave
 {

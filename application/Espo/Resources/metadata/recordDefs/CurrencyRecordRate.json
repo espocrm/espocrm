@@ -1,0 +1,8 @@
+{
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\BeforeSaveValidation"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\BeforeSaveValidation"
+    ]
+}

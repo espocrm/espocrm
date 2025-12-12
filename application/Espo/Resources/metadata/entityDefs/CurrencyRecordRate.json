@@ -5,7 +5,7 @@
             "required": true,
             "readOnlyAfterCreate": true,
             "validatorClassNameList": [
-                "Espo\\Classes\\FieldValidators\\CurrencyRate\\Record\\NonBase"
+                "Espo\\Classes\\FieldValidators\\CurrencyRecordRate\\Record\\NonBase"
             ]
         },
         "baseCode": {
@@ -27,7 +27,7 @@
             "scale": 8,
             "required": true,
             "audited": true,
-            "view": "views/currency-rate/fields/rate"
+            "view": "views/currency-record-rate/fields/rate"
         },
         "createdAt": {
             "type": "datetime",

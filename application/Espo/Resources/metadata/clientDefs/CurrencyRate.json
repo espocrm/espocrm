@@ -1,5 +1,0 @@
-{
-    "controller": "controllers/record",
-    "modelDefaultsPreparator": "handlers/currency-rate/default-preparator",
-    "textFilterDisabled": true
-}
