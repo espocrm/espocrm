@@ -30,6 +30,7 @@
 namespace Espo\Tools\Currency;
 
 use Espo\Core\Currency\ConfigDataProvider;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\CurrencyRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\UpdateBuilder;
@@ -39,6 +40,8 @@ class RecordManager
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
+        private ConfigWriter $configWriter,
+        private CurrencyRatesProvider $currencyRatesProvider,
     ) {}
 
     public function sync(): void
@@ -46,6 +49,8 @@ class RecordManager
         $this->entityManager->getTransactionManager()->run(function () {
             $this->syncInTransaction();
         });
+
+        $this->writeToConfig();
     }
 
     private function syncInTransaction(): void
@@ -101,5 +106,23 @@ class RecordManager
             ->forUpdate()
             ->sth()
             ->find();
+    }
+
+    private function writeToConfig(): void
+    {
+        $rates = [];
+
+        foreach ($this->configDataProvider->getCurrencyList() as $code) {
+            try {
+                $rate = $this->currencyRatesProvider->getRate($code) ?? '1.0';
+            } catch (Exceptions\NotEnabled) {
+                continue;
+            }
+
+            $rates[$code] = (float) $rate;
+        }
+
+        $this->configWriter->set('currencyRates', $rates);
+        $this->configWriter->save();
     }
 }

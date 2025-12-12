@@ -191,7 +191,7 @@
             "view": "views/settings/fields/default-currency"
         },
         "currencyRates": {
-            "type": "jsonObject"
+            "type": "base"
         },
         "outboundEmailIsShared": {
             "type": "bool",

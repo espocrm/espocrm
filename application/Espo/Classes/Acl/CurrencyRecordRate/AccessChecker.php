@@ -49,7 +49,6 @@ class AccessChecker implements AccessEntityCREDChecker
         private DefaultAccessChecker $defaultAccessChecker,
     ) {}
 
-
     public function checkCreate(User $user, ScopeData $data): bool
     {
         if ($data->getEdit() === Table::LEVEL_YES) {

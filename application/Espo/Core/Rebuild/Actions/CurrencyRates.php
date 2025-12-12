@@ -32,6 +32,9 @@ namespace Espo\Core\Rebuild\Actions;
 use Espo\Core\Rebuild\RebuildAction;
 use Espo\Core\Utils\Currency\DatabasePopulator;
 
+/**
+ * @noinspection PhpUnused
+ */
 class CurrencyRates implements RebuildAction
 {
     public function __construct(private DatabasePopulator $databasePopulator) {}
