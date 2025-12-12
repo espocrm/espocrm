@@ -6,5 +6,10 @@
     "nameAttribute": "code",
     "defaultFilterData": {
         "primary": "active"
+    },
+    "relationshipPanels": {
+        "rates": {
+            "layout": "listForRecord"
+        }
     }
 }

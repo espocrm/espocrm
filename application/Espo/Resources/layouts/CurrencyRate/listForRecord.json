@@ -1,0 +1,13 @@
+[
+    {
+        "name": "date",
+        "width": 25
+    },
+    {
+        "name": "rate"
+    },
+    {
+        "name": "baseCode",
+        "width": 25
+    }
+]
