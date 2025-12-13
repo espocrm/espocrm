@@ -149,10 +149,7 @@ class AppService
         ];
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getAppParams(): array
+    public function getAppParams(): stdClass
     {
         $user = $this->user;
 
@@ -205,7 +202,7 @@ class AppService
             $appParams[$paramKey] = $itemParams;
         }
 
-        return $appParams;
+        return (object) $appParams;
     }
 
     private function getUserDataForFrontend(): stdClass

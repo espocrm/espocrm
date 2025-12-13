@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,48 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Tools\App\Api;
+
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Tools\App\AppService;
+
 /**
- * Application parameters.
- *
- * @since 9.0.0
+ * @noinspection PhpUnused
  */
-export default class AppParams {
+class GetAppParams implements Action
+{
+    public function __construct(
+        private AppService $appService,
+    ) {}
 
-    /**
-     * @param {Record} params
-     */
-    constructor(params = {}) {
-        /** @private */
-        this.params = params;
-    }
+    public function process(Request $request): Response
+    {
+        $data = $this->appService->getAppParams();
 
-    /**
-     * Get a parameter.
-     *
-     * @param {string} name A parameter.
-     * @return {*}
-     */
-    get(name) {
-        return this.params[name];
-    }
-
-    /**
-     * Set all parameters.
-     *
-     * @internal
-     * @param {Record} params
-     */
-    setAll(params) {
-        this.params = params;
-    }
-
-    /**
-     * Reload params from the backend.
-     */
-    async load() {
-        /** @type {module:app~UserData} */
-        const data = await Espo.Ajax.getRequest('App/appParams');
-
-        this.params = data;
+        return ResponseComposer::json($data);
     }
 }

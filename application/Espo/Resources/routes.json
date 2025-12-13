@@ -23,6 +23,11 @@
         "actionClassName": "Espo\\Tools\\App\\Api\\GetAbout"
     },
     {
+        "route": "/App/appParams",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\App\\Api\\GetAppParams"
+    },
+    {
         "route": "/Metadata",
         "method": "get",
         "params": {
