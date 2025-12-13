@@ -49,20 +49,6 @@ export default class extends SettingsEditRecordView {
             this.setFieldOptionList('baseCurrency', currencyList);
         });
 
-        this.listenTo(this.model, 'change', (model, o) => {
-            if (!o.ui) {
-                return;
-            }
-
-            if (model.hasChanged('currencyList') || model.hasChanged('baseCurrency')) {
-                const currencyRatesField = this.getFieldView('currencyRates');
-
-                if (currencyRatesField) {
-                    currencyRatesField.reRender();
-                }
-            }
-        });
-
         this.whenReady().then(() => {
             const view = /** @type {EditView} view */
                 this.getParentView();
