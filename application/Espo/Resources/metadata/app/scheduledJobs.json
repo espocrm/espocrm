@@ -41,6 +41,12 @@
         "scheduling": "25 5 * * *",
         "jobClassName": "Espo\\Classes\\Jobs\\CheckNewExtensionVersion"
     },
+    "SyncCurrencyRates": {
+        "name": "Sync Currency Rates",
+        "jobClassName": "Espo\\Classes\\Jobs\\SyncCurrencyRates",
+        "scheduling": "5 0 * * *",
+        "isSystem": true
+    },
     "Cleanup": {
         "jobClassName": "Espo\\Classes\\Jobs\\Cleanup"
     },
