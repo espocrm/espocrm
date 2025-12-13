@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "Create CurrencyRecordRate": "Create Exchange Rate"
+    },
+    "fields": {
+        "record": "Currency",
+        "baseCode": "Base",
+        "date": "Date",
+        "rate": "Rate",
+        "number": "Number"
+    },
+    "links": {
+        "record": "Currency"
+    }
+}

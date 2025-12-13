@@ -1,0 +1,23 @@
+[
+    {
+        "name": "code",
+        "link": true,
+        "width": 18
+    },
+    {
+        "name": "label",
+        "width": 28
+    },
+    {
+        "name": "status",
+        "width": 20
+    },
+    {
+        "name": "isBase",
+        "width": 15
+    },
+    {
+        "name": "rate",
+        "align": "right"
+    }
+]

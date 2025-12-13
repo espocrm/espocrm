@@ -1,0 +1,10 @@
+{
+    "selectAttributesDependencyMap": {
+        "id": [
+            "recordId",
+            "recordName",
+            "baseCode"
+        ]
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\Boolean"
+}

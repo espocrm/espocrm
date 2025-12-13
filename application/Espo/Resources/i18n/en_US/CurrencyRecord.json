@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "code": "Code",
+        "status": "Status",
+        "label": "Label",
+        "symbol": "Symbol",
+        "isBase": "Is Base",
+        "rate": "Rate",
+        "rateDate": "Rate Date"
+    },
+    "links": {
+        "rates": "Rates"
+    },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    }
+}

@@ -168,6 +168,9 @@
         },
         "baselineRole": {
             "level": "admin"
+        },
+        "currencyRates": {
+            "readOnly": true
         }
     }
 }

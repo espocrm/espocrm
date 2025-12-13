@@ -1,0 +1,87 @@
+{
+    "fields": {
+        "code": {
+            "type": "varchar",
+            "maxLength": 3,
+            "required": true,
+            "readOnly": true,
+            "index": true
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ],
+            "default": "Active",
+            "maxLength": 8,
+            "style": {
+                "Inactive": "info"
+            }
+        },
+        "label": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Label"
+        },
+        "symbol": {
+            "type": "varchar",
+            "notStorable": true,
+            "readOnly": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Symbol"
+        },
+        "rateDate": {
+            "type": "date",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\RateDate"
+        },
+        "rate": {
+            "type": "decimal",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "decimalPlaces": 6,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\Rate",
+            "view": "views/currency-record-rate/fields/rate"
+        },
+        "isBase": {
+            "type": "bool",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\CurrencyRecord\\IsBase"
+        }
+    },
+    "links": {
+        "rates": {
+            "type": "hasMany",
+            "entity": "CurrencyRecordRate",
+            "foreign": "record",
+            "readOnly": true,
+            "orderBy": "date",
+            "order": "desc"
+        }
+    },
+    "indexes": {
+        "codeDeleteId": {
+            "type": "unique",
+            "columns": [
+                "code",
+                "deleteId"
+            ]
+        }
+    },
+    "deleteId": true,
+    "collection": {
+        "textFilterFields": [
+            "code"
+        ],
+        "orderBy": "code",
+        "order": "asc"
+    }
+}

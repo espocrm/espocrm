@@ -1,0 +1,10 @@
+[
+    {
+        "name": "date",
+        "width": 25
+    },
+    {
+        "name": "rate",
+        "align": "right"
+    }
+]

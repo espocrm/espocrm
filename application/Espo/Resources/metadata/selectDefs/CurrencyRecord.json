@@ -1,0 +1,11 @@
+{
+    "primaryFilterClassNameMap": {
+        "active": "Espo\\Classes\\Select\\CurrencyRecord\\PrimaryFilters\\Active"
+    },
+    "selectAttributesDependencyMap": {
+        "id": [
+            "code"
+        ]
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\Boolean"
+}

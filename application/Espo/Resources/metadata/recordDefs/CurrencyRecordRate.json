@@ -1,0 +1,17 @@
+{
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\BeforeSaveValidation"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\BeforeSaveValidation"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\AfterSave"
+    ],
+    "afterDeleteHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\CurrencyRecordRate\\AfterDelete"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "baseCode": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "id"
+                    }
+                ]
+            }
+        }
+    }
+}

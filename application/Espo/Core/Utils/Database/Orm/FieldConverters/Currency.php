@@ -263,7 +263,7 @@ class Currency implements FieldConverter
     {
         $name = $fieldDefs->getName();
 
-        $alias = $name . 'CurrencyRate';
+        $alias = $name . 'CurrencyRecordRate';
         $leftJoins = [
             [
                 'Currency',

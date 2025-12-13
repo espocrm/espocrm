@@ -63,7 +63,9 @@
             "ImportError": "Import",
             "ImportEml": "Import",
             "WorkingTimeRange": "WorkingTimeCalendar",
-            "Stream": true
+            "Stream": true,
+            "CurrencyRecord": "boolean:Currency",
+            "CurrencyRecordRate": "Currency"
         },
         "fieldLevel": {
         },
@@ -155,7 +157,11 @@
                 "delete": "all"
             },
             "Stream": true,
-            "ImportEml": "Import"
+            "ImportEml": "Import",
+            "CurrencyRecordRate": {
+                "read": "yes",
+                "edit": "yes"
+            }
         }
     },
     "valuePermissionList": [

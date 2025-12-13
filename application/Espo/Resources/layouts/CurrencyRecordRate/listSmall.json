@@ -1,0 +1,18 @@
+[
+    {
+        "name": "date",
+        "width": 25
+    },
+    {
+        "name": "record",
+        "width": 25
+    },
+    {
+        "name": "baseCode",
+        "width": 25
+    },
+    {
+        "name": "rate",
+        "align": "right"
+    }
+]

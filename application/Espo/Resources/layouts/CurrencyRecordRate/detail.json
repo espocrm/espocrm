@@ -1,0 +1,22 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "record"
+                },
+                {
+                    "name": "baseCode"
+                }
+            ],
+            [
+                {
+                    "name": "date"
+                },
+                {
+                    "name": "rate"
+                }
+            ]
+        ]
+    }
+]

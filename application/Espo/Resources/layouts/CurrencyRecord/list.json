@@ -1,0 +1,31 @@
+[
+    {
+        "name": "code",
+        "link": true,
+        "width": 16
+    },
+    {
+        "name": "label",
+        "width": 16
+    },
+    {
+        "name": "symbol",
+        "width": 10
+    },
+    {
+        "name": "status",
+        "width": 12
+    },
+    {
+        "name": "isBase",
+        "width": 10
+    },
+    {
+        "name": "rateDate",
+        "width": 12
+    },
+    {
+        "name": "rate",
+        "align": "right"
+    }
+]

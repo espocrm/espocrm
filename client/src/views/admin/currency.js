@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import SettingsEditRecordView from 'views/settings/record/edit';
+import EditView from 'views/edit';
 
 export default class extends SettingsEditRecordView {
 
@@ -65,6 +66,22 @@ export default class extends SettingsEditRecordView {
         });
 
         this.controlCurrencyRatesVisibility();
+
+        this.whenReady().then(() => {
+            const view = /** @type {EditView} view */
+                this.getParentView();
+
+            if (!view instanceof EditView) {
+                return;
+            }
+
+            view.addMenuItem('buttons', {
+                name: 'currencyRecords',
+                link: '#CurrencyRecord',
+                labelTranslation: 'Settings.labels.Currency Rates',
+                iconClass: 'fas fa-euro-sign',
+            });
+        });
     }
 
     controlCurrencyRatesVisibility() {

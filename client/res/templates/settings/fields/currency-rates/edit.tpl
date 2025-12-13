@@ -8,6 +8,7 @@
                 data-currency="{{@key}}"
                 value="{{./this}}"
                 style="text-align: right;"
+                readonly="readonly"
             >
         </span>
         <span class="input-group-addon radius-right" style="width: 22%">{{../baseCurrency}}</span>
