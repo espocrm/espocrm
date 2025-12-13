@@ -35,7 +35,7 @@ use Espo\Core\WebSocket\Submission;
 use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\Entity;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
-use Espo\Tools\Currency\RecordManager;
+use Espo\Tools\Currency\SyncManager;
 
 /**
  * @implements SaveHook<CurrencyRecordRate>
@@ -43,7 +43,7 @@ use Espo\Tools\Currency\RecordManager;
 class AfterSave implements SaveHook
 {
     public function __construct(
-        private RecordManager $recordManager,
+        private SyncManager $syncManager,
         private Submission $submission,
     ) {}
 
@@ -52,7 +52,7 @@ class AfterSave implements SaveHook
         $code = $entity->getRecord()->getCode();
 
         try {
-            $this->recordManager->syncCodeToConfig($code);
+            $this->syncManager->syncCodeToConfig($code);
         } catch (NotEnabled $e) {
             throw new Conflict($e->getMessage(), previous: $e);
         }

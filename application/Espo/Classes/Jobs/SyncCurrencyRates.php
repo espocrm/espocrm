@@ -30,7 +30,7 @@
 namespace Espo\Classes\Jobs;
 
 use Espo\Core\Job\JobDataLess;
-use Espo\Tools\Currency\RecordManager;
+use Espo\Tools\Currency\SyncManager;
 
 /**
  * @noinspection PhpUnused
@@ -38,11 +38,11 @@ use Espo\Tools\Currency\RecordManager;
 class SyncCurrencyRates implements JobDataLess
 {
     public function __construct(
-        private RecordManager $recordManager,
+        private SyncManager $syncManager,
     ) {}
 
     public function run(): void
     {
-        $this->recordManager->syncToConfig();
+        $this->syncManager->syncToConfig();
     }
 }

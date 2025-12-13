@@ -37,7 +37,7 @@ use Espo\Core\Currency\Rates;
 use Espo\Core\Field\Currency;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config\ConfigWriter;
-use Espo\Tools\Currency\RecordManager;
+use Espo\Tools\Currency\SyncManager;
 use tests\integration\Core\BaseTestCase;
 
 class CurrencyTest extends BaseTestCase
@@ -60,7 +60,7 @@ class CurrencyTest extends BaseTestCase
 
         $configWriter->save();
 
-        $this->getInjectableFactory()->create(RecordManager::class)->sync();
+        $this->getInjectableFactory()->create(SyncManager::class)->sync();
 
         $service = $factory->create(RateService::class);
 

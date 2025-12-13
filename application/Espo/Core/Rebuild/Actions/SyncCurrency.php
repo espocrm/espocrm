@@ -30,7 +30,7 @@
 namespace Espo\Core\Rebuild\Actions;
 
 use Espo\Core\Rebuild\RebuildAction;
-use Espo\Tools\Currency\RecordManager;
+use Espo\Tools\Currency\SyncManager;
 
 /**
  * @noinspection PhpUnused
@@ -38,11 +38,11 @@ use Espo\Tools\Currency\RecordManager;
 class SyncCurrency implements RebuildAction
 {
     public function __construct(
-        private RecordManager $recordManager,
+        private SyncManager $syncManager,
     ) {}
 
     public function process(): void
     {
-        $this->recordManager->sync();
+        $this->syncManager->sync();
     }
 }

@@ -48,7 +48,7 @@ class RateService
         private Acl $acl,
         private DatabasePopulator $databasePopulator,
         private ConfigDataProvider $configDataProvider,
-        private RecordManager $recordManager,
+        private SyncManager $syncManager,
         private RateEntryProvider $rateEntryProvider,
         private DateTime $dateTime,
         private EntityManager $entityManager,
@@ -93,7 +93,7 @@ class RateService
             $this->writeOne($code, $value);
         }
 
-        $this->recordManager->syncToConfig();
+        $this->syncManager->syncToConfig();
         $this->databasePopulator->process();
     }
 

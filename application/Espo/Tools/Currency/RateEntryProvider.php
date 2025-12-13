@@ -30,6 +30,7 @@
 namespace Espo\Tools\Currency;
 
 use Espo\Core\Currency\ConfigDataProvider;
+use Espo\Core\Currency\InternalRateEntryProvider;
 use Espo\Core\Field\Date;
 use Espo\Core\Utils\DateTime;
 use Espo\Entities\CurrencyRecord;
@@ -52,6 +53,7 @@ class RateEntryProvider
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
         private DateTime $dateTime,
+        private InternalRateEntryProvider $internalRateEntryProvider,
     ) {
         $this->map = new WeakMap();
     }
@@ -89,22 +91,22 @@ class RateEntryProvider
         return $entry;
     }
 
+    private function getRateEntryForRecord(CurrencyRecord $record, ?Date $date = null): ?CurrencyRecordRate
+    {
+        $date ??= $this->dateTime->getToday();
+        $base = $this->configDataProvider->getBaseCurrency();
+
+        return $this->internalRateEntryProvider->getRateEntryForRecord($record, $date, $base);
+    }
+
     /**
      * Get rate against the base currency by a record.
      *
      * @return ?numeric-string
      */
-    public function getRateForRecord(CurrencyRecord $record): ?string
+    public function getRateForRecord(CurrencyRecord $record, ?Date $date = null): ?string
     {
-        $rateEntry = $this->entityManager
-            ->getRDBRepositoryByClass(CurrencyRecordRate::class)
-            ->where([
-                CurrencyRecordRate::ATTR_RECORD_ID => $record->getId(),
-                CurrencyRecordRate::FIELD_BASE_CODE => $this->configDataProvider->getBaseCurrency(),
-                CurrencyRecordRate::FIELD_DATE . '<=' => $this->dateTime->getToday()->toString(),
-            ])
-            ->order(CurrencyRecordRate::FIELD_DATE, Order::DESC)
-            ->findOne();
+        $rateEntry = $this->getRateEntryForRecord($record, $date);
 
         return $rateEntry?->getRate();
     }

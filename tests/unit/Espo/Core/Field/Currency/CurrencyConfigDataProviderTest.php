@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core\Field\Currency;
 
 use Espo\Core\Currency\ConfigDataProvider as CurrencyConfigDataProvider;
+use Espo\Core\Currency\InternalRatesProvider;
 use Espo\Core\Utils\Config;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -38,12 +39,17 @@ class CurrencyConfigDataProviderTest extends TestCase
 {
     private $config;
     private $provider;
+    private $ratesProvider;
 
     protected function setUp() : void
     {
         $this->config = $this->createMock(Config::class);
+        $this->ratesProvider = $this->createMock(InternalRatesProvider::class);
 
-        $this->provider = new CurrencyConfigDataProvider($this->config);
+        $this->provider = new CurrencyConfigDataProvider(
+            $this->config,
+            $this->ratesProvider,
+        );
     }
 
     public function testDefaultCurrency()
@@ -100,6 +106,13 @@ class CurrencyConfigDataProviderTest extends TestCase
 
     public function testCurrencyRate1()
     {
+        $this->ratesProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn([
+                'EUR' => 1.2,
+            ]);
+
         $invokedCount = $this->exactly(2);
 
         $this->config
@@ -107,11 +120,9 @@ class CurrencyConfigDataProviderTest extends TestCase
             ->method('get')
             ->willReturnCallback(function ($param) use ($invokedCount) {
                 if ($invokedCount->numberOfInvocations() === 1) {
-                    $this->assertEquals('currencyRates', $param);
+                    $this->assertEquals('baseCurrency', $param);
 
-                    return [
-                        'EUR' => 1.2,
-                    ];
+                    return 'USD';
                 }
 
                 if ($invokedCount->numberOfInvocations() === 2) {
@@ -130,6 +141,13 @@ class CurrencyConfigDataProviderTest extends TestCase
 
     public function testCurrencyRate2()
     {
+        $this->ratesProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn([
+                'EUR' => 1.2,
+            ]);
+
         $invokedCount = $this->exactly(2);
 
         $this->config
@@ -137,11 +155,9 @@ class CurrencyConfigDataProviderTest extends TestCase
             ->method('get')
             ->willReturnCallback(function ($param) use ($invokedCount) {
                 if ($invokedCount->numberOfInvocations() === 1) {
-                    $this->assertEquals('currencyRates', $param);
+                    $this->assertEquals('baseCurrency', $param);
 
-                    return [
-                        'EUR' => 1.2,
-                    ];
+                    return 'USD';
                 }
 
                 if ($invokedCount->numberOfInvocations() === 2) {

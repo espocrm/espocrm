@@ -36,7 +36,7 @@ use Espo\Core\WebSocket\Submission;
 use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\Entity;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
-use Espo\Tools\Currency\RecordManager;
+use Espo\Tools\Currency\SyncManager;
 
 /**
  * @implements DeleteHook<CurrencyRecordRate>
@@ -44,7 +44,7 @@ use Espo\Tools\Currency\RecordManager;
 class AfterDelete implements DeleteHook
 {
     public function __construct(
-        private RecordManager $recordManager,
+        private SyncManager $syncManager,
         private Submission $submission,
     ) {}
 
@@ -53,7 +53,7 @@ class AfterDelete implements DeleteHook
         $code = $entity->getRecord()->getCode();
 
         try {
-            $this->recordManager->syncCodeToConfig($code);
+            $this->syncManager->syncCodeToConfig($code);
         } catch (NotEnabled $e) {
             throw new Conflict($e->getMessage(), previous: $e);
         }

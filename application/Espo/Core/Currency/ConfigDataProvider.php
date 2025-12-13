@@ -34,8 +34,10 @@ use RuntimeException;
 
 class ConfigDataProvider
 {
-    public function __construct(private Config $config)
-    {}
+    public function __construct(
+        private Config $config,
+        private InternalRatesProvider $internalRatesProvider,
+    ) {}
 
     /**
      * Get decimal places.
@@ -66,7 +68,7 @@ class ConfigDataProvider
     /**
      * Get a list of available currencies.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getCurrencyList(): array
     {
@@ -86,10 +88,10 @@ class ConfigDataProvider
      */
     public function getCurrencyRate(string $currencyCode): float
     {
-        $rates = $this->config->get('currencyRates') ?? [];
+        $rates = $this->internalRatesProvider->get($this->getBaseCurrency());
 
         if (!$this->hasCurrency($currencyCode)) {
-            throw new RuntimeException("Can't get currency rate of '{$currencyCode}' currency.");
+            throw new RuntimeException("Can't get currency rate of '$currencyCode' currency.");
         }
 
         return $rates[$currencyCode] ?? 1.0;
@@ -100,7 +102,7 @@ class ConfigDataProvider
      */
     public function getCurrencyRates(): Rates
     {
-        $rates = $this->config->get('currencyRates') ?? [];
+        $rates = $this->internalRatesProvider->get($this->getBaseCurrency());
 
         $rates[$this->getBaseCurrency()] = 1.0;
 

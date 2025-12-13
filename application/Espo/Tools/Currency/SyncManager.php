@@ -37,7 +37,11 @@ use Espo\ORM\Query\UpdateBuilder;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
 use Traversable;
 
-class RecordManager
+/**
+ * @since 9.3.0
+ * @internal
+ */
+class SyncManager
 {
     public function __construct(
         private ConfigDataProvider $configDataProvider,
