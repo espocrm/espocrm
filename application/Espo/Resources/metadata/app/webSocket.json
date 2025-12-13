@@ -1,6 +1,7 @@
 {
     "categories": {
         "newNotification": {},
+        "appParamsUpdate": {},
         "recordUpdate": {
             "paramList": ["scope", "id"],
             "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=read"

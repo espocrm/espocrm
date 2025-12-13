@@ -30,9 +30,9 @@
 namespace Espo\Classes\RecordHooks\CurrencyRecordRate;
 
 use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\Hook\DeleteHook;
+use Espo\Core\WebSocket\Submission;
 use Espo\Entities\CurrencyRecordRate;
 use Espo\ORM\Entity;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
@@ -45,6 +45,7 @@ class AfterDelete implements DeleteHook
 {
     public function __construct(
         private RecordManager $recordManager,
+        private Submission $submission,
     ) {}
 
     public function process(Entity $entity, DeleteParams $params): void
@@ -56,5 +57,7 @@ class AfterDelete implements DeleteHook
         } catch (NotEnabled $e) {
             throw new Conflict($e->getMessage(), previous: $e);
         }
+
+        $this->submission->submit('appParamsUpdate');
     }
 }

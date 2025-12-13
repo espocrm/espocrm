@@ -557,6 +557,8 @@ class App {
         this.acl.implementationClassMap = aclImplementationClassMap;
 
         this.initRouter();
+
+        this.webSocketManager.subscribe('appParamsUpdate', () => this.appParams.load());
     }
 
     /**

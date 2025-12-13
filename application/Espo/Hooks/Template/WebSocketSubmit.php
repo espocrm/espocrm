@@ -27,37 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Hooks\Template;
 
-use Espo\Core\ORM\Entity;
-use UnexpectedValueException;
+use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\WebSocket\Submission;
+use Espo\Entities\Template;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
+use Espo\ORM\Repository\Option\SaveOptions;
 
-class Template extends Entity
+/**
+ * Update app params when a first template is added.
+ *
+ * @implements AfterSave<Template>
+ */
+class WebSocketSubmit implements AfterSave
 {
-    public const ENTITY_TYPE = 'Template';
+    public function __construct(
+        private Submission $submission,
+        private EntityManager $entityManager,
+    ) {}
 
-    public const STATUS_ACTIVE = 'Active';
-
-    public const string FIELD_ENTITY_TYPE = 'entityType';
-
-    public function getTargetEntityType(): string
+    public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        $entityType = $this->get(self::FIELD_ENTITY_TYPE);
-
-        if ($entityType === null) {
-            throw new UnexpectedValueException();
+        if (!$entity->isNew()) {
+            return;
         }
 
-        return $entityType;
-    }
+        $another = $this->entityManager
+            ->getRDBRepositoryByClass(Template::class)
+            ->where([
+                Attribute::ID . '!=' => $entity->getId(),
+                Template::FIELD_ENTITY_TYPE => $entity->getEntityType(),
+            ])
+            ->findOne();
 
-    public function isActive(): bool
-    {
-        return $this->get('status') === self::STATUS_ACTIVE;
-    }
+        if ($another) {
+            return;
+        }
 
-    public function getFilename(): ?string
-    {
-        return $this->get('filename');
+        $this->submission->submit('appParamsUpdate');
     }
 }
