@@ -31,11 +31,12 @@ namespace Espo\Tools\Currency;
 
 use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Config\SystemConfig;
+use Espo\Core\Utils\DataCache;
 use Espo\Entities\CurrencyRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
-use Traversable;
 
 /**
  * @since 9.3.0
@@ -43,11 +44,15 @@ use Traversable;
  */
 class SyncManager
 {
+    private string $cacheKey = 'currencyRates';
+
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
         private ConfigWriter $configWriter,
         private RateEntryProvider $rateEntryProvider,
+        private DataCache $dataCache,
+        private SystemConfig $systemConfig,
     ) {}
 
     public function sync(): void
@@ -56,7 +61,7 @@ class SyncManager
             $this->syncInTransaction();
         });
 
-        $this->syncToConfig();
+        $this->refreshCache();
     }
 
     private function syncInTransaction(): void
@@ -114,24 +119,20 @@ class SyncManager
             ->find();
     }
 
-    public function syncToConfig(): void
+    public function refreshCache(): void
     {
         $this->entityManager->getTransactionManager()->run(function () {
             $this->syncToConfigInTransaction();
         });
+
+        $this->clearCache();
     }
 
     private function syncToConfigInTransaction(): void
     {
         $this->lock();
 
-        $rates = [];
-
-        foreach ($this->getActiveCurrencyRecords() as $record) {
-            $rate = $this->rateEntryProvider->getRateForRecord($record) ?? '1.0';
-
-            $rates[$record->getCode()] = (float) $rate;
-        }
+        $rates = $this->configDataProvider->getCurrencyRates()->toAssoc();
 
         $this->configWriter->set('currencyRates', $rates);
         $this->configWriter->save();
@@ -140,7 +141,7 @@ class SyncManager
     /**
      * @throws NotEnabled
      */
-    public function syncCodeToConfig(string $code): void
+    public function updateCode(string $code): void
     {
         $rates = $this->configDataProvider->getCurrencyRates()->toAssoc();
 
@@ -150,18 +151,16 @@ class SyncManager
 
         $this->configWriter->set('currencyRates', $rates);
         $this->configWriter->save();
+
+        $this->clearCache();
     }
 
-    /**
-     * @return Traversable<int, CurrencyRecord>
-     */
-    private function getActiveCurrencyRecords(): Traversable
+    private function clearCache(): void
     {
-        return $this->entityManager
-            ->getRDBRepositoryByClass(CurrencyRecord::class)
-            ->where([
-                CurrencyRecord::FIELD_STATUS => CurrencyRecord::STATUS_ACTIVE,
-            ])
-            ->find();
+        if (!$this->systemConfig->useCache()) {
+            return;
+        }
+
+        $this->dataCache->clear($this->cacheKey);
     }
 }

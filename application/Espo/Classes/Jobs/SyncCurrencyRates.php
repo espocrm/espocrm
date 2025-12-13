@@ -43,6 +43,6 @@ class SyncCurrencyRates implements JobDataLess
 
     public function run(): void
     {
-        $this->syncManager->syncToConfig();
+        $this->syncManager->refreshCache();
     }
 }

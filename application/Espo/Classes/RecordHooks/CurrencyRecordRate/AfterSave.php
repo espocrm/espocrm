@@ -52,7 +52,7 @@ class AfterSave implements SaveHook
         $code = $entity->getRecord()->getCode();
 
         try {
-            $this->syncManager->syncCodeToConfig($code);
+            $this->syncManager->updateCode($code);
         } catch (NotEnabled $e) {
             throw new Conflict($e->getMessage(), previous: $e);
         }

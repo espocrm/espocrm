@@ -93,7 +93,7 @@ class RateService
             $this->writeOne($code, $value);
         }
 
-        $this->syncManager->syncToConfig();
+        $this->syncManager->refreshCache();
         $this->databasePopulator->process();
     }
 
