@@ -111,6 +111,15 @@ class RecordManager
 
     public function syncToConfig(): void
     {
+        $this->entityManager->getTransactionManager()->run(function () {
+            $this->syncToConfigInTransaction();
+        });
+    }
+
+    private function syncToConfigInTransaction(): void
+    {
+        $this->lock();
+
         $rates = [];
 
         foreach ($this->configDataProvider->getCurrencyList() as $code) {
