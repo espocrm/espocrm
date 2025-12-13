@@ -29,16 +29,19 @@
 
 namespace Espo\Hooks\Common;
 
+use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
-use Espo\Core\Di;
 
-class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
+class CurrencyConverted
 {
-    use Di\MetadataSetter;
-    use Di\ConfigSetter;
-
     public static int $order = 1;
+
+    public function __construct(
+        private ConfigDataProvider $configDataProvider,
+        private Metadata $metadata,
+    ) {}
 
     public function beforeSave(Entity $entity): void
     {
@@ -77,14 +80,13 @@ class CurrencyConverted implements Di\MetadataAware, Di\ConfigAware
                 continue;
             }
 
-            $rates = $this->config->get('currencyRates', []);
-            $baseCurrency = $this->config->get('baseCurrency');
-            $defaultCurrency = $this->config->get('defaultCurrency');
+            $rates = $this->configDataProvider->getCurrencyRates()->toAssoc();
+            $baseCurrency = $this->configDataProvider->getBaseCurrency();
+            $defaultCurrency = $this->configDataProvider->getDefaultCurrency();
 
-            if ($defaultCurrency === $currency) {
-                $targetValue = $value;
-            } else {
-                $targetValue = $value;
+            $targetValue = $value;
+
+            if ($defaultCurrency !== $currency) {
                 $targetValue = $targetValue / ($rates[$baseCurrency] ?? 1.0);
                 $targetValue = $targetValue * ($rates[$currency] ?? 1.0);
 
