@@ -35,6 +35,7 @@ use Espo\Entities\CurrencyRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
+use Traversable;
 
 class RecordManager
 {
@@ -122,14 +123,10 @@ class RecordManager
 
         $rates = [];
 
-        foreach ($this->configDataProvider->getCurrencyList() as $code) {
-            try {
-                $rate = $this->rateEntryProvider->getRate($code) ?? '1.0';
-            } catch (Exceptions\NotEnabled) {
-                continue;
-            }
+        foreach ($this->getActiveCurrencyRecords() as $record) {
+            $rate = $this->rateEntryProvider->getRateForRecord($record) ?? '1.0';
 
-            $rates[$code] = (float) $rate;
+            $rates[$record->getCode()] = (float) $rate;
         }
 
         $this->configWriter->set('currencyRates', $rates);
@@ -149,5 +146,18 @@ class RecordManager
 
         $this->configWriter->set('currencyRates', $rates);
         $this->configWriter->save();
+    }
+
+    /**
+     * @return Traversable<int, CurrencyRecord>
+     */
+    private function getActiveCurrencyRecords(): Traversable
+    {
+        return $this->entityManager
+            ->getRDBRepositoryByClass(CurrencyRecord::class)
+            ->where([
+                CurrencyRecord::FIELD_STATUS => CurrencyRecord::STATUS_ACTIVE,
+            ])
+            ->find();
     }
 }

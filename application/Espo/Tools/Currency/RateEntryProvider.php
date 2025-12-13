@@ -94,7 +94,7 @@ class RateEntryProvider
      *
      * @return ?numeric-string
      */
-    private function getRateByRecord(CurrencyRecord $record): ?string
+    public function getRateForRecord(CurrencyRecord $record): ?string
     {
         $rateEntry = $this->entityManager
             ->getRDBRepositoryByClass(CurrencyRecordRate::class)
@@ -120,7 +120,7 @@ class RateEntryProvider
     {
         $record = $this->getRecordByCode($code);
 
-        return $this->getRateByRecord($record);
+        return $this->getRateForRecord($record);
     }
 
     /**
