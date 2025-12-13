@@ -44,7 +44,7 @@
     "SyncCurrencyRates": {
         "name": "Sync Currency Rates",
         "jobClassName": "Espo\\Classes\\Jobs\\SyncCurrencyRates",
-        "scheduling": "5 0 * * *",
+        "scheduling": "2 0 * * *",
         "isSystem": true
     },
     "Cleanup": {
