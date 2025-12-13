@@ -51,7 +51,7 @@ class CurrencyRates implements AppParam
         $rates = $this->configDataProvider->getCurrencyRates()->toAssoc();
 
         foreach ($rates as $code => $value) {
-            $rates[$code] = $this->numberUtil->format($value, self::PRECISION);
+            $rates[$code] = $this->numberUtil->format($value, self::PRECISION, '.', '');
         }
 
         return (object) $rates;
