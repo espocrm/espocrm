@@ -60,7 +60,6 @@ class CurrencyTest extends BaseTestCase
 
         $configWriter->save();
 
-
         $this->getInjectableFactory()->create(RecordManager::class)->sync();
 
         $service = $factory->create(RateService::class);
