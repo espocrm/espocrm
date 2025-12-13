@@ -47,8 +47,6 @@ export default class extends SettingsEditRecordView {
 
             this.setFieldOptionList('defaultCurrency', currencyList);
             this.setFieldOptionList('baseCurrency', currencyList);
-
-            this.controlCurrencyRatesVisibility();
         });
 
         this.listenTo(this.model, 'change', (model, o) => {
@@ -65,8 +63,6 @@ export default class extends SettingsEditRecordView {
             }
         });
 
-        this.controlCurrencyRatesVisibility();
-
         this.whenReady().then(() => {
             const view = /** @type {EditView} view */
                 this.getParentView();
@@ -82,15 +78,5 @@ export default class extends SettingsEditRecordView {
                 iconClass: 'fas fa-euro-sign',
             });
         });
-    }
-
-    controlCurrencyRatesVisibility() {
-        const currencyList = this.model.get('currencyList');
-
-        if (currencyList.length < 2) {
-            this.hideField('currencyRates');
-        } else {
-            this.showField('currencyRates');
-        }
     }
 }
