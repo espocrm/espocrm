@@ -35,7 +35,6 @@ use Espo\Entities\Email;
 use Espo\Entities\Settings;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -50,10 +49,8 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Config\Access;
-
 use Espo\Entities\Portal;
 use Espo\Repositories\Portal as PortalRepository;
-
 use Espo\Tools\Currency\RecordManager as CurrencyRecordManager;
 use stdClass;
 
@@ -76,6 +73,7 @@ class SettingsService
         private EmailConfigDataProvider $emailConfigDataProvider,
         private Acl\Cache\Clearer $aclCacheClearer,
         private CurrencyRecordManager $currencyRecordManager,
+        private CurrencyDatabasePopulator $currencyDatabasePopulator,
     ) {}
 
     /**
@@ -247,7 +245,7 @@ class SettingsService
 
         if (isset($data->baseCurrency) || isset($data->currencyList) || isset($data->defaultCurrency)) {
             $this->currencyRecordManager->sync();
-            $this->populateDatabaseWithCurrencyRates();
+            $this->currencyDatabasePopulator->process();
         }
     }
 
@@ -341,11 +339,6 @@ class SettingsService
                 $data->$param = array_values($list);
             }
         }
-    }
-
-    private function populateDatabaseWithCurrencyRates(): void
-    {
-        $this->injectableFactory->create(CurrencyDatabasePopulator::class)->process();
     }
 
     private function filterData(stdClass $data): void

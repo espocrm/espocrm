@@ -42,7 +42,7 @@ class RecordManager
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
         private ConfigWriter $configWriter,
-        private CurrencyRatesProvider $currencyRatesProvider,
+        private RateEntryProvider $rateEntryProvider,
     ) {}
 
     public function sync(): void
@@ -115,7 +115,7 @@ class RecordManager
 
         foreach ($this->configDataProvider->getCurrencyList() as $code) {
             try {
-                $rate = $this->currencyRatesProvider->getRate($code) ?? '1.0';
+                $rate = $this->rateEntryProvider->getRate($code) ?? '1.0';
             } catch (Exceptions\NotEnabled) {
                 continue;
             }
@@ -134,7 +134,7 @@ class RecordManager
     {
         $rates = $this->configDataProvider->getCurrencyRates()->toAssoc();
 
-        $rate = $this->currencyRatesProvider->getRate($code) ?? '1.0';
+        $rate = $this->rateEntryProvider->getRate($code) ?? '1.0';
 
         $rates[$code] = (float) $rate;
 

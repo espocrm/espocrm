@@ -40,6 +40,7 @@ class CurrencyRecordRate extends Entity
     public const string FIELD_DATE = 'date';
     public const string FIELD_BASE_CODE = 'baseCode';
     public const string FIELD_RATE = 'rate';
+    public const string FIELD_RECORD = 'record';
 
     public const string ATTR_RECORD_ID = 'recordId';
 
@@ -49,7 +50,7 @@ class CurrencyRecordRate extends Entity
     public function getRate(): string
     {
         /** @var numeric-string */
-        return $this->get(self::FIELD_RATE,) ?? '1';
+        return $this->get(self::FIELD_RATE) ?? '1';
     }
 
     /**
@@ -65,9 +66,19 @@ class CurrencyRecordRate extends Entity
         return $this->set(self::FIELD_BASE_CODE, $code);
     }
 
+    public function setRecord(CurrencyRecord $record): self
+    {
+        return $this->setRelatedLinkOrEntity(self::FIELD_RECORD, $record);
+    }
+
+    public function setDate(Date $date): self
+    {
+        return $this->setValueObject(self::DATE, $date);
+    }
+
     public function getRecord(): CurrencyRecord
     {
-        $record = $this->relations->getOne('record');
+        $record = $this->relations->getOne(self::FIELD_RECORD);
 
         if (!$record instanceof CurrencyRecord) {
             throw new ValueError("No record.");

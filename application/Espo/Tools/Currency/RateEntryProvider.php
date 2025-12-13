@@ -30,6 +30,7 @@
 namespace Espo\Tools\Currency;
 
 use Espo\Core\Currency\ConfigDataProvider;
+use Espo\Core\Field\Date;
 use Espo\Core\Utils\DateTime;
 use Espo\Entities\CurrencyRecord;
 use Espo\Entities\CurrencyRecordRate;
@@ -40,8 +41,9 @@ use WeakMap;
 
 /**
  * @since 9.3.0
+ * @internal
  */
-class CurrencyRatesProvider
+class RateEntryProvider
 {
     /** @var WeakMap<CurrencyRecord, ?CurrencyRecordRate> */
     private WeakMap $map;
@@ -72,11 +74,27 @@ class CurrencyRatesProvider
     }
 
     /**
+     * @throws NotEnabled
+     */
+    public function prepareNew(string $code, Date $date): CurrencyRecordRate
+    {
+        $record = $this->getRecordByCode($code);
+
+        $entry = $this->entityManager->getRDBRepositoryByClass(CurrencyRecordRate::class)->getNew();
+
+        $entry
+            ->setRecord($record)
+            ->setDate($date);
+
+        return $entry;
+    }
+
+    /**
      * Get rate against the base currency by a record.
      *
      * @return ?numeric-string
      */
-    public function getRateByRecord(CurrencyRecord $record): ?string
+    private function getRateByRecord(CurrencyRecord $record): ?string
     {
         $rateEntry = $this->entityManager
             ->getRDBRepositoryByClass(CurrencyRecordRate::class)
@@ -100,15 +118,46 @@ class CurrencyRatesProvider
      */
     public function getRate(string $code): ?string
     {
+        $record = $this->getRecordByCode($code);
+
+        return $this->getRateByRecord($record);
+    }
+
+    /**
+     * @throws NotEnabled
+     */
+    public function getRateEntryOnDate(string $code, Date $date): ?CurrencyRecordRate
+    {
+        $record = $this->getRecordByCode($code);
+
+        return $this->entityManager
+            ->getRDBRepositoryByClass(CurrencyRecordRate::class)
+            ->where([
+                CurrencyRecordRate::ATTR_RECORD_ID => $record->getId(),
+                CurrencyRecordRate::FIELD_BASE_CODE => $this->configDataProvider->getBaseCurrency(),
+                CurrencyRecordRate::FIELD_DATE  => $date->toString(),
+            ])
+            ->order(CurrencyRecordRate::FIELD_DATE, Order::DESC)
+            ->findOne();
+    }
+
+    /**
+     * @throws NotEnabled
+     */
+    private function getRecordByCode(string $code): CurrencyRecord
+    {
         $record = $this->entityManager
             ->getRDBRepositoryByClass(CurrencyRecord::class)
-            ->where([CurrencyRecord::FIELD_CODE => $code])
+            ->where([
+                CurrencyRecord::FIELD_CODE => $code,
+                CurrencyRecord::FIELD_STATUS => CurrencyRecord::STATUS_ACTIVE,
+            ])
             ->findOne();
 
         if (!$record) {
             throw new NotEnabled("Currency $code is not enabled.");
         }
 
-        return $this->getRateByRecord($record);
+        return $record;
     }
 }

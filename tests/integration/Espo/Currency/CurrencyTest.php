@@ -37,15 +37,17 @@ use Espo\Core\Currency\Rates;
 use Espo\Core\Field\Currency;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Tools\Currency\RecordManager;
+use tests\integration\Core\BaseTestCase;
 
-class CurrencyTest extends \tests\integration\Core\BaseTestCase
+class CurrencyTest extends BaseTestCase
 {
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testSetCurrencyRates(): void
     {
-        $app = $this->createApplication();
-
-        /** @var InjectableFactory $factory */
-        $factory = $app->getContainer()->get('injectableFactory');
+        $factory = $this->getInjectableFactory();
 
         $configWriter = $factory->create(ConfigWriter::class);
 
@@ -55,7 +57,11 @@ class CurrencyTest extends \tests\integration\Core\BaseTestCase
         $configWriter->set('currencyRates', [
             'EUR' => 1.2,
         ]);
+
         $configWriter->save();
+
+
+        $this->getInjectableFactory()->create(RecordManager::class)->sync();
 
         $service = $factory->create(RateService::class);
 

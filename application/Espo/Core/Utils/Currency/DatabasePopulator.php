@@ -33,7 +33,7 @@ use Espo\Core\Currency\ConfigDataProvider;
 use Espo\Entities\Currency;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
-use Espo\Tools\Currency\CurrencyRatesProvider;
+use Espo\Tools\Currency\RateEntryProvider;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
 
 /**
@@ -46,7 +46,7 @@ class DatabasePopulator
     public function __construct(
         private EntityManager $entityManager,
         private ConfigDataProvider $configDataProvider,
-        private CurrencyRatesProvider $currencyRatesProvider,
+        private RateEntryProvider $rateEntryProvider,
     ) {}
 
     public function process(): void
@@ -104,7 +104,7 @@ class DatabasePopulator
 
         foreach ($this->configDataProvider->getCurrencyList() as $itCode) {
             try {
-                $currencyRates[$itCode] = (float)($this->currencyRatesProvider->getRate($itCode) ?? 1);
+                $currencyRates[$itCode] = (float) ($this->rateEntryProvider->getRate($itCode) ?? 1);
             } catch (NotEnabled) {
                 continue;
             }

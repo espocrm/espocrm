@@ -34,7 +34,7 @@ use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Entities\CurrencyRecord;
 use Espo\ORM\Entity;
-use Espo\Tools\Currency\CurrencyRatesProvider;
+use Espo\Tools\Currency\RateEntryProvider;
 
 /**
  * @implements Loader<CurrencyRecord>
@@ -42,14 +42,14 @@ use Espo\Tools\Currency\CurrencyRatesProvider;
 class Rate implements Loader
 {
     public function __construct(
-        private CurrencyRatesProvider $currencyRatesProvider,
+        private RateEntryProvider $rateEntryProvider,
         private ConfigDataProvider $configDataProvider,
     ) {}
 
     public function process(Entity $entity, Params $params): void
     {
         $rate = $entity->getCode() !== $this->configDataProvider->getBaseCurrency() ?
-            $this->currencyRatesProvider->getCurrentRateEntry($entity)?->getRate() :
+            $this->rateEntryProvider->getCurrentRateEntry($entity)?->getRate() :
             '1';
 
         $entity->setRate($rate);
