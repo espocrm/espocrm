@@ -42,7 +42,6 @@ use WeakMap;
 
 /**
  * @since 9.3.0
- * @internal
  */
 class RateEntryProvider
 {
