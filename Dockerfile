@@ -9,39 +9,23 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Set permissions for directories that won't be volume-mounted
-RUN chmod -R 775 /var/www/html/custom && \
-    chmod -R 775 /var/www/html/client/custom && \
-    chown -R www-data:www-data /var/www/html
-
 # Create startup script that initializes the data directory at runtime
 # This is needed because the in-memory volume mounts EMPTY over /var/www/html/data
-COPY <<'EOF' /usr/local/bin/startup.sh
-#!/bin/bash
-set -e
-
-echo "Initializing EspoCRM data directory..."
-
-# Create required directories in the mounted volume
-mkdir -p /var/www/html/data/cache
-mkdir -p /var/www/html/data/logs
-mkdir -p /var/www/html/data/upload
-mkdir -p /var/www/html/data/tmp
-mkdir -p /var/www/html/data/export
-mkdir -p /var/www/html/data/import
-mkdir -p /var/www/html/data/.backup
-
-# Set permissions (www-data is uid 33)
-chown -R www-data:www-data /var/www/html/data
-chmod -R 775 /var/www/html/data
-
-echo "Data directory initialized successfully"
-
-# Execute the original entrypoint
-exec docker-entrypoint.sh apache2-foreground
-EOF
-
-RUN chmod +x /usr/local/bin/startup.sh
+RUN printf '#!/bin/bash\n\
+set -e\n\
+echo "Initializing EspoCRM data directory..."\n\
+mkdir -p /var/www/html/data/cache\n\
+mkdir -p /var/www/html/data/logs\n\
+mkdir -p /var/www/html/data/upload\n\
+mkdir -p /var/www/html/data/tmp\n\
+mkdir -p /var/www/html/data/export\n\
+mkdir -p /var/www/html/data/import\n\
+mkdir -p /var/www/html/data/.backup\n\
+chown -R www-data:www-data /var/www/html/data\n\
+chmod -R 775 /var/www/html/data\n\
+echo "Data directory initialized successfully"\n\
+exec docker-entrypoint.sh apache2-foreground\n\
+' > /usr/local/bin/startup.sh && chmod +x /usr/local/bin/startup.sh
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
