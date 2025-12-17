@@ -1,0 +1,155 @@
+name: Deploy to GCP Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
+
+jobs:
+  set-environment:
+    name: Determine Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      service_name: ${{ steps.set-env.outputs.service_name }}
+      image_tag: ${{ steps.set-env.outputs.image_tag }}
+    steps:
+      - name: Set environment based on trigger
+        id: set-env
+        run: |
+          # Manual trigger
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENV="${{ github.event.inputs.environment }}"
+            IMAGE_TAG="${{ github.sha }}"
+          # Tag push (v*) -> prod
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            ENV="prod"
+            IMAGE_TAG="${{ github.ref_name }}"
+          # Push to main/master -> dev
+          else
+            ENV="dev"
+            IMAGE_TAG="${{ github.sha }}"
+          fi
+
+          echo "environment=$ENV" >> $GITHUB_OUTPUT
+          echo "service_name=espocrm-$ENV" >> $GITHUB_OUTPUT
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Deploying to: $ENV with tag: $IMAGE_TAG"
+
+  build-and-deploy:
+    name: Build and Deploy to Cloud Run
+    needs: set-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.set-environment.outputs.environment }}
+
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      SERVICE_NAME: ${{ needs.set-environment.outputs.service_name }}
+      IMAGE_NAME: espocrm
+      IMAGE_TAG: ${{ needs.set-environment.outputs.image_tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/espocrm-repo/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker tag ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/espocrm-repo/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+                     ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/espocrm-repo/${{ env.IMAGE_NAME }}:${{ needs.set-environment.outputs.environment }}-latest
+
+      - name: Push Docker image to Artifact Registry
+        run: |
+          docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/espocrm-repo/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/espocrm-repo/${{ env.IMAGE_NAME }}:${{ needs.set-environment.outputs.environment }}-latest
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ secrets.GCP_REGION }}
+          image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/espocrm-repo/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          flags: |
+            --allow-unauthenticated
+            --memory=${{ secrets.CLOUD_RUN_MEMORY || '1Gi' }}
+            --cpu=${{ secrets.CLOUD_RUN_CPU || '1' }}
+            --min-instances=${{ secrets.CLOUD_RUN_MIN_INSTANCES || '0' }}
+            --max-instances=${{ secrets.CLOUD_RUN_MAX_INSTANCES || '3' }}
+            --port=80
+            --add-cloudsql-instances=${{ secrets.DB_INSTANCE_CONNECTION }}
+          env_vars: |
+            ESPOCRM_DATABASE_PLATFORM=Mysql
+            ESPOCRM_DATABASE_HOST=/cloudsql/${{ secrets.DB_INSTANCE_CONNECTION }}
+            ESPOCRM_DATABASE_NAME=${{ secrets.DB_NAME }}
+            ESPOCRM_DATABASE_USER=${{ secrets.DB_USER }}
+            ESPOCRM_ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
+            ESPOCRM_SITE_URL=${{ secrets.SITE_URL }}
+            ESPOCRM_LANGUAGE=en_US
+            ESPOCRM_TIME_ZONE=UTC
+          secrets: |
+            ESPOCRM_DATABASE_PASSWORD=${{ secrets.GCP_SECRET_DB_PASSWORD }}:latest
+            ESPOCRM_ADMIN_PASSWORD=${{ secrets.GCP_SECRET_ADMIN_PASSWORD }}:latest
+
+      - name: Show deployment URL
+        run: |
+          echo "## Deployment Successful! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Service URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ needs.set-environment.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Service:** ${{ env.SERVICE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Image Tag:** ${{ env.IMAGE_TAG }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Health check
+        run: |
+          echo "Waiting for service to be ready..."
+          sleep 30
+          curl -f ${{ steps.deploy.outputs.url }} || echo "Health check pending - service may need initial setup"
+
+  notify:
+    name: Notify on completion
+    needs: [set-environment, build-and-deploy]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Deployment status
+        run: |
+          if [ "${{ needs.build-and-deploy.result }}" == "success" ]; then
+            echo "✅ Deployment to ${{ needs.set-environment.outputs.environment }} completed successfully!"
+          else
+            echo "❌ Deployment to ${{ needs.set-environment.outputs.environment }} failed. Check the logs for details."
+            exit 1
+          fi

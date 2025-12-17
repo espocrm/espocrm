@@ -27,6 +27,19 @@
 !/custom/Espo/Modules/.htaccess
 /install/config.php
 
+# Environment files (keep secrets out of git)
+.env
+.env.local
+.env.*.local
+
+# GCP service account keys (NEVER commit these)
+gcp-sa-key.json
+*-sa-key.json
+*.json.key
+
+# Docker
+docker-compose.override.yml
+
 client/css/espo/*
 client/lib/*
 client/modules/crm/lib/*
