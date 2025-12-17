@@ -73,7 +73,7 @@ class EditModalView extends ModalView {
                 return;
             }
 
-            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden && !item.disabled) === -1) {
                 return;
             }
 
@@ -93,7 +93,7 @@ class EditModalView extends ModalView {
                 return;
             }
 
-            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden && !item.disabled) === -1) {
                 return;
             }
 
