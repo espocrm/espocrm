@@ -74,7 +74,7 @@ class EditModalView extends ModalView {
                 return;
             }
 
-            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden && !item.disabled) === -1) {
                 return;
             }
 
@@ -94,7 +94,7 @@ class EditModalView extends ModalView {
                 return;
             }
 
-            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden) === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'save' && !item.hidden && !item.disabled) === -1) {
                 return;
             }
 
@@ -385,50 +385,59 @@ class EditModalView extends ModalView {
      * @protected
      * @param {{bypassClose?: boolean}} [data]
      */
-    actionSave(data = {}) {
+    async actionSave(data = {}) {
         const editView = this.getRecordView();
 
         const model = editView.model;
 
-        const $buttons = this.dialog.$el.find('.modal-footer button');
+        const disabledButtons = [];
 
-        $buttons.addClass('disabled').attr('disabled', 'disabled');
+        this.buttonList.forEach(it => {
+            if (!it.name || it.disabled) {
+                return;
+            }
 
-        editView
-            .save()
-            .then(() => {
-                const wasNew = !this.id;
+            this.disableButton(it.name);
 
-                if (wasNew) {
-                    this.id = model.id;
-                }
+            disabledButtons.push(it.name);
+        });
 
-                this.trigger('after:save', model, {bypassClose: data.bypassClose});
+        try {
+            await editView.save();
+        } catch (e) {
+            disabledButtons.forEach(it => this.enableButton(it));
 
-                if (!data.bypassClose) {
-                    this.dialog.close();
+            return;
+        }
 
-                    if (wasNew) {
-                        const url = `#${this.scope}/view/${model.id}`;
-                        const name = model.attributes[this.nameAttribute] || this.model.id;
+        const wasNew = !this.id;
 
-                        const msg = this.translate('Created') + '\n' +
-                            `[${name}](${url})`;
+        if (wasNew) {
+            this.id = model.id;
+        }
 
-                        Espo.Ui.notify(msg, 'success', 4000, {suppress: true});
-                    }
+        this.trigger('after:save', model, {bypassClose: data.bypassClose});
 
-                    return;
-                }
+        if (!data.bypassClose) {
+            this.dialog.close();
 
-                $(this.containerElement).find('.modal-header .modal-title-text')
-                    .html(this.composeHeaderHtml());
+            if (wasNew) {
+                const url = `#${this.scope}/view/${model.id}`;
+                const name = model.attributes[this.nameAttribute] || this.model.id;
 
-                $buttons.removeClass('disabled').removeAttr('disabled');
-            })
-            .catch(() => {
-                $buttons.removeClass('disabled').removeAttr('disabled');
-            })
+                const msg = this.translate('Created') + '\n' +
+                    `[${name}](${url})`;
+
+                Espo.Ui.notify(msg, 'success', 4000, {suppress: true});
+            }
+
+            return;
+        }
+
+        $(this.containerElement).find('.modal-header .modal-title-text')
+            .html(this.composeHeaderHtml());
+
+        disabledButtons.forEach(it => this.enableButton(it));
     }
 
     actionSaveAndContinueEditing() {

@@ -42,7 +42,7 @@ class ComposeEmailModalView extends EditModalView {
     shortcutKeys = {
         /** @this ComposeEmailModalView */
         'Control+Enter': function (e) {
-            if (this.buttonList.findIndex(item => item.name === 'send' && !item.hidden) === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'send' && !item.hidden && !item.disabled) === -1) {
                 return;
             }
 
@@ -53,7 +53,7 @@ class ComposeEmailModalView extends EditModalView {
         },
         /** @this ComposeEmailModalView */
         'Control+KeyS': function (e) {
-            if (this.buttonList.findIndex(item => item.name === 'saveDraft' && !item.hidden) === -1) {
+            if (this.buttonList.findIndex(item => item.name === 'saveDraft' && !item.hidden && !item.disabled) === -1) {
                 return;
             }
 

@@ -241,7 +241,7 @@ class EditRecordView extends DetailRecordView {
             return;
         }
 
-        if (this.buttonList.findIndex(item => item.name === 'cancel' && !item.hidden) === -1) {
+        if (this.buttonList.findIndex(item => item.name === 'cancel' && !item.hidden && !item.disabled) === -1) {
             return;
         }
 

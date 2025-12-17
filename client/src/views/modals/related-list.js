@@ -671,7 +671,7 @@ class RelatedListModalView extends ModalView {
             return;
         }
 
-        if (this.buttonList.findIndex(item => item.name === 'createRelated' && !item.hidden) === -1) {
+        if (this.buttonList.findIndex(item => item.name === 'createRelated' && !item.hidden && !item.disabled) === -1) {
             return;
         }
 
