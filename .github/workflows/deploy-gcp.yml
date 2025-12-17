@@ -108,7 +108,10 @@ jobs:
             --min-instances=${{ secrets.CLOUD_RUN_MIN_INSTANCES || '0' }}
             --max-instances=${{ secrets.CLOUD_RUN_MAX_INSTANCES || '3' }}
             --port=80
+            --execution-environment=gen2
             --add-cloudsql-instances=${{ secrets.DB_INSTANCE_CONNECTION }}
+            --add-volume=name=espocrm-data,type=in-memory,size-limit=512Mi
+            --add-volume-mount=volume=espocrm-data,mount-path=/var/www/html/data
           env_vars: |
             ESPOCRM_DATABASE_PLATFORM=Mysql
             ESPOCRM_DATABASE_HOST=/cloudsql/${{ secrets.DB_INSTANCE_CONNECTION }}
