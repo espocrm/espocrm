@@ -372,9 +372,8 @@ class ConverterTest extends TestCase
                     [
                         'test',
                         $alias,
-                        [$alias . '.localId=:' => 'id'],
+                        null,
                         [
-                            'noLeftAlias' => true,
                             'onlyMiddle' => true,
                             'type' => JoinType::left,
                         ],
