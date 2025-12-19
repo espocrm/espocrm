@@ -22,6 +22,7 @@
                 "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');",
                 "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');",
                 "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');",
+                "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');",
                 "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');",
                 "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');",
                 "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');",

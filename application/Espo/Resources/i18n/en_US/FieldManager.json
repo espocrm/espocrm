@@ -46,6 +46,7 @@
             "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 days",
             "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 days",
             "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 days",
+            "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 days",
             "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 week",
             "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 weeks",
             "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 weeks",
