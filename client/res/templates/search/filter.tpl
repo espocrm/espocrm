@@ -8,5 +8,3 @@
     <label class="control-label" data-name="{{name}}">{{translate name category='fields' scope=scope}}</label>
     <div class="field" data-name="{{name}}">{{{field}}}</div>
 </div>
-
-
