@@ -42,48 +42,64 @@ class FilterView extends View {
         };
     }
 
+    /**
+     * @param {{
+     *     name: string,
+     *     fieldView?: string,
+     *     params?: Record|null,
+     *     notRemovable?: boolean,
+     *     model: import('model').default,
+     * }} options Field view is supported as of v9.3.
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     setup() {
         const name = this.name = this.options.name;
-        let type = this.model.getFieldType(name);
 
-        if (!type && name === 'id') {
-            type = 'id'
+        let viewName = this.options.fieldView;
+
+        if (!viewName) {
+            let type = this.model.getFieldType(name);
+
+            if (!type && name === 'id') {
+                type = 'id';
+            }
+
+            if (type) {
+                viewName = this.model.getFieldParam(name, 'view') ||
+                    this.getFieldManager().getViewName(type);
+            }
         }
 
-        if (type) {
-            const viewName =
-                this.model.getFieldParam(name, 'view') ||
-                this.getFieldManager().getViewName(type);
-
-            this.createView('field', viewName, {
-                mode: 'search',
-                model: this.model,
-                selector: '.field',
-                defs: {
-                    name: name,
-                },
-                searchParams: this.options.params,
-            }, view => {
-                this.listenTo(view, 'change', () => {
-                    this.trigger('change');
-                });
-
-                this.listenTo(view, 'search', () => {
-                    this.trigger('search');
-                });
-            });
+        if (!viewName) {
+            return;
         }
+
+        this.createView('field', viewName, {
+            mode: 'search',
+            model: this.model,
+            selector: '.field',
+            name: name,
+            searchParams: this.options.params,
+        }, view => {
+            this.listenTo(view, 'change', () => this.trigger('change'));
+            this.listenTo(view, 'search', () => this.trigger('search'));
+        });
     }
 
     /**
-     * @return {module:views/fields/base}
+     * @return {import('views/fields/base').default|null}
      */
     getFieldView() {
         return this.getView('field');
     }
 
     populateDefaults() {
-        const view = this.getView('field');
+        const view = this.getFieldView();
 
         if (!view) {
             return;

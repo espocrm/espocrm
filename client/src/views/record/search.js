@@ -31,9 +31,11 @@
 import View from 'view';
 import StoredTextSearch from 'helpers/misc/stored-text-search';
 import Autocomplete from 'ui/autocomplete';
+import FilterView from 'views/search/filter';
 
 /**
  * @typedef {Object} module:views/record/search~boolFilterDefs
+ * @property {string} [name]
  * @property {boolean} [inPortalDisabled]
  * @property {boolean} [isPortalOnly]
  * @property {boolean} [aux]
@@ -139,9 +141,11 @@ class SearchView extends View {
             return this.fieldFilterList !== null;
         });
 
-        this.boolFilterList = Espo.Utils
-            .clone(this.getMetadata().get(['clientDefs', this.scope, 'boolFilterList']) || [])
-            .filter(/** module:views/record/search~boolFilterDefs|string */item => {
+        /** @type {Array<module:views/record/search~boolFilterDefs|string>} */
+        const boolFilterList = this.getMetadata().get(['clientDefs', this.scope, 'boolFilterList']) ?? [];
+
+        this.boolFilterList = boolFilterList
+            .filter(item => {
                 if (typeof item === 'string') {
                     return true;
                 }
@@ -173,7 +177,7 @@ class SearchView extends View {
                     return item;
                 }
 
-                item = item || {};
+                item = item ?? {};
 
                 return item.name;
             });
@@ -1092,7 +1096,7 @@ class SearchView extends View {
      * @param {SearchView~createFilterCallback} callback
      * @param {boolean} [noRender]
      */
-    createFilter(name, params, callback, noRender) {
+    async createFilter(name, params, callback, noRender) {
         params = params || {};
 
         let rendered = false;
@@ -1101,48 +1105,47 @@ class SearchView extends View {
             rendered = true;
 
             this.$advancedFiltersPanel.append(
-                '<div data-name="'+name+'" class="filter filter-' + name + '" />'
+                `<div data-name="${name}" class="filter filter-${name}" />`
             );
         }
 
-        this.createView('filter-' + name, 'views/search/filter', {
+        const view = new FilterView({
             name: name,
             model: this.model,
             params: params,
-            selector: '.filter[data-name="' + name + '"]',
-        }, view => {
-            if (typeof callback === 'function') {
-                view.once('after:render', () => {
-                    callback(view);
-                });
+        });
+
+        await this.assignView(`filter-${name}`, view, `.filter[data-name="${name}"]`);
+
+        if (typeof callback === 'function') {
+            view.once('after:render', () => callback(view));
+        }
+
+        if (rendered && !noRender) {
+            view.render().then(() => {});
+        }
+
+        this.listenTo(view, 'change', () => {
+            let toShowApply = this.isSearchedWithAdvancedFilter;
+
+            if (!toShowApply) {
+                const data = view.getFieldView().fetchSearch();
+
+                if (data) {
+                    toShowApply = true;
+                }
             }
 
-            if (rendered && !noRender) {
-                view.render();
+            if (!toShowApply) {
+                return;
             }
 
-            this.listenTo(view, 'change', () => {
-                let toShowApply = this.isSearchedWithAdvancedFilter;
+            this.showApplyFiltersButton();
+        });
 
-                if (!toShowApply) {
-                    const data = view.getView('field').fetchSearch();
-
-                    if (data) {
-                        toShowApply = true;
-                    }
-                }
-
-                if (!toShowApply) {
-                    return;
-                }
-
-                this.showApplyFiltersButton();
-            });
-
-            this.listenTo(view, 'search', () => {
-                this.search();
-                this.hideApplyFiltersButton();
-            });
+        this.listenTo(view, 'search', () => {
+            this.search();
+            this.hideApplyFiltersButton();
         });
     }
 
