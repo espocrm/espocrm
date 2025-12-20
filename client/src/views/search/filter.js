@@ -45,7 +45,7 @@ class FilterView extends View {
     /**
      * @param {{
      *     name: string,
-     *     fieldView?: string|null,
+     *     viewName?: string|null,
      *     params?: Record|null,
      *     notRemovable?: boolean,
      *     model: import('model').default,
@@ -60,7 +60,7 @@ class FilterView extends View {
     setup() {
         const name = this.name = this.options.name;
 
-        let viewName = this.options.fieldView;
+        let viewName = this.options.viewName;
 
         if (!viewName) {
             let type = this.model.getFieldType(name);
