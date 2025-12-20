@@ -45,7 +45,7 @@ class FilterView extends View {
     /**
      * @param {{
      *     name: string,
-     *     fieldView?: string,
+     *     fieldView?: string|null,
      *     params?: Record|null,
      *     notRemovable?: boolean,
      *     model: import('model').default,
