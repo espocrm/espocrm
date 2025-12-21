@@ -1,7 +1,7 @@
 # EspoCRM Development/Deployment Dockerfile
 # Extends official image for Cloud Run deployment
 
-FROM espocrm/espocrm:latest
+FROM espocrm/espocrm:8.4
 
 # Install additional tools
 RUN apt-get update && apt-get install -y \

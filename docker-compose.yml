@@ -22,7 +22,7 @@ services:
       start_period: 30s
 
   espocrm:
-    image: espocrm/espocrm:latest
+    image: espocrm/espocrm:8.4
     container_name: espocrm
     restart: unless-stopped
     environment:
@@ -47,7 +47,7 @@ services:
         condition: service_healthy
 
   espocrm-daemon:
-    image: espocrm/espocrm:latest
+    image: espocrm/espocrm:8.4
     container_name: espocrm-daemon
     restart: unless-stopped
     entrypoint: docker-daemon.sh
@@ -59,7 +59,7 @@ services:
       - espocrm
 
   espocrm-websocket:
-    image: espocrm/espocrm:latest
+    image: espocrm/espocrm:8.4
     container_name: espocrm-websocket
     restart: unless-stopped
     entrypoint: docker-websocket.sh
