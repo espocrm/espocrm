@@ -111,6 +111,7 @@ jobs:
             --execution-environment=gen2
             --add-cloudsql-instances=${{ secrets.DB_INSTANCE_CONNECTION }}
             --clear-volumes
+            --clear-volume-mounts
             --add-volume=name=espocrm-data,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_NAME }}
             --add-volume-mount=volume=espocrm-data,mount-path=/var/www/html/data
             --add-volume=name=espocrm-custom,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_CUSTOM }}
