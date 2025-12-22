@@ -19,6 +19,17 @@ set -e\n\
 # Run entrypoint setup phase (it copies files when /var/www/html is empty)\n\
 /usr/local/bin/docker-entrypoint.sh true || true\n\
 \n\
+# Sync installation state: if data/config.php shows installed, ensure install/config.php matches\n\
+# This prevents the installation wizard from appearing after container restarts\n\
+if [ -f /var/www/html/data/config.php ]; then\n\
+    if grep -q "isInstalled.*true" /var/www/html/data/config.php 2>/dev/null; then\n\
+        echo "EspoCRM already installed, syncing install config..."\n\
+        mkdir -p /var/www/html/install\n\
+        echo "<?php return [\\\"isInstalled\\\" => true];" > /var/www/html/install/config.php\n\
+        chown www-data:www-data /var/www/html/install/config.php\n\
+    fi\n\
+fi\n\
+\n\
 # Fix permissions for all writable directories\n\
 echo "Fixing permissions..."\n\
 chown -R www-data:www-data /var/www/html 2>/dev/null || true\n\
