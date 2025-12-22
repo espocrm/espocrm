@@ -110,8 +110,12 @@ jobs:
             --port=80
             --execution-environment=gen2
             --add-cloudsql-instances=${{ secrets.DB_INSTANCE_CONNECTION }}
-            --add-volume=name=espocrm-data,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_NAME }}
+            --add-volume=name=espocrm-data,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_NAME }},mount-options="only-dir=data"
             --add-volume-mount=volume=espocrm-data,mount-path=/var/www/html/data
+            --add-volume=name=espocrm-custom,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_NAME }},mount-options="only-dir=custom"
+            --add-volume-mount=volume=espocrm-custom,mount-path=/var/www/html/custom
+            --add-volume=name=espocrm-client-custom,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_NAME }},mount-options="only-dir=client-custom"
+            --add-volume-mount=volume=espocrm-client-custom,mount-path=/var/www/html/client/custom
           env_vars: |
             ESPOCRM_DATABASE_PLATFORM=Mysql
             ESPOCRM_DATABASE_HOST=/cloudsql/${{ secrets.DB_INSTANCE_CONNECTION }}
