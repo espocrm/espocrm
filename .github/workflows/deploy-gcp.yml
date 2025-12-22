@@ -105,13 +105,13 @@ jobs:
             --allow-unauthenticated
             --memory=${{ secrets.CLOUD_RUN_MEMORY || '1Gi' }}
             --cpu=${{ secrets.CLOUD_RUN_CPU || '1' }}
-            --min-instances=${{ secrets.CLOUD_RUN_MIN_INSTANCES || '0' }}
+            --min-instances=${{ secrets.CLOUD_RUN_MIN_INSTANCES || '1' }}
             --max-instances=${{ secrets.CLOUD_RUN_MAX_INSTANCES || '3' }}
             --port=80
             --execution-environment=gen2
             --add-cloudsql-instances=${{ secrets.DB_INSTANCE_CONNECTION }}
-            --add-volume=name=espocrm-html,type=in-memory,size-limit=1Gi
-            --add-volume-mount=volume=espocrm-html,mount-path=/var/www/html
+            --add-volume=name=espocrm-data,type=cloud-storage,bucket=${{ secrets.GCS_BUCKET_NAME }}
+            --add-volume-mount=volume=espocrm-data,mount-path=/var/www/html/data
           env_vars: |
             ESPOCRM_DATABASE_PLATFORM=Mysql
             ESPOCRM_DATABASE_HOST=/cloudsql/${{ secrets.DB_INSTANCE_CONNECTION }}

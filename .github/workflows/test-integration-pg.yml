@@ -1,8 +1,7 @@
 name: Test Integration on PostgreSQL
 
 on:
-    schedule:
-        - cron:  '0 11 * * *'
+  workflow_dispatch:
 
 jobs:
   test:
