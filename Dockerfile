@@ -9,9 +9,13 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Pre-copy EspoCRM files to /var/www/html at build time
-# This avoids the entrypoint copy step which conflicts with GCS FUSE mounts
-RUN cp -a /var/www/espocrm/. /var/www/html/ && \
+# Find and copy EspoCRM source files to /var/www/html at build time
+# The official image stores files in /usr/src/espocrm
+RUN if [ -d /usr/src/espocrm ]; then \
+        cp -a /usr/src/espocrm/. /var/www/html/; \
+    elif [ -d /var/www/espocrm ]; then \
+        cp -a /var/www/espocrm/. /var/www/html/; \
+    fi && \
     chown -R www-data:www-data /var/www/html
 
 # Create custom entrypoint wrapper (skip the original entrypoint copy step)
