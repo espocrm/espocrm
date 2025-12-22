@@ -9,15 +9,16 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Create custom entrypoint wrapper
+# Pre-copy EspoCRM files to /var/www/html at build time
+# This avoids the entrypoint copy step which conflicts with GCS FUSE mounts
+RUN cp -a /var/www/espocrm/. /var/www/html/ && \
+    chown -R www-data:www-data /var/www/html
+
+# Create custom entrypoint wrapper (skip the original entrypoint copy step)
 RUN printf '#!/bin/bash\n\
 set -e\n\
 \n\
-# Call the original docker-entrypoint.sh with a dummy command to do the setup\n\
-# Then fix permissions and start apache ourselves\n\
-\n\
-# Run entrypoint setup phase (it copies files when /var/www/html is empty)\n\
-/usr/local/bin/docker-entrypoint.sh true || true\n\
+echo "Starting EspoCRM Cloud Run entrypoint..."\n\
 \n\
 # Sync installation state: if data/config.php shows installed, ensure install/config.php matches\n\
 # This prevents the installation wizard from appearing after container restarts\n\
@@ -30,9 +31,11 @@ if [ -f /var/www/html/data/config.php ]; then\n\
     fi\n\
 fi\n\
 \n\
-# Fix permissions for all writable directories\n\
-echo "Fixing permissions..."\n\
-chown -R www-data:www-data /var/www/html 2>/dev/null || true\n\
+# Fix permissions for GCS mounted directories\n\
+echo "Fixing permissions for mounted directories..."\n\
+chown -R www-data:www-data /var/www/html/data 2>/dev/null || true\n\
+chown -R www-data:www-data /var/www/html/custom 2>/dev/null || true\n\
+chown -R www-data:www-data /var/www/html/client/custom 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/data 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/custom 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/client/custom 2>/dev/null || true\n\
