@@ -18,6 +18,11 @@ RUN if [ -d /usr/src/espocrm ]; then \
     fi && \
     chown -R www-data:www-data /var/www/html
 
+# Copy local custom files to the image
+COPY custom /var/www/html/custom
+COPY client/custom /var/www/html/client/custom
+RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom
+
 # Create custom entrypoint wrapper (skip the original entrypoint copy step)
 RUN printf '#!/bin/bash\n\
 set -e\n\
@@ -44,6 +49,10 @@ chmod -R 775 /var/www/html/data 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/custom 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/client/custom 2>/dev/null || true\n\
 echo "Permissions fixed"\n\
+\n\
+# Run Rebuild to apply metadata changes\n\
+echo "Running EspoCRM rebuild..."\n\
+php command.php rebuild || echo "Rebuild failed, continuing..."\n\
 \n\
 # Start Apache in foreground\n\
 exec apache2-foreground\n\
