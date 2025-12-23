@@ -6,7 +6,8 @@
         "cGender": "Gender",
         "cBranch": "Branch",
         "cFlags": "Flags",
-        "cLastContactDate": "Last Contact Date"
+        "cLastContactDate": "Last Contact Date",
+        "cGoldLoans": "Gold Loans"
     },
     "options": {
         "cGender": {
@@ -26,5 +27,8 @@
             "PEP": "PEP",
             "Legal": "Legal"
         }
+    },
+    "links": {
+        "cGoldLoans": "Gold Loans"
     }
 }

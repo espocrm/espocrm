@@ -2,16 +2,16 @@
     "activities": {
         "disabled": true
     },
+    "default": {
+        "disabled": true
+    },
     "history": {
         "disabled": true
     },
-    "stream": {
+    "tasks": {
         "disabled": true
     },
     "_delimiter_": {
         "disabled": true
-    },
-    "cases": {
-        "index": 0
     }
 }

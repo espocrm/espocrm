@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "amount": "Amount",
+        "amountCurrency": "Amount (Currency)",
+        "amountConverted": "Amount (Converted)",
+        "goldWeight": "Gold Weight (g)",
+        "goldType": "Gold Type",
+        "contact": "Contact"
+    },
+    "labels": {
+        "Create CGoldLoan": "Create Gold Loan"
+    },
+    "options": {
+        "goldType": {
+            "": "",
+            "18K": "18K",
+            "22K": "22K",
+            "24K": "24K"
+        }
+    },
+    "links": {
+        "contact": "Contact"
+    }
+}

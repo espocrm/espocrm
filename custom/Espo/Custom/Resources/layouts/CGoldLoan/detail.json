@@ -1,0 +1,24 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "goldType"
+                },
+                {
+                    "name": "goldWeight"
+                }
+            ],
+            [
+                {
+                    "name": "amount"
+                },
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

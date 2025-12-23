@@ -69,5 +69,14 @@
             "type": "date",
             "isCustom": true
         }
+    },
+    "links": {
+        "cGoldLoans": {
+            "type": "hasMany",
+            "foreign": "contact",
+            "entity": "CGoldLoan",
+            "audited": false,
+            "isCustom": true
+        }
     }
 }
