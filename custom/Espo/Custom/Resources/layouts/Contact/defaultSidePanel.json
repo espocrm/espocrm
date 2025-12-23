@@ -1,0 +1,32 @@
+[
+    {
+        "name": "name"
+    },
+    {
+        "name": "cNicNumber"
+    },
+    {
+        "name": "cDateOfBirth"
+    },
+    {
+        "name": "address"
+    },
+    {
+        "name": "phoneNumber"
+    },
+    {
+        "name": "emailAddress"
+    },
+    {
+        "name": "cBranch"
+    },
+    {
+        "name": ":assignedUser"
+    },
+    {
+        "name": "cLastContactDate"
+    },
+    {
+        "name": "cFlags"
+    }
+]

@@ -5,6 +5,69 @@
             "type": "date",
             "required": true,
             "isCustom": true
+        },
+        "cNicNumber": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 12,
+            "options": [],
+            "isCustom": true,
+            "pattern": "/^([0-9]{9}[vVxX]|[0-9]{12})$/"
+        },
+        "cGender": {
+            "type": "enum",
+            "required": true,
+            "options": [
+                "",
+                "Male",
+                "Female"
+            ],
+            "style": {
+                "": null,
+                "Male": null,
+                "Female": null
+            },
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cBranch": {
+            "type": "enum",
+            "options": [
+                "",
+                "Colombo",
+                "Kandy",
+                "Jaffna"
+            ],
+            "style": {
+                "": null,
+                "Colombo": null,
+                "Kandy": null,
+                "Jaffna": null
+            },
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cFlags": {
+            "type": "enum",
+            "options": [
+                "",
+                "VIP",
+                "PEP",
+                "Legal"
+            ],
+            "style": {
+                "": null,
+                "VIP": null,
+                "PEP": null,
+                "Legal": null
+            },
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLastContactDate": {
+            "notNull": false,
+            "type": "date",
+            "isCustom": true
         }
     }
 }
