@@ -190,6 +190,7 @@ class EntityManagerEditView extends View {
                     if (
                         fieldDefs[item].disabled ||
                         fieldDefs[item].utility ||
+                        fieldDefs[item].directAccessDisabled ||
                         fieldDefs[item].directUpdateDisabled
                     ) {
                         return false;
