@@ -21,8 +21,8 @@
 .phpunit.result.cache
 /composer.phar
 /vendor/
-/custom/Espo/Custom/*
-/custom/Espo/Modules/*
+#/custom/Espo/Custom/*
+#/custom/Espo/Modules/*
 !/custom/Espo/Custom/.htaccess
 !/custom/Espo/Modules/.htaccess
 /install/config.php

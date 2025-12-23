@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "cDateOfBirth": {
+            "notNull": false,
+            "type": "date",
+            "required": true,
+            "isCustom": true
+        }
+    }
+}
