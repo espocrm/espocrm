@@ -11,8 +11,7 @@
             "required": true,
             "maxLength": 12,
             "options": [],
-            "isCustom": true,
-            "pattern": "/^([0-9]{9}[vVxX]|[0-9]{12})$/"
+            "isCustom": true
         },
         "cGender": {
             "type": "enum",
