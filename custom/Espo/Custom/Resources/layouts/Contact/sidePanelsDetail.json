@@ -1,8 +1,8 @@
 {
-    "activities": {
+    "default": {
         "disabled": true
     },
-    "default": {
+    "activities": {
         "disabled": true
     },
     "history": {
@@ -13,5 +13,9 @@
     },
     "_delimiter_": {
         "disabled": true
+    },
+    "bankingLoans": {
+        "style": "default",
+        "index": 0
     }
 }

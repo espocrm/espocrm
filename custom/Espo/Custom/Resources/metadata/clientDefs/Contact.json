@@ -1,4 +1,21 @@
 {
+    "sidePanels": {
+        "detail": [
+            "__APPEND__",
+            {
+                "name": "bankingLoans",
+                "label": "Banking Loans",
+                "view": "custom:views/contact/panels/banking-loans",
+                "style": "default"
+            },
+            {
+                "name": "fixedDeposits",
+                "label": "Fixed Deposits",
+                "view": "custom:views/contact/panels/fixed-deposits",
+                "style": "default"
+            }
+        ]
+    },
     "relationshipPanels": {
         "goldLoans": {
             "layout": null,
