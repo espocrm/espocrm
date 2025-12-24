@@ -1100,11 +1100,15 @@
                 },
                 "directAccessDisabled": {
                     "type": "boolean",
-                    "description": "Indicates that the field value is not accessed directly but through some additional logic. The filed won't be available in PDF Templates, Email Templates and some other tools."
+                    "description": "Indicates that the field value is not accessed or written directly but through some additional logic. The field won't be available in PDF Templates, Email Templates, and some other tools."
                 },
                 "directUpdateDisabled": {
                     "type": "boolean",
                     "description": "Indicates that updating the field directly is not possible."
+                },
+                "directUpdateEnabled": {
+                    "type": "boolean",
+                    "description": "Indicates that updating the field directly is possible. To be used if directAccessDisabled is true to indicate that update is possible. As of v9.3.0."
                 },
                 "foreignAccessDisabled": {
                     "type": "boolean",
@@ -1117,6 +1121,10 @@
                 "importDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to import the field."
+                },
+                "importEnabled": {
+                    "type": "boolean",
+                    "description": "Indicates that import for the field is allowed even if directAccessDisabled or directUpdateDisabled are true. As of v9.3.0."
                 },
                 "exportDisabled": {
                     "type": "boolean",

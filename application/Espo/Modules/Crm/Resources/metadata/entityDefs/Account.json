@@ -201,6 +201,7 @@
             "importDisabled": true,
             "exportDisabled": true,
             "directAccessDisabled": true,
+            "directUpdateEnabled": true,
             "filtersEnabled": true,
             "noLoad": true
         },
@@ -213,7 +214,8 @@
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
             "entity": "TargetList",
-            "directAccessDisabled": true
+            "directAccessDisabled": true,
+            "importEnabled": true
         },
         "originalLead": {
             "type": "linkOne",

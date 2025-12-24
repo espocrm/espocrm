@@ -358,7 +358,9 @@ class Step2ImportView extends View {
                 (
                     d.disabled ||
                     d.importDisabled ||
-                    d.utility
+                    d.utility ||
+                    d.directAccessDisabled && !d.importEnabled ||
+                    d.directUpdateDisabled && !d.importEnabled && !d.directUpdateEnabled
                 )
             ) {
                 continue;
@@ -399,7 +401,9 @@ class Step2ImportView extends View {
                 (
                     defs.disabled ||
                     defs.importDisabled ||
-                    defs.utility
+                    defs.utility ||
+                    defs.directAccessDisabled && !defs.importEnabled ||
+                    defs.directUpdateDisabled && !defs.importEnabled && !defs.directUpdateEnabled
                 )
             ) {
                 continue;

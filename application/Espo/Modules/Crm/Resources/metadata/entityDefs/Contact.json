@@ -480,7 +480,8 @@
             "layoutListDisabled": true,
             "importDisabled": true,
             "directAccessDisabled": true,
-            "filtersEnabled": true,
+            "filtersEnabled": true,,
+            "directUpdateEnabled": true,
             "noLoad": true
         },
         "targetList": {
@@ -493,7 +494,8 @@
             "layoutFiltersDisabled": true,
             "exportDisabled": true,
             "entity": "TargetList",
-            "directAccessDisabled": true
+            "directAccessDisabled": true,
+            "importEnabled": true
         },
         "portalUser": {
             "type": "linkOne",
