@@ -1,0 +1,215 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "tooltip": "Qualification check identifier"
+        },
+        "checkDate": {
+            "type": "datetime",
+            "required": true,
+            "default": "javascript: return this.dateTime.getNow(1);",
+            "tooltip": "Date and time of qualification check"
+        },
+        "checkType": {
+            "type": "enum",
+            "options": [
+                "",
+                "Initial Qualification",
+                "Re-qualification",
+                "Final Assessment",
+                "Exception Review"
+            ],
+            "required": true,
+            "default": "Initial Qualification",
+            "tooltip": "Type of qualification check"
+        },
+        "eligibilityResult": {
+            "type": "enum",
+            "options": [
+                "",
+                "Qualified",
+                "Not Qualified",
+                "Conditional",
+                "Pending Review"
+            ],
+            "required": true,
+            "style": {
+                "Qualified": "success",
+                "Not Qualified": "danger",
+                "Conditional": "warning",
+                "Pending Review": "primary"
+            },
+            "displayAsLabel": true,
+            "audited": true,
+            "tooltip": "Result of qualification assessment"
+        },
+        "maxLoanAmount": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Maximum loan amount applicant qualifies for"
+        },
+        "maxLoanAmountConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "recommendedTenure": {
+            "type": "int",
+            "min": 1,
+            "max": 360,
+            "tooltip": "Recommended loan tenure in months"
+        },
+        "interestRateOffered": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "tooltip": "Interest rate offered based on qualification (%)"
+        },
+        "estimatedEmi": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Estimated monthly EMI"
+        },
+        "estimatedEmiConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "foirCalculated": {
+            "type": "float",
+            "tooltip": "Calculated FOIR percentage"
+        },
+        "dtiCalculated": {
+            "type": "float",
+            "tooltip": "Calculated DTI percentage"
+        },
+        "creditScoreUsed": {
+            "type": "int",
+            "min": 300,
+            "max": 900,
+            "tooltip": "Credit score used in this assessment"
+        },
+        "incomeConsidered": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Total income considered for calculation"
+        },
+        "incomeConsideredConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "obligationsConsidered": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Total obligations considered for calculation"
+        },
+        "obligationsConsideredConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "passesCreditScore": {
+            "type": "bool",
+            "tooltip": "Does credit score meet minimum requirement"
+        },
+        "passesFoir": {
+            "type": "bool",
+            "tooltip": "Does FOIR meet requirement"
+        },
+        "passesDocuments": {
+            "type": "bool",
+            "tooltip": "Are all required documents verified"
+        },
+        "passesEmployment": {
+            "type": "bool",
+            "tooltip": "Does employment meet requirement"
+        },
+        "failureReasons": {
+            "type": "text",
+            "tooltip": "Reasons for not qualifying (if applicable)"
+        },
+        "conditionalRequirements": {
+            "type": "text",
+            "tooltip": "Requirements to be met for conditional approval"
+        },
+        "assessedBy": {
+            "type": "link",
+            "entity": "User",
+            "tooltip": "User who performed the assessment"
+        },
+        "approvedBy": {
+            "type": "link",
+            "entity": "User",
+            "tooltip": "Manager who approved (for conditional cases)"
+        },
+        "approvalDate": {
+            "type": "datetime",
+            "tooltip": "Date of manager approval"
+        },
+        "remarks": {
+            "type": "text",
+            "tooltip": "Additional remarks and notes"
+        },
+        "calculationDetails": {
+            "type": "text",
+            "tooltip": "Details of calculations performed",
+            "readOnly": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "financialLead": {
+            "type": "link",
+            "required": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assessedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "approvedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "financialLead": {
+            "type": "belongsTo",
+            "entity": "FinancialLead",
+            "foreign": "qualificationChecks"
+        }
+    },
+    "collection": {
+        "orderBy": "checkDate",
+        "order": "desc"
+    },
+    "indexes": {
+        "checkDate": {
+            "columns": ["checkDate", "deleted"]
+        },
+        "eligibilityResult": {
+            "columns": ["eligibilityResult", "deleted"]
+        }
+    }
+}

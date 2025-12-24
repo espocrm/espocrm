@@ -1,0 +1,152 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "tooltip": "Document name or title"
+        },
+        "documentType": {
+            "type": "enum",
+            "options": [
+                "",
+                "National ID",
+                "Passport",
+                "Driving License",
+                "Bank Statement",
+                "Salary Slip",
+                "Utility Bill",
+                "Tax Return",
+                "Business Registration",
+                "Property Deed",
+                "Employment Letter",
+                "Other"
+            ],
+            "required": true,
+            "tooltip": "Type of document"
+        },
+        "documentStatus": {
+            "type": "enum",
+            "options": [
+                "Pending Upload",
+                "Uploaded",
+                "Under Verification",
+                "Verified",
+                "Rejected",
+                "Expired"
+            ],
+            "default": "Pending Upload",
+            "style": {
+                "Pending Upload": "default",
+                "Uploaded": "primary",
+                "Under Verification": "warning",
+                "Verified": "success",
+                "Rejected": "danger",
+                "Expired": "danger"
+            },
+            "displayAsLabel": true,
+            "audited": true,
+            "required": true
+        },
+        "isMandatory": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Is this document mandatory for loan processing"
+        },
+        "file": {
+            "type": "file",
+            "sourceList": ["Document"],
+            "tooltip": "Upload document file"
+        },
+        "fileId": {
+            "type": "varchar",
+            "maxLength": 24
+        },
+        "fileName": {
+            "type": "varchar"
+        },
+        "uploadedDate": {
+            "type": "datetime",
+            "tooltip": "Date and time when document was uploaded"
+        },
+        "verifiedBy": {
+            "type": "link",
+            "entity": "User",
+            "tooltip": "User who verified this document"
+        },
+        "verifiedDate": {
+            "type": "datetime",
+            "tooltip": "Date and time when document was verified"
+        },
+        "expiryDate": {
+            "type": "date",
+            "tooltip": "Expiry date of document (if applicable)"
+        },
+        "rejectionReason": {
+            "type": "text",
+            "tooltip": "Reason for rejection if document was rejected"
+        },
+        "ocrExtractedData": {
+            "type": "text",
+            "tooltip": "Data extracted from document via OCR",
+            "readOnly": true
+        },
+        "notes": {
+            "type": "text",
+            "tooltip": "Additional notes about the document"
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "financialLead": {
+            "type": "link",
+            "required": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "verifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "financialLead": {
+            "type": "belongsTo",
+            "entity": "FinancialLead",
+            "foreign": "documents"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "documentType": {
+            "columns": ["documentType", "deleted"]
+        },
+        "documentStatus": {
+            "columns": ["documentStatus", "deleted"]
+        }
+    }
+}

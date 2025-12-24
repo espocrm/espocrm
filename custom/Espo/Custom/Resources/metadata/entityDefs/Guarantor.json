@@ -1,0 +1,191 @@
+{
+    "fields": {
+        "name": {
+            "type": "personName",
+            "isPersonalData": true,
+            "required": true
+        },
+        "firstName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "lastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "relationshipToApplicant": {
+            "type": "enum",
+            "options": [
+                "",
+                "Spouse",
+                "Parent",
+                "Sibling",
+                "Child",
+                "Relative",
+                "Friend",
+                "Business Partner",
+                "Employer",
+                "Other"
+            ],
+            "required": true,
+            "tooltip": "Relationship to primary applicant"
+        },
+        "nicNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "isPersonalData": true,
+            "required": true,
+            "tooltip": "National Identity Card Number"
+        },
+        "dateOfBirth": {
+            "type": "date",
+            "isPersonalData": true
+        },
+        "contactNumber": {
+            "type": "phone",
+            "isPersonalData": true,
+            "required": true
+        },
+        "email": {
+            "type": "email",
+            "isPersonalData": true
+        },
+        "address": {
+            "type": "address",
+            "isPersonalData": true
+        },
+        "addressStreet": {
+            "type": "text",
+            "maxLength": 255,
+            "dbType": "varchar"
+        },
+        "addressCity": {
+            "type": "varchar"
+        },
+        "addressState": {
+            "type": "varchar"
+        },
+        "addressCountry": {
+            "type": "varchar"
+        },
+        "addressPostalCode": {
+            "type": "varchar"
+        },
+        "employmentType": {
+            "type": "enum",
+            "options": [
+                "",
+                "Permanent",
+                "Contract",
+                "Self-Employed",
+                "Business Owner",
+                "Pensioner",
+                "Unemployed"
+            ],
+            "tooltip": "Type of employment"
+        },
+        "employerName": {
+            "type": "varchar",
+            "maxLength": 150,
+            "tooltip": "Name of employer"
+        },
+        "designation": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "Job title"
+        },
+        "monthlyIncome": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Monthly income in LKR"
+        },
+        "monthlyIncomeConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "propertyOwned": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Does guarantor own property"
+        },
+        "propertyDetails": {
+            "type": "text",
+            "tooltip": "Details of property owned"
+        },
+        "propertyValue": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Estimated property value"
+        },
+        "propertyValueConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "consentGiven": {
+            "type": "bool",
+            "default": false,
+            "required": true,
+            "audited": true,
+            "tooltip": "Has guarantor given consent"
+        },
+        "consentDate": {
+            "type": "date",
+            "tooltip": "Date consent was given"
+        },
+        "verificationStatus": {
+            "type": "enum",
+            "options": ["", "Pending", "Verified", "Rejected"],
+            "default": "Pending",
+            "style": {
+                "Pending": "default",
+                "Verified": "success",
+                "Rejected": "danger"
+            },
+            "displayAsLabel": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "financialLead": {
+            "type": "link",
+            "required": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "financialLead": {
+            "type": "belongsTo",
+            "entity": "FinancialLead",
+            "foreign": "guarantors"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc"
+    }
+}

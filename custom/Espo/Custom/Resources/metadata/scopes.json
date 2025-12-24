@@ -1,0 +1,81 @@
+{
+    "FinancialLead": {
+        "entity": true,
+        "layouts": true,
+        "tab": true,
+        "acl": true,
+        "aclPortal": false,
+        "customizable": true,
+        "importable": true,
+        "notifications": true,
+        "stream": true,
+        "hasPersonalData": true,
+        "object": true,
+        "statusField": "status",
+        "kanbanStatusIgnoreList": ["Converted", "Lost"]
+    },
+    "CoApplicant": {
+        "entity": true,
+        "layouts": true,
+        "tab": false,
+        "acl": true,
+        "customizable": true,
+        "importable": false,
+        "stream": false,
+        "hasPersonalData": true,
+        "object": true
+    },
+    "Guarantor": {
+        "entity": true,
+        "layouts": true,
+        "tab": false,
+        "acl": true,
+        "customizable": true,
+        "importable": false,
+        "stream": false,
+        "hasPersonalData": true,
+        "object": true
+    },
+    "LeadDocument": {
+        "entity": true,
+        "layouts": true,
+        "tab": false,
+        "acl": true,
+        "customizable": true,
+        "importable": false,
+        "stream": true,
+        "object": true,
+        "statusField": "documentStatus"
+    },
+    "CreditReport": {
+        "entity": true,
+        "layouts": true,
+        "tab": false,
+        "acl": true,
+        "customizable": true,
+        "importable": false,
+        "stream": true,
+        "object": true
+    },
+    "QualificationCheck": {
+        "entity": true,
+        "layouts": true,
+        "tab": false,
+        "acl": true,
+        "customizable": true,
+        "importable": false,
+        "stream": true,
+        "object": true
+    },
+    "LoanProduct": {
+        "entity": true,
+        "layouts": true,
+        "tab": true,
+        "acl": true,
+        "customizable": true,
+        "importable": true,
+        "stream": false,
+        "object": true,
+        "statusField": "status"
+    }
+}
