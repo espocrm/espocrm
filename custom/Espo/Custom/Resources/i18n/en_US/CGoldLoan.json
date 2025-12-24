@@ -5,7 +5,8 @@
         "amountConverted": "Amount (Converted)",
         "goldWeight": "Gold Weight (g)",
         "goldType": "Gold Type",
-        "contact": "Contact"
+        "contact": "Contact",
+        "lastPaymentDate": "Last Payment Date"
     },
     "labels": {
         "Create CGoldLoan": "Create Gold Loan"

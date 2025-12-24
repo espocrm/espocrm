@@ -66,6 +66,11 @@
         },
         "contact": {
             "type": "link"
+        },
+        "lastPaymentDate": {
+            "notNull": false,
+            "type": "date",
+            "isCustom": true
         }
     },
     "links": {
