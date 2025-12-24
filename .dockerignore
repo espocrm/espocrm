@@ -1,0 +1,65 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node
+node_modules
+npm-debug.log
+
+# Composer
+vendor
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Documentation
+*.md
+docs/
+
+# Tests
+tests/
+phpunit.xml
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Data directory (will be created at runtime)
+data/*
+!data/.data
+
+# Custom (will be mounted or created at runtime)
+custom/Espo/Custom/*
+!custom/Espo/Custom/.htaccess
+!custom/Espo/Custom/Resources
+
+# Uploads
+client/custom/*
+
+# Cache
+.cache
+
+# Temporary files
+tmp/
+*.tmp
+
+# Build artifacts
+build/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
