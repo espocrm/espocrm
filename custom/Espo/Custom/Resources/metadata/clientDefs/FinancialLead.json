@@ -1,0 +1,166 @@
+{
+    "iconClass": "fas fa-hand-holding-usd",
+    "color": "#3498db",
+    "kanbanViewMode": true,
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "coApplicants",
+                "label": "Co-Applicants",
+                "view": "views/record/panels/relationship",
+                "recordListView": "views/record/list",
+                "select": true,
+                "create": true,
+                "rowActionsView": "views/record/row-actions/relationship"
+            },
+            {
+                "name": "guarantors",
+                "label": "Guarantors",
+                "view": "views/record/panels/relationship",
+                "recordListView": "views/record/list",
+                "select": true,
+                "create": true,
+                "rowActionsView": "views/record/row-actions/relationship"
+            },
+            {
+                "name": "documents",
+                "label": "Documents",
+                "view": "views/record/panels/relationship",
+                "recordListView": "views/record/list",
+                "create": true,
+                "rowActionsView": "views/record/row-actions/relationship"
+            },
+            {
+                "name": "creditReports",
+                "label": "Credit Reports",
+                "view": "views/record/panels/relationship",
+                "recordListView": "views/record/list",
+                "create": true,
+                "rowActionsView": "views/record/row-actions/relationship"
+            },
+            {
+                "name": "qualificationChecks",
+                "label": "Qualification Checks",
+                "view": "views/record/panels/relationship",
+                "recordListView": "views/record/list",
+                "create": true,
+                "rowActionsView": "views/record/row-actions/relationship"
+            },
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "select": false
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "select": false
+            }
+        ]
+    },
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "activities",
+                "label": "Activities",
+                "view": "crm:views/record/panels/activities",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "history",
+                "label": "History",
+                "view": "crm:views/record/panels/history",
+                "aclScope": "Activities"
+            },
+            {
+                "name": "tasks",
+                "label": "Tasks",
+                "view": "crm:views/record/panels/tasks",
+                "aclScope": "Task"
+            }
+        ]
+    },
+    "filterList": [
+        {
+            "name": "myLeads",
+            "label": "My Leads"
+        },
+        {
+            "name": "qualified",
+            "label": "Qualified",
+            "style": "success"
+        },
+        {
+            "name": "hot",
+            "label": "Hot Leads",
+            "style": "danger"
+        },
+        {
+            "name": "followUpToday",
+            "label": "Follow-up Today",
+            "style": "warning"
+        }
+    ],
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "dynamicLogic": {
+        "fields": {
+            "employerName": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "employmentType",
+                                    "value": "Permanent"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "employmentType",
+                                    "value": "Contract"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "designation": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "employmentType",
+                                    "value": "Permanent"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "employmentType",
+                                    "value": "Contract"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "convertedAt": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Converted"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

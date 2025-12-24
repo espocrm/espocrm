@@ -1,0 +1,170 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "tooltip": "Credit report identifier"
+        },
+        "bureauName": {
+            "type": "enum",
+            "options": [
+                "",
+                "CRIB (Credit Information Bureau)",
+                "Experian",
+                "Other"
+            ],
+            "required": true,
+            "tooltip": "Name of credit bureau"
+        },
+        "reportDate": {
+            "type": "datetime",
+            "required": true,
+            "tooltip": "Date and time when report was generated"
+        },
+        "creditScore": {
+            "type": "int",
+            "min": 300,
+            "max": 900,
+            "required": true,
+            "tooltip": "Credit score from bureau"
+        },
+        "reportReference": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "Bureau reference number for this report"
+        },
+        "numberOfActiveLoans": {
+            "type": "int",
+            "min": 0,
+            "default": 0,
+            "tooltip": "Number of active loans"
+        },
+        "totalOutstandingAmount": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Total outstanding loan amount"
+        },
+        "totalOutstandingAmountConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "defaultHistory": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Has any default history"
+        },
+        "defaultDetails": {
+            "type": "text",
+            "tooltip": "Details of any defaults"
+        },
+        "creditUtilization": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "tooltip": "Credit utilization percentage"
+        },
+        "oldestAccountAge": {
+            "type": "int",
+            "tooltip": "Age of oldest credit account in months"
+        },
+        "recentInquiries": {
+            "type": "int",
+            "min": 0,
+            "tooltip": "Number of recent credit inquiries"
+        },
+        "reportStatus": {
+            "type": "enum",
+            "options": ["", "Retrieved", "Analyzed", "Issues Found"],
+            "default": "Retrieved",
+            "style": {
+                "Retrieved": "primary",
+                "Analyzed": "success",
+                "Issues Found": "danger"
+            },
+            "displayAsLabel": true
+        },
+        "reportFile": {
+            "type": "file",
+            "sourceList": ["Document"],
+            "tooltip": "Credit report PDF file"
+        },
+        "reportFileId": {
+            "type": "varchar",
+            "maxLength": 24
+        },
+        "reportFileName": {
+            "type": "varchar"
+        },
+        "apiResponse": {
+            "type": "text",
+            "tooltip": "Raw API response from bureau",
+            "readOnly": true
+        },
+        "analysisNotes": {
+            "type": "text",
+            "tooltip": "Analysis and notes about the credit report"
+        },
+        "riskCategory": {
+            "type": "enum",
+            "options": ["", "Low Risk", "Medium Risk", "High Risk", "Very High Risk"],
+            "style": {
+                "Low Risk": "success",
+                "Medium Risk": "primary",
+                "High Risk": "warning",
+                "Very High Risk": "danger"
+            },
+            "displayAsLabel": true,
+            "tooltip": "Risk category based on credit report"
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "financialLead": {
+            "type": "link",
+            "required": true
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "financialLead": {
+            "type": "belongsTo",
+            "entity": "FinancialLead",
+            "foreign": "creditReports"
+        }
+    },
+    "collection": {
+        "orderBy": "reportDate",
+        "order": "desc"
+    },
+    "indexes": {
+        "reportDate": {
+            "columns": ["reportDate", "deleted"]
+        },
+        "creditScore": {
+            "columns": ["creditScore", "deleted"]
+        }
+    }
+}

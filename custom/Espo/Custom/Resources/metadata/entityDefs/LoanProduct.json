@@ -1,0 +1,298 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 150,
+            "tooltip": "Loan product name"
+        },
+        "productCode": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 50,
+            "tooltip": "Unique product code"
+        },
+        "productType": {
+            "type": "enum",
+            "options": [
+                "",
+                "Personal Loan",
+                "Home Loan",
+                "Vehicle Loan",
+                "Business Loan",
+                "Microfinance",
+                "Leasing",
+                "Pawning",
+                "Education Loan",
+                "Agriculture Loan",
+                "Other"
+            ],
+            "required": true,
+            "tooltip": "Type of loan product"
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Inactive",
+                "Discontinued"
+            ],
+            "default": "Active",
+            "style": {
+                "Active": "success",
+                "Inactive": "warning",
+                "Discontinued": "danger"
+            },
+            "displayAsLabel": true,
+            "required": true
+        },
+        "description": {
+            "type": "text",
+            "tooltip": "Product description and features"
+        },
+        "minLoanAmount": {
+            "type": "currency",
+            "min": 0,
+            "required": true,
+            "tooltip": "Minimum loan amount"
+        },
+        "minLoanAmountConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "maxLoanAmount": {
+            "type": "currency",
+            "min": 0,
+            "required": true,
+            "tooltip": "Maximum loan amount"
+        },
+        "maxLoanAmountConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "minTenure": {
+            "type": "int",
+            "min": 1,
+            "required": true,
+            "tooltip": "Minimum tenure in months"
+        },
+        "maxTenure": {
+            "type": "int",
+            "min": 1,
+            "required": true,
+            "tooltip": "Maximum tenure in months"
+        },
+        "interestRateMin": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "required": true,
+            "tooltip": "Minimum interest rate per annum (%)"
+        },
+        "interestRateMax": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "required": true,
+            "tooltip": "Maximum interest rate per annum (%)"
+        },
+        "interestRateDefault": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "tooltip": "Default interest rate (%)"
+        },
+        "rateType": {
+            "type": "enum",
+            "options": [
+                "",
+                "Fixed",
+                "Variable",
+                "Reducing Balance",
+                "Flat Rate"
+            ],
+            "required": true,
+            "tooltip": "Type of interest rate"
+        },
+        "processingFee": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Processing fee amount"
+        },
+        "processingFeeConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "processingFeePercentage": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "tooltip": "Processing fee as percentage of loan amount"
+        },
+        "minIncome": {
+            "type": "currency",
+            "min": 0,
+            "tooltip": "Minimum monthly income required"
+        },
+        "minIncomeConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "minCreditScore": {
+            "type": "int",
+            "min": 300,
+            "max": 900,
+            "tooltip": "Minimum credit score required"
+        },
+        "maxFoir": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "tooltip": "Maximum FOIR allowed (%)"
+        },
+        "maxDti": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "tooltip": "Maximum DTI allowed (%)"
+        },
+        "eligibleEmploymentTypes": {
+            "type": "multiEnum",
+            "options": [
+                "Permanent",
+                "Contract",
+                "Self-Employed",
+                "Business Owner",
+                "Pensioner"
+            ],
+            "tooltip": "Employment types eligible for this product"
+        },
+        "minAge": {
+            "type": "int",
+            "min": 18,
+            "max": 100,
+            "tooltip": "Minimum age of applicant"
+        },
+        "maxAge": {
+            "type": "int",
+            "min": 18,
+            "max": 100,
+            "tooltip": "Maximum age of applicant"
+        },
+        "requiresGuarantor": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Does this product require a guarantor"
+        },
+        "requiresCollateral": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Does this product require collateral"
+        },
+        "collateralType": {
+            "type": "enum",
+            "options": [
+                "",
+                "Property",
+                "Vehicle",
+                "Fixed Deposit",
+                "Gold/Jewelry",
+                "Business Assets",
+                "Other"
+            ],
+            "tooltip": "Type of collateral required"
+        },
+        "requiredDocuments": {
+            "type": "text",
+            "tooltip": "List of required documents (one per line)"
+        },
+        "features": {
+            "type": "text",
+            "tooltip": "Key features and benefits"
+        },
+        "terms": {
+            "type": "text",
+            "tooltip": "Terms and conditions"
+        },
+        "targetMarket": {
+            "type": "text",
+            "tooltip": "Target market and customer segment"
+        },
+        "specialOffers": {
+            "type": "text",
+            "tooltip": "Any special offers or promotions"
+        },
+        "displayOrder": {
+            "type": "int",
+            "default": 10,
+            "tooltip": "Display order in product listings"
+        },
+        "isPromoted": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Is this a promoted/featured product"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "tooltip": "Product manager"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        }
+    },
+    "collection": {
+        "orderBy": "displayOrder",
+        "order": "asc",
+        "textFilterFields": ["name", "productCode", "productType"]
+    },
+    "indexes": {
+        "productCode": {
+            "unique": true,
+            "columns": ["productCode", "deleted"]
+        },
+        "productType": {
+            "columns": ["productType", "deleted"]
+        },
+        "status": {
+            "columns": ["status", "deleted"]
+        },
+        "displayOrder": {
+            "columns": ["displayOrder", "deleted"]
+        }
+    }
+}

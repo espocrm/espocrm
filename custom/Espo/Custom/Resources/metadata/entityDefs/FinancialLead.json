@@ -1,0 +1,596 @@
+{
+    "fields": {
+        "name": {
+            "type": "personName",
+            "isPersonalData": true,
+            "required": true
+        },
+        "salutationName": {
+            "type": "enum",
+            "options": ["", "Mr.", "Ms.", "Mrs.", "Dr."]
+        },
+        "firstName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "lastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "New",
+                "Contact Attempted",
+                "Contacted",
+                "Information Gathering",
+                "Document Collection",
+                "Credit Check",
+                "Qualified",
+                "Converted",
+                "Lost"
+            ],
+            "default": "New",
+            "style": {
+                "New": "default",
+                "Contact Attempted": "warning",
+                "Contacted": "primary",
+                "Information Gathering": "primary",
+                "Document Collection": "primary",
+                "Credit Check": "warning",
+                "Qualified": "success",
+                "Converted": "success",
+                "Lost": "danger"
+            },
+            "displayAsLabel": true,
+            "labelType": "state",
+            "audited": true,
+            "required": true
+        },
+        "dateOfBirth": {
+            "type": "date",
+            "isPersonalData": true,
+            "tooltip": "Date of birth of the applicant"
+        },
+        "gender": {
+            "type": "enum",
+            "options": ["", "Male", "Female", "Other"],
+            "isPersonalData": true
+        },
+        "maritalStatus": {
+            "type": "enum",
+            "options": ["", "Single", "Married", "Divorced", "Widowed"],
+            "isPersonalData": true
+        },
+        "nicNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "isPersonalData": true,
+            "tooltip": "National Identity Card Number",
+            "pattern": "$noBadCharacters"
+        },
+        "passportNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "isPersonalData": true,
+            "tooltip": "Passport number if NIC not available"
+        },
+        "emailAddress": {
+            "type": "email",
+            "isPersonalData": true,
+            "required": true
+        },
+        "phoneNumber": {
+            "type": "phone",
+            "typeList": ["Mobile", "Office", "Home", "Other"],
+            "defaultType": "Mobile",
+            "isPersonalData": true,
+            "required": true
+        },
+        "address": {
+            "type": "address",
+            "isPersonalData": true
+        },
+        "addressStreet": {
+            "type": "text",
+            "maxLength": 255,
+            "dbType": "varchar"
+        },
+        "addressCity": {
+            "type": "varchar"
+        },
+        "addressState": {
+            "type": "varchar"
+        },
+        "addressCountry": {
+            "type": "varchar",
+            "default": "Sri Lanka"
+        },
+        "addressPostalCode": {
+            "type": "varchar"
+        },
+        "employmentType": {
+            "type": "enum",
+            "options": [
+                "",
+                "Permanent",
+                "Contract",
+                "Self-Employed",
+                "Business Owner",
+                "Pensioner",
+                "Unemployed"
+            ],
+            "required": true,
+            "tooltip": "Type of employment"
+        },
+        "employerName": {
+            "type": "varchar",
+            "maxLength": 150,
+            "tooltip": "Name of current employer"
+        },
+        "designation": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "Job title/designation"
+        },
+        "monthlyIncome": {
+            "type": "currency",
+            "min": 0,
+            "required": true,
+            "tooltip": "Monthly salary or income in LKR",
+            "audited": true
+        },
+        "monthlyIncomeConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "additionalIncome": {
+            "type": "currency",
+            "min": 0,
+            "default": 0,
+            "tooltip": "Additional monthly income from other sources",
+            "audited": true
+        },
+        "additionalIncomeConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "monthlyObligations": {
+            "type": "currency",
+            "min": 0,
+            "default": 0,
+            "tooltip": "Total monthly loan obligations and expenses",
+            "audited": true
+        },
+        "monthlyObligationsConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "bankAccountNumber": {
+            "type": "varchar",
+            "maxLength": 30,
+            "isPersonalData": true,
+            "tooltip": "Primary bank account number"
+        },
+        "bankName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "Name of the bank"
+        },
+        "loanAmountRequested": {
+            "type": "currency",
+            "min": 0,
+            "required": true,
+            "tooltip": "Loan amount requested by applicant",
+            "audited": true
+        },
+        "loanAmountRequestedConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "loanTenureRequested": {
+            "type": "int",
+            "min": 1,
+            "max": 360,
+            "tooltip": "Requested loan tenure in months"
+        },
+        "primaryProductInterest": {
+            "type": "enum",
+            "options": [
+                "",
+                "Personal Loan",
+                "Home Loan",
+                "Vehicle Loan",
+                "Business Loan",
+                "Microfinance",
+                "Leasing",
+                "Pawning",
+                "Other"
+            ],
+            "required": true,
+            "tooltip": "Type of loan product interested in"
+        },
+        "loanPurpose": {
+            "type": "text",
+            "tooltip": "Purpose for the loan"
+        },
+        "leadTemperature": {
+            "type": "enum",
+            "options": ["", "Cold", "Warm", "Hot"],
+            "default": "Cold",
+            "style": {
+                "Cold": "primary",
+                "Warm": "warning",
+                "Hot": "danger"
+            },
+            "displayAsLabel": true,
+            "tooltip": "Lead temperature based on engagement"
+        },
+        "leadScore": {
+            "type": "int",
+            "min": 0,
+            "max": 100,
+            "readOnly": true,
+            "tooltip": "Auto-calculated lead score (0-100)"
+        },
+        "creditScore": {
+            "type": "int",
+            "min": 300,
+            "max": 900,
+            "readOnly": true,
+            "tooltip": "Credit score from bureau"
+        },
+        "foir": {
+            "type": "float",
+            "readOnly": true,
+            "tooltip": "Fixed Obligation to Income Ratio (%)"
+        },
+        "dti": {
+            "type": "float",
+            "readOnly": true,
+            "tooltip": "Debt to Income Ratio (%)"
+        },
+        "eligibilityStatus": {
+            "type": "enum",
+            "options": ["", "Pending", "Qualified", "Not Qualified", "Conditional"],
+            "default": "Pending",
+            "style": {
+                "Pending": "default",
+                "Qualified": "success",
+                "Not Qualified": "danger",
+                "Conditional": "warning"
+            },
+            "displayAsLabel": true,
+            "tooltip": "Loan eligibility status"
+        },
+        "maxEligibleAmount": {
+            "type": "currency",
+            "min": 0,
+            "readOnly": true,
+            "tooltip": "Maximum eligible loan amount based on qualification"
+        },
+        "maxEligibleAmountConverted": {
+            "type": "currencyConverted",
+            "readOnly": true
+        },
+        "recommendedTenure": {
+            "type": "int",
+            "readOnly": true,
+            "tooltip": "Recommended loan tenure in months"
+        },
+        "leadChannel": {
+            "type": "enum",
+            "options": [
+                "",
+                "Website",
+                "Facebook",
+                "Google Ads",
+                "Referral",
+                "Walk-In",
+                "Phone Call",
+                "SMS Campaign",
+                "Email Campaign",
+                "Field Agent",
+                "Partner",
+                "Other"
+            ],
+            "required": true,
+            "tooltip": "Channel through which lead was acquired"
+        },
+        "sourceDetail": {
+            "type": "varchar",
+            "maxLength": 200,
+            "tooltip": "Additional details about the source"
+        },
+        "referredBy": {
+            "type": "varchar",
+            "maxLength": 150,
+            "tooltip": "Name of person who referred this lead"
+        },
+        "fieldAgentCode": {
+            "type": "varchar",
+            "maxLength": 50,
+            "tooltip": "Field agent code if acquired through agent"
+        },
+        "utmSource": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "UTM Source parameter"
+        },
+        "utmMedium": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "UTM Medium parameter"
+        },
+        "utmCampaign": {
+            "type": "varchar",
+            "maxLength": 100,
+            "tooltip": "UTM Campaign parameter"
+        },
+        "kycStatus": {
+            "type": "enum",
+            "options": ["", "Pending", "In Progress", "Completed", "Rejected"],
+            "default": "Pending",
+            "style": {
+                "Pending": "default",
+                "In Progress": "primary",
+                "Completed": "success",
+                "Rejected": "danger"
+            },
+            "displayAsLabel": true,
+            "tooltip": "KYC verification status"
+        },
+        "dataConsentGiven": {
+            "type": "bool",
+            "default": false,
+            "audited": true,
+            "tooltip": "Has applicant given consent for data processing"
+        },
+        "creditBureauConsentGiven": {
+            "type": "bool",
+            "default": false,
+            "audited": true,
+            "tooltip": "Consent to check credit bureau"
+        },
+        "marketingConsentGiven": {
+            "type": "bool",
+            "default": false,
+            "audited": true,
+            "tooltip": "Consent for marketing communications"
+        },
+        "fraudCheckStatus": {
+            "type": "enum",
+            "options": ["", "Pending", "Clear", "Flagged", "Under Review"],
+            "default": "Pending",
+            "style": {
+                "Pending": "default",
+                "Clear": "success",
+                "Flagged": "danger",
+                "Under Review": "warning"
+            },
+            "displayAsLabel": true,
+            "tooltip": "Fraud check status"
+        },
+        "lastContactDate": {
+            "type": "date",
+            "tooltip": "Date of last contact with lead"
+        },
+        "nextFollowUpDate": {
+            "type": "date",
+            "tooltip": "Next scheduled follow-up date"
+        },
+        "touchpointCount": {
+            "type": "int",
+            "min": 0,
+            "default": 0,
+            "readOnly": true,
+            "tooltip": "Number of touchpoints with lead"
+        },
+        "responseRate": {
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "readOnly": true,
+            "tooltip": "Lead response rate (%)"
+        },
+        "daysInPipeline": {
+            "type": "int",
+            "readOnly": true,
+            "tooltip": "Number of days in pipeline"
+        },
+        "documentChecklistComplete": {
+            "type": "bool",
+            "readOnly": true,
+            "default": false,
+            "tooltip": "Are all mandatory documents verified"
+        },
+        "creditBureauStatus": {
+            "type": "enum",
+            "options": ["", "Not Requested", "Pending", "Retrieved", "Failed"],
+            "default": "Not Requested",
+            "style": {
+                "Not Requested": "default",
+                "Pending": "warning",
+                "Retrieved": "success",
+                "Failed": "danger"
+            },
+            "displayAsLabel": true,
+            "tooltip": "Credit bureau report status"
+        },
+        "isDuplicate": {
+            "type": "bool",
+            "default": false,
+            "tooltip": "Is this a duplicate lead"
+        },
+        "description": {
+            "type": "text",
+            "tooltip": "Additional notes and comments"
+        },
+        "convertedAt": {
+            "type": "datetime",
+            "readOnly": true,
+            "tooltip": "Date and time when lead was converted"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "tooltip": "Loan officer assigned to this lead"
+        },
+        "teams": {
+            "type": "linkMultiple"
+        },
+        "campaign": {
+            "type": "link"
+        },
+        "duplicateOf": {
+            "type": "link",
+            "entity": "FinancialLead",
+            "tooltip": "Original lead if this is a duplicate"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        },
+        "campaign": {
+            "type": "belongsTo",
+            "entity": "Campaign"
+        },
+        "meetings": {
+            "type": "hasMany",
+            "entity": "Meeting",
+            "foreign": "parent",
+            "audited": true
+        },
+        "calls": {
+            "type": "hasMany",
+            "entity": "Call",
+            "foreign": "parent",
+            "audited": true
+        },
+        "tasks": {
+            "type": "hasChildren",
+            "entity": "Task",
+            "foreign": "parent",
+            "audited": true
+        },
+        "emails": {
+            "type": "hasChildren",
+            "entity": "Email",
+            "foreign": "parent"
+        },
+        "documents": {
+            "type": "hasMany",
+            "entity": "LeadDocument",
+            "foreign": "financialLead"
+        },
+        "coApplicants": {
+            "type": "hasMany",
+            "entity": "CoApplicant",
+            "foreign": "financialLead"
+        },
+        "guarantors": {
+            "type": "hasMany",
+            "entity": "Guarantor",
+            "foreign": "financialLead"
+        },
+        "creditReports": {
+            "type": "hasMany",
+            "entity": "CreditReport",
+            "foreign": "financialLead"
+        },
+        "qualificationChecks": {
+            "type": "hasMany",
+            "entity": "QualificationCheck",
+            "foreign": "financialLead"
+        },
+        "duplicateOf": {
+            "type": "belongsTo",
+            "entity": "FinancialLead",
+            "foreign": "duplicateLeads"
+        },
+        "duplicateLeads": {
+            "type": "hasMany",
+            "entity": "FinancialLead",
+            "foreign": "duplicateOf"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": ["name", "emailAddress", "phoneNumber", "nicNumber"]
+    },
+    "indexes": {
+        "firstName": {
+            "columns": ["firstName", "deleted"]
+        },
+        "name": {
+            "columns": ["firstName", "lastName"]
+        },
+        "status": {
+            "columns": ["status", "deleted"]
+        },
+        "nicNumber": {
+            "columns": ["nicNumber", "deleted"]
+        },
+        "phoneNumber": {
+            "columns": ["phoneNumber", "deleted"]
+        },
+        "emailAddress": {
+            "columns": ["emailAddress", "deleted"]
+        },
+        "createdAt": {
+            "columns": ["createdAt", "deleted"]
+        },
+        "assignedUser": {
+            "columns": ["assignedUserId", "deleted"]
+        },
+        "eligibilityStatus": {
+            "columns": ["eligibilityStatus", "deleted"]
+        },
+        "leadChannel": {
+            "columns": ["leadChannel", "deleted"]
+        },
+        "nextFollowUpDate": {
+            "columns": ["nextFollowUpDate", "deleted"]
+        }
+    },
+    "formula": {
+        "foir": "ifThen(\n  monthlyIncome + additionalIncome > 0,\n  (monthlyObligations / (monthlyIncome + additionalIncome)) * 100,\n  0\n)",
+        "dti": "ifThen(\n  monthlyIncome + additionalIncome > 0,\n  (monthlyObligations / (monthlyIncome + additionalIncome)) * 100,\n  0\n)",
+        "daysInPipeline": "datetime\\diff(createdAt, datetime\\now(), 'days')",
+        "leadScore": "$incomeScore = 0;\n$employmentScore = 0;\n$creditScorePoints = 0;\n$documentScore = 0;\n$engagementScore = 0;\n\n// Income Score (25 points max)\n$totalIncome = monthlyIncome + additionalIncome;\nifThen(\n  $totalIncome >= 200000,\n  $incomeScore = 25,\n  ifThen(\n    $totalIncome >= 150000,\n    $incomeScore = 20,\n    ifThen(\n      $totalIncome >= 100000,\n      $incomeScore = 15,\n      ifThen(\n        $totalIncome >= 75000,\n        $incomeScore = 10,\n        ifThen(\n          $totalIncome >= 50000,\n          $incomeScore = 5,\n          $incomeScore = 0\n        )\n      )\n    )\n  )\n);\n\n// Employment Score (15 points max)\nifThen(\n  employmentType == 'Permanent',\n  $employmentScore = 15,\n  ifThen(\n    employmentType == 'Business Owner',\n    $employmentScore = 12,\n    ifThen(\n      employmentType == 'Self-Employed',\n      $employmentScore = 10,\n      ifThen(\n        employmentType == 'Contract',\n        $employmentScore = 8,\n        ifThen(\n          employmentType == 'Pensioner',\n          $employmentScore = 5,\n          $employmentScore = 0\n        )\n      )\n    )\n  )\n);\n\n// Credit Score (30 points max)\nifThen(\n  creditScore >= 750,\n  $creditScorePoints = 30,\n  ifThen(\n    creditScore >= 700,\n    $creditScorePoints = 25,\n    ifThen(\n      creditScore >= 650,\n      $creditScorePoints = 20,\n      ifThen(\n        creditScore >= 600,\n        $creditScorePoints = 15,\n        ifThen(\n          creditScore >= 550,\n          $creditScorePoints = 10,\n          ifThen(\n            creditScore >= 500,\n            $creditScorePoints = 5,\n            $creditScorePoints = 0\n          )\n        )\n      )\n    )\n  )\n);\n\n// Document Score (15 points max)\nifThen(\n  kycStatus == 'Completed',\n  $documentScore = 15,\n  ifThen(\n    kycStatus == 'In Progress',\n    $documentScore = 8,\n    ifThen(\n      kycStatus == 'Pending',\n      $documentScore = 0,\n      $documentScore = 0\n    )\n  )\n);\n\n// Engagement Score (15 points max)\n$engagementScore = 0;\nifThen(\n  touchpointCount >= 10,\n  $engagementScore = 15,\n  ifThen(\n    touchpointCount >= 7,\n    $engagementScore = 12,\n    ifThen(\n      touchpointCount >= 5,\n      $engagementScore = 9,\n      ifThen(\n        touchpointCount >= 3,\n        $engagementScore = 6,\n        ifThen(\n          touchpointCount >= 1,\n          $engagementScore = 3,\n          $engagementScore = 0\n        )\n      )\n    )\n  )\n);\n\n// Calculate total score\n$incomeScore + $employmentScore + $creditScorePoints + $documentScore + $engagementScore;"
+    }
+}
