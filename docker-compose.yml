@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  espocrm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: espocrm
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_HOST=mysql
+      - DATABASE_NAME=espocrm
+      - DATABASE_USER=espocrm
+      - DATABASE_PASSWORD=espocrm_password
+      - DATABASE_PORT=3306
+      - SITE_URL=http://localhost:8080
+    volumes:
+      - espocrm_data:/var/www/html/data
+      - espocrm_custom:/var/www/html/custom
+      - espocrm_client_custom:/var/www/html/client/custom
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: espocrm_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=espocrm
+      - MYSQL_USER=espocrm
+      - MYSQL_PASSWORD=espocrm_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  espocrm_data:
+  espocrm_custom:
+  espocrm_client_custom:
+  mysql_data:
