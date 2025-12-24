@@ -113,6 +113,12 @@
         },
         "listPortal": {
             "type": "list"
+        },
+        "listForAccount": {
+            "type": "listSmall"
+        },
+        "listForContact": {
+            "type": "listSmall"
         }
     },
     "iconClass": "fas fa-briefcase"

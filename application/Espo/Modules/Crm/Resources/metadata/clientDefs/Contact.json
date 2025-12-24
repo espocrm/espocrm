@@ -75,7 +75,8 @@
                 "id": "contactId",
                 "name": "contactName"
             },
-            "selectHandler": "handlers/select-related/same-account"
+            "selectHandler": "handlers/select-related/same-account",
+            "layout": "listForContact"
         },
         "targetLists": {
             "create": false,

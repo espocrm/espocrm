@@ -1,6 +1,7 @@
 [
-    {"name":"name", "link": true},
-    {"name":"number", "width": 18},
-    {"name":"status", "width": 19},
-    {"name":"priority", "width": 19}
+    {"name": "name", "link": true},
+    {"name": "number", "width": 14},
+    {"name": "status", "width": 14},
+    {"name": "priority", "width": 14},
+    {"name": "account", "width": 22}
 ]
