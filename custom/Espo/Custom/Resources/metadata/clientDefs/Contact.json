@@ -13,6 +13,24 @@
                 "label": "Fixed Deposits",
                 "view": "custom:views/contact/panels/fixed-deposits",
                 "style": "default"
+            },
+            {
+                "name": "savingsAccounts",
+                "label": "Savings Accounts",
+                "view": "custom:views/contact/panels/savings-accounts",
+                "style": "default"
+            },
+            {
+                "name": "goldLoans",
+                "label": "Gold Loans",
+                "view": "custom:views/contact/panels/gold-loans",
+                "style": "default"
+            },
+            {
+                "name": "factoring",
+                "label": "Factoring",
+                "view": "custom:views/contact/panels/factoring",
+                "style": "default"
             }
         ]
     },

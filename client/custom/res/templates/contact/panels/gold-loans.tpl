@@ -3,7 +3,7 @@
         <div class="pull-right">
             </div>
         <h4 class="panel-title">
-            <span style="margin-right: 5px;" class="fas fa-landmark"></span> Banking Loans
+            <span style="margin-right: 5px;" class="fas fa-ring"></span> Gold Loans
         </h4>
     </div>
     
@@ -11,48 +11,51 @@
         <table class="table table-striped table-hover" style="margin-bottom: 0; cursor: pointer;">
             <thead>
                 <tr>
-                    <th style="padding-left: 15px;">Loan Type</th>
-                    <th class="text-right">Amount</th>
-                    <th class="text-center">Status</th>
+                    <th style="padding-left: 15px;">Item Type</th>
+                    <th class="text-right">Loan Amount</th>
+                    <th class="text-center">Risk</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="padding-left: 15px;">
-                        <strong>Home Loan</strong><br>
-                        <small class="text-muted">ID: HL-2024-889</small>
+                        <strong>Gold Necklace (22K)</strong><br>
+                        <small class="text-muted">Weight: 45g</small>
                     </td>
                     <td class="text-right">
-                        $250,000.00
+                        LKR 350,000.00<br>
+                        <small class="text-danger">Out: LKR 365,000.00</small>
                     </td>
                     <td class="text-center">
-                        <span class="label label-success">Active</span>
+                        <span class="label label-danger">High</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="padding-left: 15px;">
-                        <strong>Car Loan</strong><br>
-                        <small class="text-muted">ID: CL-2023-102</small>
+                        <strong>Gold Ring (24K)</strong><br>
+                        <small class="text-muted">Weight: 12g</small>
                     </td>
                     <td class="text-right">
-                        $15,000.00
+                        LKR 85,000.00<br>
+                        <small class="text-muted">Out: LKR 82,000.00</small>
                     </td>
                     <td class="text-center">
-                        <span class="label label-default">Paid</span>
+                        <span class="label label-success">Low</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="padding-left: 15px;">
-                        <strong>Personal Loan</strong><br>
-                        <small class="text-muted">ID: PL-2025-001</small>
+                        <strong>Bangles (22K)</strong><br>
+                        <small class="text-muted">Weight: 30g</small>
                     </td>
                     <td class="text-right">
-                        $5,000.00
+                        LKR 200,000.00<br>
+                        <small class="text-warning">Out: LKR 210,000.00</small>
                     </td>
                     <td class="text-center">
-                        <span class="label label-warning">Pending</span>
+                        <span class="label label-warning">Medium</span>
                     </td>
                 </tr>
             </tbody>

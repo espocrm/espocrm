@@ -3,7 +3,7 @@
         <div class="pull-right">
             </div>
         <h4 class="panel-title">
-            <span style="margin-right: 5px;" class="fas fa-landmark"></span> Banking Loans
+            <span style="margin-right: 5px;" class="fas fa-wallet"></span> Savings Accounts
         </h4>
     </div>
     
@@ -11,19 +11,19 @@
         <table class="table table-striped table-hover" style="margin-bottom: 0; cursor: pointer;">
             <thead>
                 <tr>
-                    <th style="padding-left: 15px;">Loan Type</th>
-                    <th class="text-right">Amount</th>
+                    <th style="padding-left: 15px;">Account Number</th>
+                    <th class="text-right">Balance</th>
                     <th class="text-center">Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="padding-left: 15px;">
-                        <strong>Home Loan</strong><br>
-                        <small class="text-muted">ID: HL-2024-889</small>
+                        <strong>xxxx-xxxx-8892</strong><br>
+                        <small class="text-muted">Primary Savings</small>
                     </td>
                     <td class="text-right">
-                        $250,000.00
+                        $12,450.00
                     </td>
                     <td class="text-center">
                         <span class="label label-success">Active</span>
@@ -32,27 +32,27 @@
 
                 <tr>
                     <td style="padding-left: 15px;">
-                        <strong>Car Loan</strong><br>
-                        <small class="text-muted">ID: CL-2023-102</small>
+                        <strong>xxxx-xxxx-1024</strong><br>
+                        <small class="text-muted">Joint Account</small>
                     </td>
                     <td class="text-right">
-                        $15,000.00
+                        $45,000.00
                     </td>
                     <td class="text-center">
-                        <span class="label label-default">Paid</span>
+                        <span class="label label-success">Active</span>
                     </td>
                 </tr>
 
                 <tr>
                     <td style="padding-left: 15px;">
-                        <strong>Personal Loan</strong><br>
-                        <small class="text-muted">ID: PL-2025-001</small>
+                        <strong>xxxx-xxxx-0019</strong><br>
+                        <small class="text-muted">Kids Savings</small>
                     </td>
                     <td class="text-right">
-                        $5,000.00
+                        $1,200.00
                     </td>
                     <td class="text-center">
-                        <span class="label label-warning">Pending</span>
+                        <span class="label label-warning">Dormant</span>
                     </td>
                 </tr>
             </tbody>

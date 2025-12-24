@@ -4,6 +4,10 @@ define(['views/record/panels/side'], function (SidePanelView) {
 
         template: 'custom:contact/panels/fixed-deposits',
 
+        events: {
+            'click .table': 'actionShowDetails'
+        },
+
         setup: function () {
             // No code needed here.
         },
@@ -16,6 +20,12 @@ define(['views/record/panels/side'], function (SidePanelView) {
 
         getRenderData: function () {
             return {}; 
+        },
+
+        actionShowDetails: function () {
+            this.createView('detailsModal', 'custom:views/contact/modals/fixed-deposits-details', {}, function (view) {
+                view.render();
+            });
         }
     });
 });
