@@ -1,0 +1,900 @@
+{
+  "task": "Enhance EspoCRM Lead Management for Financial Services",
+  "description": "Implement a comprehensive financial services lead management system by extending EspoCRM's core Lead module. This enhancement adds financial-specific fields, credit assessment integration, loan product matching, and regulatory compliance features for microfinance institutions and banks in Sri Lanka.",
+  
+  "context": {
+    "project_type": "EspoCRM Extension/Module Development",
+    "language": "PHP 8.1+, JavaScript ES6+",
+    "framework": "EspoCRM 8.x/9.x",
+    "target_industry": "Financial Services - Microfinance, Banks, Leasing Companies",
+    "geographic_focus": "Sri Lanka",
+    "codebase_location": "https://github.com/espocrm/espocrm",
+    "documentation": "https://docs.espocrm.com/development/"
+  },
+  
+  "architecture_understanding": {
+    "espocrm_structure": {
+      "backend": {
+        "base_path": "application/Espo/",
+        "custom_path": "custom/Espo/Custom/",
+        "modules_path": "application/Espo/Modules/",
+        "key_directories": {
+          "entities": "Entities/",
+          "repositories": "Repositories/",
+          "services": "Services/",
+          "controllers": "Controllers/",
+          "hooks": "Hooks/",
+          "resources": "Resources/"
+        }
+      },
+      "metadata": {
+        "path": "custom/Espo/Custom/Resources/metadata/",
+        "key_files": {
+          "entity_defs": "entityDefs/",
+          "client_defs": "clientDefs/",
+          "scopes": "scopes.json",
+          "fields": "fields/"
+        }
+      },
+      "frontend": {
+        "path": "client/custom/src/",
+        "key_files": {
+          "views": "views/",
+          "models": "models/",
+          "collections": "collections/"
+        }
+      }
+    },
+    "extension_approach": "Create custom module under custom/Espo/Custom/ to avoid core modifications",
+    "key_patterns": {
+      "entity_definition": "JSON metadata in Resources/metadata/entityDefs/",
+      "service_layer": "PHP services in Services/ for business logic",
+      "hooks": "PHP hooks in Hooks/ for event-driven automation",
+      "formulas": "Formula script for calculated fields",
+      "api_integration": "Custom services with HTTP client integration"
+    }
+  },
+  
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Core Entity Structure Setup",
+      "duration": "3 weeks",
+      "priority": "P0 - Critical",
+      "deliverables": [
+        {
+          "item": "FinancialLead Entity Definition",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/entityDefs/FinancialLead.json",
+            "custom/Espo/Custom/Resources/metadata/scopes.json (update)",
+            "custom/Espo/Custom/Resources/metadata/clientDefs/FinancialLead.json"
+          ],
+          "requirements": [
+            "Extend base Lead entity with 40+ financial-specific fields",
+            "Include: employmentType, monthlyIncome, additionalIncome, monthlyObligations, dateOfBirth, gender, maritalStatus, nicNumber, bankAccountNumber",
+            "Include: loanAmountRequested, loanTenureRequested, primaryProductInterest, loanPurpose",
+            "Include: leadTemperature, leadScore, creditScore, foir, dti, eligibilityStatus, maxEligibleAmount",
+            "Include: leadChannel, sourceDetail, referredBy, fieldAgentCode, utmSource, utmMedium, utmCampaign",
+            "Include: kycStatus, dataConsentGiven, creditBureauConsentGiven, fraudCheckStatus",
+            "Include: lastContactDate, nextFollowUpDate, touchpointCount, responseRate, daysInPipeline",
+            "Add proper field types, validations, and tooltips",
+            "Implement field-level encryption for sensitive data (nicNumber, bankAccountNumber, passportNumber)",
+            "Define proper enum options with color coding for status fields"
+          ],
+          "acceptance_criteria": [
+            "Entity appears in EspoCRM admin panel under Entity Manager",
+            "All fields are editable in Entity Manager",
+            "Fields display correctly in detail/edit/list views",
+            "Validation rules work as expected",
+            "Encrypted fields are properly secured in database"
+          ]
+        },
+        {
+          "item": "Supporting Entities Creation",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/entityDefs/CoApplicant.json",
+            "custom/Espo/Custom/Resources/metadata/entityDefs/Guarantor.json",
+            "custom/Espo/Custom/Resources/metadata/entityDefs/LeadDocument.json",
+            "custom/Espo/Custom/Resources/metadata/entityDefs/CreditReport.json",
+            "custom/Espo/Custom/Resources/metadata/entityDefs/QualificationCheck.json",
+            "custom/Espo/Custom/Resources/metadata/entityDefs/LoanProduct.json"
+          ],
+          "requirements": [
+            "Create CoApplicant entity with: name, relationship, nicNumber, employmentType, monthlyIncome, contactNumber, email, link to FinancialLead",
+            "Create Guarantor entity with: name, relationshipToApplicant, nicNumber, address, employmentDetails, propertyDetails, consentGiven, link to FinancialLead",
+            "Create LeadDocument entity with: documentType, documentStatus, isMandatory, attachment, verifiedBy, verifiedDate, rejectionReason, link to FinancialLead",
+            "Create CreditReport entity with: bureauName, reportDate, creditScore, reportReference, numberOfActiveLoans, totalOutstandingAmount, defaultHistory, reportFile, link to FinancialLead",
+            "Create QualificationCheck entity with: checkDate, checkType, eligibilityResult, maxLoanAmount, recommendedTenure, interestRateOffered, foirCalculated, dtiCalculated, link to FinancialLead",
+            "Create LoanProduct entity with: productCode, productType, description, min/max loan amounts, min/max tenure, interest rates, eligibility criteria, required documents",
+            "Define all relationships (hasOne, hasMany, belongsTo) between entities",
+            "Add proper indexes for performance"
+          ],
+          "acceptance_criteria": [
+            "All entities are created and visible in admin panel",
+            "Relationships work bidirectionally",
+            "Can create/edit/delete records for each entity",
+            "Related records display correctly on parent entity detail view"
+          ]
+        },
+        {
+          "item": "Formula-Based Calculations",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/entityDefs/FinancialLead.json (update formulas section)"
+          ],
+          "requirements": [
+            "Implement leadScore formula: Calculate 0-100 score based on income (25 pts), employment (15 pts), credit score (30 pts), documents (15 pts), engagement (15 pts)",
+            "Implement foir formula: (monthlyObligations / (monthlyIncome + additionalIncome)) * 100",
+            "Implement dti formula: Same as FOIR calculation",
+            "Implement daysInPipeline formula: datetime\\diff(createdAt, datetime\\now(), 'days')",
+            "Implement documentChecklistComplete formula: Check if all mandatory documents are verified",
+            "Implement touchpointCount increment on activity creation",
+            "Implement responseRate calculation based on attempts vs responses"
+          ],
+          "acceptance_criteria": [
+            "Lead score auto-calculates when relevant fields change",
+            "FOIR and DTI display correct percentages",
+            "Days in pipeline updates dynamically",
+            "All calculations are accurate and performant"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Custom Business Logic & Services",
+      "duration": "2 weeks",
+      "priority": "P0 - Critical",
+      "deliverables": [
+        {
+          "item": "Credit Bureau Integration Service",
+          "files_to_create": [
+            "custom/Espo/Custom/Services/CreditBureauService.php",
+            "custom/Espo/Custom/Services/CribApiService.php",
+            "custom/Espo/Custom/Controllers/CreditBureau.php"
+          ],
+          "requirements": [
+            "Create CreditBureauService with retrieveCreditReport($leadId) method",
+            "Implement CRIB API integration with proper authentication",
+            "Handle API responses and error cases gracefully",
+            "Create CreditReport entity record from API response",
+            "Update FinancialLead creditScore and creditBureauStatus fields",
+            "Store report file as attachment",
+            "Trigger qualification check after credit report retrieval",
+            "Add proper logging for audit trail",
+            "Implement rate limiting to avoid excessive API calls",
+            "Add consent verification before making API call"
+          ],
+          "acceptance_criteria": [
+            "Can retrieve credit report via API action",
+            "Credit report data saves correctly to CreditReport entity",
+            "Lead credit score updates automatically",
+            "Error handling works for failed API calls",
+            "Consent is checked before API execution",
+            "Audit logs capture all credit check activities"
+          ]
+        },
+        {
+          "item": "Loan Product Recommendation Engine",
+          "files_to_create": [
+            "custom/Espo/Custom/Services/LoanProductRecommendationService.php",
+            "custom/Espo/Custom/Controllers/LoanProductRecommendation.php"
+          ],
+          "requirements": [
+            "Create recommendProducts($leadId) method",
+            "Implement product matching algorithm based on: minIncome, minCreditScore, maxFOIR, loan amount range",
+            "Calculate match score (0-100) for each product",
+            "Calculate maxEligibleAmount using EMI formula and FOIR constraints",
+            "Calculate estimated EMI for requested loan amount",
+            "Return sorted array of recommended products",
+            "Consider loan purpose and employment type in matching",
+            "Handle edge cases (no qualifying products, partial qualification)",
+            "Optimize for performance (cache product rules)",
+            "Add explanation/reasoning for each recommendation"
+          ],
+          "acceptance_criteria": [
+            "Recommendations match business logic accurately",
+            "Calculations for max eligible amount are correct",
+            "EMI calculations use proper formula",
+            "Products are ranked by match score",
+            "API returns recommendations in <500ms",
+            "Edge cases handled gracefully"
+          ]
+        },
+        {
+          "item": "Lead Qualification Service",
+          "files_to_create": [
+            "custom/Espo/Custom/Services/LeadQualificationService.php",
+            "custom/Espo/Custom/Controllers/LeadQualification.php"
+          ],
+          "requirements": [
+            "Create runQualificationCheck($leadId) method",
+            "Calculate FOIR and DTI ratios",
+            "Evaluate credit score against product requirements",
+            "Check document completeness",
+            "Determine eligibilityStatus (Qualified/Not Qualified/Conditional)",
+            "Calculate maxEligibleAmount and recommendedTenure",
+            "Create QualificationCheck entity record",
+            "Update lead eligibilityStatus, maxEligibleAmount, recommendedTenure fields",
+            "Trigger notification to loan officer on qualification",
+            "Generate eligibility certificate (PDF) for qualified leads",
+            "Handle re-qualification scenarios"
+          ],
+          "acceptance_criteria": [
+            "Qualification logic matches business rules",
+            "All qualification data saves to QualificationCheck entity",
+            "Lead fields update correctly",
+            "Notifications trigger appropriately",
+            "Re-qualification works without duplicating records",
+            "Qualification certificate generates correctly"
+          ]
+        },
+        {
+          "item": "Duplicate Detection Service",
+          "files_to_create": [
+            "custom/Espo/Custom/Services/DuplicateDetectionService.php",
+            "custom/Espo/Custom/Hooks/FinancialLead/DuplicateCheck.php"
+          ],
+          "requirements": [
+            "Create checkDuplicates($leadId) method",
+            "Check for duplicates by: nicNumber, phoneNumber, email (exact match)",
+            "Check for duplicates by: name + dateOfBirth (fuzzy match)",
+            "Use Levenshtein distance for name matching (threshold: 85% similarity)",
+            "Set isDuplicate flag and duplicateOf link if match found",
+            "Create hook to run on lead creation",
+            "Handle multiple potential duplicates (link to oldest)",
+            "Add manual merge capability",
+            "Log duplicate detection events",
+            "Allow override for false positives"
+          ],
+          "acceptance_criteria": [
+            "Duplicate detection runs automatically on lead creation",
+            "Exact matches are caught correctly",
+            "Fuzzy matching works without too many false positives",
+            "Duplicate link points to correct original lead",
+            "Manual override functionality works",
+            "Performance is acceptable (<1s for check)"
+          ]
+        },
+        {
+          "item": "Document Verification Service",
+          "files_to_create": [
+            "custom/Espo/Custom/Services/DocumentVerificationService.php",
+            "custom/Espo/Custom/Controllers/DocumentVerification.php"
+          ],
+          "requirements": [
+            "Create verifyNicDocument($attachmentId) method using OCR API",
+            "Extract NIC number, name, date of birth from document image",
+            "Validate extracted data against lead information",
+            "Update LeadDocument status (Verified/Rejected)",
+            "Auto-populate lead fields if data missing",
+            "Support multiple document types (NIC, Passport, Driving License, Bank Statement)",
+            "Integrate with OCR service (Google Vision API or Tesseract)",
+            "Handle poor quality images (reject with reason)",
+            "Store extracted data for audit",
+            "Calculate document completeness percentage"
+          ],
+          "acceptance_criteria": [
+            "OCR extraction works with >90% accuracy for good quality images",
+            "Verification updates document status correctly",
+            "Auto-population of lead fields works",
+            "Multiple document types are supported",
+            "Poor quality images are handled appropriately",
+            "Document completeness percentage is accurate"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Workflow Automation & BPM",
+      "duration": "2 weeks",
+      "priority": "P1 - High",
+      "deliverables": [
+        {
+          "item": "New Lead Processing Workflow",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/workflows/FinancialLead_NewLeadProcessing.json",
+            "custom/Espo/Custom/Hooks/FinancialLead/AfterSave.php"
+          ],
+          "requirements": [
+            "Create workflow triggered on new lead creation (status = 'New')",
+            "Auto-assign lead using Round-Robin or Least-Busy rule based on team",
+            "Send welcome SMS to lead using SMS service",
+            "Create follow-up task for assigned loan officer (due: +1 day)",
+            "Run duplicate detection check",
+            "If duplicate found, notify manager and mark lead",
+            "If not duplicate, update status to 'Contact Attempted'",
+            "Send internal notification to assigned user",
+            "Log all workflow actions in activity stream",
+            "Add configurable delay between actions"
+          ],
+          "acceptance_criteria": [
+            "Workflow triggers automatically on lead creation",
+            "Assignment rules work correctly",
+            "SMS is sent successfully",
+            "Task is created for loan officer",
+            "Duplicate check runs and flags correctly",
+            "Status updates happen in correct sequence",
+            "All actions are logged"
+          ]
+        },
+        {
+          "item": "Lead Qualification Workflow",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/bpm/FinancialLead_QualificationProcess.json"
+          ],
+          "requirements": [
+            "Create BPM process triggered when status changes to 'Information Gathering'",
+            "Check if KYC is completed, if not, create task to collect KYC documents",
+            "Once KYC complete, trigger credit bureau check",
+            "Calculate FOIR/DTI after credit check",
+            "Run product recommendation engine",
+            "Create qualification check record",
+            "Branch based on qualification result:",
+            "  - If Qualified: Update status to 'Qualified', send qualification email, create task to present offers",
+            "  - If Not Qualified: Update status to 'Lost', send rejection email (with reason), close lead",
+            "  - If Conditional: Update status to 'Awaiting Decision', create approval task for manager",
+            "Log all decisions and actions"
+          ],
+          "acceptance_criteria": [
+            "BPM process flows through all steps correctly",
+            "Branching logic works based on conditions",
+            "Tasks are created at appropriate steps",
+            "Emails/SMS are sent correctly",
+            "Status updates happen automatically",
+            "Manual approval step works for conditional cases"
+          ]
+        },
+        {
+          "item": "Lead Nurturing Email Sequence",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/workflows/FinancialLead_NurturingSequence.json",
+            "custom/Espo/Custom/Resources/templates/email/*.html (multiple templates)"
+          ],
+          "requirements": [
+            "Create email templates for nurturing sequence:",
+            "  - Day 0: Welcome email with loan calculator link",
+            "  - Day 2: Educational content on loan process",
+            "  - Day 5: Product comparison guide",
+            "  - Day 7: Customer testimonials",
+            "  - Day 10: Special offer (if lead is warm/hot and not contacted)",
+            "  - Day 14: Last touch - 'Still interested?' re-engagement",
+            "Use scheduled workflows with time-based triggers",
+            "Stop sequence if lead converts or status changes to Lost",
+            "Track email opens/clicks in activity stream",
+            "Personalize emails with lead data (name, loan amount, product interest)",
+            "A/B test subject lines"
+          ],
+          "acceptance_criteria": [
+            "Emails send at correct intervals",
+            "Email content is personalized correctly",
+            "Sequence stops on conversion or loss",
+            "Email tracking works",
+            "Unsubscribe link works correctly",
+            "Templates render properly in email clients"
+          ]
+        },
+        {
+          "item": "SMS Reminder Automation",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/workflows/FinancialLead_SmsReminders.json",
+            "custom/Espo/Custom/Services/SmsService.php"
+          ],
+          "requirements": [
+            "Create SMS service with sendSms($phoneNumber, $message, $provider) method",
+            "Integrate with Dialog and Mobitel SMS gateways",
+            "Create SMS templates for:",
+            "  - Day 3: Reminder to complete KYC",
+            "  - Day 7: Reminder about pending documents",
+            "  - Day 14: Re-engagement message",
+            "  - Before follow-up date: Reminder to loan officer",
+            "Send SMS only if marketingConsentGiven = true",
+            "Log all SMS in SmsLog entity",
+            "Handle opt-out requests (STOP keyword)",
+            "Track delivery status",
+            "Implement rate limiting"
+          ],
+          "acceptance_criteria": [
+            "SMS integration works with both providers",
+            "Messages send at correct times",
+            "Consent is checked before sending",
+            "Opt-out functionality works",
+            "Delivery status is tracked",
+            "Rate limiting prevents spam"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Frontend UI/UX Enhancements",
+      "duration": "2 weeks",
+      "priority": "P1 - High",
+      "deliverables": [
+        {
+          "item": "Custom Lead Detail View Layout",
+          "files_to_create": [
+            "client/custom/src/views/financial-lead/detail.js",
+            "custom/Espo/Custom/Resources/metadata/clientDefs/FinancialLead.json",
+            "client/custom/res/templates/financial-lead/detail.tpl"
+          ],
+          "requirements": [
+            "Create multi-panel detail layout with sections:",
+            "  - Overview (name, status, score, channel, assigned user)",
+            "  - Financial Information (income, obligations, FOIR, DTI)",
+            "  - Loan Requirements (product, amount, tenure, purpose)",
+            "  - Qualification Status (eligibility, credit score, max amount)",
+            "  - Personal Details (DOB, gender, NIC, address)",
+            "  - Compliance & Consent (KYC, consents, fraud status)",
+            "  - Engagement (touchpoints, response rate, follow-up date)",
+            "  - Channel Attribution (source, UTM, referrer)",
+            "Add action buttons: 'Run Credit Check', 'Recommend Products', 'Qualify Lead', 'Convert to Application'",
+            "Display related records in panels: Documents, Credit Reports, Qualification Checks, Co-Applicants",
+            "Show lead score as progress bar with color coding",
+            "Display document checklist with completion status",
+            "Add timeline view for all activities",
+            "Make layout responsive for mobile"
+          ],
+          "acceptance_criteria": [
+            "Layout displays all sections correctly",
+            "Panels are collapsible",
+            "Action buttons trigger correct services",
+            "Related records load properly",
+            "Visual indicators (progress bars, badges) work",
+            "Responsive design works on mobile/tablet",
+            "Layout is user-friendly and intuitive"
+          ]
+        },
+        {
+          "item": "Kanban Pipeline View",
+          "files_to_create": [
+            "client/custom/src/views/financial-lead/list-kanban.js",
+            "custom/Espo/Custom/Resources/metadata/clientDefs/FinancialLead.json (add kanban config)"
+          ],
+          "requirements": [
+            "Enable Kanban view for FinancialLead list view",
+            "Configure status field as Kanban group by field",
+            "Display columns: New, Contact Attempted, Contacted, Information Gathering, Document Collection, Credit Check, Qualified, Converted, Lost",
+            "Show lead cards with: name, phone, loan amount, product interest, lead score badge, days in pipeline",
+            "Color-code cards by lead temperature (Hot=red, Warm=orange, Cold=blue)",
+            "Enable drag-and-drop to change status",
+            "Show count of leads in each stage",
+            "Add quick filters: My Leads, Hot Leads, Follow-up Due Today, High Score (>75)",
+            "Implement lazy loading for performance",
+            "Add search/filter bar"
+          ],
+          "acceptance_criteria": [
+            "Kanban view displays correctly with all stages",
+            "Drag-and-drop updates lead status",
+            "Card data displays accurately",
+            "Color coding works",
+            "Filters work correctly",
+            "Performance is good even with 100+ leads",
+            "Mobile-responsive"
+          ]
+        },
+        {
+          "item": "Custom Dashboards & Dashlets",
+          "files_to_create": [
+            "client/custom/src/views/dashlets/lead-funnel.js",
+            "client/custom/src/views/dashlets/lead-source-performance.js",
+            "client/custom/src/views/dashlets/hot-leads-list.js",
+            "client/custom/src/views/dashlets/qualification-metrics.js",
+            "custom/Espo/Custom/Resources/metadata/dashlets/*.json"
+          ],
+          "requirements": [
+            "Create Lead Funnel dashlet showing conversion by stage (bar chart)",
+            "Create Lead Source Performance dashlet (table: channel, count, conversion %, avg days to convert)",
+            "Create Hot Leads Requiring Attention dashlet (list view filtered by temperature + follow-up overdue)",
+            "Create Qualification Metrics dashlet (pie chart: Qualified, Not Qualified, Conditional, Pending)",
+            "Create Credit Score Distribution dashlet (histogram)",
+            "Create My Conversion Rate dashlet (KPI with trend)",
+            "Make all dashlets configurable (date range, filters)",
+            "Use Chart.js for visualizations",
+            "Implement real-time data refresh",
+            "Add export functionality"
+          ],
+          "acceptance_criteria": [
+            "All dashlets render correctly",
+            "Charts display accurate data",
+            "Configuration options work",
+            "Real-time refresh works",
+            "Export functionality works",
+            "Dashlets are performant",
+            "Mobile-responsive"
+          ]
+        },
+        {
+          "item": "Web-to-Lead Capture Form",
+          "files_to_create": [
+            "public/lead-capture/index.html",
+            "public/lead-capture/style.css",
+            "public/lead-capture/script.js",
+            "custom/Espo/Custom/Controllers/LeadCapture.php (custom endpoint)"
+          ],
+          "requirements": [
+            "Create embeddable HTML form with fields: firstName, lastName, phoneNumber, email, primaryProductInterest, loanAmountRequested, monthlyIncome, employmentType, dataConsentGiven",
+            "Add client-side validation (required fields, email format, phone format, numeric values)",
+            "Implement progressive disclosure (show employmentType-specific fields)",
+            "Add loan calculator preview (show estimated EMI)",
+            "Capture UTM parameters from URL",
+            "Add reCAPTCHA for spam prevention",
+            "Show success/error messages",
+            "Send data to EspoCRM Lead Capture API",
+            "Trigger thank you email on submission",
+            "Make form responsive and mobile-friendly",
+            "Add form analytics (Google Tag Manager integration)",
+            "Implement form abandonment tracking"
+          ],
+          "acceptance_criteria": [
+            "Form submits successfully to EspoCRM",
+            "Lead is created with correct data",
+            "Validation works on client and server side",
+            "UTM parameters are captured",
+            "reCAPTCHA prevents spam",
+            "Form works on all devices/browsers",
+            "Analytics tracking works",
+            "User experience is smooth"
+          ]
+        },
+        {
+          "item": "Document Upload Interface",
+          "files_to_create": [
+            "client/custom/src/views/financial-lead/modals/document-upload.js",
+            "client/custom/src/views/lead-document/detail.js"
+          ],
+          "requirements": [
+            "Create document upload modal with drag-and-drop",
+            "Show document checklist with mandatory/optional indicators",
+            "Support multiple file upload (PDF, JPG, PNG max 5MB each)",
+            "Show upload progress bar",
+            "Display thumbnail preview for images",
+            "Allow document type selection from dropdown",
+            "Trigger OCR verification for ID documents automatically",
+            "Show verification status (Pending/Verified/Rejected)",
+            "Allow bulk upload from mobile camera",
+            "Add document expiry date for time-sensitive docs",
+            "Implement document version control",
+            "Add download/print functionality"
+          ],
+          "acceptance_criteria": [
+            "File upload works smoothly",
+            "Checklist displays correctly",
+            "OCR triggers automatically",
+            "Verification status updates in real-time",
+            "Mobile camera upload works",
+            "File size/type validation works",
+            "User experience is intuitive"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "Reporting & Analytics",
+      "duration": "1.5 weeks",
+      "priority": "P2 - Medium",
+      "deliverables": [
+        {
+          "item": "Lead Performance Reports",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/reports/*.json"
+          ],
+          "requirements": [
+            "Create report: Total Leads by Period (date range filter, group by created date)",
+            "Create report: Leads by Channel (pie/bar chart, group by leadChannel)",
+            "Create report: Conversion Rate by Channel (table: channel, total leads, converted, conversion %)",
+            "Create report: Average Days to Conversion (by channel, by product, overall)",
+            "Create report: Lead Score Distribution (histogram, 0-25, 26-50, 51-75, 76-100)",
+            "Create report: Qualified vs Not Qualified Breakdown (pie chart by month)",
+            "Add filters: date range, assigned user, team, status, product interest",
+            "Enable export to PDF, Excel, CSV",
+            "Add scheduled email delivery of reports",
+            "Implement report caching for performance"
+          ],
+          "acceptance_criteria": [
+            "All reports generate correct data",
+            "Filters work properly",
+            "Charts render correctly",
+            "Export functionality works",
+            "Scheduled delivery works",
+            "Reports load quickly"
+          ]
+        },
+        {
+          "item": "Loan Officer Performance Dashboard",
+          "files_to_create": [
+            "custom/Espo/Custom/Resources/metadata/reports/LoanOfficerPerformance.json"
+          ],
+          "requirements": [
+            "Create report with metrics per loan officer:",
+            "  - Total leads assigned",
+            "  - Leads converted",
+            "  - Conversion rate %",
+            "  - Average lead score of assigned leads",
+            "  - Average response time (hours)",
+            "  - Touchpoint efficiency (avg touchpoints to conversion)",
+            "  - Document completion rate %",
+            "  - Average days to conversion",
+            "Add ranking/leaderboard view",
+            "Add trend charts (week-over-week, month-over-month)",
+            "Enable drill-down to individual lead details",
+            "Add goal tracking (target vs actual)",
+            "Implement peer comparison",
+            "Add commissions calculation preview"
+          ],
+          "acceptance_criteria": [
+            "All metrics calculate correctly",
+            "Leaderboard ranks properly",
+            "Trend charts show accurate data",
+            "Drill-down navigation works",
+            "Goal tracking displays correctly"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "name": "Testing, Security & Deployment",
+      "duration": "2 weeks",
+      "priority": "P0 - Critical",
+      "deliverables": [
+        {
+          "item": "Comprehensive Testing Suite",
+          "files_to_create": [
+            "tests/unit/Espo/Custom/Services/*.php",
+            "tests/integration/Espo/Custom/*.php"
+          ],
+          "requirements": [
+            "Write PHPUnit tests for all custom services (target: 80% coverage)",
+            "Test credit bureau integration with mock API responses",
+            "Test loan product recommendation logic with various scenarios",
+            "Test qualification calculation accuracy",
+            "Test duplicate detection with edge cases",
+            "Test formula calculations (FOIR, DTI, lead score)",
+            "Test workflow execution with various conditions",
+            "Create integration tests for API endpoints",
+            "Test data validation and sanitization",
+            "Test error handling and edge cases",
+            "Perform security testing (SQL injection, XSS, CSRF)",
+            "Load testing with 1000+ concurrent users"
+          ],
+          "acceptance_criteria": [
+            "All unit tests pass",
+            "Code coverage >80%",
+            "Integration tests pass",
+            "No security vulnerabilities found",
+            "System performs well under load",
+            "All edge cases handled correctly"
+          ]
+        },
+        {
+          "item": "Security Hardening",
+          "files_to_create": [
+            "custom/Espo/Custom/Acl/FinancialLead.php",
+            "custom/Espo/Custom/Resources/metadata/aclDefs/*.json"
+          ],
+          "requirements": [
+            "Implement role-based access control:",
+            "  - Loan Officer: read=team, create=yes, edit=own, delete=no, cannot see bankAccountNumber",
+            "  - Senior Manager: read=all, create=yes, edit=all, delete=yes, can see all fields",
+            "  - Data Entry: create=yes, edit for 24hrs, cannot see credit scores",
+            "Enable field-level encryption for: nicNumber, bankAccountNumber, passportNumber",
+            "Implement audit logging for all data changes",
+            "Add IP address logging for sensitive actions",
+            "Implement session timeout (30 minutes inactivity)",
+            "Add 2FA requirement for admin users",
+            "Implement rate limiting on API endpoints (100 req/min per user)",
+            "Sanitize all user inputs to prevent XSS",
+            "Use parameterized queries to prevent SQL injection",
+            "Implement CSRF token validation",
+            "Add data retention policy enforcement (delete leads after 2 years if not converted)"
+          ],
+          "acceptance_criteria": [
+            "RBAC works correctly for all roles",
+            "Encrypted fields are secure in database",
+            "Audit logs capture all changes",
+            "Rate limiting works",
+            "No XSS/SQL injection vulnerabilities",
+            "CSRF protection works",
+            "Data retention policy executes correctly"
+          ]
+        },
+        {
+          "item": "Deployment & Documentation",
+          "files_to_create": [
+            "docs/INSTALLATION.md",
+            "docs/USER_GUIDE.md",
+            "docs/ADMIN_GUIDE.md",
+            "docs/API_DOCUMENTATION.md",
+            "docs/CHANGELOG.md"
+          ],
+          "requirements": [
+            "Create installation guide with step-by-step instructions",
+            "Document all custom entities and fields",
+            "Document API endpoints with examples",
+            "Create user guide with screenshots",
+            "Create admin configuration guide",
+            "Document workflow configurations",
+            "Create troubleshooting guide",
+            "Add code comments for all custom logic",
+            "Create database migration scripts",
+            "Create backup/restore procedures",
+            "Prepare production deployment checklist",
+            "Create rollback plan"
+          ],
+          "acceptance_criteria": [
+            "Installation can be completed following docs",
+            "All features are documented",
+            "API documentation is complete and accurate",
+            "Screenshots are current and helpful",
+            "Troubleshooting guide resolves common issues"
+          ]
+        }
+      ]
+    }
+  ],
+  
+  "technical_requirements": {
+    "php_version": ">=8.1",
+    "espocrm_version": ">=8.0",
+    "database": "MySQL 8.0+ or MariaDB 10.6+",
+    "web_server": "Apache 2.4+ or Nginx 1.18+",
+    "php_extensions": [
+      "pdo_mysql",
+      "json",
+      "gd",
+      "openssl",
+      "zip",
+      "iconv",
+      "mbstring",
+      "curl",
+      "xml",
+      "bcmath"
+    ],
+    "composer_packages": [
+      "guzzlehttp/guzzle:^7.0 - for HTTP client",
+      "phpoffice/phpspreadsheet:^1.29 - for Excel reports",
+      "dompdf/dompdf:^2.0 - for PDF generation"
+    ],
+    "npm_packages": [
+      "chart.js:^4.0 - for dashlets",
+      "moment.js:^2.29 - for date handling"
+    ],
+    "external_apis": [
+      "CRIB (Credit Information Bureau) - credit reports",
+      "Dialog SMS Gateway - SMS notifications",
+      "Mobitel SMS Gateway - SMS notifications",
+      "Google Vision API (optional) - OCR for document verification",
+      "Tesseract OCR (alternative) - local OCR processing"
+    ]
+  },
+  
+  "coding_standards": {
+    "php": {
+      "standard": "PSR-12",
+      "naming_convention": {
+        "classes": "PascalCase",
+        "methods": "camelCase",
+        "variables": "camelCase",
+        "constants": "UPPER_SNAKE_CASE"
+      },
+      "documentation": "PHPDoc for all classes and public methods",
+      "error_handling": "Use exceptions, catch and log all errors"
+    },
+    "javascript": {
+      "standard": "ESLint with Airbnb config",
+      "framework": "Backbone.js (EspoCRM frontend framework)",
+      "naming_convention": {
+        "classes": "PascalCase",
+        "methods": "camelCase",
+        "variables": "camelCase",
+        "constants": "UPPER_SNAKE_CASE"
+      }
+    },
+    "database": {
+      "naming": "snake_case for tables and columns",
+      "indexes": "Add indexes for foreign keys and frequently queried fields",
+      "migrations": "Version all schema changes"
+    }
+  },
+  
+  "success_criteria": {
+    "functional": [
+      "All 40+ custom fields work correctly",
+      "All 6 supporting entities are operational",
+      "Credit bureau integration retrieves reports successfully",
+      "Loan product recommendation engine provides accurate matches",
+      "Lead qualification calculates FOIR/DTI correctly",
+      "Duplicate detection catches >95% of duplicates",
+      "Document verification OCR works with >90% accuracy",
+      "All workflows execute without errors",
+      "Email/SMS notifications send reliably",
+      "Web-to-lead form captures data correctly"
+    ],
+    "performance": [
+      "Page load time <2 seconds",
+      "API response time <500ms for most endpoints",
+      "Lead list view loads 100 records in <1 second",
+      "Report generation <5 seconds for standard date ranges",
+      "Search queries return in <300ms",
+      "System handles 100+ concurrent users",
+      "Database queries optimized (no N+1 problems)"
+    ],
+    "security": [
+      "Zero SQL injection vulnerabilities",
+      "Zero XSS vulnerabilities",
+      "All sensitive data encrypted at rest",
+      "RBAC enforced for all operations",
+      "Audit trail captures all data changes",
+      "Session management secure",
+      "API rate limiting effective"
+    ],
+    "usability": [
+      "Intuitive UI requiring <30 min training",
+      "Mobile-responsive on all devices",
+      "Forms validate with helpful error messages",
+      "Dashboards provide actionable insights",
+      "Search and filters work intuitively",
+      "Action buttons clearly labeled"
+    ]
+  },
+  
+  "key_files_to_reference": {
+    "espocrm_core": [
+      "application/Espo/Modules/Crm/Resources/metadata/entityDefs/Lead.json",
+      "application/Espo/Modules/Crm/Entities/Lead.php",
+      "application/Espo/Modules/Crm/Services/Lead.php",
+      "application/Espo/Modules/Crm/Controllers/Lead.php",
+      "client/modules/crm/src/views/lead/detail.js",
+      "client/modules/crm/src/views/lead/record/list.js"
+    ],
+    "documentation_urls": [
+      "https://docs.espocrm.com/development/metadata/",
+      "https://docs.espocrm.com/development/orm/",
+      "https://docs.espocrm.com/development/api/",
+      "https://docs.espocrm.com/development/services/",
+      "https://docs.espocrm.com/development/custom-views/",
+      "https://docs.espocrm.com/administration/bpm/"
+    ]
+  },
+  
+  "notes_for_implementation": [
+    "Start by examining EspoCRM's core Lead entity structure to understand inheritance patterns",
+    "Use Entity Manager to prototype fields before writing JSON metadata",
+    "Test each phase deliverable independently before moving to next phase",
+    "Keep custom code in custom/Espo/Custom/ to avoid conflicts with core updates",
+    "Use EspoCRM's dependency injection container for service access",
+    "Follow EspoCRM's ORM patterns for database operations",
+    "Leverage EspoCRM's built-in Formula engine for calculations where possible",
+    "Use hooks for event-driven automation instead of modifying core controllers",
+    "Test with sample data that matches Sri Lankan context (LKR currency, local phone formats)",
+    "Implement feature flags to enable/disable features during rollout",
+    "Create database backups before each major deployment",
+    "Monitor error logs closely during initial deployment",
+    "Gather user feedback after each phase for iterative improvement"
+  ],
+  
+  "expected_outcomes": {
+    "business_impact": [
+      "Reduce lead response time from hours to <15 minutes",
+      "Increase lead conversion rate by 15-20%",
+      "Reduce manual data entry time by 50%",
+      "Improve lead qualification accuracy to >90%",
+      "Enable data-driven decision making with comprehensive analytics",
+      "Ensure regulatory compliance (PDPA, CBSL requirements)",
+      "Reduce duplicate lead creation by 95%",
+      "Accelerate loan processing time by 30%"
+    ],
+    "technical_outcomes": [
+      "Robust, maintainable codebase following EspoCRM best practices",
+      "Comprehensive test coverage (>80%)",
+      "Secure implementation with no critical vulnerabilities",
+      "Scalable architecture supporting 1000+ users",
+      "Well-documented code and processes",
+      "Seamless integration with external APIs",
+      "Efficient database queries and indexing",
+      "Responsive, user-friendly interfaces"
+    ]
+  }
+}
