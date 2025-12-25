@@ -4,7 +4,8 @@
             "notNull": false,
             "type": "date",
             "required": true,
-            "isCustom": true
+            "isCustom": true,
+            "useNumericFormat": true
         },
         "cNicNumber": {
             "type": "varchar",
@@ -67,6 +68,13 @@
         "cLastContactDate": {
             "notNull": false,
             "type": "date",
+            "isCustom": true,
+            "useNumericFormat": true
+        },
+        "cCifNumber": {
+            "type": "varchar",
+            "maxLength": 40,
+            "options": [],
             "isCustom": true
         }
     },

@@ -7,7 +7,8 @@
         "cBranch": "Branch",
         "cFlags": "Flags",
         "cLastContactDate": "Last Contact Date",
-        "cGoldLoans": "Gold Loans"
+        "cGoldLoans": "Gold Loans",
+        "cCifNumber": "CIF Number"
     },
     "options": {
         "cGender": {

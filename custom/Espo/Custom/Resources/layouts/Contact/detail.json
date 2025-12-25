@@ -4,9 +4,14 @@
             [
                 {
                     "name": "name"
-                },
+                }
+            ],
+            [
                 {
                     "name": "cNicNumber"
+                },
+                {
+                    "name": "cCifNumber"
                 }
             ],
             [
