@@ -4,6 +4,7 @@ set -e
 echo "Starting EspoCRM initialization..."
 
 # Create required directories if they don't exist
+mkdir -p /var/www/html/public
 mkdir -p /var/www/html/data
 mkdir -p /var/www/html/data/cache
 mkdir -p /var/www/html/data/logs
@@ -12,13 +13,33 @@ mkdir -p /var/www/html/data/tmp
 mkdir -p /var/www/html/custom
 mkdir -p /var/www/html/client/custom
 
+# If public directory is empty, copy core files there
+if [ ! -f "/var/www/html/public/index.php" ]; then
+    echo "Setting up public directory structure..."
+    # Create index.php in public if it doesn't exist
+    if [ -f "/var/www/html/index.php" ]; then
+        cp /var/www/html/index.php /var/www/html/public/
+    fi
+    
+    # Copy api and portal directories if they exist
+    if [ -d "/var/www/html/api" ] && [ ! -d "/var/www/html/public/api" ]; then
+        cp -r /var/www/html/api /var/www/html/public/
+    fi
+    
+    if [ -d "/var/www/html/portal" ] && [ ! -d "/var/www/html/public/portal" ]; then
+        cp -r /var/www/html/portal /var/www/html/public/
+    fi
+fi
+
 # Set proper permissions
 chown -R www-data:www-data /var/www/html/data
 chown -R www-data:www-data /var/www/html/custom
 chown -R www-data:www-data /var/www/html/client/custom
+chown -R www-data:www-data /var/www/html/public
 chmod -R 775 /var/www/html/data
 chmod -R 775 /var/www/html/custom
 chmod -R 775 /var/www/html/client/custom
+chmod -R 755 /var/www/html/public
 
 # If config.php doesn't exist and we have environment variables, create it
 if [ ! -f "/var/www/html/data/config.php" ] && [ -n "$DATABASE_HOST" ]; then
@@ -41,10 +62,10 @@ return [
     'recordsPerPageSmall' => 5,
     'applicationName' => 'EspoCRM',
     'version' => '9.2.5',
-    'timeZone' => 'UTC',
-    'dateFormat' => 'MM/DD/YYYY',
+    'timeZone' => 'Asia/Colombo',
+    'dateFormat' => 'DD/MM/YYYY',
     'timeFormat' => 'HH:mm',
-    'weekStart' => 0,
+    'weekStart' => 1,
     'thousandSeparator' => ',',
     'decimalMark' => '.',
     'exportDelimiter' => ',',
