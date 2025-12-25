@@ -43,5 +43,8 @@
             "layout": null,
             "selectPrimaryFilterName": null
         }
-    }
+    },
+    "kanbanViewMode": false,
+    "color": "#a4c5e0",
+    "iconClass": "fas fa-id-badge"
 }

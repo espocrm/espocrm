@@ -1,23 +1,21 @@
 {
+    "_delimiter_": {
+        "disabled": true
+    },
     "activities": {
         "disabled": true
     },
     "history": {
         "disabled": true
     },
-    "stream": {
+    "tasks": {
         "disabled": true
     },
-    "_delimiter_": {
-        "disabled": true
-    },
-    "cases": {
+    "default": {
         "index": 0
     },
-    "cLeads": {
+    "convertedTo": {
+        "style": "success",
         "index": 1
-    },
-    "opportunities": {
-        "index": 2
     }
 }

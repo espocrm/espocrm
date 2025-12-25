@@ -33,5 +33,8 @@
     "links": {
         "cGoldLoans": "Gold Loans",
         "cLeads": "Leads"
+    },
+    "labels": {
+        "Create Contact": "Create Customer"
     }
 }

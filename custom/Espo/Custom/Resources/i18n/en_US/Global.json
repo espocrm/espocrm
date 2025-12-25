@@ -1,8 +1,10 @@
 {
     "scopeNames": {
-        "CGoldLoan": "Gold Loan"
+        "CGoldLoan": "Gold Loan",
+        "Contact": "Customer"
     },
     "scopeNamesPlural": {
-        "CGoldLoan": "Gold Loans"
+        "CGoldLoan": "Gold Loans",
+        "Contact": "Customers"
     }
 }
