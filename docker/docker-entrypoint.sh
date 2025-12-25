@@ -13,22 +13,15 @@ mkdir -p /var/www/html/data/tmp
 mkdir -p /var/www/html/custom
 mkdir -p /var/www/html/client/custom
 
-# If public directory is empty, copy core files there
-if [ ! -f "/var/www/html/public/index.php" ]; then
-    echo "Setting up public directory structure..."
-    # Create index.php in public if it doesn't exist
-    if [ -f "/var/www/html/index.php" ]; then
-        cp /var/www/html/index.php /var/www/html/public/
-    fi
-    
-    # Copy api and portal directories if they exist
-    if [ -d "/var/www/html/api" ] && [ ! -d "/var/www/html/public/api" ]; then
-        cp -r /var/www/html/api /var/www/html/public/
-    fi
-    
-    if [ -d "/var/www/html/portal" ] && [ ! -d "/var/www/html/public/portal" ]; then
-        cp -r /var/www/html/portal /var/www/html/public/
-    fi
+# Ensure public directory exists and has proper structure
+echo "Verifying public directory structure..."
+
+# Public directory should already exist from the COPY in Dockerfile
+# Just ensure permissions are correct
+if [ -d "/var/www/html/public" ]; then
+    echo "Public directory found - structure is ready"
+else
+    echo "Warning: Public directory not found!"
 fi
 
 # Set proper permissions
