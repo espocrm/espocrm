@@ -1,14 +1,18 @@
 [
     {
+        "name": "name",
+        "width": 16
+    },
+    {
         "name": "status",
         "width": 15
     },
     {
-        "name": "assignedUser",
-        "width": 18
+        "name": "description",
+        "width": 16
     },
     {
-        "name": "createdAt",
-        "width": 13
+        "name": "assignedUser",
+        "width": 18
     }
 ]
