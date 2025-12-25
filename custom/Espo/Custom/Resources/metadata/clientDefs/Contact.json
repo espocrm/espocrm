@@ -38,6 +38,10 @@
         "goldLoans": {
             "layout": null,
             "selectPrimaryFilterName": null
+        },
+        "leads": {
+            "layout": null,
+            "selectPrimaryFilterName": null
         }
     }
 }

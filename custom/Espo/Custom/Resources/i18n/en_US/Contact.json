@@ -8,7 +8,8 @@
         "cFlags": "Flags",
         "cLastContactDate": "Last Contact Date",
         "cGoldLoans": "Gold Loans",
-        "cCifNumber": "CIF Number"
+        "cCifNumber": "CIF Number",
+        "cLeads": "Leads"
     },
     "options": {
         "cGender": {
@@ -30,6 +31,7 @@
         }
     },
     "links": {
-        "cGoldLoans": "Gold Loans"
+        "cGoldLoans": "Gold Loans",
+        "cLeads": "Leads"
     }
 }

@@ -85,6 +85,13 @@
             "entity": "CGoldLoan",
             "audited": false,
             "isCustom": true
+        },
+        "cLeads": {
+            "type": "hasMany",
+            "foreign": "cContact",
+            "entity": "Lead",
+            "audited": false,
+            "isCustom": true
         }
     }
 }

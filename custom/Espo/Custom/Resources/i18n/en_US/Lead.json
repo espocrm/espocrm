@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "cContact": "Contact"
+    },
+    "links": {
+        "cContact": "Contact"
+    }
+}
