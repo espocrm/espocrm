@@ -29,10 +29,12 @@ chown -R www-data:www-data /var/www/html/data
 chown -R www-data:www-data /var/www/html/custom
 chown -R www-data:www-data /var/www/html/client/custom
 chown -R www-data:www-data /var/www/html/public
+chown -R www-data:www-data /var/www/html/install
 chmod -R 775 /var/www/html/data
 chmod -R 775 /var/www/html/custom
 chmod -R 775 /var/www/html/client/custom
 chmod -R 755 /var/www/html/public
+chmod -R 755 /var/www/html/install
 
 # If config.php doesn't exist and we have environment variables, create it
 if [ ! -f "/var/www/html/data/config.php" ] && [ -n "$DATABASE_HOST" ]; then
