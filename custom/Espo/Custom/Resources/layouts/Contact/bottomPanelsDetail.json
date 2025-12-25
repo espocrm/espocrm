@@ -11,13 +11,26 @@
     "_delimiter_": {
         "disabled": true
     },
-    "cases": {
-        "index": 0
+    "_tabBreak_1": {
+        "index": 0,
+        "tabBreak": true,
+        "tabLabel": "Financial Overview"
     },
-    "cLeads": {
+    "totalDepositsAdvances": {
         "index": 1
     },
+    "_tabBreak_0": {
+        "index": 2,
+        "tabBreak": true,
+        "tabLabel": "Support"
+    },
+    "cases": {
+        "index": 3
+    },
+    "cLeads": {
+        "index": 4
+    },
     "opportunities": {
-        "index": 2
+        "index": 5
     }
 }

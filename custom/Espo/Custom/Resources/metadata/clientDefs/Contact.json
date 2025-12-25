@@ -34,6 +34,16 @@
             }
         ]
     },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "totalDepositsAdvances",
+                "label": "Financial Overview",
+                "view": "custom:views/contact/panels/total-deposits-advances"
+            },
+            "__APPEND__"
+        ]
+    },
     "relationshipPanels": {
         "goldLoans": {
             "layout": null,
