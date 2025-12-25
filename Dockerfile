@@ -61,14 +61,14 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Set permissions
+# Set permissions - create directories first, then set permissions only on existing files
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
+    && mkdir -p /var/www/html/data /var/www/html/custom /var/www/html/client/custom \
     && chmod -R 775 /var/www/html/data \
     && chmod -R 775 /var/www/html/custom \
     && chmod -R 775 /var/www/html/client/custom \
-    && chmod 644 /var/www/html/.htaccess \
-    && chmod 644 /var/www/html/api/v1/.htaccess
+    && find /var/www/html -name ".htaccess" -type f -exec chmod 644 {} \;
 
 # Configure PHP
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
