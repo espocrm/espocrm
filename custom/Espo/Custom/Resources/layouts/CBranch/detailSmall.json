@@ -1,0 +1,38 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "branchCode"
+                }
+            ],
+            [
+                {
+                    "name": "emailAddress"
+                },
+                {
+                    "name": "telephoneNumber"
+                }
+            ],
+            [
+                {
+                    "name": "branchAddress"
+                },
+                {
+                    "name": "bankingHours"
+                }
+            ],
+            [
+                {
+                    "name": "user"
+                },
+                false
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]

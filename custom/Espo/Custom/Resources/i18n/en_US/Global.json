@@ -1,8 +1,10 @@
 {
     "scopeNames": {
-        "Contact": "Customer"
+        "Contact": "Customer",
+        "CBranch": "Branch"
     },
     "scopeNamesPlural": {
-        "Contact": "Customers"
+        "Contact": "Customers",
+        "CBranch": "Branches"
     }
 }

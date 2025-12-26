@@ -58,6 +58,10 @@
         "leads": {
             "layout": null,
             "selectPrimaryFilterName": null
+        },
+        "branch": {
+            "layout": null,
+            "selectPrimaryFilterName": null
         }
     },
     "kanbanViewMode": false,

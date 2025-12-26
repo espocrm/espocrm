@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "cBranch": {
+            "type": "linkOne"
+        }
+    },
+    "links": {
+        "cBranch": {
+            "type": "hasOne",
+            "foreign": "user",
+            "entity": "CBranch",
+            "isCustom": true
+        }
+    }
+}

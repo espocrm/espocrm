@@ -4,23 +4,17 @@
         "cNicNumber": "NIC Number",
         "assignedUser": "Relationship Officer",
         "cGender": "Gender",
-        "cBranch": "Branch",
         "cFlags": "Flags",
         "cLastContactDate": "Last Contact Date",
         "cCifNumber": "CIF Number",
-        "cLeads": "Leads"
+        "cLeads": "Leads",
+        "cBranch": "Branch"
     },
     "options": {
         "cGender": {
             "": "",
             "Male": "Male",
             "Female": "Female"
-        },
-        "cBranch": {
-            "": "",
-            "Colombo": "Colombo",
-            "Kandy": "Kandy",
-            "Jaffna": "Jaffna"
         },
         "cFlags": {
             "": "",
@@ -30,7 +24,8 @@
         }
     },
     "links": {
-        "cLeads": "Leads"
+        "cLeads": "Leads",
+        "cBranch": "Branch"
     },
     "labels": {
         "Create Contact": "Create Customer"

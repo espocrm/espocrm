@@ -1,0 +1,17 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-building",
+    "relationshipPanels": {
+        "user": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        },
+        "contacts": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        }
+    }
+}
