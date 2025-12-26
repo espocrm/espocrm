@@ -1,5 +1,5 @@
 {
-    "stream": true,
+    "stream": false,
     "disabled": false,
     "statusField": null,
     "kanbanStatusIgnoreList": null,
