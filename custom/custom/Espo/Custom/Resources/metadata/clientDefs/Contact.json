@@ -1,0 +1,66 @@
+{
+    "sidePanels": {
+        "detail": [
+            "__APPEND__",
+            {
+                "name": "bankingLoans",
+                "label": "Banking Loans",
+                "view": "custom:views/contact/panels/banking-loans",
+                "style": "default"
+            },
+            {
+                "name": "fixedDeposits",
+                "label": "Fixed Deposits",
+                "view": "custom:views/contact/panels/fixed-deposits",
+                "style": "default"
+            },
+            {
+                "name": "savingsAccounts",
+                "label": "Savings Accounts",
+                "view": "custom:views/contact/panels/savings-accounts",
+                "style": "default"
+            },
+            {
+                "name": "goldLoans",
+                "label": "Gold Loans",
+                "view": "custom:views/contact/panels/gold-loans",
+                "style": "default"
+            },
+            {
+                "name": "factoring",
+                "label": "Factoring",
+                "view": "custom:views/contact/panels/factoring",
+                "style": "default"
+            },
+            {
+                "name": "leasings",
+                "label": "Leasings",
+                "view": "custom:views/contact/panels/leasings",
+                "style": "default"
+            }
+        ]
+    },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "totalDepositsAdvances",
+                "label": "Financial Overview",
+                "view": "custom:views/contact/panels/total-deposits-advances"
+            },
+            "__APPEND__"
+        ]
+    },
+    "relationshipPanels": {
+        "goldLoans": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        },
+        "leads": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": "#a4c5e0",
+    "iconClass": "fas fa-id-badge"
+}

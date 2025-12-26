@@ -1,0 +1,59 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                }
+            ],
+            [
+                {
+                    "name": "cNicNumber"
+                },
+                {
+                    "name": "cCifNumber"
+                }
+            ],
+            [
+                {
+                    "name": "cDateOfBirth"
+                },
+                {
+                    "name": "cGender"
+                }
+            ],
+            [
+                {
+                    "name": "address"
+                },
+                {
+                    "name": "cBranch"
+                }
+            ],
+            [
+                {
+                    "name": "phoneNumber"
+                },
+                {
+                    "name": "emailAddress"
+                }
+            ],
+            [
+                {
+                    "name": "assignedUser"
+                },
+                {
+                    "name": "cLastContactDate"
+                }
+            ],
+            [
+                {
+                    "name": "cFlags"
+                }
+            ]
+        ],
+        "style": "default",
+        "noteStyle": "info",
+        "label": ""
+    }
+]

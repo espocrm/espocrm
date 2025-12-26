@@ -1,0 +1,14 @@
+{
+    "stream": {
+        "disabled": true
+    },
+    "activities": {
+        "disabled": true
+    },
+    "history": {
+        "disabled": true
+    },
+    "_delimiter_": {
+        "disabled": true
+    }
+}

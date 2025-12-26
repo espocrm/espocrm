@@ -1,0 +1,26 @@
+[
+    {
+        "name": "number",
+        "widthPx": 100
+    },
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "type",
+        "width": 16
+    },
+    {
+        "name": "status",
+        "width": 11
+    },
+    {
+        "name": "priority",
+        "width": 11
+    },
+    {
+        "name": "assignedUser",
+        "width": 14
+    }
+]

@@ -1,0 +1,26 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "cContact"
+                }
+            ],
+            [
+                {
+                    "name": "status"
+                },
+                {
+                    "name": "source"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]
