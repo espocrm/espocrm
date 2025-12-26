@@ -30,6 +30,7 @@
                 <th class="text-right">Invoice Amount</th>
                 <th class="text-right">Advanced (80%)</th>
                 <th>Due Date</th>
+                <th>Branch</th>
                 <th class="text-center">Status</th>
             </tr>
         </thead>
@@ -41,6 +42,7 @@
                 <td class="text-right">LKR 1,000,000.00</td>
                 <td class="text-right">LKR 800,000.00</td>
                 <td>2025-01-30</td>
+                <td>Colombo</td>
                 <td class="text-center"><span class="label label-warning">Pending</span></td>
             </tr>
             <tr>
@@ -50,6 +52,7 @@
                 <td class="text-right">LKR 500,000.00</td>
                 <td class="text-right">LKR 400,000.00</td>
                 <td>2025-02-05</td>
+                <td>Jaffna</td>
                 <td class="text-center"><span class="label label-warning">Pending</span></td>
             </tr>
         </tbody>

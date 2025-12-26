@@ -9,6 +9,7 @@
                 <th class="text-right">Monthly Rental</th>
                 <th>Term</th>
                 <th>End Date</th>
+                <th>Branch</th>
                 <th class="text-center">Status</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                 <td class="text-right">LKR 350,000.00</td>
                 <td>60 Months</td>
                 <td>2028-05-15</td>
+                <td>Colombo</td>
                 <td class="text-center"><span class="label label-success">Active</span></td>
             </tr>
             <tr>
@@ -31,6 +33,7 @@
                 <td class="text-right">LKR 210,000.00</td>
                 <td>48 Months</td>
                 <td>2026-08-20</td>
+                <td>Kandy</td>
                 <td class="text-center"><span class="label label-warning">Arrears</span></td>
             </tr>
         </tbody>
