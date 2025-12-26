@@ -2,6 +2,189 @@
     "fields": {
         "cContact": {
             "type": "link"
+        },
+        "accountName": {
+            "options": []
+        },
+        "cDateOfBirth": {
+            "notNull": false,
+            "type": "date",
+            "isCustom": true
+        },
+        "cGender": {
+            "type": "enum",
+            "options": [
+                "Male",
+                "Female",
+                "Other"
+            ],
+            "style": {
+                "Male": null,
+                "Female": null,
+                "Other": null
+            },
+            "default": "Male",
+            "displayAsLabel": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cMaritalStatus": {
+            "type": "enum",
+            "options": [
+                "Single",
+                "Married",
+                "Divorced",
+                "Widowed"
+            ],
+            "style": {
+                "Single": null,
+                "Married": null,
+                "Divorced": null,
+                "Widowed": null
+            },
+            "default": "Single",
+            "displayAsLabel": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cProofType": {
+            "type": "enum",
+            "options": [
+                "Owned",
+                "Rented",
+                "Family"
+            ],
+            "style": {
+                "Owned": null,
+                "Rented": null,
+                "Family": null
+            },
+            "default": "Owned",
+            "displayAsLabel": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cNICNo": {
+            "type": "varchar",
+            "maxLength": 100,
+            "pattern": "/^([0-9]{9}[vVxX]|[0-9]{12})$/",
+            "isPersonalData": true,
+            "options": [],
+            "isCustom": true
+        },
+        "cPassport": {
+            "type": "varchar",
+            "maxLength": 10,
+            "pattern": "/^[A-Z][0-9]{7}$/",
+            "options": [],
+            "isCustom": true
+        },
+        "cDrivingLicense": {
+            "type": "varchar",
+            "maxLength": 10,
+            "pattern": "/^[B][0-9]{7}$/",
+            "options": [],
+            "isCustom": true
+        },
+        "cEmployeeType": {
+            "type": "enum",
+            "options": [
+                "Salaried",
+                "Self-Employed",
+                "Business",
+                "Retired"
+            ],
+            "style": {
+                "Salaried": null,
+                "Self-Employed": null,
+                "Business": null,
+                "Retired": null
+            },
+            "default": "Salaried",
+            "displayAsLabel": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cBusinessName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cTurnover": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cExistingMonthlyObligations": {
+            "type": "currency",
+            "isCustom": true
+        },
+        "cBankName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cAccountNo": {
+            "type": "int",
+            "isCustom": true
+        },
+        "cBranch": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cCreditScore": {
+            "notNull": false,
+            "type": "float",
+            "min": 0,
+            "isCustom": true
+        },
+        "cInterestedLoan": {
+            "type": "enum",
+            "options": [
+                "Personal Loan",
+                "Vehicle Loan",
+                "Gold Loan",
+                "Business Loan",
+                "Lease"
+            ],
+            "style": {
+                "Personal Loan": null,
+                "Vehicle Loan": null,
+                "Gold Loan": null,
+                "Business Loan": null,
+                "Lease": null
+            },
+            "default": "Personal Loan",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDesiredLoanAmount": {
+            "type": "currency",
+            "min": 0,
+            "isCustom": true
+        },
+        "cPreferredTenure": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cPurposeOfLoan": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cPropertyOrVehicleDetails": {
+            "type": "varchar",
+            "maxLength": 255,
+            "options": [],
+            "isCustom": true
         }
     },
     "links": {

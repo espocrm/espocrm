@@ -4,25 +4,16 @@
             [
                 {
                     "name": "name"
-                },
+                }
+            ],
+            [
                 {
                     "name": "cNicNumber"
                 },
                 {
                     "name": "cCifNumber"
                 }
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": false,
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "customLabel": "Overview"
-    },
-    {
-        "rows": [
+            ],
             [
                 {
                     "name": "cDateOfBirth"
@@ -61,13 +52,8 @@
                 }
             ]
         ],
-        "dynamicLogicVisible": null,
         "style": "default",
-        "isCollapsed": true,
-        "tabBreak": false,
-        "hidden": true,
-        "noteText": null,
         "noteStyle": "info",
-        "customLabel": "Full Details"
+        "label": ""
     }
 ]
