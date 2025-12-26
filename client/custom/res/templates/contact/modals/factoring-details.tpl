@@ -52,33 +52,6 @@
                 <td>2025-02-05</td>
                 <td class="text-center"><span class="label label-warning">Pending</span></td>
             </tr>
-            <tr>
-                <td>INV-2024-003</td>
-                <td>2024-12-10</td>
-                <td>Global Tech</td>
-                <td class="text-right">LKR 750,000.00</td>
-                <td class="text-right">LKR 600,000.00</td>
-                <td>2025-02-10</td>
-                <td class="text-center"><span class="label label-warning">Pending</span></td>
-            </tr>
-            <tr>
-                <td>INV-2024-004</td>
-                <td>2024-12-15</td>
-                <td>Retail Solutions</td>
-                <td class="text-right">LKR 250,000.00</td>
-                <td class="text-right">LKR 200,000.00</td>
-                <td>2025-02-15</td>
-                <td class="text-center"><span class="label label-warning">Pending</span></td>
-            </tr>
-             <tr>
-                <td>INV-2023-999</td>
-                <td>2023-11-01</td>
-                <td>Old Client Inc</td>
-                <td class="text-right">LKR 2,000,000.00</td>
-                <td class="text-right">LKR 1,600,000.00</td>
-                <td>2024-01-01</td>
-                <td class="text-center"><span class="label label-success">Paid</span></td>
-            </tr>
         </tbody>
     </table>
 </div>

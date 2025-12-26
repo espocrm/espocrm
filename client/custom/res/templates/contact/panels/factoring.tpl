@@ -21,16 +21,6 @@
                     <td class="text-right">LKR 5,000,000.00</td>
                 </tr>
                 <tr>
-                    <td style="padding-left: 15px;"><strong>Utilization</strong></td>
-                    <td class="text-right">
-                        45%
-                        <div class="progress" style="height: 5px; margin-bottom: 0; margin-top: 5px;">
-                          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
-                          </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
                     <td style="padding-left: 15px;"><strong>Outstanding Balance</strong></td>
                     <td class="text-right text-danger">LKR 2,250,000.00</td>
                 </tr>

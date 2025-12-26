@@ -29,7 +29,6 @@
                         <span class="label label-success">Active</span>
                     </td>
                 </tr>
-
                 <tr>
                     <td style="padding-left: 15px;">
                         <strong>Recurring Deposit</strong><br>
@@ -40,19 +39,6 @@
                     </td>
                     <td class="text-center">
                         <span class="label label-warning">Maturing Soon</span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="padding-left: 15px;">
-                        <strong>Tax Saver FD</strong><br>
-                        <small class="text-muted">ID: FD-2020-112</small>
-                    </td>
-                    <td class="text-center">
-                        Mar 31, 2025
-                    </td>
-                    <td class="text-center">
-                        <span class="label label-success">Active</span>
                     </td>
                 </tr>
             </tbody>

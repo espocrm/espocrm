@@ -29,7 +29,6 @@
                         <span class="label label-success">Active</span>
                     </td>
                 </tr>
-
                 <tr>
                     <td style="padding-left: 15px;">
                         <strong>xxxx-xxxx-1024</strong><br>
@@ -40,19 +39,6 @@
                     </td>
                     <td class="text-center">
                         <span class="label label-success">Active</span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="padding-left: 15px;">
-                        <strong>xxxx-xxxx-0019</strong><br>
-                        <small class="text-muted">Kids Savings</small>
-                    </td>
-                    <td class="text-right">
-                        $1,200.00
-                    </td>
-                    <td class="text-center">
-                        <span class="label label-warning">Dormant</span>
                     </td>
                 </tr>
             </tbody>

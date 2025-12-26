@@ -33,26 +33,6 @@
                 <td>2028-06-10</td>
                 <td class="text-center"><span class="label label-default">Paid</span></td>
             </tr>
-            <tr>
-                <td>PL-2025-001</td>
-                <td>Personal Loan</td>
-                <td class="text-right">$5,000.00</td>
-                <td class="text-right">8.9%</td>
-                <td class="text-right">$450.00</td>
-                <td>2025-02-01</td>
-                <td>2026-02-01</td>
-                <td class="text-center"><span class="label label-warning">Pending</span></td>
-            </tr>
-             <tr>
-                <td>EL-2022-555</td>
-                <td>Education Loan</td>
-                <td class="text-right">$40,000.00</td>
-                <td class="text-right">4.0%</td>
-                <td class="text-right">$380.00</td>
-                <td>2022-09-01</td>
-                <td>2032-09-01</td>
-                <td class="text-center"><span class="label label-success">Active</span></td>
-            </tr>
         </tbody>
     </table>
 </div>

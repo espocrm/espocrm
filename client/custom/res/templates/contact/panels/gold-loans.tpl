@@ -30,7 +30,6 @@
                         <span class="label label-danger">High</span>
                     </td>
                 </tr>
-
                 <tr>
                     <td style="padding-left: 15px;">
                         <strong>Gold Ring (24K)</strong><br>
@@ -42,20 +41,6 @@
                     </td>
                     <td class="text-center">
                         <span class="label label-success">Low</span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="padding-left: 15px;">
-                        <strong>Bangles (22K)</strong><br>
-                        <small class="text-muted">Weight: 30g</small>
-                    </td>
-                    <td class="text-right">
-                        LKR 200,000.00<br>
-                        <small class="text-warning">Out: LKR 210,000.00</small>
-                    </td>
-                    <td class="text-center">
-                        <span class="label label-warning">Medium</span>
                     </td>
                 </tr>
             </tbody>

@@ -31,6 +31,12 @@
                 "label": "Factoring",
                 "view": "custom:views/contact/panels/factoring",
                 "style": "default"
+            },
+            {
+                "name": "leasings",
+                "label": "Leasings",
+                "view": "custom:views/contact/panels/leasings",
+                "style": "default"
             }
         ]
     },

@@ -24,13 +24,6 @@
                 <td class="text-right">2025-12-20 ($2,000.00 Cr)</td>
                 <td class="text-center"><span class="label label-success">Active</span></td>
             </tr>
-            <tr>
-                <td>1000-2000-0019</td>
-                <td>Kids Savings</td>
-                <td class="text-right">$1,200.00</td>
-                <td class="text-right">2025-11-15 ($50.00 Cr)</td>
-                <td class="text-center"><span class="label label-warning">Dormant</span></td>
-            </tr>
         </tbody>
     </table>
 </div>

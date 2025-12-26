@@ -33,16 +33,6 @@
                 <td class="text-center"><span class="label label-success">Low</span></td>
                 <td class="text-center"><span class="label label-success">Active</span></td>
             </tr>
-            <tr>
-                <td>GL-2024-055</td>
-                <td>Bangles</td>
-                <td>22K</td>
-                <td class="text-right">30.0</td>
-                <td class="text-right">LKR 200,000.00</td>
-                <td class="text-right text-warning">LKR 210,000.00</td>
-                <td class="text-center"><span class="label label-warning">Medium</span></td>
-                <td class="text-center"><span class="label label-success">Active</span></td>
-            </tr>
         </tbody>
     </table>
 </div>
