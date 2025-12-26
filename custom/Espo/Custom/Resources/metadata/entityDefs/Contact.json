@@ -79,13 +79,6 @@
         }
     },
     "links": {
-        "cGoldLoans": {
-            "type": "hasMany",
-            "foreign": "contact",
-            "entity": "CGoldLoan",
-            "audited": false,
-            "isCustom": true
-        },
         "cLeads": {
             "type": "hasMany",
             "foreign": "cContact",

@@ -7,7 +7,6 @@
         "cBranch": "Branch",
         "cFlags": "Flags",
         "cLastContactDate": "Last Contact Date",
-        "cGoldLoans": "Gold Loans",
         "cCifNumber": "CIF Number",
         "cLeads": "Leads"
     },
@@ -31,7 +30,6 @@
         }
     },
     "links": {
-        "cGoldLoans": "Gold Loans",
         "cLeads": "Leads"
     },
     "labels": {
