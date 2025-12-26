@@ -1,0 +1,13 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#fcd928",
+    "relationshipPanels": {
+        "contact": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        }
+    }
+}

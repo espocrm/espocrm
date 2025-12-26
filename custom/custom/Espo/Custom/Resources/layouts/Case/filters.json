@@ -1,0 +1,10 @@
+[
+    "assignedUser",
+    "status",
+    "priority",
+    "contact",
+    "name",
+    "description",
+    "createdAt",
+    "modifiedAt"
+]
