@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "cTargetListNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "readOnly": true,
+            "unique": true,
+            "isCustom": true
+        }
+    }
+}

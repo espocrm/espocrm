@@ -1,4 +1,7 @@
 {
+    "fields": {
+        "cCaseNumber": "Case Number"
+    },
     "options": {
         "type": {
             "": "",

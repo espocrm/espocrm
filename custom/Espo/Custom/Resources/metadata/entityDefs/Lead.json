@@ -1,5 +1,12 @@
 {
     "fields": {
+        "cLeadNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "readOnly": true,
+            "unique": true,
+            "isCustom": true
+        },
         "cContact": {
             "type": "link"
         },
