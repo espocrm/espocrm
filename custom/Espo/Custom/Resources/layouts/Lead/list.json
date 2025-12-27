@@ -1,18 +1,31 @@
 [
     {
-        "name": "name",
+        "name": "cLeadId",
         "width": 16
+    },
+    {
+        "name": "cSeqNumber",
+        "width": 16
+    },
+    {
+        "name": "name",
+        "link": "true"
     },
     {
         "name": "status",
         "width": 15
     },
     {
-        "name": "description",
-        "width": 16
+        "name": "emailAddress",
+        "width": 20,
+        "notSortable": true
     },
     {
         "name": "assignedUser",
         "width": 18
+    },
+    {
+        "name": "createdAt",
+        "width": 13
     }
 ]

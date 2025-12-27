@@ -1,0 +1,14 @@
+[
+    {
+        "name": "branchCode",
+        "width": 16
+    },
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "user",
+        "width": 16
+    }
+]

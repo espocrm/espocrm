@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "cBranch": "Branch"
+    },
+    "links": {
+        "cBranch": "Branch"
+    }
+}

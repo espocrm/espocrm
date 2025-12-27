@@ -31,23 +31,6 @@
             "maxLength": 100,
             "isCustom": true
         },
-        "cBranch": {
-            "type": "enum",
-            "options": [
-                "",
-                "Colombo",
-                "Kandy",
-                "Jaffna"
-            ],
-            "style": {
-                "": null,
-                "Colombo": null,
-                "Kandy": null,
-                "Jaffna": null
-            },
-            "maxLength": 100,
-            "isCustom": true
-        },
         "cFlags": {
             "type": "enum",
             "options": [
@@ -76,20 +59,26 @@
             "maxLength": 40,
             "options": [],
             "isCustom": true
+        },
+        "cBranch": {
+            "type": "link"
+        },
+        "cLeads": {
+            "type": "linkMultiple"
         }
     },
     "links": {
-        "cGoldLoans": {
-            "type": "hasMany",
-            "foreign": "contact",
-            "entity": "CGoldLoan",
-            "audited": false,
-            "isCustom": true
-        },
         "cLeads": {
             "type": "hasMany",
             "foreign": "cContact",
             "entity": "Lead",
+            "audited": false,
+            "isCustom": true
+        },
+        "cBranch": {
+            "type": "belongsTo",
+            "foreign": "contacts",
+            "entity": "CBranch",
             "audited": false,
             "isCustom": true
         }

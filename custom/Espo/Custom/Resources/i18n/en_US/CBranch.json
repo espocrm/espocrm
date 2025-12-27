@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "branchCode": "Branch Code",
+        "name": "Branch Name",
+        "branchAddress": "Branch Address",
+        "branchAddressStreet": "Branch Address Street",
+        "branchAddressCity": "Branch Address City",
+        "branchAddressState": "Branch Address State",
+        "branchAddressCountry": "Branch Address Country",
+        "branchAddressPostalCode": "Branch Address Postal Code",
+        "branchAddressMap": "Branch Address Map",
+        "telephoneNumber": "Telephone Number",
+        "emailAddress": "EmailAddress",
+        "user": "Branch Manager",
+        "bankingHours": "Banking Hours",
+        "contacts": "Contacts"
+    },
+    "labels": {
+        "Create CBranch": "Create Branch"
+    },
+    "links": {
+        "user": "Branch Manager",
+        "contacts": "Contacts"
+    }
+}

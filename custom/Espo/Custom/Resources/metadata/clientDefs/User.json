@@ -1,10 +1,10 @@
 {
     "relationshipPanels": {
-        "contact": {
+        "branch": {
             "layout": null,
             "selectPrimaryFilterName": null
         },
-        "cContact": {
+        "cBranch": {
             "layout": null,
             "selectPrimaryFilterName": null
         }

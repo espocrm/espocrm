@@ -2,6 +2,16 @@
     "fields": {
         "name": {
             "required": null
+        },
+        "cPermanentAddress": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isFalse",
+                        "attribute": "cIsPermanentAddressSameAsCurrent"
+                    }
+                ]
+            }
         }
     }
 }

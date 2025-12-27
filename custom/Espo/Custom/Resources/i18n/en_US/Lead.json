@@ -1,8 +1,73 @@
 {
     "fields": {
-        "cContact": "Contact"
+        "cContact": "Existing Customer",
+        "accountName": "Account Name",
+        "cDateOfBirth": "Date Of Birth",
+        "cGender": "Gender",
+        "cMaritalStatus": "Marital Status",
+        "cProofType": "Proof Type",
+        "cNICNo": "NIC No",
+        "cPassport": "Passport",
+        "cDrivingLicense": "Driving License",
+        "cEmployeeType": "Employee Type",
+        "cBusinessName": "Employer / Business Name",
+        "cTurnover": "Monthly / Annual Turnover",
+        "cExistingMonthlyObligations": "Existing Monthly Obligations (EMI, Rent, etc)",
+        "cExistingMonthlyObligationsCurrency": "Existing Monthly Obligations (EMI, Rent, etc) (Currency)",
+        "cExistingMonthlyObligationsConverted": "Existing Monthly Obligations (EMI, Rent, etc) (Converted)",
+        "cBankName": "Bank Name",
+        "cAccountNo": "Account No",
+        "cBranch": "Branch",
+        "cCreditScore": "CRIB / Credit Score",
+        "cInterestedLoan": "Interested Loan",
+        "cDesiredLoanAmount": "Desired Loan Amount",
+        "cDesiredLoanAmountCurrency": "Desired Loan Amount (Currency)",
+        "cDesiredLoanAmountConverted": "Desired Loan Amount (Converted)",
+        "cPreferredTenure": "Preferred Tenure",
+        "cPurposeOfLoan": "Purpose Of Loan",
+        "cPropertyOrVehicleDetails": "Property Or Vehicle Details",
+        "cIsPermanentAddressSameAsCurrent": "Is Permanent Address Same As Current ?",
+        "cPermanentAddress": "Permanent Address",
+        "cPermanentAddressStreet": "Permanent Address Street",
+        "cPermanentAddressCity": "Permanent Address City",
+        "cPermanentAddressState": "Permanent Address State",
+        "cPermanentAddressCountry": "Permanent Address Country",
+        "cPermanentAddressPostalCode": "Permanent Address Postal Code",
+        "cPermanentAddressMap": "Permanent Address Map",
+        "cLeadID": "Lead ID"
     },
     "links": {
-        "cContact": "Contact"
+        "cContact": "Existing Customer"
+    },
+    "options": {
+        "cGender": {
+            "Male": "Male",
+            "Female": "Female",
+            "Other": "Other"
+        },
+        "cMaritalStatus": {
+            "Single": "Single",
+            "Married": "Married",
+            "Divorced": "Divorced",
+            "Widowed": "Widowed"
+        },
+        "cProofType": {
+            "Owned": "Owned",
+            "Rented": "Rented",
+            "Family": "Family"
+        },
+        "cEmployeeType": {
+            "Salaried": "Salaried",
+            "Self-Employed": "Self-Employed",
+            "Business": "Business",
+            "Retired": "Retired"
+        },
+        "cInterestedLoan": {
+            "Personal Loan": "Personal Loan",
+            "Vehicle Loan": "Vehicle Loan",
+            "Gold Loan": "Gold Loan",
+            "Business Loan": "Business Loan",
+            "Lease": "Lease"
+        }
     }
 }
