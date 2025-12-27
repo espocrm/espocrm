@@ -1,10 +1,6 @@
 [
     {
-        "name": "cLeadId",
-        "width": 16
-    },
-    {
-        "name": "cSeqNumber",
+        "name": "cLeadID",
         "width": 16
     },
     {
