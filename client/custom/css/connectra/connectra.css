@@ -67,3 +67,8 @@ body[data-navbar="side"] .global-search-container a.global-search-button {
     align-items: center;
     height: auto;
 }
+
+/* Hide EspoCRM footer credit */
+footer .credit {
+    display: none;
+}
