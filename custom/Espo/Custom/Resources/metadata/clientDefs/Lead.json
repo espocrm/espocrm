@@ -3,6 +3,10 @@
         "contact": {
             "layout": null,
             "selectPrimaryFilterName": null
+        },
+        "cContact": {
+            "layout": null,
+            "selectPrimaryFilterName": null
         }
     }
 }

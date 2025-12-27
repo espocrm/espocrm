@@ -62,6 +62,9 @@
         },
         "cBranch": {
             "type": "link"
+        },
+        "cLeads": {
+            "type": "linkMultiple"
         }
     },
     "links": {

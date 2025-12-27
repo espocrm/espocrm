@@ -62,6 +62,10 @@
         "branch": {
             "layout": null,
             "selectPrimaryFilterName": null
+        },
+        "cLeads": {
+            "layout": null,
+            "selectPrimaryFilterName": null
         }
     },
     "kanbanViewMode": false,

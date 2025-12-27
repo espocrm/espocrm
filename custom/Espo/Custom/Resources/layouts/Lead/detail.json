@@ -3,6 +3,11 @@
         "rows": [
             [
                 {
+                    "name": "cContact"
+                }
+            ],
+            [
+                {
                     "name": "name"
                 }
             ],
@@ -36,6 +41,11 @@
                 {
                     "name": "emailAddress"
                 }
+            ],
+            [
+                {
+                    "name": "status"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
@@ -43,7 +53,7 @@
         "tabBreak": false,
         "hidden": false,
         "noteText": null,
-        "customLabel": "Contact Details"
+        "customLabel": "Contact Details and Status"
     },
     {
         "rows": [
@@ -55,6 +65,16 @@
             [
                 {
                     "name": "cProofType"
+                }
+            ],
+            [
+                {
+                    "name": "cIsPermanentAddressSameAsCurrent"
+                }
+            ],
+            [
+                {
+                    "name": "cPermanentAddress"
                 }
             ]
         ],

@@ -1,6 +1,6 @@
 {
     "fields": {
-        "cContact": "Contact",
+        "cContact": "Existing Customer",
         "accountName": "Account Name",
         "cDateOfBirth": "Date Of Birth",
         "cGender": "Gender",
@@ -18,17 +18,26 @@
         "cBankName": "Bank Name",
         "cAccountNo": "Account No",
         "cBranch": "Branch",
-        "cCreditScore": "CreditScore",
+        "cCreditScore": "CRIB / Credit Score",
         "cInterestedLoan": "Interested Loan",
         "cDesiredLoanAmount": "Desired Loan Amount",
         "cDesiredLoanAmountCurrency": "Desired Loan Amount (Currency)",
         "cDesiredLoanAmountConverted": "Desired Loan Amount (Converted)",
         "cPreferredTenure": "Preferred Tenure",
         "cPurposeOfLoan": "Purpose Of Loan",
-        "cPropertyOrVehicleDetails": "Property Or Vehicle Details"
+        "cPropertyOrVehicleDetails": "Property Or Vehicle Details",
+        "cIsPermanentAddressSameAsCurrent": "Is Permanent Address Same As Current ?",
+        "cPermanentAddress": "Permanent Address",
+        "cPermanentAddressStreet": "Permanent Address Street",
+        "cPermanentAddressCity": "Permanent Address City",
+        "cPermanentAddressState": "Permanent Address State",
+        "cPermanentAddressCountry": "Permanent Address Country",
+        "cPermanentAddressPostalCode": "Permanent Address Postal Code",
+        "cPermanentAddressMap": "Permanent Address Map",
+        "cLeadID": "Lead ID"
     },
     "links": {
-        "cContact": "Contact"
+        "cContact": "Existing Customer"
     },
     "options": {
         "cGender": {

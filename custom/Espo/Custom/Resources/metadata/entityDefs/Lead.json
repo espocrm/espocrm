@@ -4,7 +4,8 @@
             "type": "link"
         },
         "accountName": {
-            "options": []
+            "options": [],
+            "required": false
         },
         "cDateOfBirth": {
             "notNull": false,
@@ -184,6 +185,25 @@
             "type": "varchar",
             "maxLength": 255,
             "options": [],
+            "isCustom": true
+        },
+        "cIsPermanentAddressSameAsCurrent": {
+            "notNull": true,
+            "type": "bool",
+            "default": true,
+            "isCustom": true
+        },
+        "cPermanentAddress": {
+            "type": "address",
+            "isCustom": true
+        },
+        "phoneNumber": {
+            "required": true
+        },
+        "cLeadID": {
+            "type": "autoincrement",
+            "autoincrement": true,
+            "unique": true,
             "isCustom": true
         }
     },
