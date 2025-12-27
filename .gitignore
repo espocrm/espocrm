@@ -40,6 +40,9 @@ gcp-sa-key.json
 # Docker
 docker-compose.override.yml
 
+# Extensions (downloaded from secure storage during build)
+extensions/*.zip
+
 client/css/espo/*
 client/lib/*
 client/modules/crm/lib/*

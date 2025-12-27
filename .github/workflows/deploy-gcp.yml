@@ -79,6 +79,13 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Download extensions from GCS
+        run: |
+          echo "Downloading extensions from GCS bucket..."
+          mkdir -p extensions
+          gsutil -m cp -r "gs://${{ secrets.GCS_EXTENSIONS_BUCKET }}/extensions/*.zip" extensions/ 2>/dev/null || echo "No extensions found in bucket (this is OK for first deployment)"
+          ls -la extensions/ || true
+
       - name: Configure Docker for Artifact Registry
         run: |
           gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet

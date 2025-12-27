@@ -1,0 +1,8 @@
+# Extensions Directory
+
+Extension ZIP files are stored in GCS bucket and downloaded during CI/CD build.
+See DEPLOYMENT.md for setup instructions.
+
+To add a new extension:
+1. Upload ZIP to gs://${GCS_BUCKET_NAME}/extensions/
+2. Deploy - extensions are automatically downloaded and installed

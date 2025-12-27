@@ -7,6 +7,7 @@ FROM espocrm/espocrm:9.2.5
 RUN apt-get update && apt-get install -y \
     vim \
     git \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Find and copy EspoCRM source files to /var/www/html at build time
@@ -22,6 +23,11 @@ RUN if [ -d /usr/src/espocrm ]; then \
 COPY custom /var/www/html/custom
 COPY client/custom /var/www/html/client/custom
 RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom
+
+# Copy baked-in extensions (ZIP files) and initialization script
+COPY extensions /var/www/html/extensions
+COPY scripts/init-extensions.sh /usr/local/bin/init-extensions.sh
+RUN chmod +x /usr/local/bin/init-extensions.sh
 
 # Create custom entrypoint wrapper (skip the original entrypoint copy step)
 RUN printf '#!/bin/bash\n\
@@ -49,6 +55,10 @@ chmod -R 775 /var/www/html/data 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/custom 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/client/custom 2>/dev/null || true\n\
 echo "Permissions fixed"\n\
+\n\
+# Initialize baked-in extensions (only installs new ones)\n\
+echo "Initializing extensions..."\n\
+/usr/local/bin/init-extensions.sh || echo "Extension init skipped or failed, continuing..."\n\
 \n\
 # Run Rebuild to apply metadata changes\n\
 echo "Running EspoCRM rebuild..."\n\
