@@ -56,13 +56,13 @@ chmod -R 775 /var/www/html/custom 2>/dev/null || true\n\
 chmod -R 775 /var/www/html/client/custom 2>/dev/null || true\n\
 echo "Permissions fixed"\n\
 \n\
-# Initialize baked-in extensions (only installs new ones)\n\
-echo "Initializing extensions..."\n\
-/usr/local/bin/init-extensions.sh || echo "Extension init skipped or failed, continuing..."\n\
-\n\
 # Run Rebuild to apply metadata changes\n\
 echo "Running EspoCRM rebuild..."\n\
 php command.php rebuild || echo "Rebuild failed, continuing..."\n\
+\n\
+# Initialize baked-in extensions in background (to not block startup)\n\
+echo "Starting extension initialization in background..."\n\
+(/usr/local/bin/init-extensions.sh && php command.php rebuild) &\n\
 \n\
 # Start Apache in foreground\n\
 exec apache2-foreground\n\
