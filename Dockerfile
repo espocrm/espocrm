@@ -22,10 +22,32 @@ RUN if [ -d /usr/src/espocrm ]; then \
 # Copy local custom files to the image
 COPY custom /var/www/html/custom
 COPY client/custom /var/www/html/client/custom
-RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom
 
-# Copy baked-in extensions (ZIP files) and initialization script
-COPY extensions /var/www/html/extensions
+# Copy and extract baked-in extensions during build
+# Extensions are downloaded from GCS during CI/CD (not stored in git)
+# 1. Extract extension files to custom/ directories (baked into image)
+# 2. Copy ZIPs to /var/www/html/extensions/ for runtime database registration
+COPY extensions /tmp/extensions
+RUN mkdir -p /var/www/html/extensions && \
+    for ext_zip in /tmp/extensions/*.zip; do \
+        if [ -f "$ext_zip" ]; then \
+            echo "Extracting extension: $ext_zip"; \
+            unzip -o "$ext_zip" -d /tmp/ext_extract; \
+            if [ -d /tmp/ext_extract/files/custom ]; then \
+                cp -r /tmp/ext_extract/files/custom/* /var/www/html/custom/; \
+            fi; \
+            if [ -d /tmp/ext_extract/files/client/custom ]; then \
+                cp -r /tmp/ext_extract/files/client/custom/* /var/www/html/client/custom/; \
+            fi; \
+            rm -rf /tmp/ext_extract; \
+            cp "$ext_zip" /var/www/html/extensions/; \
+        fi; \
+    done && \
+    rm -rf /tmp/extensions
+
+RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom /var/www/html/extensions
+
+# Copy extension database initialization script
 COPY scripts/init-extensions.sh /usr/local/bin/init-extensions.sh
 RUN chmod +x /usr/local/bin/init-extensions.sh
 
