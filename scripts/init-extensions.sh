@@ -15,30 +15,54 @@
 #   2. Redeploy - the extension will be installed on startup
 #
 
-set -e
+# Log to stderr for Cloud Run visibility
+log() {
+    echo "[EXT-INIT] $1" >&2
+}
 
 EXTENSIONS_DIR="/var/www/html/extensions"
 ESPO_DIR="/var/www/html"
 
-echo "=== Extension Initialization ==="
+log "=== Extension Initialization ==="
+log "Extensions dir: $EXTENSIONS_DIR"
+log "EspoCRM dir: $ESPO_DIR"
+
+# Debug: List extensions directory
+log "Listing extensions directory:"
+ls -la "$EXTENSIONS_DIR" >&2 2>&1 || log "Failed to list extensions directory"
 
 # Check if extensions directory exists and has ZIP files
-if [ ! -d "$EXTENSIONS_DIR" ] || [ -z "$(ls -A $EXTENSIONS_DIR/*.zip 2>/dev/null)" ]; then
-    echo "No extension packages found in $EXTENSIONS_DIR"
+if [ ! -d "$EXTENSIONS_DIR" ]; then
+    log "Extensions directory does not exist: $EXTENSIONS_DIR"
+    exit 0
+fi
+
+zip_count=$(ls -1 "$EXTENSIONS_DIR"/*.zip 2>/dev/null | wc -l)
+log "Found $zip_count ZIP file(s)"
+
+if [ "$zip_count" -eq 0 ]; then
+    log "No extension packages found in $EXTENSIONS_DIR"
     exit 0
 fi
 
 # Check if EspoCRM is installed (config.php exists with isInstalled = true)
+log "Checking data/config.php..."
 if [ ! -f "$ESPO_DIR/data/config.php" ]; then
-    echo "EspoCRM not installed yet. Skipping extension initialization."
+    log "config.php not found at $ESPO_DIR/data/config.php"
+    log "Listing data directory:"
+    ls -la "$ESPO_DIR/data/" >&2 2>&1 || log "Failed to list data directory"
+    log "EspoCRM not installed yet. Skipping extension initialization."
     exit 0
 fi
 
+log "config.php exists, checking isInstalled flag..."
 if ! grep -q "isInstalled.*true" "$ESPO_DIR/data/config.php" 2>/dev/null; then
-    echo "EspoCRM installation not complete. Skipping extension initialization."
+    log "isInstalled flag not set to true in config.php"
+    log "EspoCRM installation not complete. Skipping extension initialization."
     exit 0
 fi
 
+log "EspoCRM is installed. Proceeding with extension installation."
 cd "$ESPO_DIR"
 
 # Process each extension ZIP file
@@ -48,25 +72,29 @@ for ext_file in "$EXTENSIONS_DIR"/*.zip; do
     fi
 
     ext_filename=$(basename "$ext_file")
-    echo ""
-    echo "Processing: $ext_filename"
+    log ""
+    log "Processing: $ext_filename"
 
     # Extract extension name from manifest.json inside ZIP
-    ext_name=$(unzip -p "$ext_file" "manifest.json" 2>/dev/null | grep -o '"name"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' || echo "")
+    # Try without leading slash first
+    ext_name=$(unzip -p "$ext_file" "manifest.json" 2>&1 | grep -o '"name"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' || echo "")
 
-    # Try alternate path with leading slash (some ZIPs have this)
+    # Try with leading slash (some ZIPs have this)
     if [ -z "$ext_name" ]; then
-        ext_name=$(unzip -p "$ext_file" "/manifest.json" 2>/dev/null | grep -o '"name"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' || echo "")
+        ext_name=$(unzip -p "$ext_file" "/manifest.json" 2>&1 | grep -o '"name"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' || echo "")
     fi
 
     if [ -z "$ext_name" ]; then
-        echo "  WARNING: Could not extract extension name from $ext_filename. Skipping."
+        log "  WARNING: Could not extract extension name from $ext_filename"
+        log "  Attempting to list ZIP contents:"
+        unzip -l "$ext_file" 2>&1 | head -20 >&2
         continue
     fi
 
-    echo "  Extension name: $ext_name"
+    log "  Extension name: $ext_name"
 
     # Check if extension is already installed by querying the database via PHP
+    log "  Checking if already installed..."
     is_installed=$(php -r "
         require_once 'bootstrap.php';
         \$app = new \Espo\Core\Application();
@@ -75,27 +103,35 @@ for ext_file in "$EXTENSIONS_DIR"/*.zip; do
             ->where(['name' => '$ext_name', 'isInstalled' => true])
             ->findOne();
         echo \$ext ? 'yes' : 'no';
-    " 2>/dev/null || echo "error")
+    " 2>&1)
+
+    log "  Installation check result: $is_installed"
 
     if [ "$is_installed" = "yes" ]; then
-        echo "  Already installed. Skipping."
+        log "  Already installed. Skipping."
         continue
     fi
 
-    if [ "$is_installed" = "error" ]; then
-        echo "  WARNING: Could not check installation status. Attempting install anyway."
+    if [ "$is_installed" != "no" ]; then
+        log "  WARNING: Unexpected check result. Attempting install anyway."
+        log "  PHP output: $is_installed"
     fi
 
-    echo "  Installing extension..."
+    log "  Installing extension via CLI..."
 
     # Use EspoCRM's native extension CLI command
-    if php command.php extension --file="$ext_file" 2>&1; then
-        echo "  Successfully installed: $ext_name"
+    install_output=$(php command.php extension --file="$ext_file" 2>&1)
+    install_status=$?
+
+    log "  Install command exit code: $install_status"
+    log "  Install output: $install_output"
+
+    if [ $install_status -eq 0 ]; then
+        log "  Successfully installed: $ext_name"
     else
-        echo "  ERROR: Failed to install $ext_name"
-        # Don't exit - continue with other extensions
+        log "  ERROR: Failed to install $ext_name"
     fi
 done
 
-echo ""
-echo "=== Extension Initialization Complete ==="
+log ""
+log "=== Extension Initialization Complete ==="
