@@ -1,0 +1,15 @@
+{
+    "linkList": [
+        {
+            "href": "client/custom/css/connectra/connectra.css",
+            "rel": "stylesheet",
+            "type": "text/css"
+        },
+        {
+            "href": "?entryPoint=ConnectraThemeCss",
+            "rel": "stylesheet",
+            "type": "text/css",
+            "noTimestamp": true
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "stylesheet": "client/css/espo/espo.css",
+    "stylesheetIframe": "client/css/espo/espo-iframe.css",
+    "logo": "client/img/logo-light.svg",
+    "params": {
+        "navbar": {
+            "type": "enum",
+            "default": "side",
+            "options": [
+                "side",
+                "top"
+            ]
+        }
+    },
+    "mappedParams": {
+        "navbarHeight": {
+            "param": "navbar",
+            "valueMap": {
+                "side": 32,
+                "top": 43
+            }
+        }
+    },
+    "dashboardCellHeight": 40,
+    "dashboardCellMargin": 16,
+    "navbarHeight": 43,
+    "modalFooterAtTheTop": true,
+    "modalFullHeight": true,
+    "fontSize": 14,
+    "textColor": "#333",
+    "hoverColor": "#FF3F19",
+    "chartGridColor": "#ddd",
+    "chartSuccessColor": "#6fc374",
+    "chartTickColor": "#e8eced",
+    "chartColorList": ["#6FA8D6", "#4E6CAD", "#EDC555", "#ED8F42", "#DE6666", "#7CC4A4", "#8A7CC2", "#D4729B", "#bfbfbf"],
+    "chartColorAlternativeList": ["#6FA8D6", "#EDC555", "#ED8F42", "#7CC4A4", "#D4729B"],
+    "calendarColors": {
+        "": "#a58dc7a0",
+        "bg": "#d5ddf6a0"
+    },
+    "isDark": false
+}

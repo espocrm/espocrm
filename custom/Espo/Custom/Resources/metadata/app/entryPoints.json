@@ -1,0 +1,8 @@
+{
+    "ConnectraThemeCss": {
+        "className": "Espo\\Custom\\EntryPoints\\ConnectraThemeCss"
+    },
+    "ConnectraFavicon": {
+        "className": "Espo\\Custom\\EntryPoints\\ConnectraFavicon"
+    }
+}
