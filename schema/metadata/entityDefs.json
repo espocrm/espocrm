@@ -555,6 +555,33 @@
                 {
                     "if": {
                         "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "number"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "prefix": {
+                                "type": "string",
+                                "description": "Prefix."
+                            },
+                            "padLength": {
+                                "type": "integer",
+                                "description": "Pad length."
+                            },
+                            "suppressHook": {
+                                "type": "boolean",
+                                "description": "Suppress the default hook. Useful when a custom hook needs to be used. As of v9.3.0."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
                             "type": {"const": "currency"}
                         }
                     },

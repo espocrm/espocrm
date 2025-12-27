@@ -25,6 +25,11 @@
             "name": "copyToClipboard",
             "type": "bool",
             "default": false
+        },
+        {
+            "name": "suppressHook",
+            "type": "bool",
+            "default": false
         }
     ],
     "filter": true,

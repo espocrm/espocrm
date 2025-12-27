@@ -35,7 +35,7 @@ use Espo\Core\Console\Exceptions\ArgumentNotSpecified;
 use Espo\Core\Console\Exceptions\InvalidArgument;
 use Espo\Core\Console\IO;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\FieldProcessing\NextNumber\BeforeSaveProcessor;
+use Espo\Core\FieldProcessing\NextNumber\Processor;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
@@ -44,11 +44,11 @@ use Espo\ORM\Query\Part\Order;
 
 class PopulateNumbers implements Command
 {
-    private BeforeSaveProcessor $beforeSaveProcessor;
+    private Processor $beforeSaveProcessor;
     private EntityManager $entityManager;
 
     public function __construct(
-        BeforeSaveProcessor $beforeSaveProcessor,
+        Processor $beforeSaveProcessor,
         EntityManager $entityManager
     ) {
         $this->beforeSaveProcessor = $beforeSaveProcessor;

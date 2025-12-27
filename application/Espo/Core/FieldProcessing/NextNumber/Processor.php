@@ -32,15 +32,19 @@ namespace Espo\Core\FieldProcessing\NextNumber;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
-use Espo\Entities\NextNumber;
-
 use Espo\Core\ORM\Entity;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\NextNumber;
 
+use Espo\ORM\Repository\Option\SaveOptions;
+use RuntimeException;
 use const STR_PAD_LEFT;
 
-class BeforeSaveProcessor
+/**
+ * @since 9.3.0
+ */
+class Processor
 {
     /** @var array<string, string[]> */
     private $fieldListMapCache = [];
@@ -52,6 +56,7 @@ class BeforeSaveProcessor
 
     /**
      * For an existing record.
+     *
      * @throws Error
      */
     public function processPopulate(Entity $entity, string $field): void
@@ -65,16 +70,35 @@ class BeforeSaveProcessor
         $this->processItem($entity, $field, [], true);
     }
 
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function process(Entity $entity, array $options): void
+    public function process(Entity $entity, SaveOptions $options): void
     {
         $fieldList = $this->getFieldList($entity->getEntityType());
 
         foreach ($fieldList as $field) {
-            $this->processItem($entity, $field, $options);
+            $this->processItem($entity, $field, $options->toAssoc());
         }
+    }
+
+    /**
+     * To be invoked in custom hooks. The default hook must be suppressed.
+     * Useful when the number should change only if some conditions met.
+     *
+     * @since 9.3.0
+     * @noinspection PhpUnused
+     */
+    public function processField(Entity $entity, string $field, SaveOptions $options): void
+    {
+        if (
+            $this->entityManager
+                ->getDefs()
+                ->getEntity($entity->getEntityType())
+                ->getField($field)
+                ->getType() !== FieldType::NUMBER
+        ) {
+            throw new RuntimeException("Not a 'number' field.");
+        }
+
+        $this->processItem($entity, $field, $options->toAssoc());
     }
 
     /**
@@ -138,6 +162,10 @@ class BeforeSaveProcessor
             $defs = $entityDefs->getField($name);
 
             if ($defs->getType() !== FieldType::NUMBER) {
+                continue;
+            }
+
+            if ($defs->getParam('suppressHook')) {
                 continue;
             }
 

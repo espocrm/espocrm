@@ -32,7 +32,7 @@ namespace Espo\Hooks\Common;
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Entity;
-use Espo\Core\FieldProcessing\NextNumber\BeforeSaveProcessor as Processor;
+use Espo\Core\FieldProcessing\NextNumber\Processor as Processor;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
@@ -45,6 +45,6 @@ class NextNumber implements BeforeSave
 
     public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        $this->processor->process($entity, $options->toAssoc());
+        $this->processor->process($entity, $options);
     }
 }
