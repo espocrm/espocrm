@@ -95,3 +95,109 @@
     },
     "optimisticConcurrencyControl": false
 }
+{
+    "fields": {
+        "cDateOfBirth": {
+            "notNull": false,
+            "type": "date",
+            "required": true,
+            "isCustom": true,
+            "useNumericFormat": true
+        },
+        "cNicNumber": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 12,
+            "options": [],
+            "isCustom": true,
+            "pattern": null
+        },
+        "cGender": {
+            "type": "enum",
+            "required": true,
+            "options": [
+                "",
+                "Male",
+                "Female"
+        "cBranch": {
+            "type": "link"
+        },
+        "cLeads": {
+            "type": "linkMultiple"
+        }
+            ],
+            "style": {
+                "": null,
+                "Male": null,
+                "Female": null
+            },
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cFlags": {
+            "type": "enum",
+            "options": [
+                "",
+                "VIP",
+                "PEP",
+                "Legal"
+            ],
+            "style": {
+                "": null,
+                "VIP": null,
+                "PEP": null,
+                "Legal": null
+            },
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLastContactDate": {
+            "notNull": false,
+            "type": "date",
+            "isCustom": true,
+            "useNumericFormat": true
+        },
+        "cCifNumber": {
+            "type": "varchar",
+            "maxLength": 40,
+            "options": [],
+            "isCustom": true
+        },
+        "cBranch": {
+            "type": "link"
+<<<<<<< HEAD
+        },
+        "cLeads": {
+            "type": "linkMultiple"
+=======
+>>>>>>> 006874d25f97d462ab16dd7d2dcca11f5d57795b
+        }
+    },
+    "links": {
+        "cLeads": {
+            "type": "hasMany",
+            "foreign": "cContact",
+            "entity": "Lead",
+            "audited": false,
+            "isCustom": true
+        },
+        "cBranch": {
+            "type": "belongsTo",
+            "foreign": "contacts",
+            "entity": "CBranch",
+            "audited": false,
+            "isCustom": true
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": [
+            "name",
+            "emailAddress"
+        ],
+        "fullTextSearch": false,
+        "countDisabled": false
+    },
+    "optimisticConcurrencyControl": false
+}

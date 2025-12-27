@@ -4,12 +4,13 @@
             "type": "link"
         },
         "accountName": {
+<<<<<<< HEAD
             "options": [],
             "required": false
+=======
+>>>>>>> 006874d25f97d462ab16dd7d2dcca11f5d57795b
         },
-        "cDateOfBirth": {
             "notNull": false,
-            "type": "date",
             "isCustom": true
         },
         "cGender": {
@@ -186,10 +187,30 @@
             "maxLength": 255,
             "options": [],
             "isCustom": true
+<<<<<<< HEAD
         },
         "cIsPermanentAddressSameAsCurrent": {
             "notNull": true,
             "type": "bool",
+            "cIsPermanentAddressSameAsCurrent": {
+                "notNull": true,
+                "type": "bool",
+                "default": true,
+                "isCustom": true
+            },
+            "cPermanentAddress": {
+                "type": "address",
+                "isCustom": true
+            },
+            "phoneNumber": {
+                "required": true
+            },
+            "cLeadID": {
+                "type": "autoincrement",
+                "autoincrement": true,
+                "unique": true,
+                "isCustom": true
+            }
             "default": true,
             "isCustom": true
         },
@@ -205,6 +226,8 @@
             "autoincrement": true,
             "unique": true,
             "isCustom": true
+=======
+>>>>>>> 006874d25f97d462ab16dd7d2dcca11f5d57795b
         }
     },
     "links": {

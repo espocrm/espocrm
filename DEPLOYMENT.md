@@ -207,6 +207,37 @@ gcloud artifacts repositories create espocrm-repo \
     --description="EspoCRM Docker images"
 ```
 
+#### 4. Create Extensions Storage Bucket
+
+Extensions (like Advanced Pack) are stored securely in a private GCS bucket and downloaded during build.
+
+```bash
+# Create a private bucket for extensions
+gcloud storage buckets create gs://espocrm-extensions-${PROJECT_ID} \
+    --location=us-central1 \
+    --uniform-bucket-level-access
+
+# Upload extensions to the bucket
+gsutil cp /path/to/advanced-pack-3.11.12.zip gs://espocrm-extensions-${PROJECT_ID}/extensions/
+
+# Verify upload
+gsutil ls gs://espocrm-extensions-${PROJECT_ID}/extensions/
+```
+
+**Adding new extensions:**
+```bash
+# Simply upload the ZIP file to the extensions folder
+gsutil cp /path/to/new-extension.zip gs://espocrm-extensions-${PROJECT_ID}/extensions/
+
+# Trigger a new deployment - extension will be installed automatically
+```
+
+**How it works:**
+1. During CI/CD build, extensions are downloaded from the GCS bucket
+2. Extensions are baked into the Docker image
+3. On container startup, new extensions are installed via EspoCRM CLI
+4. Already-installed extensions are skipped (tracked in database)
+
 ### GitHub Secrets Configuration
 
 Add these secrets to your GitHub repository (Settings > Secrets > Actions):
@@ -216,6 +247,7 @@ Add these secrets to your GitHub repository (Settings > Secrets > Actions):
 | `GCP_PROJECT_ID` | Your GCP project ID |
 | `GCP_SA_KEY` | Service account JSON key (base64 encoded) |
 | `GCP_REGION` | Deployment region (e.g., us-central1) |
+| `GCS_EXTENSIONS_BUCKET` | GCS bucket name for extensions (e.g., espocrm-extensions-myproject) |
 | `DB_INSTANCE_CONNECTION` | Cloud SQL connection string |
 | `DB_NAME` | Database name |
 | `DB_USER` | Database username |

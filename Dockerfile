@@ -7,6 +7,7 @@ FROM espocrm/espocrm:9.2.5
 RUN apt-get update && apt-get install -y \
     vim \
     git \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Find and copy EspoCRM source files to /var/www/html at build time
@@ -21,7 +22,34 @@ RUN if [ -d /usr/src/espocrm ]; then \
 # Copy local custom files to the image
 COPY custom /var/www/html/custom
 COPY client/custom /var/www/html/client/custom
-RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom
+
+# Copy and extract baked-in extensions during build
+# Extensions are downloaded from GCS during CI/CD (not stored in git)
+# 1. Extract extension files to custom/ directories (baked into image)
+# 2. Copy ZIPs to /var/www/html/extensions/ for runtime database registration
+COPY extensions /tmp/extensions
+RUN mkdir -p /var/www/html/extensions && \
+    for ext_zip in /tmp/extensions/*.zip; do \
+        if [ -f "$ext_zip" ]; then \
+            echo "Extracting extension: $ext_zip"; \
+            unzip -o "$ext_zip" -d /tmp/ext_extract; \
+            if [ -d /tmp/ext_extract/files/custom ]; then \
+                cp -r /tmp/ext_extract/files/custom/* /var/www/html/custom/; \
+            fi; \
+            if [ -d /tmp/ext_extract/files/client/custom ]; then \
+                cp -r /tmp/ext_extract/files/client/custom/* /var/www/html/client/custom/; \
+            fi; \
+            rm -rf /tmp/ext_extract; \
+            cp "$ext_zip" /var/www/html/extensions/; \
+        fi; \
+    done && \
+    rm -rf /tmp/extensions
+
+RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom /var/www/html/extensions
+
+# Copy extension database initialization script
+COPY scripts/init-extensions.sh /usr/local/bin/init-extensions.sh
+RUN chmod +x /usr/local/bin/init-extensions.sh
 
 # Create custom entrypoint wrapper (skip the original entrypoint copy step)
 RUN printf '#!/bin/bash\n\
@@ -29,10 +57,10 @@ set -e\n\
 \n\
 echo "Starting EspoCRM Cloud Run entrypoint..."\n\
 \n\
-# Sync installation state: if data/config.php shows installed, ensure install/config.php matches\n\
+# Sync installation state: if data/config-internal.php shows installed, ensure install/config.php matches\n\
 # This prevents the installation wizard from appearing after container restarts\n\
-if [ -f /var/www/html/data/config.php ]; then\n\
-    if grep -q "isInstalled.*true" /var/www/html/data/config.php 2>/dev/null; then\n\
+if [ -f /var/www/html/data/config-internal.php ]; then\n\
+    if grep -q "isInstalled.*true" /var/www/html/data/config-internal.php 2>/dev/null; then\n\
         echo "EspoCRM already installed, syncing install config..."\n\
         mkdir -p /var/www/html/install\n\
         echo "<?php return [\\\"isInstalled\\\" => true];" > /var/www/html/install/config.php\n\
@@ -53,6 +81,10 @@ echo "Permissions fixed"\n\
 # Run Rebuild to apply metadata changes\n\
 echo "Running EspoCRM rebuild..."\n\
 php command.php rebuild || echo "Rebuild failed, continuing..."\n\
+\n\
+# Initialize baked-in extensions in background (to not block startup)\n\
+echo "Starting extension initialization in background..."\n\
+(/usr/local/bin/init-extensions.sh && php command.php rebuild) &\n\
 \n\
 # Start Apache in foreground\n\
 exec apache2-foreground\n\

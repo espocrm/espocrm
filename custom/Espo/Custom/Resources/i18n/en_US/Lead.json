@@ -1,34 +1,35 @@
 {
     "fields": {
+<<<<<<< HEAD
         "cContact": "Existing Customer",
+=======
+        "cContact": "Contact",
+>>>>>>> 006874d25f97d462ab16dd7d2dcca11f5d57795b
         "accountName": "Account Name",
         "cDateOfBirth": "Date Of Birth",
         "cGender": "Gender",
         "cMaritalStatus": "Marital Status",
         "cProofType": "Proof Type",
         "cNICNo": "NIC No",
-        "cPassport": "Passport",
-        "cDrivingLicense": "Driving License",
-        "cEmployeeType": "Employee Type",
-        "cBusinessName": "Employer / Business Name",
-        "cTurnover": "Monthly / Annual Turnover",
+                "cContact": "Existing Customer",
         "cExistingMonthlyObligations": "Existing Monthly Obligations (EMI, Rent, etc)",
         "cExistingMonthlyObligationsCurrency": "Existing Monthly Obligations (EMI, Rent, etc) (Currency)",
         "cExistingMonthlyObligationsConverted": "Existing Monthly Obligations (EMI, Rent, etc) (Converted)",
         "cBankName": "Bank Name",
         "cAccountNo": "Account No",
         "cBranch": "Branch",
+<<<<<<< HEAD
         "cCreditScore": "CRIB / Credit Score",
+=======
+        "cCreditScore": "CreditScore",
+>>>>>>> 006874d25f97d462ab16dd7d2dcca11f5d57795b
         "cInterestedLoan": "Interested Loan",
         "cDesiredLoanAmount": "Desired Loan Amount",
         "cDesiredLoanAmountCurrency": "Desired Loan Amount (Currency)",
         "cDesiredLoanAmountConverted": "Desired Loan Amount (Converted)",
         "cPreferredTenure": "Preferred Tenure",
         "cPurposeOfLoan": "Purpose Of Loan",
-        "cPropertyOrVehicleDetails": "Property Or Vehicle Details",
-        "cIsPermanentAddressSameAsCurrent": "Is Permanent Address Same As Current ?",
-        "cPermanentAddress": "Permanent Address",
-        "cPermanentAddressStreet": "Permanent Address Street",
+                "cCreditScore": "CRIB / Credit Score",
         "cPermanentAddressCity": "Permanent Address City",
         "cPermanentAddressState": "Permanent Address State",
         "cPermanentAddressCountry": "Permanent Address Country",
@@ -39,9 +40,15 @@
     "links": {
         "cContact": "Existing Customer"
     },
+    },
+    "links": {
+        "cContact": "Contact"
+>>>>>>> 006874d25f97d462ab16dd7d2dcca11f5d57795b
+    },
     "options": {
         "cGender": {
-            "Male": "Male",
+                "cContact": "Existing Customer",
+                "cContact": "Contact"
             "Female": "Female",
             "Other": "Other"
         },
