@@ -35,10 +35,10 @@ set -e\n\
 \n\
 echo "Starting EspoCRM Cloud Run entrypoint..."\n\
 \n\
-# Sync installation state: if data/config.php shows installed, ensure install/config.php matches\n\
+# Sync installation state: if data/config-internal.php shows installed, ensure install/config.php matches\n\
 # This prevents the installation wizard from appearing after container restarts\n\
-if [ -f /var/www/html/data/config.php ]; then\n\
-    if grep -q "isInstalled.*true" /var/www/html/data/config.php 2>/dev/null; then\n\
+if [ -f /var/www/html/data/config-internal.php ]; then\n\
+    if grep -q "isInstalled.*true" /var/www/html/data/config-internal.php 2>/dev/null; then\n\
         echo "EspoCRM already installed, syncing install config..."\n\
         mkdir -p /var/www/html/install\n\
         echo "<?php return [\\\"isInstalled\\\" => true];" > /var/www/html/install/config.php\n\

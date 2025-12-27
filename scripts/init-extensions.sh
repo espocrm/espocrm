@@ -45,19 +45,19 @@ if [ "$zip_count" -eq 0 ]; then
     exit 0
 fi
 
-# Check if EspoCRM is installed (config.php exists with isInstalled = true)
-log "Checking data/config.php..."
-if [ ! -f "$ESPO_DIR/data/config.php" ]; then
-    log "config.php not found at $ESPO_DIR/data/config.php"
+# Check if EspoCRM is installed (config-internal.php exists with isInstalled = true)
+log "Checking data/config-internal.php..."
+if [ ! -f "$ESPO_DIR/data/config-internal.php" ]; then
+    log "config-internal.php not found at $ESPO_DIR/data/config-internal.php"
     log "Listing data directory:"
     ls -la "$ESPO_DIR/data/" >&2 2>&1 || log "Failed to list data directory"
     log "EspoCRM not installed yet. Skipping extension initialization."
     exit 0
 fi
 
-log "config.php exists, checking isInstalled flag..."
-if ! grep -q "isInstalled.*true" "$ESPO_DIR/data/config.php" 2>/dev/null; then
-    log "isInstalled flag not set to true in config.php"
+log "config-internal.php exists, checking isInstalled flag..."
+if ! grep -q "isInstalled.*true" "$ESPO_DIR/data/config-internal.php" 2>/dev/null; then
+    log "isInstalled flag not set to true in config-internal.php"
     log "EspoCRM installation not complete. Skipping extension initialization."
     exit 0
 fi
