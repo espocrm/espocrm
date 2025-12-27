@@ -1,0 +1,118 @@
+{
+    "fields": {
+        "flavourLoginBackgroundImage": {
+            "type": "image",
+            "maxFileSize": 10,
+            "accept": ["image/jpeg", "image/png", "image/webp"]
+        },
+        "flavourFavicon": {
+            "type": "image",
+            "maxFileSize": 1,
+            "accept": ["image/svg+xml", "image/png", "image/x-icon", "image/vnd.microsoft.icon"]
+        },
+        "flavourLogoPosition": {
+            "type": "enum",
+            "options": ["left", "center", "right"],
+            "default": "center"
+        },
+        "flavourSideMenuHoverExpand": {
+            "type": "bool",
+            "default": true
+        },
+        "flavourNavbarColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#ffffff"
+        },
+        "flavourTabsMenuBgColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#1461af"
+        },
+        "flavourLogoBackgroundColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#1461af"
+        },
+        "flavourTextColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker"
+        },
+        "flavourBackgroundColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#f1f8ff"
+        },
+        "flavourBrandPrimary": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#fe9100"
+        },
+        "flavourBrandInfo": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker"
+        },
+        "flavourBrandDanger": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker"
+        },
+        "flavourBrandSuccess": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker"
+        },
+        "flavourBrandWarning": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker"
+        },
+        "flavourSidenavIconColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#b3d3f3"
+        },
+        "flavourSidenavTextColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#b3d3f3"
+        },
+        "flavourSidenavFontSize": {
+            "type": "enum",
+            "options": ["12", "13", "14", "15", "16"],
+            "default": "15"
+        },
+        "flavourSidenavFontWeight": {
+            "type": "enum",
+            "options": ["normal", "500", "600", "bold"],
+            "default": "500"
+        },
+        "flavourSidenavActiveIconColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#ffffff"
+        },
+        "flavourSidenavActiveFontColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#ffffff"
+        },
+        "flavourSidenavActiveBgColor": {
+            "type": "varchar",
+            "maxLength": 7,
+            "view": "views/fields/colorpicker",
+            "default": "#1461af"
+        }
+    }
+}

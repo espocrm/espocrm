@@ -1,0 +1,14 @@
+{
+    "system": {
+        "itemList": [
+            "__APPEND__",
+            {
+                "url": "#Admin/connectraTheme",
+                "label": "Connectra Theme",
+                "iconClass": "fas fa-palette",
+                "description": "connectraTheme",
+                "recordView": "custom:views/admin/connectra-theme"
+            }
+        ]
+    }
+}

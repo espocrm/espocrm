@@ -1,0 +1,75 @@
+[
+    {
+        "label": "Login Page",
+        "rows": [
+            [
+                {"name": "flavourLoginBackgroundImage"},
+                {"name": "flavourLogoPosition"}
+            ],
+            [
+                {"name": "flavourFavicon"},
+                false
+            ]
+        ]
+    },
+    {
+        "label": "Navigation",
+        "rows": [
+            [
+                {"name": "flavourNavbarColor"},
+                {"name": "flavourTabsMenuBgColor"}
+            ],
+            [
+                {"name": "flavourLogoBackgroundColor"},
+                {"name": "flavourSideMenuHoverExpand"}
+            ]
+        ]
+    },
+    {
+        "label": "Colors",
+        "rows": [
+            [
+                {"name": "flavourTextColor"},
+                {"name": "flavourBackgroundColor"}
+            ]
+        ]
+    },
+    {
+        "label": "Brand Colors",
+        "rows": [
+            [
+                {"name": "flavourBrandPrimary"},
+                {"name": "flavourBrandInfo"}
+            ],
+            [
+                {"name": "flavourBrandDanger"},
+                {"name": "flavourBrandSuccess"}
+            ],
+            [
+                {"name": "flavourBrandWarning"},
+                false
+            ]
+        ]
+    },
+    {
+        "label": "Sidebar Menu",
+        "rows": [
+            [
+                {"name": "flavourSidenavIconColor"},
+                {"name": "flavourSidenavTextColor"}
+            ],
+            [
+                {"name": "flavourSidenavFontSize"},
+                {"name": "flavourSidenavFontWeight"}
+            ],
+            [
+                {"name": "flavourSidenavActiveIconColor"},
+                {"name": "flavourSidenavActiveFontColor"}
+            ],
+            [
+                {"name": "flavourSidenavActiveBgColor"},
+                false
+            ]
+        ]
+    }
+]

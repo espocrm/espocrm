@@ -1,0 +1,63 @@
+{
+    "fields": {
+        "flavourLoginBackgroundImage": "Login Background Image",
+        "flavourFavicon": "Custom Favicon",
+        "flavourLogoPosition": "Logo Position",
+        "flavourSideMenuHoverExpand": "Side Menu Hover Expand",
+        "flavourNavbarColor": "Top Navbar Color",
+        "flavourTabsMenuBgColor": "Tabs Menu Background",
+        "flavourLogoBackgroundColor": "Logo Background Color",
+        "flavourTextColor": "Text Color",
+        "flavourBackgroundColor": "Background Color",
+        "flavourBrandPrimary": "Primary Color",
+        "flavourBrandInfo": "Info Color",
+        "flavourBrandDanger": "Danger Color",
+        "flavourBrandSuccess": "Success Color",
+        "flavourBrandWarning": "Warning Color",
+        "flavourSidenavIconColor": "Menu Icon Color",
+        "flavourSidenavTextColor": "Menu Text Color",
+        "flavourSidenavFontSize": "Menu Font Size",
+        "flavourSidenavFontWeight": "Menu Font Weight",
+        "flavourSidenavActiveIconColor": "Active Icon Color",
+        "flavourSidenavActiveFontColor": "Active Text Color",
+        "flavourSidenavActiveBgColor": "Active Background Color"
+    },
+    "tooltips": {
+        "flavourLoginBackgroundImage": "Upload an image to display as the login page background.",
+        "flavourFavicon": "Upload a custom favicon (SVG, PNG, or ICO format).",
+        "flavourLogoPosition": "Position of the logo on the login page and navbar.",
+        "flavourSideMenuHoverExpand": "When enabled, the minimized side menu will temporarily expand when you hover over it.",
+        "flavourSidenavIconColor": "Color of icons in the sidebar menu.",
+        "flavourSidenavTextColor": "Color of text labels in the sidebar menu.",
+        "flavourSidenavActiveIconColor": "Icon color for the currently selected menu item.",
+        "flavourSidenavActiveFontColor": "Text color for the currently selected menu item.",
+        "flavourSidenavActiveBgColor": "Background color for the currently selected menu item."
+    },
+    "options": {
+        "flavourLogoPosition": {
+            "left": "Left",
+            "center": "Center",
+            "right": "Right"
+        },
+        "flavourSidenavFontSize": {
+            "12": "12px",
+            "13": "13px",
+            "14": "14px (Default)",
+            "15": "15px",
+            "16": "16px"
+        },
+        "flavourSidenavFontWeight": {
+            "normal": "Normal",
+            "500": "Medium",
+            "600": "Semi Bold",
+            "bold": "Bold"
+        }
+    },
+    "labels": {
+        "Login Page": "Login Page",
+        "Navigation": "Navigation",
+        "Colors": "Colors",
+        "Brand Colors": "Brand Colors",
+        "Sidebar Menu": "Sidebar Menu"
+    }
+}
