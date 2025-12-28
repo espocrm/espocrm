@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "cCallNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "readOnly": true,
+            "unique": true,
+            "isCustom": true
+        }
+    }
+}
