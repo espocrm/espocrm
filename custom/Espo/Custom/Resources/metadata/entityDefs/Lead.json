@@ -205,6 +205,74 @@
             "autoincrement": true,
             "unique": true,
             "isCustom": true
+        },
+        "cLeadId": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cInterestedProductType": {
+            "type": "enum",
+            "options": [
+                "Personal Loan",
+                "Vehicle Loan",
+                "Gold Loan",
+                "Business Loan",
+                "Lease"
+            ],
+            "style": {
+                "Personal Loan": null,
+                "Vehicle Loan": null,
+                "Gold Loan": null,
+                "Business Loan": null,
+                "Lease": null
+            },
+            "default": "Personal Loan",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "firstName": {
+            "required": true,
+            "options": [],
+            "pattern": "/^[a-zA-Z\\s\\.]{3,50}$/"
+        },
+        "lastName": {
+            "required": true,
+            "options": [],
+            "pattern": "/^[a-zA-Z\\s\\.]{3,50}$/"
+        },
+        "status": {
+            "options": [
+                "New",
+                "Validated",
+                "Assigned",
+                "Contacted",
+                "Verified",
+                "Qualified",
+                "In Process",
+                "Converted",
+                "Recycled",
+                "Dead",
+                "Duplicate",
+                "Disqualified",
+                "Unresponsive"
+            ],
+            "style": {
+                "New": null,
+                "Validated": null,
+                "Assigned": null,
+                "Contacted": "info",
+                "Verified": "info",
+                "Qualified": "success",
+                "In Process": "primary",
+                "Converted": "success",
+                "Recycled": "info",
+                "Dead": "danger",
+                "Duplicate": "danger",
+                "Disqualified": "danger",
+                "Unresponsive": "danger"
+            }
         }
     },
     "links": {
