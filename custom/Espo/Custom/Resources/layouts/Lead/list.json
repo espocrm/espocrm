@@ -4,10 +4,6 @@
         "width": 16
     },
     {
-        "name": "cLeadId",
-        "width": 16
-    },
-    {
         "name": "name",
         "link": "true"
     },

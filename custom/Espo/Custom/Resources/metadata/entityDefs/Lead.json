@@ -74,25 +74,29 @@
         },
         "cNICNo": {
             "type": "varchar",
-            "maxLength": 100,
-            "pattern": "/^([0-9]{9}[vVxX]|[0-9]{12})$/",
+            "maxLength": 12,
+            "pattern": "^([0-9]{9}[vVxX]|[0-9]{12})$",
             "isPersonalData": true,
             "options": [],
-            "isCustom": true
+            "isCustom": true,
+            "tooltip": true,
+            "audited": true
         },
         "cPassport": {
             "type": "varchar",
             "maxLength": 10,
-            "pattern": "/^[A-Z][0-9]{7}$/",
+            "pattern": "^[A-Z][0-9]{7,8}$",
             "options": [],
-            "isCustom": true
+            "isCustom": true,
+            "tooltip": true
         },
         "cDrivingLicense": {
             "type": "varchar",
             "maxLength": 10,
-            "pattern": "/^[B][0-9]{7}$/",
+            "pattern": "^([A-Z][0-9]{7}|[0-9]{8})$",
             "options": [],
-            "isCustom": true
+            "isCustom": true,
+            "tooltip": true
         },
         "cEmployeeType": {
             "type": "enum",
@@ -119,12 +123,6 @@
             "options": [],
             "isCustom": true
         },
-        "cTurnover": {
-            "type": "varchar",
-            "maxLength": 100,
-            "options": [],
-            "isCustom": true
-        },
         "cExistingMonthlyObligations": {
             "type": "currency",
             "isCustom": true
@@ -143,12 +141,6 @@
             "type": "varchar",
             "maxLength": 100,
             "options": [],
-            "isCustom": true
-        },
-        "cCreditScore": {
-            "notNull": false,
-            "type": "float",
-            "min": 0,
             "isCustom": true
         },
         "cInterestedLoan": {
@@ -174,12 +166,6 @@
         "cDesiredLoanAmount": {
             "type": "currency",
             "min": 0,
-            "isCustom": true
-        },
-        "cPreferredTenure": {
-            "type": "varchar",
-            "maxLength": 100,
-            "options": [],
             "isCustom": true
         },
         "cPurposeOfLoan": {
@@ -213,12 +199,6 @@
             "unique": true,
             "isCustom": true
         },
-        "cLeadId": {
-            "type": "varchar",
-            "maxLength": 100,
-            "options": [],
-            "isCustom": true
-        },
         "cInterestedProductType": {
             "type": "enum",
             "options": [
@@ -242,12 +222,14 @@
         "firstName": {
             "required": true,
             "options": [],
-            "pattern": "/^[a-zA-Z\\s\\.]{3,50}$/"
+            "pattern": "^[a-zA-Z\\s\\.]{2,}$",
+            "tooltip": true
         },
         "lastName": {
             "required": true,
             "options": [],
-            "pattern": "/^[a-zA-Z\\s\\.]{3,50}$/"
+            "pattern": "^[a-zA-Z\\s\\.]{2,}$",
+            "tooltip": true
         },
         "status": {
             "options": [
@@ -280,6 +262,135 @@
                 "Disqualified": "danger",
                 "Unresponsive": "danger"
             }
+        },
+        "cPreferredTenure": {
+            "type": "currency",
+            "min": 0,
+            "isCustom": true
+        },
+        "cTurnover": {
+            "type": "currency",
+            "min": 0,
+            "isCustom": true
+        },
+        "cCreditScore": {
+            "type": "int",
+            "isCustom": true,
+            "min": 250,
+            "max": 900,
+            "audited": true
+        },
+        "assignedUser": {
+            "audited": true
+        },
+        "cLeadScore": {
+            "type": "int",
+            "default": 0,
+            "min": 0,
+            "max": 100,
+            "readOnly": true,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "cScoreLastUpdated": {
+            "notNull": false,
+            "type": "datetime",
+            "readOnly": true,
+            "minuteStep": 1,
+            "isCustom": true
+        },
+        "cMonthlyIncome": {
+            "type": "currency",
+            "isCustom": true,
+            "audited": true,
+            "tooltip": true
+        },
+        "cDTI": {
+            "notNull": false,
+            "type": "float",
+            "decimalPlaces": 2,
+            "min": 0,
+            "max": 100,
+            "readOnly": true,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "cFOIR": {
+            "notNull": false,
+            "type": "float",
+            "min": 0,
+            "max": 100,
+            "readOnly": true,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "cProposedEMI": {
+            "type": "currency",
+            "readOnly": true,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "cCalculatedEMI": {
+            "type": "currency",
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cFinancialQualification": {
+            "type": "enum",
+            "options": [
+                "Pass",
+                "Fail",
+                "Pending"
+            ],
+            "style": {
+                "Pass": null,
+                "Fail": null,
+                "Pending": null
+            },
+            "default": "Pending",
+            "readOnly": true,
+            "tooltip": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cMaxEligibleAmount": {
+            "type": "currency",
+            "readOnly": true,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "cCRIBStatus": {
+            "type": "enum",
+            "audited": true,
+            "options": [
+                "Clean",
+                "Defaults",
+                "Pending",
+                "Not Checked"
+            ],
+            "style": {
+                "Clean": null,
+                "Defaults": null,
+                "Pending": null,
+                "Not Checked": null
+            },
+            "default": "Not Checked",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cCRIBLastChecked": {
+            "notNull": false,
+            "type": "datetime",
+            "audited": true,
+            "minuteStep": 1,
+            "isCustom": true
+        },
+        "cExistingLoans": {
+            "type": "text",
+            "rowsMin": 2,
+            "cutHeight": 200,
+            "tooltip": true,
+            "isCustom": true
         }
     },
     "links": {
@@ -290,5 +401,17 @@
             "audited": false,
             "isCustom": true
         }
-    }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": [
+            "name",
+            "accountName",
+            "emailAddress"
+        ],
+        "fullTextSearch": false,
+        "countDisabled": false
+    },
+    "optimisticConcurrencyControl": false
 }

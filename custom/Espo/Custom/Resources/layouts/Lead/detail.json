@@ -25,7 +25,8 @@
         ],
         "dynamicLogicVisible": null,
         "style": "default",
-        "tabBreak": false,
+        "tabBreak": true,
+        "tabLabel": "Basic Information",
         "hidden": false,
         "noteText": null,
         "customLabel": "Personal Information"
@@ -35,14 +36,10 @@
             [
                 {
                     "name": "phoneNumber"
-                }
-            ],
-            [
+                },
                 {
                     "name": "emailAddress"
-                }
-            ],
-            [
+                },
                 {
                     "name": "status"
                 }
@@ -65,9 +62,7 @@
             [
                 {
                     "name": "cProofType"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cIsPermanentAddressSameAsCurrent"
                 }
@@ -92,14 +87,10 @@
             [
                 {
                     "name": "cNICNo"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cPassport"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cDrivingLicense"
                 }
@@ -118,9 +109,7 @@
             [
                 {
                     "name": "cEmployeeType"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cBusinessName"
                 }
@@ -128,18 +117,14 @@
             [
                 {
                     "name": "cTurnover"
-                }
-            ],
-            [
-                {
-                    "name": "cExistingMonthlyObligations"
-                }
+                },
+                false
             ]
         ],
         "dynamicLogicVisible": null,
         "style": "default",
-        "tabBreak": false,
-        "tabLabel": null,
+        "tabBreak": true,
+        "tabLabel": "Financials & Loan",
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
@@ -150,22 +135,16 @@
             [
                 {
                     "name": "cBankName"
-                }
-            ],
-            [
-                {
-                    "name": "cAccountNo"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cBranch"
                 }
             ],
             [
                 {
-                    "name": "cCreditScore"
-                }
+                    "name": "cAccountNo"
+                },
+                false
             ]
         ],
         "dynamicLogicVisible": null,
@@ -210,5 +189,95 @@
         "noteText": null,
         "noteStyle": "info",
         "customLabel": "Loan Interest"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cLeadScore"
+                },
+                {
+                    "name": "cScoreLastUpdated"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Assessment & Risk",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Lead Scoring"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cMonthlyIncome"
+                },
+                {
+                    "name": "cExistingMonthlyObligations"
+                }
+            ],
+            [
+                {
+                    "name": "cProposedEMI"
+                },
+                {
+                    "name": "cFOIR"
+                }
+            ],
+            [
+                {
+                    "name": "cDTI"
+                },
+                {
+                    "name": "cFinancialQualification"
+                }
+            ],
+            [
+                {
+                    "name": "cMaxEligibleAmount"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": "Financial Assessment",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Financial Assessment"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cCreditScore"
+                },
+                {
+                    "name": "cCRIBStatus"
+                }
+            ],
+            [
+                {
+                    "name": "cCRIBLastChecked"
+                },
+                {
+                    "name": "cExistingLoans"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": "Credit Bureau",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Credit Bureau"
     }
 ]
