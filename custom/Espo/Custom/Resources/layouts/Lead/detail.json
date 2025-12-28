@@ -111,7 +111,7 @@
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": "ID Proof Details"
+        "customLabel": "ID Details"
     },
     {
         "rows": [
@@ -176,5 +176,39 @@
         "noteText": null,
         "noteStyle": "info",
         "customLabel": "Bank Account Details"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cInterestedLoan"
+                }
+            ],
+            [
+                {
+                    "name": "cDesiredLoanAmount"
+                },
+                {
+                    "name": "cPreferredTenure"
+                }
+            ],
+            [
+                {
+                    "name": "cPurposeOfLoan"
+                }
+            ],
+            [
+                {
+                    "name": "cPropertyOrVehicleDetails"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Loan Interest"
     }
 ]

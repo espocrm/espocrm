@@ -6,8 +6,5 @@
     "scopeNamesPlural": {
         "Contact": "Customers",
         "CBranch": "Branches"
-    },
-    "themes": {
-        "Connectra": "Connectra Theme"
     }
 }

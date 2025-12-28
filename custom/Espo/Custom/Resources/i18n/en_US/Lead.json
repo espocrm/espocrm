@@ -6,20 +6,20 @@
         "cDateOfBirth": "Date Of Birth",
         "cGender": "Gender",
         "cMaritalStatus": "Marital Status",
-        "cProofType": "Proof Type",
+        "cProofType": "Address Proof Type",
         "cNICNo": "NIC No",
         "cPassport": "Passport",
         "cDrivingLicense": "Driving License",
         "cEmployeeType": "Employee Type",
         "cBusinessName": "Employer / Business Name",
-        "cTurnover": "Monthly / Annual Turnover",
+        "cTurnover": "Monthly Turnover",
         "cExistingMonthlyObligations": "Existing Monthly Obligations (EMI, Rent, etc)",
         "cExistingMonthlyObligationsCurrency": "Existing Monthly Obligations (EMI, Rent, etc) (Currency)",
         "cExistingMonthlyObligationsConverted": "Existing Monthly Obligations (EMI, Rent, etc) (Converted)",
         "cBankName": "Bank Name",
         "cAccountNo": "Account No",
         "cBranch": "Branch",
-        "cCreditScore": "CRIB / Credit Score",
+        "cCreditScore": "CRIB / Credit Score (If available)",
         "cInterestedLoan": "Interested Loan",
         "cDesiredLoanAmount": "Desired Loan Amount",
         "cDesiredLoanAmountCurrency": "Desired Loan Amount (Currency)",
@@ -35,7 +35,9 @@
         "cPermanentAddressCountry": "Permanent Address Country",
         "cPermanentAddressPostalCode": "Permanent Address Postal Code",
         "cPermanentAddressMap": "Permanent Address Map",
-        "cLeadID": "Lead ID"
+        "cLeadID": "Lead ID",
+        "cLeadId": "Lead Id",
+        "cInterestedProductType": "Interested Product Type"
     },
     "links": {
         "cContact": "Existing Customer"
@@ -69,6 +71,28 @@
             "Gold Loan": "Gold Loan",
             "Business Loan": "Business Loan",
             "Lease": "Lease"
+        },
+        "cInterestedProductType": {
+            "Personal Loan": "Personal Loan",
+            "Vehicle Loan": "Vehicle Loan",
+            "Gold Loan": "Gold Loan",
+            "Business Loan": "Business Loan",
+            "Lease": "Lease"
+        },
+        "status": {
+            "New": "New",
+            "Validated": "Validated",
+            "Assigned": "Assigned",
+            "Contacted": "Contacted",
+            "Verified": "Verified",
+            "Qualified": "Qualified",
+            "In Process": "In Process",
+            "Converted": "Converted",
+            "Recycled": "Recycled",
+            "Dead": "Dead",
+            "Duplicate": "Duplicate",
+            "Disqualified": "Disqualified",
+            "Unresponsive": "Unresponsive"
         }
     }
 }
