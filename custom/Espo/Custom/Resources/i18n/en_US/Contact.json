@@ -8,7 +8,10 @@
         "cLastContactDate": "Last Contact Date",
         "cCifNumber": "CIF Number",
         "cLeads": "Link To Lead",
-        "cBranch": "Branch"
+        "cBranch": "Branch",
+        "cCustomerType": "Customer Type",
+        "cPassportNumber": "Passport Number",
+        "cBusinessRegistrationNumber": "Business Registration Number"
     },
     "options": {
         "cGender": {
@@ -21,6 +24,10 @@
             "VIP": "VIP",
             "PEP": "PEP",
             "Legal": "Legal"
+        },
+        "cCustomerType": {
+            "Individual": "Individual",
+            "Bussiness": "Bussiness"
         }
     },
     "links": {

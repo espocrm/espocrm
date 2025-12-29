@@ -65,6 +65,32 @@
         },
         "cLeads": {
             "type": "linkMultiple"
+        },
+        "cCustomerType": {
+            "type": "enum",
+            "options": [
+                "Individual",
+                "Bussiness"
+            ],
+            "style": {
+                "Individual": null,
+                "Bussiness": null
+            },
+            "default": "Individual",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cPassportNumber": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cBusinessRegistrationNumber": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
         }
     },
     "links": {

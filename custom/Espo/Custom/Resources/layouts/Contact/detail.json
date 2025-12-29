@@ -4,6 +4,12 @@
             [
                 {
                     "name": "name"
+                },
+                {
+                    "name": "cCustomerType"
+                },
+                {
+                    "name": "cCifNumber"
                 }
             ],
             [
@@ -11,9 +17,26 @@
                     "name": "cNicNumber"
                 },
                 {
-                    "name": "cCifNumber"
+                    "name": "cPassportNumber"
                 }
             ],
+            [
+                {
+                    "name": "cBusinessRegistrationNumber"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Overview"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "cDateOfBirth"
@@ -40,20 +63,25 @@
             ],
             [
                 {
+                    "name": "cFlags"
+                }
+            ],
+            [
+                {
                     "name": "assignedUser"
                 },
                 {
                     "name": "cLastContactDate"
                 }
-            ],
-            [
-                {
-                    "name": "cFlags"
-                }
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Customer Details",
+        "hidden": false,
+        "noteText": null,
         "noteStyle": "info",
-        "label": ""
+        "customLabel": "Customer Details"
     }
 ]
