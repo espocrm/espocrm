@@ -2185,15 +2185,14 @@ class DetailRecordView extends BaseRecordView {
             if (type === 'required') {
                 const fieldView = this.getFieldView(field);
 
-                if (fieldView.validateRequired) {
+                if (fieldView && fieldView.validateRequired) {
                     fieldView.suspendValidationMessage();
 
                     try {
                         if (!fieldView.validateRequired()) {
                             return;
                         }
-                    }
-                    catch (e) {}
+                    } catch (e) {}
                 }
             }
 
