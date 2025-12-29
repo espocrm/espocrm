@@ -8,21 +8,8 @@
     "_delimiter_": {
         "disabled": true
     },
-    "_tabBreak_0": {
-        "index": 0,
-        "tabBreak": true,
-        "tabLabel": "Tab 1"
-    },
     "stream": {
         "sticked": false,
-        "index": 1
-    },
-    "_tabBreak_1": {
-        "index": 2,
-        "tabBreak": true,
-        "tabLabel": "Tab 2"
-    },
-    "targetLists": {
-        "index": 3
+        "index": 0
     }
 }

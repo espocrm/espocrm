@@ -60,7 +60,12 @@
         "cMaxEligibleAmountConverted": "Max Eligible Amount (Converted)",
         "cCRIBStatus": "CRIB Status",
         "cCRIBLastChecked": "CRIB Last Checked",
-        "cExistingLoans": "Existing Loans"
+        "cExistingLoans": "Existing Loans",
+        "cCustomerType": "Customer Type",
+        "cCustomerSegment": "Customer Segment",
+        "cProductSubType": "Product Sub Type",
+        "cDisqualifiedReason": "Disqualified Reason",
+        "cDisqualificationDetails": "Disqualification Details"
     },
     "links": {
         "cContact": "Existing Customer"
@@ -127,6 +132,49 @@
             "Defaults": "Defaults",
             "Pending": "Pending",
             "Not Checked": "Not Checked"
+        },
+        "cCustomerType": {
+            "Individual": "Individual",
+            "Corporate": "Corporate",
+            "Sole Proprietor": "Sole Proprietor",
+            "Partnership": "Partnership"
+        },
+        "cCustomerSegment": {
+            "New Customer": "New Customer",
+            "Existing Customer": "Existing Customer",
+            "Returning Customer": "Returning Customer",
+            "Dormant Customer Reactivation": "Dormant Customer Reactivation"
+        },
+        "cProductSubType": {
+            "None": "None",
+            "Salary-based Personal Loan": "Salary-based Personal Loan",
+            "Asset-backed Personal Loan": "Asset-backed Personal Loan",
+            "Emergency Personal Loan": "Emergency Personal Loan",
+            "New Vehicle Loan": "New Vehicle Loan",
+            "Used Vehicle Loan": "Used Vehicle Loan",
+            "Vehicle Refinancing": "Vehicle Refinancing",
+            "SME Loan": "SME Loan",
+            "Working Capital Loan": "Working Capital Loan",
+            "Home Loan": "Home Loan",
+            "Home Construction Loan": "Home Construction Loan",
+            "Home Renovation Loan": "Home Renovation Loan",
+            "Gold Jewelry Loan": "Gold Jewelry Loan",
+            "Gold Coin/Bar Loan": "Gold Coin/Bar Loan"
+        },
+        "cDisqualifiedReason": {
+            "Incomplete Documentation": "Incomplete Documentation",
+            "Failed Credit Check": "Failed Credit Check",
+            "Insufficient Income": "Insufficient Income",
+            "High Debt-to-Income Ratio": "High Debt-to-Income Ratio",
+            "Employment Verification Failed": "Employment Verification Failed",
+            "Age Criteria Not Met": "Age Criteria Not Met",
+            "Negative CRIB Report": "Negative CRIB Report",
+            "Property/Asset Issues": "Property/Asset Issues",
+            "Duplicate Application": "Duplicate Application",
+            "Customer Declined": "Customer Declined",
+            "Policy Violation": "Policy Violation",
+            "Other": "Other",
+            "": ""
         }
     },
     "tooltips": {
@@ -142,6 +190,11 @@
         "cProposedEMI": "Calculated monthly installment based on loan amount and tenure",
         "cFinancialQualification": "Auto-calculated based on FOIR/DTI thresholds",
         "cMaxEligibleAmount": "Maximum loan amount customer qualifies for based on income",
-        "cExistingLoans": "Details of existing loans from CRIB report"
+        "cExistingLoans": "Details of existing loans from CRIB report",
+        "cCustomerType": "Type of customer - Individual or Business entity",
+        "cDisqualifiedReason": "Reason for lead Disqualification n - REQUIRED when status is Disqualified",
+        "cDisqualificationDetails": "Additional details about the Disqualification reason",
+        "cProductSubType": "Specific type within the product category",
+        "cCustomerSegment": "Customer relationship status with the company"
     }
 }

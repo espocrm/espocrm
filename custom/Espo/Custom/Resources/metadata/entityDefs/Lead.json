@@ -8,7 +8,8 @@
             "isCustom": true
         },
         "cContact": {
-            "type": "link"
+            "type": "link",
+            "required": false
         },
         "accountName": {
             "options": [],
@@ -191,7 +192,7 @@
             "isCustom": true
         },
         "phoneNumber": {
-            "required": true
+            "required": false
         },
         "cLeadID": {
             "type": "autoincrement",
@@ -220,13 +221,13 @@
             "isCustom": true
         },
         "firstName": {
-            "required": true,
+            "required": false,
             "options": [],
             "pattern": "^[a-zA-Z\\s\\.]{2,}$",
             "tooltip": true
         },
         "lastName": {
-            "required": true,
+            "required": false,
             "options": [],
             "pattern": "^[a-zA-Z\\s\\.]{2,}$",
             "tooltip": true
@@ -391,6 +392,137 @@
             "cutHeight": 200,
             "tooltip": true,
             "isCustom": true
+        },
+        "cCustomerType": {
+            "type": "enum",
+            "required": true,
+            "audited": true,
+            "options": [
+                "Individual",
+                "Corporate",
+                "Sole Proprietor",
+                "Partnership"
+            ],
+            "style": {
+                "Individual": null,
+                "Corporate": null,
+                "Sole Proprietor": null,
+                "Partnership": null
+            },
+            "default": "Individual",
+            "tooltip": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cCustomerSegment": {
+            "type": "enum",
+            "required": true,
+            "options": [
+                "New Customer",
+                "Existing Customer",
+                "Returning Customer",
+                "Dormant Customer Reactivation"
+            ],
+            "style": {
+                "New Customer": null,
+                "Existing Customer": null,
+                "Returning Customer": null,
+                "Dormant Customer Reactivation": null
+            },
+            "default": "New Customer",
+            "audited": true,
+            "maxLength": 100,
+            "isCustom": true,
+            "tooltip": true
+        },
+        "cProductSubType": {
+            "type": "enum",
+            "options": [
+                "None",
+                "Salary-based Personal Loan",
+                "Asset-backed Personal Loan",
+                "Emergency Personal Loan",
+                "New Vehicle Loan",
+                "Used Vehicle Loan",
+                "Vehicle Refinancing",
+                "SME Loan",
+                "Working Capital Loan",
+                "Home Loan",
+                "Home Construction Loan",
+                "Home Renovation Loan",
+                "Gold Jewelry Loan",
+                "Gold Coin/Bar Loan"
+            ],
+            "style": {
+                "None": null,
+                "Salary-based Personal Loan": null,
+                "Asset-backed Personal Loan": null,
+                "Emergency Personal Loan": null,
+                "New Vehicle Loan": null,
+                "Used Vehicle Loan": null,
+                "Vehicle Refinancing": null,
+                "SME Loan": null,
+                "Working Capital Loan": null,
+                "Home Loan": null,
+                "Home Construction Loan": null,
+                "Home Renovation Loan": null,
+                "Gold Jewelry Loan": null,
+                "Gold Coin/Bar Loan": null
+            },
+            "default": "None",
+            "maxLength": 100,
+            "isCustom": true,
+            "tooltip": true
+        },
+        "cDisqualifiedReason": {
+            "type": "enum",
+            "audited": true,
+            "options": [
+                "",
+                "Incomplete Documentation",
+                "Failed Credit Check",
+                "Insufficient Income",
+                "High Debt-to-Income Ratio",
+                "Employment Verification Failed",
+                "Age Criteria Not Met",
+                "Negative CRIB Report",
+                "Property/Asset Issues",
+                "Duplicate Application",
+                "Customer Declined",
+                "Policy Violation",
+                "Other"
+            ],
+            "style": {
+                "": null,
+                "Incomplete Documentation": null,
+                "Failed Credit Check": null,
+                "Insufficient Income": null,
+                "High Debt-to-Income Ratio": null,
+                "Employment Verification Failed": null,
+                "Age Criteria Not Met": null,
+                "Negative CRIB Report": null,
+                "Property/Asset Issues": null,
+                "Duplicate Application": null,
+                "Customer Declined": null,
+                "Policy Violation": null,
+                "Other": null
+            },
+            "default": null,
+            "tooltip": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDisqualificationDetails": {
+            "type": "text",
+            "rowsMin": 2,
+            "cutHeight": 200,
+            "audited": true,
+            "maxLength": 500,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "name": {
+            "required": true
         }
     },
     "links": {

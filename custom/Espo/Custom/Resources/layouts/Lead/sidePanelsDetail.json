@@ -1,11 +1,8 @@
 {
-    "_delimiter_": {
-        "disabled": true
-    },
     "convertedTo": {
         "disabled": true
     },
-    "activities": {
+    "_delimiter_": {
         "disabled": true
     },
     "default": {
@@ -16,5 +13,8 @@
     },
     "tasks": {
         "index": 2
+    },
+    "activities": {
+        "index": 3
     }
 }
