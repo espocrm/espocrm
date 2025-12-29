@@ -9,7 +9,7 @@
         },
         "cNicNumber": {
             "type": "varchar",
-            "required": true,
+            "required": false,
             "maxLength": 12,
             "options": [],
             "isCustom": true,
@@ -91,6 +91,16 @@
             "maxLength": 100,
             "options": [],
             "isCustom": true
+        },
+        "cBusinessName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "lastName": {
+            "required": false,
+            "options": []
         }
     },
     "links": {

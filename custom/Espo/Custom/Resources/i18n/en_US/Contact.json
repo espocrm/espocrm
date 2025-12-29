@@ -11,7 +11,8 @@
         "cBranch": "Branch",
         "cCustomerType": "Customer Type",
         "cPassportNumber": "Passport Number",
-        "cBusinessRegistrationNumber": "Business Registration Number"
+        "cBusinessRegistrationNumber": "Business Registration Number",
+        "cBusinessName": "Business Name"
     },
     "options": {
         "cGender": {

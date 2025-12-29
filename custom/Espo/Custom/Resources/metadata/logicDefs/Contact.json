@@ -50,6 +50,57 @@
                     }
                 ]
             }
+        },
+        "name": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Individual"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Individual"
+                    }
+                ]
+            }
+        },
+        "cBusinessName": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Bussiness"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Bussiness"
+                    }
+                ]
+            }
+        },
+        "lastName": {
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Individual"
+                    }
+                ]
+            }
         }
     }
 }
