@@ -17,6 +17,18 @@
         "notSortable": true
     },
     {
+        "name": "cCustomerType",
+        "width": 16
+    },
+    {
+        "name": "cCustomerSegment",
+        "width": 16
+    },
+    {
+        "name": "cDisqualifiedReason",
+        "width": 16
+    },
+    {
         "name": "assignedUser",
         "width": 18
     },

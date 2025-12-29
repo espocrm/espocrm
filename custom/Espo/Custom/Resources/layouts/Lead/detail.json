@@ -3,6 +3,9 @@
         "rows": [
             [
                 {
+                    "name": "cCustomerSegment"
+                },
+                {
                     "name": "cContact"
                 }
             ],
@@ -10,6 +13,12 @@
                 {
                     "name": "name"
                 }
+            ],
+            [
+                {
+                    "name": "cCustomerType"
+                },
+                false
             ],
             [
                 {
@@ -35,14 +44,17 @@
         "rows": [
             [
                 {
-                    "name": "phoneNumber"
-                },
-                {
                     "name": "emailAddress"
                 },
                 {
                     "name": "status"
                 }
+            ],
+            [
+                {
+                    "name": "phoneNumber"
+                },
+                false
             ]
         ],
         "dynamicLogicVisible": null,
@@ -161,6 +173,9 @@
             [
                 {
                     "name": "cInterestedLoan"
+                },
+                {
+                    "name": "cProductSubType"
                 }
             ],
             [
@@ -279,5 +294,54 @@
         "noteText": null,
         "noteStyle": "info",
         "customLabel": "Credit Bureau"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cDisqualifiedReason"
+                },
+                {
+                    "name": "cDisqualificationDetails"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "or",
+                    "value": [
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Disqualified"
+                        },
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Dead"
+                        },
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Duplicate"
+                        },
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Unresponsive"
+                        }
+                    ]
+                }
+            ]
+        },
+        "style": "danger",
+        "dynamicLogicStyled": null,
+        "tabBreak": true,
+        "tabLabel": "Disqualification Details",
+        "hidden": true,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Disqualification Details"
     }
 ]
