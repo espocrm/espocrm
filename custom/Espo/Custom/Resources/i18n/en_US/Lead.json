@@ -65,7 +65,8 @@
         "cCustomerSegment": "Customer Segment",
         "cProductSubType": "Product Sub Type",
         "cDisqualifiedReason": "Disqualified Reason",
-        "cDisqualificationDetails": "Disqualification Details"
+        "cDisqualificationDetails": "Disqualification Details",
+        "cIsQualifiedInt": "Is Qualified (Helper)"
     },
     "links": {
         "cContact": "Existing Customer"

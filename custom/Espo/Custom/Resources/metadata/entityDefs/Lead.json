@@ -523,6 +523,11 @@
         },
         "name": {
             "required": true
+        },
+        "cIsQualifiedInt": {
+            "type": "int",
+            "default": 0,
+            "isCustom": true
         }
     },
     "links": {
