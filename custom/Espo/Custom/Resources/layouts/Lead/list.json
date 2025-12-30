@@ -1,11 +1,14 @@
 [
     {
-        "name": "cLeadID",
-        "width": 16
+        "name": "cLeadNumber",
+        "width": 20,
+        "align": "left"
     },
     {
         "name": "name",
-        "link": "true"
+        "width": 20,
+        "link": true,
+        "align": "left"
     },
     {
         "name": "status",
@@ -26,7 +29,8 @@
     },
     {
         "name": "cDisqualifiedReason",
-        "width": 16
+        "width": 20,
+        "align": "left"
     },
     {
         "name": "assignedUser",
@@ -34,6 +38,7 @@
     },
     {
         "name": "createdAt",
-        "width": 13
+        "width": 20,
+        "align": "left"
     }
 ]

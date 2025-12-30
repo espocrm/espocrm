@@ -7,6 +7,10 @@
                 },
                 {
                     "name": "cContact"
+                },
+                false,
+                {
+                    "name": "cLeadScore"
                 }
             ],
             [
@@ -35,7 +39,7 @@
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Basic Information",
+        "tabLabel": "Customer Demographics",
         "hidden": false,
         "noteText": null,
         "customLabel": "Personal Information"
@@ -130,13 +134,15 @@
                 {
                     "name": "cTurnover"
                 },
-                false
+                {
+                    "name": "cExistingMonthlyObligations"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Financials & Loan",
+        "tabLabel": "Financials Information",
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
@@ -163,7 +169,7 @@
         "style": "default",
         "tabBreak": false,
         "tabLabel": null,
-        "hidden": false,
+        "hidden": true,
         "noteText": null,
         "noteStyle": "info",
         "customLabel": "Bank Account Details"
@@ -209,11 +215,37 @@
         "rows": [
             [
                 {
-                    "name": "cLeadScore"
+                    "name": "cCreditScore"
                 },
                 {
-                    "name": "cScoreLastUpdated"
+                    "name": "cCRIBStatus"
                 }
+            ],
+            [
+                {
+                    "name": "cCRIBLastChecked"
+                },
+                {
+                    "name": "cExistingLoans"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": "Credit Bureau",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Credit Bureau"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cScoreLastUpdated"
+                },
+                false
             ]
         ],
         "dynamicLogicVisible": null,
@@ -227,14 +259,6 @@
     },
     {
         "rows": [
-            [
-                {
-                    "name": "cMonthlyIncome"
-                },
-                {
-                    "name": "cExistingMonthlyObligations"
-                }
-            ],
             [
                 {
                     "name": "cProposedEMI"
@@ -266,34 +290,6 @@
         "noteText": null,
         "noteStyle": "info",
         "customLabel": "Financial Assessment"
-    },
-    {
-        "rows": [
-            [
-                {
-                    "name": "cCreditScore"
-                },
-                {
-                    "name": "cCRIBStatus"
-                }
-            ],
-            [
-                {
-                    "name": "cCRIBLastChecked"
-                },
-                {
-                    "name": "cExistingLoans"
-                }
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": false,
-        "tabLabel": "Credit Bureau",
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "customLabel": "Credit Bureau"
     },
     {
         "rows": [

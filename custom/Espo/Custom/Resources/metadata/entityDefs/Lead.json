@@ -5,7 +5,8 @@
             "maxLength": 20,
             "readOnly": true,
             "unique": true,
-            "isCustom": true
+            "isCustom": true,
+            "options": []
         },
         "cContact": {
             "type": "link",
@@ -236,43 +237,22 @@
             "options": [
                 "New",
                 "Validated",
-                "Assigned",
                 "Contacted",
-                "Verified",
                 "Qualified",
-                "In Process",
+                "Deferred",
                 "Converted",
-                "Recycled",
-                "Dead",
-                "Duplicate",
-                "Disqualified",
-                "Unresponsive"
+                "Disqualified"
             ],
             "style": {
-                "New": null,
-                "Validated": null,
-                "Assigned": null,
-                "Contacted": "info",
-                "Verified": "info",
+                "New": "info",
+                "Validated": "warning",
+                "Contacted": "primary",
                 "Qualified": "success",
-                "In Process": "primary",
+                "Deferred": null,
                 "Converted": "success",
-                "Recycled": "info",
-                "Dead": "danger",
-                "Duplicate": "danger",
-                "Disqualified": "danger",
-                "Unresponsive": "danger"
-            }
-        },
-        "cPreferredTenure": {
-            "type": "currency",
-            "min": 0,
-            "isCustom": true
-        },
-        "cTurnover": {
-            "type": "currency",
-            "min": 0,
-            "isCustom": true
+                "Disqualified": "danger"
+            },
+            "notActualOptions": []
         },
         "cCreditScore": {
             "type": "int",
@@ -299,12 +279,6 @@
             "readOnly": true,
             "minuteStep": 1,
             "isCustom": true
-        },
-        "cMonthlyIncome": {
-            "type": "currency",
-            "isCustom": true,
-            "audited": true,
-            "tooltip": true
         },
         "cDTI": {
             "notNull": false,
@@ -524,9 +498,17 @@
         "name": {
             "required": true
         },
-        "cIsQualifiedInt": {
+        "cPreferredTenure": {
             "type": "int",
-            "default": 0,
+            "isCustom": true
+        },
+        "cTurnover": {
+            "type": "int",
+            "isCustom": true
+        },
+        "cMonthlyIncome": {
+            "type": "currency",
+            "audited": true,
             "isCustom": true
         }
     },

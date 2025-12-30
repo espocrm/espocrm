@@ -1,6 +1,6 @@
 {
     "fields": {
-        "cLeadNumber": "Lead Number",
+        "cLeadNumber": "Lead Reference Number",
         "cContact": "Existing Customer",
         "accountName": "Account Name",
         "cDateOfBirth": "Date Of Birth",
@@ -18,7 +18,7 @@
         "cBankName": "Bank Name",
         "cAccountNo": "Account No",
         "cBranch": "Branch",
-        "cInterestedLoan": "Interested Loan",
+        "cInterestedLoan": "Interested Facilities",
         "cDesiredLoanAmount": "Desired Loan Amount",
         "cDesiredLoanAmountCurrency": "Desired Loan Amount (Currency)",
         "cDesiredLoanAmountConverted": "Desired Loan Amount (Converted)",
@@ -34,18 +34,9 @@
         "cPermanentAddressMap": "Permanent Address Map",
         "cLeadID": "Lead ID",
         "cInterestedProductType": "Interested Product Type",
-        "cPreferredTenure": "Preferred Tenure",
-        "cPreferredTenureCurrency": "Preferred Tenure (Currency)",
-        "cPreferredTenureConverted": "Preferred Tenure (Converted)",
-        "cTurnover": "Monthly Turnover",
-        "cTurnoverCurrency": "Monthly Turnover (Currency)",
-        "cTurnoverConverted": "Monthly Turnover (Converted)",
         "cCreditScore": "CRIB / Credit Score (If available)",
         "cLeadScore": "Lead Score",
         "cScoreLastUpdated": "Score Last Updated",
-        "cMonthlyIncome": "Monthly Income",
-        "cMonthlyIncomeCurrency": "Monthly Income (Currency)",
-        "cMonthlyIncomeConverted": "Monthly Income (Converted)",
         "cDTI": "DTI(%)",
         "cFOIR": "FOIR (%)",
         "cProposedEMI": "Proposed Monthly EMI",
@@ -66,7 +57,11 @@
         "cProductSubType": "Product Sub Type",
         "cDisqualifiedReason": "Disqualified Reason",
         "cDisqualificationDetails": "Disqualification Details",
-        "cIsQualifiedInt": "Is Qualified (Helper)"
+        "cPreferredTenure": "Preferred Tenure",
+        "cTurnover": "Monthly Turnover",
+        "cMonthlyIncome": "Monthly Income",
+        "cMonthlyIncomeCurrency": "Monthly Income (Currency)",
+        "cMonthlyIncomeConverted": "Monthly Income (Converted)"
     },
     "links": {
         "cContact": "Existing Customer"
@@ -121,7 +116,8 @@
             "Dead": "Dead",
             "Duplicate": "Duplicate",
             "Disqualified": "Disqualified",
-            "Unresponsive": "Unresponsive"
+            "Unresponsive": "Unresponsive",
+            "Deferred": "Deferred"
         },
         "cFinancialQualification": {
             "Pass": "Pass",
@@ -185,7 +181,6 @@
         "firstName": "Only letters, spaces, and initials (dots) are allowed. Minimum 2 characters",
         "lastName": "Only letters, spaces, and initials (dots) are allowed. Minimum 2 characters",
         "cLeadScore": "Auto-calculated lead quality score (0-100)",
-        "cMonthlyIncome": "Customer's gross monthly income",
         "cDTI": "Debt-to-Income Ratio - Total Obligations / Income × 100",
         "cFOIR": "Fixed Obligation to Income Ratio - New EMI / Income × 100",
         "cProposedEMI": "Calculated monthly installment based on loan amount and tenure",
