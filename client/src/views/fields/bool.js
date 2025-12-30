@@ -95,8 +95,10 @@ class BoolFieldView extends BaseFieldView {
     }
 
     fetch() {
-        // noinspection JSUnresolvedReference
-        const value = this.$element.get(0).checked;
+        const element = /** @type {HTMLInputElement|null} */
+            this.mainInputElement;
+
+        const value = element?.checked
 
         const data = {};
 
