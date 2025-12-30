@@ -1,0 +1,11 @@
+{
+    "_delimiter_": {
+        "disabled": true
+    },
+    "default": {
+        "index": 0
+    },
+    "convertedTo": {
+        "index": 1
+    }
+}
