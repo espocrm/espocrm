@@ -43,6 +43,10 @@ docker-compose.override.yml
 # Extensions (downloaded from secure storage during build)
 extensions/*.zip
 
+# Extension module files (extracted at runtime, not committed)
+custom/Espo/Modules/Advanced/
+client/custom/modules/advanced/
+
 client/css/espo/*
 client/lib/*
 client/modules/crm/lib/*
