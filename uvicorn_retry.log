@@ -1,0 +1,21 @@
+INFO:     Will watch for changes in these directories: ['/app/python']
+INFO:     Uvicorn running on http://127.0.0.1:8081 (Press CTRL+C to quit)
+INFO:     Started reloader process [9934] using StatReload
+INFO:     Started server process [9962]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:46340 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46356 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56676 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46522 - "GET /api/v1/App/user HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46538 - "GET /api/v1/Metadata HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51402 - "GET /client/css/espo/hazyblue-vertical.css HTTP/1.1" 404 Not Found
+WARNING:  StatReload detected changes in 'app/core/client_manager.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9962]
+INFO:     Started server process [15000]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:43410 - "GET /client/css/font-awesome.min.css HTTP/1.1" 200 OK
