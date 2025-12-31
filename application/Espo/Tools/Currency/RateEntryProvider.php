@@ -143,6 +143,26 @@ class RateEntryProvider
     }
 
     /**
+     * @since 9.3.0
+     * @throws NotEnabled
+     * @noinspection PhpUnused
+     */
+    public function getRateEntryOnAsOfDate(string $code, Date $date): ?CurrencyRecordRate
+    {
+        $record = $this->getRecordByCode($code);
+
+        return $this->entityManager
+            ->getRDBRepositoryByClass(CurrencyRecordRate::class)
+            ->where([
+                CurrencyRecordRate::ATTR_RECORD_ID => $record->getId(),
+                CurrencyRecordRate::FIELD_BASE_CODE => $this->configDataProvider->getBaseCurrency(),
+                CurrencyRecordRate::FIELD_DATE . '<=' => $date->toString(),
+            ])
+            ->order(CurrencyRecordRate::FIELD_DATE, Order::DESC)
+            ->findOne();
+    }
+
+    /**
      * @throws NotEnabled
      */
     private function getRecordByCode(string $code): CurrencyRecord
