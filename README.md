@@ -8,10 +8,58 @@ support cases, and more – all business information in a simple and intuitive i
 
 ![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
 
+## Python Migration Status
+
+This repository is a work-in-progress migration of the EspoCRM backend from PHP to Python (FastAPI).
+
+### Ported Features
+- **Infrastructure:** FastAPI setup, SQLAlchemy configuration, Database connection.
+- **Core Services:**
+    - `MetadataService`: Aggregates and merges JSON metadata.
+    - `LanguageService`: Aggregates and merges localization files.
+    - `ClientManager`: Bootstraps the frontend (HTML rendering, script injection).
+- **API Endpoints:**
+    - `/Metadata`: Returns application metadata.
+    - `/I18n`: Returns localization data.
+    - `/App/user`: Returns current user info (basic stub/admin fallback).
+- **Models:** `User` (basic mapping).
+
+### Pending Features
+- **Authentication:** Full login/logout flow, token management, password hashing.
+- **ORM & Data Access:** Generic CRUD service, dynamic field mapping, relationships (One-to-Many, Many-to-Many).
+- **Standard Entities:** Accounts, Contacts, Leads, etc. (Controllers, Services, Repositories).
+- **Search & Filter:** List view filtering, sorting, and pagination.
+- **Administration:** Settings, Layout Manager, Field Manager.
+- **Access Control (ACL):** Roles, Teams, Permissions.
+- **Advanced Features:** Workflows, Hooks, Jobs/Cron, Emails, Stream/Activities.
+
+### Porting Plan (Batches)
+
+1. **Batch 1: Authentication & Basic User Management**
+   - Implement login/logout endpoints.
+   - Secure session/token handling.
+   - Complete `User` model and controller.
+
+2. **Batch 2: Dynamic ORM & Generic CRUD**
+   - Implement `RecordService` and `RecordController` to handle entities dynamically based on metadata.
+   - Enable Create, Read, Update, Delete operations for arbitrary entities.
+
+3. **Batch 3: Relationships & Standard Entities**
+   - Implement relationship handling (link/unlink).
+   - Verify standard entities (Accounts, Contacts) work with the generic CRUD.
+
+4. **Batch 4: Search & Filtering**
+   - Implement EspoCRM's search syntax interpretation (`SelectManager`).
+   - Enable list view filtering and sorting.
+
+5. **Batch 5: ACL & Security**
+   - Implement Role-based and Team-based access control.
+   - Enforce permissions in CRUD operations.
+
 ### Architecture
 
 EspoCRM is a web application with a frontend designed as a single-page application and a REST API
-backend written in PHP.
+backend written in PHP (being migrated to Python).
 
 ### Demo
 
