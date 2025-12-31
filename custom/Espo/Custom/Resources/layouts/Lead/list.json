@@ -1,18 +1,44 @@
 [
     {
+        "name": "cLeadNumber",
+        "width": 20,
+        "align": "left"
+    },
+    {
         "name": "name",
-        "width": 16
+        "width": 20,
+        "link": true,
+        "align": "left"
     },
     {
         "name": "status",
         "width": 15
     },
     {
-        "name": "description",
+        "name": "emailAddress",
+        "width": 20,
+        "notSortable": true
+    },
+    {
+        "name": "cCustomerType",
         "width": 16
+    },
+    {
+        "name": "cCustomerSegment",
+        "width": 16
+    },
+    {
+        "name": "cDisqualifiedReason",
+        "width": 20,
+        "align": "left"
     },
     {
         "name": "assignedUser",
         "width": 18
+    },
+    {
+        "name": "createdAt",
+        "width": 20,
+        "align": "left"
     }
 ]

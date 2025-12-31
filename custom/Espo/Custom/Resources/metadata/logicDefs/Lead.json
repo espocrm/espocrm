@@ -1,7 +1,70 @@
 {
     "fields": {
         "name": {
-            "required": null
+            "required": null,
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerSegment",
+                        "value": "New Customer"
+                    }
+                ]
+            }
+        },
+        "cPermanentAddress": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isFalse",
+                        "attribute": "cIsPermanentAddressSameAsCurrent"
+                    }
+                ]
+            }
+        },
+        "cContact": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerSegment",
+                        "value": "Existing Customer"
+                    }
+                ]
+            }
+        },
+        "firstName": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerSegment",
+                        "value": "New Customer"
+                    }
+                ]
+            }
+        },
+        "lastName": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerSegment",
+                        "value": "New Customer"
+                    }
+                ]
+            }
+        },
+        "phoneNumber": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerSegment",
+                        "value": "New Customer"
+                    }
+                ]
+            }
         }
     }
 }

@@ -1,0 +1,74 @@
+/* Connectra Theme - Base Styles */
+
+:root {
+    --top-bar-height: 64px;
+}
+
+/* Ensure logo containers use flexbox for positioning */
+#login .logo-container {
+    display: flex;
+}
+
+.navbar-logo-container {
+    display: flex;
+}
+
+/* Logo Background in Sidebar - uses CSS variable set by dynamic CSS */
+body[data-navbar="side"] #navbar .navbar-header {
+    background-color: var(--connectra-logo-bg, transparent);
+}
+
+/* Login panel with background image support */
+body > .container.content:has(#login) #login .panel {
+    transition: background-color 0.2s ease;
+}
+
+/* Top Bar Vertical Alignment Fixes for 64px height */
+body[data-navbar="side"] #navbar .navbar-right {
+    align-items: center;
+}
+
+/* Center search container (form element) */
+body[data-navbar="side"] #navbar .navbar-right .global-search-container {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+/* Center the input-group inside search container */
+body[data-navbar="side"] #navbar .navbar-right .global-search-container .input-group {
+    display: flex;
+    align-items: center;
+}
+
+/* Search input styling with thin border */
+body[data-navbar="side"] input.global-search-input {
+    min-height: 36px;
+    max-height: 36px;
+    height: 36px;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+}
+
+/* Center icons vertically */
+body[data-navbar="side"] #navbar .navbar-right > li {
+    align-items: center;
+}
+
+body[data-navbar="side"] #navbar .navbar-right > li > a {
+    display: flex;
+    align-items: center;
+    height: auto;
+}
+
+/* Center the search button icon */
+body[data-navbar="side"] .global-search-container a.global-search-button {
+    display: flex;
+    align-items: center;
+    height: auto;
+}
+
+/* Hide EspoCRM footer credit */
+footer .credit {
+    display: none;
+}

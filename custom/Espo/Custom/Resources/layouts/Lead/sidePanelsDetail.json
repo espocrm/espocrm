@@ -1,21 +1,20 @@
 {
+    "convertedTo": {
+        "disabled": true
+    },
     "_delimiter_": {
-        "disabled": true
-    },
-    "activities": {
-        "disabled": true
-    },
-    "history": {
-        "disabled": true
-    },
-    "tasks": {
         "disabled": true
     },
     "default": {
         "index": 0
     },
-    "convertedTo": {
-        "style": "success",
+    "history": {
         "index": 1
+    },
+    "tasks": {
+        "index": 2
+    },
+    "activities": {
+        "index": 3
     }
 }

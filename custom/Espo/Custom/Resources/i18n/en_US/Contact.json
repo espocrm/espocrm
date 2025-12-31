@@ -7,7 +7,7 @@
         "cFlags": "Flags",
         "cLastContactDate": "Last Contact Date",
         "cCifNumber": "CIF Number",
-        "cLeads": "Leads",
+        "cLeads": "Link To Lead",
         "cBranch": "Branch"
     },
     "options": {
@@ -24,7 +24,7 @@
         }
     },
     "links": {
-        "cLeads": "Leads",
+        "cLeads": "Link To Lead",
         "cBranch": "Branch"
     },
     "labels": {

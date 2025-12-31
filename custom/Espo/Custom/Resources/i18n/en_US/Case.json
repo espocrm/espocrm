@@ -1,9 +1,43 @@
 {
+    "fields": {
+        "cCaseNumber": "Case Number",
+        "cSearchBy": "Search By",
+        "cSearchInput": "Search Input",
+        "cSearchResults": "Search Results",
+        "type": "Case Category",
+        "cLoan": "Loan",
+        "cSaving": "Saving",
+        "cLeasing": "Leasing",
+        "cTargetDate": "Target Date",
+        "cTimeRameinig": "Time Rameinig"
+    },
     "options": {
         "type": {
             "": "",
             "Inquiry": "Inquiry",
             "Complaint": "Complaint"
+        },
+        "cSearchBy": {
+            "NIC": "NIC",
+            "Mobile No": "Mobile No",
+            "Email": "Email"
+        },
+        "cLoan": {
+            "Loan": "Loan"
+        },
+        "cSaving": {
+            "Saving": "Saving"
+        },
+        "cLeasing": {
+            "Leasing": "Leasing"
+        },
+        "status": {
+            "Open": "Open",
+            "In Progress": "In Progress",
+            "Resolve": "Resolve",
+            "Close": "Close",
+            "Pending": "Pending",
+            "Escalated": "Escalated"
         }
     }
 }

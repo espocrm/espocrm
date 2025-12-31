@@ -3,8 +3,26 @@
         "rows": [
             [
                 {
+                    "name": "cCustomerSegment"
+                },
+                {
+                    "name": "cContact"
+                },
+                false,
+                {
+                    "name": "cLeadScore"
+                }
+            ],
+            [
+                {
                     "name": "name"
                 }
+            ],
+            [
+                {
+                    "name": "cCustomerType"
+                },
+                false
             ],
             [
                 {
@@ -20,7 +38,8 @@
         ],
         "dynamicLogicVisible": null,
         "style": "default",
-        "tabBreak": false,
+        "tabBreak": true,
+        "tabLabel": "Customer Demographics",
         "hidden": false,
         "noteText": null,
         "customLabel": "Personal Information"
@@ -29,13 +48,17 @@
         "rows": [
             [
                 {
-                    "name": "phoneNumber"
+                    "name": "emailAddress"
+                },
+                {
+                    "name": "status"
                 }
             ],
             [
                 {
-                    "name": "emailAddress"
-                }
+                    "name": "phoneNumber"
+                },
+                false
             ]
         ],
         "dynamicLogicVisible": null,
@@ -43,7 +66,7 @@
         "tabBreak": false,
         "hidden": false,
         "noteText": null,
-        "customLabel": "Contact Details"
+        "customLabel": "Contact Details and Status"
     },
     {
         "rows": [
@@ -55,6 +78,14 @@
             [
                 {
                     "name": "cProofType"
+                },
+                {
+                    "name": "cIsPermanentAddressSameAsCurrent"
+                }
+            ],
+            [
+                {
+                    "name": "cPermanentAddress"
                 }
             ]
         ],
@@ -72,14 +103,10 @@
             [
                 {
                     "name": "cNICNo"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cPassport"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cDrivingLicense"
                 }
@@ -91,16 +118,14 @@
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": "ID Proof Details"
+        "customLabel": "ID Details"
     },
     {
         "rows": [
             [
                 {
                     "name": "cEmployeeType"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cBusinessName"
                 }
@@ -108,9 +133,7 @@
             [
                 {
                     "name": "cTurnover"
-                }
-            ],
-            [
+                },
                 {
                     "name": "cExistingMonthlyObligations"
                 }
@@ -118,8 +141,8 @@
         ],
         "dynamicLogicVisible": null,
         "style": "default",
-        "tabBreak": false,
-        "tabLabel": null,
+        "tabBreak": true,
+        "tabLabel": "Financials Information",
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
@@ -129,32 +152,166 @@
         "rows": [
             [
                 {
-                    "name": "cBankName"
+                    "name": "cInterestedLoan"
+                },
+                {
+                    "name": "cProductSubType"
                 }
             ],
             [
                 {
-                    "name": "cAccountNo"
+                    "name": "cDesiredLoanAmount"
+                },
+                {
+                    "name": "cPreferredTenure"
                 }
             ],
             [
                 {
-                    "name": "cBranch"
+                    "name": "cPurposeOfLoan"
                 }
             ],
             [
                 {
-                    "name": "cCreditScore"
+                    "name": "cPropertyOrVehicleDetails"
                 }
             ]
         ],
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": false,
-        "tabLabel": null,
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": "Bank Account Details"
+        "customLabel": "Loan Interest"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cCreditScore"
+                },
+                {
+                    "name": "cCRIBStatus"
+                }
+            ],
+            [
+                {
+                    "name": "cCRIBLastChecked"
+                },
+                {
+                    "name": "cExistingLoans"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": "Credit Bureau",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Credit Bureau"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cScoreLastUpdated"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Assessment & Risk",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Lead Scoring"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cProposedEMI"
+                },
+                {
+                    "name": "cFOIR"
+                }
+            ],
+            [
+                {
+                    "name": "cDTI"
+                },
+                {
+                    "name": "cFinancialQualification"
+                }
+            ],
+            [
+                {
+                    "name": "cMaxEligibleAmount"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": "Financial Assessment",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Financial Assessment"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cDisqualifiedReason"
+                },
+                {
+                    "name": "cDisqualificationDetails"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "or",
+                    "value": [
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Disqualified"
+                        },
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Dead"
+                        },
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Duplicate"
+                        },
+                        {
+                            "type": "equals",
+                            "attribute": "status",
+                            "value": "Unresponsive"
+                        }
+                    ]
+                }
+            ]
+        },
+        "style": "danger",
+        "dynamicLogicStyled": null,
+        "tabBreak": true,
+        "tabLabel": "Disqualification Details",
+        "hidden": true,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Disqualification Details"
     }
 ]
