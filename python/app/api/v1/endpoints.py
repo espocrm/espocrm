@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.controllers import metadata
+from app.controllers import metadata, i18n
 from app.core.database import get_db
 
 router = APIRouter()
@@ -23,3 +23,4 @@ async def get_app_user(db: Session = Depends(get_db)):
     }
 
 router.include_router(metadata.router)
+router.include_router(i18n.router)
