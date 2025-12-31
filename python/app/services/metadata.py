@@ -75,7 +75,11 @@ class MetadataService:
                     key = filename
                     if key not in section_data:
                         section_data[key] = {}
-                    self._load_from_subdir(filepath, section_data[key])
+
+                    # Only recurse if the existing data is a dictionary.
+                    # If it's a list (or other type), we can't merge a directory into it.
+                    if isinstance(section_data[key], dict):
+                        self._load_from_subdir(filepath, section_data[key])
                     continue
 
                 if filename.endswith(".json"):
@@ -83,6 +87,9 @@ class MetadataService:
                     try:
                         with open(filepath, 'r') as f:
                             content = json.load(f)
+
+                            if content is None:
+                                continue
 
                             if key not in section_data:
                                 section_data[key] = content
@@ -101,14 +108,18 @@ class MetadataService:
         except Exception as e:
             print(f"Error listing directory {dir_path}: {e}")
 
-    def _deep_merge(self, dict1, dict2):
+    def _deep_merge(self, target: Dict[str, Any], source: Dict[str, Any]) -> None:
         """
-        Recursive merge of dict2 into dict1.
+        Recursive merge of source into target.
         """
-        for key, value in dict2.items():
-            if key in dict1 and isinstance(dict1[key], dict) and isinstance(value, dict):
-                self._deep_merge(dict1[key], value)
+        for key, value in source.items():
+            if (
+                key in target
+                and isinstance(target[key], dict)
+                and isinstance(value, dict)
+            ):
+                self._deep_merge(target[key], value)
             else:
-                dict1[key] = value
+                target[key] = value
 
 metadata_service = MetadataService()
