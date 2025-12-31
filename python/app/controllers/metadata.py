@@ -1,28 +1,23 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
+from app.services.metadata import metadata_service
 
 router = APIRouter()
 
-# Mocking the service and metadata for now
-class MetadataService:
-    def get_data_for_frontend(self):
-        return {
-            "app": {
-                "name": "EspoCRM Python",
-                "version": "8.0.0"
-            },
-            "entityDefs": {},
-            "scopes": {}
-        }
-
-    def get_data_for_frontend_by_key(self, key: str):
-        # Mock logic
-        return {"key": key, "value": "mock_value"}
-
-metadata_service = MetadataService()
-
 @router.get("/Metadata")
 async def get_metadata(key: Optional[str] = None):
+    # In EspoCRM, ?key=... parameter is sometimes used to fetch specific parts, but usually the whole metadata is fetched.
+    # If key is provided, we might need to filter.
+    # The PHP Metadata controller doesn't seem to expose a simple 'key' param for partial fetch in the main action,
+    # but let's keep the mock signature for now.
+
+    data = metadata_service.get_data_for_frontend()
+
     if key:
-        return metadata_service.get_data_for_frontend_by_key(key)
-    return metadata_service.get_data_for_frontend()
+        # Simple support for top-level keys like 'entityDefs'
+        if key in data:
+            return data[key]
+        else:
+            return {} # Or 404? Espo usually returns empty or null if not found.
+
+    return data
