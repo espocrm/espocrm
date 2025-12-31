@@ -22,17 +22,104 @@
         },
         "status": {
             "style": {
-                "New": null,
-                "Assigned": "primary",
+                "Open": "primary",
+                "In Progress": "success",
+                "Resolve": "info",
+                "Close": null,
                 "Pending": "warning",
-                "Closed": "success",
-                "Rejected": "info",
-                "Duplicate": "info"
+                "Escalated": "danger"
             },
-            "required": true
+            "required": true,
+            "options": [
+                "Open",
+                "In Progress",
+                "Resolve",
+                "Close",
+                "Pending",
+                "Escalated"
+            ],
+            "default": "Open"
         },
         "modifiedAt": {
             "useNumericFormat": true
+        },
+        "cSearchBy": {
+            "type": "enum",
+            "options": [
+                "NIC",
+                "Mobile No",
+                "Email"
+            ],
+            "style": {
+                "NIC": null,
+                "Mobile No": null,
+                "Email": null
+            },
+            "default": "NIC",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cSearchInput": {
+            "type": "varchar",
+            "maxLength": 50,
+            "options": [],
+            "isCustom": true
+        },
+        "cSearchResults": {
+            "type": "text",
+            "rowsMin": 2,
+            "cutHeight": 200,
+            "isCustom": true,
+            "readOnly": true
+        },
+        "cLoan": {
+            "type": "enum",
+            "options": [
+                "Loan"
+            ],
+            "style": {
+                "Loan": null
+            },
+            "default": "Loan",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cSaving": {
+            "type": "enum",
+            "options": [
+                "Saving"
+            ],
+            "style": {
+                "Saving": null
+            },
+            "default": "Saving",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLeasing": {
+            "type": "enum",
+            "options": [
+                "Leasing"
+            ],
+            "style": {
+                "Leasing": null
+            },
+            "default": "Leasing",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cTargetDate": {
+            "notNull": false,
+            "type": "datetime",
+            "minuteStep": 30,
+            "isCustom": true
+        },
+        "cTimeRameinig": {
+            "notNull": false,
+            "type": "datetime",
+            "readOnly": true,
+            "minuteStep": 30,
+            "isCustom": true
         }
     }
 }

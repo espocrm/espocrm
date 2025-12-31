@@ -152,32 +152,6 @@
         "rows": [
             [
                 {
-                    "name": "cBankName"
-                },
-                {
-                    "name": "cBranch"
-                }
-            ],
-            [
-                {
-                    "name": "cAccountNo"
-                },
-                false
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": false,
-        "tabLabel": null,
-        "hidden": true,
-        "noteText": null,
-        "noteStyle": "info",
-        "customLabel": "Bank Account Details"
-    },
-    {
-        "rows": [
-            [
-                {
                     "name": "cInterestedLoan"
                 },
                 {

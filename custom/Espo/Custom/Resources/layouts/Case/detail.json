@@ -13,17 +13,70 @@
                 {
                     "name": "contact"
                 },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Customer Basic Information",
+        "hidden": false,
+        "noteText": null,
+        "label": ""
+    },
+    {
+        "rows": [
+            [
                 {
                     "name": "type"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Case Category"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cLoan"
+                },
+                {
+                    "name": "cSaving"
+                },
+                {
+                    "name": "cLeasing"
                 }
-            ],
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Product Effected"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "status"
                 },
+                false
+            ],
+            [
                 {
                     "name": "priority"
-                }
+                },
+                false
             ],
             [
                 {
@@ -33,10 +86,47 @@
             [
                 {
                     "name": "attachments"
-                }
+                },
+                false
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Case Details & Classification",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "label": ""
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "assignedUser"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "cTargetDate"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "cTimeRameinig"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Assignment & SLA",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
         "label": ""
     }
 ]

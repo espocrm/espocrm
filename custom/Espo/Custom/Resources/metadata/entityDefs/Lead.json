@@ -236,8 +236,8 @@
         "status": {
             "options": [
                 "New",
-                "Validated",
                 "Contacted",
+                "Validated",
                 "Qualified",
                 "Deferred",
                 "Converted",
@@ -245,8 +245,8 @@
             ],
             "style": {
                 "New": "info",
-                "Validated": "warning",
                 "Contacted": "primary",
+                "Validated": "warning",
                 "Qualified": "success",
                 "Deferred": null,
                 "Converted": "success",
