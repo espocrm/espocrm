@@ -9,16 +9,17 @@
         },
         "type": {
             "options": [
-                "",
-                "Inquiry",
-                "Complaint"
+                "Service Request",
+                "Complaint",
+                "Inquiry"
             ],
             "style": {
-                "": null,
-                "Inquiry": null,
-                "Complaint": null
+                "Service Request": null,
+                "Complaint": null,
+                "Inquiry": null
             },
-            "required": true
+            "required": true,
+            "default": "Service Request"
         },
         "status": {
             "style": {
@@ -114,11 +115,37 @@
             "minuteStep": 30,
             "isCustom": true
         },
-        "cTimeRameinig": {
-            "notNull": false,
-            "type": "datetime",
-            "readOnly": true,
-            "minuteStep": 30,
+        "cRemainingTime": {
+            "type": "varchar",
+            "maxLength": 20,
+            "options": [],
+            "isCustom": true,
+            "readOnly": true
+        },
+        "cCaseNo": {
+            "type": "varchar",
+            "maxLength": 20,
+            "options": [],
+            "isCustom": true
+        },
+        "name": {
+            "options": []
+        },
+        "cProductAffected": {
+            "type": "enum",
+            "required": true,
+            "options": [
+                "Loan",
+                "Savings",
+                "Leasing"
+            ],
+            "style": {
+                "Loan": null,
+                "Savings": null,
+                "Leasing": null
+            },
+            "default": "Loan",
+            "maxLength": 100,
             "isCustom": true
         }
     }

@@ -1,26 +1,37 @@
 [
     {
-        "name": "number",
-        "widthPx": 100
+        "name": "cCaseNumber",
+        "width": 16
     },
     {
         "name": "name",
-        "link": true
+        "width": 20,
+        "link": true,
+        "align": "left"
+    },
+    {
+        "name": "contact",
+        "width": 20,
+        "align": "left"
     },
     {
         "name": "type",
         "width": 16
     },
     {
-        "name": "status",
+        "name": "priority",
         "width": 11
     },
     {
-        "name": "priority",
+        "name": "status",
         "width": 11
     },
     {
         "name": "assignedUser",
         "width": 14
+    },
+    {
+        "name": "createdAt",
+        "width": 16
     }
 ]
