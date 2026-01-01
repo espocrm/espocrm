@@ -1323,6 +1323,9 @@ class App {
         if (!label) {
             if (xhr.status === 0) {
                 msg += this.language.translate('Network error');
+            } else if (xhr.status === 500) {
+                msg += this.language.translate('Internal server error') + '\n\n' +
+                    this.language.translate('checkLogsForDetails', 'messages')
             } else {
                 msg += this.language.translate('Error') + ' ' + xhr.status;
             }

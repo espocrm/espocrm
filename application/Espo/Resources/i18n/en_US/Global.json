@@ -167,6 +167,7 @@
         "Done": "Done",
         "Access denied": "Access denied",
         "Not found": "Not found",
+        "Internal server error": "Internal server error",
         "Access": "Access",
         "Timeout": "Timeout",
         "No internet": "No internet",
@@ -336,6 +337,7 @@
         "Reactions": "Reactions"
     },
     "messages": {
+        "checkLogsForDetails": "Check logs for details",
         "pleaseWait": "Please wait...",
         "loading": "Loading...",
         "saving": "Saving...",
