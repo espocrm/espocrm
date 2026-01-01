@@ -4,18 +4,24 @@
         "cSearchBy": "Search By",
         "cSearchInput": "Search Input",
         "cSearchResults": "Search Results",
-        "type": "Case Category",
+        "type": "Type",
         "cLoan": "Loan",
         "cSaving": "Saving",
         "cLeasing": "Leasing",
         "cTargetDate": "Target Date",
-        "cTimeRameinig": "Time Rameinig"
+        "cRemainingTime": "Remaining Time",
+        "cCaseNo": "Case No",
+        "name": "Subject",
+        "contact": "Customer",
+        "contacts": "Customers",
+        "cProductAffected": "Product Affected"
     },
     "options": {
         "type": {
             "": "",
             "Inquiry": "Inquiry",
-            "Complaint": "Complaint"
+            "Complaint": "Complaint",
+            "Service Request": "Service Request"
         },
         "cSearchBy": {
             "NIC": "NIC",
@@ -38,6 +44,11 @@
             "Close": "Close",
             "Pending": "Pending",
             "Escalated": "Escalated"
+        },
+        "cProductAffected": {
+            "Loan": "Loan",
+            "Savings": "Savings",
+            "Leasing": "Leasing"
         }
     }
 }
