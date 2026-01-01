@@ -4,6 +4,7 @@ from sqlalchemy import inspect
 from app.models.user import User
 from app.models.standard_entities import Account, Contact
 from app.services.metadata import metadata_service
+from app.core.select_manager import SelectManager
 import secrets
 import string
 import re
@@ -46,6 +47,42 @@ class RecordService:
 
         data['id'] = record.id
         return data
+
+    def find(self, entity_name: str, params: dict) -> dict:
+        model_class = self._get_model(entity_name)
+        select_manager = SelectManager(self.db, model_class)
+
+        if 'where' in params:
+            select_manager.apply_where(params['where'])
+
+        sort_by = params.get('sortBy')
+        asc = params.get('asc', False)
+        # EspoCRM uses 'asc' param which is boolean, defaulting to false (desc) usually?
+        # Actually in Espo, 'asc' param is often 'true' or 'false' string, or absent.
+        # But 'desc' param is also used in SelectManager PHP?
+        # PHP code: order(string $sortBy, $desc, array &$result)
+        # Check controller usage later. For now assume asc=True/False or "asc"/"desc" string?
+        # Standard Espo API usually sends `sortBy` and `asc` (boolean).
+
+        if sort_by:
+             select_manager.apply_order(sort_by, asc)
+
+        offset = params.get('offset')
+        max_size = params.get('maxSize')
+
+        if offset is not None:
+            offset = int(offset)
+        if max_size is not None:
+            max_size = int(max_size)
+
+        select_manager.apply_limit(offset, max_size)
+
+        records, total = select_manager.execute()
+
+        return {
+            "list": [self._get_record_data(r) for r in records],
+            "total": total
+        }
 
     def create(self, entity_name: str, data: dict) -> dict:
         model_class = self._get_model(entity_name)

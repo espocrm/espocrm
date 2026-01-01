@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi import APIRouter, Depends, HTTPException, Body, Query
 from sqlalchemy.orm import Session
-from typing import List, Optional, Any
+from typing import List, Optional, Any, Dict
+import json
 from app.core.database import get_db
 from app.services.record_service import RecordService
 
@@ -8,6 +9,38 @@ router = APIRouter()
 
 def get_record_service(db: Session = Depends(get_db)):
     return RecordService(db)
+
+@router.get("/Record/{entityName}")
+def get_list(
+    entityName: str,
+    where: Optional[str] = Query(None),
+    sortBy: Optional[str] = Query(None),
+    asc: Optional[bool] = Query(False),
+    offset: Optional[int] = Query(0),
+    maxSize: Optional[int] = Query(20),
+    service: RecordService = Depends(get_record_service)
+):
+    params = {}
+    if where:
+        try:
+            params['where'] = json.loads(where)
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=400, detail="Invalid where parameter")
+
+    if sortBy:
+        params['sortBy'] = sortBy
+    if asc is not None:
+        params['asc'] = asc
+    if offset is not None:
+        params['offset'] = offset
+    if maxSize is not None:
+        params['maxSize'] = maxSize
+
+    try:
+        return service.find(entityName, params)
+    except ValueError as e:
+         raise HTTPException(status_code=400, detail=str(e))
+
 
 @router.get("/Record/{entityName}/{id}")
 def read_record(entityName: str, id: str, service: RecordService = Depends(get_record_service)):
