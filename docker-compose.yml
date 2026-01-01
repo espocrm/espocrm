@@ -22,7 +22,7 @@ services:
       start_period: 30s
 
   espocrm:
-    image: espocrm/espocrm:9.2.5
+    build: .
     container_name: espocrm
     restart: unless-stopped
     environment:
@@ -37,7 +37,10 @@ services:
       ESPOCRM_LANGUAGE: ${LANGUAGE:-en_US}
       ESPOCRM_TIME_ZONE: ${TIME_ZONE:-UTC}
     volumes:
-      - espocrm-data:/var/www/html
+      - espocrm-data:/var/www/html/data
+      - ./extensions:/var/www/html/extensions
+      - ./custom:/var/www/html/custom
+      - ./client/custom:/var/www/html/client/custom
     ports:
       - "${APP_PORT:-8080}:80"
     networks:
@@ -47,19 +50,22 @@ services:
         condition: service_healthy
 
   espocrm-daemon:
-    image: espocrm/espocrm:9.2.5
+    build: .
     container_name: espocrm-daemon
     restart: unless-stopped
     entrypoint: docker-daemon.sh
     volumes:
-      - espocrm-data:/var/www/html
+      - espocrm-data:/var/www/html/data
+      - ./extensions:/var/www/html/extensions
+      - ./custom:/var/www/html/custom
+      - ./client/custom:/var/www/html/client/custom
     networks:
       - espocrm-network
     depends_on:
       - espocrm
 
   espocrm-websocket:
-    image: espocrm/espocrm:9.2.5
+    build: .
     container_name: espocrm-websocket
     restart: unless-stopped
     entrypoint: docker-websocket.sh
@@ -69,7 +75,10 @@ services:
       ESPOCRM_CONFIG_WEB_SOCKET_ZERO_M_Q_SUBSCRIBER_DSN: "tcp://*:7777"
       ESPOCRM_CONFIG_WEB_SOCKET_ZERO_M_Q_SUBMISSION_DSN: "tcp://espocrm-websocket:7777"
     volumes:
-      - espocrm-data:/var/www/html
+      - espocrm-data:/var/www/html/data
+      - ./extensions:/var/www/html/extensions
+      - ./custom:/var/www/html/custom
+      - ./client/custom:/var/www/html/client/custom
     ports:
       - "${WEBSOCKET_PORT:-8081}:8080"
     networks:

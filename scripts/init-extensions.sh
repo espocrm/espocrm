@@ -65,7 +65,29 @@ fi
 log "EspoCRM is installed. Proceeding with extension installation."
 cd "$ESPO_DIR"
 
-# Process each extension ZIP file
+# Extract extension files to custom/ directories (for bind-mount scenarios)
+# This ensures extensions work when custom/ is bind-mounted from host
+log "Extracting extension files to custom/ directories..."
+for ext_zip in "$EXTENSIONS_DIR"/*.zip; do
+    if [ -f "$ext_zip" ]; then
+        ext_name=$(basename "$ext_zip")
+        log "  Extracting files from: $ext_name"
+        unzip -o "$ext_zip" -d /tmp/ext_extract 2>/dev/null || continue
+        if [ -d /tmp/ext_extract/files/custom ]; then
+            cp -r /tmp/ext_extract/files/custom/* /var/www/html/custom/ 2>/dev/null || true
+            log "    Copied custom/ files"
+        fi
+        if [ -d /tmp/ext_extract/files/client/custom ]; then
+            cp -r /tmp/ext_extract/files/client/custom/* /var/www/html/client/custom/ 2>/dev/null || true
+            log "    Copied client/custom/ files"
+        fi
+        rm -rf /tmp/ext_extract
+    fi
+done
+chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom 2>/dev/null || true
+log "Extension file extraction complete."
+
+# Process each extension ZIP file for database registration
 for ext_file in "$EXTENSIONS_DIR"/*.zip; do
     if [ ! -f "$ext_file" ]; then
         continue
