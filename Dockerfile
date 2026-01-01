@@ -23,9 +23,26 @@ RUN if [ -d /usr/src/espocrm ]; then \
 COPY custom /var/www/html/custom
 COPY client/custom /var/www/html/client/custom
 
-# Copy extension ZIPs (extraction happens at runtime via init-extensions.sh)
-COPY extensions /var/www/html/extensions
-RUN chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom /var/www/html/extensions
+# Extract extensions at build time (for production - files immediately available)
+# Runtime extraction in init-extensions.sh handles bind-mount scenarios for local dev
+COPY extensions /tmp/extensions
+RUN mkdir -p /var/www/html/extensions && \
+    for ext_zip in /tmp/extensions/*.zip; do \
+        if [ -f "$ext_zip" ]; then \
+            echo "Extracting extension: $ext_zip"; \
+            unzip -o "$ext_zip" -d /tmp/ext_extract; \
+            if [ -d /tmp/ext_extract/files/custom ]; then \
+                cp -r /tmp/ext_extract/files/custom/* /var/www/html/custom/; \
+            fi; \
+            if [ -d /tmp/ext_extract/files/client/custom ]; then \
+                cp -r /tmp/ext_extract/files/client/custom/* /var/www/html/client/custom/; \
+            fi; \
+            rm -rf /tmp/ext_extract; \
+            cp "$ext_zip" /var/www/html/extensions/; \
+        fi; \
+    done && \
+    rm -rf /tmp/extensions && \
+    chown -R www-data:www-data /var/www/html/custom /var/www/html/client/custom /var/www/html/extensions
 
 # Copy extension database initialization script
 COPY scripts/init-extensions.sh /usr/local/bin/init-extensions.sh
