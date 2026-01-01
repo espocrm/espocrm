@@ -3,7 +3,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import inspect
 from app.models.user import User
 from app.models.standard_entities import Account, Contact
+from app.models.acl_entities import Role, Team
 from app.services.metadata import metadata_service
+from app.services.acl_service import acl_service
 from app.core.select_manager import SelectManager
 import secrets
 import string
@@ -18,13 +20,16 @@ def to_snake_case(name):
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
 
 class RecordService:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session, user: User = None):
         self.db = db
+        self.user = user
         # Registry of models. In a real dynamic system, this would be more complex.
         self.models = {
             "User": User,
             "Account": Account,
-            "Contact": Contact
+            "Contact": Contact,
+            "Role": Role,
+            "Team": Team
         }
 
     def _get_model(self, entity_name: str):
@@ -49,11 +54,19 @@ class RecordService:
         return data
 
     def find(self, entity_name: str, params: dict) -> dict:
+        if self.user:
+            level = acl_service.get_permission_level(self.user, entity_name, 'read')
+            if level == 'no':
+                raise PermissionError(f"Access denied for {entity_name}")
+
         model_class = self._get_model(entity_name)
         select_manager = SelectManager(self.db, model_class)
 
         if 'where' in params:
             select_manager.apply_where(params['where'])
+
+        if self.user:
+             self._apply_acl_filters(select_manager, entity_name, 'read')
 
         sort_by = params.get('sortBy')
         asc = params.get('asc', False)
@@ -85,6 +98,10 @@ class RecordService:
         }
 
     def create(self, entity_name: str, data: dict) -> dict:
+        if self.user:
+            if not acl_service.check(self.user, entity_name, 'create'):
+                 raise PermissionError(f"Create access denied for {entity_name}")
+
         model_class = self._get_model(entity_name)
         record = model_class()
 
@@ -92,7 +109,21 @@ class RecordService:
 
         self._populate_record(record, data)
 
+        # Set ownership if applicable
+        if hasattr(record, 'assigned_user_id') and self.user:
+            record.assigned_user_id = self.user.id
+
         self.db.add(record)
+        self.db.flush() # Flush to get ID if needed for relationships
+
+        # Handle team assignment
+        team_ids = data.get('teamsIds')
+        if team_ids is None and self.user and self.user.default_team_id:
+             team_ids = [self.user.default_team_id]
+
+        if team_ids:
+             self._update_teams(record, team_ids, entity_name)
+
         self.db.commit()
         self.db.refresh(record)
         return self._get_record_data(record)
@@ -102,6 +133,11 @@ class RecordService:
         record = self.db.query(model).get(id)
         if not record:
             return None
+
+        if self.user:
+            if not acl_service.check_scope(self.user, record, 'read'):
+                 raise PermissionError(f"Read access denied for {entity_name} {id}")
+
         return self._get_record_data(record)
 
     def update(self, entity_name: str, id: str, data: dict) -> Optional[dict]:
@@ -110,7 +146,16 @@ class RecordService:
         if not record:
             return None
 
+        if self.user:
+            if not acl_service.check_scope(self.user, record, 'edit'):
+                 raise PermissionError(f"Edit access denied for {entity_name} {id}")
+
         self._populate_record(record, data)
+
+        team_ids = data.get('teamsIds')
+        if team_ids is not None:
+             self._update_teams(record, team_ids, entity_name)
+
         self.db.commit()
         self.db.refresh(record)
         return self._get_record_data(record)
@@ -119,6 +164,10 @@ class RecordService:
         model = self._get_model(entity_name)
         record = self.db.query(model).get(id)
         if record:
+            if self.user:
+                if not acl_service.check_scope(self.user, record, 'delete'):
+                     raise PermissionError(f"Delete access denied for {entity_name} {id}")
+
             record.deleted = True
             self.db.commit()
             return True
@@ -251,3 +300,42 @@ class RecordService:
         if hasattr(record, sc):
             return sc
         return None
+
+    def _apply_acl_filters(self, select_manager: SelectManager, entity_name: str, action: str):
+        level = acl_service.get_permission_level(self.user, entity_name, action)
+        if level == 'all':
+            return
+        if level == 'own':
+            select_manager.apply_filter('assignedUserId', self.user.id)
+        elif level == 'team':
+             # Need to filter by team
+             # Logic: record.teams IN user.teams OR record.assignedUserId = user.id
+             # This requires SelectManager to support complex OR conditions or custom filter.
+             # For now, let's implement a basic `apply_team_access_filter` in SelectManager.
+             user_team_ids = [t.id for t in self.user.teams]
+             select_manager.apply_team_access_filter(self.user.id, user_team_ids)
+
+    def _update_teams(self, record, team_ids: List[str], entity_name: str):
+        # Handle manual update of entity_team table because generic M2M with polymorphism is tricky
+        from app.models.acl_entities import entity_team
+        from sqlalchemy import delete
+
+        # Check if model supports teams (has 'teams' relationship)
+        if not hasattr(record, 'teams'):
+             return
+
+        # Delete existing links
+        self.db.execute(
+            delete(entity_team).where(
+                entity_team.c.entity_id == record.id,
+                entity_team.c.entity_type == entity_name
+            )
+        )
+
+        # Insert new links
+        if team_ids:
+            values = [
+                {"entity_id": record.id, "entity_type": entity_name, "team_id": t_id}
+                for t_id in team_ids
+            ]
+            self.db.execute(entity_team.insert(), values)

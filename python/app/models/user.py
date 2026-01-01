@@ -1,5 +1,7 @@
-from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from app.core.database import Base
+from app.models.acl_entities import user_role, user_team, Role, Team
 
 class User(Base):
     __tablename__ = "user"
@@ -9,6 +11,10 @@ class User(Base):
     first_name = Column("firstName", String(255))
     last_name = Column("lastName", String(255))
     is_admin = Column("isAdmin", Boolean, default=False)
+    default_team_id = Column("defaultTeamId", String(24), ForeignKey("team.id"), nullable=True)
+
+    roles = relationship("Role", secondary=user_role)
+    teams = relationship("Team", secondary=user_team)
 
     # We might need to add other fields that EspoCRM expects, but these are the basics.
     # The frontend expects 'name', 'username', 'isAdmin', 'id'.
