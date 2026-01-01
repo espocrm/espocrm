@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, and_, or_, not_, desc, asc, func
+from sqlalchemy import select, and_, or_, not_, desc, asc, func, literal
 from typing import List, Optional, Any, Dict
 import json
 from sqlalchemy import inspect
@@ -139,6 +139,8 @@ class SelectManager:
 
     def execute(self):
         # Count total before limit/offset
+        # We need to make sure we are counting from the filtered query
+        # Using subquery might be slow but safe for complex queries
         count_query = select(func.count()).select_from(self.base_query.subquery())
         total = self.db.scalar(count_query)
 
@@ -152,3 +154,46 @@ class SelectManager:
         result = self.db.execute(query)
         records = result.scalars().all()
         return records, total
+
+    def apply_filter(self, attribute: str, value: Any):
+        """Applies a simple equality filter."""
+        column = self._get_column(attribute)
+        if column is not None:
+            self.base_query = self.base_query.where(column == value)
+        else:
+            # FAIL CLOSED: If we try to filter by something that doesn't exist.
+            # Especially critical for 'assignedUserId' in ACL checks.
+            # If we don't apply the filter, we return everything, which is a leak.
+            self.base_query = self.base_query.where(literal(False))
+
+    def apply_team_access_filter(self, user_id: str, team_ids: List[str]):
+        """
+        Applies filter for 'team' access level.
+        Access is granted if:
+        1. Record is owned by user (assignedUserId == user_id)
+        OR
+        2. Record is assigned to one of the user's teams (via 'teams' relationship)
+        """
+
+        # Determine if model has 'assignedUserId'
+        assigned_user_col = self._get_column('assignedUserId')
+
+        # Check if model has 'teams' relationship
+        mapper = inspect(self.model_class).mapper
+        teams_rel = mapper.relationships.get('teams')
+
+        conditions = []
+
+        if assigned_user_col is not None:
+            conditions.append(assigned_user_col == user_id)
+
+        if teams_rel and team_ids:
+             TeamClass = teams_rel.mapper.class_
+             conditions.append(getattr(self.model_class, 'teams').any(TeamClass.id.in_(team_ids)))
+
+        if conditions:
+            self.base_query = self.base_query.where(or_(*conditions))
+        else:
+            # FAIL CLOSED: If we can't verify ownership or team membership (no cols), deny access.
+            # This happens if the entity doesn't support ownership/teams but ACL requires it.
+            self.base_query = self.base_query.where(literal(False))
