@@ -1,0 +1,109 @@
+define("views/search/filter", ["exports", "view"], function (_exports, _view) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  _view = _interopRequireDefault(_view);
+  function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+  /************************************************************************
+   * This file is part of EspoCRM.
+   *
+   * EspoCRM – Open Source CRM application.
+   * Copyright (C) 2014-2025 EspoCRM, Inc.
+   * Website: https://www.espocrm.com
+   *
+   * This program is free software: you can redistribute it and/or modify
+   * it under the terms of the GNU Affero General Public License as published by
+   * the Free Software Foundation, either version 3 of the License, or
+   * (at your option) any later version.
+   *
+   * This program is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   * GNU Affero General Public License for more details.
+   *
+   * You should have received a copy of the GNU Affero General Public License
+   * along with this program. If not, see <https://www.gnu.org/licenses/>.
+   *
+   * The interactive user interfaces in modified source and object code versions
+   * of this program must display Appropriate Legal Notices, as required under
+   * Section 5 of the GNU Affero General Public License version 3.
+   *
+   * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
+   * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+   ************************************************************************/
+
+  /** @module views/search/filter */
+
+  class FilterView extends _view.default {
+    template = 'search/filter';
+    data() {
+      return {
+        name: this.name,
+        scope: this.model.entityType,
+        notRemovable: this.options.notRemovable
+      };
+    }
+
+    /**
+     * @param {{
+     *     name: string,
+     *     viewName?: string|null,
+     *     params?: Record|null,
+     *     notRemovable?: boolean,
+     *     model: import('model').default,
+     * }} options Field view is supported as of v9.3.
+     */
+    constructor(options) {
+      super(options);
+      this.options = options;
+    }
+    setup() {
+      const name = this.name = this.options.name;
+      let viewName = this.options.viewName;
+      if (!viewName) {
+        let type = this.model.getFieldType(name);
+        if (!type && name === 'id') {
+          type = 'id';
+        }
+        if (type) {
+          viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+        }
+      }
+      if (!viewName) {
+        return;
+      }
+      this.createView('field', viewName, {
+        mode: 'search',
+        model: this.model,
+        selector: '.field',
+        name: name,
+        searchParams: this.options.params
+      }, view => {
+        this.listenTo(view, 'change', () => this.trigger('change'));
+        this.listenTo(view, 'search', () => this.trigger('search'));
+      });
+    }
+
+    /**
+     * @return {import('views/fields/base').default|null}
+     */
+    getFieldView() {
+      return this.getView('field');
+    }
+    populateDefaults() {
+      const view = this.getFieldView();
+      if (!view) {
+        return;
+      }
+      if (!('populateSearchDefaults' in view)) {
+        return;
+      }
+      view.populateSearchDefaults();
+    }
+  }
+  var _default = _exports.default = FilterView;
+});
+//# sourceMappingURL=filter.js.map ;

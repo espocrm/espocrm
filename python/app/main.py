@@ -13,6 +13,12 @@ if python_dir not in sys.path:
 from app.core.config import Config
 from app.core.client_manager import ClientManager
 from app.api.v1 import endpoints
+from app.core.database import engine
+from app.models.base import Base
+# Import models so they are registered with Base
+from app.models import user, attachment, notification, acl_entities, standard_entities
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

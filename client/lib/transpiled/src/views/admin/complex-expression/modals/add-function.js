@@ -1,0 +1,62 @@
+define("views/admin/complex-expression/modals/add-function", ["exports", "views/modal"], function (_exports, _modal) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  _modal = _interopRequireDefault(_modal);
+  function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+  /************************************************************************
+   * This file is part of EspoCRM.
+   *
+   * EspoCRM – Open Source CRM application.
+   * Copyright (C) 2014-2025 EspoCRM, Inc.
+   * Website: https://www.espocrm.com
+   *
+   * This program is free software: you can redistribute it and/or modify
+   * it under the terms of the GNU Affero General Public License as published by
+   * the Free Software Foundation, either version 3 of the License, or
+   * (at your option) any later version.
+   *
+   * This program is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   * GNU Affero General Public License for more details.
+   *
+   * You should have received a copy of the GNU Affero General Public License
+   * along with this program. If not, see <https://www.gnu.org/licenses/>.
+   *
+   * The interactive user interfaces in modified source and object code versions
+   * of this program must display Appropriate Legal Notices, as required under
+   * Section 5 of the GNU Affero General Public License version 3.
+   *
+   * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
+   * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+   ************************************************************************/
+
+  class ComplexExpressionAddFunctionModalView extends _modal.default {
+    template = 'admin/formula/modals/add-function';
+    backdrop = true;
+    data() {
+      let text = this.translate('formulaFunctions', 'messages', 'Admin').replace('{documentationUrl}', this.documentationUrl);
+      text = this.getHelper().transformMarkdownText(text, {
+        linksInNewTab: true
+      }).toString();
+      return {
+        functionDataList: this.functionDataList,
+        text: text
+      };
+    }
+    setup() {
+      this.addActionHandler('add', (e, target) => {
+        this.trigger('add', target.dataset.value);
+      });
+      this.headerText = this.translate('Function');
+      this.documentationUrl = 'https://docs.espocrm.com/user-guide/complex-expressions/';
+      this.functionDataList = this.options.functionDataList || this.getMetadata().get('app.complexExpression.functionList') || [];
+    }
+  }
+  _exports.default = ComplexExpressionAddFunctionModalView;
+});
+//# sourceMappingURL=add-function.js.map ;

@@ -1,3 +1,4 @@
+
 # Existing ignores (if any were there)
 # Python ignores
 venv/
@@ -7,3 +8,8 @@ uvicorn.log
 .env
 .idea/
 .vscode/
+
+# Dependencies
+node_modules/
+vendor/
+build/

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.controllers import metadata, i18n, record_controller
+from app.api.v1 import attachment, notification
 from app.core.database import get_db
 from app.models.user import User
 
@@ -45,3 +46,5 @@ async def get_app_user(db: Session = Depends(get_db)):
 router.include_router(metadata.router)
 router.include_router(i18n.router)
 router.include_router(record_controller.router)
+router.include_router(attachment.router)
+router.include_router(notification.router)

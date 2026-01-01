@@ -1,0 +1,109 @@
+define("views/email/fields/subject", ["exports", "views/fields/varchar"], function (_exports, _varchar) {
+  "use strict";
+
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.default = void 0;
+  _varchar = _interopRequireDefault(_varchar);
+  function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+  /************************************************************************
+   * This file is part of EspoCRM.
+   *
+   * EspoCRM – Open Source CRM application.
+   * Copyright (C) 2014-2025 EspoCRM, Inc.
+   * Website: https://www.espocrm.com
+   *
+   * This program is free software: you can redistribute it and/or modify
+   * it under the terms of the GNU Affero General Public License as published by
+   * the Free Software Foundation, either version 3 of the License, or
+   * (at your option) any later version.
+   *
+   * This program is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   * GNU Affero General Public License for more details.
+   *
+   * You should have received a copy of the GNU Affero General Public License
+   * along with this program. If not, see <https://www.gnu.org/licenses/>.
+   *
+   * The interactive user interfaces in modified source and object code versions
+   * of this program must display Appropriate Legal Notices, as required under
+   * Section 5 of the GNU Affero General Public License version 3.
+   *
+   * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
+   * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+   ************************************************************************/
+
+  class EmailSubjectFieldView extends _varchar.default {
+    listLinkTemplate = 'email/fields/subject/list-link';
+    data() {
+      const data = super.data();
+      data.isRead = this.model.get('sentById') === this.getUser().id || this.model.get('isRead');
+      data.isImportant = this.model.has('isImportant') && this.model.get('isImportant');
+      data.hasAttachment = this.model.has('hasAttachment') && this.model.get('hasAttachment');
+      data.isReplied = this.model.has('isReplied') && this.model.get('isReplied');
+      data.isAutoReply = this.model.has('isAutoReply') && this.model.attributes.isAutoReply;
+      data.hasIcon = data.hasAttachment || data.isAutoReply;
+      if (data.hasIcon) {
+        data.iconCount = 1;
+        if (data.hasAttachment && data.isAutoReply) {
+          data.iconCount = 2;
+        }
+      }
+      data.inTrash = this.model.attributes.groupFolderId ? this.model.attributes.groupStatusFolder === 'Trash' : this.model.attributes.inTrash;
+      data.inArchive = this.model.attributes.groupFolderId ? this.model.attributes.groupStatusFolder === 'Archive' : this.model.attributes.inArchive;
+      data.style = null;
+      if (data.isImportant) {
+        data.style = 'warning';
+      } else if (data.inTrash) {
+        data.style = 'muted';
+      } else if (data.inArchive) {
+        data.style = 'info';
+      }
+      if (!data.isRead && !this.model.has('isRead')) {
+        data.isRead = true;
+      }
+      if (!data.isNotEmpty) {
+        if (this.model.get('name') !== null && this.model.get('name') !== '' && this.model.has('name')) {
+          data.isNotEmpty = true;
+        }
+      }
+      return data;
+    }
+    getValueForDisplay() {
+      return this.model.get('name');
+    }
+    getAttributeList() {
+      return ['name', 'subject', 'isRead', 'isImportant', 'hasAttachment', 'inTrash', 'groupStatusFolder', 'isAutoReply'];
+    }
+    setup() {
+      super.setup();
+      this.events['click [data-action="showAttachments"]'] = e => {
+        e.stopPropagation();
+        this.showAttachments();
+      };
+      this.listenTo(this.model, 'change:isRead change:isImportant change:groupStatusFolder', () => {
+        if (this.mode === this.MODE_LIST || this.mode === this.MODE_LIST_LINK) {
+          this.reRender();
+        }
+      });
+    }
+    fetch() {
+      const data = super.fetch();
+      data.name = data.subject;
+      return data;
+    }
+    showAttachments() {
+      Espo.Ui.notifyWait();
+      this.createView('dialog', 'views/email/modals/attachments', {
+        model: this.model
+      }).then(view => {
+        view.render();
+        Espo.Ui.notify(false);
+      });
+    }
+  }
+  var _default = _exports.default = EmailSubjectFieldView;
+});
+//# sourceMappingURL=subject.js.map ;

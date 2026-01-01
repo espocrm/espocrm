@@ -1,0 +1,42 @@
+{
+    "stylesheet": "client/css/espo/nord.css",
+    "stylesheetIframe": "client/css/espo/nord-iframe.css",
+    "logo": "client/img/logo-light.svg",
+    "params": {
+        "navbar": {
+            "type": "enum",
+            "default": "side",
+            "options": [
+                "side",
+                "top"
+            ]
+        }
+    },
+    "mappedParams": {
+        "navbarHeight": {
+            "param": "navbar",
+            "valueMap": {
+                "side": 32,
+                "top": 43
+            }
+        }
+    },
+    "dashboardCellHeight": 40,
+    "dashboardCellMargin": 16,
+    "navbarHeight": 43,
+    "modalFooterAtTheTop": true,
+    "modalFullHeight": true,
+    "fontSize": 14,
+    "textColor": "#ECEFF4",
+    "hoverColor": "#88C0D0",
+    "chartGridColor": "#4C566A",
+    "chartSuccessColor": "#A3BE8C",
+    "chartTickColor": "#4C566A",
+    "chartColorList": ["#88C0D0", "#81A1C1", "#5E81AC", "#BF616A", "#D08770", "#EBCB8B", "#A3BE8C", "#B48EAD"],
+    "chartColorAlternativeList": ["#88C0D0", "#EBCB8B", "#D08770", "#A3BE8C", "#B48EAD"],
+    "calendarColors": {
+        "": "#88C0D0",
+        "bg": "#434C5E"
+    },
+    "isDark": true
+}

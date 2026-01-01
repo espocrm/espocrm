@@ -1,4 +1,31 @@
-## EspoCRM
+# VitalFlow CRM
+
+VitalFlow (formerly CarePulse) is a modern healthcare CRM platform. A fork of EspoCRM.
+
+## Themes
+VitalFlow includes a Nordic-inspired dark theme optimized for healthcare environments, providing a calm and focused interface.
+
+## Development
+
+### Prerequisites
+- PHP 8.3+
+- MySQL/MariaDB
+- Composer
+- NPC/Node.js
+
+### Setup
+1. `composer install`
+2. `npm install`
+3. `npm run build`
+4. Configure `data/config.php` (copy from `data/config-internal.php` or use installer)
+
+### Running
+- Backend: PHP built-in server or Apache/Nginx
+- Frontend: `npm run dev` (for development)
+
+---
+
+## Original EspoCRM Readme Below
 
 [![PHPStan level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](#espocrm)
 
