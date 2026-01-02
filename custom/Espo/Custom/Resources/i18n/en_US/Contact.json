@@ -12,7 +12,8 @@
         "cCustomerType": "Customer Type",
         "cPassportNumber": "Passport Number",
         "cBusinessRegistrationNumber": "Business Registration Number",
-        "cBusinessName": "Business Name"
+        "cBusinessName": "Business Name",
+        "cBusinessOwnerName": "Business Owner Name"
     },
     "options": {
         "cGender": {

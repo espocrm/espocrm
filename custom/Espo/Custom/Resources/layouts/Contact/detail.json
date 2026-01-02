@@ -29,6 +29,14 @@
                 {
                     "name": "cBusinessRegistrationNumber"
                 }
+            ],
+            [
+                {
+                    "name": "cDateOfBirth"
+                },
+                {
+                    "name": "cGender"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
@@ -43,18 +51,7 @@
         "rows": [
             [
                 {
-                    "name": "cDateOfBirth"
-                },
-                {
-                    "name": "cGender"
-                }
-            ],
-            [
-                {
-                    "name": "address"
-                },
-                {
-                    "name": "cBranch"
+                    "name": "cBusinessOwnerName"
                 }
             ],
             [
@@ -67,7 +64,18 @@
             ],
             [
                 {
+                    "name": "address"
+                },
+                {
+                    "name": "cBranch"
+                }
+            ],
+            [
+                {
                     "name": "cFlags"
+                },
+                {
+                    "name": "createdAt"
                 }
             ],
             [
@@ -82,10 +90,10 @@
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Customer Details",
+        "tabLabel": "Other Info",
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": "Customer Details"
+        "customLabel": "Other Info"
     }
 ]

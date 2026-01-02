@@ -3,7 +3,7 @@
         "cDateOfBirth": {
             "notNull": false,
             "type": "date",
-            "required": true,
+            "required": false,
             "isCustom": true,
             "useNumericFormat": true
         },
@@ -17,7 +17,7 @@
         },
         "cGender": {
             "type": "enum",
-            "required": true,
+            "required": false,
             "options": [
                 "",
                 "Male",
@@ -101,6 +101,12 @@
         "lastName": {
             "required": false,
             "options": []
+        },
+        "cBusinessOwnerName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
         }
     },
     "links": {
