@@ -4,7 +4,11 @@
         "link": true
     },
     {
-        "name": "cNicNumber",
+        "name": "cBusinessName",
+        "width": 16
+    },
+    {
+        "name": "cCustomerType",
         "width": 16
     },
     {
