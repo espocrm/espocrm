@@ -128,7 +128,7 @@ class FieldValidationManager
                 !$entityDefs->tryGetField($field)?->getParam('forceValidation') &&
                 !$this->isFieldSetInData($entityType, $field, $data)
             ) {
-                if (!$this->hasRequiredLogic($entityType, $field)) {
+                if (!$this->hasRequiredLogic($entityType, $field) && !$this->hasRequiredFieldParam($entityType, $field)) {
                     continue;
                 }
 
@@ -500,5 +500,10 @@ class FieldValidationManager
     private function hasRequiredLogic(string $entityType, string $field): bool
     {
         return (bool) $this->metadata->get("logicDefs.$entityType.fields.$field.required");
+    }
+
+    private function hasRequiredFieldParam(string $entityType, string $field): bool
+    {
+        return (bool) $this->metadata->get("entityDefs.$entityType.fields.$field.required");
     }
 }
