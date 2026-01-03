@@ -83,6 +83,10 @@ php command.php rebuild || echo "Rebuild failed, continuing..."\n\
 echo "Starting extension initialization in background..."\n\
 (/usr/local/bin/init-extensions.sh && php command.php rebuild) &\n\
 \n\
+# Start EspoCRM daemon for scheduled jobs and workflows\n\
+echo "Starting EspoCRM daemon..."\n\
+cd /var/www/html && nohup su -s /bin/bash www-data -c "php daemon.php" > /var/log/espocrm-daemon.log 2>&1 &\n\
+\n\
 # Start Apache in foreground\n\
 exec apache2-foreground\n\
 ' > /usr/local/bin/custom-entrypoint.sh && chmod +x /usr/local/bin/custom-entrypoint.sh
