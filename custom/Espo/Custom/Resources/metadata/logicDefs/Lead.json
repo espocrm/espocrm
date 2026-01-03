@@ -1,13 +1,22 @@
 {
     "fields": {
         "name": {
-            "required": null,
-            "visible": {
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "notEquals",
+                        "attribute": "cCustomerSegment",
+                        "value": "Existing Customer"
+                    }
+                ]
+            },
+            "visible": null,
+            "readOnly": {
                 "conditionGroup": [
                     {
                         "type": "equals",
                         "attribute": "cCustomerSegment",
-                        "value": "New Customer"
+                        "value": "Existing Customer"
                     }
                 ]
             }
@@ -34,23 +43,43 @@
             }
         },
         "firstName": {
-            "visible": {
+            "visible": null,
+            "readOnly": {
                 "conditionGroup": [
                     {
                         "type": "equals",
                         "attribute": "cCustomerSegment",
-                        "value": "New Customer"
+                        "value": "Existing Customer"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "notEquals",
+                        "attribute": "cCustomerSegment",
+                        "value": "Existing Customer"
                     }
                 ]
             }
         },
         "lastName": {
-            "visible": {
+            "visible": null,
+            "readOnly": {
                 "conditionGroup": [
                     {
                         "type": "equals",
                         "attribute": "cCustomerSegment",
-                        "value": "New Customer"
+                        "value": "Existing Customer"
+                    }
+                ]
+            },
+            "required": {
+                "conditionGroup": [
+                    {
+                        "type": "notEquals",
+                        "attribute": "cCustomerSegment",
+                        "value": "Existing Customer"
                     }
                 ]
             }
@@ -62,6 +91,17 @@
                         "type": "equals",
                         "attribute": "cCustomerSegment",
                         "value": "New Customer"
+                    }
+                ]
+            }
+        },
+        "cNICNo": {
+            "readOnly": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerSegment",
+                        "value": "Existing Customer"
                     }
                 ]
             }

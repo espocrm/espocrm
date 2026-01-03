@@ -101,6 +101,13 @@
             "entity": "Contact",
             "audited": false,
             "isCustom": true
+        },
+        "cases": {
+            "type": "hasMany",
+            "foreign": "cBranch",
+            "entity": "Case",
+            "audited": false,
+            "isCustom": true
         }
     },
     "collection": {

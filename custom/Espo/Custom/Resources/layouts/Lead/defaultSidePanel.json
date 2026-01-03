@@ -1,5 +1,14 @@
 [
     {
         "name": ":assignedUser"
+    },
+    {
+        "name": "cScoreLastUpdated"
+    },
+    {
+        "name": "cLeadScore"
+    },
+    {
+        "name": "cSpecialNotesReadOnly"
     }
 ]

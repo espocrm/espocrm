@@ -124,6 +124,47 @@
         "rows": [
             [
                 {
+                    "name": "cInterestedLoan"
+                },
+                {
+                    "name": "cProductSubType"
+                }
+            ],
+            [
+                {
+                    "name": "campaign"
+                },
+                {
+                    "name": "cLeadGeneratedBy"
+                }
+            ],
+            [
+                {
+                    "name": "cLeadSource"
+                },
+                {
+                    "name": "cSpecialNotes"
+                }
+            ],
+            [
+                {
+                    "name": "cPurposeOfLoan"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Lead Information",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "label": ""
+    },
+    {
+        "rows": [
+            [
+                {
                     "name": "cEmployeeType"
                 },
                 {
@@ -152,28 +193,10 @@
         "rows": [
             [
                 {
-                    "name": "cInterestedLoan"
-                },
-                {
-                    "name": "cProductSubType"
-                }
-            ],
-            [
-                {
                     "name": "cDesiredLoanAmount"
                 },
                 {
                     "name": "cPreferredTenure"
-                }
-            ],
-            [
-                {
-                    "name": "cPurposeOfLoan"
-                }
-            ],
-            [
-                {
-                    "name": "cPropertyOrVehicleDetails"
                 }
             ]
         ],
@@ -183,7 +206,7 @@
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": "Loan Interest"
+        "label": ""
     },
     {
         "rows": [

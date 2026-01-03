@@ -13,13 +13,15 @@
         "emailAddress": "EmailAddress",
         "user": "Branch Manager",
         "bankingHours": "Banking Hours",
-        "contacts": "Contacts"
+        "contacts": "Contacts",
+        "cases": "Cases"
     },
     "labels": {
         "Create CBranch": "Create Branch"
     },
     "links": {
         "user": "Branch Manager",
-        "contacts": "Contacts"
+        "contacts": "Contacts",
+        "cases": "Cases"
     }
 }
