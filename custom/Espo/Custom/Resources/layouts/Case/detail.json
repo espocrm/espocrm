@@ -6,7 +6,7 @@
                     "name": "name"
                 },
                 {
-                    "name": "number"
+                    "name": "cCaseNumber"
                 }
             ],
             [
@@ -45,14 +45,9 @@
         "rows": [
             [
                 {
-                    "name": "cLoan"
+                    "name": "cProductAffected"
                 },
-                {
-                    "name": "cSaving"
-                },
-                {
-                    "name": "cLeasing"
-                }
+                false
             ]
         ],
         "dynamicLogicVisible": null,
@@ -115,7 +110,7 @@
             ],
             [
                 {
-                    "name": "cTimeRameinig"
+                    "name": "cRemainingTime"
                 },
                 false
             ]

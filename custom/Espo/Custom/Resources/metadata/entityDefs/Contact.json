@@ -3,13 +3,13 @@
         "cDateOfBirth": {
             "notNull": false,
             "type": "date",
-            "required": true,
+            "required": false,
             "isCustom": true,
             "useNumericFormat": true
         },
         "cNicNumber": {
             "type": "varchar",
-            "required": true,
+            "required": false,
             "maxLength": 12,
             "options": [],
             "isCustom": true,
@@ -17,7 +17,7 @@
         },
         "cGender": {
             "type": "enum",
-            "required": true,
+            "required": false,
             "options": [
                 "",
                 "Male",
@@ -65,6 +65,48 @@
         },
         "cLeads": {
             "type": "linkMultiple"
+        },
+        "cCustomerType": {
+            "type": "enum",
+            "options": [
+                "Individual",
+                "Bussiness"
+            ],
+            "style": {
+                "Individual": null,
+                "Bussiness": null
+            },
+            "default": "Individual",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cPassportNumber": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cBusinessRegistrationNumber": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "cBusinessName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "lastName": {
+            "required": false,
+            "options": []
+        },
+        "cBusinessOwnerName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
         }
     },
     "links": {

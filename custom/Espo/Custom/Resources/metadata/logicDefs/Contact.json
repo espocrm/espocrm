@@ -101,6 +101,39 @@
                     }
                 ]
             }
+        },
+        "cGender": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Individual"
+                    }
+                ]
+            }
+        },
+        "cDateOfBirth": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Individual"
+                    }
+                ]
+            }
+        },
+        "cBusinessOwnerName": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "equals",
+                        "attribute": "cCustomerType",
+                        "value": "Bussiness"
+                    }
+                ]
+            }
         }
     }
 }

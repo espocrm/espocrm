@@ -3,6 +3,14 @@
         "rows": [
             [
                 {
+                    "name": "cCustomerType"
+                },
+                {
+                    "name": "cCifNumber"
+                }
+            ],
+            [
+                {
                     "name": "name"
                 }
             ],
@@ -11,7 +19,15 @@
                     "name": "cNicNumber"
                 },
                 {
-                    "name": "cCifNumber"
+                    "name": "cPassportNumber"
+                }
+            ],
+            [
+                {
+                    "name": "cBusinessName"
+                },
+                {
+                    "name": "cBusinessRegistrationNumber"
                 }
             ],
             [
@@ -21,13 +37,21 @@
                 {
                     "name": "cGender"
                 }
-            ],
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "customLabel": "Overview"
+    },
+    {
+        "rows": [
             [
                 {
-                    "name": "address"
-                },
-                {
-                    "name": "cBranch"
+                    "name": "cBusinessOwnerName"
                 }
             ],
             [
@@ -40,20 +64,36 @@
             ],
             [
                 {
-                    "name": "assignedUser"
+                    "name": "address"
                 },
                 {
-                    "name": "cLastContactDate"
+                    "name": "cBranch"
                 }
             ],
             [
                 {
                     "name": "cFlags"
+                },
+                {
+                    "name": "createdAt"
+                }
+            ],
+            [
+                {
+                    "name": "assignedUser"
+                },
+                {
+                    "name": "cLastContactDate"
                 }
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Other Info",
+        "hidden": false,
+        "noteText": null,
         "noteStyle": "info",
-        "label": ""
+        "customLabel": "Other Info"
     }
 ]
