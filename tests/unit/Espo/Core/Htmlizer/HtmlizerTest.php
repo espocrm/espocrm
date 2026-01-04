@@ -93,7 +93,7 @@ class HtmlizerTest extends TestCase
 
         $this->entityManager = $this->createMock(EntityManager::class);
 
-        $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
+        $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kyiv');
         $this->number = new NumberUtil('.', ',');
         $this->htmlizer = new Htmlizer(
             $this->dateTime,

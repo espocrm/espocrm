@@ -1708,7 +1708,7 @@ class FormulaTest extends TestCase
                     },
                     {
                         "type": "value",
-                        "value": "Europe/Kiev"
+                        "value": "Europe/Kyiv"
                     }
                 ]
             }
@@ -1757,7 +1757,7 @@ class FormulaTest extends TestCase
                     },
                     {
                         "type": "value",
-                        "value": "Europe/Kiev"
+                        "value": "Europe/Kyiv"
                     }
                 ]
             }
@@ -1806,7 +1806,7 @@ class FormulaTest extends TestCase
                     },
                     {
                         "type": "value",
-                        "value": "Europe/Kiev"
+                        "value": "Europe/Kyiv"
                     }
                 ]
             }
@@ -1855,7 +1855,7 @@ class FormulaTest extends TestCase
                     },
                     {
                         "type": "value",
-                        "value": "Europe/Kiev"
+                        "value": "Europe/Kyiv"
                     }
                 ]
             }
@@ -1904,7 +1904,7 @@ class FormulaTest extends TestCase
                     },
                     {
                         "type": "value",
-                        "value": "Europe/Kiev"
+                        "value": "Europe/Kyiv"
                     }
                 ]
             }
@@ -1981,7 +1981,7 @@ class FormulaTest extends TestCase
                     },
                     {
                         "type": "value",
-                        "value": "Europe/Kiev"
+                        "value": "Europe/Kyiv"
                     }
                 ]
             }

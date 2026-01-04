@@ -239,7 +239,7 @@ class ConverterTest extends TestCase
                     'attribute' => 'test',
                     'value' => '2020-12-20',
                     'dateTime' => true,
-                    'timeZone' => 'Europe/Kiev',
+                    'timeZone' => 'Europe/Kyiv',
                 ],
             ],
         ]);

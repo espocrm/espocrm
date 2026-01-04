@@ -66,7 +66,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertGetFormat(): void
     {
-        $util = new DateTime('YYYY-MM-DD', 'HH:mm', 'Europe/Kiev');
+        $util = new DateTime('YYYY-MM-DD', 'HH:mm', 'Europe/Kyiv');
 
         $this->assertEquals('YYYY-MM-DD HH:mm', $util->getDateTimeFormat());
 
@@ -75,7 +75,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertSystemDateTime1(): void
     {
-        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kiev');
+        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kyiv');
 
         $this->assertEquals(
             '20-05-2021 13:00',
@@ -85,7 +85,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertSystemDateTime2(): void
     {
-        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kiev');
+        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kyiv');
 
         $this->assertEquals(
             '2021-05-20 10:00am',
@@ -95,7 +95,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertSystemDate1(): void
     {
-        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kiev');
+        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kyiv');
 
         $this->assertEquals(
             '20-05-2021',

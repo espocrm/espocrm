@@ -63,7 +63,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
     public function testFromDateTime2()
     {
-        $dt = new DateTimeImmutable('2021-05-01 10:20:30', new DateTimeZone('Europe/Kiev'));
+        $dt = new DateTimeImmutable('2021-05-01 10:20:30', new DateTimeZone('Europe/Kyiv'));
 
         $value = DateTime::fromDateTime($dt);
 
@@ -152,7 +152,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTime
             ::fromString('2021-05-01 10:20:30')
-            ->withTimezone(new DateTimeZone('Europe/Kiev'));
+            ->withTimezone(new DateTimeZone('Europe/Kyiv'));
 
         $this->assertEquals('2021-05-01 10:20:30', $value->toString());
 
@@ -163,9 +163,9 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTime
             ::fromString('2021-05-01 10:20:30')
-            ->withTimezone(new DateTimeZone('Europe/Kiev'));
+            ->withTimezone(new DateTimeZone('Europe/Kyiv'));
 
-        $this->assertEquals(new DateTimeZone('Europe/Kiev'), $value->getTimezone());
+        $this->assertEquals(new DateTimeZone('Europe/Kyiv'), $value->getTimezone());
     }
 
     public function testDiff(): void
@@ -212,7 +212,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
     public function testComparison(): void
     {
         $value = DateTime::fromString('2021-05-01 10:10:30')
-            ->withTimezone(new DateTimeZone('Europe/Kiev'));
+            ->withTimezone(new DateTimeZone('Europe/Kyiv'));
 
         $this->assertTrue(
             $value->isEqualTo(

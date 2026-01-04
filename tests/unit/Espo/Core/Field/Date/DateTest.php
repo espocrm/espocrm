@@ -143,7 +143,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
     public function testToday(): void
     {
         $value1 = Date::createToday();
-        $value2 = Date::createToday(new DateTimeZone('Europe/Kiev'));
+        $value2 = Date::createToday(new DateTimeZone('Europe/Kyiv'));
 
         $this->assertEquals(0, $value1->diff($value2)->invert);
     }
