@@ -15,7 +15,8 @@
         "contact": "Customer",
         "contacts": "Customers",
         "cProductAffected": "Product Affected",
-        "cBranch": "Branch"
+        "cBranch": "Branch",
+        "cSLAStatus": "SLA Status"
     },
     "options": {
         "type": {
@@ -50,6 +51,12 @@
             "Loan": "Loan",
             "Savings": "Savings",
             "Leasing": "Leasing"
+        },
+        "cSLAStatus": {
+            "": "",
+            "Ok": "Ok",
+            "Warning": "Warning",
+            "Breached": "Breached"
         }
     },
     "links": {

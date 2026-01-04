@@ -4,5 +4,8 @@
     },
     {
         "name": "cRemainingTime"
+    },
+    {
+        "name": "cSLAStatus"
     }
 ]
