@@ -1,0 +1,12 @@
+{
+    "relationshipPanels": {
+        "branchs": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        },
+        "branch": {
+            "layout": null,
+            "selectPrimaryFilterName": null
+        }
+    }
+}

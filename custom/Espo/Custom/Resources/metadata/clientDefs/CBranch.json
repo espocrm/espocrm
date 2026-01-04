@@ -12,6 +12,10 @@
         "contacts": {
             "layout": null,
             "selectPrimaryFilterName": null
+        },
+        "cases": {
+            "layout": null,
+            "selectPrimaryFilterName": null
         }
     }
 }

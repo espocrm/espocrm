@@ -13,16 +13,18 @@
                 {
                     "name": "contact"
                 },
-                false
+                {
+                    "name": "status"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Customer Basic Information",
+        "tabLabel": "Customer Information",
         "hidden": false,
         "noteText": null,
-        "label": ""
+        "customLabel": ""
     },
     {
         "rows": [
@@ -57,16 +59,10 @@
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": "Product Effected"
+        "customLabel": ""
     },
     {
         "rows": [
-            [
-                {
-                    "name": "status"
-                },
-                false
-            ],
             [
                 {
                     "name": "priority"

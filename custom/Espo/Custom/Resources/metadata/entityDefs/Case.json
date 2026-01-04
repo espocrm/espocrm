@@ -27,7 +27,6 @@
                 "In Progress": "success",
                 "Resolve": "info",
                 "Close": null,
-                "Pending": "warning",
                 "Escalated": "danger"
             },
             "required": true,
@@ -36,7 +35,6 @@
                 "In Progress",
                 "Resolve",
                 "Close",
-                "Pending",
                 "Escalated"
             ],
             "default": "Open"
@@ -113,7 +111,8 @@
             "notNull": false,
             "type": "datetime",
             "minuteStep": 30,
-            "isCustom": true
+            "isCustom": true,
+            "readOnly": true
         },
         "cRemainingTime": {
             "type": "varchar",
@@ -146,6 +145,18 @@
             },
             "default": "Loan",
             "maxLength": 100,
+            "isCustom": true
+        },
+        "cBranch": {
+            "type": "link"
+        }
+    },
+    "links": {
+        "cBranch": {
+            "type": "belongsTo",
+            "foreign": "cases",
+            "entity": "CBranch",
+            "audited": false,
             "isCustom": true
         }
     }

@@ -14,7 +14,8 @@
         "name": "Subject",
         "contact": "Customer",
         "contacts": "Customers",
-        "cProductAffected": "Product Affected"
+        "cProductAffected": "Product Affected",
+        "cBranch": "Branch"
     },
     "options": {
         "type": {
@@ -50,5 +51,8 @@
             "Savings": "Savings",
             "Leasing": "Leasing"
         }
+    },
+    "links": {
+        "cBranch": "Branch"
     }
 }

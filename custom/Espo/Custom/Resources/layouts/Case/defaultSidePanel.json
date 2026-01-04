@@ -1,5 +1,8 @@
 [
     {
-        "name": "streamUpdatedAt"
+        "name": "cTargetDate"
+    },
+    {
+        "name": "cRemainingTime"
     }
 ]
