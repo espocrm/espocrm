@@ -1,11 +1,11 @@
 [
     {
+        "name": ":assignedUser"
+    },
+    {
         "name": "cTargetDate"
     },
     {
         "name": "cRemainingTime"
-    },
-    {
-        "name": "cSLAStatus"
     }
 ]

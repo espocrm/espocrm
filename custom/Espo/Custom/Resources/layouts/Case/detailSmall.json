@@ -36,7 +36,12 @@
                 }
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
-        "label": ""
+        "tabBreak": false,
+        "tabLabel": "Case Details & Classifications",
+        "hidden": false,
+        "noteText": null,
+        "customLabel": "Case Details & Classifications"
     }
 ]

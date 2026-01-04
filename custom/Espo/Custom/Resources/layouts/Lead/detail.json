@@ -63,7 +63,9 @@
                 {
                     "name": "cCustomerType"
                 },
-                false
+                {
+                    "name": "cBranch"
+                }
             ],
             [
                 {
@@ -92,14 +94,8 @@
                     "name": "emailAddress"
                 },
                 {
-                    "name": "status"
-                }
-            ],
-            [
-                {
                     "name": "phoneNumber"
-                },
-                false
+                }
             ]
         ],
         "dynamicLogicVisible": null,
@@ -195,7 +191,7 @@
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": ""
+        "label": ""
     },
     {
         "rows": [
