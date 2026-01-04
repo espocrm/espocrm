@@ -592,6 +592,83 @@
             "default": null,
             "maxLength": 100,
             "isCustom": true
+        },
+        "cLeadStatusReadOnly": {
+            "type": "enum",
+            "options": [
+                "New",
+                "Contacted",
+                "Validated",
+                "Qualified",
+                "Deferred",
+                "Converted",
+                "Disqualified"
+            ],
+            "style": {
+                "New": "info",
+                "Contacted": "primary",
+                "Validated": "warning",
+                "Qualified": "success",
+                "Deferred": null,
+                "Converted": "success",
+                "Disqualified": "danger"
+            },
+            "default": "New",
+            "readOnly": true,
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLeadSourceReadOnly": {
+            "type": "enum",
+            "readOnly": true,
+            "options": [
+                "",
+                "Social Media",
+                "Marketing Campaign",
+                "Television",
+                "News Paper"
+            ],
+            "style": {
+                "": null,
+                "Social Media": null,
+                "Marketing Campaign": null,
+                "Television": null,
+                "News Paper": null
+            },
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cCampaignReadOnly": {
+            "type": "varchar",
+            "maxLength": 50,
+            "readOnly": true,
+            "options": [],
+            "isCustom": true
+        },
+        "cSLATime": {
+            "type": "varchar",
+            "maxLength": 20,
+            "readOnly": true,
+            "options": [],
+            "isCustom": true
+        },
+        "cSLAStatus": {
+            "type": "enum",
+            "options": [
+                "",
+                "Ok",
+                "Warning",
+                "Breached"
+            ],
+            "style": {
+                "": null,
+                "Ok": "success",
+                "Warning": "warning",
+                "Breached": "danger"
+            },
+            "maxLength": 100,
+            "isCustom": true,
+            "readOnly": true
         }
     },
     "links": {

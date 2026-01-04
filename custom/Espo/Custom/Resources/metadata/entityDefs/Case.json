@@ -149,6 +149,25 @@
         },
         "cBranch": {
             "type": "link"
+        },
+        "cSLAStatus": {
+            "type": "enum",
+            "readOnly": true,
+            "options": [
+                "",
+                "Ok",
+                "Warning",
+                "Breached"
+            ],
+            "style": {
+                "": null,
+                "Ok": "success",
+                "Warning": "warning",
+                "Breached": "danger"
+            },
+            "default": "Ok",
+            "maxLength": 100,
+            "isCustom": true
         }
     },
     "links": {

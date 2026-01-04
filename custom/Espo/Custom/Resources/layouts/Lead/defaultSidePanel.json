@@ -9,6 +9,15 @@
         "name": "cLeadScore"
     },
     {
+        "name": "cLeadStatusReadOnly"
+    },
+    {
+        "name": "cLeadSourceReadOnly"
+    },
+    {
+        "name": "cCampaignReadOnly"
+    },
+    {
         "name": "cSpecialNotesReadOnly"
     }
 ]

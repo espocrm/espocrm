@@ -21,7 +21,7 @@
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Customer Information",
+        "tabLabel": "Customer Data",
         "hidden": false,
         "noteText": null,
         "customLabel": ""
@@ -59,7 +59,7 @@
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "customLabel": ""
+        "label": ""
     },
     {
         "rows": [

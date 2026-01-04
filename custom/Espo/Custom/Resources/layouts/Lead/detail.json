@@ -3,6 +3,47 @@
         "rows": [
             [
                 {
+                    "name": "cInterestedLoan"
+                },
+                {
+                    "name": "cProductSubType"
+                }
+            ],
+            [
+                {
+                    "name": "campaign"
+                },
+                {
+                    "name": "cLeadGeneratedBy"
+                }
+            ],
+            [
+                {
+                    "name": "cLeadSource"
+                },
+                {
+                    "name": "cSpecialNotes"
+                }
+            ],
+            [
+                {
+                    "name": "cPurposeOfLoan"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Lead Information",
+        "hidden": false,
+        "noteText": null,
+        "noteStyle": "info",
+        "label": ""
+    },
+    {
+        "rows": [
+            [
+                {
                     "name": "cCustomerSegment"
                 },
                 {
@@ -39,7 +80,7 @@
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Customer Demographics",
+        "tabLabel": "Customer Data",
         "hidden": false,
         "noteText": null,
         "customLabel": "Personal Information"
@@ -124,47 +165,6 @@
         "rows": [
             [
                 {
-                    "name": "cInterestedLoan"
-                },
-                {
-                    "name": "cProductSubType"
-                }
-            ],
-            [
-                {
-                    "name": "campaign"
-                },
-                {
-                    "name": "cLeadGeneratedBy"
-                }
-            ],
-            [
-                {
-                    "name": "cLeadSource"
-                },
-                {
-                    "name": "cSpecialNotes"
-                }
-            ],
-            [
-                {
-                    "name": "cPurposeOfLoan"
-                }
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": true,
-        "tabLabel": "Lead Information",
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "label": ""
-    },
-    {
-        "rows": [
-            [
-                {
                     "name": "cEmployeeType"
                 },
                 {
@@ -178,19 +178,7 @@
                 {
                     "name": "cExistingMonthlyObligations"
                 }
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": true,
-        "tabLabel": "Financials Information",
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "customLabel": "Financial Profile"
-    },
-    {
-        "rows": [
+            ],
             [
                 {
                     "name": "cDesiredLoanAmount"
@@ -202,11 +190,12 @@
         ],
         "dynamicLogicVisible": null,
         "style": "default",
-        "tabBreak": false,
+        "tabBreak": true,
+        "tabLabel": "Financials Info",
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
-        "label": ""
+        "customLabel": ""
     },
     {
         "rows": [
@@ -248,7 +237,7 @@
         "dynamicLogicVisible": null,
         "style": "default",
         "tabBreak": true,
-        "tabLabel": "Assessment & Risk",
+        "tabLabel": "Assessment Info",
         "hidden": false,
         "noteText": null,
         "noteStyle": "info",
