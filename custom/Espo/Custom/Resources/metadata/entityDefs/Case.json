@@ -24,8 +24,8 @@
         "status": {
             "style": {
                 "Open": "primary",
-                "In Progress": "success",
-                "Resolve": "info",
+                "In Progress": "info",
+                "Resolved": "success",
                 "Close": null,
                 "Escalated": "danger"
             },
@@ -33,7 +33,7 @@
             "options": [
                 "Open",
                 "In Progress",
-                "Resolve",
+                "Resolved",
                 "Close",
                 "Escalated"
             ],

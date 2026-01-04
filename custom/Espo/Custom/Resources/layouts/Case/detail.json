@@ -16,6 +16,19 @@
                 {
                     "name": "status"
                 }
+            ],
+            [
+                {
+                    "name": "priority"
+                },
+                {
+                    "name": "cBranch"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
@@ -24,7 +37,7 @@
         "tabLabel": "Customer Data",
         "hidden": false,
         "noteText": null,
-        "customLabel": ""
+        "customLabel": "Case Details & Classifications"
     },
     {
         "rows": [
@@ -32,7 +45,9 @@
                 {
                     "name": "type"
                 },
-                false
+                {
+                    "name": "cProductAffected"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
@@ -42,82 +57,5 @@
         "noteText": null,
         "noteStyle": "info",
         "customLabel": "Case Category"
-    },
-    {
-        "rows": [
-            [
-                {
-                    "name": "cProductAffected"
-                },
-                false
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": false,
-        "tabLabel": null,
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "label": ""
-    },
-    {
-        "rows": [
-            [
-                {
-                    "name": "priority"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "description"
-                }
-            ],
-            [
-                {
-                    "name": "attachments"
-                },
-                false
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": true,
-        "tabLabel": "Case Details & Classification",
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "label": ""
-    },
-    {
-        "rows": [
-            [
-                {
-                    "name": "assignedUser"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "cTargetDate"
-                },
-                false
-            ],
-            [
-                {
-                    "name": "cRemainingTime"
-                },
-                false
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "default",
-        "tabBreak": true,
-        "tabLabel": "Assignment & SLA",
-        "hidden": false,
-        "noteText": null,
-        "noteStyle": "info",
-        "label": ""
     }
 ]

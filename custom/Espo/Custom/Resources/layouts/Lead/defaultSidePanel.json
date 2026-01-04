@@ -3,21 +3,12 @@
         "name": ":assignedUser"
     },
     {
-        "name": "cScoreLastUpdated"
-    },
-    {
         "name": "cLeadScore"
     },
     {
-        "name": "cLeadStatusReadOnly"
+        "name": "status"
     },
     {
-        "name": "cLeadSourceReadOnly"
-    },
-    {
-        "name": "cCampaignReadOnly"
-    },
-    {
-        "name": "cSpecialNotesReadOnly"
+        "name": "cScoreLastUpdated"
     }
 ]
