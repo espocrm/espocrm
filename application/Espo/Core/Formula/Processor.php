@@ -177,7 +177,7 @@ class Processor
             $evaluatedArguments = new EvaluatedArgumentList($rawEvaluatedArguments);
 
             if ($function instanceof FuncVariablesAware) {
-                $variables = new Variables($this->variables ?? (object) []);
+                $variables = new Variables($this->variables);
 
                 return $function->process($evaluatedArguments, $variables);
             }

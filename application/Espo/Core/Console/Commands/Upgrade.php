@@ -463,6 +463,9 @@ class Upgrade implements Command
         return $data;
     }
 
+    /**
+     * @param non-empty-string $url
+     */
     private function downloadFile(string $url): ?string
     {
         $localFilePath = 'data/upload/upgrades/' . Util::generateId() . '.zip';
@@ -472,8 +475,16 @@ class Upgrade implements Command
         if (is_file($url)) {
             copy($url, $localFilePath);
         } else {
+            $fp = fopen($localFilePath, 'w');
+
+            if ($fp === false) {
+                echo "\nCould not open local file for writing.\n";
+
+                return null;
+            }
+
             $options = [
-                CURLOPT_FILE => fopen($localFilePath, 'w'),
+                CURLOPT_FILE => $fp,
                 CURLOPT_TIMEOUT => 3600,
                 CURLOPT_URL => $url,
             ];
@@ -481,9 +492,7 @@ class Upgrade implements Command
             $ch = curl_init();
 
             curl_setopt_array($ch, $options);
-
             curl_exec($ch);
-
             curl_close($ch);
         }
 

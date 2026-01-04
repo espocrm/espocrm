@@ -890,14 +890,14 @@ class Util
     /**
      * Sanitize HTML code.
      *
-     * @param string|string[] $text A source.
+     * @param string|array<string|int, mixed> $text A source.
      * @param string[] $permittedHtmlTags Allows only HTML tags without parameters like <p></p>, <br>, etc.
-     * @return string|string[]
+     * @return string|array<string|int, mixed>
      */
     public static function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
     {
         if (is_array($text)) {
-            foreach ($text as $key => &$value) {
+            foreach ($text as &$value) {
                 $value = self::sanitizeHtml($value, $permittedHtmlTags);
             }
 

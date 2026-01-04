@@ -2053,7 +2053,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param string[]|array<string[]> $select
-     * @param string[] $explicitJoins
+     * @param string[]|array<int, mixed>[] $explicitJoins
      * @param array<string, mixed> $params
      */
     protected function getBelongsToJoinsPart(

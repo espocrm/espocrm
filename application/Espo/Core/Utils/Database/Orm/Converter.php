@@ -135,6 +135,7 @@ class Converter
             $this->entityDefs = $this->metadata->get('entityDefs');
         }
 
+        /** @var array<string, mixed> */
         return $this->entityDefs;
     }
 

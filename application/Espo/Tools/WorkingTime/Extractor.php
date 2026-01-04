@@ -36,6 +36,7 @@ use Espo\Tools\WorkingTime\Calendar\HavingRanges;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Date;
+use LogicException;
 
 class Extractor
 {
@@ -108,7 +109,7 @@ class Extractor
         }
 
         for ($i = count($list) - 1; $i >= 0; $i--) {
-            $pair = $list[$i];
+            $pair = $list[$i] ?? throw new LogicException();
 
             if ($to->isGreaterThan($pair[1]) || $to->isEqualTo($pair[1])) {
                 break;

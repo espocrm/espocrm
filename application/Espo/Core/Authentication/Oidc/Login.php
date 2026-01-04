@@ -204,6 +204,7 @@ class Login implements LoginInterface
     }
 
     /**
+     * @param non-empty-string $endpoint
      * @return array{?string, ?Result, ?string}
      */
     private function requestToken(

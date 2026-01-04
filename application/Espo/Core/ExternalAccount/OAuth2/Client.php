@@ -213,9 +213,9 @@ class Client
     }
 
     /**
-     * @param string $url
+     * @param non-empty-string $url
      * @param array<string, mixed>|string|null $params
-     * @param string $httpMethod
+     * @param non-empty-string $httpMethod
      * @param array<string, string> $httpHeaders
      * @return array{
      *   result: array<string, mixed>|string,
@@ -262,9 +262,9 @@ class Client
     }
 
     /**
-     * @param string $url
+     * @param non-empty-string $url
      * @param array<string, mixed>|string|null $params
-     * @param string $httpMethod
+     * @param non-empty-string $httpMethod
      * @param array<string, string> $httpHeaders
      * @return array{
      *   result: array<string, mixed>|string,
@@ -302,7 +302,9 @@ class Client
                     $postFields = $params;
                 }
 
-                $curlOptions[CURLOPT_POSTFIELDS] = $postFields;
+                if ($postFields !== '' && $postFields !== null) {
+                    $curlOptions[CURLOPT_POSTFIELDS] = $postFields;
+                }
 
                 break;
 
@@ -403,7 +405,7 @@ class Client
     }
 
     /**
-     * @param string $url
+     * @param non-empty-string $url
      * @param string $grantType
      * @param array{
      *     client_id?: string,

@@ -391,7 +391,7 @@ class Image implements EntryPoint
         $orientation = $this->getOrientation($filePath);
 
         if ($orientation) {
-            $angle = [0, 0, 0, 180, 0, 0, -90, 0, 90][$orientation];
+            $angle = [0, 0, 0, 180, 0, 0, -90, 0, 90][$orientation] ?? 0;
 
             $targetImage = imagerotate($targetImage, $angle, 0) ?: $targetImage;
         }

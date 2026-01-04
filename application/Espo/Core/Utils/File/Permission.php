@@ -237,8 +237,9 @@ class Permission
                     $pKey = $rule[$count];
                 }
 
+                /** @phpstan-ignore-next-line empty.variable */
                 if (!empty($pKey)) {
-                    $permission[$pKey]= $val;
+                    $permission[$pKey] = $val;
                 }
 
                 $count++;

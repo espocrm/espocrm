@@ -244,7 +244,6 @@ class SearchParams
      * With a primary filter.
      *
      * @param string|null $primaryFilter
-     * @return $this
      */
     public function withPrimaryFilter(?string $primaryFilter): self
     {
