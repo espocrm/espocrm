@@ -28,14 +28,10 @@
 
 import Controller from 'controller';
 
-class ActivitiesController extends Controller {
+export default class ActivitiesController extends Controller {
 
     checkAccess(action) {
-        if (this.getAcl().check('Activities')) {
-            return true;
-        }
-
-        return false;
+        return this.getAcl().check('Activities');
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -48,39 +44,30 @@ class ActivitiesController extends Controller {
     }
 
     /**
+     * @private
      * @param {'activities'|'history'} type
      * @param {string} entityType
      * @param {string} id
      * @param {string} targetEntityType
      */
-    processList(type, entityType, id, targetEntityType) {
-        let viewName = 'crm:views/activities/list'
+    async processList(type, entityType, id, targetEntityType) {
+        const viewName = 'modules/crm/views/activities/list';
 
-        let model;
+        const model = await this.modelFactory.create(entityType)
 
-        this.modelFactory.create(entityType)
-            .then(m => {
-                model = m;
-                model.id = id;
+        model.id = id;
 
-                return model.fetch({main: true});
-            })
-            .then(() => {
-                return this.collectionFactory.create(targetEntityType);
-            })
-            .then(collection => {
-                collection.url = 'Activities/' + model.entityType + '/' + id + '/' +
-                    type + '/list/' + targetEntityType;
+        await model.fetch({main: true});
 
-                this.main(viewName, {
-                    scope: entityType,
-                    model: model,
-                    collection: collection,
-                    link:  type + '_' + targetEntityType,
-                    type: type,
-                });
-            });
+        const collection = await this.collectionFactory.create(targetEntityType);
+        collection.url = `Activities/${model.entityType}/${id}/${type}/list/${targetEntityType}`;
+
+        this.main(viewName, {
+            scope: entityType,
+            model: model,
+            collection: collection,
+            link:  `${type}_${targetEntityType}`,
+            type: type,
+        });
     }
 }
-
-export default ActivitiesController;
