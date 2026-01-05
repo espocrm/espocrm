@@ -528,7 +528,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
         }
 
         if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
-            return string;
+            return {[string]: true};
         }
 
         const options = {};
