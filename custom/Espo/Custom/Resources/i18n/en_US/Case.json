@@ -16,7 +16,10 @@
         "contacts": "Customers",
         "cProductAffected": "Product Affected",
         "cBranch": "Branch",
-        "cSLAStatus": "SLA Status"
+        "cSLAStatus": "SLA Status",
+        "cIsOpen": "IsOpen",
+        "cIsClosed": "IsClosed",
+        "cIsBreached": "IsBreached"
     },
     "options": {
         "type": {
