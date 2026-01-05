@@ -28,7 +28,6 @@
 
 import Controller from 'controller';
 import SearchManager from 'search-manager';
-import SettingsEditView from 'views/settings/edit';
 import AdminIndexView from 'views/admin/index';
 import {inject} from 'di';
 import Language from 'language';
