@@ -72,7 +72,9 @@
         "cLeadSourceReadOnly": "Lead Source",
         "cCampaignReadOnly": "Campaign",
         "cSLATime": "SLA Time",
-        "cSLAStatus": "SLA Status"
+        "cSLAStatus": "SLA Status",
+        "cIsConvertedInt": "IsConvertedInt",
+        "cConversionScore": "ConversionScore"
     },
     "links": {
         "cContact": "Existing Customer"

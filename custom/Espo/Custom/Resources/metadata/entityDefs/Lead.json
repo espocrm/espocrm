@@ -669,6 +669,22 @@
             "maxLength": 100,
             "isCustom": true,
             "readOnly": true
+        },
+        "cIsConvertedInt": {
+            "type": "int",
+            "default": 0,
+            "max": 1,
+            "min": 0,
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cConversionScore": {
+            "type": "int",
+            "default": 0,
+            "min": 0,
+            "max": 100,
+            "readOnly": true,
+            "isCustom": true
         }
     },
     "links": {
