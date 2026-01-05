@@ -92,6 +92,10 @@ class SelectProvider {
                 return;
             }
 
+            if (!settings && item.hidden) {
+                return;
+            }
+
             const field = item.name;
             const type = this.metadata.get(`entityDefs.${entityType}.fields.${field}.type`);
 
