@@ -78,7 +78,7 @@ class LinkManager
      *     linkType: string,
      *     entity: string,
      *     link: string,
-     *     entityForeign: string,
+     *     entityForeign: ?string,
      *     linkForeign: string,
      *     label: string,
      *     labelForeign: string,
@@ -127,6 +127,10 @@ class LinkManager
         }
 
         if ($linkType === self::MANY_TO_MANY) {
+            if (!$entityForeign) {
+                throw new Error("No entityForeign.");
+            }
+
             $relationName = !empty($params['relationName']) ?
                 $params['relationName'] :
                 lcfirst($entity) . $entityForeign;
@@ -284,7 +288,7 @@ class LinkManager
             }
         }
 
-        if ($linkForeign === lcfirst($entityForeign)) {
+        if ($entityForeign && $linkForeign === lcfirst($entityForeign)) {
             throw new Conflict("Link $entityForeign::$linkForeign must not match entity type name.");
         }
 
