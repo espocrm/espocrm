@@ -685,6 +685,14 @@
             "max": 100,
             "readOnly": true,
             "isCustom": true
+        },
+        "cIsQualified": {
+            "type": "int",
+            "default": 0,
+            "min": 0,
+            "max": 1,
+            "readOnly": true,
+            "isCustom": true
         }
     },
     "links": {
