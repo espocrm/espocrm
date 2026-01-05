@@ -168,6 +168,27 @@
             "default": "Ok",
             "maxLength": 100,
             "isCustom": true
+        },
+        "cIsOpen": {
+            "type": "int",
+            "default": 1,
+            "min": 0,
+            "max": 1,
+            "isCustom": true
+        },
+        "cIsClosed": {
+            "type": "int",
+            "default": 0,
+            "min": 0,
+            "max": 1,
+            "isCustom": true
+        },
+        "cIsBreached": {
+            "type": "int",
+            "default": 0,
+            "min": 0,
+            "max": 1,
+            "isCustom": true
         }
     },
     "links": {
