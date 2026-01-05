@@ -74,7 +74,8 @@
         "cSLATime": "SLA Time",
         "cSLAStatus": "SLA Status",
         "cIsConvertedInt": "IsConvertedInt",
-        "cConversionScore": "ConversionScore"
+        "cConversionScore": "ConversionScore",
+        "cIsQualified": "IsQualified"
     },
     "links": {
         "cContact": "Existing Customer"
