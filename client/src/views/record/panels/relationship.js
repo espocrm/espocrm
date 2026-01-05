@@ -218,6 +218,8 @@ class RelationshipPanelView extends BottomPanelView {
             this.defs.view = false;
         }
 
+        const unlinkDisabled = this.defs.unlinkDisabled || this.model.getLinkParam(this.link, 'readOnly');
+
         let hasCreate = false;
 
         if (this.defs.create) {
@@ -375,7 +377,7 @@ class RelationshipPanelView extends BottomPanelView {
                         selector: '.list-container',
                         skipBuildRows: true,
                         rowActionsOptions: {
-                            unlinkDisabled: this.defs.unlinkDisabled,
+                            unlinkDisabled: unlinkDisabled,
                             editDisabled: this.defs.editDisabled,
                             removeDisabled: this.defs.removeDisabled,
                         },
