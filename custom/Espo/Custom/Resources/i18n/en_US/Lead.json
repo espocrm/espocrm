@@ -75,7 +75,15 @@
         "cSLAStatus": "SLA Status",
         "cIsConvertedInt": "IsConvertedInt",
         "cConversionScore": "ConversionScore",
-        "cIsQualified": "IsQualified"
+        "cIsQualified": "IsQualified",
+        "cInitialAssignedAt": "Initial Assigned At",
+        "cFirstContactAt": "First Contact At",
+        "cQualifiedAt": "Qualified At",
+        "cHandOffAt": "Hand off At",
+        "cLeadTargetDate": "Lead Target Date",
+        "cLeadRemainingTime": "Lead Remaining Time",
+        "cLeadSLAStatus": "Lead SLA Status",
+        "cLeadPriority": "Lead Priority"
     },
     "links": {
         "cContact": "Existing Customer"
@@ -108,7 +116,8 @@
             "Vehicle Loan": "Vehicle Loan",
             "Gold Loan": "Gold Loan",
             "Business Loan": "Business Loan",
-            "Lease": "Lease"
+            "Lease": "Lease",
+            "Home Loan": "Home Loan"
         },
         "cInterestedProductType": {
             "Personal Loan": "Personal Loan",
@@ -235,6 +244,16 @@
             "Ok": "Ok",
             "Warning": "Warning",
             "Breached": "Breached"
+        },
+        "cLeadSLAStatus": {
+            "On Track": "On Track",
+            "At Risk": "At Risk",
+            "Breached": "Breached"
+        },
+        "cLeadPriority": {
+            "Hot": "Hot",
+            "Warm": "Warm",
+            "Cold": "Cold"
         }
     },
     "tooltips": {

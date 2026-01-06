@@ -6,6 +6,400 @@
             "readOnly": true,
             "unique": true,
             "isCustom": true
+        },
+        "cLoanProductType": {
+            "type": "enum",
+            "options": [
+                "Personal Loan",
+                "Business Loan",
+                "Gold Loan",
+                "Vehicle Loan",
+                "Home Loan",
+                "Lease"
+            ],
+            "required": true,
+            "default": "Personal Loan",
+            "isCustom": true
+        },
+        "cLoanTenure": {
+            "type": "int",
+            "required": true,
+            "min": 6,
+            "max": 360,
+            "default": 12,
+            "tooltip": "Loan tenure in months",
+            "isCustom": true
+        },
+        "cInterestRate": {
+            "type": "float",
+            "required": true,
+            "min": 1,
+            "max": 50,
+            "tooltip": "Annual interest rate %",
+            "isCustom": true
+        },
+        "cEmiAmount": {
+            "type": "currency",
+            "readOnly": true,
+            "tooltip": "Monthly EMI auto-calculated",
+            "isCustom": true
+        },
+        "cProcessingFee": {
+            "type": "currency",
+            "default": 0,
+            "isCustom": true
+        },
+        "cInsurancePremium": {
+            "type": "currency",
+            "default": 0,
+            "isCustom": true
+        },
+        "cTotalLoanCost": {
+            "type": "currency",
+            "readOnly": true,
+            "tooltip": "Total amount to be repaid",
+            "isCustom": true
+        },
+        "cLoanPurpose": {
+            "type": "text",
+            "rows": 3,
+            "tooltip": "Purpose of the loan",
+            "isCustom": true
+        },
+        "cApplicantMonthlyIncome": {
+            "type": "currency",
+            "required": true,
+            "tooltip": "Copied from Lead during conversion",
+            "isCustom": true
+        },
+        "cApplicantEmploymentType": {
+            "type": "enum",
+            "options": [
+                "Salaried",
+                "Self-Employed",
+                "Business",
+                "Retired"
+            ],
+            "required": true,
+            "isCustom": true
+        },
+        "cApplicantEmployerName": {
+            "type": "varchar",
+            "maxLength": 150,
+            "isCustom": true
+        },
+        "cApplicantCreditScore": {
+            "type": "int",
+            "min": 300,
+            "max": 900,
+            "isCustom": true
+        },
+        "cMonthlyObligations": {
+            "type": "currency",
+            "tooltip": "Existing monthly obligations (EMIs, rent, etc.)",
+            "isCustom": true
+        },
+        "cCalculatedFOIR": {
+            "type": "float",
+            "readOnly": true,
+            "tooltip": "Fixed Obligation to Income Ratio %",
+            "isCustom": true
+        },
+        "cCalculatedDTI": {
+            "type": "float",
+            "readOnly": true,
+            "tooltip": "Debt-to-Income Ratio %",
+            "isCustom": true
+        },
+        "cSecurityType": {
+            "type": "enum",
+            "options": [
+                "None (Unsecured)",
+                "Gold Jewelry",
+                "Vehicle",
+                "Property",
+                "Fixed Deposit",
+                "Guarantor",
+                "Mixed"
+            ],
+            "default": "None (Unsecured)",
+            "isCustom": true
+        },
+        "cSecurityValue": {
+            "type": "currency",
+            "default": 0,
+            "isCustom": true
+        },
+        "cSecurityDescription": {
+            "type": "text",
+            "rows": 3,
+            "tooltip": "Details of collateral/security",
+            "isCustom": true
+        },
+        "cLtvRatio": {
+            "type": "float",
+            "readOnly": true,
+            "tooltip": "Loan-to-Value ratio %",
+            "isCustom": true
+        },
+        "cHasGuarantor": {
+            "type": "bool",
+            "default": false,
+            "isCustom": true
+        },
+        "cGuarantorName": {
+            "type": "varchar",
+            "maxLength": 150,
+            "isCustom": true
+        },
+        "cGuarantorNIC": {
+            "type": "varchar",
+            "maxLength": 12,
+            "isCustom": true
+        },
+        "cGuarantorMonthlyIncome": {
+            "type": "currency",
+            "isCustom": true
+        },
+        "cGuarantorContactNumber": {
+            "notStorable": true,
+            "type": "phone",
+            "isCustom": true,
+            "typeList": [
+                "Mobile",
+                "Home",
+                "Office"
+            ],
+            "defaultType": "Mobile"
+        },
+        "cGuarantorRelationship": {
+            "type": "enum",
+            "options": [
+                "Parent",
+                "Spouse",
+                "Sibling",
+                "Friend",
+                "Business Partner",
+                "Other"
+            ],
+            "isCustom": true
+        },
+        "cApprovalStatus": {
+            "type": "enum",
+            "options": [
+                "Pending Review",
+                "Under Credit Assessment",
+                "Pending Branch Manager",
+                "Pending Regional Manager",
+                "Pending Credit Committee",
+                "Approved",
+                "Rejected",
+                "Conditional Approval"
+            ],
+            "default": "Pending Review",
+            "required": true,
+            "isCustom": true
+        },
+        "cApprovalLevel": {
+            "type": "enum",
+            "options": [
+                "Branch Level (< LKR 500K)",
+                "Regional Level (< LKR 2M)",
+                "Credit Committee (> LKR 2M)"
+            ],
+            "isCustom": true
+        },
+        "cBranchManagerApprover": {
+            "type": "link",
+            "entity": "User",
+            "isCustom": true
+        },
+        "cBranchManagerApprovalDate": {
+            "type": "datetime",
+            "isCustom": true
+        },
+        "cBranchManagerRemarks": {
+            "type": "text",
+            "rows": 3,
+            "isCustom": true
+        },
+        "cRegionalManagerApprover": {
+            "type": "link",
+            "entity": "User",
+            "isCustom": true
+        },
+        "cRegionalManagerApprovalDate": {
+            "type": "datetime",
+            "isCustom": true
+        },
+        "cRegionalManagerRemarks": {
+            "type": "text",
+            "rows": 3,
+            "isCustom": true
+        },
+        "cCreditCommitteeApprovalDate": {
+            "type": "datetime",
+            "isCustom": true
+        },
+        "cCreditCommitteeRemarks": {
+            "type": "text",
+            "rows": 3,
+            "isCustom": true
+        },
+        "cRejectionReason": {
+            "type": "enum",
+            "options": [
+                "Insufficient Income",
+                "Poor Credit History",
+                "High Existing Obligations",
+                "Inadequate Security",
+                "Fraudulent Application",
+                "KYC/Documentation Issues",
+                "Policy Violation",
+                "Other"
+            ],
+            "isCustom": true
+        },
+        "cDocumentChecklistStatus": {
+            "type": "enum",
+            "options": [
+                "Not Started",
+                "In Progress",
+                "Pending Customer",
+                "Complete",
+                "Incomplete"
+            ],
+            "default": "Not Started",
+            "isCustom": true
+        },
+        "cDocumentsReceived": {
+            "type": "multiEnum",
+            "options": [
+                "NIC Copy",
+                "Salary Slips",
+                "Bank Statements",
+                "Employment Letter",
+                "Utility Bill",
+                "Property Documents",
+                "Vehicle Registration",
+                "Guarantor NIC",
+                "Business Registration"
+            ],
+            "isCustom": true
+        },
+        "cDocumentsMissing": {
+            "type": "text",
+            "rows": 3,
+            "isCustom": true
+        },
+        "cAgreementPrepared": {
+            "type": "bool",
+            "default": false,
+            "isCustom": true
+        },
+        "cAgreementSignedDate": {
+            "type": "date",
+            "isCustom": true
+        },
+        "cDisbursementStatus": {
+            "type": "enum",
+            "options": [
+                "Not Initiated",
+                "Pending Disbursement",
+                "Disbursed",
+                "Failed",
+                "Cancelled"
+            ],
+            "default": "Not Initiated",
+            "isCustom": true
+        },
+        "cDisbursementDate": {
+            "type": "date",
+            "isCustom": true
+        },
+        "cDisbursementAmount": {
+            "type": "currency",
+            "isCustom": true
+        },
+        "cDisbursementMethod": {
+            "type": "enum",
+            "options": [
+                "Bank Transfer",
+                "Cheque",
+                "Cash",
+                "Direct to Vendor"
+            ],
+            "isCustom": true
+        },
+        "cDisbursementBankName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cDisbursementAccountNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "isCustom": true
+        },
+        "cDisbursementAccountName": {
+            "type": "varchar",
+            "maxLength": 150,
+            "isCustom": true
+        },
+        "cLoanAccountNumber": {
+            "type": "varchar",
+            "maxLength": 20,
+            "tooltip": "CBS-generated loan account number",
+            "isCustom": true
+        },
+        "cCbsReferenceNumber": {
+            "type": "varchar",
+            "maxLength": 50,
+            "tooltip": "Core Banking System reference",
+            "isCustom": true
+        },
+        "cDaysInPipeline": {
+            "type": "int",
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cDaysToApproval": {
+            "type": "int",
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cDaysToDisbursement": {
+            "type": "int",
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cConversionDate": {
+            "type": "datetime",
+            "tooltip": "When lead was converted to opportunity",
+            "isCustom": true
+        }
+    },
+    "links": {
+        "cSourceLead": {
+            "type": "belongsTo",
+            "entity": "Lead",
+            "foreign": "createdOpportunities",
+            "audited": true,
+            "isCustom": true
+        },
+        "cBranchManagerApprover": {
+            "type": "belongsTo",
+            "entity": "User",
+            "foreign": "assignedOpportunities",
+            "audited": true,
+            "isCustom": true
+        },
+        "cRegionalManagerApprover": {
+            "type": "belongsTo",
+            "entity": "User",
+            "foreign": "assignedOpportunities",
+            "audited": true,
+            "isCustom": true
         }
     }
 }

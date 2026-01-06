@@ -152,14 +152,16 @@
                 "Vehicle Loan",
                 "Gold Loan",
                 "Business Loan",
-                "Lease"
+                "Lease",
+                "Home Loan"
             ],
             "style": {
                 "Personal Loan": null,
                 "Vehicle Loan": null,
                 "Gold Loan": null,
                 "Business Loan": null,
-                "Lease": null
+                "Lease": null,
+                "Home Loan": null
             },
             "default": "Personal Loan",
             "maxLength": 100,
@@ -692,6 +694,81 @@
             "min": 0,
             "max": 1,
             "readOnly": true,
+            "isCustom": true
+        },
+        "cInitialAssignedAt": {
+            "notNull": false,
+            "type": "datetime",
+            "minuteStep": 1,
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cFirstContactAt": {
+            "notNull": false,
+            "type": "datetime",
+            "minuteStep": 1,
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cQualifiedAt": {
+            "notNull": false,
+            "type": "datetime",
+            "readOnly": true,
+            "minuteStep": 1,
+            "isCustom": true
+        },
+        "cHandOffAt": {
+            "notNull": false,
+            "type": "datetime",
+            "minuteStep": 1,
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cLeadTargetDate": {
+            "notNull": false,
+            "type": "datetime",
+            "minuteStep": 1,
+            "readOnly": true,
+            "isCustom": true
+        },
+        "cLeadRemainingTime": {
+            "type": "varchar",
+            "maxLength": 20,
+            "readOnly": true,
+            "options": [],
+            "isCustom": true
+        },
+        "cLeadSLAStatus": {
+            "type": "enum",
+            "readOnly": true,
+            "options": [
+                "On Track",
+                "At Risk",
+                "Breached"
+            ],
+            "style": {
+                "On Track": "success",
+                "At Risk": "warning",
+                "Breached": "danger"
+            },
+            "default": "On Track",
+            "maxLength": 100,
+            "isCustom": true
+        },
+        "cLeadPriority": {
+            "type": "enum",
+            "options": [
+                "Hot",
+                "Warm",
+                "Cold"
+            ],
+            "style": {
+                "Hot": "warning",
+                "Warm": null,
+                "Cold": "primary"
+            },
+            "default": "Hot",
+            "maxLength": 100,
             "isCustom": true
         }
     },

@@ -9,6 +9,12 @@
         "name": "status"
     },
     {
-        "name": "cScoreLastUpdated"
+        "name": "cLeadSLAStatus"
+    },
+    {
+        "name": "cLeadPriority"
+    },
+    {
+        "name": "cLeadRemainingTime"
     }
 ]

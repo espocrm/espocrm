@@ -1,0 +1,280 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                }
+            ],
+            [
+                {
+                    "name": "stage"
+                },
+                {
+                    "name": "cApprovalStatus"
+                }
+            ],
+            [
+                {
+                    "name": "probability"
+                },
+                {
+                    "name": "closeDate"
+                }
+            ],
+            [
+                {
+                    "name": "contact"
+                },
+                {
+                    "name": "cSourceLead"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Application Overview",
+        "hidden": false,
+        "noteText": null,
+        "customLabel": "Overview"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cLoanProductType"
+                },
+                {
+                    "name": "amount"
+                }
+            ],
+            [
+                {
+                    "name": "cLoanTenure"
+                },
+                {
+                    "name": "cInterestRate"
+                }
+            ],
+            [
+                {
+                    "name": "cProcessingFee"
+                },
+                {
+                    "name": "cInsurancePremium"
+                }
+            ],
+            [
+                {
+                    "name": "cLoanPurpose"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Loan Details"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cApplicantMonthlyIncome"
+                },
+                {
+                    "name": "cMonthlyObligations"
+                }
+            ],
+            [
+                {
+                    "name": "cApplicantEmploymentType"
+                },
+                {
+                    "name": "cApplicantEmployerName"
+                }
+            ],
+            [
+                {
+                    "name": "cApplicantCreditScore"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Financial & Security",
+        "hidden": false,
+        "noteText": null,
+        "customLabel": "Applicant Financial Profile"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cSecurityType"
+                },
+                {
+                    "name": "cSecurityValue"
+                }
+            ],
+            [
+                {
+                    "name": "cHasGuarantor"
+                },
+                {
+                    "name": "cGuarantorName"
+                }
+            ],
+            [
+                {
+                    "name": "cGuarantorNIC"
+                },
+                {
+                    "name": "cGuarantorMonthlyIncome"
+                }
+            ],
+            [
+                {
+                    "name": "cGuarantorContactNumber"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "cSecurityDescription"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Security & Guarantor"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cApprovalLevel"
+                }
+            ],
+            [
+                {
+                    "name": "cBranchManagerApprover"
+                },
+                {
+                    "name": "cBranchManagerApprovalDate"
+                }
+            ],
+            [
+                {
+                    "name": "cBranchManagerRemarks"
+                }
+            ],
+            [
+                {
+                    "name": "cRegionalManagerApprover"
+                },
+                {
+                    "name": "cRegionalManagerApprovalDate"
+                }
+            ],
+            [
+                {
+                    "name": "cRegionalManagerRemarks"
+                }
+            ],
+            [
+                {
+                    "name": "cCreditCommitteeApprovalDate"
+                }
+            ],
+            [
+                {
+                    "name": "cCreditCommitteeRemarks"
+                }
+            ],
+            [
+                {
+                    "name": "cRejectionReason"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": true,
+        "tabLabel": "Approval & Disbursement",
+        "hidden": false,
+        "noteText": null,
+        "customLabel": "Approval Workflow"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cDocumentChecklistStatus"
+                },
+                {
+                    "name": "cAgreementPrepared"
+                }
+            ],
+            [
+                {
+                    "name": "cDocumentsReceived"
+                }
+            ],
+            [
+                {
+                    "name": "cDocumentsMissing"
+                }
+            ],
+            [
+                {
+                    "name": "cAgreementSignedDate"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Documentation"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "cDisbursementStatus"
+                },
+                {
+                    "name": "cDisbursementDate"
+                }
+            ],
+            [
+                {
+                    "name": "cDisbursementAmount"
+                },
+                {
+                    "name": "cDisbursementMethod"
+                }
+            ],
+            [
+                {
+                    "name": "cDisbursementBankName"
+                },
+                {
+                    "name": "cDisbursementAccountNumber"
+                }
+            ],
+            [
+                {
+                    "name": "cDisbursementAccountName"
+                }
+            ],
+            [
+                {
+                    "name": "cLoanAccountNumber"
+                },
+                {
+                    "name": "cCbsReferenceNumber"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Disbursement"
+    }
+]

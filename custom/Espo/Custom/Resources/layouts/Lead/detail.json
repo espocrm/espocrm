@@ -5,9 +5,7 @@
                 {
                     "name": "cInterestedLoan"
                 },
-                {
-                    "name": "cProductSubType"
-                }
+                false
             ],
             [
                 {
