@@ -20,17 +20,16 @@
         "notSortable": true
     },
     {
-        "name": "cCustomerType",
+        "name": "cLeadSLAStatus",
+        "width": 16
+    },
+    {
+        "name": "cLeadRemainingTime",
         "width": 16
     },
     {
         "name": "cCustomerSegment",
         "width": 16
-    },
-    {
-        "name": "cDisqualifiedReason",
-        "width": 20,
-        "align": "left"
     },
     {
         "name": "assignedUser",

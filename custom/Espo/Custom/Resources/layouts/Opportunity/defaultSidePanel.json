@@ -1,0 +1,26 @@
+[
+    {
+        "name": ":assignedUser"
+    },
+    {
+        "name": "teams"
+    },
+    {
+        "name": "cCalculatedDTI"
+    },
+    {
+        "name": "cCalculatedFOIR"
+    },
+    {
+        "name": "cLtvRatio"
+    },
+    {
+        "name": "cTotalLoanCost"
+    },
+    {
+        "name": "cEmiAmount"
+    },
+    {
+        "name": "cDaysInPipeline"
+    }
+]
