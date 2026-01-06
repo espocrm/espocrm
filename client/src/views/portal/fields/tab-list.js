@@ -44,7 +44,8 @@ export default class extends TabListFieldView {
                 return true;
             }
 
-            return !!this.getMetadata().get(`scopes.${tab}.aclPortal`);
+            return this.getMetadata().get(`scopes.${tab}.aclPortal`) ||
+                this.getMetadata().get(`scopes.${tab}.tabPortal`);
         });
     }
 }

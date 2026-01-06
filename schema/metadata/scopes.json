@@ -45,6 +45,10 @@
             "description": "A permission level required for a user to have the scope available as a navbar tab. Examples: portal, massUpdate.",
             "type": ["string", "null"]
         },
+        "tabPortal": {
+            "description": "To allow the navbar tab for the portal even if aclPortal is false. As if v9.3.0.",
+            "type": "boolean"
+        },
         "type": {
             "description": "A template type of the entity. E.g. Base, BasePlus, Person, Company, CategoryTree, Event.",
             "type": ["string", "null"]
