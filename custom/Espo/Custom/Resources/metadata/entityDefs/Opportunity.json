@@ -377,6 +377,42 @@
             "type": "datetime",
             "tooltip": "When lead was converted to opportunity",
             "isCustom": true
+        },
+        "cCLoanStage": {
+            "type": "enum",
+            "options": [
+                "",
+                "Application Created",
+                "Document Collection",
+                "Credit Assessment",
+                "Security Valuation",
+                "Pending Approval - Branch",
+                "Pending Approval - Regional",
+                "Approved - Agreement Pending",
+                "Agreement - Signed",
+                "Pending Disbursement",
+                "Disbursed - Won",
+                "Rejected - Lost",
+                "Cancelled - Lost"
+            ],
+            "style": {
+                "": null,
+                "Application Created": "primary",
+                "Document Collection": null,
+                "Credit Assessment": "primary",
+                "Security Valuation": "primary",
+                "Pending Approval - Branch": "warning",
+                "Pending Approval - Regional": "warning",
+                "Approved - Agreement Pending": "success",
+                "Agreement - Signed": "success",
+                "Pending Disbursement": "success",
+                "Disbursed - Won": "success",
+                "Rejected - Lost": "danger",
+                "Cancelled - Lost": "danger"
+            },
+            "default": "Application Created",
+            "maxLength": 100,
+            "isCustom": true
         }
     },
     "links": {
