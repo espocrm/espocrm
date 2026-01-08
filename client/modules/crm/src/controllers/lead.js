@@ -31,8 +31,8 @@ import RecordController from 'controllers/record';
 class LeadController extends RecordController {
 
     // noinspection JSUnusedGlobalSymbols
-    actionConvert(id) {
-        this.main('crm:views/lead/convert', {id: id});
+    actionConvert(options) {
+        this.main('crm:views/lead/convert', {id: options.id});
     }
 }
 

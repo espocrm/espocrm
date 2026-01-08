@@ -60,7 +60,7 @@ class LeadDetailView extends DetailView {
     }
 
     actionConvert() {
-        this.getRouter().navigate(`${this.model.entityType}/convert/${this.model.id}` , {trigger: true});
+        this.getRouter().navigate(`${this.model.entityType}/convert/id=${this.model.id}`, {trigger: true});
     }
 }
 
