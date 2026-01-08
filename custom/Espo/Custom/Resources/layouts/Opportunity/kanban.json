@@ -1,0 +1,26 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "cCLoanStage"
+    },
+    {
+        "name": "amount",
+        "align": "right",
+        "isLarge": true
+    },
+    {
+        "name": "account"
+    },
+    {
+        "name": "closeDate",
+        "align": "right",
+        "isMuted": true
+    },
+    {
+        "name": "assignedUser",
+        "hidden": true
+    }
+]

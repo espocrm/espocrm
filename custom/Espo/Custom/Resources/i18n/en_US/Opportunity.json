@@ -56,7 +56,8 @@
         "cDaysToDisbursement": "Days to Disbursement",
         "cConversionDate": "Conversion Date",
         "cSourceLead": "Source Lead",
-        "contact": "Contact"
+        "contact": "Contact",
+        "cCLoanStage": "Loan Stage"
     },
     "options": {
         "cLoanProductType": {
@@ -87,6 +88,21 @@
             "Mobile": "Mobile",
             "Home": "Home",
             "Office": "Office"
+        },
+        "cCLoanStage": {
+            "": "",
+            "Application Created": "Application Created",
+            "Document Collection": "Document Collection",
+            "Credit Assessment": "Credit Assessment",
+            "Security Valuation": "Security Valuation",
+            "Pending Approval - Branch": "Pending Approval - Branch",
+            "Pending Approval - Regional": "Pending Approval - Regional",
+            "Approved - Agreement Pending": "Approved - Agreement Pending",
+            "Agreement - Signed": "Agreement - Signed",
+            "Pending Disbursement": "Pending Disbursement",
+            "Disbursed - Won": "Disbursed - Won",
+            "Rejected - Lost": "Rejected - Lost",
+            "Cancelled - Lost": "Cancelled - Lost"
         }
     }
 }
