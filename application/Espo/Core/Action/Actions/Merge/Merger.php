@@ -42,6 +42,7 @@ use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\ObjectUtil;
+use Espo\Entities\Attachment;
 use Espo\Entities\Note;
 use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress;
@@ -304,6 +305,13 @@ class Merger
                 ->get(['entityDefs', $entityType, 'links', $name, 'notMergeable']);
 
             if ($notMergeable) {
+                continue;
+            }
+
+            if (
+                $relationDefs->tryGetForeignEntityType() === Attachment::ENTITY_TYPE &&
+                $type === RelationType::HAS_CHILDREN
+            ) {
                 continue;
             }
 
