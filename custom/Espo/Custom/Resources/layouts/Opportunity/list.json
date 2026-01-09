@@ -1,0 +1,28 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "stage",
+        "width": 15
+    },
+    {
+        "name": "assignedUser",
+        "width": 12
+    },
+    {
+        "name": "amount",
+        "width": 10,
+        "align": "right"
+    },
+    {
+        "name": "createdAt",
+        "width": 12
+    },
+    {
+        "name": "closeDate",
+        "width": 9,
+        "hidden": true
+    }
+]

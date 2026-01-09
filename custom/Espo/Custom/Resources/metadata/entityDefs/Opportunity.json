@@ -86,7 +86,8 @@
         "cApplicantEmployerName": {
             "type": "varchar",
             "maxLength": 150,
-            "isCustom": true
+            "isCustom": true,
+            "options": []
         },
         "cApplicantCreditScore": {
             "type": "int",
@@ -114,16 +115,27 @@
         "cSecurityType": {
             "type": "enum",
             "options": [
-                "None (Unsecured)",
+                "",
                 "Gold Jewelry",
                 "Vehicle",
                 "Property",
                 "Fixed Deposit",
                 "Guarantor",
-                "Mixed"
+                "Mixed",
+                "Stocks"
             ],
-            "default": "None (Unsecured)",
-            "isCustom": true
+            "default": null,
+            "isCustom": true,
+            "style": {
+                "": null,
+                "Gold Jewelry": null,
+                "Vehicle": null,
+                "Property": null,
+                "Fixed Deposit": null,
+                "Guarantor": null,
+                "Mixed": null,
+                "Stocks": null
+            }
         },
         "cSecurityValue": {
             "type": "currency",
@@ -198,7 +210,17 @@
             ],
             "default": "Pending Review",
             "required": true,
-            "isCustom": true
+            "isCustom": true,
+            "style": {
+                "Pending Review": "primary",
+                "Under Credit Assessment": "warning",
+                "Pending Branch Manager": "primary",
+                "Pending Regional Manager": "primary",
+                "Pending Credit Committee": "primary",
+                "Approved": "success",
+                "Rejected": "danger",
+                "Conditional Approval": "danger"
+            }
         },
         "cApprovalLevel": {
             "type": "enum",
@@ -249,6 +271,7 @@
         "cRejectionReason": {
             "type": "enum",
             "options": [
+                "",
                 "Insufficient Income",
                 "Poor Credit History",
                 "High Existing Obligations",
@@ -258,7 +281,18 @@
                 "Policy Violation",
                 "Other"
             ],
-            "isCustom": true
+            "isCustom": true,
+            "style": {
+                "": null,
+                "Insufficient Income": null,
+                "Poor Credit History": null,
+                "High Existing Obligations": null,
+                "Inadequate Security": null,
+                "Fraudulent Application": null,
+                "KYC/Documentation Issues": null,
+                "Policy Violation": null,
+                "Other": null
+            }
         },
         "cDocumentChecklistStatus": {
             "type": "enum",
@@ -270,7 +304,14 @@
                 "Incomplete"
             ],
             "default": "Not Started",
-            "isCustom": true
+            "isCustom": true,
+            "style": {
+                "Not Started": "info",
+                "In Progress": "warning",
+                "Pending Customer": "primary",
+                "Complete": "success",
+                "Incomplete": "danger"
+            }
         },
         "cDocumentsReceived": {
             "type": "multiEnum",
@@ -311,7 +352,14 @@
                 "Cancelled"
             ],
             "default": "Not Initiated",
-            "isCustom": true
+            "isCustom": true,
+            "style": {
+                "Not Initiated": "info",
+                "Pending Disbursement": "primary",
+                "Disbursed": "success",
+                "Failed": "danger",
+                "Cancelled": "danger"
+            }
         },
         "cDisbursementDate": {
             "type": "date",
@@ -413,6 +461,16 @@
             "default": "Application Created",
             "maxLength": 100,
             "isCustom": true
+        },
+        "stage": {
+            "style": {
+                "Prospecting": "primary",
+                "Qualification": null,
+                "Proposal": "warning",
+                "Negotiation": "success",
+                "Closed Won": "success",
+                "Closed Lost": "info"
+            }
         }
     },
     "links": {
