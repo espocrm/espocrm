@@ -12,9 +12,6 @@
         "isLarge": true
     },
     {
-        "name": "account"
-    },
-    {
         "name": "closeDate",
         "align": "right",
         "isMuted": true

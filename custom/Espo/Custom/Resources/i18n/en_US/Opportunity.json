@@ -11,7 +11,7 @@
         "cLoanPurpose": "Loan Purpose",
         "cApplicantMonthlyIncome": "Applicant Monthly Income",
         "cApplicantEmploymentType": "Employment Type",
-        "cApplicantEmployerName": "Employer Name",
+        "cApplicantEmployerName": "Employer/ Business Name",
         "cApplicantCreditScore": "Credit Score",
         "cMonthlyObligations": "Monthly Obligations",
         "cCalculatedFOIR": "Calculated FOIR (%)",
@@ -103,6 +103,27 @@
             "Disbursed - Won": "Disbursed - Won",
             "Rejected - Lost": "Rejected - Lost",
             "Cancelled - Lost": "Cancelled - Lost"
+        },
+        "cSecurityType": {
+            "": "",
+            "Gold Jewelry": "Gold Jewelry",
+            "Vehicle": "Vehicle",
+            "Property": "Property",
+            "Fixed Deposit": "Fixed Deposit",
+            "Guarantor": "Guarantor",
+            "Mixed": "Mixed",
+            "Stocks": "Stocks"
+        },
+        "cRejectionReason": {
+            "": "",
+            "Insufficient Income": "Insufficient Income",
+            "Poor Credit History": "Poor Credit History",
+            "High Existing Obligations": "High Existing Obligations",
+            "Inadequate Security": "Inadequate Security",
+            "Fraudulent Application": "Fraudulent Application",
+            "KYC/Documentation Issues": "KYC/Documentation Issues",
+            "Policy Violation": "Policy Violation",
+            "Other": "Other"
         }
     }
 }
