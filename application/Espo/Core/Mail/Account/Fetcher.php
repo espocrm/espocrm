@@ -110,7 +110,7 @@ class Fetcher
         $folder = mb_convert_encoding($folderOriginal, 'UTF7-IMAP', 'UTF-8');
 
         try {
-            $storage->selectFolder($folder);
+            $storage->selectFolder($folderOriginal);
         } catch (Throwable $e) {
             $message = "{$account->getEntityType()} {$account->getId()}, " .
                 "could not select folder '$folder'; {$e->getMessage()}";
