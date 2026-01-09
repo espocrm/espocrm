@@ -244,7 +244,7 @@ class DirectoryTreeStorage implements Storage
             $folders = $this->mailbox->folders()->get();
 
             foreach ($folders as $folder) {
-                $output[] = $folder->name();
+                $output[] = $folder->path();
             }
         } catch (CommonException $e) {
             throw new ImapError($e->getMessage(), previous: $e);
