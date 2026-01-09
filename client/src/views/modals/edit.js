@@ -112,6 +112,8 @@ class EditModalView extends ModalView {
             e.stopPropagation();
             e.preventDefault();
 
+            // Refactor the following code so that it can be easily re-used in other edit modals.
+
             const focusedFieldView = this.getRecordView().getFocusedFieldView();
 
             if (focusedFieldView) {
