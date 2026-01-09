@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import {register} from 'di';
+import Ui from 'ui';
 
 /** @typedef {import('view').default} View */
 /** @typedef {string|function(KeyboardEvent): void} Key */
@@ -113,6 +114,10 @@ export default class ShortcutManager {
         const items = this.items.filter(it => it.level === this.level);
 
         if (items.length === 0) {
+            return;
+        }
+
+        if (Ui.getConfirmCount()) {
             return;
         }
 
