@@ -104,7 +104,7 @@ class EditModalView extends ModalView {
             this.actionSaveAndContinueEditing();
         },
         /** @this EditModalView */
-        'Escape': function (e) {
+        'Escape': async function (e) {
             if (this.saveDisabled) {
                 return;
             }
@@ -120,12 +120,13 @@ class EditModalView extends ModalView {
                 this.model.set(focusedFieldView.fetch(), {skipReRender: true});
             }
 
-            if (this.getRecordView().isChanged) {
-                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
-                    .then(() => this.actionClose());
+            if (!this.getRecordView().isChanged) {
+                this.actionClose();
 
                 return;
             }
+
+            await this.confirm(this.translate('confirmLeaveOutMessage', 'messages'));
 
             this.actionClose();
         },
