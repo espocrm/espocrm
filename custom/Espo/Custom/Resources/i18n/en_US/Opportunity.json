@@ -1,6 +1,23 @@
 {
     "fields": {
         "cOpportunityNumber": "Opportunity Number",
+        "cMonthlyIncome": "Monthly Income",
+        "cEmployeeType": "Employment Type",
+        "cBusinessName": "Business/Employer Name",
+        "cCreditScore": "Credit Score",
+        "cExistingMonthlyObligations": "Existing Monthly Obligations",
+        "cFOIR": "FOIR %",
+        "cDTI": "DTI %",
+        "cInterestedProductType": "Interested Product Type",
+        "cPreferredTenure": "Preferred Tenure",
+        "cPurposeOfLoan": "Purpose of Loan",
+        "cBankName": "Bank Name",
+        "cAccountNo": "Account Number",
+        "cBranch": "Branch",
+        "cDateOfBirth": "Date of Birth",
+        "cGender": "Gender",
+        "cNICNo": "NIC Number",
+        "cPropertyOrVehicleDetails": "Property/Vehicle Details",
         "cLoanProductType": "Loan Product Type",
         "cLoanTenure": "Loan Tenure (Months)",
         "cInterestRate": "Interest Rate (%)",
@@ -60,6 +77,24 @@
         "cCLoanStage": "Loan Stage"
     },
     "options": {
+        "cInterestedProductType": {
+            "Personal Loan": "Personal Loan",
+            "Vehicle Loan": "Vehicle Loan",
+            "Gold Loan": "Gold Loan",
+            "Business Loan": "Business Loan",
+            "Lease": "Lease"
+        },
+        "cEmployeeType": {
+            "Salaried": "Salaried",
+            "Self-Employed": "Self-Employed",
+            "Business": "Business",
+            "Retired": "Retired"
+        },
+        "cGender": {
+            "Male": "Male",
+            "Female": "Female",
+            "Other": "Other"
+        },
         "cLoanProductType": {
             "Personal Loan": "Personal Loan",
             "Business Loan": "Business Loan",

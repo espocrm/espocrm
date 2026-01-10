@@ -43,7 +43,7 @@
         "rows": [
             [
                 {
-                    "name": "cLoanProductType"
+                    "name": "cInterestedProductType"
                 },
                 {
                     "name": "amount"
@@ -51,7 +51,7 @@
             ],
             [
                 {
-                    "name": "cLoanTenure"
+                    "name": "cPreferredTenure"
                 },
                 {
                     "name": "cInterestRate"
@@ -67,7 +67,7 @@
             ],
             [
                 {
-                    "name": "cLoanPurpose"
+                    "name": "cPurposeOfLoan"
                 }
             ]
         ],
@@ -78,23 +78,31 @@
         "rows": [
             [
                 {
-                    "name": "cApplicantMonthlyIncome"
+                    "name": "cMonthlyIncome"
                 },
                 {
-                    "name": "cMonthlyObligations"
+                    "name": "cExistingMonthlyObligations"
                 }
             ],
             [
                 {
-                    "name": "cApplicantEmploymentType"
+                    "name": "cEmployeeType"
                 },
                 {
-                    "name": "cApplicantEmployerName"
+                    "name": "cBusinessName"
                 }
             ],
             [
                 {
-                    "name": "cApplicantCreditScore"
+                    "name": "cCreditScore"
+                },
+                {
+                    "name": "cDTI"
+                }
+            ],
+            [
+                {
+                    "name": "cFOIR"
                 },
                 false
             ]

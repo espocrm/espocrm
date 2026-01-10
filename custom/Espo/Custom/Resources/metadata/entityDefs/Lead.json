@@ -781,6 +781,28 @@
             "isCustom": true
         }
     },
+    "convertFields": {
+        "Opportunity": {
+            "amount": "cDesiredLoanAmount",
+            "cMonthlyIncome": "cTurnover",
+            "cEmployeeType": "cEmployeeType",
+            "cBusinessName": "cBusinessName",
+            "cCreditScore": "cCreditScore",
+            "cExistingMonthlyObligations": "cExistingMonthlyObligations",
+            "cFOIR": "cFOIR",
+            "cDTI": "cDTI",
+            "cInterestedProductType": "cInterestedProductType",
+            "cPreferredTenure": "cPreferredTenure",
+            "cPurposeOfLoan": "cPurposeOfLoan",
+            "cBankName": "cBankName",
+            "cAccountNo": "cAccountNo",
+            "cBranch": "cBranch",
+            "cDateOfBirth": "cDateOfBirth",
+            "cGender": "cGender",
+            "cNICNo": "cNICNo",
+            "cPropertyOrVehicleDetails": "cPropertyOrVehicleDetails"
+        }
+    },
     "collection": {
         "orderBy": "createdAt",
         "order": "desc",
