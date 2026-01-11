@@ -13,7 +13,8 @@
         "cPassportNumber": "Passport Number",
         "cBusinessRegistrationNumber": "Business Registration Number",
         "cBusinessName": "Business Name",
-        "cBusinessOwnerName": "Business Owner Name"
+        "cBusinessOwnerName": "Business Owner Name",
+        "teams": "Branch"
     },
     "options": {
         "cGender": {

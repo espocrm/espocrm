@@ -83,7 +83,8 @@
         "cLeadTargetDate": "Lead Target Date",
         "cLeadRemainingTime": "Lead Remaining Time",
         "cLeadSLAStatus": "Lead SLA Status",
-        "cLeadPriority": "Lead Priority"
+        "cLeadPriority": "Lead Priority",
+        "teams": "Branch"
     },
     "links": {
         "cContact": "Existing Customer"
