@@ -8,7 +8,7 @@
         "cLastContactDate": "Last Contact Date",
         "cCifNumber": "CIF Number",
         "cLeads": "Link To Lead",
-        "cBranch": "Branch",
+        "cBranch": "Branch-bk",
         "cCustomerType": "Customer Type",
         "cPassportNumber": "Passport Number",
         "cBusinessRegistrationNumber": "Business Registration Number",
@@ -34,7 +34,7 @@
     },
     "links": {
         "cLeads": "Link To Lead",
-        "cBranch": "Branch"
+        "cBranch": "Branch-bk"
     },
     "labels": {
         "Create Contact": "Create Customer"
