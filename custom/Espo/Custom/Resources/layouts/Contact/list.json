@@ -17,8 +17,9 @@
         "notSortable": true
     },
     {
-        "name": "cBranch",
-        "width": 16
+        "name": "teams",
+        "width": 16,
+        "notSortable": true
     },
     {
         "name": "assignedUser",
