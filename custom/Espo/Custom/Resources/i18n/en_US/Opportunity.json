@@ -13,7 +13,7 @@
         "cPurposeOfLoan": "Purpose of Loan",
         "cBankName": "Bank Name",
         "cAccountNo": "Account Number",
-        "cBranch": "Branch",
+        "cBranch": "Branch-bk",
         "cDateOfBirth": "Date of Birth",
         "cGender": "Gender",
         "cNICNo": "NIC Number",
@@ -74,7 +74,8 @@
         "cConversionDate": "Conversion Date",
         "cSourceLead": "Source Lead",
         "contact": "Contact",
-        "cCLoanStage": "Loan Stage"
+        "cCLoanStage": "Loan Stage",
+        "teams": "Branch"
     },
     "options": {
         "cInterestedProductType": {

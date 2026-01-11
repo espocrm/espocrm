@@ -112,8 +112,9 @@
         "cBranch": {
             "type": "varchar",
             "maxLength": 100,
-            "tooltip": "Branch - auto-filled from Lead",
-            "isCustom": true
+            "tooltip": true,
+            "isCustom": true,
+            "options": []
         },
         "cDateOfBirth": {
             "type": "date",

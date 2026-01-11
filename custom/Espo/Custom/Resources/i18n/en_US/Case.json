@@ -15,11 +15,12 @@
         "contact": "Customer",
         "contacts": "Customers",
         "cProductAffected": "Product Affected",
-        "cBranch": "Branch",
+        "cBranch": "Branch-bk",
         "cSLAStatus": "SLA Status",
         "cIsOpen": "IsOpen",
         "cIsClosed": "IsClosed",
-        "cIsBreached": "IsBreached"
+        "cIsBreached": "IsBreached",
+        "teams": "Branch"
     },
     "options": {
         "type": {
