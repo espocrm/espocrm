@@ -67,6 +67,7 @@ class BeforeCreate implements SaveHook
             throw new Forbidden("No access to email.");
         }
 
+        // As the record hook is processed after the LinkCheck, no forbidden error will be produced.
         $entity->set('emailId', $emailId);
     }
 }
