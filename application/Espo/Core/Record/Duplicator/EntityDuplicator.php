@@ -31,11 +31,12 @@ namespace Espo\Core\Record\Duplicator;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\Defs;
 use Espo\ORM\Defs\FieldDefs;
 use Espo\Core\Utils\FieldUtil;
-
+use Espo\ORM\Type\RelationType;
 use stdClass;
 
 /**
@@ -61,6 +62,10 @@ class EntityDuplicator
 
         foreach ($entityDefs->getFieldList() as $fieldDefs) {
             $this->processField($entity, $fieldDefs, $valueMap);
+        }
+
+        foreach ($entityDefs->getRelationList() as $relationDefs) {
+            $this->processLink($entity, $relationDefs, $entityDefs, $valueMap);
         }
 
         return $valueMap;
@@ -91,6 +96,37 @@ class EntityDuplicator
 
         foreach (get_object_vars($fieldValueMap) as $attribute => $value) {
             $valueMap->$attribute = $value;
+        }
+    }
+
+    private function processLink(
+        Entity $entity,
+        RelationDefs $relationDefs,
+        Defs\EntityDefs $entityDefs,
+        stdClass $valueMap,
+    ): void {
+
+        $link = $relationDefs->getName();
+
+        if (
+            !in_array($relationDefs->getType(), [
+                RelationType::BELONGS_TO,
+                RelationType::BELONGS_TO_PARENT,
+                RelationType::HAS_ONE,
+            ])
+        ) {
+            return;
+        }
+
+        if ($entityDefs->hasField($link)) {
+            return;
+        }
+
+        unset($valueMap->{$link . 'Id'});
+        unset($valueMap->{$link . 'Name'});
+
+        if ($relationDefs->getType() === RelationType::BELONGS_TO_PARENT) {
+            unset($valueMap->{$link . 'Type'});
         }
     }
 
