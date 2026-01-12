@@ -308,7 +308,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
 
         if ($isForeignReference && $fieldData && $fieldData->getLink()) {
             $label =
-                $this->language->translateLabel($fieldData->getLink(), 'links', $entityType) . '.' .
+                $this->language->translateLabel($fieldData->getLink(), 'links', $entityType) . ' . ' .
                 $this->language->translateLabel($fieldData->getField(), 'fields', $fieldData->getEntityType());
         }
 
