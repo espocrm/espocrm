@@ -1,4 +1,4 @@
-<p class="credit small">&copy; 2025
+<p class="credit small">&copy; 2026
 <a
     href="https://www.espocrm.com"
     title="Powered by EspoCRM"
