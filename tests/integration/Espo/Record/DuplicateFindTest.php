@@ -29,20 +29,14 @@
 
 namespace tests\integration\Espo\Record;
 
-use Espo\Core\{
-    Exceptions\ConflictSilent,
-    Record\CreateParams,
-};
+use Espo\Core\Exceptions\ConflictSilent;
+use Espo\Core\Record\CreateParams;
+use tests\integration\Core\BaseTestCase;
 
-use Espo\Modules\Crm\Services\Account;
-use Espo\Modules\Crm\Services\Lead;
-
-
-class DuplicateFindTest extends \tests\integration\Core\BaseTestCase
+class DuplicateFindTest extends BaseTestCase
 {
     public function testAccount1()
     {
-        /* @var $service Account */
         $service = $this->getContainer()
             ->get('recordServiceContainer')
             ->get('Account');
@@ -66,7 +60,6 @@ class DuplicateFindTest extends \tests\integration\Core\BaseTestCase
 
     public function testAccountSkip()
     {
-        /* @var $service Account */
         $service = $this->getContainer()
             ->get('recordServiceContainer')
             ->get('Account');
@@ -90,7 +83,6 @@ class DuplicateFindTest extends \tests\integration\Core\BaseTestCase
 
     public function testLead1()
     {
-        /* @var $service Lead */
         $service = $this->getContainer()
             ->get('recordServiceContainer')
             ->get('Lead');
@@ -114,7 +106,6 @@ class DuplicateFindTest extends \tests\integration\Core\BaseTestCase
 
     public function testLeadSkip()
     {
-        /* @var $service Lead */
         $service = $this->getContainer()
             ->get('recordServiceContainer')
             ->get('Lead');
