@@ -30,7 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\DateTime;
-use RuntimeException;
+use Exception;
 
 class ExternalAccount extends Integration
 {
@@ -97,7 +97,7 @@ class ExternalAccount extends Integration
 
         try {
             return DateTime::fromString($raw);
-        } catch (RuntimeException) {
+        } catch (Exception) {
             return null;
         }
     }
