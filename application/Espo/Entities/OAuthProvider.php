@@ -33,11 +33,11 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 use stdClass;
-use ValueError;
+use UnexpectedValueException;
 
 class OAuthProvider extends Entity
 {
-    public const ENTITY_TYPE = 'OAuthProvider';
+    public const string ENTITY_TYPE = 'OAuthProvider';
 
     public function isActive(): bool
     {
@@ -49,7 +49,7 @@ class OAuthProvider extends Entity
         $value = $this->get('clientId');
 
         if (!is_string($value)) {
-            throw new ValueError("No client ID.");
+            throw new UnexpectedValueException("No client ID.");
         }
 
         return $value;
@@ -60,7 +60,7 @@ class OAuthProvider extends Entity
         $value = $this->get('clientSecret');
 
         if (!is_string($value)) {
-            throw new ValueError("No client secret.");
+            throw new UnexpectedValueException("No client secret.");
         }
 
         return $value;
@@ -71,7 +71,7 @@ class OAuthProvider extends Entity
         $value = $this->get('tokenEndpoint');
 
         if (!is_string($value)) {
-            throw new ValueError("No token endpoint.");
+            throw new UnexpectedValueException("No token endpoint.");
         }
 
         return $value;
@@ -82,7 +82,7 @@ class OAuthProvider extends Entity
         $value = $this->get('authorizationEndpoint');
 
         if (!is_string($value)) {
-            throw new ValueError("No authorization endpoint.");
+            throw new UnexpectedValueException("No authorization endpoint.");
         }
 
         return $value;

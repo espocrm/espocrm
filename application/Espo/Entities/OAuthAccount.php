@@ -34,18 +34,18 @@ namespace Espo\Entities;
 use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\Entity;
 use SensitiveParameter;
-use ValueError;
+use UnexpectedValueException;
 
 class OAuthAccount extends Entity
 {
-    public const ENTITY_TYPE = 'OAuthAccount';
+    public const string ENTITY_TYPE = 'OAuthAccount';
 
     public function getProvider(): OAuthProvider
     {
         $provider = $this->relations->getOne('provider');
 
         if (!$provider instanceof OAuthProvider) {
-            throw new ValueError("No provider.");
+            throw new UnexpectedValueException("No provider.");
         }
 
         return $provider;

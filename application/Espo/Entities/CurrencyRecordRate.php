@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\Date;
 use Espo\Core\ORM\Entity;
-use ValueError;
+use UnexpectedValueException;
 
 class CurrencyRecordRate extends Entity
 {
@@ -81,7 +81,7 @@ class CurrencyRecordRate extends Entity
         $record = $this->relations->getOne(self::FIELD_RECORD);
 
         if (!$record instanceof CurrencyRecord) {
-            throw new ValueError("No record.");
+            throw new UnexpectedValueException("No record.");
         }
 
         return $record;
@@ -92,7 +92,7 @@ class CurrencyRecordRate extends Entity
         $date = $this->getValueObject(self::FIELD_DATE);
 
         if (!$date instanceof Date) {
-            throw new ValueError("No date.");
+            throw new UnexpectedValueException("No date.");
         }
 
         return $date;
