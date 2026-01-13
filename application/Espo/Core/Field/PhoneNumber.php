@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A phone number value. Immutable.
@@ -44,7 +44,7 @@ class PhoneNumber
     public function __construct(string $number)
     {
         if ($number === '') {
-            throw new RuntimeException("Empty phone number.");
+            throw new InvalidArgumentException("Empty phone number.");
         }
 
         $this->number = $number;
@@ -144,6 +144,8 @@ class PhoneNumber
 
     /**
      * Create with a number.
+     *
+     * @throws InvalidArgumentException
      */
     public static function create(string $number): self
     {
@@ -152,6 +154,8 @@ class PhoneNumber
 
     /**
      * Create from a number and type.
+     *
+     * @throws InvalidArgumentException
      */
     public static function createWithType(string $number, string $type): self
     {

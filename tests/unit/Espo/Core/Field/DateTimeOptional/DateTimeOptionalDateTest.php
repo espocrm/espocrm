@@ -29,16 +29,15 @@
 
 namespace tests\unit\Espo\Core\Field\DateTimeOptional;
 
-use Espo\Core\{
-    Field\DateTimeOptional,
-};
+use Espo\Core\Field\DateTimeOptional;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use RuntimeException;
+use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use DateInterval;
 
-class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
+class DateTimeOptionalDateTest extends TestCase
 {
     public function testFromString()
     {
@@ -60,21 +59,21 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
     public function testBad1()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         DateTimeOptional::fromString('2021-05-A');
     }
 
     public function testBad2()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         DateTimeOptional::fromString('2021-05-1');
     }
 
     public function testEmpty()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         DateTimeOptional::fromString('');
     }

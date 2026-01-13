@@ -29,16 +29,15 @@
 
 namespace tests\unit\Espo\Core\Field\Date;
 
-use Espo\Core\{
-    Field\Date,
-};
+use Espo\Core\Field\Date;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use RuntimeException;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use DateInterval;
 
-class DateTest extends \PHPUnit\Framework\TestCase
+class DateTest extends TestCase
 {
     public function testFromString()
     {
@@ -58,21 +57,21 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
     public function testBad1()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Date::fromString('2021-05-A');
     }
 
     public function testBad2()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Date::fromString('2021-05-1');
     }
 
     public function testEmpty()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Date::fromString('');
     }

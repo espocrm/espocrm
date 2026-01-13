@@ -29,17 +29,16 @@
 
 namespace tests\unit\Espo\Core\Field\PhoneNumber;
 
-use Espo\Core\{
-    Field\PhoneNumber,
-};
+use Espo\Core\Field\PhoneNumber;
 
-use RuntimeException;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class PhoneNumberTest extends \PHPUnit\Framework\TestCase
+class PhoneNumberTest extends TestCase
 {
     public function testInvalidEmpty()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         PhoneNumber::create('');
     }

@@ -29,16 +29,15 @@
 
 namespace tests\unit\Espo\Core\Field\Currency;
 
-use Espo\Core\{
-    Field\Currency,
-    Field\Currency\CurrencyFactory,
-};
+use Espo\Core\Field\Currency;
+use Espo\Core\Field\Currency\CurrencyFactory;
 
 use Espo\ORM\Entity;
 
-use RuntimeException;
+use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
-class CurrencyTest extends \PHPUnit\Framework\TestCase
+class CurrencyTest extends TestCase
 {
     public function testValue()
     {
@@ -122,7 +121,7 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
     public function testBadAdd()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         (new Currency(2.0, 'USD'))->add(
             new Currency(1.0, 'EUR')
@@ -131,7 +130,7 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
     public function testGetBadCode()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         new Currency(2.0, '');
     }
@@ -237,7 +236,7 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
     public function testCompare4(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Currency::create(2.1, 'EUR')
             ->compare(

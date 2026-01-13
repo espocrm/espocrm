@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A phone number group. Contains a list of phone numbers. One phone number is set as primary.
@@ -43,8 +43,7 @@ class PhoneNumberGroup
 
     /**
      * @param PhoneNumber[] $list
-     *
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function __construct(array $list = [])
     {
@@ -81,11 +80,8 @@ class PhoneNumberGroup
     {
         $primary = $this->getPrimary();
 
-        if (!$primary) {
-            return null;
-        }
+        return $primary?->getNumber();
 
-        return $primary->getNumber();
     }
 
     /**
@@ -169,7 +165,7 @@ class PhoneNumberGroup
     }
 
     /**
-     * Whether an number is in the list.
+     * Whether the number is in the list.
      */
     public function hasNumber(string $number): bool
     {
@@ -258,6 +254,7 @@ class PhoneNumberGroup
      * Create with an optional phone number list. A first item will be set as primary.
      *
      * @param PhoneNumber[] $list
+     * @throws InvalidArgumentException
      */
     public static function create(array $list = []): self
     {
@@ -281,11 +278,11 @@ class PhoneNumberGroup
 
         foreach ($this->list as $item) {
             if (!$item instanceof PhoneNumber) {
-                throw new RuntimeException("Bad item.");
+                throw new InvalidArgumentException("Bad item.");
             }
 
             if (in_array($item->getNumber(), $numberList)) {
-                throw new RuntimeException("Number list contains a duplicate.");
+                throw new InvalidArgumentException("Number list contains a duplicate.");
             }
 
             $numberList[] = strtolower($item->getNumber());

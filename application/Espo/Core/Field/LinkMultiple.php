@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A link-multiple value object. Immutable.
@@ -38,7 +38,7 @@ class LinkMultiple
 {
     /**
      * @param LinkMultipleItem[] $list
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function __construct(private array $list = [])
     {
@@ -148,8 +148,7 @@ class LinkMultiple
      * Clone with an added item list.
      * .
      * @param LinkMultipleItem[] $list
-     *
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function withAddedList(array $list): self
     {
@@ -201,7 +200,7 @@ class LinkMultiple
      *
      * @param LinkMultipleItem[] $list
      *
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public static function create(array $list = []): self
     {
@@ -214,11 +213,11 @@ class LinkMultiple
 
         foreach ($this->list as $item) {
             if (!$item instanceof LinkMultipleItem) {
-                throw new RuntimeException("Bad item.");
+                throw new InvalidArgumentException("Bad item.");
             }
 
             if (in_array($item->getId(), $idList)) {
-                throw new RuntimeException("List contains duplicates.");
+                throw new InvalidArgumentException("List contains duplicates.");
             }
 
             $idList[] = strtolower($item->getId());

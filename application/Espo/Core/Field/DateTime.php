@@ -36,6 +36,7 @@ use DateTimeInterface;
 use DateInterval;
 use DateTimeZone;
 use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A date-time value object. Immutable.
@@ -45,12 +46,15 @@ class DateTime implements DateTimeable
     private string $value;
     private DateTimeImmutable $dateTime;
 
-    private const SYSTEM_FORMAT = 'Y-m-d H:i:s';
+    private const string SYSTEM_FORMAT = 'Y-m-d H:i:s';
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct(string $value)
     {
         if (!$value) {
-            throw new RuntimeException("Empty value.");
+            throw new InvalidArgumentException("Empty value.");
         }
 
         $normValue = strlen($value) === 16 ? $value . ':00' : $value;
@@ -64,13 +68,13 @@ class DateTime implements DateTimeable
         );
 
         if ($parsedValue === false) {
-            throw new RuntimeException("Bad value.");
+            throw new InvalidArgumentException("Bad value.");
         }
 
         $this->dateTime = $parsedValue;
 
         if ($this->value !== $this->dateTime->format(self::SYSTEM_FORMAT)) {
-            throw new RuntimeException("Bad value.");
+            throw new InvalidArgumentException("Bad value.");
         }
     }
 
@@ -343,6 +347,8 @@ class DateTime implements DateTimeable
 
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format.
+     *
+     * @throws InvalidArgumentException
      */
     public static function fromString(string $value): self
     {

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * An email address group. Contains a list of email addresses. One email address is set as primary.
@@ -43,7 +43,7 @@ class EmailAddressGroup
 
     /**
      * @param EmailAddress[] $list
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function __construct(array $list = [])
     {
@@ -80,11 +80,7 @@ class EmailAddressGroup
     {
         $primary = $this->getPrimary();
 
-        if (!$primary) {
-            return null;
-        }
-
-        return $primary->getAddress();
+        return $primary?->getAddress();
     }
 
     /**
@@ -274,17 +270,20 @@ class EmailAddressGroup
         return null;
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     private function validateList(): void
     {
         $addressList = [];
 
         foreach ($this->list as $item) {
             if (!$item instanceof EmailAddress) {
-                throw new RuntimeException("Bad item.");
+                throw new InvalidArgumentException("Bad item.");
             }
 
             if (in_array(strtolower($item->getAddress()), $addressList)) {
-                throw new RuntimeException("Address list contains a duplicate.");
+                throw new InvalidArgumentException("Address list contains a duplicate.");
             }
 
             $addressList[] = strtolower($item->getAddress());

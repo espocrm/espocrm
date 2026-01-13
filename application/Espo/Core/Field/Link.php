@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A link value object. Immutable.
@@ -42,7 +42,7 @@ class Link
     public function __construct(string $id)
     {
         if (!$id) {
-            throw new RuntimeException("Empty ID.");
+            throw new InvalidArgumentException("Empty ID.");
         }
 
         $this->id = $id;

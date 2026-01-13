@@ -35,7 +35,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateInterval;
 use DateTimeZone;
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A date-time or date. Immutable.
@@ -45,9 +45,12 @@ class DateTimeOptional implements DateTimeable
     private ?DateTime $dateTimeValue = null;
     private ?Date $dateValue = null;
 
-    private const SYSTEM_FORMAT = 'Y-m-d H:i:s';
-    private const SYSTEM_FORMAT_DATE = 'Y-m-d';
+    private const string SYSTEM_FORMAT = 'Y-m-d H:i:s';
+    private const string SYSTEM_FORMAT_DATE = 'Y-m-d';
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct(string $value)
     {
         if (self::isStringDateTime($value)) {
@@ -59,6 +62,8 @@ class DateTimeOptional implements DateTimeable
 
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format or date in `Y-m-d`.
+     *
+     * @throws InvalidArgumentException
      */
     public static function fromString(string $value): self
     {
@@ -67,12 +72,14 @@ class DateTimeOptional implements DateTimeable
 
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format.
+     *
+     * @throws InvalidArgumentException
      * @noinspection PhpUnused
      */
     public static function fromDateTimeString(string $value): self
     {
         if (!self::isStringDateTime($value)) {
-            throw new RuntimeException("Bad value.");
+            throw new InvalidArgumentException("Bad value.");
         }
 
         return self::fromString($value);
@@ -434,12 +441,14 @@ class DateTimeOptional implements DateTimeable
 
     /**
      * Create from a string with a date in `Y-m-d` format.
+     *
+     * @throws InvalidArgumentException
      * @noinspection PhpUnused
      */
     public static function fromDateString(string $value): self
     {
         if (self::isStringDateTime($value)) {
-            throw new RuntimeException("Bad value.");
+            throw new InvalidArgumentException("Bad value.");
         }
 
         return self::fromString($value);

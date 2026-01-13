@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
-use FILTER_VALIDATE_EMAIL;
+use const FILTER_VALIDATE_EMAIL;
 
 /**
  * An email address value. Immutable.
@@ -42,14 +42,17 @@ class EmailAddress
     private bool $isOptedOut = false;
     private bool $isInvalid = false;
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct(string $address)
     {
         if ($address === '') {
-            throw new RuntimeException("Empty email address.");
+            throw new InvalidArgumentException("Empty email address.");
         }
 
         if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
-            throw new RuntimeException("Not valid email address '{$address}'.");
+            throw new InvalidArgumentException("Not valid email address '$address'.");
         }
 
         $this->address = $address;
@@ -129,6 +132,8 @@ class EmailAddress
 
     /**
      * Create from an address.
+     *
+     * @throws InvalidArgumentException
      */
     public static function create(string $address): self
     {

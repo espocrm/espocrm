@@ -29,13 +29,12 @@
 
 namespace tests\unit\Espo\Core\Field\EmailAddress;
 
-use Espo\Core\{
-    Field\EmailAddress,
-    Field\EmailAddressGroup,
-    Field\EmailAddress\EmailAddressGroupAttributeExtractor,
-};
+use Espo\Core\Field\EmailAddress;
+use Espo\Core\Field\EmailAddress\EmailAddressGroupAttributeExtractor;
+use Espo\Core\Field\EmailAddressGroup;
+use PHPUnit\Framework\TestCase;
 
-class EmailAddressGroupAttributeExtractorTest extends \PHPUnit\Framework\TestCase
+class EmailAddressGroupAttributeExtractorTest extends TestCase
 {
     public function testExtract()
     {

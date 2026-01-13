@@ -29,13 +29,12 @@
 
 namespace tests\unit\Espo\Core\Field\Link;
 
-use Espo\Core\{
-    Field\Link,
-};
+use Espo\Core\Field\Link;
 
-use RuntimeException;
+use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
-class LinkTest extends \PHPUnit\Framework\TestCase
+class LinkTest extends TestCase
 {
     public function testCreate()
     {
@@ -47,7 +46,7 @@ class LinkTest extends \PHPUnit\Framework\TestCase
 
     public function testBad1()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Link::create('');
     }

@@ -31,7 +31,6 @@ namespace Espo\Core\Field;
 
 use Espo\Core\Currency\CalculatorUtil;
 
-use RuntimeException;
 use InvalidArgumentException;
 
 /**
@@ -46,7 +45,7 @@ class Currency
     /**
      * @param numeric-string|float|int $amount An amount.
      * @param string $code A currency code.
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function __construct($amount, string $code)
     {
@@ -55,7 +54,7 @@ class Currency
         }
 
         if (strlen($code) !== 3) {
-            throw new RuntimeException("Bad currency code.");
+            throw new InvalidArgumentException("Bad currency code.");
         }
 
         if (is_float($amount) || is_int($amount)) {
@@ -95,12 +94,12 @@ class Currency
     /**
      * Add a currency value.
      *
-     * @throws RuntimeException If currency codes are different.
+     * @throws InvalidArgumentException If currency codes are different.
      */
     public function add(self $value): self
     {
         if ($this->getCode() !== $value->getCode()) {
-            throw new RuntimeException("Can't add a currency value with a different code.");
+            throw new InvalidArgumentException("Can't add a currency value with a different code.");
         }
 
         $amount = CalculatorUtil::add(
@@ -114,12 +113,12 @@ class Currency
     /**
      * Subtract a currency value.
      *
-     * @throws RuntimeException If currency codes are different.
+     * @throws InvalidArgumentException If currency codes are different.
      */
     public function subtract(self $value): self
     {
         if ($this->getCode() !== $value->getCode()) {
-            throw new RuntimeException("Can't subtract a currency value with a different code.");
+            throw new InvalidArgumentException("Can't subtract a currency value with a different code.");
         }
 
         $amount = CalculatorUtil::subtract(
@@ -176,12 +175,12 @@ class Currency
      * - `0` if equal to the value;
      * - `-1` if less than the value.
      *
-     * @throws RuntimeException If currency codes are different.
+     * @throws InvalidArgumentException If currency codes are different.
      */
     public function compare(self $value): int
     {
         if ($this->getCode() !== $value->getCode()) {
-            throw new RuntimeException("Can't compare currencies with different codes.");
+            throw new InvalidArgumentException("Can't compare currencies with different codes.");
         }
 
         return CalculatorUtil::compare(
@@ -203,7 +202,7 @@ class Currency
      *
      * @param numeric-string|float|int $amount An amount.
      * @param string $code A currency code.
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public static function create($amount, string $code): self
     {

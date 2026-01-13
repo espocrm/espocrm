@@ -33,10 +33,11 @@ use Espo\Core\Field\DateTime;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use RuntimeException;
+use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use DateInterval;
 
-class DateTimeTest extends \PHPUnit\Framework\TestCase
+class DateTimeTest extends TestCase
 {
     public function testFromString1()
     {
@@ -72,21 +73,21 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
     public function testBad1()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         DateTime::fromString('2021-05-A 10:20:30');
     }
 
     public function testBad2()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         DateTime::fromString('2021-05-1 10:20:30');
     }
 
     public function testEmpty()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         DateTime::fromString('');
     }

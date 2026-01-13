@@ -29,24 +29,23 @@
 
 namespace tests\unit\Espo\Core\Field\EmailAddress;
 
-use Espo\Core\{
-    Field\EmailAddress,
-};
+use Espo\Core\Field\EmailAddress;
 
-use RuntimeException;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class EmailAddressTest extends \PHPUnit\Framework\TestCase
+class EmailAddressTest extends TestCase
 {
     public function testInvalidAddress()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         EmailAddress::create('one');
     }
 
     public function testInvalidEmpty()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         EmailAddress::create('');
     }

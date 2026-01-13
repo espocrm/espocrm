@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Field;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 /**
  * A link-multiple item. Immutable.
@@ -42,12 +42,12 @@ class LinkMultipleItem
     private array $columnData = [];
 
     /**
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function __construct(string $id)
     {
         if ($id === '') {
-            throw new RuntimeException("Empty ID.");
+            throw new InvalidArgumentException("Empty ID.");
         }
 
         $this->id = $id;
@@ -124,7 +124,7 @@ class LinkMultipleItem
     /**
      * Create.
      *
-     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public static function create(string $id, ?string $name = null): self
     {
