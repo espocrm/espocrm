@@ -91,7 +91,7 @@ class MassConvertCurrencyModalView extends ModalView {
             readOnly: true
         });
 
-        this.createView('currencyRates', 'views/settings/fields/currency-rates', {
+        this.createView('currencyRates', 'views/currency/fields/currency-rates', {
             model: model,
             name: 'currencyRates',
             selector: '.field[data-name="currencyRates"]',
