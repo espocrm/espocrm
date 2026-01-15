@@ -29,42 +29,31 @@
 
 namespace Espo\Tools\UserSecurity\Password\Recovery;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Utils\Config;
-use Espo\Entities\Portal;
-use Espo\ORM\EntityManager;
+use const FILTER_VALIDATE_URL;
+use const PHP_URL_HOST;
 
-class UrlValidator
+/**
+ * @internal
+ */
+class UrlValidatorUtil
 {
-    public function __construct(
-        private Config $config,
-        private EntityManager $entityManager
-    ) {}
-
-    /**
-     * @throws Forbidden
-     */
-    public function validate(string $url): void
+    public static function validate(string $url, string $siteUrl): bool
     {
-        $siteUrl = rtrim($this->config->get('siteUrl') ?? '', '/');
+        $host = parse_url($url, PHP_URL_HOST);
+        $siteHost = parse_url($siteUrl, PHP_URL_HOST);
 
-        if (UrlValidatorUtil::validate($url, $siteUrl)) {
-            return;
+        if ($host !== $siteHost) {
+            return false;
         }
 
-        /** @var iterable<Portal> $portals */
-        $portals = $this->entityManager
-            ->getRDBRepositoryByClass(Portal::class)
-            ->find();
-
-        foreach ($portals as $portal) {
-            $siteUrl = rtrim($portal->getUrl() ?? '', '/');
-
-            if (UrlValidatorUtil::validate($url, $siteUrl)) {
-                return;
-            }
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
         }
 
-        throw new Forbidden("URL does not match Site URL.");
+        if (!str_starts_with($url, $siteUrl)) {
+            return false;
+        }
+
+        return true;
     }
 }
