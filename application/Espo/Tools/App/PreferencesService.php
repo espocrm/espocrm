@@ -43,6 +43,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
 use stdClass;
 
@@ -53,19 +54,22 @@ class PreferencesService
     private Acl $acl;
     private Config $config;
     private FieldValidationManager $fieldValidationManager;
+    private Metadata $metadata;
 
     public function __construct(
         EntityManager $entityManager,
         User $user,
         Acl $acl,
         Config $config,
-        FieldValidationManager $fieldValidationManager
+        FieldValidationManager $fieldValidationManager,
+        Metadata $metadata
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->acl = $acl;
         $this->config = $config;
         $this->fieldValidationManager = $fieldValidationManager;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -209,7 +213,16 @@ class PreferencesService
         }
 
         $dashboardLayout = $this->config->get('dashboardLayout');
-        $dashletsOptions = $this->config->get('dashletsOptions');
+        $dashletsOptions = null;
+
+        if (!$dashboardLayout) {
+            $dashboardLayout = $this->metadata->get('app.defaultDashboardLayouts.Standard');
+            $dashletsOptions = $this->metadata->get('app.defaultDashboardOptions.Standard');
+        }
+
+        if ($dashletsOptions === null) {
+            $dashletsOptions = $this->config->get('dashletsOptions');
+        }
 
         $preferences->set([
             'dashboardLayout' => $dashboardLayout,
