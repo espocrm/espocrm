@@ -34,7 +34,13 @@ use Espo\Tools\Pdf\Params;
 
 use stdClass;
 
+/**
+ * @template TEntity of Entity = Entity
+ */
 interface DataLoader
 {
+    /**
+     * @param TEntity $entity
+     */
     public function load(Entity $entity, Params $params): stdClass;
 }
