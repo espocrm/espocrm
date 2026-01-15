@@ -139,12 +139,17 @@ export default class extends View {
 
                 const url = data.url || this.baseUrl;
 
-                const msg = this.translate('passwordChangedByRequest', 'messages', 'User') +
-                    ' <a href="' + url + '">' + this.translate('Login', 'labels', 'User') + '</a>.';
+                const a = document.createElement('a');
+                a.href = url;
+                a.innerText = this.translate('Login', 'labels', 'User');
+
+                const message = this.translate('passwordChangedByRequest', 'messages', 'User');
+
+                const html = this.getHelper().escapeString(message) + ' ' + a.outerHTML;
 
                 this.$el.find('.msg-box')
                     .removeClass('hidden')
-                    .html('<span class="text-success">' + msg + '</span>');
+                    .html('<span class="text-success">' + html + '</span>');
             })
             .catch(() => {
                 return $submit.removeClass('disabled');
