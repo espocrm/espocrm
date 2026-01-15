@@ -322,7 +322,12 @@
                             "rows": {
                                 "type": "integer",
                                 "minimum": 1,
-                                "description": "Max number of rows."
+                                "description": "Maximum number of rows."
+                            },
+                            "rowsMin": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "description": "Minimum number of rows the textarea can shrink to."
                             },
                             "seeMoreDisabled": {
                                 "type": "boolean",
