@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
- * Copyright (C) 2014-2025 EspoCRM, Inc.
+ * Copyright (C) 2014-2026 EspoCRM, Inc.
  * Website: https://www.espocrm.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,44 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\UserSecurity\Password\Recovery;
+namespace tests\unit\Espo\Tools\UserSecurity\Password;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Utils\Config;
-use Espo\Entities\Portal;
-use Espo\ORM\EntityManager;
+use Espo\Tools\UserSecurity\Password\Recovery\UrlValidatorUtil;
+use PHPUnit\Framework\TestCase;
 
-class UrlValidator
+class UrlValidatorUtilTest extends TestCase
 {
-    public function __construct(
-        private Config $config,
-        private EntityManager $entityManager
-    ) {}
-
-    /**
-     * @throws Forbidden
-     */
-    public function validate(string $url): void
+    public function testValidate(): void
     {
-        $siteUrl = rtrim($this->config->get('siteUrl') ?? '', '/');
+        $this->assertTrue(
+            UrlValidatorUtil::validate('https://test.com', 'https://test.com')
+        );
 
-        if (UrlValidatorUtil::validate($url, $siteUrl)) {
-            return;
-        }
+        $this->assertTrue(
+            UrlValidatorUtil::validate('https://test.com/test', 'https://test.com')
+        );
 
-        /** @var iterable<Portal> $portals */
-        $portals = $this->entityManager
-            ->getRDBRepositoryByClass(Portal::class)
-            ->find();
+        $this->assertTrue(
+            UrlValidatorUtil::validate('https://test.com/test', 'https://test.com/test')
+        );
 
-        foreach ($portals as $portal) {
-            $siteUrl = rtrim($portal->getUrl() ?? '', '/');
+        $this->assertFalse(
+            UrlValidatorUtil::validate('https://test.com.test', 'https://test.com')
+        );
 
-            if (UrlValidatorUtil::validate($url, $siteUrl)) {
-                return;
-            }
-        }
-
-        throw new Forbidden("URL does not match Site URL.");
+        $this->assertFalse(
+            UrlValidatorUtil::validate('https://test.com.test<test', 'https://test.com')
+        );
     }
 }
