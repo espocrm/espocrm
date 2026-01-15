@@ -226,7 +226,9 @@ class Htmlizer
         $data = $this->prepareData($entity, $additionalData);
 
         if (!$skipLinks && $level === 0 && $entity->hasId()) {
-            $this->loadRelatedCollections($entity, $template, $data);
+            $additionalDataKeys = is_array($additionalData) ? array_keys($additionalData) : [];
+
+            $this->loadRelatedCollections($entity, $template, $data, $additionalDataKeys);
         }
 
         $skipAttributeList = [];
@@ -244,10 +246,15 @@ class Htmlizer
 
     /**
      * @param array<string, mixed> $data
+     * @param string[] $skipList
      */
-    private function loadRelatedCollections(Entity $entity, ?string $template, array &$data): void
+    private function loadRelatedCollections(Entity $entity, ?string $template, array &$data, array $skipList): void
     {
         foreach ($entity->getRelationList() as $relation) {
+            if (in_array($relation, $skipList)) {
+                continue;
+            }
+
             $collection = $this->loadRelatedCollection($entity, $relation, $template);
 
             if ($collection) {
@@ -638,7 +645,6 @@ class Htmlizer
                 $rootData,
                 $context['fn'] ?? null,
                 $context['inverse'] ?? null,
-                //$context['fn.blockParams'],
             );
 
             $helper = $injectableFactory->create($className);
