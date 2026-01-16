@@ -1303,7 +1303,7 @@ class Service implements Crud,
 
             $this->getRepository()
                 ->getRelation($entity, $link)
-                ->relate($foreignEntity, [SaveOption::API => true]);
+                ->relate($foreignEntity, null, [SaveOption::API => true]);
 
             $countRelated++;
         }
