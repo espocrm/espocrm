@@ -4,28 +4,20 @@
 	    	"name": "My Espo",
 		    "layout": [
                 {
-                    "id": "defaultActivities",
+                    "id": "default-activities",
                     "name": "Activities",
                     "x": 2,
                     "y": 2,
                     "width": 2,
-                    "height": 2
+                    "height": 4
                 },
                 {
-                    "id": "defaultStream",
+                    "id": "default-stream",
                     "name": "Stream",
                     "x": 0,
                     "y": 0,
                     "width": 2,
                     "height": 4
-                },
-                {
-                    "id": "defaultTasks",
-                    "name": "Tasks",
-                    "x": 2,
-                    "y": 4,
-                    "width": 2,
-                    "height": 2
                 }
 		    ]
 		}

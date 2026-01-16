@@ -1,6 +1,6 @@
 {
 	"Standard": {
-	    "defaultStream": {
+	    "default-stream": {
 	    	"displayRecords": 10
 	    }
 	}
