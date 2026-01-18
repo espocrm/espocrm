@@ -818,7 +818,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Whether an attribute was written (since syncing with DB) regardless being changed.
+     * Whether an attribute was written (since syncing with DB) regardless of being changed.
      */
     public function isAttributeWritten(string $name): bool
     {
