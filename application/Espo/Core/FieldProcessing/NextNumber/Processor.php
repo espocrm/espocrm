@@ -72,6 +72,10 @@ class Processor
 
     public function process(Entity $entity, SaveOptions $options): void
     {
+        if (!$entity->isNew()) {
+            return;
+        }
+
         $fieldList = $this->getFieldList($entity->getEntityType());
 
         foreach ($fieldList as $field) {
@@ -82,6 +86,7 @@ class Processor
     /**
      * To be invoked in custom hooks. The default hook must be suppressed.
      * Useful when the number should change only if some conditions met.
+     * Processes even a non-new entity.
      *
      * @since 9.3.0
      * @noinspection PhpUnused
@@ -98,19 +103,30 @@ class Processor
             throw new RuntimeException("Not a 'number' field.");
         }
 
-        $this->processItem($entity, $field, $options->toAssoc());
+        $this->processItem(
+            entity: $entity,
+            field: $field,
+            options: $options->toAssoc(),
+            force: true,
+        );
     }
 
     /**
      * @param array<string, mixed> $options
      */
-    private function processItem(Entity $entity, string $field, array $options, bool $populate = false): void
-    {
+    private function processItem(
+        Entity $entity,
+        string $field,
+        array $options,
+        bool $populate = false,
+        bool $force = false,
+    ): void {
+
         if (!empty($options[SaveOption::IMPORT]) && $entity->has($field)) {
             return;
         }
 
-        if (!$entity->isNew()) {
+        if (!$entity->isNew() && !$force) {
             if ($entity->isAttributeChanged($field)) {
                 $entity->set($field, $entity->getFetched($field));
             }
