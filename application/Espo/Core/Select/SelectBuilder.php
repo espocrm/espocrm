@@ -503,6 +503,10 @@ class SelectBuilder
             $searchParams = SearchParams::merge($searchParams, $this->searchParams);
         }
 
+        foreach ($this->whereItemList as $it) {
+            $searchParams = $searchParams->withWhereAdded($it);
+        }
+
         $this->createAdditionalApplier()->apply(
             $this->additionalApplierClassNameList,
             $this->queryBuilder,
