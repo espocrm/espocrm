@@ -1148,7 +1148,11 @@
                 },
                 "filtersEnabled": {
                     "type": "boolean",
-                    "description": "Indicates that the field can be used in filters regardless directAccessDisabled being true. To be used only with directAccessDisabled."
+                    "description": "Indicates that the field can be used in filters regardless of directAccessDisabled being set to true. To be used only with directAccessDisabled."
+                },
+                "listColumnEnabled": {
+                    "type": "boolean",
+                    "description": "Indicated that thw field can be used in list columns regardless of directAccessDisabled being set to true."
                 },
                 "importDisabled": {
                     "type": "boolean",
