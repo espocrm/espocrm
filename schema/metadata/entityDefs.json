@@ -1152,7 +1152,7 @@
                 },
                 "listColumnEnabled": {
                     "type": "boolean",
-                    "description": "Indicated that thw field can be used in list columns regardless of directAccessDisabled being set to true."
+                    "description": "Indicated that the field can be used in list columns regardless of directAccessDisabled being set to true."
                 },
                 "importDisabled": {
                     "type": "boolean",
