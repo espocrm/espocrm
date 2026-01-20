@@ -43,6 +43,7 @@ use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Order;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -700,6 +701,13 @@ class Htmlizer
             ->getDefs()
             ->getEntity($entityType)
             ->getRelation($relation);
+
+        if ($relationDefs->getParam('orderBy')) {
+            $orderBy = $relationDefs->getParam('orderBy');
+            $order = $relationDefs->getParam('order') ?? Order::ASC;
+
+            return [[$orderBy, $order]];
+        }
 
         if (!$relationDefs->hasForeignEntityType()) {
             return [];
