@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "enabled": "מופעל",
+        "clientId": "מזהה לקוח (Client ID)",
+        "clientSecret": "סוד לקוח (Client Secret)",
+        "redirectUri": "כתובת להפניה (Redirect URI)",
+        "apiKey": "מפתח API",
+        "siteKey": "מפתח אתר (Site Key)",
+        "secretKey": "מפתח סודי (Secret Key)",
+        "scoreThreshold": "סף ניקוד"
+    },
+    "titles": {
+        "GoogleMaps": "מפות גוגל",
+        "GoogleReCaptcha": "גוגל reCAPTCHA"
+    },
+    "messages": {
+        "selectIntegration": "בחר אינטגרציה מהתפריט.",
+        "noIntegrations": "לא קיימות אינטגרציות זמינות."
+    },
+    "help": {
+        "GoogleReCaptcha": "קבל את מפתח האתר והמפתח הסודי מ-[גוגל](https://www.google.com/recaptcha/).",
+        "Google": "**קבל אישורי OAuth 2.0 מקונסולת המפתחים של גוגל.**\n\nבקר ב-[Google Developers Console](https://console.developers.google.com/project) כדי לקבל אישורי OAuth 2.0 כמו מזהה לקוח וסוד לקוח, הידועים גם לגוגל וגם ליישום EspoCRM.",
+        "GoogleMaps": "קבל מפתח API [כאן](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    }
+}
