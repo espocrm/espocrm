@@ -115,9 +115,9 @@
             "param": "accountLink",
             "fieldDefs": {
                 "type": "enum",
-                "tooltip": true
-            },
-            "view": "views/admin/entity-manager/fields/acl-account-link"
+                "tooltip": true,
+                "view": "views/admin/entity-manager/fields/acl-account-link"
+            }
         }
     },
     "@Base": {
