@@ -531,9 +531,9 @@ class Upgrade implements Command
 
     private function getCurrentVersion(): ?string
     {
-        $configData = include "data/config.php"; /** @phpstan-ignore-line */
-
-        if (!$configData) {
+        if (file_exists("data/state.php")) {
+            $configData = include "data/state.php"; /** @phpstan-ignore-line */
+        } else {
             return null;
         }
 
