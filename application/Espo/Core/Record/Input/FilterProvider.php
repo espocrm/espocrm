@@ -31,6 +31,7 @@ namespace Espo\Core\Record\Input;
 
 use Espo\Core\Acl;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
@@ -49,17 +50,13 @@ class FilterProvider
      */
     public function getForCreate(string $entityType): array
     {
-        $classNameList = $this->getCreateClassNameList($entityType);
+        $list = [];
 
-        $binding = BindingContainerBuilder::create()
-            ->bindInstance(User::class, $this->user)
-            ->bindInstance(Acl::class, $this->acl)
-            ->build();
+        foreach ($this->getCreateClassNameList($entityType) as $className) {
+            $list[] = $this->createFilter($className, $entityType);
+        }
 
-        return array_map(
-            fn ($className) => $this->injectableFactory->createWithBinding($className, $binding),
-            $classNameList
-        );
+        return $list;
     }
 
     /**
@@ -67,17 +64,29 @@ class FilterProvider
      */
     public function getForUpdate(string $entityType): array
     {
-        $classNameList = $this->getUpdateClassNameList($entityType);
+        $list = [];
 
+        foreach ($this->getUpdateClassNameList($entityType) as $className) {
+            $list[] = $this->createFilter($className, $entityType);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param class-string<Filter> $className
+     */
+    private function createFilter(string $className, string $entityType): Filter
+    {
         $binding = BindingContainerBuilder::create()
             ->bindInstance(User::class, $this->user)
             ->bindInstance(Acl::class, $this->acl)
+            ->inContext($className, function (ContextualBinder $binder) use ($entityType) {
+                $binder->bindValue('$entityType', $entityType);
+            })
             ->build();
 
-        return array_map(
-            fn ($className) => $this->injectableFactory->createWithBinding($className, $binding),
-            $classNameList
-        );
+        return $this->injectableFactory->createWithBinding($className, $binding);
     }
 
     /**

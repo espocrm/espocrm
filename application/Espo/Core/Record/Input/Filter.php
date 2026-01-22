@@ -31,6 +31,8 @@ namespace Espo\Core\Record\Input;
 
 /**
  * An input filter.
+ *
+ * $entityType is passed to the constructor as of v9.3.
  */
 interface Filter
 {
