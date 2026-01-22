@@ -198,6 +198,9 @@ class Lead extends Person
         return $this->setRelatedLinkOrEntity('campaign', $campaign);
     }
 
+    /**
+     * @since 9.3.0
+     */
     public function getTitle(): ?string
     {
         return $this->get('title');
