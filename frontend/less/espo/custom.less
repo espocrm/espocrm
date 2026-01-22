@@ -4063,10 +4063,12 @@ body > .autocomplete-suggestions.text-search-suggestions {
             padding: 0;
         }
 
-        > .list > table {
+        > .list:has(> table) {
             margin-left: var(--minus-1px);
             margin-right: var(--minus-1px);
+        }
 
+        > .list > table {
             > tbody {
                 > tr {
                     > td:first-child {
