@@ -314,6 +314,14 @@ class ConvertService
 
         if ($account) {
             $values->accountId = $account->getId();
+
+            if ($lead->getTitle()) {
+                $values->accountsColumns = (object) [
+                    $account->getId() => (object) [
+                        Contact::COLUMN_ACCOUNTS_ROLE => $lead->getTitle(),
+                    ],
+                ];
+            }
         }
 
         $service = $this->recordServiceContainer->getByClass(Contact::class);

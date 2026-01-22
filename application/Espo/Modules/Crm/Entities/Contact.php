@@ -40,6 +40,9 @@ class Contact extends Person
 {
     public const ENTITY_TYPE = 'Contact';
 
+    /** @since v9.3.0. */
+    public const string COLUMN_ACCOUNTS_ROLE = 'role';
+
     /**
      * An assigned user.
      */
