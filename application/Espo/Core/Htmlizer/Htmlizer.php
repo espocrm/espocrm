@@ -921,7 +921,7 @@ class Htmlizer
                 continue;
             }
 
-            if ($this->acl && !$this->acl->tryCheck($relatedEntity)) {
+            if ($this->acl && !$this->acl->tryCheck($relatedEntity, Acl\Table::ACTION_READ)) {
                 continue;
             }
 
