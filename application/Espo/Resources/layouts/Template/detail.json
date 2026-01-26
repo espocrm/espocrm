@@ -42,5 +42,10 @@
             [{"name":"footer"}],
             [{"name": "style"}]
         ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
     }
 ]

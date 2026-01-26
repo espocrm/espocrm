@@ -32,6 +32,9 @@
             "tooltip": true,
             "audited": true
         },
+        "description": {
+            "type": "text"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

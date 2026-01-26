@@ -31,5 +31,10 @@
             [{"name": "body"}],
             [{"name": "attachments"}, {"name":"isHtml"}]
         ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
     }
 ]

@@ -215,6 +215,9 @@
             "view": "views/lead-capture/fields/phone-number-country",
             "maxLength": 2
         },
+        "description": {
+            "type": "text"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

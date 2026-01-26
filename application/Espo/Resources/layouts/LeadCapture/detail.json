@@ -30,5 +30,10 @@
             [{"name": "smtpAccount"}, false],
             [{"name": "optInConfirmationSuccessMessage", "fullWidth": true}]
         ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
     }
 ]

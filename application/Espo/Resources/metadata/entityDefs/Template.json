@@ -75,6 +75,9 @@
         "teams": {
             "type": "linkMultiple"
         },
+        "description": {
+            "type": "text"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

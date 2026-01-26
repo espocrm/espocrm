@@ -117,6 +117,9 @@
             "min": 0,
             "tooltip": "Settings.authTokenMaxIdleTime"
         },
+        "description": {
+            "type": "text"
+        },
         "modifiedAt": {
             "type": "datetime",
             "readOnly": true

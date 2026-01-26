@@ -11,6 +11,11 @@
     },
     {
         "rows": [
+            [{"name": "description"}]
+        ]
+    },
+    {
+        "rows": [
             [{"name": "dateFormat"}, {"name": "timeZone"}],
             [{"name": "timeFormat"}, {"name": "weekStart"}],
             [{"name": "defaultCurrency"}, {"name": "language"}]
