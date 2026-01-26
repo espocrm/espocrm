@@ -292,13 +292,17 @@
             "type": "link",
             "layoutDetailDisabled": true,
             "tooltip": true,
-            "customizationAuditedDisabled": true,
-            "customizationAutocompleteOnEmptyDisabled": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\User\\DefaultTeam\\IsUserTeam"
             ],
             "view": "views/user/fields/default-team",
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "fieldManagerParamList": [
+                "audited",
+                "tooltipText",
+                "readOnly",
+                "autocompleteOnEmpty"
+            ]
         },
         "acceptanceStatus": {
             "type": "varchar",
@@ -350,7 +354,14 @@
             "additionalAttributeList": ["columns"],
             "layoutDetailDisabled": true,
             "view": "views/user/fields/teams",
-            "audited": true
+            "audited": true,
+            "fieldManagerParamList": [
+                "audited",
+                "tooltipText",
+                "readOnly",
+                "autocompleteOnEmpty",
+                "maxCount"
+            ]
         },
         "roles": {
             "type": "linkMultiple",
