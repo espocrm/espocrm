@@ -53,10 +53,10 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Suivre automatiquement tous les nouveaux enregistrements (créés par n’importe quel utilisateur) des Fonctionnalités sélectionnés. Permet de les voir dans le flux et de recevoir des notifications sur tous les enregistrements.",
+    "addCustomTabs": "Si cette option est cochée, les onglets personnalisés seront ajoutés au menu par défaut. Sinon, seuls les onglets personnalisés seront affichés.",
     "doNotFillAssignedUserIfNotRequired": "Lors de la création d'un enregistrement, l'utilisateur attribué ne sera pas renseigné avec son propre utilisateur, sauf si le champ est obligatoire.",
     "followCreatedEntities": "Lors de la création de nouveaux enregistrements, ils seront automatiquement suivis même s'ils sont attribués à un autre utilisateur.",
-    "followCreatedEntityTypeList": "Vous suivrez automatiquement les éléments que vous créerez s'ils font partie de votre sélection de Fonctionnalités, même s’ils sont attribués à un autre utilisateur.",
-    "addCustomTabs": "Si cette option est cochée, les onglets personnalisés seront ajoutés au menu par défaut. Sinon, seuls les onglets personnalisés seront affichés."
+    "followCreatedEntityTypeList": "Vous suivrez automatiquement les éléments que vous créerez s'ils font partie de votre sélection de Fonctionnalités, même s’ils sont attribués à un autre utilisateur."
   },
   "tabFields": {
     "label": "Étiquette",

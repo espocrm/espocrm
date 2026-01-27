@@ -74,13 +74,13 @@
   },
   "tooltips": {
     "defaultTeam": "Toutes les données créées par cet utilisateur seront liés à cette équipe par défaut.",
-    "userName": "Lettres a-z, nombres 0-9 et underscores autorisés.",
     "isAdmin": "Un administrateur accède à tout.",
-    "isActive": "Si décoché, alors l'utilisateur ne pourra plus se connecter.",
     "teams": "Les équipes auxquelles l'utilisateur appartient. Permissions héritées de celles de l'équipe.",
     "roles": "Rôles d'accès supplémentaires. Utilisez-les si l'utilisateur ne fait pas partie d'une équipe ou si vous avez besoin d'étendre le niveau des permissions uniquement pour cet utilisateur.",
     "portalRoles": "Rôles de Portail additionnels",
     "portals": "Portails auxquels cet utilisateur a accès",
+    "userName": "Lettres a-z, nombres 0-9 et underscores autorisés.",
+    "isActive": "Si décoché, alors l'utilisateur ne pourra plus se connecter.",
     "layoutSet": "Les thèmes d'un ensemble seront appliqués à l'utilisateur au lieu de celui par défaut."
   },
   "messages": {

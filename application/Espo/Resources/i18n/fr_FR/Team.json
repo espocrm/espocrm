@@ -14,13 +14,13 @@
     "workingTimeCalendar": "Calendriers des jours travaillés",
     "groupEmailFolders": "Dossiers eMail de groupe"
   },
-  "tooltips": {
-    "roles": "Permissions. Les utilisateurs de cette équipe obtiennent le niveau d'accès des rôles sélectionnés.",
-    "positionList": "Postes disponibles dans cette équipe. Par exemple : conseiller, manager.",
-    "layoutSet": "Offre la possibilité d’avoir des mises en page différentes des mises en page standard. Le jeu de mise en page sera appliqué aux utilisateurs pour lesquels cette équipe est définie comme équipe par défaut.",
-    "workingTimeCalendar": "Un calendrier sera appliqué aux utilisateurs pour lesquels cette équipe est définie comme équipe par défaut."
-  },
   "labels": {
     "Create Team": "Créer une équipe"
+  },
+  "tooltips": {
+    "workingTimeCalendar": "Un calendrier sera appliqué aux utilisateurs pour lesquels cette équipe est définie comme équipe par défaut.",
+    "layoutSet": "Offre la possibilité d’avoir des mises en page différentes des mises en page standard. Le jeu de mise en page sera appliqué aux utilisateurs pour lesquels cette équipe est définie comme équipe par défaut.",
+    "roles": "Permissions. Les utilisateurs de cette équipe obtiennent le niveau d'accès des rôles sélectionnés.",
+    "positionList": "Postes disponibles dans cette équipe. Par exemple : conseiller, manager."
   }
 }

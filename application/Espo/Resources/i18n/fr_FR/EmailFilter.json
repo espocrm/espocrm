@@ -13,12 +13,12 @@
     "Create EmailFilter": "Créer un filtre email"
   },
   "tooltips": {
-    "from": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *.",
-    "to": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *.",
     "name": "Donnez au filtre une description.",
     "bodyContains": "Le corps de l'email contient l'un des mots ou phrases",
+    "bodyContainsAll": "Le corps du mail contient tous les mots ou phrases spécifiés.",
     "subject": "Utilisez un caractère `étoile`  :\n\n* `texte*` – commence par le texte,\n* `*texte*` – contient le texte,\n* `*texte` – finit par le texte.",
-    "bodyContainsAll": "Le corps du mail contient tous les mots ou phrases spécifiés."
+    "from": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *.",
+    "to": "Emails envoyés de cette adresse. Laisser vide si inutile. Vous pouvez utiliser des caractères de substitution: *."
   },
   "links": {
     "emailFolder": "Dossier",
