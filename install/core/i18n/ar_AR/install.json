@@ -32,7 +32,6 @@
     "Install": "تثبيت",
     "Configuration Instructions": "تعليمات التكوين",
     "phpVersion": "إصدار الـPHP",
-    "requiredMysqlVersion": "إصدار MySQL",
     "dbHostName": "اسم المضيف",
     "dbName": "اسم قاعدة البيانات",
     "dbUserName": "اسم مستخدم قاعدة البيانات",

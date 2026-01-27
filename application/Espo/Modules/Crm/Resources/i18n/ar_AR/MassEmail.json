@@ -52,7 +52,6 @@
     "storeSentEmails": "سيتم تخزين رسائل البريد الإلكتروني في CRM."
   },
   "presetFilters": {
-    "actual": "فِعلي",
     "complete": "مكتمل"
   }
 }

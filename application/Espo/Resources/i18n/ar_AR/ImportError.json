@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "type": "نوع",
+    "validationFailures": "فشل التحقق من الصحة",
+    "import": "استيراد",
+    "rowIndex": "مؤشر الصف",
+    "exportRowIndex": "تصدير مؤشر الصف",
+    "lineNumber": "رقم السطر",
+    "exportLineNumber": "تصدير رقم السطر",
+    "row": "صف"
+  },
+  "options": {
+    "type": {
+      "Validation": "مصادقة",
+      "Access": "ولوج",
+      "Not-Found": "غير موجود"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "رقم السطر في ملف CSV الأصلي.",
+    "exportLineNumber": "رقم السطر في ملف التصدير CSV."
+  }
+}

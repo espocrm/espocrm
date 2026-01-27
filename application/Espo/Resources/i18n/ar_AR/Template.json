@@ -38,30 +38,6 @@
       "now": "الآن (التاريخ والوقت)",
       "pagebreak": "فاصل صفحة"
     },
-    "fontFace": {
-      "aealarabiya": "قناة العربية",
-      "aefurat": "عيفورات",
-      "cid0cs": "CID-0 CS",
-      "cid0ct": "CID-0 قيراط",
-      "cid0jp": "CID-0 جب",
-      "cid0kr": "CID-0 كرونة",
-      "courier": "ساعي",
-      "dejavusans": "DejaVu بلا",
-      "dejavusanscondensed": "DejaVu بلا مكثف",
-      "dejavusansmono": "ديجافو بلا مونو",
-      "freemono": "فري مونو",
-      "freesans": "فري سانس",
-      "freeserif": "فريسيريف",
-      "helvetica": "هيلفيتيكا",
-      "hysmyeongjostdmedium": "Hysmyeongjostd متوسطة",
-      "kozgopromedium": "كوزجو برو متوسط",
-      "kozminproregular": "كوزمين برو عادي",
-      "pdfasymbol": "رمز PDFA",
-      "pdfatimes": "PDFA تايمز",
-      "symbol": "رمز",
-      "times": "مرات",
-      "dejavuserifcondensed": "مكثف DejaVu Serif"
-    },
     "pageFormat": {
       "Custom": "العادة"
     }

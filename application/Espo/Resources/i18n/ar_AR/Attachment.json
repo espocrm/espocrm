@@ -10,7 +10,8 @@
     "field": "مجال",
     "sourceId": "معرف المصدر",
     "storage": "تخزين",
-    "size": "الحجم (بايت)"
+    "size": "الحجم (بايت)",
+    "isBeingUploaded": "قيد التحميل"
   },
   "options": {
     "role": {

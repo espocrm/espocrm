@@ -15,7 +15,6 @@
     "InboundEmail": "حساب البريد الإلكتروني للمجموعة",
     "Stream": "الاحداث",
     "Import": "ادخال من الخارج",
-    "Template": "قالب",
     "Job": "وظيفة",
     "EmailFilter": "تصفية الايميل",
     "Portal": "البوابة",
@@ -53,7 +52,9 @@
     "Webhook": "الويب هوك",
     "Currency": "عملة",
     "LayoutSet": "مجموعة التخطيط",
-    "Mass Action": "العمل الجماهيري"
+    "Mass Action": "العمل الجماهيري",
+    "Note": "ملاحظة",
+    "ImportError": "خطأ الإستيراد"
   },
   "scopeNamesPlural": {
     "Email": "الإيميلات",
@@ -70,7 +71,6 @@
     "Dashboard": "الرئيسية",
     "InboundEmail": "حسابات البريد للمجموعة",
     "Stream": "الاحداث",
-    "Template": "القوالب",
     "Job": "الوظائف",
     "EmailFilter": "تصفيات الايميل",
     "Portal": "البوابات",
@@ -97,7 +97,9 @@
     "EmailAddress": "عناوين البريد الإلكتروني",
     "PhoneNumber": "أرقام الهواتف",
     "Currency": "عملة",
-    "LayoutSet": "مجموعات التخطيط"
+    "LayoutSet": "مجموعات التخطيط",
+    "Note": "ملاحظات",
+    "ImportError": "أخطاء الإستيراد"
   },
   "labels": {
     "Misc": "متفرقات",
@@ -114,7 +116,6 @@
     "Loading...": "جاري التحميل..",
     "Uploading...": "جاري الرفع ..",
     "Sending...": "جاري الارسال..",
-    "Merging...": "جاري الدمج..",
     "Merged": "تم الدمج",
     "Removed": "تم الحذف",
     "Posted": "تم اضافه البوست",
@@ -128,14 +129,10 @@
     "Record has been removed": "تمت إزالة السجل",
     "Wrong username/password": "اسم المستخدم/كلمة المرور خطأ",
     "Post cannot be empty": "صندوق البريد لا يمكن أن يكون فارغا",
-    "Removing...": "جاري الحذف..",
-    "Unlinking...": "جاري فك الربط ..",
-    "Posting...": "جاري اضافة المقال...",
     "Username can not be empty!": "اسم المستخدم لا يمكن أن يكون فارغ!",
     "Cache is not enabled": "الكاش غير ممكن",
     "Cache has been cleared": "تم حذف الكاش",
     "Rebuild has been done": "إعادة البناء تمت",
-    "Saving...": "جاري الحفظ..",
     "Modified": "تم التعديل",
     "Created": "تم الإنشاء",
     "Create": "انشاء",
@@ -266,11 +263,11 @@
     "Field": "مجال",
     "Resolution": "القرار",
     "Resolve Conflict": "حل الصراع",
-    "Download": "تحميل"
+    "Download": "تحميل",
+    "Sort": "ترتيب"
   },
   "messages": {
     "pleaseWait": "انتظر من فضلك ..",
-    "posting": "جاري النشر..",
     "confirmLeaveOutMessage": "هل أنت متأكد من أنك تريد مغادرة النموذج؟",
     "notModified": "لم تقم بتعديل السجل",
     "fieldIsRequired": "{field} مطلوبة",
@@ -319,8 +316,6 @@
     "loading": "جار التحميل...",
     "saving": "إنقاذ...",
     "fieldMaxFileSizeError": "يجب ألا يتجاوز الملف {max} ميغا بايت",
-    "fieldShouldBeLess": "{field} يجب ان لا يكون أكبر من {value}",
-    "fieldShouldBeGreater": "{field} يجب ان لا يكون أقل من {value}",
     "fieldIsUploading": "جارٍ التحميل",
     "erasePersonalDataConfirmation": "سيتم مسح الحقول التي تم تحديدها بشكل دائم. هل أنت واثق؟",
     "massPrintPdfMaxCountError": "لا يمكن طباعة أكثر من {maxCount} من السجلات.",
@@ -331,8 +326,14 @@
     "notUpdated": "غير محدث",
     "maintenanceMode": "التطبيق حاليا في وضع الصيانة. فقط المستخدمين المسؤولين لديهم حق الوصول.\n\nيمكن تعطيل وضع الصيانة في الإدارة ← الإعدادات.",
     "fieldInvalid": "{field} غير صالح",
+    "fieldPhoneInvalid": "{field} غير صالح",
     "resolveSaveConflict": "تم تعديل السجل. تحتاج إلى حل التعارض قبل أن تتمكن من حفظ السجل.",
-    "massActionProcessed": "تمت معالجة الإجراءات الجماعية."
+    "massActionProcessed": "تمت معالجة الإجراءات الجماعية.",
+    "fieldUrlExceedsMaxLength": "يتجاوز عنوان URL المشفر الحد الأقصى لطول {maxLength}",
+    "fieldNotMatchingPattern": "{field} لا يتطابق مع النمط '{pattern}'",
+    "fieldNotMatchingPattern$noBadCharacters": "يحتوي {field} على رموز غير مسموح بها",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "يجب ألا يحتوي {field} على رموز ASCII الخاصة",
+    "fieldNotMatchingPattern$latinLetters": "يمكن أن يحتوي {field} على حروف لاتينية فقط"
   },
   "boolFilters": {
     "onlyMy": "انا فقط",
@@ -439,6 +440,7 @@
     "createAssigned": "{user}  قام بإنشاء {entityType} {entity} وقام بتخصيصها إلي  {assignee}",
     "assign": "{user} تعيين {entityType} {entity} الى {assignee}",
     "assignThis": "{user} تعيين هذا {entityType} الى {assignee}",
+    "assignMultiAddThis": "{user} تعيين هذا {entityType} الى {assignee}",
     "postThis": "{user} شارك",
     "attachThis": "{user} الحق",
     "statusThis": "{user} قام بتحديث {field}",
@@ -586,7 +588,7 @@
     },
     "saveConflictResolution": {
       "current": "حالي",
-      "actual": "فِعلي",
+      "actual": "الحالي",
       "original": "اصلي"
     }
   },
@@ -671,8 +673,6 @@
       "color": {
         "recent": "أخر لون",
         "more": "لون إضافي",
-        "background": "لون الخلفية",
-        "foreground": "لون الخط",
         "transparent": "شفاف",
         "setTransparent": "ضبط كا شفاف",
         "reset": "إعادة الوضع",
@@ -707,5 +707,18 @@
   "listViewModes": {
     "list": "قائمة",
     "kanban": "كانبان"
+  },
+  "themes": {
+    "Dark": "غامق",
+    "Espo": "ايسب",
+    "Sakura": "ساكورا",
+    "Violet": "البنفسجي",
+    "Glass": "زجاج"
+  },
+  "fieldValidations": {
+    "arrayOfString": "مجموعة من السلاسل",
+    "noEmptyString": "لا لسلسلة فارغة",
+    "max": "أقصى قيمة",
+    "min": "أدنى قيمة"
   }
 }

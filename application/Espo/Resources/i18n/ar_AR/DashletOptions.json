@@ -12,8 +12,6 @@
     "entityType": "نوع الكيان",
     "primaryFilter": "عامل التصفية الأساسي",
     "boolFilterList": "مرشحات إضافية",
-    "sortBy": "تنظيم (الخانة)",
-    "sortDirection": "ترتيب (اتجاه)",
     "expandedLayout": "تَخطِيط",
     "dateFilter": "مرشح التاريخ",
     "skipOwn": "لا تظهر السجلات الخاصة"

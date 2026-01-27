@@ -7,7 +7,6 @@
     "to": "إلى",
     "replyTo": "الرد إلى",
     "replyToString": "الرد الى (جملة)",
-    "isHtml": "هل HTML ؟",
     "body": "المحتوى",
     "subject": "عنوان الرسالة",
     "attachments": "المرفقات",
@@ -28,6 +27,7 @@
     "isReplied": "تمت الإجابة عليه",
     "isNotReplied": "لم تتم الإجابة عليه",
     "folder": "مُجلّد",
+    "folderString": "مُجلّد",
     "inboundEmails": "مجموعة حسابات",
     "emailAccounts": "الحسابات الشخصيه",
     "hasAttachment": "لديها مرفق",
@@ -41,9 +41,6 @@
     "fromName": "من الاسم",
     "fromString": "من سلسلة",
     "isSystem": "هو نظام",
-    "toEmailAddresses": "إلى عناوين البريد الإلكتروني",
-    "bccEmailAddresses": "عناوين البريد الإلكتروني BCC",
-    "replyToEmailAddresses": "الرد على عناوين البريد الإلكتروني",
     "personStringData": "بيانات سلسلة الشخص",
     "fromEmailAddress": "من العنوان (رابط)",
     "replyToName": "الرد على الاسم",
@@ -63,18 +60,13 @@
     "assignedUsers": "المستخدمون المعينون",
     "sentBy": "أرسلت بواسطة",
     "attachments": "المرفقات",
-    "fromEmailAddress": "من البريد الإلكتروني",
-    "toEmailAddresses": "إلى البريد الإلكتروني",
-    "ccEmailAddresses": "نسخة للب",
-    "bccEmailAddresses": "عناوين البريد الإلكتروني BCC",
-    "replyToEmailAddresses": "الرد على عناوين البريد الإلكتروني"
+    "fromEmailAddress": "من البريد الإلكتروني"
   },
   "options": {
     "status": {
       "Draft": "مسودة",
       "Sending": "جاري الإرسال",
       "Sent": "تم الإرسال",
-      "Archived": "الأرشيف",
       "Received": "وصلت",
       "Failed": "فشل"
     }
@@ -117,13 +109,13 @@
     "savedAsDraft": "تم حفظها كمسودة",
     "confirmInsertTemplate": "سيتم فقد نص البريد الإلكتروني. هل أنت متأكد أنك تريد إدراج القالب؟",
     "noSmtpSetup": "لم يتم تكوين SMTP: {link}",
+    "confirmSend": "ارسال البريد الالكتروني؟",
     "sendConfirm": "ارسال البريد الالكتروني؟",
     "removeSelectedRecordsConfirmation": "هل أنت متأكد أنك تريد إزالة رسائل البريد الإلكتروني المختارة؟\n\nستتم إزالتها للمستخدمين الآخرين أيضًا.",
     "removeRecordConfirmation": "هل أنت متأكد أنك تريد إزالة البريد الإلكتروني؟\n\nستتم إزالته للمستخدمين الآخرين أيضًا."
   },
   "presetFilters": {
     "sent": "تم الإرسال",
-    "archived": "مؤرشفة",
     "inbox": "الوارد",
     "drafts": "مسودة",
     "trash": "المحذوفات",

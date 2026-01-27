@@ -2,7 +2,6 @@
   "fields": {
     "name": "الإسم",
     "status": "الحالة",
-    "isHtml": "كود (HTML)",
     "body": "محتوي الرسالة",
     "subject": "عنوان الرسالة",
     "attachments": "المرفقات",
@@ -17,9 +16,6 @@
   },
   "tooltips": {
     "oneOff": "تحقق إذا ما كنت ستستخدم هذا القالب مرة واحدة فقط. علي سبيل المثال للبريد الإلكتروني الشامل"
-  },
-  "presetFilters": {
-    "actual": "فعلي"
   },
   "placeholderTexts": {
     "optOutLink": "رابط إلغاء الاشتراك",

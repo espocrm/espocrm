@@ -6,9 +6,6 @@
     "status": "حاله"
   },
   "options": {
-    "format": {
-      "xlsx": "XLSX (إكسل)"
-    },
     "status": {
       "Pending": "قيد الانتظار",
       "Running": "يعمل",

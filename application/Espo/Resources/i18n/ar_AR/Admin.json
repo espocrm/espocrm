@@ -33,7 +33,7 @@
     "Auth Tokens": "رموز التحقق",
     "Authentication": "المصادقة",
     "Currency": "العملة",
-    "Integrations": "التكامل",
+    "Integrations": "lلتكامل",
     "Extensions": "الإضافات",
     "Upload": "رفع",
     "Installing...": "جاري التثبيت ..",
@@ -172,7 +172,6 @@
     "minHeight": "أقل ارتفاع بالبيكسل",
     "provider": "المزود",
     "typeList": "لائحة الأنواع",
-    "rows": "عدد الأسطر في مساحة الكتابة",
     "lengthOfCut": "طول القطع",
     "sourceList": "لائحة المصادر",
     "tooltipText": "نص تلميح الأداة",
@@ -209,7 +208,9 @@
     "onlyDefaultCurrency": "العملة الافتراضية فقط",
     "dynamicLogicInvalid": "شروط تجعل الحقل غير صالح",
     "conversionDisabled": "تعطيل التحويل",
-    "decimalPlaces": "منازل عشرية"
+    "decimalPlaces": "منازل عشرية",
+    "pattern": "نمط",
+    "globalRestrictions": "القيود العامة"
   },
   "messages": {
     "selectEntityType": "حدد نوع الجدول في القائمة اليسري",
@@ -264,7 +265,6 @@
     "actionHistory": "سجل إجراءات المستخدم.",
     "labelManager": "تخصيص تسميات التطبيق.",
     "authLog": "سجل تسجيل الدخول.",
-    "leadCapture": "نقاط دخول API لـ Web-to-Lead.",
     "attachments": "جميع مرفقات الملفات المخزنة في النظام.",
     "templateManager": "تخصيص قوالب الرسائل.",
     "systemRequirements": "متطلبات النظام لـ EspoCRM.",

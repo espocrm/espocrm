@@ -1,16 +1,15 @@
 {
   "fields": {
-    "width": "العرض (%)",
     "link": "الرابط",
     "notSortable": "غير قابلة للترتيب",
     "align": "محاذاة",
     "panelName": "اسم اللوحة",
     "style": "أسلوب",
-    "sticked": "ملتصقة",
     "isLarge": "حجم الخط الكبير",
     "dynamicLogicVisible": "الظروف تجعل اللوحة مرئية",
     "hidden": "مختفي",
-    "dynamicLogicStyled": "تطبيق شروط مما يجعل الاسلوب"
+    "dynamicLogicStyled": "تطبيق شروط مما يجعل الاسلوب",
+    "noLabel": "بدون ملصق"
   },
   "options": {
     "align": {

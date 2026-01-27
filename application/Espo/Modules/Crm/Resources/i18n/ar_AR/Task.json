@@ -43,7 +43,6 @@
     "overdue": "متأخر"
   },
   "presetFilters": {
-    "actual": "فعلي",
     "completed": "تم إنهاءها",
     "todays": "اليوم",
     "overdue": "مُتأخّر",
