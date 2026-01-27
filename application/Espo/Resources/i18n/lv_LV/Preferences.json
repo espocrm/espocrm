@@ -58,10 +58,10 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Automātiski sekot VISIEM jaunajiem (jebkura lietotāja izveidotajiem) ierakstiem par noteiktiem atlasīto vienību tipiem. Šādi varēsiet skatīt informāciju straumēšanā un saņemt paziņojumus par visiem ierakstiem sistēmā.",
+    "addCustomTabs": "Ja ir atzīmēts, noklusējuma cilnēm tiks pievienotas pielāgotās cilnes. Pretējā gadījumā noklusējuma cilnes vietā tiks izmantotas pielāgotās cilnes.",
     "doNotFillAssignedUserIfNotRequired": "Izveidojot ierakstu, kā piešķirtie lietotāji netiks norādīti pašu lietotāji, izņemot gadījumus, kad šis lauks būs obligāti aizpildāms.",
     "followCreatedEntities": "Izveidojot jaunus ierakstus, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam.",
-    "followCreatedEntityTypeList": "Izveidojot jaunus ierakstus no atlasītajiem vienību tipiem, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam.",
-    "addCustomTabs": "Ja ir atzīmēts, noklusējuma cilnēm tiks pievienotas pielāgotās cilnes. Pretējā gadījumā noklusējuma cilnes vietā tiks izmantotas pielāgotās cilnes."
+    "followCreatedEntityTypeList": "Izveidojot jaunus ierakstus no atlasītajiem vienību tipiem, tiem tiks automātiski sekots, pat ja tie būs piešķirti citam lietotājam."
   },
   "tabFields": {
     "label": "Etiķete",

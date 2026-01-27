@@ -47,10 +47,10 @@
     "imapNotConnected": "Nevar izveidot savienojumu ar [IMAP kontu](#EmailAccount/view/{id})."
   },
   "tooltips": {
-    "monitoredFolders": "Vairākas mapes cita no citas jāatdala ar komatu.\n\nJūs varat pievienot \"nosūtīto ziņojumu\" mapi, lai sinhronizētu e-pastus, kas nosūtīti no ārējā e-pasta klienta.",
     "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī. E-pasta adreses laukam jāatbilst adresei, no kurienes e-pasti tiks nosūtīti.",
     "useSmtp": "Iespēja sūtīt e-pasta ziņojumus.",
-    "emailAddress": "Lietotāja ierakstam (piešķirtajam lietotājam) jābūt vienādai e-pasta adresei, lai varētu izmantot šo e-pasta kontu sūtīšanai."
+    "emailAddress": "Lietotāja ierakstam (piešķirtajam lietotājam) jābūt vienādai e-pasta adresei, lai varētu izmantot šo e-pasta kontu sūtīšanai.",
+    "monitoredFolders": "Vairākas mapes cita no citas jāatdala ar komatu.\n\nJūs varat pievienot \"nosūtīto ziņojumu\" mapi, lai sinhronizētu e-pastus, kas nosūtīti no ārējā e-pasta klienta."
   },
   "presetFilters": {
     "active": "Aktīvais"

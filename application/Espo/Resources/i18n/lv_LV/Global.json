@@ -15,7 +15,6 @@
     "InboundEmail": "Grupas e-pasta konts",
     "Stream": "Straume",
     "Import": "Importēt",
-    "Template": "Veidne",
     "Job": "Darbs",
     "EmailFilter": "E-pasta filtrs",
     "Portal": "Portāls",
@@ -64,7 +63,8 @@
     "AddressCountry": "Adrese Valsts",
     "AppSecret": "Lietotņu noslēpums",
     "OAuthProvider": "OAuth nodrošinātājs",
-    "OAuthAccount": "OAuth konts"
+    "OAuthAccount": "OAuth konts",
+    "Template": "Veidne"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -81,7 +81,6 @@
     "Dashboard": "Infopanelis",
     "InboundEmail": "Grupas e-pasta konti",
     "Stream": "Straume",
-    "Template": "Veidnes",
     "Job": "Darbi",
     "EmailFilter": "E-pasta filtri",
     "Portal": "Portāli",
@@ -120,7 +119,8 @@
     "AddressCountry": "Adrese Valstis",
     "AppSecret": "Lietotņu noslēpumi",
     "OAuthProvider": "OAuth nodrošinātāji",
-    "OAuthAccount": "OAuth konti"
+    "OAuthAccount": "OAuth konti",
+    "Template": "Veidnes"
   },
   "labels": {
     "Misc": "Dažādi",

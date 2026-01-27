@@ -8,9 +8,6 @@
     "xlsxTitle": "Nosaukums"
   },
   "options": {
-    "format": {
-      "xlsx": "XLSX (\"Excel\")"
-    },
     "status": {
       "Pending": "Gaida",
       "Success": "Panākumi",

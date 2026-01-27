@@ -80,7 +80,6 @@
     "default": "Pēc izveidošanas vērtība tiks iestatīta pēc noklusējuma.",
     "min": "Min. pieņemamā vērtība.",
     "max": "Maks. pieņemamā vērtība.",
-    "seeMoreDisabled": "Neatzīmējot šo izvēli, gari teksti tiks īsināti.",
     "lengthOfCut": "Cik garš drīkst būt teksts pirms izgriešanas.",
     "maxLength": "Maks. pieņemamais teksta garums.",
     "before": "Datuma vērtībai jābūt pirms norādītā lauka datuma vērtības.",
@@ -103,7 +102,8 @@
     "readOnlyAfterCreate": "Lauka vērtību var norādīt, veidojot jaunu ierakstu. Pēc tam lauks kļūst tikai lasāms. To joprojām var aprēķināt pēc formulas.",
     "linkReadOnly": "Lauka vērtību lietotājs nevar norādīt. Bet to var aprēķināt pēc formulas.\n\nTas arī atslēgs iespēju izveidot saistītu ierakstu no attiecību paneļiem.",
     "relateOnImport": "Importējot ar šo lauku, ieraksts automātiski tiks saistīts ar atbilstošu ārējo ierakstu. Šo funkcionalitāti izmantojiet tikai tad, ja ārējais lauks tiek uzskatīts par unikālu.",
-    "preview": "Rādīt priekšskatījuma pogu. Piemērojams, ja ir iespējota funkcija Markdown."
+    "preview": "Rādīt priekšskatījuma pogu. Piemērojams, ja ir iespējota funkcija Markdown.",
+    "seeMoreDisabled": "Neatzīmējot šo izvēli, gari teksti tiks īsināti."
   },
   "fieldParts": {
     "address": {

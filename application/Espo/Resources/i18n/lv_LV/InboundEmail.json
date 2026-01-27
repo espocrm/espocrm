@@ -45,8 +45,6 @@
   },
   "tooltips": {
     "reply": "Paziņot e-pasta nosūtītājiem, ka e-pasts ir saņemts.\n\nLai novērstu ieciklošanos, noteiktam lietotājam zināmā periodā iespējams nosūtīt tikai vienu e-pastu.",
-    "createCase": "Automātiski izveidot lietu no ienākošajiem e-pastiem.",
-    "replyToAddress": "Noteikt šīs pastkastes e-pasta adresi, lai atbildes ienāktu šeit.",
     "caseDistribution": "Norāda, kā lieta tiks piešķirta. Piešķirt tieši lietotājam vai piešķirt grupas ietvaros.",
     "assignToUser": "Kam tiks piešķirtas lietotāja lietas.",
     "team": "Kam tiks piešķirtas grupas lietas.",
@@ -54,13 +52,15 @@
     "addAllTeamUsers": "E-pasti būs redzami visu norādīto grupu lietotāju iesūtnēs.",
     "targetUserPosition": "Lietotāji ar norādīto amatu tiks sadalīti ar lietām.",
     "monitoredFolders": "Vairākas mapes cita no citas jāatdala ar komatu.",
-    "smtpIsShared": "Ja būs atzīmēta šī izvēle, lietotāji varēs nosūtīt e-pastus, izmantojot šo SMTP. Pieejamību kontrolēs lomas ar grupas e-pasta konta atļaujas starpniecību.",
-    "smtpIsForMassEmail": "Ja būs atzīmēta šī izvēle, masveida e-pastiem būs pieejams SMTP",
     "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī.",
     "useSmtp": "Iespēja sūtīt e-pasta ziņojumus.",
     "groupEmailFolder": "Ienākošos e-pasta ziņojumus ievietojiet grupas mapē.",
     "excludeFromReply": "Atbildot uz e-pasta ziņojumiem, kas nosūtīti uz šī konta e-pasta adresi, tā e-pasta adrese netiks pievienota CC.\n\nŅemiet vērā, ka, iespējojot šo parametru, šī konta e-pasta adrese būs pieejama lietotājiem, kuriem ir piekļuve e-pasta vēstuļu sūtīšanai.",
-    "isSystem": "ir sistēmas e-pasta konts."
+    "isSystem": "ir sistēmas e-pasta konts.",
+    "createCase": "Automātiski izveidot lietu no ienākošajiem e-pastiem.",
+    "replyToAddress": "Noteikt šīs pastkastes e-pasta adresi, lai atbildes ienāktu šeit.",
+    "smtpIsShared": "Ja būs atzīmēta šī izvēle, lietotāji varēs nosūtīt e-pastus, izmantojot šo SMTP. Pieejamību kontrolēs lomas ar grupas e-pasta konta atļaujas starpniecību.",
+    "smtpIsForMassEmail": "Ja būs atzīmēta šī izvēle, masveida e-pastiem būs pieejams SMTP"
   },
   "links": {
     "filters": "Filtri",
