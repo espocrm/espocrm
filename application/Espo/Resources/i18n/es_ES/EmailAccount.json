@@ -51,10 +51,10 @@
     "imapNotConnected": "No se pudo conectar a [cuenta IMAP](#EmailAccount/view/{id})."
   },
   "tooltips": {
-    "monitoredFolders": "Las carpetas deben estar separadas por comas.\n\nPuede agregar una carpeta 'Enviados' para sincronizar los correos enviados desde un cliente externo.",
     "storeSentEmails": "Los correos enviados se almacenarán en el servidor IMAP. El campo Dirección de correo debe coincidir con la dirección desde donde se enviarán los correos.",
     "useSmtp": "La capacidad de enviar correos.",
-    "emailAddress": "El registro de usuario (usuario asignado) debe tener la misma dirección de correo para poder utilizar esta cuenta de correo para enviar."
+    "emailAddress": "El registro de usuario (usuario asignado) debe tener la misma dirección de correo para poder utilizar esta cuenta de correo para enviar.",
+    "monitoredFolders": "Las carpetas deben estar separadas por comas.\n\nPuede agregar una carpeta 'Enviados' para sincronizar los correos enviados desde un cliente externo."
   },
   "presetFilters": {
     "active": "Activo"

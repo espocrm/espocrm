@@ -17,9 +17,6 @@
   "tooltips": {
     "oneOff": "Marque la casilla si usted va a utilizar esta plantilla solo una vez. Por ejemplo para correo masivo."
   },
-  "presetFilters": {
-    "actual": "Actuales"
-  },
   "placeholderTexts": {
     "optOutLink": "un enlace para darse de baja",
     "today": "El día de hoy",
@@ -29,5 +26,8 @@
   },
   "messages": {
     "infoText": "Marcadores de posición disponibles:\n\n{optOutUrl} & # 8211; URL para un enlace para darse de baja;\n\n{optOutLink} & # 8211; un enlace para darse de baja."
+  },
+  "presetFilters": {
+    "actual": "Actuales"
   }
 }

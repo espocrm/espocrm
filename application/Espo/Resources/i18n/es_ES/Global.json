@@ -15,7 +15,6 @@
     "InboundEmail": "Cuenta de correo grupal",
     "Stream": "Historia",
     "Import": "Importar",
-    "Template": "Plantilla",
     "Job": "Trabajo",
     "EmailFilter": "Filtro de correo",
     "PortalRole": "Rol del portal",
@@ -63,7 +62,8 @@
     "AddressCountry": "Dirección País",
     "AppSecret": "Secreto de la aplicación",
     "OAuthProvider": "Proveedor de OAuth",
-    "OAuthAccount": "Cuenta OAuth"
+    "OAuthAccount": "Cuenta OAuth",
+    "Template": "Plantilla"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -79,7 +79,6 @@
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuentas de correo grupales",
     "Stream": "Historia",
-    "Template": "Plantillas",
     "Job": "Trabajos",
     "EmailFilter": "Filtros de correo",
     "Portal": "Portales",
@@ -118,7 +117,8 @@
     "AddressCountry": "Dirección Países",
     "AppSecret": "Secretos de la aplicación",
     "OAuthProvider": "Proveedores de OAuth",
-    "OAuthAccount": "Cuentas OAuth"
+    "OAuthAccount": "Cuentas OAuth",
+    "Template": "Plantillas"
   },
   "labels": {
     "Misc": "Misceláneos",

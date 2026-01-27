@@ -45,8 +45,6 @@
   },
   "tooltips": {
     "reply": "Notifique a los remitentes de correo que han recibido sus mensajes.\n\nSolo un correo será enviado a un destinatario particular durante un período de tiempo para evitar bucles.",
-    "createCase": "Automaticamente crear un ticket de los correos entrantes.",
-    "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
     "caseDistribution": "¿Cómo serán asignados a los tickets? Asignados directamente a un usuario o al equipo.",
     "assignToUser": "Los tickets serán asignados al usuario:",
     "team": "Los tickets serán asignados al siguiente equipo:",
@@ -54,13 +52,15 @@
     "addAllTeamUsers": "Los correos aparecerán en la bandeja de entrada de todos los usuarios de los equipos especificados.",
     "targetUserPosition": "Los usuarios con los puestos especificados recibirán los tickets.",
     "monitoredFolders": "Las carpetas deben estar separadas por comas.",
-    "smtpIsShared": "Si se marca, entonces los usuarios podrán enviar correos usando este SMTP. La disponibilidad está controlada por Roles a través de los permisos de la cuenta de correo grupal.",
-    "smtpIsForMassEmail": "Si está marcado, SMTP estará disponible para correo masivo.",
     "storeSentEmails": "Los correos enviados se almacenarán en el servidor IMAP.",
     "useSmtp": "La capacidad de enviar correos.",
     "groupEmailFolder": "Coloque los correos entrantes en una carpeta grupal.",
     "excludeFromReply": "Al responder correos enviados a la dirección de esta cuenta, esta no se añadirá a la sección de CC.\n\nTen en cuenta que, al habilitar este parámetro, la dirección de esta cuenta estará disponible para los usuarios con acceso para enviar correos.",
-    "isSystem": "Es la cuenta de correo del sistema."
+    "isSystem": "Es la cuenta de correo del sistema.",
+    "createCase": "Automaticamente crear un ticket de los correos entrantes.",
+    "replyToAddress": "Especifique la dirección de correo de este buzón para hacer que las respuestas vegan aquí.",
+    "smtpIsShared": "Si se marca, entonces los usuarios podrán enviar correos usando este SMTP. La disponibilidad está controlada por Roles a través de los permisos de la cuenta de correo grupal.",
+    "smtpIsForMassEmail": "Si está marcado, SMTP estará disponible para correo masivo."
   },
   "links": {
     "filters": "Filtros",

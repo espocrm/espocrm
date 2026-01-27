@@ -84,13 +84,13 @@
   },
   "tooltips": {
     "defaultTeam": "Todos los registros creados por este usuario serán relacionados a este equipo por defecto.",
-    "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos",
     "isAdmin": "El usuario administrador puede tener acceso a todo.",
-    "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "teams": "Equipos a los que este usuario pertenece. Nivel de control de acceso se hereda de los roles de equipo.",
     "roles": "Roles de acceso adicionales. Úsalo si el usuario no pertenece a ningún equipo o si necesita ampliar el nivel de control de acceso solo para este usuario.",
     "portalRoles": "Roles adicionales del portal. Utilícelos para extender el nivel de acceso exclusivamente para este usuario.",
     "portals": "El usuario tiene accesos a los siguientes portales.",
+    "userName": "Letras a-z, números 0-9 y guiones bajos están permitidos",
+    "isActive": "Si lo desmarca, el usuario no podrá iniciar sesión.",
     "layoutSet": "Se aplicarán al usuario los diseños de un conjunto específico en lugar de los predeterminados."
   },
   "messages": {

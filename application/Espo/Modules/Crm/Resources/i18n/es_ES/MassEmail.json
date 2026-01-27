@@ -52,7 +52,7 @@
     "storeSentEmails": "Los correos se almacenarán en el CRM."
   },
   "presetFilters": {
-    "actual": "Actuales",
-    "complete": "Completo"
+    "complete": "Completo",
+    "actual": "Actuales"
   }
 }

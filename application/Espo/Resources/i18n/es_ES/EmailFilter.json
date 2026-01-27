@@ -16,15 +16,6 @@
     "Create EmailFilter": "Crear un filtro de email",
     "Emails": "Correos"
   },
-  "tooltips": {
-    "from": "Filtra los correos enviados desde esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
-    "to": "Filtra los correos enviados a esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
-    "name": "Dé al filtro un nombre descriptivo.",
-    "bodyContains": "Filtra los correos que en el cuerpo contengan cualquiera de estas palabras o frases.",
-    "isGlobal": "Aplica este filtro a todos los correos entrantes del sistema.",
-    "subject": "Utilice un comodín *:\n\n * `texto *` - comienza con texto,\n * `* texto *` - contiene texto,\n * `* texto` - termina con texto.",
-    "bodyContainsAll": "El cuerpo de un correo electrónico contiene todas las palabras o frases especificadas."
-  },
   "options": {
     "action": {
       "Skip": "Ignorar",
@@ -32,6 +23,15 @@
       "None": "Ninguno",
       "Move to Group Folder": "Poner en carpeta de grupo"
     }
+  },
+  "tooltips": {
+    "name": "Dé al filtro un nombre descriptivo.",
+    "bodyContains": "Filtra los correos que en el cuerpo contengan cualquiera de estas palabras o frases.",
+    "isGlobal": "Aplica este filtro a todos los correos entrantes del sistema.",
+    "bodyContainsAll": "El cuerpo de un correo electrónico contiene todas las palabras o frases especificadas.",
+    "subject": "Utilice un comodín *:\n\n * `texto *` - comienza con texto,\n * `* texto *` - contiene texto,\n * `* texto` - termina con texto.",
+    "from": "Filtra los correos enviados desde esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *.",
+    "to": "Filtra los correos enviados a esta dirección. Dejar en blanco si no es necesario. Puede usar el comodín *."
   },
   "links": {
     "emailFolder": "Carpeta",
