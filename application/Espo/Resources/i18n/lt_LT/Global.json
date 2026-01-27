@@ -15,7 +15,6 @@
     "InboundEmail": "Grupės el. pašto paskyra ",
     "Stream": "Srautas",
     "Import": "Importuoti",
-    "Template": "Šablonas",
     "Job": "Darbas",
     "EmailFilter": "El. pašto filtras",
     "Portal": "Portalas",
@@ -64,7 +63,8 @@
     "AddressCountry": "Adresas Šalis",
     "AppSecret": "Programėlės paslaptis",
     "OAuthProvider": "OAuth teikėjas",
-    "OAuthAccount": "\"OAuth\" paskyra"
+    "OAuthAccount": "\"OAuth\" paskyra",
+    "Template": "Šablonas"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -81,7 +81,6 @@
     "Dashboard": "Prietaisų skydelis",
     "InboundEmail": "Grupės el. pašto paskyros",
     "Stream": "Srautas",
-    "Template": "Šablonai",
     "Job": "Užduotys",
     "EmailFilter": "El. pašto filtrai",
     "Portal": "Portalai",
@@ -120,7 +119,8 @@
     "AddressCountry": "Adresas Šalys",
     "AppSecret": "Programėlių paslaptys",
     "OAuthProvider": "OAuth teikėjai",
-    "OAuthAccount": "\"OAuth\" paskyros"
+    "OAuthAccount": "\"OAuth\" paskyros",
+    "Template": "Šablonai"
   },
   "labels": {
     "Misc": "Įvairūs",

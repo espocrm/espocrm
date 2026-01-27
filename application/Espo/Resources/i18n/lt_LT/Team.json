@@ -16,13 +16,13 @@
     "workingTimeCalendar": "Darbo laiko kalendorius",
     "groupEmailFolders": "Grupės el. pašto aplankai"
   },
-  "tooltips": {
-    "roles": "Prieigos rolės. Šios komandos vartotojai gauna prieigos kontrolės lygį iš pasirinktų rolių.",
-    "positionList": "Galimos pozicijos šioje komandoje. Pavyzdžiui pardavėjas, vadybininkas.\n",
-    "layoutSet": "Suteikiama galimybė kurti kitokius nei standartiniai maketus. Maketų rinkinys bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda.",
-    "workingTimeCalendar": "Kalendorius bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda."
-  },
   "labels": {
     "Create Team": "Sukurti komandą"
+  },
+  "tooltips": {
+    "workingTimeCalendar": "Kalendorius bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda.",
+    "layoutSet": "Suteikiama galimybė kurti kitokius nei standartiniai maketus. Maketų rinkinys bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda.",
+    "roles": "Prieigos rolės. Šios komandos vartotojai gauna prieigos kontrolės lygį iš pasirinktų rolių.",
+    "positionList": "Galimos pozicijos šioje komandoje. Pavyzdžiui pardavėjas, vadybininkas.\n"
   }
 }

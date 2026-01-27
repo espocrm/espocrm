@@ -57,10 +57,10 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Automatiškai sekti visus naujus sukurtus įrašus (sukurtus bet kurio vartotojo) pasirinktų vedinių tipų, kad galėtumėte matyti sraute esančią informaciją ir gauti pranešimus apie visus sistemos įrašus.",
+    "addCustomTabs": "Jei pažymėta, pasirinktiniai skirtukai bus pridėti prie numatytųjų skirtukų. Priešingu atveju vietoj numatytųjų skirtukų bus naudojami pasirinktiniai skirtukai.",
     "doNotFillAssignedUserIfNotRequired": "Kurdamas įrašą priskirtas vartotojas nebus užpildytas, nebent laukelis yra privalomas.",
     "followCreatedEntities": "Kuriant naujus įrašus jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui.",
-    "followCreatedEntityTypeList": "Kai kuriate naujus pasirinktų subjektų tipų įrašus, jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui.",
-    "addCustomTabs": "Jei pažymėta, pasirinktiniai skirtukai bus pridėti prie numatytųjų skirtukų. Priešingu atveju vietoj numatytųjų skirtukų bus naudojami pasirinktiniai skirtukai."
+    "followCreatedEntityTypeList": "Kai kuriate naujus pasirinktų subjektų tipų įrašus, jie bus automatiškai stebimi, net jei jie bus priskirti kitam vartotojui."
   },
   "tabFields": {
     "label": "Etiketė",

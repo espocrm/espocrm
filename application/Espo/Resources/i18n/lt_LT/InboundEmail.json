@@ -44,8 +44,6 @@
   },
   "tooltips": {
     "reply": "Pranešti siuntėjams, kad jų el. Laiškai buvo gauti.\n\n  Tam tikram gavėjui per tam tikrą laikotarpį bus išsiųstas tik vienas el. laiškas, kad būtų išvengta kartojimų.",
-    "createCase": "Automatiškai sukurkite atvejį iš gaunamų el. laiškų.",
-    "replyToAddress": "Patikslinkite pašto dėžutės el. pašto adresą, kad  jam galima būtų priskirti gaunamus laiškus",
     "caseDistribution": "Kaip bus priskirtas aptarnavimas. Priskirtas tiesiogiai vartotojui arba tarp komandos narių.",
     "assignToUser": "Vartotojo darbai bus priskirti.",
     "team": "Komandos darbai bus priskirti.",
@@ -53,13 +51,15 @@
     "addAllTeamUsers": "El. Laiškai bus rodomi visų žinomų komandų naudotojų gautuosiuose.",
     "targetUserPosition": "Vartotojai su nurodyta pozicija bus platinami su atvejais.",
     "monitoredFolders": "Keli aplankai turėtų būti atskirti kableliais.",
-    "smtpIsShared": "Jei pažymėsite, vartotojai galės siųsti el. laiškus naudodami šį SMTP. Prieinamumą kontroliuoja Rolės, per leidimą grupės el. Pašto paskyrai.",
-    "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams.",
     "storeSentEmails": "Išsiųsti el. laiškai bus saugomi IMAP serveryje.",
     "useSmtp": "Galimybė siųsti el. laiškus.",
     "groupEmailFolder": "Gautus el. laiškus sudėkite į grupinį aplanką.",
     "excludeFromReply": "Atsakant į el. laiškus, siunčiamus šios paskyros el. pašto adresu, jos el. pašto adresas nebus įtrauktas į CC.\n\nAtkreipkite dėmesį, kad įjungus šį parametrą, šios paskyros el. pašto adresas bus matomas naudotojams, turintiems teisę siųsti el. laiškus.",
-    "isSystem": "yra sistemos el. pašto paskyra."
+    "isSystem": "yra sistemos el. pašto paskyra.",
+    "createCase": "Automatiškai sukurkite atvejį iš gaunamų el. laiškų.",
+    "replyToAddress": "Patikslinkite pašto dėžutės el. pašto adresą, kad  jam galima būtų priskirti gaunamus laiškus",
+    "smtpIsShared": "Jei pažymėsite, vartotojai galės siųsti el. laiškus naudodami šį SMTP. Prieinamumą kontroliuoja Rolės, per leidimą grupės el. Pašto paskyrai.",
+    "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams."
   },
   "links": {
     "filters": "Filtrai",

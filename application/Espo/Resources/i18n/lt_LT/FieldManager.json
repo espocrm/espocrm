@@ -80,7 +80,6 @@
     "default": "Vertė nustatoma pagal numatytuosius nustatymus.",
     "min": "Minimali priimtina vertė.",
     "max": "Maksimali priimtina vertė.",
-    "seeMoreDisabled": "Jeigu nepažymėta, ilgi tekstai bus sutrumpinti",
     "lengthOfCut": "Kokio ilgio gali būti tekstas, prieš apkerpant",
     "maxLength": "Maksimalus priimtinas teksto ilgis.",
     "before": "Duomenų vertė turėtų būti prieš duomenų vertės nurodytą laukelį",
@@ -103,7 +102,8 @@
     "readOnlyAfterCreate": "Lauko reikšmę galima nurodyti kuriant naują įrašą. Vėliau laukas tampa tik skaitymui skirtu lauku. Jį vis dar galima apskaičiuoti pagal formulę.",
     "linkReadOnly": "Naudotojas negali nurodyti lauko reikšmės. Tačiau ją galima apskaičiuoti pagal formulę.\n\nTaip pat bus išjungta galimybė sukurti susijusį įrašą iš ryšių skydelių.",
     "relateOnImport": "Importuojant su šiuo lauku, įrašas automatiškai susiejamas su atitinkamu užsienio įrašu. Šią funkciją naudokite tik tuo atveju, jei užsienio laukas laikomas unikaliu.",
-    "preview": "Rodyti peržiūros mygtuką. Taikoma, jei įjungta funkcija Markdown."
+    "preview": "Rodyti peržiūros mygtuką. Taikoma, jei įjungta funkcija Markdown.",
+    "seeMoreDisabled": "Jeigu nepažymėta, ilgi tekstai bus sutrumpinti"
   },
   "fieldParts": {
     "address": {

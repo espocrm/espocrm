@@ -89,13 +89,13 @@
   },
   "tooltips": {
     "defaultTeam": "Visi šio naudotojo sukurti įrašai bus susiję su šia komanda pagal nutylėjimą.",
-    "userName": "Leidžiami raidės a-z, skaičiai 0-9, taškai, brūkšniai, @ -žymėjimai ir pabraukimai.",
     "isAdmin": "Administratorius turi prieigą prie visko",
-    "isActive": "Jei nepažymėta, vartotojas negalės prisijungti.",
     "teams": "Komandos kurioms priklauso šis naudotojas. Prieigos kontrolės lygis yra perimtas iš komandos rolės.",
     "roles": "Papildomos prieigos vaidmenys. Naudokite jį, jei naudotojas nepriklauso jokiai komandai arba jums reikia išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
     "portalRoles": "Papildomos portalo rolės. Naudokite ją, kad galėtumėte išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
     "portals": "Portalai, prie kurių šis vartotojas turi prieigą.",
+    "userName": "Leidžiami raidės a-z, skaičiai 0-9, taškai, brūkšniai, @ -žymėjimai ir pabraukimai.",
+    "isActive": "Jei nepažymėta, vartotojas negalės prisijungti.",
     "layoutSet": "Naudotojui bus taikomi ne numatytieji, o nurodyto rinkinio maketai."
   },
   "messages": {
