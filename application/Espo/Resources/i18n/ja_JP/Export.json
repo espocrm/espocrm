@@ -9,9 +9,6 @@
     "xlsxTitle": "タイトル"
   },
   "options": {
-    "format": {
-      "xlsx": " XLSX（エクセル）"
-    },
     "status": {
       "Pending": "保留中",
       "Running": "ランニング",

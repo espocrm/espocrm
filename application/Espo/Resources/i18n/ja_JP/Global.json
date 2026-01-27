@@ -15,7 +15,6 @@
     "InboundEmail": "グループメールアカウント",
     "Stream": "ストリーム",
     "Import": "輸入",
-    "Template": "テンプレート",
     "Job": "仕事",
     "EmailFilter": "メールフィルター",
     "Portal": "ポータル",
@@ -66,7 +65,8 @@
     "AddressCountry": "住所国",
     "AppSecret": "アプリシークレット",
     "OAuthProvider": "OAuthプロバイダー",
-    "OAuthAccount": "OAuthアカウント"
+    "OAuthAccount": "OAuthアカウント",
+    "Template": "テンプレート"
   },
   "scopeNamesPlural": {
     "Email": "メール",
@@ -83,7 +83,6 @@
     "Dashboard": "ダッシュボード",
     "InboundEmail": "グループメールアカウント",
     "Stream": "ストリーム",
-    "Template": "テンプレート",
     "Job": "求人",
     "EmailFilter": "メールフィルター",
     "Portal": "ポータル",
@@ -123,7 +122,8 @@
     "AddressCountry": "住所国",
     "AppSecret": "アプリの秘密",
     "OAuthProvider": " OAuthプロバイダー",
-    "OAuthAccount": "OAuth アカウント"
+    "OAuthAccount": "OAuth アカウント",
+    "Template": "テンプレート"
   },
   "labels": {
     "Misc": "その他",
