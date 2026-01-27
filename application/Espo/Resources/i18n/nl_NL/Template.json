@@ -20,14 +20,16 @@
     "headerPosition": "Koptekst Positie",
     "printHeader": "Kop afdrukken",
     "title": "Titel",
-    "style": "Stijl"
+    "style": "Stijl",
+    "filename": "Bestandsnaam"
   },
   "labels": {
     "Create Template": "Creëer Sjabloon"
   },
   "tooltips": {
     "footer": "Gebruik {pageNumber} om het paginanummer af te drukken.",
-    "variables": "Kopieer en plak de benodigde aanduiding naar koptekst, hoofdtekst of voettekst."
+    "variables": "Kopieer en plak de benodigde aanduiding naar koptekst, hoofdtekst of voettekst.",
+    "filename": "Een optionele bestandsnaam. Entiteitsattributen kunnen worden gebruikt als plaatshouders.\n\nExtra plaatshouder:\n- `{{today}}`\n\nVoorbeeld:\n`Document_{{today}}_{{name}}`"
   },
   "options": {
     "pageOrientation": {

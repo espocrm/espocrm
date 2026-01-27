@@ -37,7 +37,9 @@
     "defaultRemindersTask": "Standaard herinneringen voor taken",
     "addCustomTabs": "Aangepaste Tabs toevoegen",
     "reactionNotifications": "In-app meldingen over reacties",
-    "pageContentWidth": "Breedte inhoud"
+    "pageContentWidth": "Breedte inhoud",
+    "reactionNotificationsNotFollowed": "Meldingen over reacties op niet-gevolgde records",
+    "followAsCollaborator": "Automatisch volgen wanneer toegevoegd als medewerker"
   },
   "options": {
     "weekStart": {
@@ -58,10 +60,10 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "De gebruiker zal automatisch alle nieuwe records van de geselecteerde entiteittypes volgen, zal informatie in de stream zien en zal meldingen ontvangen.",
+    "addCustomTabs": "Als deze optie is aangevinkt, worden aangepaste tabbladen toegevoegd aan de standaardtabbladen. Anders worden aangepaste tabbladen gebruikt in plaats van de standaardtabbladen.",
     "doNotFillAssignedUserIfNotRequired": "Bij het aanmaken van een record toegewezen gebruiker zal de gebruiker niet worden ingevuld met een eigen gebruikersnaam, tenzij het veld verplicht is.",
     "followCreatedEntities": "Bij het aanmaken van nieuwe records worden deze automatisch gevolgd, zelfs als ze aan een andere gebruiker worden toegewezen.",
-    "followCreatedEntityTypeList": "Wanneer nieuwe records van geselecteerde entiteittypes worden aanmaakt, worden deze automatisch gevolgd zelfs als ze aan een andere gebruiker worden toegewezen.",
-    "addCustomTabs": "Als deze optie is aangevinkt, worden aangepaste tabbladen toegevoegd aan de standaardtabbladen. Anders worden aangepaste tabbladen gebruikt in plaats van de standaardtabbladen."
+    "followCreatedEntityTypeList": "Wanneer nieuwe records van geselecteerde entiteittypes worden aanmaakt, worden deze automatisch gevolgd zelfs als ze aan een andere gebruiker worden toegewezen."
   },
   "tabFields": {
     "iconClass": "Icoon",

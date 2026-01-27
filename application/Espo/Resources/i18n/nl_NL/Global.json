@@ -60,7 +60,8 @@
     "AddressCountry": "Adres Land",
     "AppSecret": "App Geheim",
     "OAuthAccount": "OAuth account",
-    "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitem"
+    "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitem",
+    "Template": "PDF-sjabloon"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -111,7 +112,8 @@
     "AddressCountry": "Adres Landen",
     "AppSecret": "App Geheimen",
     "OAuthAccount": "OAuth accounts",
-    "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitems"
+    "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitems",
+    "Template": "PDF-sjablonen"
   },
   "labels": {
     "Misc": "Overig",
@@ -503,7 +505,8 @@
     "entityRemoved": "{user} verwijderde {entityType} {entity}",
     "emailInbox": "{user} voegde e-mail {entiteit} toe aan je inbox",
     "userPostReaction": "{user} reageerde op je {post}",
-    "userPostInParentReaction": "{user} reageerde op je {post} in {entityType} {entity}"
+    "userPostInParentReaction": "{user} reageerde op je {post} in {entityType} {entity}",
+    "addedToCollaborators": "{user} heeft je toegevoegd als medewerker aan {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} geplaatst op {entityType} {entity}",

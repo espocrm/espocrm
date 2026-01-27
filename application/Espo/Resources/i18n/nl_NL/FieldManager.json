@@ -72,7 +72,6 @@
     "default": "De waarde wordt standaard ingesteld bij het maken.",
     "min": "Minimale acceptabele waarde.",
     "max": "Maximale acceptabele waarde.",
-    "seeMoreDisabled": "Als dit niet wordt gecontroleerd, worden lange teksten ingekort.",
     "lengthOfCut": "Hoe lang de tekst kan zijn voordat deze wordt afgekapt.",
     "maxLength": "Maximaal toegestane lengte van de tekst.",
     "before": "De datumwaarde moet vóór de datumwaarde van het opgegeven veld liggen.",
@@ -96,7 +95,8 @@
     "linkReadOnly": "De veldwaarde kan niet worden opgegeven door de gebruiker. Maar kan wel worden berekend met een formule.\n\nHet schakelt ook de mogelijkheid uit om een gerelateerd record te maken vanuit relatiepanelen.",
     "relateOnImport": "Als je importeert met dit veld, wordt automatisch een record gekoppeld aan een overeenkomend buitenlands record. Gebruik deze functionaliteit alleen als het vreemde veld als uniek wordt beschouwd.",
     "preview": "Toon de voorbeeldknop. Van toepassing als Markdown is ingeschakeld.",
-    "itemsEditable": "Items kunnen worden bewerkt. Alleen van toepassing als er geen opties zijn opgegeven."
+    "itemsEditable": "Items kunnen worden bewerkt. Alleen van toepassing als er geen opties zijn opgegeven.",
+    "seeMoreDisabled": "Als dit niet wordt gecontroleerd, worden lange teksten ingekort."
   },
   "fieldParts": {
     "address": {
@@ -149,7 +149,8 @@
     "link": "Een record gerelateerd via Behoort-tot (meer-tot-één of één-op-één) relatie.",
     "linkParent": "Een record gerelateerd door Behoort-Toe-Ouder relatie. Kan van verschillende soorten entiteiten zijn.",
     "linkMultiple": "Een reeks records die via een Has-Many (veel-op-veel of één-op-veel) relatie met elkaar zijn verbonden. Niet alle relaties hebben hun link-multiple velden. Alleen die waar de parameter(s) Link-Multiple is ingeschakeld.",
-    "urlMultiple": "Meerdere links."
+    "urlMultiple": "Meerdere links.",
+    "decimal": "Een decimaal getal met vaste-komma-precisie."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Veldnaam '{field}' is niet toegestaan.",

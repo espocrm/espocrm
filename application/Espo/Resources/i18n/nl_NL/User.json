@@ -83,13 +83,13 @@
   },
   "tooltips": {
     "defaultTeam": "Alle door gebruiker gecreëerde records worden standaard aan de groep gekoppeld.",
-    "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
     "isAdmin": "Beheerder heeft overal toegang.",
-    "isActive": "Indien niet aangevinkt, zal de gebruiker niet kunnen inloggen.",
     "teams": "Tot welke groep deze gebruiker behoord. Toegang beheer is afhankelijk van groep regels.",
     "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden.",
     "portalRoles": "Extra portaal functies. Gebruik het om het toegangscontrole niveau exclusief voor deze gebruiker uit te breiden.",
     "portals": "Portalen waartoe deze gebruiker toegang heeft.",
+    "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
+    "isActive": "Indien niet aangevinkt, zal de gebruiker niet kunnen inloggen.",
     "layoutSet": "Lay-outs uit een opgegeven set worden toegepast voor de gebruiker in plaats van de standaard lay-outs."
   },
   "messages": {

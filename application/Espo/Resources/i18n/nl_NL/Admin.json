@@ -139,7 +139,8 @@
     "datetimeOptional": "Datum / tijd",
     "linkOne": "Link één",
     "urlMultiple": "Meerdere Url",
-    "base": "Basis"
+    "base": "Basis",
+    "decimal": "Decimaal"
   },
   "fields": {
     "name": "Naam",

@@ -20,7 +20,8 @@
     "useImap": "Ophalen van e-mails",
     "smtpAuthMechanism": "SMTP Auth Mechanisme",
     "security": "Beveiliging",
-    "connectedAt": "Verbonden op"
+    "connectedAt": "Verbonden op",
+    "folderMap": "Maptoewijzing"
   },
   "options": {
     "status": {
@@ -41,7 +42,8 @@
   "messages": {
     "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
     "connectionIsOk": "Verbinding is Ok",
-    "imapNotConnected": "Kan geen verbinding maken met [IMAP-account](#EmailAccount/view/{id})."
+    "imapNotConnected": "Kan geen verbinding maken met [IMAP-account](#EmailAccount/view/{id}).",
+    "noFolder": "De toegewezen map bestaat niet."
   },
   "links": {
     "emails": "E-mails"
@@ -49,7 +51,8 @@
   "tooltips": {
     "storeSentEmails": "Verzonden E-mails worden opgeslagen op de IMAP server. E-mailadres veld moet overeenkomen met het E-mailadres waarvan verzonden wordt.",
     "useSmtp": "De mogelijkheid om e-mails te verzenden.",
-    "emailAddress": "Het gebruikersrecord (toegewezen gebruiker) moet hetzelfde e-mailadres hebben om dit e-mailaccount te kunnen gebruiken voor verzending."
+    "emailAddress": "Het gebruikersrecord (toegewezen gebruiker) moet hetzelfde e-mailadres hebben om dit e-mailaccount te kunnen gebruiken voor verzending.",
+    "monitoredFolders": "Selecteer IMAP-mappen om te importeren. U kunt ze optioneel toewijzen aan Espo-mappen.\n\nU kunt de map 'Verzonden' toevoegen om e-mails te synchroniseren die zijn verzonden vanuit een externe e-mailclient."
   },
   "presetFilters": {
     "active": "Actief"
