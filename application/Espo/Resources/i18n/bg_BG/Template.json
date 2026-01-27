@@ -20,7 +20,8 @@
     "headerPosition": "Позиция на хедъра",
     "printHeader": "Принтирай хедъра",
     "title": "Заглавие",
-    "style": "Стил"
+    "style": "Стил",
+    "status": "Статус"
   },
   "labels": {
     "Create Template": "Създаване на шаблон"
@@ -41,6 +42,10 @@
     },
     "pageFormat": {
       "Custom": "Персонализиран"
+    },
+    "status": {
+      "Active": "Активен",
+      "Inactive": "Неактивен"
     }
   }
 }

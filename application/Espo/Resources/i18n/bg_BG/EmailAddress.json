@@ -6,7 +6,8 @@
   },
   "fields": {
     "optOut": "Отписал се",
-    "invalid": "невалиден"
+    "invalid": "невалиден",
+    "lower": "Име с малки букви"
   },
   "presetFilters": {
     "orphan": "сирак"

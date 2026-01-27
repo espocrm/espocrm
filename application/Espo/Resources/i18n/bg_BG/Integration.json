@@ -5,7 +5,8 @@
     "clientSecret": "Клиент Secret",
     "redirectUri": "URL за пренасочване",
     "apiKey": "API ключ",
-    "scoreThreshold": "Праг на резултата"
+    "scoreThreshold": "Праг на резултата",
+    "mapId": "ID на картата"
   },
   "messages": {
     "selectIntegration": "Изберете интеграция от менюто.",

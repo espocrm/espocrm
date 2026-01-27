@@ -214,7 +214,8 @@
     "labelType": "Тип заглавие",
     "preview": "Преглед",
     "attachmentField": "Поле за прикачени файлове",
-    "dynamicLogicReadOnlySaved": "Условия за запазено състояние, които правят полето само за четене"
+    "dynamicLogicReadOnlySaved": "Условия за запазено състояние, които правят полето само за четене",
+    "itemsEditable": "Редактируеми елементи"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",

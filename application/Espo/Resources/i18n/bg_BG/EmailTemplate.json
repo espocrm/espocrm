@@ -25,5 +25,14 @@
   },
   "messages": {
     "infoText": "Налични заместители:\n\n{optOutUrl} &#8211; URL линк за отписване;\n\n{optOutLink} &#8211; линк за отписване."
+  },
+  "options": {
+    "status": {
+      "Active": "Активен",
+      "Inactive": "Неактивен"
+    }
+  },
+  "presetFilters": {
+    "actual": "Активен"
   }
 }

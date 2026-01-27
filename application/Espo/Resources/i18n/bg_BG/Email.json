@@ -58,7 +58,8 @@
     "sendAt": "Изпрати на",
     "toEmailAddresses": "До имейл адреси",
     "bccEmailAddresses": "BCC имейл адреси",
-    "replyToEmailAddresses": "Reply-To имейл адреси"
+    "replyToEmailAddresses": "Reply-To имейл адреси",
+    "isAutoReply": "Се използва за auto-reply"
   },
   "links": {
     "replied": "Отговорено",

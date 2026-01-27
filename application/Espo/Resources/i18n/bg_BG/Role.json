@@ -25,7 +25,8 @@
     "Access": "Достъп",
     "Create Role": "Създаване на Роля",
     "Scope Level": "Ниво на обхват",
-    "Field Level": "На ниво полета"
+    "Field Level": "На ниво полета",
+    "Baseline": "По подразбиране"
   },
   "options": {
     "accessList": {
