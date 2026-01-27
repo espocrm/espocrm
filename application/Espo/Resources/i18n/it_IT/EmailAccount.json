@@ -20,7 +20,8 @@
     "useImap": "Scarica email",
     "smtpAuthMechanism": "Meccanismo di Autenticazione SMTP",
     "security": "Sicurezza",
-    "connectedAt": "Connesso Alle"
+    "connectedAt": "Connesso Alle",
+    "folderMap": "Mappatura cartelle"
   },
   "links": {
     "filters": "Filtri",
@@ -41,12 +42,14 @@
   "messages": {
     "couldNotConnectToImap": "Impossibile connettersi al server IMAP",
     "connectionIsOk": "La Connessione è Ok",
-    "imapNotConnected": "Impossibile connettersi a [account IMAP](#EmailAccount/view/{id})."
+    "imapNotConnected": "Impossibile connettersi a [account IMAP](#EmailAccount/view/{id}).",
+    "noFolder": "La cartella mappata non esiste."
   },
   "tooltips": {
     "storeSentEmails": "Le e-mail inviate verranno archiviate sul server IMAP. Il campo Indirizzo e-mail deve corrispondere all'indirizzo da cui verranno inviate le e-mail.",
     "useSmtp": "La possibilità di inviare email.",
-    "emailAddress": "Il record utente (utente assegnato) deve avere lo stesso indirizzo email per poter utilizzare questo account di posta elettronica per l'invio."
+    "emailAddress": "Il record utente (utente assegnato) deve avere lo stesso indirizzo email per poter utilizzare questo account di posta elettronica per l'invio.",
+    "monitoredFolders": "Seleziona le cartelle IMAP da importare. Se lo desideri, puoi associarle alle cartelle Espo.\n\nPuoi aggiungere la cartella “Inviati” per sincronizzare le e-mail inviate da un client di posta elettronica esterno."
   },
   "presetFilters": {
     "active": "Attivo"

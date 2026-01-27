@@ -60,7 +60,8 @@
     "AddressCountry": "Indirizzo Paese",
     "OAuthProvider": "Fornitore OAuth",
     "OAuthAccount": "Account OAuth",
-    "WebhookEventQueueItem": "Elemento della coda degli eventi Webhook"
+    "WebhookEventQueueItem": "Elemento della coda degli eventi Webhook",
+    "Template": "Modello PDF"
   },
   "scopeNamesPlural": {
     "Email": "Email",
@@ -115,7 +116,8 @@
     "AppSecret": "App Secret",
     "OAuthProvider": "Fornitori OAuth",
     "OAuthAccount": "Account OAuth",
-    "WebhookEventQueueItem": "Elementi della coda degli eventi Webhook"
+    "WebhookEventQueueItem": "Elementi della coda degli eventi Webhook",
+    "Template": "Modelli PDF"
   },
   "labels": {
     "Misc": "Varie",
@@ -517,7 +519,8 @@
     "entityRemoved": "{user} ha rimosso {entityType} {entity}",
     "emailInbox": "{user} ha aggiunto l'email {entity} alla tua posta in arrivo",
     "userPostReaction": "{user} ha reagito al tuo {post}",
-    "userPostInParentReaction": "{user} ha reagito al tuo {post} in {entityType} {entity}"
+    "userPostInParentReaction": "{user} ha reagito al tuo {post} in {entityType} {entity}",
+    "addedToCollaborators": "{user} ti ha aggiunto come collaboratore a {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} ha scritto {entityType} {entity}",

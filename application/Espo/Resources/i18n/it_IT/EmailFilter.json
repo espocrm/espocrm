@@ -16,15 +16,6 @@
     "Create EmailFilter": "Crea Filtro Email",
     "Emails": "Email"
   },
-  "tooltips": {
-    "from": "Messaggi di posta elettronica inviati dall'indirizzo specificato. Lascia vuoto se non necessario. È possibile utilizzare caratteri jolly *.",
-    "to": "Messaggi di posta elettronica inviati all'indirizzo specificato. Lascia vuoto se non necessario . È possibile utilizzare caratteri jolly *.",
-    "name": "Dai al filtro un nome descrittivo.",
-    "bodyContains": "Il corpo del messaggio contiene una delle parole, o frasi, specificate",
-    "isGlobal": "Applica questo filtro a tutte le email in arrivo al sistema.",
-    "subject": "Usa un wildcard *: \n\n * `testo*` – inizia con testo,\n * `*testo*` – contiene testo,\n * `*testo` – finisce con testo.",
-    "bodyContainsAll": "Il corpo di un'email contiene tutte le parole o le frasi specificate."
-  },
   "options": {
     "action": {
       "Skip": "Ignora",
@@ -32,6 +23,15 @@
       "None": "Nessuno",
       "Move to Group Folder": "Metti nella Cartella di Gruppo"
     }
+  },
+  "tooltips": {
+    "name": "Dai al filtro un nome descrittivo.",
+    "bodyContains": "Il corpo del messaggio contiene una delle parole, o frasi, specificate",
+    "isGlobal": "Applica questo filtro a tutte le email in arrivo al sistema.",
+    "bodyContainsAll": "Il corpo di un'email contiene tutte le parole o le frasi specificate.",
+    "subject": "Usa un wildcard *: \n\n * `testo*` – inizia con testo,\n * `*testo*` – contiene testo,\n * `*testo` – finisce con testo.",
+    "from": "Messaggi di posta elettronica inviati dall'indirizzo specificato. Lascia vuoto se non necessario. È possibile utilizzare caratteri jolly *.",
+    "to": "Messaggi di posta elettronica inviati all'indirizzo specificato. Lascia vuoto se non necessario . È possibile utilizzare caratteri jolly *."
   },
   "links": {
     "emailFolder": "Cartella",

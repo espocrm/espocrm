@@ -37,7 +37,9 @@
     "defaultRemindersTask": "Promemoria Predefiniti per i Compiti",
     "addCustomTabs": "Aggiungi Schede Personalizzate",
     "reactionNotifications": "Notifiche in-app per le reazioni",
-    "pageContentWidth": "Larghezza contenuto"
+    "pageContentWidth": "Larghezza contenuto",
+    "reactionNotificationsNotFollowed": "Notifiche relative alle reazioni per i record non seguiti",
+    "followAsCollaborator": "Segui automaticamente quando aggiunto come collaboratore"
   },
   "options": {
     "weekStart": {
@@ -58,10 +60,10 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Segui automaticamente TUTTI i nuovi record (creati da qualsiasi utente) dei tipi di entità selezionati. Per essere in grado di vedere le informazioni nel flusso e ricevere notifiche su tutti i record nel sistema.",
+    "addCustomTabs": "Se selezionato, le schede personalizzate verranno aggiunte alle schede predefinite. Altrimenti, le schede personalizzate verranno utilizzate al posto delle schede predefinite.",
     "doNotFillAssignedUserIfNotRequired": "Quando si crea un record, l'utente assegnato non verrà riempito con il proprio utente a meno che il campo non sia obbligatorio.",
     "followCreatedEntities": "Quando si creano nuovi record, verranno automaticamente seguiti anche se assegnati a un altro utente.",
-    "followCreatedEntityTypeList": "Quando si creano nuovi record di tipi di entità selezionati, questi verranno seguiti automaticamente anche se assegnati a un altro utente.",
-    "addCustomTabs": "Se selezionato, le schede personalizzate verranno aggiunte alle schede predefinite. Altrimenti, le schede personalizzate verranno utilizzate al posto delle schede predefinite."
+    "followCreatedEntityTypeList": "Quando si creano nuovi record di tipi di entità selezionati, questi verranno seguiti automaticamente anche se assegnati a un altro utente."
   },
   "tabFields": {
     "label": "Etichetta",

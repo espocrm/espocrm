@@ -140,7 +140,8 @@
     "jsonObject": "Oggetto Json",
     "datetime": "Data-ora",
     "datetimeOptional": "Data/data-ora",
-    "urlMultiple": "Url Multipli"
+    "urlMultiple": "Url Multipli",
+    "decimal": "Decimale"
   },
   "fields": {
     "type": "Tipo",

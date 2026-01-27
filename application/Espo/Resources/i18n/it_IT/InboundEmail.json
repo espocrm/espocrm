@@ -42,8 +42,6 @@
   },
   "tooltips": {
     "reply": "Notifica ai mittenti che le loro email sono state ricevute.\n\nVerrà inviata una sola email per destinatario, in un determinato periodo di tempo, per evitare loops.",
-    "createCase": "Creazione automatica di un Caso all'arrivo di una email.",
-    "replyToAddress": "Indicare l'indirizzo email di questo account di posta, per indirizzare qui le risposte.",
     "caseDistribution": "Come verranno assegnati i Casi. Assegnato direttamente all'utente o tra i membri del team.",
     "assignToUser": "Assegnatari dei processi utente.",
     "team": "il team a cui saranno assegnati i casi.",
@@ -51,13 +49,15 @@
     "addAllTeamUsers": "I Messaggi di posta elettronica vengono visualizzati nella cartella di Posta in arrivo di tutti gli utenti di un gruppo specifico.",
     "targetUserPosition": "Gli utenti con posizione specifica verranno distribuiti con i casi.",
     "monitoredFolders": "Se più cartelle, devono essere separate da virgola",
-    "smtpIsShared": "Se selezionato, gli utenti saranno in grado di inviare e-mail utilizzando questo SMTP. La disponibilità è controllata dai ruoli tramite l'autorizzazione dell'account e-mail di gruppo.",
-    "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa.",
     "storeSentEmails": "Le email inviate saranno memorizzate sul server IMAP",
     "useSmtp": "La possibilità di inviare email.",
     "groupEmailFolder": "Metti le email in arrivo in una cartella di gruppo.",
     "excludeFromReply": "Quando si risponde alle e-mail inviate all'indirizzo e-mail di questo account, il suo indirizzo e-mail non verrà aggiunto in CC.\n\nAbilitando questo parametro, l'indirizzo e-mail di questo account sarà esposto agli utenti che hanno accesso all'invio di e-mail.",
-    "isSystem": "È l'account di posta elettronica del sistema."
+    "isSystem": "È l'account di posta elettronica del sistema.",
+    "createCase": "Creazione automatica di un Caso all'arrivo di una email.",
+    "replyToAddress": "Indicare l'indirizzo email di questo account di posta, per indirizzare qui le risposte.",
+    "smtpIsShared": "Se selezionato, gli utenti saranno in grado di inviare e-mail utilizzando questo SMTP. La disponibilità è controllata dai ruoli tramite l'autorizzazione dell'account e-mail di gruppo.",
+    "smtpIsForMassEmail": "Se selezionato, SMTP sarà disponibile per l'e-mail di massa."
   },
   "links": {
     "filters": "Filtri",

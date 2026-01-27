@@ -76,7 +76,6 @@
     "default": "Sarà impostato al valore predefinito durante la creazione.",
     "min": "Valore minimo accettabile.",
     "max": "Valore massimo accettabile.",
-    "seeMoreDisabled": "Se non selezionato, i testi lunghi saranno tagliati.",
     "lengthOfCut": "Lunghezza del testo prima del taglio.",
     "maxLength": "Lunghezza massima accettabile del testo.",
     "before": "Il valore della data deve essere precedente al valore della data del campo specificato.",
@@ -100,7 +99,8 @@
     "linkReadOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato con una formula.\n\nInoltre, disabilita la possibilità di creare un record correlato dai pannelli delle relazioni.",
     "relateOnImport": "Quando si importa con questo campo, si mette automaticamente in relazione un record con un record straniero corrispondente. Utilizzare questa funzionalità solo se il campo straniero è considerato unico.",
     "preview": "Mostra il pulsante di anteprima. Applicabile se è abilitato il Markdown.",
-    "itemsEditable": "Gli elementi possono essere modificati. Applicabile solo se non vi sono opzioni specificate."
+    "itemsEditable": "Gli elementi possono essere modificati. Applicabile solo se non vi sono opzioni specificate.",
+    "seeMoreDisabled": "Se non selezionato, i testi lunghi saranno tagliati."
   },
   "fieldParts": {
     "address": {
@@ -153,7 +153,8 @@
     "link": "Un record correlato attraverso la relazione Belongs-To (many-to-one o one-to-one).",
     "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Può essere di tipi di entità differenti.",
     "linkMultiple": "Un insieme di record correlati attraverso una relazione Has-Many (molti-a-molti o uno-a-molti). Non tutte le relazioni hanno i loro campi multipli. Lo sono solo quelle in cui il parametro Collegamento multiplo è abilitato.",
-    "urlMultiple": "Link multipli."
+    "urlMultiple": "Link multipli.",
+    "decimal": "Un numero decimale con precisione a virgola fissa."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Nome campo '{field}' non è permesso.",

@@ -20,14 +20,16 @@
     "printHeader": "Stampa Intestazione",
     "title": "Titolo",
     "style": "Stile",
-    "status": "Stato"
+    "status": "Stato",
+    "filename": "Nome file"
   },
   "labels": {
     "Create Template": "Crea Modello"
   },
   "tooltips": {
     "footer": "Utilizzare {pageNumber} per stampare il numero di pagina.",
-    "variables": "Copia e incolla il placeholder necessario in Intestazione, Corpo o Piè di pagina."
+    "variables": "Copia e incolla il placeholder necessario in Intestazione, Corpo o Piè di pagina.",
+    "filename": "Un nome file opzionale. Gli attributi dell'entità possono essere utilizzati come segnaposto.\n\nSegnaposto aggiuntivo:\n- `{{today}}`\n\nEsempio:\n`Documento_{{today}}_{{name}}`"
   },
   "options": {
     "pageOrientation": {

@@ -49,7 +49,8 @@
     "Silent Mode": "Modalità silenziosa",
     "New import with same params": "Nuovo import con gli stessi parametri",
     "Run Manually": "Avvia Manualmente",
-    "Export": "Esporta"
+    "Export": "Esporta",
+    "Parameters": "Parametri"
   },
   "messages": {
     "utf8": "Dovrebbe avere codifica UTF-8",
