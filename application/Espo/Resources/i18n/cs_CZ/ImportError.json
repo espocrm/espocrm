@@ -1,1 +1,23 @@
-{}
+{
+  "fields": {
+    "type": "Typ",
+    "validationFailures": "Selhání validace",
+    "rowIndex": "Index řádku",
+    "exportRowIndex": "Index řádku exportu",
+    "lineNumber": "Číslo řádku",
+    "exportLineNumber": "Číslo řádku exportu",
+    "row": "Řádek",
+    "entityType": "Typ entity"
+  },
+  "options": {
+    "type": {
+      "Validation": "Validace",
+      "Access": "Přístup",
+      "Not-Found": "Nenalezeno"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Číslo řádku v původním CSV.",
+    "exportLineNumber": "Číslo řádku v exportovaném CSV."
+  }
+}

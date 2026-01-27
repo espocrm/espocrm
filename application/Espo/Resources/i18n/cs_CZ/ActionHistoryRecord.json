@@ -1,5 +1,30 @@
 {
   "fields": {
-    "user": "Uživatel"
+    "user": "Uživatel",
+    "action": "Akce",
+    "createdAt": "Datum",
+    "target": "Cíl",
+    "targetType": "Typ cíle",
+    "authToken": "Autentizační token",
+    "ipAddress": "IP Adresa",
+    "authLogRecord": "Záznam autentizačního logu",
+    "userType": "Typ uživatele"
+  },
+  "links": {
+    "authToken": "Autentizační token",
+    "user": "Uživatel",
+    "target": "Cíl",
+    "authLogRecord": "Záznam autentizačního logu"
+  },
+  "presetFilters": {
+    "onlyMy": "Jenom já"
+  },
+  "options": {
+    "action": {
+      "read": "Číst",
+      "update": "Aktualizovat",
+      "delete": "Smazat",
+      "create": "Vytvořit"
+    }
   }
 }

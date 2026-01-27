@@ -1,1 +1,62 @@
-{}
+{
+  "fields": {
+    "name": "Název",
+    "campaign": "Kampaň",
+    "isActive": "Je aktivní",
+    "subscribeToTargetList": "Přihlásit se k cílovému seznamu",
+    "subscribeContactToTargetList": "Přihlaste kontakt, pokud existuje",
+    "targetList": "Cílový seznam",
+    "fieldList": "Pole těla požadavku",
+    "optInConfirmationEmailTemplate": "Šablona e-mailu pro potvrzení přihlášení",
+    "optInConfirmationLifetime": "Životnost potvrzení přihlášení (hodiny)",
+    "optInConfirmationSuccessMessage": "Text, který se zobrazí po potvrzení přihlášení",
+    "leadSource": "Zdroj potenciálu",
+    "apiKey": "API klíč",
+    "targetTeam": "Cílový tým",
+    "exampleRequestMethod": "Metoda",
+    "exampleRequestPayload": "Tělo požadavku",
+    "createLeadBeforeOptInConfirmation": "Před potvrzením vytvořte potenciál",
+    "duplicateCheck": "Duplicitní kontrola",
+    "skipOptInConfirmationIfSubscribed": "Přeskočte potvrzení, pokud je Potenciál již v seznamu cílů",
+    "smtpAccount": "SMTP účet",
+    "inboundEmail": "Skupinový e-mailový účet",
+    "exampleRequestHeaders": "Hlavičky",
+    "phoneNumberCountry": "Kód země telefonu",
+    "fieldParams": "Parametry polí",
+    "formId": "ID formuláře",
+    "formEnabled": "Webový formulář",
+    "formUrl": "URL formuláře",
+    "formSuccessText": "Text zobrazený po odeslání formuláře",
+    "formText": "Text zobrazený ve formuláři",
+    "formSuccessRedirectUrl": "URL pro přesměrování po odeslání formuláře",
+    "formLanguage": "Jazyk použitý ve formuláři",
+    "formFrameAncestors": "Povolené hostitelé pro vložení formuláře",
+    "formCaptcha": "Použít Captcha",
+    "formTitle": "Název formuláře",
+    "formTheme": "Téma formuláře"
+  },
+  "links": {
+    "targetList": "Cílový seznam",
+    "campaign": "Kampaň",
+    "optInConfirmationEmailTemplate": "Šablona e-mailu pro potvrzení přihlášení",
+    "targetTeam": "Cílový tým",
+    "inboundEmail": "Skupinový emailový účet"
+  },
+  "labels": {
+    "Create LeadCapture": "Vytvořit vstupní bod",
+    "Generate New API Key": "Generovat nový klíč API",
+    "Request": "Požadavek",
+    "Confirm Opt-In": "Potvrďte přihlášení",
+    "Generate New Form ID": "Generovat nové ID formuláře",
+    "Web Form": "Webový formulář"
+  },
+  "messages": {
+    "generateApiKey": "Vytvořit nový klíč API",
+    "optInConfirmationExpired": "Platnost odkazu pro potvrzení přihlášení vypršela.",
+    "optInIsConfirmed": "Přihlášení je potvrzeno."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown je podporován.",
+    "formCaptcha": "Abyste mohli používat Captcha, musíte ji nakonfigurovat v **Administrace** > **Integrace**."
+  }
+}

@@ -2,6 +2,7 @@
   "fields": {
     "name": "Název",
     "parent": "Rodič",
+    "status": "Stav",
     "dateStart": "Datum zahájení",
     "dateEnd": "Datum ukončení",
     "direction": "Směr",
@@ -11,7 +12,8 @@
     "contacts": "Kontakty",
     "leads": "Stopy",
     "reminders": "Připomenutí",
-    "account": "Organizace"
+    "account": "Organizace",
+    "acceptanceStatus": "Stav přijetí"
   },
   "options": {
     "status": {
@@ -24,6 +26,7 @@
       "Inbound": "Příchozí"
     },
     "acceptanceStatus": {
+      "None": "Žádný",
       "Accepted": "Přijatý",
       "Declined": "Odmítnutý",
       "Tentative": "Předběžný"

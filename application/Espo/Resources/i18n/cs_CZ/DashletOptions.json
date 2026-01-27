@@ -6,13 +6,42 @@
     "autorefreshInterval": "Interval automatického obnovení",
     "displayRecords": "Zobrazit záznamů",
     "isDoubleHeight": "Výška 2x",
-    "mode": "Mód"
+    "mode": "Mód",
+    "enabledScopeList": "Co má být zobrazeno",
+    "users": "Uživatelé",
+    "entityType": "Typ entity",
+    "primaryFilter": "Základní filter",
+    "boolFilterList": "Další filtry",
+    "expandedLayout": "Vzhled",
+    "dateFilter": "Filtr datumů",
+    "skipOwn": "Nezobrazovat záznamy",
+    "folder": "Složka",
+    "includeShared": "Zahrnout sdílené",
+    "sortBy": "Pořadí podle",
+    "sortDirection": "Typ řazení"
   },
   "options": {
     "mode": {
       "agendaWeek": "Týden (agenda)",
       "basicWeek": "Týden",
-      "month": "Měsíc"
+      "month": "Měsíc",
+      "basicDay": "Den",
+      "agendaDay": "Den (agenda)",
+      "timeline": "Časová osa"
+    },
+    "sortDirection": {
+      "asc": "Vzestupně",
+      "desc": "Sestupně"
     }
+  },
+  "messages": {
+    "selectEntityType": "Vyberte typ entity v dashletu"
+  },
+  "tooltips": {
+    "skipOwn": "Nezobrazovat moje akce"
+  },
+  "otherFields": {
+    "soft": "Měkký",
+    "small": "Malý"
   }
 }

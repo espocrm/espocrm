@@ -5,7 +5,17 @@
     "campaign": "Kampaň",
     "parent": "Cíl",
     "object": "Objekt",
-    "application": "Aplikace"
+    "application": "Aplikace",
+    "queueItem": "Položka fronty",
+    "stringData": "Textová data",
+    "stringAdditionalData": "string Additional Data",
+    "isTest": "Je Test"
+  },
+  "links": {
+    "queueItem": "Položka fronty",
+    "parent": "Rodič",
+    "object": "Objekt",
+    "campaign": "Kampaň"
   },
   "options": {
     "action": {
@@ -14,10 +24,20 @@
       "Opted Out": "Odhlášené",
       "Bounced": "Odmítnuté",
       "Clicked": "Kliknuté",
-      "Lead Created": "Vytvořeno stop"
+      "Lead Created": "Vytvořeno stop",
+      "Opted In": "Příhlášené"
     }
   },
   "labels": {
     "All": "Vše"
+  },
+  "presetFilters": {
+    "sent": "Posláno",
+    "opened": "Otevřeno",
+    "optedOut": "Odhlášeno",
+    "bounced": "Odraženo",
+    "clicked": "Kliknuto",
+    "leadCreated": "Potenciál vytvořen",
+    "optedIn": "Přihlášeno"
   }
 }

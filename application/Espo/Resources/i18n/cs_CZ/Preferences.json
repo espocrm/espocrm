@@ -9,21 +9,65 @@
     "defaultCurrency": "Výchozí měna",
     "currencyList": "Seznam měn",
     "language": "Jazyk",
+    "exportDelimiter": "Exportovat oddělovač",
     "signature": "Emailový podpis",
+    "dashboardTabList": "Seznam záložek",
+    "tabList": "Seznam záložek",
     "defaultReminders": "Výchozí upozornění",
-    "receiveAssignmentEmailNotifications": "Dostávat emailová upozornění dle přiřazení",
-    "autoFollowEntityTypeList": "Auto-Follow"
+    "theme": "Téma",
+    "useCustomTabList": "Seznam vlastních záložek",
+    "receiveAssignmentEmailNotifications": "E-mailová oznámení o přiřazení",
+    "receiveMentionEmailNotifications": "Emailová oznámení o zmínkách v příspěvcích",
+    "receiveStreamEmailNotifications": "Emailová upozornění na příspěvky a aktualizace stavu",
+    "dashboardLayout": "Rozvržení Dashboardu",
+    "emailReplyForceHtml": "Odpovědět emailem v HTML",
+    "autoFollowEntityTypeList": "Automatické sledování entit",
+    "emailReplyToAllByDefault": "Odpovědět všem jako výchozí",
+    "doNotFillAssignedUserIfNotRequired": "Při vytváření záznamu předem nevyplňujte přiřazeného uživatele",
+    "followEntityOnStreamPost": "Automaticky sledovat záznam po zveřejnění ve streamu",
+    "followCreatedEntities": "Automaticky sledovat vytvořené záznamy",
+    "followCreatedEntityTypeList": "Automaticky sledovat vytvořené záznamy konkrétních typů entit",
+    "emailUseExternalClient": "Použít externího emailového klienta",
+    "assignmentNotificationsIgnoreEntityTypeList": "Oznámení o přiřazení v aplikaci",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Oznámení o přiřazení e-mailu",
+    "dashboardLocked": "Uzamknout Dashboard",
+    "textSearchStoringDisabled": "Vypnout textové řazení filtrů",
+    "calendarSlotDuration": "Délka políčka v kalendáři",
+    "calendarScrollHour": "Základní hodina kalendáře",
+    "defaultRemindersTask": "Výchozí upozornění pro úkol",
+    "addCustomTabs": "Přidat vlastní záložky",
+    "reactionNotifications": "Notifikace v CRM ohledně reakcí",
+    "pageContentWidth": "Šířka obsahu",
+    "reactionNotificationsNotFollowed": "Notifikace o reakcích pro nesledované záznamy",
+    "followAsCollaborator": "Automaticky sledovat při přidání jako spolupracovník"
   },
   "options": {
     "weekStart": {
       "0": "Neděle",
       "1": "Pondělí"
+    },
+    "pageContentWidth": {
+      "": "Normální",
+      "Wide": "Široký"
     }
   },
   "labels": {
-    "Notifications": "Upozornění"
+    "Notifications": "Oznámení",
+    "User Interface": "Uživatelské prostředí",
+    "Misc": "Vedlejší",
+    "Locale": "Lokální nastavení",
+    "Reset Dashboard to Default": "Nastavit Dashboard na Výchozí"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Uživatel bude automaticky sledovat všechny nové záznamy vybraných entit, uvidí informace ve streamu a bude dostávat upozornění."
+    "autoFollowEntityTypeList": "Uživatel bude automaticky sledovat všechny nové záznamy vybraných entit, uvidí informace ve streamu a bude dostávat upozornění.",
+    "addCustomTabs": "Při zaškrtnutí budou vlastní záložky přidány k výchozím. V opačném případě nahradí výchozí záložky.",
+    "doNotFillAssignedUserIfNotRequired": "Při vytvoření záznamu nebude přiřazený uživatel vyplněn vlastním uživatelem, pokud není toto pole povinné.",
+    "followCreatedEntities": "Při vytváření nových záznamů budou automaticky sledovány, i když budou přiřazeny jinému uživateli.",
+    "followCreatedEntityTypeList": "Při vytváření nových záznamů vybraných typů entit budou automaticky sledovány, i když budou přiřazeny jinému uživateli."
+  },
+  "tabFields": {
+    "label": "Popisek",
+    "iconClass": "Ikona",
+    "color": "Barva"
   }
 }

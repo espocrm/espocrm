@@ -4,10 +4,20 @@
     "week": "Týden",
     "agendaWeek": "Týden",
     "day": "Den",
-    "agendaDay": "Den"
+    "agendaDay": "Den",
+    "timeline": "Časová osa"
   },
   "labels": {
     "Today": "Dnes",
-    "Create": "Vytvořit"
+    "Create": "Vytvořit",
+    "Shared": "Sdílené",
+    "Add User": "Přidat uživatele",
+    "current": "aktuální",
+    "time": "čas",
+    "User List": "Seznam uživatelů",
+    "View Calendar": "Zobrazit kalendář",
+    "Create Shared View": "Vytvořit sdílené zobrazení",
+    "Edit Shared View": "Upravit sdílené zobrazení",
+    "Shared Mode Options": "Možnosti sdíleného režimu"
   }
 }

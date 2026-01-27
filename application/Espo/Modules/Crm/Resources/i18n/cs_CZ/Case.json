@@ -2,11 +2,31 @@
   "fields": {
     "name": "Název",
     "number": "Číslo",
+    "status": "Stav",
     "account": "Organizace",
     "contact": "Kontakt",
+    "contacts": "Kontakty",
     "priority": "Priorita",
     "type": "Typ",
-    "description": "Popis"
+    "description": "Popis",
+    "lead": "Potenciál",
+    "attachments": "Přílohy",
+    "inboundEmail": "Skupinový e-mailový účet",
+    "originalEmail": "Původní email",
+    "isInternal": "Schováno z portálu"
+  },
+  "links": {
+    "account": "Organizace",
+    "contact": "Kontakt (primární)",
+    "Contacts": "Kontakty",
+    "meetings": "Schůzky",
+    "calls": "Volání",
+    "tasks": "Úlohy",
+    "emails": "Emaily",
+    "articles": "Články znalostní báze",
+    "lead": "Potenciál",
+    "attachments": "Přílohy",
+    "inboundEmail": "Skupinový e-mailový účet"
   },
   "options": {
     "status": {
@@ -29,7 +49,11 @@
     }
   },
   "labels": {
-    "Create Case": "Vytvořit událost"
+    "Create Case": "Vytvořit servisní požadavek",
+    "Close": "Uzavřít",
+    "Reject": "Odmítnout",
+    "Closed": "Uzavřeno",
+    "Rejected": "Odmítnuto"
   },
   "presetFilters": {
     "open": "Otevřený",

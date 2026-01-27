@@ -2,6 +2,7 @@
   "fields": {
     "name": "Název",
     "parent": "Rodič",
+    "status": "Stav",
     "dateStart": "Datum zahájení",
     "dateEnd": "Datum dokončení",
     "dateStartDate": "Datum zahájení (celý den)",
@@ -11,10 +12,15 @@
     "isOverdue": "Je zpozděné",
     "account": "Organizace",
     "dateCompleted": "Datum dokončení",
-    "attachments": "Přílohy"
+    "attachments": "Přílohy",
+    "reminders": "Připomenutí",
+    "contact": "Kontakt",
+    "originalEmail": "Původní email"
   },
   "links": {
-    "attachments": "Přílohy"
+    "attachments": "Přílohy",
+    "account": "Organizace",
+    "contact": "Kontakt"
   },
   "options": {
     "status": {
@@ -33,11 +39,17 @@
   },
   "labels": {
     "Create Task": "Vytvořit úkol",
-    "Complete": "Dokončit"
+    "Complete": "Dokončit",
+    "overdue": "Po termínu"
   },
   "presetFilters": {
     "completed": "Dokončené",
     "todays": "Dnešní",
-    "overdue": "Zpožděné"
+    "overdue": "Zpožděné",
+    "deferred": "Odložený",
+    "actual": "Aktuální"
+  },
+  "nameOptions": {
+    "replyToEmail": "Odpovědět na email"
   }
 }

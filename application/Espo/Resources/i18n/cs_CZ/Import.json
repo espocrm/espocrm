@@ -14,17 +14,96 @@
     "Remove Duplicates": "Odebrat duplicity",
     "importedCount": "Naimportováno (počet)",
     "duplicateCount": "Duplicity (počet)",
-    "updatedCount": "Aktualizováno (počet)"
+    "updatedCount": "Aktualizováno (počet)",
+    "Create Only": "Pouze vytvořit",
+    "Create and Update": "Vytvořit a aktualizovat",
+    "Update Only": "Pouze aktualizovat",
+    "Update by": "Aktualizace podle",
+    "Set as Not Duplicate": "Nastavit jako neduplikovat",
+    "File (CSV)": "Soubor (CSV)",
+    "First Row Value": "Hodnota prvního řádku",
+    "Skip": "Přeskočit",
+    "Header Row Value": "Hodnota řádku záhlaví",
+    "Field": "Pole",
+    "What to Import?": "Co importovat?",
+    "Entity Type": "Typ entity",
+    "What to do?": "Co dělat?",
+    "Header Row": "Řádek záhlaví",
+    "Person Name Format": "Formát jména osoby",
+    "John Smith": "Jan Novák",
+    "Smith John": "Novák Jan",
+    "Smith, John": "Novák, Jan",
+    "Field Delimiter": "Oddělovač pole",
+    "Date Format": "Formát datumu",
+    "Decimal Mark": "Desetinný oddělovač",
+    "Text Qualifier": "Kvalifikace textu",
+    "Time Format": "Formát času",
+    "Currency": "Měna",
+    "Preview": "Náhled",
+    "Next": "Další",
+    "Step 1": "Krok 1",
+    "Step 2": "Krok 2",
+    "Double Quote": "Dvojité uvozovky",
+    "Single Quote": "Jednotlivá nabídka",
+    "Imported": "Importováno",
+    "Duplicates": "Duplicity",
+    "Skip searching for duplicates": "Přeskočit vyhledávání duplikátů",
+    "Timezone": "Časové pásmo",
+    "Remove Import Log": "Odebrat protokol importu",
+    "New Import": "Nový import",
+    "Import Results": "Výsledky importu",
+    "Silent Mode": "Tichý mód",
+    "New import with same params": "Nový import se stejnými parametry",
+    "Run Manually": "Spustit ručně",
+    "Parameters": "Parametry"
   },
   "messages": {
     "utf8": "Mělo by být v UTF-8 kódování",
-    "duplicatesRemoved": "Duplicity odstraněny"
+    "duplicatesRemoved": "Duplicity odstraněny",
+    "inIdle": "Provádět v nečinnosti (pro velká data; přes cron)",
+    "revert": "Tímto trvale odstraníte všechny importované záznamy.",
+    "removeDuplicates": "Tím trvale odstraníte všechny importované záznamy, které byly rozpoznány jako duplikáty.",
+    "confirmRevert": "Tímto trvale odstraníte všechny importované záznamy. Jste si jistí?",
+    "confirmRemoveDuplicates": "Tím trvale odstraníte všechny importované záznamy, které byly rozpoznány jako duplikáty. Jsi si jistá?",
+    "removeImportLog": "Tím odstraníte protokol importu. Všechny importované záznamy budou uchovány. Použijte jej, pokud jste si jisti, že import je v pořádku.",
+    "confirmRemoveImportLog": "Tím odstraníte protokol importu. Všechny importované záznamy budou uchovány. Nebudete moci vrátit výsledky importu. Jste si jistí?",
+    "importRunning": "Import běží...",
+    "noErrors": "Žádné chyby"
   },
   "fields": {
     "file": "Soubor",
     "entityType": "Typ entity",
     "imported": "Naimportované záznamy",
     "duplicates": "Duplicitní záznamy",
-    "updated": "Aktualizované záznamy"
+    "updated": "Aktualizované záznamy",
+    "status": "Stav"
+  },
+  "options": {
+    "status": {
+      "Failed": "Selhalo",
+      "In Process": "V procesu",
+      "Complete": "Kompletní"
+    },
+    "personNameFormat": {
+      "f l": "First Last (Jméno a Příjmení)",
+      "l f": "Last First (Příjmení a Jméno)",
+      "f m l": "First Middle Last (Jméno, Druhý jméno, Příjmení)",
+      "l f m": "Last First Middle (Příjmení Jméno Střední)",
+      "l, f": "Last, First (Příjmení, Jméno)"
+    }
+  },
+  "strings": {
+    "commandToRun": "Příkaz ke spuštění (z CLI)",
+    "saveAsDefault": "Uložit jako výchozí"
+  },
+  "tooltips": {
+    "manualMode": "Pokud je zaškrtnuto, budete muset import spustit ručně z příkazového řádku. Příkaz se zobrazí po nastavení importu.",
+    "silentMode": "Většina skriptů po uložení bude přeskočena, záznamy ve streamu nebudou vytvořeny. Import bude probíhat rychleji."
+  },
+  "links": {
+    "errors": "Chyby"
+  },
+  "params": {
+    "phoneNumberCountry": "Kód země telefonu"
   }
 }

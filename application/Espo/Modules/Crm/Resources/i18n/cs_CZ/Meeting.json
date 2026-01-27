@@ -2,21 +2,28 @@
   "fields": {
     "name": "Název",
     "parent": "Rodič",
+    "status": "Stav",
     "dateStart": "Datum zahájení",
     "dateEnd": "Datum ukončení",
     "duration": "Trvání",
     "description": "Popis",
     "users": "Uživatelé",
     "contacts": "Kontakty",
-    "leads": "Stopy",
+    "leads": "Potenciály",
     "reminders": "Připomenutí",
-    "account": "Organizace"
+    "account": "Organizace",
+    "acceptanceStatus": "Stav přijetí",
+    "dateStartDate": "Datum zahájení (celý den)",
+    "dateEndDate": "Datum ukončení (celý den)",
+    "isAllDay": "Celý den",
+    "sourceEmail": "Zdrojový e-mail",
+    "joinUrl": "URL pro připojení"
   },
   "options": {
     "status": {
-      "Planned": "Planovaný",
-      "Held": "Uskutečněný",
-      "Not Held": "Neuskutečněný"
+      "Planned": "Plánovaný",
+      "Held": "Uskutečněno",
+      "Not Held": "Neuskutečněno"
     },
     "acceptanceStatus": {
       "None": "-",
@@ -26,20 +33,29 @@
     }
   },
   "massActions": {
-    "setHeld": "Nastavit jako uskutečněný",
-    "setNotHeld": "Nastavit jako neuskutečněný"
+    "setHeld": "Označit jako uskutečněno",
+    "setNotHeld": "Označit jako neuskutečněno"
   },
   "labels": {
     "Create Meeting": "Vytvořit schůzku",
-    "Set Held": "Nastavit jako uskutečněný",
-    "Set Not Held": "Nastavit jako neuskutečněný",
+    "Set Held": "Označit jako uskutečněno",
+    "Set Not Held": "Označit jako neuskutečněno",
     "Send Invitations": "Odeslat pozvánky",
     "on time": "na čas",
-    "before": "před"
+    "before": "před",
+    "All-Day": "Celý den",
+    "Send Cancellation": "Odeslat zrušení",
+    "Acceptance": "Přijetí"
   },
   "presetFilters": {
     "planned": "Plánovaný",
     "held": "Uskutečněný",
     "todays": "Dnešní"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nic nebylo odesláno",
+    "selectAcceptanceStatus": "Nastavit svůj stav přijetí.",
+    "sendInvitationsToSelectedAttendees": "Odeslat pozvánky vybraným účastníkům",
+    "sendCancellationsToSelectedAttendees": "Odeslat zrušení vybraným účastníkům"
   }
 }

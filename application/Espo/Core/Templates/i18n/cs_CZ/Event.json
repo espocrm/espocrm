@@ -1,5 +1,39 @@
 {
+  "fields": {
+    "parent": "Rodič",
+    "dateStart": "Datum začátku",
+    "dateEnd": "Datum konce",
+    "duration": "Trvání",
+    "status": "Stav",
+    "reminders": "Připomínky",
+    "dateStartDate": "Datum začátku (celodenní)",
+    "dateEndDate": "Datum konce (celodenní)",
+    "isAllDay": "Je celodenní"
+  },
+  "links": {
+    "parent": "Rodič"
+  },
+  "options": {
+    "status": {
+      "Planned": "Plánováno",
+      "Held": "Uskutečněno",
+      "Not Held": "Neuskutečněno"
+    }
+  },
   "labels": {
-    "Create {entityType}": "Vytvořit {entityTypeTranslated}"
+    "Create {entityType}": "Vytvořit {entityTypeTranslated}",
+    "Schedule {entityType}": "Naplánovat {entityTypeTranslated}",
+    "Log {entityType}": "Zaznamenat {entityTypeTranslated}",
+    "Set Held": "Označit jako uskutečněné",
+    "Set Not Held": "Označit jako neuskutečněné"
+  },
+  "massActions": {
+    "setHeld": "Označit jako uskutečněné",
+    "setNotHeld": "Označit jako neuskutečněné"
+  },
+  "presetFilters": {
+    "planned": "Plánované",
+    "held": "Uskutečněné",
+    "todays": "Dnešní"
   }
 }

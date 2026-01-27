@@ -1,1 +1,53 @@
-{}
+{
+  "fields": {
+    "name": "Název",
+    "body": "Tělo",
+    "entityType": "Typ entity",
+    "header": "Záhlaví",
+    "footer": "Zápatí",
+    "leftMargin": "Levý okraj",
+    "topMargin": "Horní okraj",
+    "rightMargin": "Pravý okraj",
+    "bottomMargin": "Spodní okraj",
+    "printFooter": "Tisk zápatí",
+    "footerPosition": "Pozice zápatí",
+    "variables": "Dostupné zástupné symboly",
+    "pageOrientation": "Orientace stránky",
+    "pageFormat": "Formát papíru",
+    "fontFace": "Písmo",
+    "pageWidth": "Šířka stránky (mm)",
+    "pageHeight": "Výška stránky (mm)",
+    "headerPosition": "Pozice záhlaví",
+    "printHeader": "Tisknout záhlaví na každé stránce",
+    "title": "Titul",
+    "style": "Styl",
+    "status": "Stav",
+    "filename": "Název souboru"
+  },
+  "labels": {
+    "Create Template": "Vytvořit šablonu"
+  },
+  "tooltips": {
+    "footer": "K vytištění čísla stránky použijte {pageNumber}.",
+    "variables": "Zkopírujte a vložte potřebný zástupný symbol do záhlaví, těla nebo zápatí.",
+    "filename": "Volitelný název souboru. Atributy entity lze použít jako zástupné symboly.\n\nDalší zástupný symbol:\n- `{{today}}`\n\nPříklad:\n`Dokument_{{today}}_{{name}}`"
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Na výšku",
+      "Landscape": "Na šířku"
+    },
+    "placeholders": {
+      "today": "Dnes (datum)",
+      "now": "Nyní (datum-čas)",
+      "pagebreak": "Zalomení stránky"
+    },
+    "pageFormat": {
+      "Custom": "Vlastní"
+    },
+    "status": {
+      "Active": "Aktivní",
+      "Inactive": "Neaktivní"
+    }
+  }
+}

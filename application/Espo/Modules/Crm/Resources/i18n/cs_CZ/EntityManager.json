@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "activityStatusList": "Seznam stavů aktivit",
+    "historyStatusList": "Seznam stavů historie",
+    "completedStatusList": "Dokončené stavy",
+    "canceledStatusList": "Zrušené stavy"
+  },
+  "tooltips": {
+    "activityStatusList": "Stavy, které se zobrazují v panelu aktivit.",
+    "historyStatusList": "Stavy, které se zobrazují v panelu historie.",
+    "completedStatusList": "Stavy, které představují dokončení záznamu",
+    "canceledStatusList": "Stavy, které představují zrušení záznamu a nebudou brány v úvahu ve při určování vytíženosti uživatelů"
+  }
+}

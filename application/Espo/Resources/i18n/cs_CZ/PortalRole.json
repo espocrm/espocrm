@@ -1,1 +1,16 @@
-{}
+{
+  "links": {
+    "users": "Uživatelé"
+  },
+  "labels": {
+    "Access": "Přístup",
+    "Create PortalRole": "Vytvořit portálovou roli",
+    "Scope Level": "Úroveň rozsahu",
+    "Field Level": "Úroveň pole"
+  },
+  "fields": {
+    "exportPermission": "Oprávnění exportu",
+    "massUpdatePermission": "Oprávnění hromadné aktualizace",
+    "fieldData": "Data polí"
+  }
+}

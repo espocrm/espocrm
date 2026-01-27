@@ -1,1 +1,17 @@
-{}
+{
+  "fields": {
+    "event": "Událost",
+    "target": "Cíl",
+    "status": "Stav",
+    "processedAt": "Zpracováno v",
+    "attempts": "Pokusy",
+    "processAt": "Zpracovat v"
+  },
+  "options": {
+    "status": {
+      "Pending": "Čekající",
+      "Success": "Úspěšné",
+      "Failed": "Neúspěšné"
+    }
+  }
+}

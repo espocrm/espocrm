@@ -1,12 +1,32 @@
 {
   "fields": {
     "name": "Jméno",
+    "status": "Stav",
     "host": "Server",
     "username": "Uživatelské jméno",
     "password": "Heslo",
     "monitoredFolders": "Synchronizované složky",
-    "fetchSince": "Nastaveno od",
-    "emailAddress": "Emailová adresa"
+    "fetchSince": "Načíst od",
+    "emailAddress": "Emailová adresa",
+    "sentFolder": "Složka s odeslanými",
+    "storeSentEmails": "Uložit odeslané e-maily",
+    "keepFetchedEmailsUnread": "Ponechat načtené e-maily jako nepřečtené",
+    "emailFolder": "Vložit do složky",
+    "useSmtp": "Použít SMTP",
+    "smtpHost": "Server",
+    "smtpAuth": "Autentikovat",
+    "smtpSecurity": "Zabezpečení",
+    "smtpUsername": "SMTP uživatelské jméno",
+    "smtpPassword": "SMTP heslo",
+    "useImap": "Použít IMAP",
+    "smtpAuthMechanism": "Autentizační mechanismus",
+    "security": "Zabezpečení",
+    "connectedAt": "Připojeno v",
+    "folderMap": "Mapování složek"
+  },
+  "links": {
+    "filters": "Filtry",
+    "emails": "Emaily"
   },
   "options": {
     "status": {
@@ -17,13 +37,22 @@
   "labels": {
     "Create EmailAccount": "Vytvořit emailový účet",
     "Main": "Hlavní",
-    "Test Connection": "Test spojení"
+    "Test Connection": "Test spojení",
+    "Send Test Email": "Odeslat testovací email"
   },
   "messages": {
     "couldNotConnectToImap": "Nemohu se připojit k IMAP serveru",
-    "connectionIsOk": "Spojení je OK"
+    "connectionIsOk": "Spojení je OK",
+    "imapNotConnected": "Nelze se připojit k [IMAP účtu](#EmailAccount/view/{id}).",
+    "noFolder": "Mapovaná složka neexistuje."
   },
   "tooltips": {
-    "monitoredFolders": "Můžete přidat složku 'Odeslané' k synchronizaci externím emailovým klientem."
+    "storeSentEmails": "Odeslané e-maily budou uloženy na serveru IMAP. Pole E-mailová adresa by se mělo shodovat s adresou, ze které budou e-maily zasílány.",
+    "useSmtp": "Možnost odesílat e-maily.",
+    "emailAddress": "Záznam uživatele (přiřazený uživatel) by měl mít stejnou e-mailovou adresu, aby bylo možné použít tento e-mailový účet k odesílání.",
+    "monitoredFolders": "Vyberte složky IMAP k importu. Volitelně je můžete mapovat na složky v systému.\n\nMůžete přidat složku 'Odesláno' pro synchronizaci e-mailů odeslaných z externího e-mailového klienta."
+  },
+  "presetFilters": {
+    "active": "Aktivní"
   }
 }

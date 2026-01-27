@@ -1,5 +1,66 @@
 {
   "fields": {
+    "post": "Příspěvek",
+    "attachments": "Přílohy",
+    "targetType": "Cíl",
+    "teams": "Týmy",
+    "users": "Uživatelé",
+    "portals": "Portály",
+    "type": "Typ",
+    "isGlobal": "Globální",
+    "isInternal": "Interní (pro interní uživatele)",
+    "related": "Související",
+    "createdByGender": "Pohlaví tvůrce",
+    "number": "Číslo",
+    "isPinned": "Je připnuto"
+  },
+  "filters": {
+    "all": "Vše",
+    "posts": "Příspěvky",
+    "updates": "Aktualizace",
+    "activity": "Aktivita"
+  },
+  "messages": {
+    "writeMessage": "Napište zprávu zde",
+    "pinnedMaxCountExceeded": "Nelze připnout více poznámek. Maximální povolený počet je {count}."
+  },
+  "options": {
+    "type": {
+      "Post": "Příspěvek",
+      "Create": "Vytvoření",
+      "CreateRelated": "Vytvoření souvisejícího",
+      "Update": "Aktualizace",
+      "Status": "Stav",
+      "Assign": "Přiřazení",
+      "Relate": "Propojení",
+      "Unrelate": "Zrušení propojení",
+      "EmailReceived": "E-mail přijat",
+      "EmailSent": "E-mail odeslán"
+    },
+    "targetType": {
+      "self": "sobě",
+      "users": "konkrétnímu uživateli (uživatelům)",
+      "teams": "konkrétnímu týmu (týmům)",
+      "all": "všem interním uživatelům",
+      "portals": "uživatelům portálu"
+    }
+  },
+  "links": {
+    "superParent": "Super rodič",
+    "related": "Související",
+    "portals": "Portály",
     "attachments": "Přílohy"
+  },
+  "labels": {
+    "View Posts": "Zobrazit příspěvky",
+    "View Activity": "Zobrazit aktivity",
+    "Pin": "Připnout",
+    "Unpin": "Odepnout",
+    "Pinned": "Připnuto",
+    "Quote Reply": "Odpovêdět s citací",
+    "View Attachments": "Zobrazit přílohy"
+  },
+  "otherFields": {
+    "to": "Komu"
   }
 }

@@ -1,1 +1,8 @@
-{}
+{
+  "links": {
+    "emails": "Emaily"
+  },
+  "labels": {
+    "Create GroupEmailFolder": "Vytvořit složku"
+  }
+}

@@ -13,17 +13,33 @@
     "campaign": "Kampaň",
     "targetLists": "Cílové seznamy",
     "targetList": "Cílový seznam",
-    "title": "Pozice"
+    "portalUser": "Uživatel portálu",
+    "originalLead": "Původní Potenciál",
+    "acceptanceStatus": "Stav přijetí",
+    "accountIsInactive": "Neaktivní",
+    "acceptanceStatusMeetings": "Stav přijetí (Schůzky)",
+    "acceptanceStatusCalls": "Stav přijetí (Volání)",
+    "title": "Pozice",
+    "hasPortalUser": "Má uživatele portálu",
+    "originalEmail": "Původní email"
   },
   "links": {
     "opportunities": "Případy",
     "cases": "Události",
     "targetLists": "Cílové seznamy",
     "campaignLogRecords": "Log kampaně",
-    "campaign": "Kampaň"
+    "campaign": "Kampaň",
+    "account": "Organizace (hlavní)",
+    "accounts": "Organizace",
+    "casesPrimary": "Případy (primární)",
+    "portalUser": "Uživatel portálu",
+    "originalLead": "Původní Potenciál",
+    "documents": "Documenty",
+    "tasksPrimary": "Úkoly (rozšířené)",
+    "opportunitiesPrimary": "Příležitosti (hlavní)"
   },
   "labels": {
-    "Create Contact": "Vytvořit kontakt"
+    "Create Contact": "Vytvořit Kontakt"
   },
   "options": {
     "opportunityRole": {
@@ -31,5 +47,10 @@
       "Evaluator": "Hodnotí",
       "Influencer": "Má vliv"
     }
+  },
+  "presetFilters": {
+    "portalUsers": "Uživatelé portálu",
+    "notPortalUsers": "Není uživatel portálu",
+    "accountActive": "Aktivní"
   }
 }

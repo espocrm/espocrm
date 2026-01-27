@@ -10,7 +10,11 @@
     "industry": "Průmysl",
     "type": "Typ",
     "contactRole": "Pozice",
-    "campaign": "Kampaň"
+    "campaign": "Kampaň",
+    "targetLists": "Cílové seznamy",
+    "targetList": "Cílový seznam",
+    "originalLead": "Původní Potenciál",
+    "contactIsInactive": "Je neaktivní"
   },
   "links": {
     "contacts": "Kontakty",
@@ -23,7 +27,10 @@
     "emailsPrimary": "Emaily (rozšířené)",
     "targetLists": "Cílové seznamy",
     "campaignLogRecords": "Log kampaně",
-    "campaign": "Kampaň"
+    "campaign": "Kampaň",
+    "portalUsers": "Uživatelé portálu",
+    "originalLead": "Původní Potenciál",
+    "contactsPrimary": "Primární kontakty"
   },
   "options": {
     "type": {
@@ -34,17 +41,22 @@
       "Agriculture": "Zemědělství",
       "Advertising": "Reklama",
       "Apparel & Accessories": "Oblečení a doplňky",
+      "Automotive": "Automobilový průmysl",
       "Banking": "Bankovnictví",
       "Biotechnology": "Biotechnologie",
+      "Building Materials & Equipment": "Stavebnictví",
       "Chemical": "Chemie",
       "Computer": "Počítače",
       "Education": "Vzdělání",
       "Electronics": "Elektronika",
+      "Energy": "Energie",
       "Entertainment & Leisure": "Zábava a volný čas",
       "Food & Beverage": "Stravování a nápoje",
       "Grocery": "Potraviny",
+      "Healthcare": "Zdravotnictví",
       "Insurance": "Pojištění",
       "Legal": "Právo",
+      "Manufacturing": "Výroba",
       "Publishing": "Vydavatelství",
       "Real Estate": "Nemovitosti",
       "Service": "Služby",
@@ -53,15 +65,41 @@
       "Telecommunications": "Telekomunikace",
       "Television": "TV",
       "Transportation": "Doprava",
-      "Venture Capital": "Rizikový kapitál"
+      "Venture Capital": "Rizikový kapitál",
+      "Aerospace": "Letectví a kosmonautika",
+      "Architecture": "Architektura",
+      "Construction": "Konstrukce",
+      "Defense": "Obrana",
+      "Creative": "Tvůrčí činnost",
+      "Culture": "Kultura",
+      "Consulting": "Poradenství",
+      "Electric Power": "Elektrická energie",
+      "Hospitality": "Pohostinství",
+      "Mass Media": "Hromadné sdělovací prostředky",
+      "Mining": "Hornictví",
+      "Music": "Hudba",
+      "Petroleum": "Ropa",
+      "Retail": "Maloobchod",
+      "Shipping": "Přeprava",
+      "Support": "Podpora",
+      "Testing, Inspection & Certification": "Testování, inspekce a certifikace",
+      "Wholesale": "Velkoobchod",
+      "Water": "Vodohospodářství",
+      "Travel": "Cestování"
     }
   },
   "labels": {
     "Create Account": "Vytvořit organizaci",
-    "Copy Billing": "Zkopírovat fakturační údaje"
+    "Copy Billing": "Zkopírovat fakturační údaje",
+    "Set Primary": "Nastavit jako primární"
   },
   "presetFilters": {
     "customers": "Zákazníci",
-    "partners": "Partneři"
+    "partners": "Partneři",
+    "recentlyCreated": "Nedávno vytvořeno"
+  },
+  "tabs": {
+    "Account": "Organizace",
+    "Support": "Podpora"
   }
 }

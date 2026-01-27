@@ -3,6 +3,21 @@
     "user": "Uživatel",
     "ipAddress": "IP adresa",
     "lastAccess": "Datum posledního přístupu",
-    "createdAt": "Datum přihlášení"
+    "createdAt": "Datum přihlášení",
+    "isActive": "Je aktivní",
+    "portal": "Portál"
+  },
+  "links": {
+    "actionHistoryRecords": "Historie akcí"
+  },
+  "presetFilters": {
+    "active": "Aktivní",
+    "inactive": "Neaktivní"
+  },
+  "labels": {
+    "Set Inactive": "Zneplatnit"
+  },
+  "massActions": {
+    "setInactive": "Nastavit jako neplatný"
   }
 }

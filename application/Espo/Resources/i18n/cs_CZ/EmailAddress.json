@@ -3,5 +3,13 @@
     "Primary": "Primární",
     "Opted Out": "Odhlášené",
     "Invalid": "Neplatné"
+  },
+  "fields": {
+    "optOut": "Odhlášený",
+    "invalid": "Neplatný",
+    "lower": "Název malými písmeny"
+  },
+  "presetFilters": {
+    "orphan": "Sirotek"
   }
 }

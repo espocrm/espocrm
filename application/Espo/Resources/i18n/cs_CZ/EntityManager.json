@@ -1,7 +1,11 @@
 {
   "labels": {
     "Fields": "Pole",
-    "Relationships": "Vztahy"
+    "Relationships": "Vztahy",
+    "Schedule": "Plán",
+    "Formula": "Vzorec",
+    "Layouts": "Layouty",
+    "Parameters": "Parametry"
   },
   "fields": {
     "name": "Jméno",
@@ -12,28 +16,104 @@
     "linkType": "Typ linku",
     "entityForeign": "Cizí entita",
     "linkForeign": "Cizí link",
-    "labelForeign": "Cizí popisek"
+    "link": "Odkaz",
+    "labelForeign": "Cizí popisek",
+    "relationName": "Název prostřední tabulky",
+    "linkMultipleField": "Pole s vícenásobnou vazbou",
+    "linkMultipleFieldForeign": "Cizí pole s vícenásobnou vazbou",
+    "disabled": "Zakázáno",
+    "textFilterFields": "Pole textového filtru",
+    "audited": "Auditováno",
+    "auditedForeign": "Cizí audit",
+    "statusField": "Stavové pole",
+    "beforeSaveCustomScript": "Před uložením vlastního skriptu",
+    "color": "Barva",
+    "kanbanViewMode": "Kanban zobrazení",
+    "kanbanStatusIgnoreList": "Ignorované skupiny v zobrazení Kanban",
+    "iconClass": "Ikona",
+    "fullTextSearch": "Fulltextové vyhledávání",
+    "countDisabled": "Zakázat počet záznamů",
+    "parentEntityTypeList": "Typy nadřazených entit",
+    "foreignLinkEntityTypeList": "Cizí odkazy",
+    "entity": "Entita",
+    "optimisticConcurrencyControl": "Optimistická kontrola konkurence",
+    "beforeSaveApiScript": "API skript před uložením",
+    "updateDuplicateCheck": "Kontrola duplicit při aktualizaci",
+    "duplicateCheckFieldList": "Pole pro kontrolu duplicit",
+    "author": "Autor",
+    "module": "Modul",
+    "version": "Verze",
+    "selectFilter": "Filtr pro vybírání",
+    "primaryFilters": "Primární filtry",
+    "stars": "Hvězdičky",
+    "preserveAuditLog": "Zachovat auditní log",
+    "assignedUsers": "Více přiřazených uživatelů",
+    "collaborators": "Spolupracovníci",
+    "aclContactLink": "Odkaz na kontakt pro účely práv",
+    "aclAccountLink": "Odkaz na organizaci pro účely práv",
+    "sortBy": "Seřadit podle",
+    "sortDirection": "Směr řazení"
   },
   "options": {
     "type": {
+      "": "Žádný",
       "Base": "Báze",
       "Person": "Osoba",
-      "CategoryTree": "Strom kategorií"
+      "CategoryTree": "Strom kategorií",
+      "Event": "Událost",
+      "BasePlus": "Báze Plus",
+      "Company": "Společnost"
     },
     "linkType": {
       "manyToMany": "N-N",
       "oneToMany": "1-N",
       "manyToOne": "N-1",
       "parentToChildren": "Rodič-Potomek",
-      "childrenToParent": "Potomek-Rodič"
+      "childrenToParent": "Potomek-Rodič",
+      "oneToOneRight": "Jedna ku jedné zprava",
+      "oneToOneLeft": "Jedna ku jedné zleva"
     },
     "sortDirection": {
       "asc": "Vzestupně",
       "desc": "Sestupně"
+    },
+    "module": {
+      "Custom": "Vlastní"
     }
   },
   "messages": {
     "entityCreated": "Entita byla vytvořena",
-    "linkAlreadyExists": "Konflikt: link již existuje."
+    "linkAlreadyExists": "Konflikt: link již existuje.",
+    "linkConflict": "Konflikt názvu: odkaz nebo pole se stejným názvem již existuje.",
+    "confirmRemove": "Opravdu chcete odstranit typ entity ze systému?",
+    "beforeSaveCustomScript": "Skript volaný pokaždé před uložením entity. Použijte pro nastavení vypočítaných polí.",
+    "beforeSaveApiScript": "Skript volaný při vytváření a aktualizaci přes API před uložením entity. Použijte pro vlastní validaci a kontrolu duplicit.",
+    "nameIsAlreadyUsed": "Název '{name}' je již používán.",
+    "nameIsNotAllowed": "Název '{name}' není povolen.",
+    "nameIsTooLong": "Název je příliš dlouhý.",
+    "confirmRemoveLink": "Opravdu chcete odstranit vztah *{link}*?",
+    "urlHashCopiedToClipboard": "URL fragment pro filter *{name}* byl zkopírován do schránky. Můžete jej přidat do navbaru."
+  },
+  "tooltips": {
+    "statusField": "Aktualizace tohoto pole se zaznamenávají ve streamu.",
+    "textFilterFields": "Pole používaná při textovém vyhledávání.",
+    "disabled": "Zkontrolujte, zda tuto entitu ve svém systému nepotřebujete.",
+    "linkAudited": "Vytvoření souvisejícího záznamu a propojení s existujícím záznamem bude uloženo ve streamu.",
+    "linkMultipleField": "Pole Více odkazů poskytuje praktický způsob úpravy vztahů. Nepoužívejte jej, pokud máte velký počet souvisejících záznamů.",
+    "entityType": "Base Plus - má panely Aktivity, Historie a Úkoly. \n Událost - k dispozici na panelu Kalendář a Aktivity.",
+    "fullTextSearch": "Pro správné fungování je potřeba přestavět.",
+    "countDisabled": "Celkový počet se v zobrazení seznamu nezobrazí. Může snížit dobu načítání, když je tabulka DB velká.",
+    "optimisticConcurrencyControl": "Zabraňuje konfliktům při úpravách",
+    "duplicateCheckFieldList": "Určuje, podle kterých polí se budou kontrolovat duplicitní záznamy",
+    "updateDuplicateCheck": "Provede kontrolu duplicit při uložení záznamu",
+    "linkSelectFilter": "Primární filtr, který se použije ve výchozím nastavení při výběru záznamu.",
+    "stars": "Schopnost označovat záznamy hvězdičkami.",
+    "aclContactLink": "Odkaz s Kontaktem pro použití při aplikaci přístupové kontroly pro portálové uživatele.",
+    "aclAccountLink": "Odkaz s Účtem pro použití při aplikaci přístupové kontroly pro portálové uživatele.",
+    "collaborators": "Možnost sdílet záznamy s konkrétními uživateli.",
+    "assignedUsers": "Možnost přiřadit záznam více uživatelům.\n\nPoznámka: Po povolení parametru se stávající přiřazení uživatelů nepřenesou do nového pole *Přiřazení uživatelé*.",
+    "preserveAuditLog": "Zakáže čištění auditního logu. Tento parametr je použitelný pouze pokud je Stream zakázán. Pokud je Stream povolen, záznamy auditního logu se nemažou.",
+    "stream": "Zda má entita Stream.",
+    "linkParamReadOnly": "Odkaz pouze pro čtení nelze upravovat přes API požadavky *link* a *unlink*. Nebude možné propojovat a odpojovat záznamy přes panel vztahů. Stále je možné upravovat odkazy pouze pro čtení přes pole odkazu a vícenásobného odkazu."
   }
 }

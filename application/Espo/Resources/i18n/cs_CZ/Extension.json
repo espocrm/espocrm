@@ -3,13 +3,15 @@
     "name": "Jméno",
     "version": "Verze",
     "description": "Popis",
-    "isInstalled": "Instalováno"
+    "isInstalled": "Instalováno",
+    "checkVersionUrl": "URL pro kontrolu nových verzí"
   },
   "labels": {
     "Uninstall": "Odebrat",
     "Install": "Nainstalovat"
   },
   "messages": {
-    "uninstalled": "Rozšíření {name} bylo odebráno"
+    "uninstalled": "Rozšíření {name} bylo odebráno",
+    "fileExceedsMaxUploadSize": "Velikost souboru překračuje maximální povolenou velikost {maxSize}. Zvažte zvýšení `post_max_size` nebo nainstalujte rozšíření přes CLI."
   }
 }

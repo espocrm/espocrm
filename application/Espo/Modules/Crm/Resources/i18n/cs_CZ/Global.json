@@ -18,37 +18,53 @@
   "scopeNames": {
     "Account": "Organizace",
     "Contact": "Kontakt",
-    "Lead": "Stopa",
+    "Lead": "Potenciál",
     "Target": "Cíl",
-    "Opportunity": "Případ",
+    "Opportunity": "Obchodní příležitost",
     "Meeting": "Schůzka",
     "Calendar": "Kalendář",
     "Call": "Volání",
     "Task": "Úkol",
-    "Case": "Událost",
+    "Case": "Servisní požadavek",
     "Document": "Dokument",
     "DocumentFolder": "Složka dokumentů",
     "Campaign": "Kampaň",
-    "TargetList": "Cílový seznam"
+    "TargetList": "Cílový seznam",
+    "MassEmail": "Hromadný email",
+    "EmailQueueItem": "Položka fronty emailů",
+    "CampaignTrackingUrl": "URL sledování kampaně",
+    "Activities": "Aktivity",
+    "KnowledgeBaseArticle": "Článek firemních znalostí",
+    "KnowledgeBaseCategory": "Kategorie firemních znalostí",
+    "CampaignLogRecord": "Log kampaně",
+    "TargetListCategory": "Kategorie cílového seznamu"
   },
   "scopeNamesPlural": {
     "Account": "Organizace",
     "Contact": "Kontakty",
-    "Lead": "Stopy",
+    "Lead": "Potenciál",
     "Target": "Cíle",
-    "Opportunity": "Případy",
+    "Opportunity": "Obchodní příležitosti",
     "Meeting": "Schůzky",
     "Calendar": "Kalendáře",
     "Call": "Volání",
     "Task": "Úkoly",
-    "Case": "Události",
+    "Case": "Servisní požadavky",
     "Document": "Dokumenty",
     "DocumentFolder": "Složky dokumentů",
     "Campaign": "Kampaně",
-    "TargetList": "Cílové seznamy"
+    "TargetList": "Cílové seznamy",
+    "MassEmail": "Hromadné emaily",
+    "EmailQueueItem": "Položky e-mailové fronty",
+    "CampaignTrackingUrl": "URL sledování kampaní",
+    "Activities": "Aktivity",
+    "KnowledgeBaseArticle": "Znalostní báze",
+    "KnowledgeBaseCategory": "Kategorie znalostní báze",
+    "CampaignLogRecord": "Záznamy logu kampaní",
+    "TargetListCategory": "Kategorie cílového seznamu"
   },
   "dashlets": {
-    "Leads": "Moje stopy",
+    "Leads": "Moje akvizice",
     "Opportunities": "Moje případy",
     "Tasks": "Moje úkoly",
     "Cases": "Moje události",
@@ -58,7 +74,8 @@
     "OpportunitiesByStage": "Případy podle stavu",
     "OpportunitiesByLeadSource": "Případy podle zdroje",
     "SalesByMonth": "Prodeje za měsíc",
-    "SalesPipeline": "Prodejní pipeline"
+    "SalesPipeline": "Prodejní pipeline",
+    "Activities": "Moje aktivity"
   },
   "labels": {
     "Create InboundEmail": "Vytvořit příchodí email",
@@ -67,12 +84,14 @@
     "Attendees": "Účastníci",
     "Schedule Meeting": "Plánovaná schůzka",
     "Schedule Call": "Plánované volání",
-    "Compose Email": "Sestavit email",
+    "Compose Email": "Napsat email",
     "Log Meeting": "Zapsat schůzku",
     "Log Call": "Zapsat volání",
     "Archive Email": "Archivovat email",
     "Create Task": "Vytvořit úkol",
-    "Tasks": "Úkoly"
+    "Tasks": "Úkoly",
+    "Scheduler": "Plánovač",
+    "Schedule": "Plán"
   },
   "fields": {
     "billingAddressCity": "Město",
@@ -85,15 +104,29 @@
     "addressState": "Kraj",
     "billingAddressStreet": "Ulice",
     "addressStreet": "Ulice",
+    "billingAddressMap": "Mapa",
+    "addressMap": "Mapa",
     "shippingAddressCity": "Město (doručovací)",
     "shippingAddressStreet": "Ulice (doručovací)",
     "shippingAddressCountry": "Země (doručovací)",
     "shippingAddressState": "Kraj (doručovací)",
-    "shippingAddressPostalCode": "PSČ (doručovací)"
+    "shippingAddressPostalCode": "PSČ (doručovací)",
+    "shippingAddressMap": "Mapa (dodací)"
   },
   "options": {
     "reminderTypes": {
       "Popup": "Vyskakovací"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} vás přidal k {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} přijal účast na {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} odmítl účast na {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} je nerozhodný ohledně účasti na {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} přijal účast",
+    "eventConfirmationDeclinedThis": "{invitee} odmítl účast",
+    "eventConfirmationTentativeThis": "{invitee} je nerozhodný ohledně účasti"
   }
 }

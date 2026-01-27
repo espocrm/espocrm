@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "method": "Metoda"
+  },
+  "labels": {
+    "Create AuthenticationProvider": "Vytvořit poskytovatele autentizace"
+  }
+}

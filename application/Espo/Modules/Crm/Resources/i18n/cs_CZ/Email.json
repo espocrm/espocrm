@@ -1,8 +1,13 @@
 {
   "labels": {
-    "Create Lead": "Vytvořit stopu",
+    "Create Lead": "Vytvořit akvizici",
     "Create Contact": "Vytvořit kontakt",
     "Create Task": "Vytvořit úkol",
-    "Create Case": "Vytvořit událost"
+    "Create Case": "Vytvořit servisní požadavek",
+    "Add to Contact": "Přidat ke kontaktu",
+    "Add to Lead": "Přidat k akvizici"
+  },
+  "fields": {
+    "tasks": "Úkoly"
   }
 }

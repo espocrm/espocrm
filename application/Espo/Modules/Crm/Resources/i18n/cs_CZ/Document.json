@@ -5,6 +5,7 @@
   },
   "fields": {
     "name": "Název",
+    "status": "Stav",
     "file": "Soubor",
     "type": "Typ",
     "publishDate": "Datum publikace",
@@ -16,11 +17,14 @@
   "links": {
     "accounts": "Organizace",
     "opportunities": "Případy",
-    "folder": "Složka"
+    "folder": "Složka",
+    "leads": "Potenciály",
+    "contacts": "Kontakty"
   },
   "options": {
     "status": {
       "Active": "Aktivní",
+      "Draft": "Rozepsaný",
       "Expired": "Expirovaný",
       "Canceled": "Zrušený"
     },
@@ -31,6 +35,7 @@
     }
   },
   "presetFilters": {
-    "active": "Aktivní"
+    "active": "Aktivní",
+    "draft": "Koncept"
   }
 }

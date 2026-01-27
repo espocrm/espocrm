@@ -1,1 +1,39 @@
-{}
+{
+  "fields": {
+    "username": "Uživatelské jméno",
+    "ipAddress": "IP Adresa",
+    "requestTime": "Čas požadavku",
+    "createdAt": "Požadováno v",
+    "isDenied": "Je odmítnuto",
+    "denialReason": "Důvod odmítnutí",
+    "portal": "Portál",
+    "user": "Uživatel",
+    "authToken": "Token ověření vytvořen",
+    "requestUrl": "URL požadavku",
+    "requestMethod": "Způsob vyžádání",
+    "authTokenIsActive": "Ověřovací token je aktivní",
+    "authenticationMethod": "Metoda ověřování"
+  },
+  "links": {
+    "authToken": "Token ověření vytvořen",
+    "user": "Uživatel",
+    "portal": "Portál",
+    "actionHistoryRecords": "Historie akcí"
+  },
+  "presetFilters": {
+    "denied": "Zamítnuto",
+    "accepted": "Přijato"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Nesprávné údaje",
+      "INACTIVE_USER": "Neaktivní uživatel",
+      "IS_PORTAL_USER": "Portálový uživatel",
+      "IS_NOT_PORTAL_USER": "Není portálovým uživatelem",
+      "USER_IS_NOT_IN_PORTAL": "Uživatel není přiřazen k portálu",
+      "IS_SYSTEM_USER": "Je systémový uživatel",
+      "FORBIDDEN": "Zakázáno",
+      "WRONG_CODE": "Nesprávný kód"
+    }
+  }
+}

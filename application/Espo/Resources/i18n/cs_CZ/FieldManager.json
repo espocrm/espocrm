@@ -1,1 +1,173 @@
-{}
+{
+  "labels": {
+    "Dynamic Logic": "Dynamická logika",
+    "Name": "Název",
+    "Label": "Označení",
+    "Type": "Typ",
+    "View Details": "Zobrazit detaily"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Žádné",
+      "javascript: return this.dateTime.getNow(1);": "Nyní",
+      "javascript: return this.dateTime.getNow(5);": "Nyní (5m)",
+      "javascript: return this.dateTime.getNow(15);": "Nyní (15m)",
+      "javascript: return this.dateTime.getNow(30);": "Nyní (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 hodina",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 hodiny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 hodiny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 hodiny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 hodin",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 den",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 dny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 dny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 dny",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 dnů",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 dnů",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 týden"
+    },
+    "dateDefault": {
+      "": "Žádné",
+      "javascript: return this.dateTime.getToday();": "Dnes",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 den",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 dny",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 dny",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 dny",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 dnů",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 dnů",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 dnů",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 dnů",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 dní",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1týden",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 týdny",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 týdny",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 měsíc",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 měsíce",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 měsíce",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 měsíce",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 měsíců",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 rok"
+    },
+    "barcodeType": {
+      "QRcode": "QR kód"
+    },
+    "globalRestrictions": {
+      "forbidden": "Zakázáno",
+      "internal": "Interní",
+      "onlyAdmin": "Pouze admin",
+      "readOnly": "Pouze pro čtení",
+      "nonAdminReadOnly": "Pouze pro čtení (ne-admin)"
+    }
+  },
+  "tooltips": {
+    "audited": "Aktualizace budou zobrazeny ve streamu.",
+    "required": "Pole bude povinné. Nelze nechat prázdné.",
+    "default": "Hodnota bude nastavena ve výchozím nastavení při vytváření.",
+    "min": "Minimální přijatelná hodnota.",
+    "max": "Maximální přijatelná hodnota.",
+    "lengthOfCut": "Jak dlouhý může být text, než bude oříznut.",
+    "maxLength": "Maximální přijatelná délka textu (počet bajtů v databázi).",
+    "before": "Datum by mělo být před datem zadaného pole.",
+    "after": "Datum by mělo být po datu zadaného pole.",
+    "readOnly": "Hodnotu pole nelze určit uživatelem. Lze jej však vypočítat podle vzorce.",
+    "maxFileSize": "Pokud je prázdné nebo 0, pak žádný limit.",
+    "fileAccept": "Které typy souborů přijímat. Je možné přidat vlastní položky.",
+    "barcodeLastChar": "Pro typ EAN-13.",
+    "conversionDisabled": "Akce převodu měny nebude na toto pole aplikována.",
+    "cutHeight": "Text vyšší než zadaná hodnota bude oříznut s tlačítkem 'zobrazit více'.",
+    "urlStrip": "Odstranit protokol a koncové lomítko.",
+    "pattern": "Regulární výraz pro kontrolu hodnoty pole. Definujte výraz nebo vyberte předdefinovaný.",
+    "options": "Seznam možných hodnot a jejich popisků.",
+    "optionsArray": "Seznam možných hodnot a jejich popisků. Pokud je prázdný, pole umožní zadávání vlastních hodnot.",
+    "maxCount": "Maximální počet položek, které lze vybrat.",
+    "displayAsList": "Každá položka na novém řádku.",
+    "optionsVarchar": "Seznam hodnot pro automatické dokončování.",
+    "currencyDecimal": "Použít Decimal typ v databázi. V aplikaci budou hodnoty reprezentovány jako řetězce. Zaškrtněte tento parametr, pokud je vyžadována přesnost.",
+    "optionsReference": "Znovu použít možnosti z jiného pole.",
+    "readOnlyAfterCreate": "Hodnota pole může být zadána při vytváření nového záznamu. Poté se pole stane pouze pro čtení. Stále může být vypočítáno vzorcem.",
+    "linkReadOnly": "Hodnotu pole nemůže zadat uživatel. Ale může být vypočítána vzorcem.\n\nTaké zakáže možnost vytvořit související záznam z panelů vztahů.",
+    "relateOnImport": "Při importu s tímto polem automaticky propojí záznam s odpovídajícím cizím záznamem. Tuto funkci používejte pouze pokud je cizí pole považováno za jedinečné.",
+    "preview": "Zobrazit tlačítko náhledu. Použitelné, pokud je povoleno Markdown.",
+    "itemsEditable": "Umožňuje upravovat jednotlivé položky seznamu.",
+    "seeMoreDisabled": "Pokud není zaškrtnuto, budou dlouhé texty zkráceny."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Ulice",
+      "city": "Město",
+      "state": "Stát",
+      "country": "Země",
+      "postalCode": "PSČ",
+      "map": "Mapa"
+    },
+    "personName": {
+      "salutation": "Oslovení",
+      "first": "Jméno",
+      "last": "Příjmení",
+      "middle": "Prostřední"
+    },
+    "currency": {
+      "converted": "(Převedeno)",
+      "currency": "(Měna)"
+    },
+    "datetimeOptional": {
+      "date": "Datum"
+    }
+  },
+  "fieldInfo": {
+    "varchar": "Jednořádkový text.",
+    "enum": "Selectbox, lze vybrat pouze jednu hodnotu.",
+    "text": "Víceřádkový text s podporou markdown.",
+    "date": "Datum bez času.",
+    "datetime": "Datum a čas",
+    "currency": "Hodnota měny. Desetinné číslo s kódem měny.",
+    "int": "Celé číslo.",
+    "float": "Číslo s desetinnou částí.",
+    "bool": "Zaškrtávací políčko. Dvě možné hodnoty: true a false.",
+    "multiEnum": "Seznam hodnot, lze vybrat více hodnot. Seznam je seřazen.",
+    "checklist": "Seznam zaškrtávacích políček.",
+    "array": "Seznam hodnot, podobný poli Multi-Enum.",
+    "address": "Adresa s ulicí, městem, státem, PSČ a zemí.",
+    "url": "Pro ukládání odkazů.",
+    "wysiwyg": "Text s podporou HTML.",
+    "file": "Pro nahrávání souborů.",
+    "image": "Pro nahrávání obrázků.",
+    "attachmentMultiple": "Umožňuje nahrát více souborů.",
+    "number": "Automatické zvyšování počtu typů řetězců s možnou předponou a konkrétní délkou.",
+    "autoincrement": "Generované celé číslo jen pro čtení s automatickým zvyšováním.",
+    "barcode": "Čárový kód. Lze tisknout do PDF.",
+    "email": "Sada e-mailových adres s jejich parametry: Odhlášeno, Neplatné, Primární.",
+    "phone": "Sada telefonních čísel s jejich parametry: Typ, Odhlášeno, Neplatné, Primární.",
+    "foreign": "Pole souvisejícího záznamu. Pouze ke čtení.",
+    "link": "Záznam vztahu Belongs-To (více na jednoho nebo jeden na jednoho).",
+    "linkParent": "Záznam vztahu mezi rodiči. Může být různých typů entit.",
+    "linkMultiple": "Sada záznamů vztahu Has-Many (many-to-many or one-to-many). Ne všechny vztahy mají svá pole s více odkazy. Pouze ty, kde je povolen parametr Link-Multiple.",
+    "urlMultiple": "Více odkazů.",
+    "decimal": "Desetinné číslo s pevnou přesností."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Název pole '{field}' není povolen.",
+    "fieldAlreadyExists": "Pole s názvem '{field}' již existuje v entitě '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Odkaz s názvem '{field}' již existuje v '{entityType}'.",
+    "confirmRemove": "Opravdu chcete odstranit pole *{field}*?\n\nOdstranění pole neodstraní data z databáze. Data z databáze budou odstraněna, pokud provedete hard rebuild.",
+    "fieldCreatedAddToLayouts": "Pole bylo vytvořeno. Nyní ho můžete přidat do [layoutů]({link})",
+    "namingFieldLinkConflict": "Název '{field}' je v konfliktu s vazbou."
+  },
+  "otherFields": {
+    "attributes": "Atributy"
+  }
+}

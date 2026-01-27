@@ -1,1 +1,14 @@
-{}
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Vytvořit kategorii",
+    "Manage Categories": "Spravovat kategorie",
+    "EmailTemplates": "Šablony emailu"
+  },
+  "fields": {
+    "order": "Pořadí",
+    "childList": "Seznam podkategorií"
+  },
+  "links": {
+    "emailTemplates": "Šablony emailu"
+  }
+}

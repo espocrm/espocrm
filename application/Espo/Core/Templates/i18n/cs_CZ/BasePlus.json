@@ -1,4 +1,9 @@
 {
+  "links": {
+    "meetings": "Schůzky",
+    "calls": "Hovory",
+    "tasks": "Úkoly"
+  },
   "labels": {
     "Create {entityType}": "Vytvořit {entityTypeTranslated}"
   }

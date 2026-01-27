@@ -2,20 +2,62 @@
   "fields": {
     "name": "Jméno",
     "userName": "Uživatelské jméno",
+    "title": "Titul",
     "isAdmin": "Je admin",
     "defaultTeam": "Výchozí tým",
     "phoneNumber": "Telefon",
     "roles": "Role",
+    "portals": "Portály",
+    "portalRoles": "Role portálu",
     "teamRole": "Pozice",
     "password": "Heslo",
-    "passwordConfirm": "Potvrzení hesla",
+    "currentPassword": "Aktuální heslo",
+    "passwordConfirm": "Potvrdit heslo",
     "newPassword": "Nové heslo",
-    "newPasswordConfirm": "Potvrzení nového hesla",
-    "isActive": "Je aktivní"
+    "newPasswordConfirm": "Potvrdit nové heslo",
+    "isActive": "Je aktivní",
+    "isPortalUser": "Je uživatel portálu",
+    "contact": "Kontakt",
+    "accounts": "Organizace",
+    "account": "Organizace (Primární)",
+    "sendAccessInfo": "Poslat e-mail s přístupovými informacemi uživateli",
+    "portal": "Portál",
+    "gender": "Pohlaví",
+    "position": "Pozice v týmu",
+    "ipAddress": "IP Adresa",
+    "passwordPreview": "Náhled hesla",
+    "isSuperAdmin": "Je super administrátor",
+    "lastAccess": "Poslední přístup",
+    "type": "Typ",
+    "apiKey": "API klíč",
+    "secretKey": "Soukromý klíč",
+    "authMethod": "Metoda ověřování",
+    "yourPassword": "Vaše aktuální heslo",
+    "dashboardTemplate": "Dashboard šablona",
+    "auth2FAEnable": "Povolit dvoufázové ověřování",
+    "auth2FAMethod": "2FA metoda",
+    "auth2FATotpSecret": "2FA TOTP tajemství",
+    "auth2FA": "Dvoufázové ověření",
+    "workingTimeCalendar": "Kalendář pracovní doby",
+    "layoutSet": "Sada layoutů",
+    "avatarColor": "Barva avataru"
   },
   "links": {
     "teams": "Týmy",
-    "roles": "Role"
+    "roles": "Role",
+    "notes": "Poznámky",
+    "portals": "Portály",
+    "portalRoles": "Role portálu",
+    "contact": "Kontakt",
+    "accounts": "Organizace",
+    "account": "Organizace (Primární)",
+    "tasks": "Úkoly",
+    "defaultTeam": "Výchozí tým",
+    "dashboardTemplate": "Dashboard šablona",
+    "userData": "Data uživatele",
+    "workingTimeCalendar": "Kalendář pracovní doby",
+    "layoutSet": "Sada layoutů",
+    "workingTimeRanges": "Výjimky pracovní doby"
   },
   "labels": {
     "Create User": "Vytvořit uživatele",
@@ -23,16 +65,37 @@
     "Access": "Přístup",
     "Preferences": "Předvolby",
     "Change Password": "Změnit heslo",
-    "Teams and Access Control": "Týmy a kontrola přístupu",
+    "Teams and Access Control": "Týmy a řízení přístupu",
     "Forgot Password?": "Zapomenuté heslo?",
-    "Password Change Request": "Požadavek na změnu hesla",
-    "Email Address": "Emailová adresa",
+    "Password Change Request": "Žádost o změnu hesla",
+    "Email Address": "E-mailová adresa",
     "External Accounts": "Externí účty",
-    "Email Accounts": "Emailové účty"
+    "Email Accounts": "E-mailové účty",
+    "Portal": "Portál",
+    "Create Portal User": "Vytvořit uživatele portálu",
+    "Proceed w/o Contact": "Pokračovat bez kontaktu",
+    "Generate New API Key": "Generovat nový API klíč",
+    "Generate New Password": "Generovat nové heslo",
+    "Code": "Kód",
+    "Back to login form": "Zpět na přihlašovací formulář",
+    "Requirements": "Požadavky",
+    "Security": "Zabezpečení",
+    "Reset 2FA": "Resetovat 2FA",
+    "Secret": "Tajemství",
+    "Send Password Change Link": "Odeslat odkaz na změnu hesla",
+    "Send Code": "Odeslat kód",
+    "Login Link": "Odkaz pro přihlášení"
   },
   "tooltips": {
-    "userName": "Letters a-z, numbers 0-9 and underscores are allowed.",
-    "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level only for this user."
+    "defaultTeam": "Všechny záznamy vytvořené tímto uživatelem budou ve výchozím nastavení souviset s tímto týmem.",
+    "isAdmin": "Správce má přístup ke všemu.",
+    "teams": "Týmy, do kterých tento uživatel patří. Úroveň řízení přístupu se dědí z rolí týmu.",
+    "roles": "Další přístupové role. Použijte je, pokud uživatel nepatří do žádného týmu nebo pokud potřebujete rozšířit úroveň řízení přístupu výhradně pro tohoto uživatele.",
+    "portalRoles": "Další role portálu. Použijte jej k rozšíření úrovně řízení přístupu výhradně pro tohoto uživatele.",
+    "portals": "Portály, ke kterým má tento uživatel přístup.",
+    "userName": "Povolena jsou písmena a-z, čísla 0-9, tečky, pomlčky, zavináče a podtržítka.",
+    "isActive": "Pokud není zaškrtnuto, uživatel se nebude moci přihlásit.",
+    "layoutSet": "Layouty ze specifikované sady se budou používat namísto výchozích."
   },
   "messages": {
     "passwordWillBeSent": "Heslo bude posláno na emailovou adresu uživatele.",
@@ -43,12 +106,63 @@
     "userNameEmailAddressNotFound": "Uživatelské jméno/heslo nebylo nalezeno",
     "forbidden": "Tato operace není povolena, prosím zkuste to později",
     "uniqueLinkHasBeenSent": "Unikátní link byl poslán na zadanou emailovou adresu.",
-    "passwordChangedByRequest": "Heslo bylo změněo."
+    "passwordChangedByRequest": "Heslo bylo změněno.",
+    "userNameExists": "Uživatelské jméno již existuje",
+    "setupSmtpBefore": "Abyste mohli systému odesílat heslo e-mailem, musíte nastavit [Nastavení SMTP]({url}).",
+    "passwordStrengthLength": "Musí mít alespoň {délku} znaků.",
+    "passwordStrengthLetterCount": "Musí obsahovat alespoň {count} písmen.",
+    "passwordStrengthNumberCount": "Musí obsahovat alespoň {počet} číslic.",
+    "passwordStrengthBothCases": "Musí obsahovat velká i malá písmena.",
+    "wrongCode": "Špatný kód",
+    "codeIsRequired": "Je vyžadován kód",
+    "enterTotpCode": "Zadejte kód z aplikace ověřovatele.",
+    "verifyTotpCode": "Naskenujte QR kód pomocí aplikace pro mobilní autentizaci. Pokud máte potíže se skenováním, můžete toto tajemství zadat ručně. Poté se ve vaší aplikaci zobrazí šestimístný kód. Zadejte tento kód do pole níže.",
+    "generateAndSendNewPassword": "Bude vygenerováno nové heslo a odesláno na e-mailovou adresu uživatele.",
+    "security2FaResetConfirmation": "Jste si jistý/á, že chcete resetovat současné nastavení dvoufázového ověření?",
+    "ldapUserInEspoNotFound": "Uživatel nebyl nalezen v CRM. Požádejte správce o vytvoření uživatele.",
+    "passwordRecoverySentIfMatched": "Za předpokladu, že se zadané údaje shodovaly s jakýmkoli uživatelským účtem.",
+    "auth2FARequiredHeader": "Vyžaduje se dvoufázové ověření",
+    "auth2FARequired": "Musíte nastavit dvoufázové ověřování. Na svém mobilním telefonu použijte aplikaci ověřovatele (např. Google Authenticator)",
+    "sendPasswordChangeLinkConfirmation": "E-mail umožňujíci změnu hesla s unikátním odkazem bude zaslán uživateli. Tento odkaz vyprší za specifikovanou dobu času.",
+    "yourAuthenticationCode": "Váš autentizační kód: {code}.",
+    "choose2FaSmsPhoneNumber": "Vyberte telefonní číslo, které bude použito pro dvoufázové ověření.",
+    "choose2FaEmailAddress": "Vyberte e-mailovou adresu, která bude použita pro dvoufázové ověření. Je silně doporučeno nepoužívat primární adresu.",
+    "enterCodeSentInEmail": "Zadejte kód, který byl zaslán na Vaši emailovou adresu.",
+    "enterCodeSentBySms": "Zadejte kód, který byl zaslán na Vaši telefonní číslo.",
+    "passwordChangeRequestNotFound": "Požadavek o změnu hesla nebyl nalezen. Je možné, že vypršel. Zkuste vytvořit nový ze [stránky na přihlášení]({url}).",
+    "loginAs": "Otevřete odkaz pro přihlášení v anonymním okně pro zachování vaší aktuální relace. Použijte své správcovské přihlašovací údaje k přihlášení.",
+    "failedToLogIn": "Přihlášení selhalo",
+    "2faMethodNotConfigured": "Doufázové ověření není plně nastaveno v systému.",
+    "loginError": "Došlo k chybě",
+    "defaultTeamIsNotUsers": "Výchozí tým by měl být jeden z týmů uživatele.",
+    "passwordStrengthSpecialCharacterCount": "Musí obsahovat alespoň {count} speciálních znaků."
   },
   "boolFilters": {
-    "onlyMyTeam": "Pouze můj tým"
+    "onlyMyTeam": "Pouze můj tým",
+    "onlyMe": "Pouze já"
   },
   "presetFilters": {
-    "active": "Aktivní"
+    "active": "Aktivní",
+    "activePortal": "Aktivní portáloví",
+    "activeApi": "Aktivní API"
+  },
+  "options": {
+    "gender": {
+      "": "Nenastaveno",
+      "Male": "Muž",
+      "Female": "Žena",
+      "Neutral": "Neutrální"
+    },
+    "type": {
+      "regular": "Obyčejný",
+      "portal": "Portálový",
+      "system": "Systémový"
+    },
+    "authMethod": {
+      "ApiKey": "API Klíč"
+    }
+  },
+  "actions": {
+    "changePosition": "Změnit pozici"
   }
 }

@@ -1,7 +1,7 @@
 {
   "labels": {
     "Converted To": "Konvertováno do",
-    "Create Lead": "Vytvořit stopu",
+    "Create Lead": "Vytvořit Potenciál",
     "Convert": "Konvertovat",
     "convert": "konvertovat"
   },
@@ -13,6 +13,7 @@
     "accountName": "Název organizace",
     "doNotCall": "Nevolat",
     "address": "Adresa",
+    "status": "Stav",
     "source": "Zdroj",
     "opportunityAmount": "Částka případu",
     "opportunityAmountConverted": "Částka případu (konvertováno)",
@@ -22,12 +23,24 @@
     "createdOpportunity": "Případ",
     "campaign": "Kampaň",
     "targetLists": "Cílové seznamy",
-    "targetList": "Cílový seznam"
+    "targetList": "Cílový seznam",
+    "industry": "Druh činnosti",
+    "acceptanceStatus": "Stav přijetí",
+    "opportunityAmountCurrency": "Částka příležitosti v měně",
+    "acceptanceStatusMeetings": "Stav přijetí (Schůzky)",
+    "acceptanceStatusCalls": "Stav přijetí (Volání)",
+    "convertedAt": "Převedeno na",
+    "originalEmail": "Původní e-mail"
   },
   "links": {
     "targetLists": "Cílové seznamy",
     "campaignLogRecords": "Log kampaně",
-    "campaign": "Kampaň"
+    "campaign": "Kampaň",
+    "createdAccount": "Organizace",
+    "createdContact": "Kontakt",
+    "createdOpportunity": "Příležitost",
+    "cases": "Případy",
+    "documents": "Dokumenty"
   },
   "options": {
     "status": {
@@ -49,6 +62,7 @@
   },
   "presetFilters": {
     "active": "Aktivní",
-    "converted": "Konvertovaný"
+    "converted": "Konvertovaný",
+    "actual": "Aktuální"
   }
 }

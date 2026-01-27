@@ -1,6 +1,12 @@
 {
   "layouts": {
-    "detailConvert": "Konvertovat stopu",
-    "listForAccount": "Seznam (pro organizace)"
+    "detailConvert": "Konverze z potenciálu",
+    "listForAccount": "Seznam (pro organizace)",
+    "listForContact": "Seznam (pro kontakt)"
+  },
+  "templates": {
+    "invitation": "Pozvání",
+    "reminder": "Připomínka",
+    "cancellation": "Zrušení"
   }
 }

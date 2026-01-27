@@ -1,1 +1,13 @@
-{}
+{
+  "fields": {
+    "number": "Číslo",
+    "target": "Cíl",
+    "leadCapture": "Vstupní bod",
+    "createdAt": "Zadáno",
+    "isCreated": "Je vytvořen potenciál"
+  },
+  "links": {
+    "leadCapture": "Vstupní bod",
+    "target": "Cíl"
+  }
+}

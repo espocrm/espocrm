@@ -1,12 +1,58 @@
 {
   "fields": {
+    "link": "Odkaz",
     "notSortable": "Neřaditelné",
-    "align": "Zarovnání"
+    "align": "Zarovnání",
+    "panelName": "Název panelu",
+    "style": "Styl",
+    "isLarge": "Velká velikost písma",
+    "dynamicLogicVisible": "Podmínky zviditelnění panelu",
+    "hidden": "Skrytý",
+    "dynamicLogicStyled": "Podmínky pro použití stylu",
+    "noLabel": "Skrýt název",
+    "tabLabel": "Text záložky",
+    "tabBreak": "Zalomit záložku",
+    "width": "Šířka",
+    "noteText": "Text Poznámky",
+    "noteStyle": "Styl poznámky",
+    "isMuted": "Tlumená barva",
+    "sticked": "Přilepit nahoru"
   },
   "options": {
     "align": {
       "left": "Vlevo",
       "right": "Vpravo"
+    },
+    "style": {
+      "default": "Výchozí",
+      "success": "Úspěch",
+      "danger": "Nebezpečí",
+      "info": "Informace",
+      "warning": "Varování",
+      "primary": "Primární"
     }
+  },
+  "labels": {
+    "New panel": "Nový panel",
+    "Layout": "Vzhled"
+  },
+  "tooltips": {
+    "link": "Pokud je zaškrtnuto, zobrazí se hodnota pole jako odkaz směřující na detailní pohled na záznam. Obvykle se používá pro pole * Jméno *.",
+    "hiddenPanel": "Chcete-li zobrazit panel, musíte kliknout na 'zobrazit více'.",
+    "sticked": "Panel bude přilepen k panelu nad ním. Žádná mezera mezi panely.",
+    "panelStyle": "Barva panelu.",
+    "dynamicLogicVisible": "Pokud je nastaveno, panel bude skrytý, dokud nebude splněna podmínka.",
+    "dynamicLogicStyled": "Barva bude použita, pokud je splněna určitá podmínka. Barva je definována parametrem *Styl*.",
+    "tabBreak": "Samostatná záložka pro panel a všechny následující panely až do dalšího zalomení záložky.",
+    "noLabel": "Nezobrazovat popisek sloupce v záhlaví.",
+    "notSortable": "Zakáže možnost řazení podle sloupce.",
+    "width": "Šířka sloupce. Doporučuje se mít jeden sloupec bez zadané šířky, obvykle by to mělo být pole *Jméno*.",
+    "noteText": "Text, který se zobrazí v panelu. Je podporován Markdown."
+  },
+  "messages": {
+    "cantBeEmpty": "Layout nemůže být prázdné.",
+    "fieldsIncompatible": "Pole nemohou být v layoutu společně: {fields}.",
+    "alreadyExists": "Layout `{name}` již existuje.",
+    "createInfo": "Vlastní layout seznamu mohou být použita panely vztahů."
   }
 }

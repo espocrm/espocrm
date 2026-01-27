@@ -1,1 +1,8 @@
-{}
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Posílání hromadných emailů",
+      "ControlKnowledgeBaseArticleStatus": "Kontrola statusu článku znalostní báze"
+    }
+  }
+}

@@ -2,10 +2,12 @@
   "fields": {
     "name": "Název",
     "description": "Popis",
+    "status": "Stav",
     "type": "Typ",
     "startDate": "Datum zahájení",
     "endDate": "Datum ukončení",
     "targetLists": "Cílové seznamy",
+    "excludingTargetLists": "Vyloučené cílové seznamy",
     "sentCount": "Poslané",
     "openedCount": "Otevřené",
     "clickedCount": "Kliknuté",
@@ -15,20 +17,37 @@
     "softBouncedCount": "Měkce odmítnuté",
     "leadCreatedCount": "Vytvořených stop",
     "revenue": "Příjem",
-    "revenueConverted": "příjem (konvertováno)"
+    "revenueConverted": "příjem (konvertováno)",
+    "budget": "Rozpočet",
+    "budgetConverted": "Rozpočet (převeden)",
+    "contactsTemplate": "Šablona kontaktů",
+    "leadsTemplate": "Šablona potenciálů",
+    "accountsTemplate": "Šablona organizací",
+    "usersTemplate": "Šablona uživatelů",
+    "mailMergeOnlyWithAddress": "Přeskočit záznamy bez vyplněné adresy",
+    "optedInCount": "Přihlášené",
+    "budgetCurrency": "Měna rozpočtu"
   },
   "links": {
     "targetLists": "Cílové seznamy",
+    "excludingTargetLists": "Vyloučené cílové seznamy",
     "accounts": "Organizace",
     "contacts": "Kontakty",
     "leads": "Stopy",
-    "opportunities": "Případy"
+    "opportunities": "Případy",
+    "massEmails": "Hromadné emaily",
+    "trackingUrls": "Sledovaná URL",
+    "contactsTemplate": "Šablona kontaktů",
+    "leadsTemplate": "Šablony Potenciálů",
+    "accountsTemplate": "Šablona organizací",
+    "usersTemplate": "Šablona uživatelů"
   },
   "options": {
     "type": {
       "Television": "TV",
       "Radio": "Rádio",
-      "Mail": "Email"
+      "Mail": "Email",
+      "Informational Email": "Informační email"
     },
     "status": {
       "Planning": "Plánované",
@@ -42,9 +61,26 @@
     "Target Lists": "Cílové seznamy",
     "Statistics": "Statistiky",
     "hard": "těžký",
-    "soft": "měkký"
+    "soft": "měkký",
+    "Unsubscribe": "Odhlásit se",
+    "Mass Emails": "Hromadné e-maily",
+    "Email Templates": "Šablony emailu",
+    "Unsubscribe again": "Znovu se odhlásit",
+    "Subscribe again": "Přihlásit se znovu",
+    "Create Target List": "Vytvořit cílový seznam",
+    "Mail Merge": "Sloučení emailů",
+    "Generate Mail Merge PDF": "Generování hromadné korespondence PDF"
   },
   "presetFilters": {
     "active": "Aktivní"
+  },
+  "messages": {
+    "unsubscribed": "Byli jste odhlášeni z našeho seznamu adresátů.",
+    "subscribedAgain": "Jste znovu přihlášeni k odběru.",
+    "cannotChangeType": "Nelze změnit typ"
+  },
+  "tooltips": {
+    "targetLists": "Cíle, které by měly přijímat zprávy.",
+    "excludingTargetLists": "Cíle, které by neměly přijímat zprávy."
   }
 }

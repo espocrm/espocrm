@@ -1,4 +1,12 @@
 {
+  "fields": {
+    "address": "Adresa"
+  },
+  "links": {
+    "meetings": "Schůzky",
+    "calls": "Hovory",
+    "tasks": "Úkoly"
+  },
   "labels": {
     "Create {entityType}": "Vytvořit {entityTypeTranslated}"
   }

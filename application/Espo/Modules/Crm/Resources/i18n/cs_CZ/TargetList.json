@@ -5,21 +5,38 @@
     "entryCount": "Počet vstupů",
     "campaigns": "Kampaně",
     "endDate": "Datum ukončení",
-    "targetLists": "Cílové seznamy"
+    "targetLists": "Cílové seznamy",
+    "includingActionList": "Zahrnout",
+    "excludingActionList": "Vyloučit",
+    "optedOutCount": "Počet odhlášených",
+    "targetStatus": "Cílový stav",
+    "isOptedOut": "Je odhlášen",
+    "sourceCampaign": "Zdrojová kampaň",
+    "category": "Kategorie"
   },
   "links": {
     "accounts": "Organizace",
     "contacts": "Kontakty",
-    "leads": "Stopy",
-    "campaigns": "Kampaně"
+    "leads": "Potenciálové",
+    "campaigns": "Kampaně",
+    "massEmails": "Hromadný email",
+    "category": "Kategorie"
   },
   "options": {
     "type": {
-      "Television": "TV"
+      "Television": "Televize",
+      "Radio": "Rádio",
+      "Newsletter": "Novinky"
+    },
+    "targetStatus": {
+      "Opted Out": "Odhlášený",
+      "Listed": "Vypsaný"
     }
   },
   "labels": {
     "Create TargetList": "Vytvořit cílový seznam",
-    "Opted Out": "Odhlášené"
+    "Opted Out": "Odhlášené",
+    "Cancel Opt-Out": "Zrušit odhlášení",
+    "Opt-Out": "Odhlásit"
   }
 }

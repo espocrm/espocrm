@@ -1,1 +1,10 @@
-{}
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Vytvořit kategorii",
+    "Manage Categories": "Spravovat kategorie",
+    "Articles": "Články"
+  },
+  "links": {
+    "articles": "Články"
+  }
+}
