@@ -1,7 +1,13 @@
 {
   "labels": {
     "Primary": "首选",
-    "Opted Out": "选择退出",
+    "Opted Out": "已退订",
     "Invalid": "无效"
+  },
+  "fields": {
+    "optOut": "已退订"
+  },
+  "presetFilters": {
+    "orphan": "孤立"
   }
 }

@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "layout": "布局",
+    "append": "附加 (不删除用户的标签页)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "创建模板",
+    "Deploy to Users": "部署到用户",
+    "Deploy to Team": "部署到团队"
+  }
+}

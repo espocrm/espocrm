@@ -22,15 +22,14 @@
     "writeMessage": "在这里写信息"
   },
   "options": {
-    "targetType": {
-      "self": "给我自己",
-      "users": "给特殊用户",
-      "teams": "给特殊对",
-      "all": "所有内部门户",
-      "portals": "给门户用户"
-    },
     "type": {
       "Post": "帖子"
     }
+  },
+  "links": {
+    "superParent": "最高层级",
+    "related": "相关链接",
+    "portals": "门户",
+    "attachments": "附件"
   }
 }

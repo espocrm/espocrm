@@ -8,15 +8,14 @@
     "cc": "抄送",
     "bcc": "密送",
     "replyTo": "回复",
-    "replyToString": "回复（字符串）",
-    "isHtml": "是HTML",
+    "replyToString": "回复至 (String)",
     "body": "正文",
     "subject": "主题",
     "attachments": "附件",
     "selectTemplate": "选择模板",
     "fromAddress": "发件人地址",
-    "emailAddress": "邮件地址",
-    "deliveryDate": "邮寄日期",
+    "emailAddress": "邮箱地址",
+    "deliveryDate": "送达日期",
     "account": "账户",
     "users": "用户",
     "replied": "已回复",
@@ -24,13 +23,14 @@
     "isRead": "已读",
     "isNotRead": "未读",
     "isImportant": "重要",
-    "isUsers": "是用户的",
-    "inTrash": "在垃圾箱",
+    "isUsers": "用户的",
+    "inTrash": "在回收站",
     "name": "命名（主题）",
     "isReplied": "已回复",
     "isNotReplied": "未回复",
     "folder": "文件夹",
-    "inboundEmails": "组帐户",
+    "folderString": "文件夹",
+    "inboundEmails": "群组帐户",
     "emailAccounts": "个人帐户",
     "hasAttachment": "有附件",
     "sentBy": "发送者",
@@ -42,30 +42,31 @@
     "folderId": "文件夹编号",
     "fromName": "发件人",
     "fromString": "从字符串",
-    "toEmailAddresses": "收件人地址",
-    "bccEmailAddresses": "BCC地址"
+    "isSystem": "系统",
+    "fromEmailAddress": "发件人地址 (链接)",
+    "replyToName": "回复名称",
+    "replyToAddress": "回复地址"
   },
   "links": {
     "replied": "已回复",
     "replies": "回复",
-    "inboundEmails": "邮件组帐户",
+    "inboundEmails": "群组帐户",
     "emailAccounts": "个人帐户",
     "assignedUsers": "已指派用户",
     "sentBy": "发送者",
     "attachments": "附件",
-    "fromEmailAddress": "发件人地址",
-    "toEmailAddresses": "收件人地址",
-    "ccEmailAddresses": "CC地址",
-    "bccEmailAddresses": "BCC地址"
+    "fromEmailAddress": "发件人地址"
   },
   "options": {
     "status": {
       "Draft": "草稿",
       "Sending": "发送中",
-      "Sent": "发送",
-      "Archived": "归档",
+      "Sent": "已发送",
       "Received": "已接收",
       "Failed": "失败"
+    },
+    "groupStatusFolder": {
+      "Trash": "回收站"
     }
   },
   "labels": {
@@ -78,45 +79,48 @@
     "Original message": "原始消息",
     "Forwarded message": "已转发消息",
     "Email Accounts": "个人邮件帐户",
-    "Inbound Emails": "邮件组帐户",
+    "Inbound Emails": "群组邮件帐户",
     "Email Templates": "邮件模板",
     "Send Test Email": "发送测试邮件",
     "Send": "发送",
     "Email Address": "邮件地址",
-    "Mark Read": "标记为已读",
+    "Mark Read": "标为已读",
     "Sending...": "发送中...",
     "Save Draft": "保存草稿",
-    "Mark all as read": "标记所有为已读",
+    "Mark all as read": "全部已读",
     "Show Plain Text": "显示纯文本",
-    "Mark as Important": "标记为重要",
-    "Unmark Importance": "取消重要标记",
-    "Move to Trash": "移到垃圾箱",
-    "Retrieve from Trash": "从垃圾箱中取回",
+    "Mark as Important": "标为重要",
+    "Unmark Importance": "取消重要",
+    "Move to Trash": "移至回收站",
+    "Retrieve from Trash": "从回收站恢复",
     "Move to Folder": "移动到文件夹",
     "Filters": "筛选器",
-    "Folders": "文件夹"
+    "Folders": "文件夹",
+    "View Users": "查看用户",
+    "Moved to Trash": "移至回收站",
+    "Retrieved from Trash": "从回收站恢复"
   },
   "messages": {
     "testEmailSent": "测试邮件已发送",
     "emailSent": "邮件已发送",
     "savedAsDraft": "保存为草稿",
-    "confirmInsertTemplate": "邮件正文将丢失,您确定要插入模板吗?"
+    "confirmInsertTemplate": "邮件正文将丢失,您确定要插入模板吗?",
+    "groupMoveToTrashNoEditAccess": "无法将邮件从群组文件夹移至回收站。没有权限编辑邮件。"
   },
   "presetFilters": {
     "sent": "已发送",
-    "archived": "归档",
     "inbox": "收件箱",
     "drafts": "草稿箱",
-    "trash": "垃圾箱",
-    "important": "重要的"
+    "trash": "回收站",
+    "important": "重要"
   },
   "massActions": {
-    "markAsRead": "标记为已读",
-    "markAsNotRead": "标记为未读",
-    "markAsImportant": "标记为重要",
-    "markAsNotImportant": "取消重要标记",
-    "moveToTrash": "移到垃圾箱",
+    "markAsRead": "标为已读",
+    "markAsNotRead": "标为未读",
+    "markAsImportant": "标为重要",
+    "markAsNotImportant": "取消重要",
+    "moveToTrash": "移至回收站",
     "moveToFolder": "移动到文件夹",
-    "retrieveFromTrash": "从垃圾箱回收"
+    "retrieveFromTrash": "从回收站恢复"
   }
 }

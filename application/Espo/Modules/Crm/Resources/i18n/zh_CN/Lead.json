@@ -27,7 +27,7 @@
     "targetList": "目标列表",
     "industry": "行业",
     "acceptanceStatus": "验收状态",
-    "opportunityAmountCurrency": "机会金额货币",
+    "opportunityAmountCurrency": "商机金额货币",
     "acceptanceStatusMeetings": "接受状态(Meetings)",
     "acceptanceStatusCalls": "接受状态(Calls)"
   },
@@ -62,8 +62,7 @@
     }
   },
   "presetFilters": {
-    "active": "激活",
-    "actual": "所有",
+    "active": "启用",
     "converted": "已转换"
   }
 }

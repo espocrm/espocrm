@@ -5,18 +5,10 @@
     "timeZone": "时区",
     "weekStart": "每周始于",
     "thousandSeparator": "千位分隔符",
-    "decimalMark": "十进制标志",
+    "decimalMark": "小数点标记",
     "defaultCurrency": "默认货币",
     "currencyList": "货币列表",
     "language": "语言",
-    "smtpServer": "SMTP服务器",
-    "smtpPort": "端口",
-    "smtpAuth": "验证",
-    "smtpSecurity": "安全协议",
-    "smtpUsername": "用户名",
-    "emailAddress": "邮件",
-    "smtpPassword": "密码",
-    "smtpEmailAddress": "邮件地址",
     "exportDelimiter": "导出分隔符",
     "signature": "邮件签名",
     "dashboardTabList": "功能列表",
@@ -28,7 +20,7 @@
     "receiveMentionEmailNotifications": "邮寄时提及的邮件提醒",
     "receiveStreamEmailNotifications": "关于邮寄和更新状态的邮件提醒",
     "dashboardLayout": "仪表板布局",
-    "emailReplyForceHtml": "超文本语言回复邮件",
+    "emailReplyForceHtml": "以 HTML 格式回复邮件",
     "autoFollowEntityTypeList": "全局自动跟随",
     "emailReplyToAllByDefault": "此邮件签名默认用于所有回复邮件.",
     "doNotFillAssignedUserIfNotRequired": "不要在创建记录时预先填充指定的用户",
@@ -36,8 +28,9 @@
     "followCreatedEntities": "自动跟踪创建的记录",
     "followCreatedEntityTypeList": "自动跟踪特定功能创建的记录",
     "emailUseExternalClient": "使用外部邮件客户端",
-    "scopeColorsDisabled": "禁用颜色范围",
-    "tabColorsDisabled": "禁用功能菜单颜色"
+    "dashboardLocked": "锁定仪表盘",
+    "addCustomTabs": "添加自定义标签页",
+    "pageContentWidth": "内容宽度"
   },
   "options": {
     "weekStart": {
@@ -49,12 +42,10 @@
     "Notifications": "通知",
     "User Interface": "用户界面",
     "Misc": "杂项",
-    "Locale": "语言环境"
+    "Locale": "语言环境",
+    "Reset Dashboard to Default": "将仪表盘重置为默认"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "自动跟随所选实体类型的所有新记录(由任何用户创建),能够在信息流中看到信息并接收关于系统中所有记录的通知。",
-    "doNotFillAssignedUserIfNotRequired": "当创建记录时，分配的用户不会被自己的用户填充，除非字段是必需的。",
-    "followCreatedEntities": "当创建新记录时，即使分配给另一个用户，它们也会自动跟随。",
-    "followCreatedEntityTypeList": "当创建选定实体类型的新记录时，即使将它们分配给另一个用户，它们也会自动跟随。"
+    "autoFollowEntityTypeList": "自动跟随所选实体类型的所有新记录(由任何用户创建),能够在信息流中看到信息并接收关于系统中所有记录的通知。"
   }
 }

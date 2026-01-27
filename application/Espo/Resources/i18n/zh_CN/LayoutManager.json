@@ -1,12 +1,10 @@
 {
   "fields": {
-    "width": "宽度（％）",
     "link": "链接",
     "notSortable": "不可排序",
     "align": "对齐",
     "panelName": "面板名称",
     "style": "样式",
-    "sticked": "已贴",
     "isLarge": "大字体",
     "dynamicLogicVisible": "使面板可见的条件"
   },

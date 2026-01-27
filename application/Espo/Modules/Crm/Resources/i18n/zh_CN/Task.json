@@ -41,8 +41,7 @@
     "Complete": "完成"
   },
   "presetFilters": {
-    "actual": "所有",
-    "completed": "完成",
+    "completed": "已完成",
     "todays": "今天",
     "overdue": "过期",
     "deferred": "延期"

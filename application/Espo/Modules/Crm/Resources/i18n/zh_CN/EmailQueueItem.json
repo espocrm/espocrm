@@ -5,13 +5,13 @@
     "target": "目标",
     "sentAt": "发送日期",
     "attemptCount": "尝试",
-    "emailAddress": "电子邮件地址",
-    "massEmail": "群发电子邮件",
+    "emailAddress": "邮箱地址",
+    "massEmail": "群发邮件",
     "isTest": "是测试"
   },
   "links": {
     "target": "目标",
-    "massEmail": "群发电子邮件"
+    "massEmail": "群发邮件"
   },
   "options": {
     "status": {
@@ -23,7 +23,7 @@
   },
   "presetFilters": {
     "pending": "有待",
-    "sent": "发送",
+    "sent": "已发送",
     "failed": "失败"
   }
 }

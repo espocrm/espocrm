@@ -12,12 +12,15 @@
     "leads": "潜在客户",
     "reminders": "提醒",
     "account": "客户",
-    "acceptanceStatus": "接受状态"
+    "acceptanceStatus": "接受状态",
+    "dateStartDate": "开始日期 (全天)",
+    "dateEndDate": "结束日期 (全天)",
+    "isAllDay": "全天"
   },
   "options": {
     "status": {
       "Planned": "已计划",
-      "Held": "举行",
+      "Held": "已举行",
       "Not Held": "未举行"
     },
     "acceptanceStatus": {
@@ -28,7 +31,7 @@
     }
   },
   "massActions": {
-    "setHeld": "设为举行",
+    "setHeld": "设为已举行",
     "setNotHeld": "设为未举行"
   },
   "labels": {
@@ -37,11 +40,12 @@
     "Set Not Held": "设为未举行",
     "Send Invitations": "发送邀请",
     "on time": "准时",
-    "before": "之前"
+    "before": "之前",
+    "All-Day": "全天"
   },
   "presetFilters": {
     "planned": "已计划",
-    "held": "举行",
+    "held": "已举行",
     "todays": "今天的"
   },
   "messages": {

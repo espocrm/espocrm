@@ -2,7 +2,7 @@
   "fields": {
     "name": "名称",
     "body": "正文",
-    "entityType": "功能类型",
+    "entityType": "实体类型",
     "header": "标题",
     "footer": "页脚",
     "leftMargin": "左边距",
@@ -14,7 +14,11 @@
     "variables": "可用占位符",
     "pageOrientation": "页面方向",
     "pageFormat": "页面格式",
-    "fontFace": "字体"
+    "fontFace": "字体",
+    "pageWidth": "页面宽度 (mm)",
+    "pageHeight": "页面高度 (mm)",
+    "status": "状态",
+    "filename": "文件名"
   },
   "labels": {
     "Create Template": "创建模板"
@@ -31,6 +35,13 @@
     "placeholders": {
       "today": "今天（日期）",
       "now": "现在（日期时间）"
+    },
+    "pageFormat": {
+      "Custom": "自定义"
+    },
+    "status": {
+      "Active": "启用",
+      "Inactive": "未启用"
     }
   }
 }

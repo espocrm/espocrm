@@ -5,21 +5,14 @@
     "assignmentPermission": "分配许可",
     "userPermission": "用户权限",
     "portalPermission": "门户权限",
-    "groupEmailAccountPermission": "邮件组权限",
+    "groupEmailAccountPermission": "群组邮件账户权限",
     "exportPermission": "导出权限",
-    "dataPrivacyPermission": "数据隐私权限"
+    "dataPrivacyPermission": "数据隐私权限",
+    "massUpdatePermission": "批量更新权限"
   },
   "links": {
     "users": "用户",
     "teams": "团队"
-  },
-  "tooltips": {
-    "assignmentPermission": "允许限制将记录和消息分配给其他用户的能力。\n\n所有的 - 没有限制\n团队 - 只能分配和发信息给队友\n否 - 只能分配和发信息给自己",
-    "userPermission": "允许以限制用户查看活动，日历和其他用户的数据流的能力。\n\n所有 - 可以查看所有\n团队 - 可以查看队友的活动只\n否 - 无法查看",
-    "portalPermission": "对门户信息的访问，可以向门户用户发送消息。",
-    "groupEmailAccountPermission": "对组邮件帐户的访问，从组邮件SMTP发送邮件的能力。",
-    "dataPrivacyPermission": "允许查看和删除个人数据。",
-    "exportPermission": "用户是否具有导出记录的能力。"
   },
   "labels": {
     "Access": "访问",
@@ -53,5 +46,8 @@
   },
   "messages": {
     "changesAfterClearCache": "访问控制中的所有更改将在缓存清除后应用。"
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "允许查看和删除个人数据。"
   }
 }

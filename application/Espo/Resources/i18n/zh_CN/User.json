@@ -17,19 +17,26 @@
     "newPassword": "新密码",
     "newPasswordConfirm": "确认新密码",
     "avatar": "头像",
-    "isActive": "活跃",
+    "isActive": "已启用",
     "isPortalUser": "门户用户",
     "contact": "联系人",
     "accounts": "客户",
     "account": "帐户（主要）",
-    "sendAccessInfo": "通过邮件向用户发送访问信息.",
+    "sendAccessInfo": "向用户发送包含访问信息的邮件",
     "portal": "门户网站",
     "gender": "性别",
     "position": "在队中的位置",
     "ipAddress": "IP地址",
     "passwordPreview": "密码预览",
     "isSuperAdmin": "超级管理员",
-    "lastAccess": "最后访问"
+    "lastAccess": "最后访问",
+    "type": "类型",
+    "apiKey": "API 密钥",
+    "secretKey": "密钥",
+    "authMethod": "验证方式",
+    "yourPassword": "您的当前密码",
+    "dashboardTemplate": "仪表盘模板",
+    "auth2FAEnable": "启用双因素身份验证"
   },
   "links": {
     "teams": "团队",
@@ -40,7 +47,9 @@
     "contact": "联系人",
     "accounts": "客户",
     "account": "帐户（主要）",
-    "tasks": "任务"
+    "tasks": "任务",
+    "defaultTeam": "默认团队",
+    "dashboardTemplate": "仪表盘模板"
   },
   "labels": {
     "Create User": "创建用户",
@@ -51,41 +60,45 @@
     "Teams and Access Control": "团队和访问控制",
     "Forgot Password?": "忘记密码？",
     "Password Change Request": "密码更改请求",
-    "Email Address": "电子邮件地址",
+    "Email Address": "邮箱地址",
     "External Accounts": "外部帐户",
-    "Email Accounts": "电子邮件帐户",
+    "Email Accounts": "邮箱帐户",
     "Portal": "门户",
     "Create Portal User": "创建门户用户",
-    "Proceed w/o Contact": "继续创建联系人"
+    "Proceed w/o Contact": "继续创建联系人",
+    "Generate New API Key": "生成新的 API 密钥",
+    "Security": "安全"
   },
   "tooltips": {
     "defaultTeam": "默认情况下，此用户创建的所有记录都将与此小组相关。",
-    "userName": "允许使用字符: a-z，0-9，.，-，@, _",
     "isAdmin": "管理员拥有最大权限.",
-    "isActive": "如果取消选中则用户将无法登录。",
     "teams": "该用户所属的团队。访问控制级别从团队角色继承。",
     "roles": "其他访问角色。如果用户不属于任何团队，或者需要为此用户专门扩展访问控制级别，请使用此角色。",
     "portalRoles": "其他门户网站角色。使用它来为此用户专门扩展访问控制级别。",
     "portals": "此用户有权访问的门户。"
   },
   "messages": {
-    "passwordWillBeSent": "密码将发送到用户的电子邮件地址。",
+    "passwordWillBeSent": "密码将发送到用户的邮箱地址。",
     "passwordChanged": "密码已被更改",
     "userCantBeEmpty": "用户名不能为空",
     "wrongUsernamePassword": "用户名/密码错误",
-    "emailAddressCantBeEmpty": "电子邮件地址不能为空",
-    "userNameEmailAddressNotFound": "用户名/电子邮件地址未找到",
+    "emailAddressCantBeEmpty": "邮箱地址不能为空",
+    "userNameEmailAddressNotFound": "用户名/邮箱地址未找到",
     "forbidden": "禁止访问，请稍后再试",
-    "uniqueLinkHasBeenSent": "唯一网址已发送到指定的电子邮件地址。",
+    "uniqueLinkHasBeenSent": "唯一网址已发送到指定的邮箱地址。",
     "passwordChangedByRequest": "密码已被更改。",
-    "userNameExists": "用户名已经存在"
+    "userNameExists": "用户名已经存在",
+    "setupSmtpBefore": "您需要设置[SMTP设置]({url})，以便系统能够通过电子邮件发送密码。",
+    "enterCodeSentBySms": "请输入发送到您手机的短信验证码。",
+    "passwordChangeRequestNotFound": "未找到修改密码的请求。可能已过期。请尝试从[登录页面]({url})重新开始密码恢复。"
   },
   "boolFilters": {
-    "onlyMyTeam": "只有我的团队"
+    "onlyMyTeam": "仅我的团队"
   },
   "presetFilters": {
-    "active": "激活",
-    "activePortal": "门户活动"
+    "active": "启用",
+    "activePortal": "门户启用",
+    "activeApi": "API 启用"
   },
   "options": {
     "gender": {
@@ -93,6 +106,15 @@
       "Male": "男士",
       "Female": "女士",
       "Neutral": "中立的"
+    },
+    "type": {
+      "admin": "管理员",
+      "portal": "门户",
+      "system": "系统",
+      "super-admin": "超级管理员"
+    },
+    "authMethod": {
+      "ApiKey": "API密钥"
     }
   }
 }

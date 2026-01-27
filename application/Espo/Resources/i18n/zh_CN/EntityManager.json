@@ -9,31 +9,30 @@
   "fields": {
     "name": "名称",
     "type": "类型",
-    "labelSingular": "单标签",
-    "labelPlural": "多标签",
+    "labelSingular": "标签 单数",
+    "labelPlural": "标签 复数",
     "stream": "信息流",
     "label": "标签",
-    "linkType": "连接类型",
+    "linkType": "关联类型",
     "entityForeign": "外部实体",
-    "linkForeign": "外部连接",
-    "link": "连接",
+    "linkForeign": "外部关联",
+    "link": "关联",
     "labelForeign": "外部标签",
-    "sortBy": "默认排序（字段）",
-    "sortDirection": "默认排序（方向）",
     "relationName": "中间表名称",
-    "linkMultipleField": "连接多个字段",
-    "linkMultipleFieldForeign": "外部连接多个字段",
-    "disabled": "禁用",
+    "linkMultipleField": "关联多个字段",
+    "linkMultipleFieldForeign": "外部多重关联字段",
+    "disabled": "已禁用",
     "textFilterFields": "文本过滤字段",
     "audited": "已审核",
-    "auditedForeign": "外部审核",
-    "statusField": "字段状态",
+    "auditedForeign": "外部审计",
+    "statusField": "状态字段",
     "beforeSaveCustomScript": "在保存自定义脚本之前",
     "color": "颜色",
     "kanbanViewMode": "预览看板",
     "kanbanStatusIgnoreList": "看板视图中被忽略的组",
     "iconClass": "图标",
-    "fullTextSearch": "全文搜索"
+    "fullTextSearch": "全文搜索",
+    "foreignLinkEntityTypeList": "外部关联"
   },
   "options": {
     "type": {
@@ -41,7 +40,7 @@
       "Base": "基本",
       "Person": "个人",
       "CategoryTree": "类别树",
-      "Event": "时间",
+      "Event": "事件",
       "BasePlus": "基础增强",
       "Company": "公司"
     },
@@ -59,17 +58,17 @@
   },
   "messages": {
     "entityCreated": "实体已创建",
-    "linkAlreadyExists": "连接名称冲突。",
-    "linkConflict": "名称冲突：已存在同名连接或字段。"
+    "linkAlreadyExists": "关联名称冲突。",
+    "linkConflict": "名称冲突：已存在同名关联或字段。",
+    "urlHashCopiedToClipboard": "用于 *{name}* 过滤器的 URL 片段已复制到剪贴板。您可以将其添加到导航栏中。"
   },
   "tooltips": {
-    "statusField": "此字段的更新记录在信息流中。",
-    "textFilterFields": "文字搜索使用的字段。",
-    "stream": "不论实体是否有信息流。",
-    "disabled": "检查您的系统中是否不需要此实体。",
+    "statusField": "此字段的更新已记录在信息流中。",
+    "textFilterFields": "文本搜索使用的字段。",
+    "disabled": "如果您的系统中不需要此实体请勾选此项。",
     "linkAudited": "在信息流中将记录创建相关记录并链接现有记录。",
-    "linkMultipleField": "链接多字段提供了编辑关系的方便的方式。不要使用它，如果你可以有大量的相关记录。",
-    "entityType": "Base Plus  - 具有活动，历史和任务面板。活动 - 在“日历和活动”面板中可用。",
-    "fullTextSearch": "需要运行重新构建。"
+    "linkMultipleField": "多字段关联功能为编辑关联关系提供了便捷方式。若涉及大量关联记录，请勿使用此功能。",
+    "entityType": "Base Plus  - 具有活动，历史和任务面板。\n\n事件 - 在日历和活动面板中可用。",
+    "fullTextSearch": "需要运行重建。"
   }
 }

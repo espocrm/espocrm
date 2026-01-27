@@ -2,7 +2,8 @@
   "fields": {
     "number": "号码",
     "data": "数据",
-    "target": "目标"
+    "target": "目标",
+    "isCreated": "潜在客户已创建"
   },
   "links": {
     "target": "目标"

@@ -23,7 +23,7 @@
     "useImap": "获取邮件"
   },
   "links": {
-    "filters": "过滤器",
+    "filters": "筛选器",
     "emails": "邮箱"
   },
   "options": {
@@ -44,7 +44,9 @@
     "connectionIsOk": "连接正常"
   },
   "tooltips": {
-    "monitoredFolders": "多个文件夹用逗号分隔。\n\n添加 ‘Sent’ 文件夹与外部邮件客户端同步已发邮件。",
     "storeSentEmails": "发送的电子邮件将存储在IMAP服务器上,电子邮件地址字段应该与将要发送的电子邮件地址匹配。"
+  },
+  "presetFilters": {
+    "active": "启用"
   }
 }

@@ -2,20 +2,25 @@
   "fields": {
     "name": "名称",
     "campaign": "运动",
-    "isActive": "激活",
+    "isActive": "已启用",
     "subscribeToTargetList": "订阅目标列表",
     "subscribeContactToTargetList": "订阅目标列表",
     "targetList": "目标列表",
     "apiKey": "API 密钥",
     "targetTeam": "目标团队",
     "exampleRequestMethod": "方法",
-    "exampleRequestUrl": "网址"
+    "exampleRequestUrl": "网址",
+    "exampleRequestPayload": "负载",
+    "skipOptInConfirmationIfSubscribed": "跳过确认在目标列表中的潜在客户",
+    "smtpAccount": "SMTP 账户",
+    "inboundEmail": "群组邮件账户"
   },
   "links": {
     "targetList": "目标列表",
     "campaign": "运行",
     "targetTeam": "目标团队",
-    "logRecords": "日志"
+    "logRecords": "日志",
+    "inboundEmail": "群组邮件账户"
   },
   "labels": {
     "Create LeadCapture": "创建入口点",

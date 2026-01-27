@@ -3,5 +3,8 @@
     "detailConvert": "转换潜在客户",
     "listForAccount": "列表（帐户）",
     "listForContact": "列表（联系人）"
+  },
+  "templates": {
+    "reminder": "提醒"
   }
 }

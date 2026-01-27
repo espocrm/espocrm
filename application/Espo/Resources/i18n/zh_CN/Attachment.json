@@ -19,5 +19,8 @@
       "Export File": "导出文件",
       "Mail Merge": "邮件合并"
     }
+  },
+  "presetFilters": {
+    "orphan": "孤立"
   }
 }

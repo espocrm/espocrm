@@ -1,19 +1,29 @@
 {
   "fields": {
     "status": "状态",
-    "executeTime": "执行At",
-    "attempts": "尝试左",
+    "executeTime": "执行于",
+    "attempts": "剩余尝试次数",
     "failedAttempts": "失败尝试",
     "serviceName": "服务",
     "methodName": "方法",
     "scheduledJob": "计划作业",
     "data": "数据",
     "method": "方法",
-    "scheduledJobJob": "计划工作名称"
+    "scheduledJobJob": "计划工作名称",
+    "executedAt": "执行于",
+    "startedAt": "开始于",
+    "targetType": "目标类型",
+    "targetId": "目标ID",
+    "number": "序号",
+    "queue": "队列",
+    "job": "任务",
+    "group": "群组",
+    "className": "类名称",
+    "targetGroup": "目标群组"
   },
   "options": {
     "status": {
-      "Pending": "有待",
+      "Pending": "挂起中",
       "Success": "成功",
       "Running": "运行",
       "Failed": "失败"

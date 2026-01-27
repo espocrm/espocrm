@@ -17,7 +17,7 @@
     "portalUser": "门户网站用户",
     "originalLead": "原始潜在客户",
     "acceptanceStatus": "验收状态",
-    "accountIsInactive": "账户未激活",
+    "accountIsInactive": "账户未启用",
     "acceptanceStatusMeetings": "接受状态(Meetings)",
     "acceptanceStatusCalls": "接受状态(Calls)"
   },
@@ -47,7 +47,7 @@
   },
   "presetFilters": {
     "portalUsers": "门户用户",
-    "notPortalUsers": "不是门户用户",
-    "accountActive": "激活"
+    "notPortalUsers": "非门户用户",
+    "accountActive": "启用"
   }
 }

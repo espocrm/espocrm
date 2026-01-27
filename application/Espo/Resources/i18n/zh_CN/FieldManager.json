@@ -68,7 +68,6 @@
     "default": "值将在创建时默认设置。",
     "min": "最小可接受的值。",
     "max": "最大可接受的值。",
-    "seeMoreDisabled": "如果没有检查，那么长的文本将被缩短。",
     "lengthOfCut": "文字可以在多长时间之前被剪掉。",
     "maxLength": "最大可接受的文本长度。",
     "before": "日期值应在指定字段的日期值之前。",
@@ -91,10 +90,17 @@
       "last": "姓"
     },
     "currency": {
-      "converted": "已换算"
+      "converted": "(已换算)"
     },
     "datetimeOptional": {
       "date": "日期"
     }
+  },
+  "fieldInfo": {
+    "email": "一组包含以下参数的邮件地址：已退订、无效、主地址。",
+    "phone": "一组包含以下参数的电话号码：已退订、无效、主地址。"
+  },
+  "messages": {
+    "confirmRemove": "您确定要删除 *{field}* 字段吗？\n\n删除字段不会将数据从数据库中移除。如果您运行硬重建则数据库中的数据将被移除。"
   }
 }

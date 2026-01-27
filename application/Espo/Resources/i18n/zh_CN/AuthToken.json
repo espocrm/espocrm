@@ -11,13 +11,13 @@
     "actionHistoryRecords": "历史操作"
   },
   "presetFilters": {
-    "active": "激活",
-    "inactive": "未激活"
+    "active": "启用",
+    "inactive": "未启用"
   },
   "labels": {
-    "Set Inactive": "设为未激活"
+    "Set Inactive": "设为未启用"
   },
   "massActions": {
-    "setInactive": "设为未激活"
+    "setInactive": "设为未启用"
   }
 }

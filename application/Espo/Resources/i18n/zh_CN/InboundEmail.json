@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "名称",
-    "emailAddress": "电子邮件地址",
+    "emailAddress": "邮箱地址",
     "status": "状态",
     "assignToUser": "指派给用户",
     "host": "SMTP服务器",
@@ -9,7 +9,7 @@
     "password": "密码",
     "port": "端口",
     "monitoredFolders": "监视文件夹",
-    "trashFolder": "垃圾文件夹",
+    "trashFolder": "回收站文件夹",
     "createCase": "创建工单",
     "reply": "自动回复",
     "caseDistribution": "工单分发",
@@ -34,32 +34,31 @@
     "fromName": "发件人",
     "smtpIsShared": "共享",
     "smtpIsForMassEmail": "SMTP可用于大规模电子邮件",
-    "useImap": "获取邮件"
+    "useImap": "获取邮件",
+    "groupEmailFolder": "群组邮件文件夹"
   },
   "tooltips": {
-    "reply": "通知他们的电子邮件已收到电子邮件发件人。\n\n 只有一个电子邮件会期间的时间，以防止循环一段时间被发送到特定的收件人。",
-    "createCase": "自动从传入电子邮件创建工单。",
-    "replyToAddress": "指定此邮箱的电子邮件地址，以便响应到这里。",
-    "caseDistribution": "如何分配工单，直接指派给用户或团队。",
+    "reply": "通知发件人他们的邮件已送达。\n\n为防止循环发送，在特定时间段内仅向每位收件人发送一封邮件。",
+    "caseDistribution": "如何分配工单。直接指派给用户或团队。",
     "assignToUser": "用户工单将会指派给。",
     "team": "团队工单将会指派给。",
     "teams": "团队电子邮件将会指派给。",
     "addAllTeamUsers": "电子邮件将出现在指定团队的所有用户的“收件箱”中。",
     "targetUserPosition": "具有指定位置的用户将与工单一起分发。",
     "monitoredFolders": "多个文件夹用逗号分隔。",
-    "smtpIsShared": "如果勾选此选项，用户就可以使用SMTP发送电子邮件。可用性由角色通过组电子邮件帐户权限控制",
-    "smtpIsForMassEmail": "如果勾选的话，SMTP将可用于群发邮件",
-    "storeSentEmails": "发送的电子邮件将存储在IMAP服务器上。"
+    "storeSentEmails": "发送的电子邮件将存储在IMAP服务器上。",
+    "smtpIsShared": "如果勾选此选项，用户就可以使用SMTP发送电子邮件。可用性由角色通过群组邮件帐户权限控制。"
   },
   "links": {
-    "filters": "过滤器",
+    "filters": "筛选器",
     "emails": "邮箱",
-    "assignToUser": "分配给用户"
+    "assignToUser": "分配给用户",
+    "groupEmailFolder": "群组邮件文件夹"
   },
   "options": {
     "status": {
-      "Active": "激活",
-      "Inactive": "未激活"
+      "Active": "启用",
+      "Inactive": "未启用"
     },
     "caseDistribution": {
       "": "没有",
@@ -69,7 +68,7 @@
     }
   },
   "labels": {
-    "Create InboundEmail": "创建电子邮件帐户",
+    "Create InboundEmail": "创建邮箱帐户",
     "Actions": "操作",
     "Main": "主要"
   },

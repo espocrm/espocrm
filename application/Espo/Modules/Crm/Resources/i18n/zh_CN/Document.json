@@ -23,7 +23,7 @@
   },
   "options": {
     "status": {
-      "Active": "激活",
+      "Active": "启用",
       "Draft": "草案",
       "Expired": "已过期",
       "Canceled": "取消"
@@ -35,7 +35,7 @@
     }
   },
   "presetFilters": {
-    "active": "激活",
+    "active": "启用",
     "draft": "草案"
   }
 }

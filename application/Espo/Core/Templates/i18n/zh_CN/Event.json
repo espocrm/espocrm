@@ -5,7 +5,10 @@
     "dateEnd": "结束日期",
     "duration": "持续时间",
     "status": "状态",
-    "reminders": "提醒"
+    "reminders": "提醒",
+    "dateStartDate": "开始日期 (全天)",
+    "dateEndDate": "结束日期 (全天)",
+    "isAllDay": "全天"
   },
   "links": {
     "parent": "关联"

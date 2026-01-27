@@ -5,7 +5,7 @@
     "companyLogo": "商标",
     "url": "网址",
     "portalRoles": "角色",
-    "isActive": "活跃",
+    "isActive": "已启用",
     "isDefault": "是默认值",
     "tabList": "选项卡列表",
     "quickCreateList": "快速创建列表",
@@ -18,7 +18,9 @@
     "weekStart": "每周起始日",
     "defaultCurrency": "默认货币",
     "customUrl": "自定义网址",
-    "customId": "用户ID"
+    "customId": "用户ID",
+    "authTokenLifetime": "授权令牌有效期 (小时)",
+    "authTokenMaxIdleTime": "授权令牌最大空闲时间 (小时)"
   },
   "links": {
     "users": "用户",

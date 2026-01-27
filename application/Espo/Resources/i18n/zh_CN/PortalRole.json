@@ -9,9 +9,7 @@
     "Field Level": "现场级"
   },
   "fields": {
-    "exportPermission": "导出权限"
-  },
-  "tooltips": {
-    "exportPermission": "门户用户是否具有导出记录的权限"
+    "exportPermission": "导出权限",
+    "massUpdatePermission": "批量更新权限"
   }
 }

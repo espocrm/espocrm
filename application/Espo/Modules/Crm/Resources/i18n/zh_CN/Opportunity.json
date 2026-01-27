@@ -4,7 +4,7 @@
     "account": "客户",
     "stage": "阶段",
     "amount": "项目预算",
-    "probability": "概率%",
+    "probability": "概率, %",
     "leadSource": "客户来源",
     "doNotCall": "不要电联",
     "closeDate": "关闭日期",
@@ -45,7 +45,7 @@
   },
   "presetFilters": {
     "open": "打开",
-    "won": "韩元",
-    "lost": "丢失"
+    "won": "赢单",
+    "lost": "失单"
   }
 }

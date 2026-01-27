@@ -8,7 +8,9 @@
     "targetLists": "目标列表",
     "includingActionList": "包含",
     "excludingActionList": "排除",
-    "optedOutCount": "取消订阅"
+    "optedOutCount": "取消订阅",
+    "targetStatus": "目标状态",
+    "isOptedOut": "已退订"
   },
   "links": {
     "accounts": "客户",
@@ -23,11 +25,15 @@
       "Television": "电视",
       "Radio": "广播",
       "Newsletter": "新闻稿"
+    },
+    "targetStatus": {
+      "Opted Out": "已退订",
+      "Listed": "已列出"
     }
   },
   "labels": {
     "Create TargetList": "创建目标列表",
-    "Opted Out": "选择退出",
+    "Opted Out": "已退订",
     "Cancel Opt-Out": "取消退出",
     "Opt-Out": "退出"
   }

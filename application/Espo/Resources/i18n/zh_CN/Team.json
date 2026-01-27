@@ -8,11 +8,8 @@
     "users": "用户",
     "notes": "笔记",
     "roles": "角色",
-    "inboundEmails": "组电子邮件帐户"
-  },
-  "tooltips": {
-    "roles": "访问角色。此团队的用户从选定的角色获取访问控制级别。",
-    "positionList": "在这个团队中可用的位置。例如。销售员，经理。"
+    "inboundEmails": "群组邮件帐户",
+    "groupEmailFolders": "群组邮件文件夹"
   },
   "labels": {
     "Create Team": "创建团队"

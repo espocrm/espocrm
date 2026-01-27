@@ -1,1 +1,8 @@
-{}
+{
+  "fields": {
+    "optOut": "已退订"
+  },
+  "presetFilters": {
+    "orphan": "孤立"
+  }
+}

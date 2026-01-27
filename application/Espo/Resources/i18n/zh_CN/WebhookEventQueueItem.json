@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "event": "事件",
+    "target": "目标",
+    "data": "数据",
+    "isProcessed": "已处理",
+    "user": "用户"
+  },
+  "links": {
+    "target": "目标",
+    "user": "用户"
+  }
+}

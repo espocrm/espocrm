@@ -8,25 +8,25 @@
     "denialReason": "拒绝原因",
     "portal": "门户",
     "user": "用户",
-    "authToken": "身份验证令牌已创建",
-    "requestUrl": "请求URL",
+    "authToken": "授权令牌已创建",
+    "requestUrl": "请求网址",
     "requestMethod": "请求方法",
-    "authTokenIsActive": "身份验证令牌已激活"
+    "authTokenIsActive": "授权令牌已启用"
   },
   "links": {
-    "authToken": "创建身份验证令牌",
+    "authToken": "授权令牌已创建",
     "user": "用户",
     "portal": "门户",
-    "actionHistoryRecords": "历史操作"
+    "actionHistoryRecords": "操作历史"
   },
   "presetFilters": {
-    "denied": "禁止",
-    "accepted": "通过"
+    "denied": "已拒绝",
+    "accepted": "已允许"
   },
   "options": {
     "denialReason": {
       "CREDENTIALS": "无效的证书",
-      "INACTIVE_USER": "未激活用户",
+      "INACTIVE_USER": "未启用用户",
       "IS_PORTAL_USER": "门户用户",
       "IS_NOT_PORTAL_USER": "不是门户用户",
       "USER_IS_NOT_IN_PORTAL": "用户与门户无关"

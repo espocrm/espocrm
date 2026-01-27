@@ -7,23 +7,21 @@
     "displayRecords": "显示记录",
     "isDoubleHeight": "2倍高度",
     "mode": "模式",
-    "enabledScopeList": "显示什么",
+    "enabledScopeList": "显示内容",
     "users": "用户",
     "entityType": "功能类型",
-    "primaryFilter": "主要过滤器",
-    "boolFilterList": "扩展过滤器",
-    "sortBy": "订单（字段）",
-    "sortDirection": "订单（方向）",
+    "primaryFilter": "基础筛选器",
+    "boolFilterList": "扩展筛选器",
     "expandedLayout": "布局",
-    "dateFilter": "日期过滤器"
+    "dateFilter": "日期筛选器"
   },
   "options": {
     "mode": {
-      "agendaWeek": "周（议程）",
+      "agendaWeek": "周 (日程)",
       "basicWeek": "周",
       "month": "月",
       "basicDay": "日",
-      "agendaDay": "日（议程）",
+      "agendaDay": "日 (日程)",
       "timeline": "时间线"
     }
   },

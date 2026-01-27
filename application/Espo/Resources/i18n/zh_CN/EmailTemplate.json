@@ -2,7 +2,6 @@
   "fields": {
     "name": "名称",
     "status": "状态",
-    "isHtml": "是HTML",
     "body": "正文",
     "subject": "主题",
     "attachments": "附件",
@@ -17,10 +16,19 @@
   "tooltips": {
     "oneOff": "如果此模板你仅用一次则选中此项。例如，批量邮件。"
   },
-  "presetFilters": {
-    "actual": "所有"
-  },
   "placeholderTexts": {
-    "optOutLink": "取消订阅链接"
+    "optOutLink": "取消订阅链接",
+    "today": "今天的日期",
+    "now": "当前日期 & 时间",
+    "currentYear": "今年"
+  },
+  "options": {
+    "status": {
+      "Active": "启用",
+      "Inactive": "未启用"
+    }
+  },
+  "presetFilters": {
+    "actual": "启用"
   }
 }

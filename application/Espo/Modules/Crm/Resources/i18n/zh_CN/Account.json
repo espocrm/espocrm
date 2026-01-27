@@ -15,14 +15,14 @@
     "targetLists": "目标列表",
     "targetList": "目标列表",
     "originalLead": "原始潜在客户",
-    "contactIsInactive": "未激活"
+    "contactIsInactive": "未启用"
   },
   "links": {
     "contacts": "联系人",
     "opportunities": "商机",
     "cases": "工单",
     "documents": "文件",
-    "meetingsPrimary": "会晤（已举行）",
+    "meetingsPrimary": "会议（已举行）",
     "callsPrimary": "通话（已展开）",
     "tasksPrimary": "任务（展开）",
     "emailsPrimary": "电子邮件（展开）",

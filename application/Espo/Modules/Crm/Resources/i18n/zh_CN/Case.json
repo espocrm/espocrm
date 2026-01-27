@@ -11,27 +11,27 @@
     "description": "描述",
     "lead": "潜在客户",
     "attachments": "附件",
-    "inboundEmail": "入站邮件"
+    "inboundEmail": "群组邮件账户"
   },
   "links": {
     "account": "客户",
-    "contact": "联系人（主）",
+    "contact": "联系人（主要）",
     "Contacts": "联系人",
-    "meetings": "会晤",
+    "meetings": "会议",
     "calls": "通话",
     "tasks": "任务",
     "emails": "电子邮件",
     "articles": "知识库文章",
     "lead": "潜在客户",
     "attachments": "附件",
-    "inboundEmail": "入站电子邮件"
+    "inboundEmail": "群组邮件账户"
   },
   "options": {
     "status": {
       "New": "新建",
       "Assigned": "已指派",
       "Pending": "待定",
-      "Closed": "关闭",
+      "Closed": "已关闭",
       "Rejected": "拒绝",
       "Duplicate": "重复"
     },
@@ -49,13 +49,13 @@
   },
   "labels": {
     "Create Case": "创建工单",
-    "Close": "关",
+    "Close": "关闭",
     "Reject": "拒绝",
-    "Closed": "关闭",
+    "Closed": "已关闭",
     "Rejected": "拒绝"
   },
   "presetFilters": {
     "open": "打开",
-    "closed": "关闭"
+    "closed": "已关闭"
   }
 }

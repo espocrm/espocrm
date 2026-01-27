@@ -21,11 +21,11 @@
     "action": {
       "Sent": "发送",
       "Opened": "开业",
-      "Opted Out": "取消订阅",
+      "Opted Out": "已退订",
       "Bounced": "退回",
       "Clicked": "点击",
       "Lead Created": "已创建的潜在客户",
-      "Opted In": "订阅"
+      "Opted In": "已订阅"
     }
   },
   "labels": {
@@ -34,9 +34,10 @@
   "presetFilters": {
     "sent": "发送",
     "opened": "打开",
-    "optedOut": "选择退出",
+    "optedOut": "已退订",
     "bounced": "反弹",
-    "clicked": "点击",
-    "leadCreated": "已创建的潜在客户"
+    "clicked": "已点击",
+    "leadCreated": "已创建潜在客户",
+    "optedIn": "已订阅"
   }
 }

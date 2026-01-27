@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "isActive": "已启用",
+    "tokenEndpoint": "令牌端点",
+    "hasAccessToken": "有访问令牌"
+  }
+}

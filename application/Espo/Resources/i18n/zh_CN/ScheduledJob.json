@@ -14,9 +14,9 @@
   "options": {
     "job": {
       "Cleanup": "清理",
-      "CheckInboundEmails": "检查组电子邮件帐户",
-      "CheckEmailAccounts": "检查个人电子邮件帐户",
-      "SendEmailReminders": "发送电子邮件提醒",
+      "CheckInboundEmails": "检查群组邮箱帐户",
+      "CheckEmailAccounts": "检查个人邮箱帐户",
+      "SendEmailReminders": "发送邮件提醒",
       "AuthTokenControl": "授权令牌控制",
       "SendEmailNotifications": "发送邮件通知",
       "CheckNewVersion": "检查新版本"
@@ -28,8 +28,8 @@
       "default": "注意：将此命令添加到Cron Job（计划任务）："
     },
     "status": {
-      "Active": "激活",
-      "Inactive": "未激活"
+      "Active": "启用",
+      "Inactive": "未启用"
     }
   }
 }

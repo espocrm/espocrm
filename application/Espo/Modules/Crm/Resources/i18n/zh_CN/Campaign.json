@@ -7,11 +7,11 @@
     "startDate": "开始日期",
     "endDate": "结束日期",
     "targetLists": "目标列表",
-    "excludingTargetLists": "剔除目标列表",
+    "excludingTargetLists": "排除目标列表",
     "sentCount": "发送",
     "openedCount": "开业",
     "clickedCount": "点击",
-    "optedOutCount": "选择退出",
+    "optedOutCount": "已退订",
     "bouncedCount": "退回",
     "hardBouncedCount": "硬弹跳",
     "softBouncedCount": "软弹跳",
@@ -20,18 +20,27 @@
     "revenueConverted": "收入（转换）",
     "budget": "预算",
     "budgetConverted": "预算（转换）",
-    "usersTemplate": "用户模板"
+    "contactsTemplate": "联系人模板",
+    "leadsTemplate": "潜在客户模板",
+    "accountsTemplate": "客户模板",
+    "usersTemplate": "用户模板",
+    "mailMergeOnlyWithAddress": "跳过未填写地址的记录",
+    "optedInCount": "已订阅"
   },
   "links": {
     "targetLists": "目标列表",
-    "excludingTargetLists": "剔除目标列表",
+    "excludingTargetLists": "排除目标列表",
     "accounts": "客户",
     "contacts": "联系人",
     "leads": "潜在客户",
     "opportunities": "商机",
     "campaignLogRecords": "日志",
-    "massEmails": "群发电子邮件",
-    "trackingUrls": "追踪网址"
+    "massEmails": "群发邮件",
+    "trackingUrls": "追踪网址",
+    "contactsTemplate": "联系人模板",
+    "leadsTemplate": "潜在客户模板",
+    "accountsTemplate": "客户模板",
+    "usersTemplate": "用户模板"
   },
   "options": {
     "type": {
@@ -44,8 +53,8 @@
     },
     "status": {
       "Planning": "规划",
-      "Active": "激活",
-      "Inactive": "非活动",
+      "Active": "启用",
+      "Inactive": "未启用",
       "Complete": "完成"
     }
   },
@@ -56,21 +65,23 @@
     "hard": "硬",
     "soft": "柔软的",
     "Unsubscribe": "取消订阅",
-    "Mass Emails": "群发电子邮件",
-    "Email Templates": "电子邮件模板",
+    "Mass Emails": "群发邮件",
+    "Email Templates": "邮件模板",
     "Unsubscribe again": "再次退订",
     "Subscribe again": "再次订阅",
-    "Create Target List": "创建目标列表"
+    "Create Target List": "创建目标列表",
+    "Mail Merge": "邮件群发",
+    "Generate Mail Merge PDF": "生成邮件群发 PDF"
   },
   "presetFilters": {
-    "active": "激活"
+    "active": "启用"
   },
   "messages": {
     "unsubscribed": "您已取消订阅我们的邮寄名单。",
     "subscribedAgain": "你再次被订阅。"
   },
   "tooltips": {
-    "targetLists": "目标应该接收的消息。",
-    "excludingTargetLists": "目标不会接收营销活动消息。"
+    "targetLists": "应该接收消息的目标。",
+    "excludingTargetLists": "不应该接收消息的目标。"
   }
 }

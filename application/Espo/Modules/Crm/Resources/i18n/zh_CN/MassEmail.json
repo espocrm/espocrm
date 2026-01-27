@@ -12,7 +12,7 @@
     "emailTemplate": "邮件模板",
     "inboundEmail": "邮件帐户",
     "targetLists": "目标列表",
-    "excludingTargetLists": "剔除目标列表",
+    "excludingTargetLists": "排除目标列表",
     "optOutEntirely": "完全选择退出",
     "smtpAccount": "SMTP帐户"
   },
@@ -39,7 +39,7 @@
     "Send Test": "发送测试",
     "System SMTP": "系统SMTP",
     "system": "系统",
-    "group": "组"
+    "group": "群组"
   },
   "messages": {
     "selectAtLeastOneTarget": "至少选择一个目标。",
@@ -52,7 +52,7 @@
     "storeSentEmails": "邮件将存储在CRM中."
   },
   "presetFilters": {
-    "actual": "所有",
-    "complete": "完成"
+    "complete": "完成",
+    "actual": "启用"
   }
 }
