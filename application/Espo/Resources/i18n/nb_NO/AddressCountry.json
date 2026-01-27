@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Create AddressCountry": "Opprett adresseland",
+    "Populate": "Fyll inn"
+  },
+  "fields": {
+    "code": "Kode",
+    "isPreferred": "Er foretrukket"
+  },
+  "tooltips": {
+    "code": "ISO 3166-1 alfa-2-kode.",
+    "isPreferred": "Foretrukne land vises først i valglisten."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Alle eksisterende land vil bli slettet, standard landliste vil bli opprettet. Det vil ikke være mulig å angre operasjonen.\n\nEr du sikker?"
+  },
+  "strings": {
+    "populateDefaults": "Fyll inn med standard landliste"
+  }
+}

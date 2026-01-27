@@ -2,19 +2,27 @@
   "fields": {
     "name": "Navn",
     "roles": "Roller",
-    "positionList": "Posisjonliste"
+    "positionList": "Posisjonliste",
+    "layoutSet": "Oppsettsett",
+    "workingTimeCalendar": "Arbeidstidskalender",
+    "userRole": "Brukerrolle"
   },
   "links": {
     "users": "Brukere",
     "notes": "Notater",
     "roles": "Roller",
-    "inboundEmails": "Epostkontoer for grupper"
-  },
-  "tooltips": {
-    "roles": "Roller for tilgangskontroll. Brukere i denne gruppen får tilgangsnivå tilsvarende de valgte rollene.",
-    "positionList": "Tilgjengelige posisjoner i denne gruppen. F.eks. salgsperson, leder etc."
+    "inboundEmails": "Epostkontoer for grupper",
+    "layoutSet": "Oppsettsett",
+    "workingTimeCalendar": "Arbeidstidskalender",
+    "groupEmailFolders": "E-postmapper for grupper"
   },
   "labels": {
     "Create Team": "Opprett gruppe"
+  },
+  "tooltips": {
+    "workingTimeCalendar": "En kalender vil bli brukt for brukere som har dette teamet satt som standardteam.",
+    "layoutSet": "Gir muligheten til å ha oppsett som avviker fra standardoppsettene. Oppsettsett vil bli brukt for brukere som har dette teamet satt som Standardteam.",
+    "roles": "Tilgangsroller. Brukere i dette teamet får tilgangskontrollnivå fra de angitte rollene.",
+    "positionList": "Stillinger tilgjengelig i dette teamet. For eksempel, selger, leder."
   }
 }

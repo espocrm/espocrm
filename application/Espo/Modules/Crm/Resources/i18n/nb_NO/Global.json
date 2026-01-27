@@ -36,7 +36,8 @@
     "Activities": "Aktiviteter",
     "KnowledgeBaseArticle": "Kunnskapsbaseartikkel",
     "KnowledgeBaseCategory": "Kunnskapsbasekategori",
-    "CampaignLogRecord": "Loggoppføring for kampanje"
+    "CampaignLogRecord": "Loggoppføring for kampanje",
+    "TargetListCategory": "Målelistkategori"
   },
   "scopeNamesPlural": {
     "Account": "Kontoer",
@@ -59,7 +60,8 @@
     "Activities": "Aktiviteter",
     "KnowledgeBaseArticle": "Kunnskapsbaser",
     "KnowledgeBaseCategory": "Kunnskapsbasekategorier",
-    "CampaignLogRecord": "Loggoppføringer for kampanje"
+    "CampaignLogRecord": "Loggoppføringer for kampanje",
+    "TargetListCategory": "Målelistkategorier"
   },
   "dashlets": {
     "Leads": "Mine ledetråder",
@@ -87,7 +89,10 @@
     "Log Call": "Logg samtale",
     "Archive Email": "Arkivert epost",
     "Create Task": "Opprett oppgave",
-    "Tasks": "Gjøremål"
+    "Tasks": "Gjøremål",
+    "Scheduler": "Planlegger",
+    "Schedule": "Plan",
+    "Log": "Logg"
   },
   "fields": {
     "billingAddressCity": "By",
@@ -113,5 +118,16 @@
     "reminderTypes": {
       "Email": "Epost"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} la deg til i {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} godtok deltakelse i {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} avslo deltakelse i {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} er usikker på deltakelse i {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} godtok deltakelse",
+    "eventConfirmationDeclinedThis": "{invitee} avslo deltakelse",
+    "eventConfirmationTentativeThis": "{invitee} er usikker på deltakelse"
   }
 }

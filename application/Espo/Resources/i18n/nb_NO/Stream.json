@@ -1,7 +1,16 @@
 {
+  "messages": {
+    "infoMention": "Skriv **@brukernavn** for å omtale en bruker i innlegget.",
+    "infoSyntax": "Tilgjengelig markdown-syntaks",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Kunne ikke legge til brukeren '{userName}' blant følgerne. Brukeren har ikke 'stream'-tilgang til posten."
+  },
   "syntaxItems": {
     "code": "kode",
+    "multilineCode": "flerlinjet kode",
+    "strongText": "fet tekst",
+    "emphasizedText": "uthevet tekst",
     "deletedText": "slettet tekst",
-    "link": "lenke"
+    "blockquote": "sitatblokk",
+    "link": "lenketekst"
   }
 }

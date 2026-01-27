@@ -6,7 +6,6 @@
     "to": "Til",
     "replyTo": "Svar til",
     "replyToString": "Svar til (string)",
-    "isHtml": "Er HTML",
     "body": "Brødtekst",
     "subject": "Emne",
     "attachments": "Vedlegg",
@@ -27,17 +26,39 @@
     "isReplied": "Er besvart",
     "isNotReplied": "Er ikke besvart",
     "folder": "Mappe",
+    "folderString": "Mappe",
     "inboundEmails": "Gruppekontoer",
     "emailAccounts": "Personlige kontoer",
     "hasAttachment": "Har vedlegg",
     "sentBy": "Sent av (bruker)",
     "assignedUsers": "Tildelt brukerne",
+    "bodyPlain": "Brødtekst (ren tekst)",
+    "ccEmailAddresses": "CC-e-postadresser",
+    "messageId": "Meldings-ID",
+    "messageIdInternal": "Meldings-ID (intern)",
     "folderId": "Mappe ID",
     "fromName": "Fra-navn",
-    "toEmailAddresses": "Til E-post addresser",
-    "replyToEmailAddresses": "Svar-til E-post adresse",
+    "fromString": "Fra-streng",
+    "isSystem": "Er system",
+    "personStringData": "Personstrengdata",
+    "fromEmailAddress": "Fra-adresse (lenke)",
     "replyToName": "Svar-til navn",
-    "replyToAddress": "Svar-til adresse"
+    "replyToAddress": "Svar-til adresse",
+    "icsContents": "ICS-innhold",
+    "icsEventData": "ICS-hendelsesdata",
+    "icsEventUid": "ICS-hendelses-UID",
+    "createdEvent": "Opprettet hendelse",
+    "event": "Hendelse",
+    "icsEventDateStart": "ICS-hendelses startdato",
+    "groupFolder": "Gruppe-mappe",
+    "isUsersSent": "Er brukerens sendte",
+    "inArchive": "I arkiv",
+    "groupStatusFolder": "Mappe for gruppestatus",
+    "sendAt": "Send kl.",
+    "toEmailAddresses": "Til e-postadresser",
+    "bccEmailAddresses": "BCC-e-postadresser",
+    "replyToEmailAddresses": "Svar-til-e-postadresser",
+    "isAutoReply": "Er autosvar"
   },
   "links": {
     "replied": "Svart",
@@ -47,17 +68,26 @@
     "assignedUsers": "Tildelt brukerne",
     "sentBy": "Sent av (bruker)",
     "attachments": "Vedlegg",
-    "toEmailAddresses": "Til E-post addresser",
-    "replyToEmailAddresses": "Svar-til E-post adresse"
+    "fromEmailAddress": "Fra e-postadresse",
+    "groupFolder": "Gruppe-mappe",
+    "createdEvent": "Opprettet hendelse",
+    "toEmailAddresses": "Til e-postadresser",
+    "ccEmailAddresses": "CC-e-postadresser",
+    "bccEmailAddresses": "BCC-e-postadresser",
+    "replyToEmailAddresses": "Svar-til-e-postadresser"
   },
   "options": {
     "status": {
       "Draft": "Utkast",
       "Sending": "Sender",
       "Sent": "Sendt",
-      "Archived": "Arkivert",
       "Received": "Mottatt",
-      "Failed": "Feilet"
+      "Failed": "Feilet",
+      "Archived": "Importert"
+    },
+    "groupStatusFolder": {
+      "Archive": "Arkiv",
+      "Trash": "Papirkurv"
     }
   },
   "labels": {
@@ -85,20 +115,50 @@
     "Retrieve from Trash": "Gjennopprett fra søppelkurv",
     "Move to Folder": "Flytt til mappe",
     "Filters": "Filtre",
-    "Folders": "Mapper"
+    "Folders": "Mapper",
+    "View Users": "Vis brukere",
+    "No Subject": "Ingen emne",
+    "Insert Field": "Sett inn felt",
+    "Event": "Hendelse",
+    "Group Folders": "Gruppe-mapper",
+    "View Attachments": "Vis vedlegg",
+    "Import EML": "Importer EML",
+    "Moved to Archive": "Flyttet til arkiv",
+    "Moved to Trash": "Flyttet til papirkurven",
+    "Retrieved from Trash": "Hentet fra papirkurven",
+    "No Records Moved": "Ingen poster flyttet",
+    "Schedule Send": "Planlegg sending"
   },
   "messages": {
     "testEmailSent": "Test-epost har blitt sendt",
     "emailSent": "Epost er sendt",
-    "savedAsDraft": "Lagret som utkast"
+    "savedAsDraft": "Lagret som utkast",
+    "confirmInsertTemplate": "E-postteksten vil gå tapt. Er du sikker på at du vil sette inn malen?",
+    "noSmtpSetup": "SMTP er ikke konfigurert: {link}",
+    "confirmSend": "Sende e-posten?",
+    "sendConfirm": "Sende e-posten?",
+    "removeSelectedRecordsConfirmation": "Er du sikker på at du vil fjerne valgte e-poster?\n\nDe vil bli fjernet for andre brukere også.",
+    "removeRecordConfirmation": "Er du sikker på at du vil fjerne e-posten?\n\nDen vil bli fjernet for andre brukere også.",
+    "invalidCredentials": "Ugyldige legitimasjonsopplysninger.",
+    "unknownError": "Ukjent feil.",
+    "recipientAddressRejected": "Mottakeradressen ble avvist.",
+    "alreadyImported": "[E-posten]({link}) finnes allerede i systemet.",
+    "couldNotSentScheduledEmail": "Kunne ikke sende planlagt [e-post]({link})",
+    "notEditAccess": "Ingen redigeringstilgang til e-posten.",
+    "groupFolderNoAccess": "Ingen tilgang til gruppemappen.",
+    "groupMoveOutNoEditAccess": "Kan ikke flytte ut av gruppemappen. Ingen redigeringstilgang til e-posten.",
+    "groupMoveToNoEditAccess": "Kan ikke flytte til gruppemappen. Ingen redigeringstilgang til e-posten.",
+    "groupMoveToTrashNoEditAccess": "Kan ikke flytte e-post fra gruppemappen til papirkurven. Ingen redigeringstilgang til e-posten.",
+    "groupMoveToArchiveNoEditAccess": "Kan ikke flytte fra gruppemappe til Arkiv. Ingen redigeringstilgang til e-post."
   },
   "presetFilters": {
     "sent": "Sendt",
-    "archived": "Arkivert",
     "inbox": "Innboks",
     "drafts": "Utkast",
     "trash": "Søppelkurv",
-    "important": "Viktig"
+    "important": "Viktig",
+    "archived": "Importert",
+    "archive": "Arkiv"
   },
   "massActions": {
     "markAsRead": "Marker som lest",
@@ -107,6 +167,17 @@
     "markAsNotImportant": "Fjern viktig-markering",
     "moveToTrash": "Flytt til søppelkurv",
     "moveToFolder": "Flytt til mappe",
-    "retrieveFromTrash": "Hent fra søppelkurv"
+    "retrieveFromTrash": "Hent fra søppelkurv",
+    "moveToArchive": "Arkiv"
+  },
+  "strings": {
+    "sendingFailed": "Sending av e-post mislyktes",
+    "group": "Gruppe"
+  },
+  "actions": {
+    "moveToArchive": "Arkiv"
+  },
+  "otherFields": {
+    "file": "Fil"
   }
 }

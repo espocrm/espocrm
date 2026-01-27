@@ -12,7 +12,11 @@
     "reminders": "Påminnelser",
     "account": "Konto",
     "acceptanceStatus": "Akseptstatus",
-    "dateEndDate": "Sluttdato (hele dagen)"
+    "dateStartDate": "Startdato (hele dagen)",
+    "dateEndDate": "Sluttdato (hele dagen)",
+    "isAllDay": "Er heldags",
+    "sourceEmail": "Kilde-e-post",
+    "joinUrl": "Bli med-URL"
   },
   "options": {
     "status": {
@@ -37,7 +41,10 @@
     "Set Not Held": "Merk som ikke gjennomført",
     "Send Invitations": "Send invitasjoner",
     "on time": "på tiden",
-    "before": "før"
+    "before": "før",
+    "All-Day": "Heldags",
+    "Send Cancellation": "Send avlysning",
+    "Acceptance": "Aksept"
   },
   "presetFilters": {
     "planned": "Planlagt",
@@ -45,6 +52,9 @@
     "todays": "Dagens"
   },
   "messages": {
-    "nothingHasBeenSent": "Ingenting ble sendt"
+    "nothingHasBeenSent": "Ingenting ble sendt",
+    "selectAcceptanceStatus": "Angi akseptstatusen din.",
+    "sendInvitationsToSelectedAttendees": "Invitasjons-e-poster vil bli sendt til de valgte deltakerne.",
+    "sendCancellationsToSelectedAttendees": "Avlysnings-e-poster vil bli sendt til de valgte deltakerne."
   }
 }

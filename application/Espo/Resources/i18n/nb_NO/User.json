@@ -26,12 +26,19 @@
     "position": "Posisjon i gruppen",
     "ipAddress": "IP-adresse",
     "passwordPreview": "Forhåndsvis passord",
+    "isSuperAdmin": "Er superadministrator",
+    "lastAccess": "Sist tilgang",
     "apiKey": "API-nøkkel",
     "secretKey": "Hemmelig Nøkkel",
     "authMethod": "Autentiseringsmetode",
     "yourPassword": "Ditt gjeldende passord",
     "dashboardTemplate": "Kontrollpanel mal",
-    "auth2FAEnable": "Aktiver 2 faktor-autentisering"
+    "auth2FAEnable": "Aktiver 2 faktor-autentisering",
+    "auth2FAMethod": "2FA-metode",
+    "auth2FATotpSecret": "2FA TOTP-hemmelighet",
+    "workingTimeCalendar": "Arbeidstidskalender",
+    "layoutSet": "Oppsettsett",
+    "avatarColor": "Avatarfarge"
   },
   "links": {
     "teams": "Grupper",
@@ -44,7 +51,11 @@
     "account": "Konto (Primær)",
     "tasks": "Oppgaver",
     "defaultTeam": "Forvalgt gruppe",
-    "dashboardTemplate": "Kontrollpanel mal"
+    "dashboardTemplate": "Kontrollpanel mal",
+    "userData": "Brukerdata",
+    "workingTimeCalendar": "Arbeidstidskalender",
+    "layoutSet": "Oppsettsett",
+    "workingTimeRanges": "Unntak for arbeidstid"
   },
   "labels": {
     "Create User": "Opprett bruker",
@@ -61,18 +72,27 @@
     "Create Portal User": "Opprett portalbruker",
     "Proceed w/o Contact": "Fortsett uten kontakt",
     "Generate New API Key": "Generer ny API-Nøkkel",
+    "Generate New Password": "Generer nytt passord",
     "Code": "Kode",
-    "Security": "Sikkerhet"
+    "Back to login form": "Tilbake til innloggingsskjema",
+    "Requirements": "Krav",
+    "Security": "Sikkerhet",
+    "Reset 2FA": "Tilbakestill 2FA",
+    "Secret": "Hemmelighet",
+    "Send Password Change Link": "Send lenke for passordendring",
+    "Send Code": "Send kode",
+    "Login Link": "Innloggingslenke"
   },
   "tooltips": {
     "defaultTeam": "Alle oppføringer som opprettes av denne brukeren vil bli relatert til denne gruppen som forvalg.",
-    "userName": "Bokstaver fra a-z, nummer fra 0-9, punktum, bindestrek, krøllalfa og understrek er tillat.",
     "isAdmin": "Adminbruker har tilgang til alt.",
-    "isActive": "Brukeren kan ikke logge inn når dette valget ikke er markert.",
     "teams": "Grupper som denne brukeren tilhører. Tilgangsnivået arves fra gruppens roller.",
     "roles": "Ytterligere tilgangsroller. Benyttes hvis brukeren ikke tilhører til noen gruppe eller når du har behov for å utvide tilgangsnivået for kun en bruker.",
     "portalRoles": "Ytterligere portalroller. Benyttes for å utvide tilgangsnivået for kun en bruker.",
-    "portals": "Portaler som brukeren har tilgang til."
+    "portals": "Portaler som brukeren har tilgang til.",
+    "userName": "Tillatte tegn: `a-z`, `0-9`, `-_@.`.",
+    "isActive": "Hvis ikke krysset av, vil ikke brukeren kunne logge inn.",
+    "layoutSet": "Oppsett fra det angitte oppsettsettet vil bli brukt for brukeren. Standardoppsettene vil bli overstyrt."
   },
   "messages": {
     "passwordWillBeSent": "Passordet vil sendes til brukerens epostadresse.",
@@ -86,15 +106,42 @@
     "passwordChangedByRequest": "Passordet er endret.",
     "userNameExists": "Brukernavn",
     "setupSmtpBefore": "Du må sette opp [SMTP settings]({url}) for at systemet skal kunne sende ut passord via E-post.",
+    "passwordStrengthLength": "Må være minst {length} tegn langt.",
+    "passwordStrengthLetterCount": "Må inneholde minst {count} bokstav(er).",
+    "passwordStrengthNumberCount": "Må inneholde minst {count} siffer.",
+    "passwordStrengthBothCases": "Må inneholde både store og små bokstaver.",
     "wrongCode": "Feil kode",
-    "auth2FARequired": "Du må sette opp 2 faktor autentisering. Bruk en autentikator på din mobil (for eks. Google Authenticatio)."
+    "codeIsRequired": "Kode er påkrevd",
+    "enterTotpCode": "Skriv inn en kode fra autentiseringsappen din.",
+    "verifyTotpCode": "Skann QR-koden med mobilens autentiseringsapp. Hvis du har problemer med å skanne, kan du skrive inn hemmeligheten manuelt. Etterpå vil du se en 6-sifret kode i applikasjonen. Skriv inn denne koden i feltet nedenfor.",
+    "generateAndSendNewPassword": "Et nytt passord vil bli generert og sendt til brukerens e-postadresse.",
+    "security2FaResetConfirmation": "Er du sikker på at du vil tilbakestille de gjeldende 2FA-innstillingene?",
+    "ldapUserInEspoNotFound": "Brukeren finnes ikke i EspoCRM. Kontakt administratoren din for å opprette brukeren.",
+    "passwordRecoverySentIfMatched": "Forutsatt at de innskrevne dataene samsvarte med en brukerkonto.",
+    "auth2FARequiredHeader": "Tofaktorautentisering kreves",
+    "auth2FARequired": "Du må sette opp 2 faktor autentisering. Bruk en autentikator på din mobil (for eks. Google Authenticatio).",
+    "sendPasswordChangeLinkConfirmation": "En e-post med en unik lenke vil bli sendt til brukeren, slik at de kan endre passordet sitt. Lenken utløper etter en bestemt tid.",
+    "yourAuthenticationCode": "Din autentiseringskode: {code}.",
+    "choose2FaSmsPhoneNumber": "Velg et telefonnummer som skal brukes for 2FA.",
+    "choose2FaEmailAddress": "Velg en e-postadresse som skal brukes for 2FA. Det anbefales sterkt å bruke en ikke-primær e-postadresse.",
+    "enterCodeSentInEmail": "Skriv inn koden som ble sendt til e-postadressen din.",
+    "enterCodeSentBySms": "Skriv inn koden som ble sendt via SMS til telefonnummeret ditt.",
+    "passwordChangeRequestNotFound": "Forespørselen om passordendring ble ikke funnet. Den kan ha utløpt. Prøv å starte en ny passordgjenoppretting fra [innloggingssiden]({url}).",
+    "loginAs": "Åpne innloggingslenken i et inkognitovindu for å bevare din nåværende økt. Bruk administratorlegitimasjonen din for å logge inn.",
+    "failedToLogIn": "Kunne ikke logge inn",
+    "2faMethodNotConfigured": "2FA-metoden er ikke fullstendig konfigurert i systemet.",
+    "loginError": "Det oppstod en feil",
+    "defaultTeamIsNotUsers": "Standardteamet må være ett av brukerens team",
+    "passwordStrengthSpecialCharacterCount": "Må inneholde minst {count} spesialtegn."
   },
   "boolFilters": {
-    "onlyMyTeam": "Bare min gruppe"
+    "onlyMyTeam": "Bare min gruppe",
+    "onlyMe": "Bare meg"
   },
   "presetFilters": {
     "active": "Aktiv",
-    "activePortal": "Aktiv portal"
+    "activePortal": "Aktiv portal",
+    "activeApi": "API aktiv"
   },
   "options": {
     "gender": {
@@ -104,10 +151,15 @@
       "Neutral": "Nøytral"
     },
     "type": {
-      "system": "system"
+      "regular": "Vanlig",
+      "system": "system",
+      "super-admin": "Superadministrator"
     },
     "authMethod": {
       "ApiKey": "API-nøkkel"
     }
+  },
+  "actions": {
+    "changePosition": "Endre posisjon"
   }
 }

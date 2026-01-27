@@ -3,15 +3,38 @@
     "name": "Navn",
     "campaign": "Kampanje",
     "isActive": "Er Aktiv",
+    "subscribeToTargetList": "Abonner på målliste",
+    "subscribeContactToTargetList": "Abonner på kontakt hvis den finnes",
     "targetList": "Målgruppe",
+    "fieldList": "Datafelter",
+    "optInConfirmation": "Dobbel samtykke",
     "optInConfirmationEmailTemplate": "Påmelding bekreftelse E-post mal",
+    "optInConfirmationLifetime": "Levetid for samtykkebekreftelse (timer)",
+    "optInConfirmationSuccessMessage": "Tekst som vises etter samtykkebekreftelse",
     "leadSource": "Ledetrådkilde",
     "apiKey": "API-nøkkel",
     "targetTeam": "Målgruppe",
     "exampleRequestMethod": "Metode",
+    "exampleRequestPayload": "Data",
+    "createLeadBeforeOptInConfirmation": "Opprett lead før bekreftelse",
     "duplicateCheck": "Sjekk Duplikat",
+    "skipOptInConfirmationIfSubscribed": "Hopp over bekreftelse hvis lead allerede er i mållisten",
     "smtpAccount": "SMTP konto",
-    "inboundEmail": "Epostkonto for gruppe"
+    "inboundEmail": "Epostkonto for gruppe",
+    "exampleRequestHeaders": "Overskrifter",
+    "phoneNumberCountry": "Telefonlandskode",
+    "fieldParams": "Feltparametere",
+    "formId": "Skjema-ID",
+    "formEnabled": "Webskjema",
+    "formUrl": "Skjema-URL",
+    "formSuccessText": "Tekst som skal vises etter innsending av skjema",
+    "formText": "Tekst som skal vises på skjema",
+    "formSuccessRedirectUrl": "URL å omdirigere til etter innsending av skjema",
+    "formLanguage": "Språk brukt i skjema",
+    "formFrameAncestors": "Tillatte verter for innebygging av skjema",
+    "formCaptcha": "Bruk Captcha",
+    "formTitle": "Skjematittel",
+    "formTheme": "Skjematema"
   },
   "links": {
     "targetList": "Målgruppe",
@@ -22,9 +45,20 @@
     "inboundEmail": "Epostkonto for gruppe"
   },
   "labels": {
-    "Generate New API Key": "Generer ny API-Nøkkel"
+    "Create LeadCapture": "Opprett inngangspunkt",
+    "Generate New API Key": "Generer ny API-Nøkkel",
+    "Request": "Forespørsel",
+    "Confirm Opt-In": "Bekreft samtykke",
+    "Generate New Form ID": "Generer ny skjema-ID",
+    "Web Form": "Nettskjema"
+  },
+  "messages": {
+    "generateApiKey": "Opprett ny API-nøkkel",
+    "optInConfirmationExpired": "Lenken for samtykkebekreftelse er utløpt.",
+    "optInIsConfirmed": "Samtykke er bekreftet."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown er støttet."
+    "optInConfirmationSuccessMessage": "Markdown er støttet.",
+    "formCaptcha": "For å kunne bruke Captcha må du konfigurere det under **Administrasjon** > **Integrasjoner**."
   }
 }

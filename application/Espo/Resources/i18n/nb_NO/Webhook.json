@@ -1,13 +1,21 @@
 {
+  "labels": {
+    "Create Webhook": "Opprett webhook"
+  },
   "fields": {
     "event": "Handling",
     "isActive": "Er Aktiv",
     "user": "API-Bruker",
     "entityType": "Enhetstype",
     "field": "Felt",
-    "secretKey": "Hemmelig Nøkkel"
+    "secretKey": "Hemmelig Nøkkel",
+    "skipOwn": "Hopp over egne"
   },
   "links": {
-    "user": "Bruker"
+    "user": "Bruker",
+    "queueItems": "Køelementer"
+  },
+  "tooltips": {
+    "skipOwn": "Ikke send hvis hendelsen ble initiert av brukeren som eier webhooken."
   }
 }

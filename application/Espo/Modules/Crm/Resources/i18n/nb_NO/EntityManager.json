@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Aktivitetsstatuser",
+    "historyStatusList": "Historikkstatuser",
+    "completedStatusList": "Fullførte statuser",
+    "canceledStatusList": "Kansellerte statuser"
+  },
+  "tooltips": {
+    "activityStatusList": "Statusverdier som avgjør at en aktivitetspost skal vises i Aktiviteter-panelet og regnes som faktisk.",
+    "historyStatusList": "Statusverdier som avgjør at en aktivitetspost skal vises i Historikk-panelet.",
+    "completedStatusList": "Statusverdier som avgjør at en aktivitet er fullført.",
+    "canceledStatusList": "Statusverdier som avgjør at en aktivitet er kansellert og ikke vil bli tatt med i ledig/opptatt-intervaller."
+  }
+}

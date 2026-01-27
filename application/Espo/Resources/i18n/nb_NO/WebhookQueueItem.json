@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "event": "Hendelse",
+    "target": "Mål",
+    "processedAt": "Behandlet kl.",
+    "attempts": "Forsøk",
+    "processAt": "Behandles kl."
+  },
+  "options": {
+    "status": {
+      "Pending": "Venter",
+      "Success": "Vellykket",
+      "Failed": "Mislykket"
+    }
+  }
+}

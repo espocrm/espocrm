@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Check Syntax": "Sjekk syntaks",
+    "Run": "Kjør"
+  },
+  "fields": {
+    "target": "Mål",
+    "targetType": "Måltype",
+    "script": "Skript",
+    "output": "Utdata",
+    "error": "Feil"
+  },
+  "messages": {
+    "runSuccess": "Kjørt vellykket.",
+    "runError": "Feil.",
+    "checkSyntaxSuccess": "Syntaksen er korrekt.",
+    "checkSyntaxError": "Syntaksfeil.",
+    "emptyScript": "Skriptet er tomt."
+  },
+  "tooltips": {
+    "output": "Skriv ut verdier med funksjonen `output\\printLine`."
+  }
+}

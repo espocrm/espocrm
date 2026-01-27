@@ -6,5 +6,8 @@
     "Create Case": "Opprett sak",
     "Add to Contact": "Legg til Kontakt",
     "Add to Lead": "Legg til Ledetråd"
+  },
+  "fields": {
+    "tasks": "Oppgaver"
   }
 }

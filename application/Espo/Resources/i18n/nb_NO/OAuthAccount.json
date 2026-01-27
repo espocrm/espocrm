@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create OAuthAccount": "Opprett OAuth-konto",
+    "Connection": "Tilkobling"
+  },
+  "fields": {
+    "provider": "Leverandør",
+    "hasAccessToken": "Har tilgangstoken",
+    "user": "Bruker",
+    "providerIsActive": "Leverandør er aktiv"
+  },
+  "links": {
+    "provider": "Leverandør"
+  }
+}

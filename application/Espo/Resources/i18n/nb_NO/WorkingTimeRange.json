@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "Calendars": "Kalendere",
+    "Create WorkingTimeRange": "Opprett unntak"
+  },
+  "fields": {
+    "timeRanges": "Plan",
+    "dateStart": "Startdato",
+    "dateEnd": "Sluttdato",
+    "calendars": "Kalendere",
+    "users": "Brukere"
+  },
+  "links": {
+    "calendars": "Kalendere",
+    "users": "Brukere"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Ikke-arbeid",
+      "Working": "Arbeid"
+    }
+  },
+  "presetFilters": {
+    "actual": "Faktisk"
+  },
+  "tooltips": {
+    "calendars": "Kalendere som unntaket skal gjelde for. Unntaket vil gjelde for alle brukere av de valgte kalenderne.\n\nLa feltet stå tomt hvis du bare trenger å bruke unntaket for bestemte brukere.",
+    "users": "Bestemte brukere som unntaket skal gjelde for."
+  }
+}

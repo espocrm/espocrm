@@ -30,26 +30,41 @@
     "smtpUsername": "SMTP-brukernavn",
     "smtpPassword": "SMTP-passord",
     "fromName": "Fra-navn",
+    "smtpIsShared": "SMTP er delt",
+    "smtpIsForMassEmail": "SMTP er for masseutsendelse",
     "useImap": "Hent E-post",
     "keepFetchedEmailsUnread": "Vis hentede eposter som ulest",
     "smtpAuthMechanism": "SMTP-Autentisering Metode",
-    "security": "Sikkerhet"
+    "security": "Sikkerhet",
+    "groupEmailFolder": "E-postmappe for gruppe",
+    "connectedAt": "Tilkoblet kl.",
+    "excludeFromReply": "Utelat fra svar",
+    "isSystem": "Er system"
   },
   "tooltips": {
     "reply": "Varsle senderen når eposten er mottatt.\n\nFor å unngå 'looping' vil det kun sendes <em>en</em> epost til mottageren innen en gitt tidsperiode.",
-    "createCase": "Opprett sak automatisk for inngående eposter.",
-    "replyToAddress": "Spesifiser epostadressen til denne postkassen for at svar skal bli sendt hit.",
     "caseDistribution": "Hvordan saker vil bli tildelt – direkte til en bruker eller til gruppen.",
     "assignToUser": "Brukere som sakene tildeles til.",
     "team": "Gruppes som sakene tildeles til.",
     "teams": "Grupper som eposter tildeles til.",
     "addAllTeamUsers": "Eposter vil vises i innboksen til alle brukere i de valgte gruppene.",
-    "useSmtp": "Muligheten for å sende E-post"
+    "targetUserPosition": "Brukere med angitt stilling vil bli tildelt saker.",
+    "monitoredFolders": "Flere mapper skal skilles med komma.",
+    "storeSentEmails": "Sendte e-poster vil bli lagret på IMAP-serveren.",
+    "useSmtp": "Muligheten for å sende E-post",
+    "groupEmailFolder": "Legg innkommende e-poster i en gruppemappe.",
+    "excludeFromReply": "Når du svarer på e-poster sendt til denne kontoens e-postadresse, vil e-postadressen ikke bli lagt til i CC.\n\nMerk at ved å aktivere denne parameteren, vil e-postadressen til denne kontoen bli eksponert for brukere som har tilgang til å sende e-poster.",
+    "isSystem": "Er systemets e-postkonto.",
+    "createCase": "Opprett saker automatisk fra innkommende e-poster.",
+    "replyToAddress": "For å rute svar til denne e-postkontoen, angi e-postadressen til denne kontoen.",
+    "smtpIsShared": "Hvis krysset av, vil brukere kunne sende e-poster ved å bruke denne SMTP-en. Tilgjengelighet styres av Roller via tillatelsen Gruppe-e-postkonto.",
+    "smtpIsForMassEmail": "Hvis krysset av, vil SMTP være tilgjengelig for masseutsendelse."
   },
   "links": {
     "filters": "Filtre",
     "emails": "Eposter",
-    "assignToUser": "Tildel til bruker"
+    "assignToUser": "Tildel til bruker",
+    "groupEmailFolder": "E-postmappe for gruppe"
   },
   "options": {
     "status": {
@@ -73,6 +88,7 @@
     "Main": "Hovedinnstillinger"
   },
   "messages": {
-    "couldNotConnectToImap": "Kunne ikke koble til IMAP-tjeneren"
+    "couldNotConnectToImap": "Kunne ikke koble til IMAP-tjeneren",
+    "imapNotConnected": "Kunne ikke koble til gruppe-[IMAP-konto](#InboundEmail/view/{id})."
   }
 }

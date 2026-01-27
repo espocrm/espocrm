@@ -1,12 +1,22 @@
 {
   "fields": {
-    "width": "Bredde (%)",
     "link": "Lenke",
     "notSortable": "Ikke sorterbar",
     "align": "Plassering",
     "panelName": "Panelnavn",
     "style": "Stil",
-    "sticked": "Festet"
+    "isLarge": "Stor skriftstørrelse",
+    "dynamicLogicVisible": "Betingelser som gjør panelet synlig",
+    "hidden": "Skjult",
+    "dynamicLogicStyled": "Vilkår for når stil brukes",
+    "noLabel": "Ingen etikett",
+    "tabLabel": "Fanetikett",
+    "tabBreak": "Fanebrekk",
+    "width": "Bredde",
+    "noteText": "Notattekst",
+    "noteStyle": "Notatstil",
+    "isMuted": "Dempet farge",
+    "sticked": "Fest øverst"
   },
   "options": {
     "align": {
@@ -22,6 +32,26 @@
     }
   },
   "labels": {
+    "New panel": "Nytt panel",
     "Layout": "Oppsett"
+  },
+  "tooltips": {
+    "link": "Hvis avkrysset, vil en feltverdi vises som en lenke som peker til detaljvisningen av posten. Vanligvis brukes dette for *Navn*-felter.",
+    "hiddenPanel": "Du må klikke på «vis mer» for å se panelet.",
+    "sticked": "Panelet vil festes til panelet over. Ingen mellomrom mellom panelene.",
+    "panelStyle": "En farge for panelet.",
+    "dynamicLogicVisible": "Hvis angitt, vil panelet være skjult med mindre vilkåret er oppfylt.",
+    "dynamicLogicStyled": "En farge vil bli brukt hvis en bestemt betingelse er oppfylt. Fargen defineres av parameteren *Stil*.",
+    "tabBreak": "En separat fane for panelet og alle påfølgende paneler frem til neste fanebrekk.",
+    "noLabel": "Ikke vis en kolonneetikett i overskriften.",
+    "notSortable": "Deaktiverer muligheten til å sortere etter kolonnen.",
+    "width": "En kolonnebredde. Det anbefales å ha én kolonne uten angitt bredde, vanligvis bør det være *Navn*-feltet.",
+    "noteText": "En tekst som skal vises i panelet. Markdown støttes."
+  },
+  "messages": {
+    "cantBeEmpty": "Oppsett kan ikke være tomt.",
+    "fieldsIncompatible": "Feltene kan ikke være på oppsettet sammen: {fields}.",
+    "alreadyExists": "Oppsettet `{name}` finnes allerede.",
+    "createInfo": "Egendefinerte listeoppsett kan brukes av relasjonspaneler."
   }
 }

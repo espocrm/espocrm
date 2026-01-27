@@ -5,7 +5,8 @@
     "EmailTemplates": "Epostmaler"
   },
   "fields": {
-    "order": "Sortering"
+    "order": "Sortering",
+    "childList": "Underliste"
   },
   "links": {
     "emailTemplates": "Epostmaler"

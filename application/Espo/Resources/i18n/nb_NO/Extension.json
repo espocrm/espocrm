@@ -3,13 +3,15 @@
     "name": "Navn",
     "version": "Versjon",
     "description": "Beskrivelse",
-    "isInstalled": "Installert"
+    "isInstalled": "Installert",
+    "checkVersionUrl": "En URL for å sjekke nye versjoner"
   },
   "labels": {
     "Uninstall": "Avinstallert",
     "Install": "Installér"
   },
   "messages": {
-    "uninstalled": "Utvidelsen <em>{name}</em> har blitt avinstallert"
+    "uninstalled": "Utvidelsen <em>{name}</em> har blitt avinstallert",
+    "fileExceedsMaxUploadSize": "Filstørrelsen overskrider maksimal opplastingsstørrelse {maxSize}. Vurder å øke `post_max_size` eller installer utvidelsen via CLI."
   }
 }

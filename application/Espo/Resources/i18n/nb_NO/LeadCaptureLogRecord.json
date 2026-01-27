@@ -1,9 +1,13 @@
 {
   "fields": {
     "number": "Nummer",
-    "target": "Mål"
+    "target": "Mål",
+    "leadCapture": "Prospektinnsamling",
+    "createdAt": "Registrert kl.",
+    "isCreated": "Er lead opprettet"
   },
   "links": {
+    "leadCapture": "Lead-innsamling",
     "target": "Mål"
   }
 }

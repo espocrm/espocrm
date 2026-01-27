@@ -6,23 +6,35 @@
     "bodyContains": "Brødtekst inneholder",
     "action": "Handling",
     "isGlobal": "Er global",
-    "emailFolder": "Mappe"
+    "emailFolder": "Mappe",
+    "groupEmailFolder": "E-postmappe for gruppe",
+    "markAsRead": "Marker som lest",
+    "bodyContainsAll": "Brødtekst inneholder alle",
+    "skipNotification": "Hopp over varsling"
   },
   "labels": {
     "Create EmailFilter": "Nytt epostfilter",
     "Emails": "Eposter"
   },
-  "tooltips": {
-    "from": "Eposter sendt fra den angitte adressen. Kan stå tom. Du kan bruke jokertegn * (stjerne).",
-    "to": "Eposter sendt til den angitte adressen. Kan stå tom. Du kan bruke jokertegn * (stjerne).",
-    "name": "Gi filteret et beskrivende navn.",
-    "bodyContains": "Epostens brødtekst inneholder en eller flere av de spesifiserte ordene eller frasene.",
-    "isGlobal": "Bruker dette filteret for alle eposter som kommer inn til applikasjonen."
-  },
   "options": {
     "action": {
       "Skip": "Ignorer",
-      "Move to Folder": "Legg til i mappe"
+      "Move to Folder": "Legg til i mappe",
+      "None": "Ingen",
+      "Move to Group Folder": "Legg i gruppemappe"
     }
+  },
+  "tooltips": {
+    "name": "Gi filteret et beskrivende navn.",
+    "bodyContains": "Epostens brødtekst inneholder en eller flere av de spesifiserte ordene eller frasene.",
+    "isGlobal": "Bruker dette filteret for alle eposter som kommer inn til applikasjonen.",
+    "bodyContainsAll": "En e-postbrødtekst inneholder alle de angitte ordene eller frasene.",
+    "subject": "Bruk et jokertegn (`*`): \n\n * `text*` – starter med tekst\n * `*text*` – inneholder tekst\n * `*text` – slutter med tekst",
+    "from": "E-poster sendt fra den angitte adressen vil bli filtrert. La stå tomt hvis det ikke er nødvendig. Du kan bruke et jokertegn (`*`).",
+    "to": "E-poster sendt til den angitte adressen vil bli filtrert. La stå tomt hvis det ikke er nødvendig. Du kan bruke et jokertegn (`*`)."
+  },
+  "links": {
+    "emailFolder": "Mappe",
+    "groupEmailFolder": "E-postmappe for gruppe"
   }
 }

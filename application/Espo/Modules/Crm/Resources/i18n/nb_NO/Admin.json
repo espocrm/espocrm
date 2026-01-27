@@ -1,6 +1,12 @@
 {
   "layouts": {
     "detailConvert": "Konverter ledetråd",
-    "listForAccount": "Liste (for konto)"
+    "listForAccount": "Liste (for konto)",
+    "listForContact": "Liste (for kontakt)"
+  },
+  "templates": {
+    "invitation": "Invitasjon",
+    "reminder": "Påminnelse",
+    "cancellation": "Avlysning"
   }
 }

@@ -35,7 +35,9 @@
   },
   "labels": {
     "Create MassEmail": "Opprett masseutsendt epost",
-    "Send Test": "Send test"
+    "Send Test": "Send test",
+    "System SMTP": "System-SMTP",
+    "group": "gruppe"
   },
   "messages": {
     "selectAtLeastOneTarget": "Velg minst ett mål.",
@@ -44,10 +46,11 @@
   "tooltips": {
     "optOutEntirely": "Epostadresser fra mottagere som har meldt seg av, vil merkes som 'avmeldt' og mottar ikke fremtidige utsendelser.",
     "targetLists": "Mål som ikke skal motta meldinger.",
-    "excludingTargetLists": "Mål som ikke skal motta meldinger."
+    "excludingTargetLists": "Mål som ikke skal motta meldinger.",
+    "storeSentEmails": "E-poster vil bli lagret i CRM."
   },
   "presetFilters": {
-    "actual": "Aktuell",
-    "complete": "Ferdig"
+    "complete": "Ferdig",
+    "actual": "Aktiv"
   }
 }

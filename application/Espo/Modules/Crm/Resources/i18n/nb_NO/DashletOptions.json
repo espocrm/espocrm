@@ -1,6 +1,7 @@
 {
   "fields": {
     "futureDays": "Neste X dager",
+    "useLastStage": "Grupper etter sist nådde fase",
     "team": "Gruppe"
   }
 }

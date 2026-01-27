@@ -7,10 +7,17 @@
     "methodName": "Metode",
     "scheduledJob": "Planlagte oppgaver",
     "method": "Metode (Ikke i bruk)",
+    "scheduledJobJob": "Planlagt jobbnåvn",
+    "executedAt": "Utført kl.",
+    "startedAt": "Startet kl.",
     "targetType": "Måltype",
+    "targetId": "Mål-ID",
     "number": "Nummer",
     "queue": "Kø",
-    "job": "Oppgave"
+    "job": "Oppgave",
+    "group": "Gruppe",
+    "className": "Klassenavn",
+    "targetGroup": "Målgruppe"
   },
   "options": {
     "status": {

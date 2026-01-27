@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "validationFailures": "Valideringsfeil",
+    "import": "Importer",
+    "rowIndex": "Radindeks",
+    "exportRowIndex": "Eksport-radindeks",
+    "lineNumber": "Linjenummer",
+    "exportLineNumber": "Eksport-linjenummer",
+    "row": "Rad",
+    "entityType": "Enhetstype"
+  },
+  "options": {
+    "type": {
+      "Validation": "Validering",
+      "Access": "Tilgang",
+      "Not-Found": "Ikke funnet"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Et linjenummer i den opprinnelige CSV-filen.",
+    "exportLineNumber": "Et linjenummer i eksport-CSV-en."
+  }
+}

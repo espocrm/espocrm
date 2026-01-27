@@ -20,8 +20,11 @@
     "budgetConverted": "Budsjett (konvertert)",
     "contactsTemplate": "Kontakter Mal",
     "leadsTemplate": "Ledetråd Mal",
+    "accountsTemplate": "Kontomal",
     "usersTemplate": "Brukere mal",
-    "optedInCount": "Påmeldt"
+    "mailMergeOnlyWithAddress": "Hopp over poster uten utfylt adresse",
+    "optedInCount": "Påmeldt",
+    "budgetCurrency": "Budsjettvaluta"
   },
   "links": {
     "targetLists": "Målgrupper",
@@ -35,6 +38,7 @@
     "trackingUrls": "Sporingslenker",
     "contactsTemplate": "Kontakter Mal",
     "leadsTemplate": "Ledetråd Mal",
+    "accountsTemplate": "Kontomal",
     "usersTemplate": "Brukere mal"
   },
   "options": {
@@ -43,7 +47,8 @@
       "Web": "Nettside",
       "Television": "Fjernsyn",
       "Newsletter": "Nyhetsbrev",
-      "Mail": "Post"
+      "Mail": "Post",
+      "Informational Email": "Informasjons-e-post"
     },
     "status": {
       "Planning": "Planlegger",
@@ -63,14 +68,16 @@
     "Unsubscribe again": "Avmeld igjen",
     "Subscribe again": "Påmeld igjen",
     "Create Target List": "Opprett målgruppe",
-    "Mail Merge": "E-post Sammenfletting"
+    "Mail Merge": "E-post Sammenfletting",
+    "Generate Mail Merge PDF": "Generer e-postfletting-PDF"
   },
   "presetFilters": {
     "active": "Aktiv"
   },
   "messages": {
     "unsubscribed": "Du er ikke lenger oppført i vår epostliste.",
-    "subscribedAgain": "Du er påmeldt igjen."
+    "subscribedAgain": "Du er påmeldt igjen.",
+    "cannotChangeType": "Kan ikke endre type."
   },
   "tooltips": {
     "targetLists": "Målgruppe(r) som skal motta meldinger.",

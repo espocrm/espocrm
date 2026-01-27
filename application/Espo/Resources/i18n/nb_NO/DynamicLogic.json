@@ -19,7 +19,10 @@
       "contains": "Inneholder",
       "has": "Inneholder",
       "notContains": "Inneholder ikke",
-      "notHas": "Inneholder ikke"
+      "notHas": "Inneholder ikke",
+      "startsWith": "Starter med",
+      "endsWith": "Slutter med",
+      "matches": "Samsvarer (reg. uttrykk)"
     }
   },
   "labels": {

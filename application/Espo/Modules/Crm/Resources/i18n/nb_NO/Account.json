@@ -29,7 +29,8 @@
     "campaignLogRecords": "Kampanjelogg",
     "campaign": "Kampanje",
     "portalUsers": "Portalbrukere",
-    "originalLead": "Original ledetråd"
+    "originalLead": "Original ledetråd",
+    "contactsPrimary": "Kontakter (primær)"
   },
   "options": {
     "type": {
@@ -85,16 +86,22 @@
       "Support": "Kundestøtte",
       "Testing, Inspection & Certification": "Testing, inspeksjon og sertifisering",
       "Wholesale": "Engros",
-      "Water": "Vann"
+      "Water": "Vann",
+      "Travel": "Reise"
     }
   },
   "labels": {
     "Create Account": "Opprett konto",
-    "Copy Billing": "Kopier fakturering"
+    "Copy Billing": "Kopier fakturering",
+    "Set Primary": "Angi som primær"
   },
   "presetFilters": {
     "customers": "Kunder",
     "partners": "Partnere",
     "recentlyCreated": "Nylig opprette"
+  },
+  "tabs": {
+    "Account": "Konto",
+    "Support": "Støtte"
   }
 }

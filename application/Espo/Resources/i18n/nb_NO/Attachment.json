@@ -6,13 +6,23 @@
     "role": "Rolle",
     "related": "Relatert",
     "file": "Fil",
-    "field": "Felt"
+    "field": "Felt",
+    "sourceId": "Kilde-ID",
+    "storage": "Lagring",
+    "size": "Størrelse (byte)",
+    "isBeingUploaded": "Lastes opp"
   },
   "options": {
     "role": {
       "Attachment": "Vedlegg",
+      "Inline Attachment": "Innebygd vedlegg",
+      "Import File": "Importer fil",
       "Export File": "Eksporter Fil",
-      "Mail Merge": "E-post Sammenfletting"
+      "Mail Merge": "E-post Sammenfletting",
+      "Mass Pdf": "Masse-PDF"
     }
+  },
+  "presetFilters": {
+    "orphan": "Foreldreløs"
   }
 }

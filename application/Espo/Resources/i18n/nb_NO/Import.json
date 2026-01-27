@@ -28,7 +28,6 @@
     "What to Import?": "Hva skal importeres?",
     "Entity Type": "Enhetstype",
     "What to do?": "Hva må gjøres?",
-    "Properties": "Egenskaper",
     "Header Row": "Overskriftsrad",
     "Person Name Format": "Format for personnavn",
     "John Smith": "Ola Nordmann",
@@ -50,12 +49,27 @@
     "Duplicates": "Duplikater",
     "Skip searching for duplicates": "Dropp å søke etter duplikater",
     "Timezone": "Tidssone",
-    "Remove Import Log": "Fjern importerings log"
+    "Remove Import Log": "Fjern importerings log",
+    "New Import": "Ny import",
+    "Import Results": "Importresultater",
+    "Silent Mode": "Stillemodus",
+    "New import with same params": "Ny import med samme parametere",
+    "Run Manually": "Kjør manuelt",
+    "Export": "Eksporter",
+    "Parameters": "Parametere"
   },
   "messages": {
     "utf8": "Bør være UTF-8-kodet",
     "duplicatesRemoved": "Duplikater fjernet",
-    "inIdle": "Kjør når kapasitet er ledig (for store mengder data, via cron)"
+    "inIdle": "Kjør når kapasitet er ledig (for store mengder data, via cron)",
+    "revert": "Dette vil fjerne alle importerte poster permanent.",
+    "removeDuplicates": "Dette vil permanent fjerne alle importerte poster som ble gjenkjent som duplikater.",
+    "confirmRevert": "Dette vil fjerne alle importerte poster permanent. Er du sikker?",
+    "confirmRemoveDuplicates": "Dette vil permanent fjerne alle importerte poster som ble gjenkjent som duplikater. Er du sikker?",
+    "removeImportLog": "Dette vil fjerne importloggen. Alle importerte poster vil bli beholdt. Bruk dette hvis du er sikker på at importen er i orden.",
+    "confirmRemoveImportLog": "Dette vil fjerne importloggen. Alle importerte poster vil bli beholdt. Du vil ikke kunne angre importresultatene. Er du sikker?",
+    "importRunning": "Import pågår...",
+    "noErrors": "Ingen feil"
   },
   "fields": {
     "file": "Fil",
@@ -69,13 +83,29 @@
       "Failed": "Feilet",
       "In Process": "Behandles",
       "Complete": "Komplett",
+      "Standby": "Ventemodus",
       "Pending": "Venter"
     },
     "personNameFormat": {
       "f l": "Fornavn Etternavn",
       "l f": "Etternavn Fornavn",
       "f m l": "Fornavn Melomnavn Etternavn",
-      "l f m": "Etternavn Fornavn Mellomnavn"
+      "l f m": "Etternavn Fornavn Mellomnavn",
+      "l, f": "Etternavn, fornavn"
     }
+  },
+  "strings": {
+    "commandToRun": "Kommando å kjøre (fra CLI)",
+    "saveAsDefault": "Lagre som standard"
+  },
+  "tooltips": {
+    "manualMode": "Hvis avkrysset, må du kjøre importen manuelt fra CLI. Kommandoen vil bli vist etter at importen er satt opp.",
+    "silentMode": "De fleste etter-lagring-skript vil bli hoppet over, strømnotater vil ikke bli opprettet. Importen vil kjøre raskere."
+  },
+  "links": {
+    "errors": "Feil"
+  },
+  "params": {
+    "phoneNumberCountry": "Telefonlandskode"
   }
 }

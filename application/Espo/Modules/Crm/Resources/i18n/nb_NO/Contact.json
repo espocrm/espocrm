@@ -17,10 +17,12 @@
     "portalUser": "Portalbruker",
     "originalLead": "Original ledetråd",
     "acceptanceStatus": "Akseptstatus",
+    "accountIsInactive": "Konto inaktiv",
     "acceptanceStatusMeetings": "Akseptstatus(Møter)",
     "acceptanceStatusCalls": "Akseptstatus (Telefon Samtaler)",
     "title": "Konto Tittel",
-    "hasPortalUser": "Har Portal Bruker"
+    "hasPortalUser": "Har Portal Bruker",
+    "originalEmail": "Opprinnelig e-post"
   },
   "links": {
     "opportunities": "Muligheter",
@@ -34,7 +36,8 @@
     "portalUser": "Portalbruker",
     "originalLead": "Original ledetråd",
     "documents": "Dokumenter",
-    "tasksPrimary": "Gjøremål (utvidet)"
+    "tasksPrimary": "Gjøremål (utvidet)",
+    "opportunitiesPrimary": "Salgsmuligheter (primær)"
   },
   "labels": {
     "Create Contact": "Opprett kontakt"

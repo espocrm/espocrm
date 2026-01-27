@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "Melding",
+    "code": "Kode",
+    "level": "Nivå",
+    "exceptionClass": "Unntaksklasse",
+    "file": "Fil",
+    "line": "Linje",
+    "requestMethod": "Forespørselsmetode",
+    "requestResourcePath": "Ressurssti for forespørsel"
+  },
+  "presetFilters": {
+    "errors": "Feil"
+  }
+}

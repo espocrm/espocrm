@@ -1,6 +1,24 @@
 {
   "fields": {
     "fieldList": "Feltliste",
-    "exportAllFields": "Eksporter alle felt"
+    "exportAllFields": "Eksporter alle felt",
+    "xlsxRecordLinks": "Postkoblinger",
+    "xlsxTitle": "Tittel"
+  },
+  "options": {
+    "status": {
+      "Pending": "Venter",
+      "Running": "Kjører",
+      "Success": "Vellykket",
+      "Failed": "Mislykket"
+    }
+  },
+  "messages": {
+    "exportProcessed": "Eksporten er behandlet. Last ned [filen]({url}).",
+    "infoText": "Eksporten behandles i bakgrunnen av cron. Det kan ta litt tid å fullføre. Å lukke denne modale dialogen vil ikke påvirke kjøringen."
+  },
+  "tooltips": {
+    "xlsxLite": "Bruker betydelig mindre minne. Anbefales hvis et stort antall poster eksporteres.",
+    "xlsxTitle": "Skriv ut en tittel og dagens dato i toppteksten."
   }
 }

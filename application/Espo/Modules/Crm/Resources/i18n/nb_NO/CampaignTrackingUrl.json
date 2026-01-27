@@ -2,7 +2,8 @@
   "fields": {
     "urlToUse": "Kode for å sette inn URL",
     "campaign": "Kampanje",
-    "action": "Handling"
+    "action": "Handling",
+    "message": "Melding"
   },
   "links": {
     "campaign": "Kampanje"
@@ -12,7 +13,12 @@
   },
   "options": {
     "action": {
-      "Redirect": "Videresende"
+      "Redirect": "Videresende",
+      "Show Message": "Vis melding"
     }
+  },
+  "tooltips": {
+    "url": "Mottakeren vil bli omdirigert til denne plasseringen etter at de følger lenken.",
+    "message": "Meldingen vil bli vist for mottakeren etter at de følger lenken. Markdown støttes."
   }
 }

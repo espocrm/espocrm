@@ -2,8 +2,15 @@
   "fields": {
     "username": "Brukernavn",
     "ipAddress": "IP-adresse",
+    "requestTime": "Forespørselstid",
+    "createdAt": "Forespurt kl.",
+    "isDenied": "Er nektet",
+    "denialReason": "Årsak til avvisning",
     "user": "Bruker",
     "authToken": "Autentisering Nøkkel Opprettet",
+    "requestUrl": "Forespørsels-URL",
+    "requestMethod": "Forespørselsmetode",
+    "authTokenIsActive": "Autentiseringstoken er aktiv",
     "authenticationMethod": "Autentiseringsmetode"
   },
   "links": {
@@ -12,11 +19,19 @@
     "actionHistoryRecords": "Behandlingshistorikk"
   },
   "presetFilters": {
+    "denied": "Nektet",
     "accepted": "Akseptert"
   },
   "options": {
     "denialReason": {
-      "IS_PORTAL_USER": "Portalbruker"
+      "CREDENTIALS": "Ugyldige påloggingsopplysninger",
+      "INACTIVE_USER": "Inaktiv bruker",
+      "IS_PORTAL_USER": "Portalbruker",
+      "IS_NOT_PORTAL_USER": "Ikke en portalbruker",
+      "USER_IS_NOT_IN_PORTAL": "Brukeren er ikke knyttet til portalen",
+      "IS_SYSTEM_USER": "Er systembruker",
+      "FORBIDDEN": "Forbudt",
+      "WRONG_CODE": "Feil kode"
     }
   }
 }

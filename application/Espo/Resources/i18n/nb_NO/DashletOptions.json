@@ -12,10 +12,14 @@
     "entityType": "Enhetstype",
     "primaryFilter": "Hovedfilter",
     "boolFilterList": "Andre Filtre",
-    "sortBy": "Rekkefølge (Felt)",
-    "sortDirection": "Rekkefølge (Retning)",
     "expandedLayout": "Oppsett",
-    "dateFilter": "Dato Filter"
+    "dateFilter": "Dato Filter",
+    "skipOwn": "Ikke vis egne poster",
+    "text": "Tekst",
+    "folder": "Mappe",
+    "includeShared": "Inkluder delte",
+    "sortBy": "Sorter etter",
+    "sortDirection": "Sorteringsretning"
   },
   "options": {
     "mode": {
@@ -25,6 +29,20 @@
       "basicDay": "Dag",
       "agendaDay": "Dag (agenda)",
       "timeline": "Tidslinje"
+    },
+    "sortDirection": {
+      "asc": "Stigende",
+      "desc": "Synkende"
     }
+  },
+  "messages": {
+    "selectEntityType": "Velg enhetstype i dashlet-alternativer."
+  },
+  "tooltips": {
+    "skipOwn": "Handlinger utført av brukerkontoen din vil ikke bli vist."
+  },
+  "otherFields": {
+    "soft": "Myk farge",
+    "small": "Liten skrift"
   }
 }

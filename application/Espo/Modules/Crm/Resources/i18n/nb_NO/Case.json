@@ -9,7 +9,9 @@
     "description": "Beskrivelse",
     "lead": "Ledetråd",
     "attachments": "Vedlegg",
-    "inboundEmail": "Epostkonto for gruppe"
+    "inboundEmail": "Epostkonto for gruppe",
+    "originalEmail": "Opprinnelig e-post",
+    "isInternal": "Skjult fra portalen"
   },
   "links": {
     "account": "Konto",

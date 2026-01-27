@@ -26,8 +26,11 @@
     "targetList": "Målgruppe",
     "industry": "Industri",
     "acceptanceStatus": "Akseptstatus",
+    "opportunityAmountCurrency": "Mulighetsbeløp valuta",
     "acceptanceStatusMeetings": "Akseptstatus(Møter)",
-    "acceptanceStatusCalls": "Akseptstatus (Telefon Samtaler)"
+    "acceptanceStatusCalls": "Akseptstatus (Telefon Samtaler)",
+    "convertedAt": "Konvertert",
+    "originalEmail": "Opprinnelig e-post"
   },
   "links": {
     "targetLists": "Målgrupper",
@@ -60,7 +63,7 @@
   },
   "presetFilters": {
     "active": "Aktive",
-    "actual": "Aktuell",
-    "converted": "Konvertert"
+    "converted": "Konvertert",
+    "actual": "Åpne"
   }
 }

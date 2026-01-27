@@ -9,13 +9,6 @@
     "defaultCurrency": "Forvalgt valuta",
     "currencyList": "Valutaliste",
     "language": "Språk",
-    "smtpServer": "Tjener",
-    "smtpAuth": "Autentisering",
-    "smtpSecurity": "Sikkerhet",
-    "smtpUsername": "Brukernavn",
-    "emailAddress": "Epost",
-    "smtpPassword": "Passord",
-    "smtpEmailAddress": "Epostadresse",
     "exportDelimiter": "Skilletegn for eksport",
     "signature": "Epostsignatur",
     "dashboardTabList": "Menyliste",
@@ -32,21 +25,48 @@
     "emailReplyToAllByDefault": "Epostsvar sendes til alle som forvalg",
     "doNotFillAssignedUserIfNotRequired": "Ikke fyll ut 'tildelt bruker' hvis det ikke er påkrevd",
     "followEntityOnStreamPost": "Følg enhet automatisk etter posting i strøm.",
-    "tabColorsDisabled": "Deaktiver fane farger"
+    "followCreatedEntities": "Auto-følg opprettede oppføringer",
+    "followCreatedEntityTypeList": "Auto-følg opprettede oppføringer for spesifikke enhetstyper",
+    "emailUseExternalClient": "Bruk en ekstern e-postklient",
+    "assignmentNotificationsIgnoreEntityTypeList": "Varsler om tildeling i appen",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "E-postvarsler om tildeling",
+    "dashboardLocked": "Lås instrumentbord",
+    "textSearchStoringDisabled": "Deaktiver lagring av tekstfilter",
+    "calendarSlotDuration": "Varighet på kalenderspor",
+    "calendarScrollHour": "Kalender rull til time",
+    "defaultRemindersTask": "Standardpåminnelser for oppgaver",
+    "addCustomTabs": "Legg til egendefinerte faner",
+    "reactionNotifications": "Varsler i appen om reaksjoner",
+    "pageContentWidth": "Innholdsbredde",
+    "reactionNotificationsNotFollowed": "Varsler om reaksjoner for poster som ikke følges",
+    "followAsCollaborator": "Følg automatisk når lagt til som samarbeidspartner"
   },
   "options": {
     "weekStart": {
       "0": "Søndag",
       "1": "Mandag"
+    },
+    "pageContentWidth": {
+      "Wide": "Bred"
     }
   },
   "labels": {
     "Notifications": "Varsler",
     "User Interface": "Brukergrensesnitt",
     "Misc": "Diverse",
-    "Locale": "Språk og nasjonalitet"
+    "Locale": "Språk og nasjonalitet",
+    "Reset Dashboard to Default": "Tilbakestill dashbord til standard"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Brukeren vil automatisk følge alle nye oppføringer til de valgte enhetstypene, motta varsler og se informasjonen i strømmen."
+    "autoFollowEntityTypeList": "Brukeren vil automatisk følge alle nye oppføringer til de valgte enhetstypene, motta varsler og se informasjonen i strømmen.",
+    "addCustomTabs": "Hvis avkrysset, blir egendefinerte faner lagt til standardfanene. Ellers brukes egendefinerte faner i stedet for standardfanene.",
+    "doNotFillAssignedUserIfNotRequired": "Når du oppretter en ny post, vil ikke tildelt bruker forhåndsutfylles med egen bruker. Hvis feltet tildelt bruker er påkrevd, har denne parameteren ingen effekt.",
+    "followCreatedEntities": "Opprettede poster vil bli fulgt automatisk, uavhengig av hvem de er tildelt.",
+    "followCreatedEntityTypeList": "Poster av de valgte enhetstypene vil bli fulgt automatisk, uavhengig av hvem de er tildelt. Bruk denne parameteren for å følge kun bestemte enhetstyper."
+  },
+  "tabFields": {
+    "label": "Etikett",
+    "iconClass": "Ikon",
+    "color": "Farge"
   }
 }

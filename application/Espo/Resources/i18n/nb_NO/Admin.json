@@ -53,9 +53,12 @@
     "Email Filters": "Epostfilter",
     "Portal Users": "Portalbrukere",
     "Action History": "Behandlingshistorikk",
+    "Label Manager": "Etikettbehandler",
     "Auth Log": "Autentisering Log",
+    "Lead Capture": "Prospektinnsamling",
     "Attachments": "Vedlegg",
     "API Users": "API-Brukere",
+    "Template Manager": "Malbehandler",
     "System Requirements": "Systemkrav",
     "PHP Settings": "PHP innstillinger",
     "Database Settings": "Databaseinnstillinger",
@@ -64,8 +67,24 @@
     "Fail": "Feil",
     "is recommended": "er anbefalt",
     "extension is missing": "utvidelse mangler",
+    "PDF Templates": "PDF-maler",
     "Dashboard Templates": "Kontrollpanel maler",
-    "Phone Numbers": "Telefonnummer"
+    "Email Addresses": "E-postadresser",
+    "Phone Numbers": "Telefonnummer",
+    "Layout Sets": "Oppsettsett",
+    "Messaging": "Meldinger",
+    "Misc": "Diverse",
+    "Job Settings": "Jobbinnstillinger",
+    "Configuration Instructions": "Konfigurasjonsinstruksjoner",
+    "Formula Sandbox": "Formel-sandkasse",
+    "Working Time Calendars": "Arbeidstidskalendere",
+    "Group Email Folders": "E-postmapper for grupper",
+    "Authentication Providers": "Autentiseringsleverandører",
+    "Setup": "Oppsett",
+    "App Log": "Applogg",
+    "Address Countries": "Adresseland",
+    "App Secrets": "App-hemmeligheter",
+    "OAuth Providers": "OAuth-leverandører"
   },
   "layouts": {
     "list": "Liste",
@@ -80,7 +99,15 @@
     "sidePanelsDetailSmall": "Sidepanel (små detaljer)",
     "sidePanelsEditSmall": "Sidepanel (redigering, liten)",
     "detailPortal": "Detalj (Portal)",
-    "detailSmallPortal": "Detalj (liten, Portal)"
+    "detailSmallPortal": "Detalj (liten, Portal)",
+    "listSmallPortal": "Liste (liten, portal)",
+    "listPortal": "Liste (portal)",
+    "relationshipsPortal": "Relasjonspaneler (portal)",
+    "defaultSidePanel": "Felt i sidepanel",
+    "bottomPanelsDetail": "Nederste paneler",
+    "bottomPanelsEdit": "Nederste paneler (rediger)",
+    "bottomPanelsDetailSmall": "Nederste paneler (detaljer liten)",
+    "bottomPanelsEditSmall": "Nederste paneler (rediger liten)"
   },
   "fieldTypes": {
     "address": "Adresse",
@@ -110,10 +137,18 @@
     "wysiwyg": "WYSIWYG",
     "map": "Kart",
     "currencyConverted": "Valuta (konvertert)",
+    "colorpicker": "Fargevelger",
     "int": "Int",
     "number": "Nummer (Automatisk økning)",
+    "jsonArray": "Json-array",
+    "jsonObject": "Json-objekt",
     "datetime": "Dato-Tid",
-    "datetimeOptional": "Dato/Dato-Tid"
+    "datetimeOptional": "Dato/Dato-Tid",
+    "checklist": "Sjekkliste",
+    "linkOne": "Koble til én",
+    "barcode": "Strekkode",
+    "urlMultiple": "URL (flere)",
+    "decimal": "Desimal"
   },
   "fields": {
     "name": "Navn",
@@ -138,7 +173,6 @@
     "minHeight": "Min. høyde (px)",
     "provider": "Tilbyder",
     "typeList": "Listetype",
-    "rows": "Antall rader i tekstområde",
     "lengthOfCut": "Kuttlengde",
     "sourceList": "Kildeliste",
     "tooltipText": "Tekst for verktøystips",
@@ -153,7 +187,48 @@
     "probabilityMap": "Stadiesannsynlighet (%)",
     "readOnly": "Skrivebeskyttet",
     "noEmptyString": "Tomme strenger er ikke tillat",
-    "onlyDefaultCurrency": "Eneste standard valuta"
+    "maxFileSize": "Maks filstørrelse (MB)",
+    "isPersonalData": "Er personopplysninger",
+    "useIframe": "Bruk Iframe",
+    "useNumericFormat": "Bruk numerisk format",
+    "strip": "Fjern",
+    "cutHeight": "Klipphøyde (px)",
+    "minuteStep": "Minuttsteg",
+    "inlineEditDisabled": "Deaktiver innebygd redigering",
+    "displayAsLabel": "Vis som etikett",
+    "allowCustomOptions": "Tillat tilpassede alternativer",
+    "maxCount": "Maks antall elementer",
+    "displayRawText": "Vis råtekst (ingen markdown)",
+    "notActualOptions": "Ikke faktiske alternativer",
+    "accept": "Godta",
+    "displayAsList": "Vis som liste",
+    "viewMap": "Knapp for vis kart",
+    "codeType": "Kodetype",
+    "lastChar": "Siste tegn",
+    "listPreviewSize": "Forhåndsvisningsstørrelse i listevisning",
+    "onlyDefaultCurrency": "Eneste standard valuta",
+    "dynamicLogicInvalid": "Betingelser som gjør feltet ugyldig",
+    "conversionDisabled": "Deaktiver konvertering",
+    "decimalPlaces": "Desimalplasser",
+    "pattern": "Mønster",
+    "globalRestrictions": "Globale begrensninger",
+    "decimal": "Desimal",
+    "optionsReference": "Alternativreferanse",
+    "copyToClipboard": "Knapp for å kopiere til utklippstavlen",
+    "rows": "Maks antall rader",
+    "readOnlyAfterCreate": "Skrivebeskyttet etter opprettelse",
+    "createButton": "Opprett-knapp",
+    "autocompleteOnEmpty": "Autofullfør ved tom inndata",
+    "relateOnImport": "Knytt ved import",
+    "aclScope": "ACL-omfang",
+    "onlyAdmin": "Kun for administrator",
+    "activeOptions": "Aktive alternativer",
+    "labelType": "Etikettype",
+    "preview": "Forhåndsvisning",
+    "attachmentField": "Vedleggsfelt",
+    "dynamicLogicReadOnlySaved": "Lagrede tilstandsbetingelser som gjør feltet skrivebeskyttet",
+    "notStorable": "Kan ikke lagres",
+    "itemsEditable": "Elementer kan redigeres"
   },
   "messages": {
     "selectEntityType": "Velg enhetstype i venstre meny.",
@@ -165,10 +240,19 @@
     "upgradeBackup": "Det er anbefalt å ta backup av EspoCRMs filer og data før oppgradering.",
     "thousandSeparatorEqualsDecimalMark": "Skillet for tusentall kan ikke være et desimaltegn",
     "userHasNoEmailAddress": "Brukeren har ikke epostadresse",
+    "uninstallConfirmation": "Er du sikker på at du vil avinstallere utvidelsen?",
+    "cronIsNotConfigured": "Planlagte jobber kjører ikke. Derfor fungerer ikke innkommende e-poster, varsler og påminnelser. Følg [instruksjonene](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) for å sette opp cron-jobb.",
+    "newExtensionVersionIsAvailable": "En ny {extensionName}-versjon {latestVersion} er tilgjengelig.",
     "upgradeVersion": "EspoCRM vil bli oppdatert til version **{version}**. Vennligst vent. Dette kan ta en stund.",
     "upgradeDone": "EspoCRM har blitt oppgradert til **{version}**.",
+    "downloadUpgradePackage": "Last ned oppgraderingspakke(r) [her]({url}).",
+    "upgradeInfo": "Se [dokumentasjonen]({url}) om hvordan du oppgraderer EspoCRM-instansen din.",
+    "upgradeRecommendation": "Denne måten å oppgradere på anbefales ikke. Det er bedre å oppgradere fra CLI.",
+    "newVersionIsAvailable": "En ny EspoCRM-versjon {latestVersion} er tilgjengelig. Følg [instruksjonene](https://www.espocrm.com/documentation/administration/upgrading/) for å oppgradere instansen din.",
     "formulaFunctions": "Fler funksjoner finner du i [documentation]({documentationUrl}).",
-    "rebuildRequired": "Du må kjøre gjenoppbygning via CLI."
+    "rebuildRequired": "Du må kjøre gjenoppbygning via CLI.",
+    "cronIsDisabled": "Cron er deaktivert, applikasjonen er ikke fullt funksjonell. Aktiver cron i [innstillingene](#Admin/settings).",
+    "cacheIsDisabled": "Cache er deaktivert, applikasjonen vil kjøre sakte. Aktiver cache i [innstillingene](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Grunnleggende systeminnstillinger",
@@ -197,7 +281,32 @@
     "inboundEmails": "Innstillinger for inngående eposter.",
     "portalUsers": "Portalbrukere.",
     "entityManager": "Opprett egne enheter og rediger eksisterende. Administrer felt og relasjoner.",
-    "emailFilters": "Eposter som samstemmer med filteret vil <em>ikke</em> importeres."
+    "emailFilters": "Eposter som samstemmer med filteret vil <em>ikke</em> importeres.",
+    "actionHistory": "Logg over brukerhandlinger.",
+    "labelManager": "Tilpass applikasjonsetiketter.",
+    "authLog": "Innloggingshistorikk.",
+    "attachments": "Alle filvedlegg lagret i systemet.",
+    "templateManager": "Tilpass meldingsmaler.",
+    "systemRequirements": "Systemkrav for EspoCRM.",
+    "apiUsers": "Separate brukere for integrasjonsformål.",
+    "jobs": "Jobber utfører oppgaver i bakgrunnen.",
+    "pdfTemplates": "Maler for utskrift til PDF.",
+    "webhooks": "Administrer webhooks.",
+    "dashboardTemplates": "Distribuer dashbord til brukere.",
+    "phoneNumbers": "Alle telefonnumre lagret i systemet.",
+    "emailAddresses": "Alle e-postadresser lagret i systemet.",
+    "layoutSets": "Samlinger av oppsett som kan tilordnes til team og portaler.",
+    "jobsSettings": "Innstillinger for jobbbehandling. Jobber utfører oppgaver i bakgrunnen.",
+    "sms": "SMS-innstillinger.",
+    "formulaSandbox": "Skriv og test formelskript.",
+    "workingTimeCalendars": "Arbeidsplan.",
+    "groupEmailFolders": "E-postmapper delt for team.",
+    "authenticationProviders": "Ekstra autentiseringsleverandører for portaler.",
+    "appLog": "Applikasjonslogg.",
+    "addressCountries": "Land tilgjengelige for adressefelter.",
+    "appSecrets": "Lagre sensitiv informasjon som API-nøkler, passord og andre hemmeligheter.",
+    "leadCapture": "Endepunkter for lead-innsamling og webskjemaer.",
+    "oAuthProviders": "OAuth-leverandører for integrasjoner."
   },
   "options": {
     "previewSize": {
@@ -206,6 +315,10 @@
       "medium": "Mellomstor",
       "large": "Stor",
       "": "Forvalg"
+    },
+    "labelType": {
+      "state": "Delstat",
+      "regular": "Vanlig"
     }
   },
   "systemRequirements": {
@@ -216,18 +329,39 @@
     "user": "Brukernavn",
     "writable": "Skrivetillatelse",
     "readable": "Lesbar",
-    "requiredMariadbVersion": "MariaDB Versjon"
+    "requiredMariadbVersion": "MariaDB Versjon",
+    "requiredPostgresqlVersion": "PostgreSQL-versjon"
   },
   "templates": {
     "accessInfo": "Tilgang Informasjon",
     "accessInfoPortal": "Tilgang Informasjon for Portaler",
+    "assignment": "Tildeling",
     "mention": "Nevnt",
-    "passwordChangeLink": "Passordbytte lenke"
+    "notePost": "Merknad om innlegg",
+    "notePostNoParent": "Merknad om innlegg (uten overordnet)",
+    "noteStatus": "Merknad om statusoppdatering",
+    "passwordChangeLink": "Passordbytte lenke",
+    "noteEmailReceived": "Merknad om mottatt e-post",
+    "twoFactorCode": "2FA-kode"
   },
   "strings": {
     "rebuildRequired": "Gjenoppbygging er påkrevd"
   },
   "keywords": {
-    "templateManager": "varsler"
+    "userInterface": "ui,tema,faner,logo,dashbord",
+    "scheduledJob": "cron,jobber",
+    "integrations": "google,kart,google maps",
+    "authLog": "logg,historikk",
+    "authTokens": "historikk,tilgang,logg",
+    "entityManager": "felter,relasjoner,forhold",
+    "templateManager": "varsler",
+    "authentication": "passord,sikkerhet,ldap",
+    "labelManager": "språk,oversettelse",
+    "appSecrets": "nøkkel,nøkler,passord",
+    "leadCapture": "nettskjemaer"
+  },
+  "tooltips": {
+    "tabUrl": "Kan starte med `#` for å navigere til en applikasjonsside.",
+    "tabUrlAclScope": "Fanen vil være tilgjengelig for brukere som har tilgang til det angitte omfanget."
   }
 }

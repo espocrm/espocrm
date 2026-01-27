@@ -14,7 +14,9 @@
     "amountWeightedConverted": "Vektet beløp",
     "campaign": "Kampanje",
     "originalLead": "Original ledetråd",
+    "amountCurrency": "Beløp valuta",
     "contactRole": "Kontaktrolle",
+    "lastStage": "Siste fase",
     "contact": "Kontakt (primær)"
   },
   "links": {

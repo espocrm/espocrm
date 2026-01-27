@@ -1,0 +1,26 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Opprett kalender"
+  },
+  "fields": {
+    "timeZone": "Tidssone",
+    "timeRanges": "Arbeidsdagplan",
+    "weekday0": "Søn",
+    "weekday1": "Man",
+    "weekday2": "Tir",
+    "weekday3": "Ons",
+    "weekday4": "Tor",
+    "weekday5": "Fre",
+    "weekday6": "Lør",
+    "weekday0TimeRanges": "Søn dagsplan",
+    "weekday1TimeRanges": "Man dagsplan",
+    "weekday2TimeRanges": "Tir dagsplan",
+    "weekday3TimeRanges": "Ons dagsplan",
+    "weekday4TimeRanges": "Tor dagsplan",
+    "weekday5TimeRanges": "Fre dagsplan",
+    "weekday6TimeRanges": "Lør dagsplan"
+  },
+  "links": {
+    "ranges": "Unntak"
+  }
+}

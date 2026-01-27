@@ -4,10 +4,19 @@
     "clientId": "Klient-ID",
     "clientSecret": "Klienthemmelighet",
     "redirectUri": "Videresendings-URI",
-    "apiKey": "API-nøkkel"
+    "apiKey": "API-nøkkel",
+    "siteKey": "Nettstedsnøkkel",
+    "secretKey": "Hemmelig nøkkel",
+    "scoreThreshold": "Terskel for poengsum",
+    "mapId": "Kart-ID"
   },
   "messages": {
     "selectIntegration": "Velg en integrasjon fra menyen.",
     "noIntegrations": "Ingen integrasjoner er tilgjengelig."
+  },
+  "help": {
+    "Google": "**Hent OAuth 2.0-legitimasjon fra Google Developers Console.**\n\nGå til [Google Developers Console](https://console.developers.google.com/project) for å hente OAuth 2.0-legitimasjon som en klient-ID og klienthemmelighet som er kjent av både Google og EspoCRM-applikasjonen.",
+    "GoogleMaps": "Hent API-nøkkel [her](https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Skaff nettstedsnøkkelen og den hemmelige nøkkelen fra [Google](https://www.google.com/recaptcha/)."
   }
 }

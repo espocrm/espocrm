@@ -20,7 +20,9 @@
     "smtpPassword": "SMTP-passord",
     "useImap": "Hent E-post",
     "smtpAuthMechanism": "SMTP-Autentisering Metode",
-    "security": "Sikkerhet"
+    "security": "Sikkerhet",
+    "connectedAt": "Tilkoblet kl.",
+    "folderMap": "Mappetilordning"
   },
   "links": {
     "filters": "Filtre",
@@ -45,11 +47,17 @@
   },
   "messages": {
     "couldNotConnectToImap": "Kunne ikke koble til IMAP-tjener",
-    "connectionIsOk": "Tilkoblingen er OK"
+    "connectionIsOk": "Tilkoblingen er OK",
+    "imapNotConnected": "Kunne ikke koble til [IMAP-konto](#EmailAccount/view/{id}).",
+    "noFolder": "Mappet mappe finnes ikke."
   },
   "tooltips": {
-    "monitoredFolders": "Du kan legge til en 'Sendt'-mappe for å synkroniskere eposter sendt fra eksterne klienter.",
     "storeSentEmails": "Sendte eposter vil lagres på IMAP-tjeneren. Epostadressefeltet må matche adressen epostene vil sendes fra.",
-    "useSmtp": "Muligheten for å sende E-post"
+    "useSmtp": "Muligheten for å sende E-post",
+    "emailAddress": "Brukerposten (tilordnet bruker) må ha samme e-postadresse for å kunne bruke denne e-postkontoen til sending.",
+    "monitoredFolders": "Velg IMAP-mapper som skal importeres. Valgfritt kan du tilordne dem til Espo-mapper.\n\nDu kan legge til «Sendt»-mappen for å synkronisere e-poster sendt fra en ekstern e-postklient."
+  },
+  "presetFilters": {
+    "active": "Aktiv"
   }
 }

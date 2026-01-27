@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "event": "Hendelse",
+    "target": "Mål",
+    "isProcessed": "Er behandlet",
+    "user": "Bruker"
+  },
+  "links": {
+    "target": "Mål",
+    "user": "Bruker"
+  }
+}

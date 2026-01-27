@@ -1,1 +1,16 @@
-{}
+{
+  "fields": {
+    "processedCount": "Antall behandlet"
+  },
+  "options": {
+    "status": {
+      "Pending": "Venter",
+      "Running": "Kjører",
+      "Success": "Vellykket",
+      "Failed": "Mislykket"
+    }
+  },
+  "messages": {
+    "infoText": "Massehandlingen behandles i bakgrunnen av cron. Det kan ta litt tid å fullføre. Å lukke denne modale dialogen vil ikke påvirke kjøringen."
+  }
+}

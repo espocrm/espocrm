@@ -13,12 +13,14 @@
     "dateCompleted": "Gjennomført",
     "attachments": "Vedlegg",
     "reminders": "Påminnelser",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "originalEmail": "Original e-post"
   },
   "links": {
     "attachments": "Vedlegg",
     "account": "Konto",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "email": "E-post"
   },
   "options": {
     "status": {
@@ -41,10 +43,13 @@
     "overdue": "På overtid"
   },
   "presetFilters": {
-    "actual": "Aktuell",
     "completed": "Gjennomført",
     "todays": "Dagens",
     "overdue": "På overtid",
-    "deferred": "Utsatt"
+    "deferred": "Utsatt",
+    "actual": "Åpne"
+  },
+  "nameOptions": {
+    "replyToEmail": "Svar på e-post"
   }
 }

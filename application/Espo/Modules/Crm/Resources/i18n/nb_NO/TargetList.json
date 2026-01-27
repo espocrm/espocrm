@@ -7,14 +7,20 @@
     "endDate": "Sluttdato",
     "targetLists": "Målgrupper",
     "includingActionList": "Inkludert",
-    "excludingActionList": "Eksludert"
+    "excludingActionList": "Eksludert",
+    "optedOutCount": "Antall avmeldte",
+    "targetStatus": "Målstatus",
+    "isOptedOut": "Har reservert seg",
+    "sourceCampaign": "Kildekampanje",
+    "category": "Kategori"
   },
   "links": {
     "accounts": "Kontoer",
     "contacts": "Kontakter",
     "leads": "Ledetråder",
     "campaigns": "Kampanjer",
-    "massEmails": "Masseutsendte eposter"
+    "massEmails": "Masseutsendte eposter",
+    "category": "Kategori"
   },
   "options": {
     "type": {
@@ -24,7 +30,8 @@
       "Newsletter": "Nyhetsbrev"
     },
     "targetStatus": {
-      "Opted Out": "Avmeldt"
+      "Opted Out": "Avmeldt",
+      "Listed": "Oppført"
     }
   },
   "labels": {

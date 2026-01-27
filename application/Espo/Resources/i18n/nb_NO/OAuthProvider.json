@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "Opprett OAuth-leverandør"
+  },
+  "fields": {
+    "isActive": "Er aktiv",
+    "clientId": "Klient-ID",
+    "clientSecret": "Klienthemmelighet",
+    "authorizationEndpoint": "Autorisasjonsendepunkt",
+    "tokenEndpoint": "Tokenendepunkt",
+    "authorizationRedirectUri": "Autorisasjonsomdirigerings-URI",
+    "scopes": "Omfang",
+    "scopeSeparator": "Omfangsskilletegn",
+    "hasAccessToken": "Har tilgangstoken",
+    "authorizationPrompt": "Autorisasjonsprompt",
+    "authorizationParams": "Autorisasjonsparametere"
+  },
+  "links": {
+    "accounts": "Kontoer"
+  },
+  "tooltips": {
+    "authorizationParams": "Ekstra spørringsparametere som skal sendes til autorisasjonsendepunktet. Angis i JSON-format."
+  }
+}

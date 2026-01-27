@@ -5,7 +5,9 @@
     "dateEnd": "Sluttdato",
     "duration": "Varighet",
     "reminders": "Påminnelser",
-    "dateEndDate": "Sluttdato (hele dagen)"
+    "dateStartDate": "Startdato (hele dagen)",
+    "dateEndDate": "Sluttdato (hele dagen)",
+    "isAllDay": "Er heldags"
   },
   "links": {
     "parent": "Forelder"

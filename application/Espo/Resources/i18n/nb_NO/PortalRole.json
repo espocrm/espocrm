@@ -10,6 +10,7 @@
   },
   "fields": {
     "exportPermission": "Eksporter Tillatelser",
-    "massUpdatePermission": "Endre utvalgte Tillatelse"
+    "massUpdatePermission": "Endre utvalgte Tillatelse",
+    "fieldData": "Feltdata"
   }
 }

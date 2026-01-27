@@ -5,23 +5,27 @@
     "assignmentPermission": "Tildelingsrettigheter",
     "userPermission": "Brukerrettigheter",
     "portalPermission": "Portalrettigheter",
+    "groupEmailAccountPermission": "Tillatelse for gruppe-e-postkonto",
     "exportPermission": "Eksporter Tillatelser",
-    "massUpdatePermission": "Endre utvalgte Tillatelse"
+    "dataPrivacyPermission": "Tillatelse for personvern",
+    "massUpdatePermission": "Endre utvalgte Tillatelse",
+    "followerManagementPermission": "Tillatelse for følgeradministrasjon",
+    "fieldData": "Feltdata",
+    "messagePermission": "Meldingstillatelse",
+    "auditPermission": "Revisjonstillatelse",
+    "mentionPermission": "Tillatelse for omtale",
+    "userCalendarPermission": "Tillatelse for brukerkalender"
   },
   "links": {
     "users": "Brukere",
     "teams": "Grupper"
   },
-  "tooltips": {
-    "assignmentPermission": "Gjør det mulig å begrense tildeling av oppføringer og å poste meldinger til andre brukere.\n\nAlle – ingen restriksjoner\n\nGruppe – kan tildele og poste til medlemmer av gruppen\n\nIngen – kan kun tildele og poste til seg selv",
-    "userPermission": "Gjør det mulig å avgrense om brukere skal kunne se aktiviteter, kalenderen og strømmen til andre brukere.\n\nAlle – kan se alt\n\nGruppe – viser kun informasjon fra deltagere i gruppen\n\nIngen – får ikke se noe",
-    "portalPermission": "Definerer tilgangen til portalinformasjon, muligheten til å poste meldinger og til å konvertere kontakter til portalbrukere."
-  },
   "labels": {
     "Access": "Tilgang",
     "Create Role": "Opprett rolle",
     "Scope Level": "Omfangsnivå",
-    "Field Level": "Feltnivå"
+    "Field Level": "Feltnivå",
+    "Baseline": "Basislinje"
   },
   "options": {
     "accessList": {
@@ -49,5 +53,19 @@
   },
   "messages": {
     "changesAfterClearCache": "Endringer i tillgangskontrollen vil først tre i kraft etter at hurtigminne er tømt."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Tillater å vise og slette personopplysninger.",
+    "followerManagementPermission": "Tillater å administrere følgere for spesifikke poster.",
+    "messagePermission": "Tillater å sende meldinger til andre brukere.\n\n* alle – kan sende til alle\n* team – kan bare sende til lagkamerater\n* nei – kan ikke sende",
+    "assignmentPermission": "Tillater å tildele poster til andre brukere.\n\n* alle – ingen begrensning\n* team – kan bare tildele til lagkamerater\n* nei – kan bare tildele til seg selv",
+    "portalPermission": "Tilgang til portalinformasjon, muligheten til å legge ut meldinger til portalbrukere.",
+    "groupEmailAccountPermission": "Tilgang til gruppe-e-postkontoer, muligheten til å sende e-poster fra gruppe-SMTP.",
+    "exportPermission": "Tillater å eksportere poster.",
+    "massUpdatePermission": "Muligheten til å utføre masseoppdatering av poster.",
+    "auditPermission": "Tillater å vise revisjonsloggen.",
+    "mentionPermission": "Tillater å omtale andre brukere i strømmen.\n\n* alle – kan omtale alle\n* team – kan bare omtale lagkamerater\n* nei – kan ikke omtale",
+    "userPermission": "Tillater å se strømmen til andre brukere. Tillater brukere å se tilgangsnivåene andre brukere har for bestemte poster.",
+    "userCalendarPermission": "Tillater å se kalenderne til andre brukere."
   }
 }

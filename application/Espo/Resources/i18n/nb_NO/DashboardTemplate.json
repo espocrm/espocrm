@@ -1,8 +1,11 @@
 {
   "fields": {
-    "layout": "Oppsett"
+    "layout": "Oppsett",
+    "append": "Legg til (ikke fjern brukerens faner)"
   },
   "labels": {
-    "Create DashboardTemplate": "Opprett mal"
+    "Create DashboardTemplate": "Opprett mal",
+    "Deploy to Users": "Distribuer til brukere",
+    "Deploy to Team": "Distribuer til team"
   }
 }

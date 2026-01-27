@@ -15,15 +15,23 @@
     "weekStart": "Første dag i uken",
     "defaultCurrency": "Forvalgt valuta",
     "customUrl": "Egendefinert URL",
-    "customId": "Egendefinert ID"
+    "customId": "Egendefinert ID",
+    "layoutSet": "Oppsettsett",
+    "authenticationProvider": "Autentiseringsleverandør",
+    "authTokenLifetime": "Levetid for autentiseringstoken (timer)",
+    "authTokenMaxIdleTime": "Maks inaktiv tid for autentiseringstoken (timer)",
+    "applicationName": "Applikasjonsnavn"
   },
   "links": {
     "users": "Brukere",
     "portalRoles": "Roller",
-    "notes": "Notater"
+    "notes": "Notater",
+    "layoutSet": "Oppsettsett",
+    "authenticationProvider": "Autentiseringsleverandør"
   },
   "tooltips": {
-    "portalRoles": "Spesifiserte portalroller vil gjelde for alle brukere i denne portalen."
+    "portalRoles": "Spesifiserte portalroller vil gjelde for alle brukere i denne portalen.",
+    "layoutSet": "Gir muligheten til å ha oppsett som avviker fra standardoppsettene."
   },
   "labels": {
     "Create Portal": "Opprett portal",

@@ -6,27 +6,57 @@
     "users": "Brukere",
     "portals": "Portaler",
     "isGlobal": "Er global",
+    "isInternal": "Er intern (for interne brukere)",
     "related": "Relatert",
-    "number": "Nummer"
+    "createdByGender": "Opprettet av kjønn",
+    "number": "Nummer",
+    "isPinned": "Er festet"
   },
   "filters": {
     "all": "Alle",
     "posts": "Poster",
-    "updates": "Oppdateringer"
+    "updates": "Oppdateringer",
+    "activity": "Aktivitet"
   },
   "messages": {
-    "writeMessage": "Skriv en melding her"
-  },
-  "options": {
-    "targetType": {
-      "self": "til meg selv",
-      "users": "til valgt(e) bruker(e)",
-      "teams": "til valgt(e) gruppe(r)",
-      "all": "til alle interne brukere",
-      "portals": "til portalbrukere"
-    }
+    "writeMessage": "Skriv en melding her",
+    "pinnedMaxCountExceeded": "Kan ikke feste flere notater. Maks tillatt antall er {count}."
   },
   "links": {
-    "related": "Relatert"
+    "superParent": "Overordnet forelder",
+    "related": "Relatert",
+    "portals": "Portaler",
+    "attachments": "Vedlegg"
+  },
+  "options": {
+    "type": {
+      "Create": "Opprett",
+      "CreateRelated": "Opprett relatert",
+      "Update": "Oppdater",
+      "Assign": "Tildel",
+      "Relate": "Knytt",
+      "Unrelate": "Opphev kobling",
+      "EmailReceived": "E-post mottatt",
+      "EmailSent": "E-post sendt"
+    },
+    "targetType": {
+      "self": "Selv",
+      "users": "Brukere",
+      "teams": "Team",
+      "all": "Alle interne brukere",
+      "portals": "Portalbrukere"
+    }
+  },
+  "labels": {
+    "View Posts": "Vis innlegg",
+    "View Activity": "Vis aktivitet",
+    "Pin": "Fest",
+    "Unpin": "Løsne",
+    "Pinned": "Festet",
+    "Quote Reply": "Sitat-svar",
+    "View Attachments": "Vis vedlegg"
+  },
+  "otherFields": {
+    "to": "Til"
   }
 }

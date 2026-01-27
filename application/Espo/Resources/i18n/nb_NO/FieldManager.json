@@ -2,7 +2,8 @@
   "labels": {
     "Dynamic Logic": "Dynamisk logikk",
     "Name": "Navn",
-    "Label": "Merkelapp"
+    "Label": "Merkelapp",
+    "View Details": "Vis detaljer"
   },
   "options": {
     "dateTimeDefault": {
@@ -61,7 +62,15 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 år"
     },
     "barcodeType": {
+      "pharmacode": "Farmakode",
       "QRcode": "QR kode"
+    },
+    "globalRestrictions": {
+      "forbidden": "Forbudt",
+      "internal": "Intern",
+      "onlyAdmin": "Kun admin",
+      "readOnly": "Skrivebeskyttet",
+      "nonAdminReadOnly": "Skrivebeskyttet for ikke-admin"
     }
   },
   "tooltips": {
@@ -70,13 +79,31 @@
     "default": "Verdi vil angis som forvalg ved ny oppføring.",
     "min": "Minste aksepterte verdi.",
     "max": "Høyeste aksepterte verdi.",
-    "seeMoreDisabled": "Lange tekster forkortes hvis valgt.",
     "lengthOfCut": "Hvor lange tekster kan være før de forkortes.",
     "maxLength": "Maksimal lengde på tekst.",
     "before": "Datoverdien må være tidligere en datoverdien spesifisert i feltet.",
     "after": "Datoverdien må være senere enn datoverdien spesifisert i feltet.",
     "readOnly": "Feltets verdi kan ikke endres av brukeren, kan kun vise resultat fra formel.",
-    "fileAccept": "Hvilke filtyper skal aksepteres. Det er mulig å legge til egne typer."
+    "maxFileSize": "Hvis tomt eller 0, ingen grense.",
+    "fileAccept": "Hvilke filtyper skal aksepteres. Det er mulig å legge til egne typer.",
+    "barcodeLastChar": "For EAN-13-type.",
+    "conversionDisabled": "Valutakonverteringshandlingen vil ikke bli brukt på dette feltet.",
+    "cutHeight": "Tekst som er lengre enn en spesifisert verdi vil bli kuttet med en «vis mer»-knapp.",
+    "urlStrip": "Fjern en protokoll og en avsluttende skråstrek.",
+    "pattern": "Et regulært uttrykk for å sjekke en feltverdi mot. Definer et uttrykk eller velg et forhåndsdefinert.",
+    "options": "En liste over mulige verdier og etikettene deres.",
+    "optionsArray": "En liste over mulige verdier og etikettene deres. Hvis tom, vil feltet tillate å legge inn egendefinerte verdier.",
+    "maxCount": "Maksimalt antall elementer som kan velges.",
+    "displayAsList": "Hvert element på en ny linje.",
+    "optionsVarchar": "En liste over autoutfyllingsverdier.",
+    "currencyDecimal": "Bruk DB-typen Decimal. I appen vil verdier bli representert som strenger. Merk av denne parameteren hvis presisjon er påkrevd.",
+    "optionsReference": "Gjenbruk alternativer fra et annet felt.",
+    "readOnlyAfterCreate": "Feltverdien kan angis når du oppretter en ny post. Etter det blir feltet skrivebeskyttet. Det kan fortsatt beregnes med formel.",
+    "linkReadOnly": "Feltverdien kan ikke angis av brukeren, men kan beregnes med formel.\n\nDette vil også deaktivere muligheten til å opprette en relatert post fra relasjonspaneler.",
+    "relateOnImport": "Ved import med dette feltet vil det automatisk knytte en post til en samsvarende ekstern post. Bruk denne funksjonen bare hvis det eksterne feltet regnes som unikt.",
+    "preview": "Vis forhåndsvisningsknappen. Gjelder hvis Markdown er aktivert.",
+    "itemsEditable": "Elementer kan redigeres. Gjelder kun hvis ingen alternativer er angitt.",
+    "seeMoreDisabled": "Hvis ikke krysset av, vil lange tekster bli forkortet."
   },
   "fieldParts": {
     "address": {
@@ -88,13 +115,59 @@
       "map": "Kart"
     },
     "personName": {
-      "salutation": "Titulering"
+      "salutation": "Titulering",
+      "first": "Første",
+      "last": "Siste",
+      "middle": "Midten"
+    },
+    "currency": {
+      "converted": "(Konvertert)",
+      "currency": "(Valuta)"
     },
     "datetimeOptional": {
       "date": "Dato"
     }
   },
   "fieldInfo": {
-    "date": "Dato uten Tid"
+    "varchar": "En tekst på én linje.",
+    "enum": "Velgeboks, bare én verdi kan velges.",
+    "text": "En flerlinjet tekst med støtte for markdown.",
+    "date": "Dato uten Tid",
+    "datetime": "Dato og klokkeslett",
+    "currency": "En valutaverdi. Et flyttall med en valutakode.",
+    "int": "Et heltall.",
+    "float": "Et tall med desimaldel.",
+    "bool": "En avkrysningsboks. To mulige verdier: true og false.",
+    "multiEnum": "En liste med verdier, flere verdier kan velges. Listen er sortert.",
+    "checklist": "En liste med avkrysningsbokser.",
+    "array": "En liste med verdier, tilsvarende Multi-Enum-feltet.",
+    "address": "En adresse med gate, by, delstat, postnummer og land.",
+    "url": "For lagring av lenker.",
+    "wysiwyg": "En tekst med støtte for HTML.",
+    "file": "For opplasting av filer.",
+    "image": "For opplasting av bilder.",
+    "attachmentMultiple": "Tillater opplasting av flere filer.",
+    "number": "Et autoinkrementerende nummer av strengtype med mulig prefiks og spesifikk lengde.",
+    "autoincrement": "Et generert skrivebeskyttet autoinkrementerende heltall.",
+    "barcode": "En strekkode. Kan skrives ut til PDF.",
+    "email": "Et sett med e-postadresser med parametere: Avmeldt, Ugyldig, Primær.",
+    "phone": "Et sett med telefonnumre med parametere: Type, Avmeldt, Ugyldig, Primær.",
+    "foreign": "Et felt i en relatert post. Skrivebeskyttet.",
+    "link": "En post relatert via Belongs-To (mange-til-én eller én-til-én)-relasjon.",
+    "linkParent": "En post relatert via Belongs-To-Parent-relasjon. Kan være av ulike entitetstyper.",
+    "linkMultiple": "Et sett med poster knyttet sammen gjennom en Has-Many-relasjon (mange-til-mange eller én-til-mange). Ikke alle relasjoner har sine link-multiple-felter. Bare de har det der parameteren(e) Link-Multiple er aktivert.",
+    "urlMultiple": "Flere lenker.",
+    "decimal": "Et desimaltall med fast punkt-presisjon."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Feltnavnet '{field}' er ikke tillatt.",
+    "fieldAlreadyExists": "Feltet '{field}' finnes allerede i '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Lenke med navnet '{field}' finnes allerede i '{entityType}'.",
+    "confirmRemove": "Er du sikker på at du vil fjerne feltet *{field}*?\n\nFjerning av feltet fjerner ikke data fra databasen. Data fra databasen vil bli fjernet hvis du kjører hard rebuild.",
+    "fieldCreatedAddToLayouts": "Feltet er opprettet. Nå kan du legge det til i [oppsett]({link})",
+    "namingFieldLinkConflict": "Navnet '{field}' er i konflikt med kobling."
+  },
+  "otherFields": {
+    "attributes": "Attributter"
   }
 }

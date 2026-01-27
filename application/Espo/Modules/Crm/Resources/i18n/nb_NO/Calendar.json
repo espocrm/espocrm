@@ -15,6 +15,9 @@
     "current": "nåværende",
     "time": "tid",
     "User List": "Brukerliste",
-    "Manage Users": "Administrer brukere"
+    "View Calendar": "Vis kalender",
+    "Create Shared View": "Opprett delt visning",
+    "Edit Shared View": "Rediger delt visning",
+    "Shared Mode Options": "Alternativer for delt modus"
   }
 }

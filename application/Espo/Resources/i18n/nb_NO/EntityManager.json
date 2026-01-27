@@ -5,7 +5,8 @@
     "Schedule": "Planlegg",
     "Log": "Logg",
     "Formula": "Formel",
-    "Layouts": "Oppsett"
+    "Layouts": "Oppsett",
+    "Parameters": "Parametere"
   },
   "fields": {
     "name": "Navn",
@@ -18,8 +19,6 @@
     "linkForeign": "Fremmed lenke",
     "link": "Lenke",
     "labelForeign": "Fremmed merkelapp",
-    "sortBy": "Forvalgt sortering (felt)",
-    "sortDirection": "Forvalgt sortering (rettning)",
     "relationName": "Midtre tabellnavn",
     "linkMultipleField": "Koble flere felt",
     "linkMultipleFieldForeign": "Kobling av flere fremmede felt",
@@ -29,8 +28,33 @@
     "auditedForeign": "Revidert av utenforstående",
     "statusField": "Statusfelt",
     "beforeSaveCustomScript": "Før egendefinert lagrings-script",
+    "color": "Farge",
+    "kanbanViewMode": "Kanban-visning",
+    "kanbanStatusIgnoreList": "Ignorerte grupper i Kanban-visning",
     "iconClass": "Ikon",
-    "parentEntityTypeList": "Foreldre typer"
+    "fullTextSearch": "Fulltekstsøk",
+    "countDisabled": "Deaktiver antall poster",
+    "parentEntityTypeList": "Foreldre typer",
+    "foreignLinkEntityTypeList": "Eksterne lenker",
+    "entity": "Entitet",
+    "optimisticConcurrencyControl": "Optimistisk samtidighetskontroll",
+    "beforeSaveApiScript": "API-skript før lagring",
+    "updateDuplicateCheck": "Duplikatsjekk ved oppdatering",
+    "duplicateCheckFieldList": "Felt for duplikatsjekk",
+    "layout": "Oppsett",
+    "author": "Forfatter",
+    "module": "Modul",
+    "version": "Versjon",
+    "selectFilter": "Velg filter",
+    "primaryFilters": "Primærfiltre",
+    "stars": "Stjerner",
+    "preserveAuditLog": "Behold revisjonslogg",
+    "assignedUsers": "Flere tilordnede brukere",
+    "collaborators": "Samarbeidspartnere",
+    "aclContactLink": "ACL kontaktkobling",
+    "aclAccountLink": "ACL kontokobling",
+    "sortBy": "Standard sorteringsfelt",
+    "sortDirection": "Standard sorteringsretning"
   },
   "options": {
     "type": {
@@ -52,20 +76,44 @@
     "sortDirection": {
       "asc": "Økende",
       "desc": "Avtagende"
+    },
+    "module": {
+      "Custom": "Tilpasset"
     }
   },
   "messages": {
     "entityCreated": "Enheten har blitt opprettet",
     "linkAlreadyExists": "Konflikt med lenkenavn.",
-    "linkConflict": "Navnekonflikt: lenke eller felt med det samme navnet eksisterer allerede."
+    "linkConflict": "Navnekonflikt: lenke eller felt med det samme navnet eksisterer allerede.",
+    "confirmRemove": "Er du sikker på at du vil fjerne entitetstypen fra systemet?",
+    "beforeSaveCustomScript": "Et skript som kjøres hver gang før en enhet lagres. Brukes til å sette beregnede felter.",
+    "beforeSaveApiScript": "Et skript som kjøres ved API-forespørsler for opprettelse og oppdatering før en enhet lagres. Brukes for egendefinert validering og duplikatkontroll.",
+    "nameIsAlreadyUsed": "Navnet '{name}' er allerede i bruk.",
+    "nameIsNotAllowed": "Navnet '{name}' er ikke tillatt.",
+    "nameIsTooLong": "Navnet er for langt.",
+    "confirmRemoveLink": "Er du sikker på at du vil fjerne relasjonen *{link}*?",
+    "urlHashCopiedToClipboard": "Et URL-fragment for filteret *{name}* er kopiert til utklippstavlen. Du kan legge det til i navigasjonslinjen."
   },
   "tooltips": {
     "statusField": "Endringer i dette feltet logges i strømmen.",
     "textFilterFields": "Feltene brukes til tekstsøk.",
-    "stream": "Hvorvidt enheten har en strøm.",
     "disabled": "Marker hvis du ikke trenger denne enheten i ditt system.",
     "linkAudited": "Opprettelse av relatert oppføring og kobling med eksisterende oppføring vil logges i strømmen.",
     "linkMultipleField": "'Koble flere'-feltet er en lettvint måte å redigere relasjoner på. Ikke bruk den hvis du har markert et stort antall relaterte oppføringer.",
-    "entityType": "Base pluss – har aktivitets-, historie- og oppgavepaneler.\n\nHendelse – tilgjengelig i kalender- og aktivitetspanelet."
+    "entityType": "Base pluss – har aktivitets-, historie- og oppgavepaneler.\n\nHendelse – tilgjengelig i kalender- og aktivitetspanelet.",
+    "fullTextSearch": "Det kreves å kjøre gjenoppbygging.",
+    "countDisabled": "Totalt antall vil ikke bli vist i listevisningen. Kan redusere lastetid når DB-tabellen er stor.",
+    "optimisticConcurrencyControl": "Forhindrer skrivekonflikter.",
+    "duplicateCheckFieldList": "Hvilke felter som skal sjekkes ved duplikatkontroll.",
+    "updateDuplicateCheck": "Utfør duplikatkontroll ved oppdatering av en post.",
+    "linkSelectFilter": "Et primærfilter som brukes som standard når du velger en post.",
+    "stars": "Muligheten til å stjernemerke poster. Stjerner kan brukes av brukere til å bokmerke poster.",
+    "aclContactLink": "Koblingen med Kontakt som skal brukes ved bruk av tilgangskontroll for portalbrukere.",
+    "aclAccountLink": "Koblingen med Konto som skal brukes ved bruk av tilgangskontroll for portalbrukere.",
+    "collaborators": "Muligheten til å dele poster med bestemte brukere.",
+    "assignedUsers": "Muligheten til å tilordne flere brukere til en post.\n\nMerk at etter at parameteren er aktivert, vil eksisterende tilordnede brukere ikke bli overført til det nye feltet *Tilordnede brukere*.",
+    "preserveAuditLog": "Deaktiverer opprydding av revisjonsloggen. Denne parameteren gjelder bare hvis Stream er deaktivert. For hvis Stream er aktivert, blir ikke revisjonsloggposter slettet.",
+    "stream": "Om enheten har Stream.",
+    "linkParamReadOnly": "En skrivebeskyttet kobling kan ikke redigeres via API-forespørslene *link* og *unlink*. Det vil ikke være mulig å knytte og fjerne koblinger mellom poster via relasjonspanelet. Det er fortsatt mulig å redigere skrivebeskyttede koblinger via link- og link-multiple-felter."
   }
 }

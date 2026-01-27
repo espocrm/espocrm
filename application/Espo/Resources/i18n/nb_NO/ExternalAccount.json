@@ -1,6 +1,11 @@
 {
   "labels": {
     "Connect": "Koble til",
-    "Connected": "Tilkoblet"
+    "Connected": "Tilkoblet",
+    "Disconnect": "Koble fra",
+    "Disconnected": "Frakoblet"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Ekstern konto for integrasjonen '{integration}' er deaktivert fordi det ikke var mulig å koble til."
   }
 }

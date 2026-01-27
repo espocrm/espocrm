@@ -17,7 +17,8 @@
     "body": "Brødtekst",
     "categories": "Kategorier",
     "language": "Språk",
-    "portals": "Portaler"
+    "portals": "Portaler",
+    "bodyPlain": "Brødtekst (ren tekst)"
   },
   "links": {
     "cases": "Saker",
@@ -38,5 +39,8 @@
   },
   "presetFilters": {
     "published": "Publisert"
+  },
+  "tooltips": {
+    "portals": "Artikkelen vil kun være tilgjengelig i angitte portaler."
   }
 }
