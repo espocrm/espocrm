@@ -28,7 +28,7 @@
     "targetLists": "Kontaktlisten",
     "campaignLogRecords": "Kampagnen Log",
     "campaign": "Kampagne",
-    "portalUsers": "Portal Benutzer",
+    "portalUsers": "Portalbenutzer",
     "originalLead": "Ursprünglicher Interessent",
     "contactsPrimary": "Kontakte (Primär)"
   },
@@ -60,6 +60,7 @@
       "Manufacturing": "Produktion",
       "Publishing": "Medien",
       "Real Estate": "Immobilien",
+      "Service": "Dienstleistung",
       "Sports": "Sport",
       "Technology": "Technologie",
       "Telecommunications": "Telekommunikation",
@@ -81,7 +82,7 @@
       "Petroleum": "Öl Industrie",
       "Retail": "Verkauf",
       "Shipping": "Versand und Transport",
-      "Support": "Service",
+      "Support": "Supportbereich",
       "Testing, Inspection & Certification": "Test, Inspektion & Zertifizierung",
       "Wholesale": "Großhandel",
       "Water": "Wasserwesen",
@@ -99,6 +100,6 @@
     "recentlyCreated": "Kürzlich erstellt"
   },
   "tabs": {
-    "Account": "Konto"
+    "Account": "Firma"
   }
 }

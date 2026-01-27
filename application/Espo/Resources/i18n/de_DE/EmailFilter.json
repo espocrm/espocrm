@@ -16,15 +16,6 @@
     "Create EmailFilter": "E-Mail Filter erstellen",
     "Emails": "E-Mails"
   },
-  "tooltips": {
-    "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen, wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
-    "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen, wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
-    "name": "Ein Name für den Filter",
-    "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
-    "isGlobal": "Wendet diesen Filter auf alle eingehenden E-Mails im System an.",
-    "subject": "Verwenden Sie einen Platzhalter *: \n\n * `text*` - beginnt mit Text,\n * `*text*` - enthält Text,\n * `*text` - endet mit Text.",
-    "bodyContainsAll": "Ein E-Mail-Text enthält alle angegebenen Wörter oder Ausdrücke."
-  },
   "options": {
     "action": {
       "Skip": "Ignorieren",
@@ -32,6 +23,15 @@
       "None": "Keine",
       "Move to Group Folder": "In Gruppenordner ablegen"
     }
+  },
+  "tooltips": {
+    "name": "Ein Name für den Filter",
+    "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
+    "isGlobal": "Wendet diesen Filter auf alle eingehenden E-Mails im System an.",
+    "bodyContainsAll": "Ein E-Mail-Text enthält alle angegebenen Wörter oder Ausdrücke.",
+    "subject": "Verwenden Sie einen Platzhalter (`*`): \n\n * `text*` - beginnt mit Text\n * `*text*` - enthält Text\n * `*text` - endet mit Text",
+    "from": "E-Mails, die von der angegebenen Adresse gesendet werden, werden gefiltert. Bitte leer lassen, wenn nicht benötigt. Sie können einen Platzhalter (`*`) verwenden.",
+    "to": "E-Mails, die an die angegebene Adresse gesendet werden, werden gefiltert. Bitte leer lassen, wenn nicht benötigt. Sie können einen Platzhalter (`*`). verwenden."
   },
   "links": {
     "emailFolder": "Ordner",

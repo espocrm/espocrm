@@ -18,14 +18,16 @@
     "pageHeight": "Seitenhöhe (mm)",
     "headerPosition": "Kopfzeilen-Position",
     "printHeader": "Header ausgeben",
-    "title": "Titel"
+    "title": "Titel",
+    "filename": "Dateiname"
   },
   "labels": {
     "Create Template": "Vorlage erstellen"
   },
   "tooltips": {
     "footer": "Verwenden Sie den Platzhalter {pageNumber}, um eine Seitennummer zu drucken.",
-    "variables": "Kopieren und fügen Sie benötigte Platzhalter in die Kopfzeile, den Inhalt oder in die Fußzeile ein."
+    "variables": "Kopieren und fügen Sie benötigte Platzhalter in die Kopfzeile, den Inhalt oder in die Fußzeile ein.",
+    "filename": "Ein optionaler Dateiname. Entitätsattribute können als Platzhalter verwendet werden.\n\nZusätzlicher Platzhalter:\n- `{{today}}`\n\nBeispiel:\n`Dokument_{{today}}_{{name}}`"
   },
   "options": {
     "pageOrientation": {

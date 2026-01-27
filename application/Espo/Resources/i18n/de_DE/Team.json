@@ -15,13 +15,13 @@
     "workingTimeCalendar": "Arbeitszeitkalender",
     "groupEmailFolders": "E-Mail Gruppenordner"
   },
-  "tooltips": {
-    "roles": "Benutzer dieses Teams erben alle Zugriffsberechtigungen von der ausgewählten Rollen.",
-    "positionList": "Verfügbare Positionen in diesem Team. Z.B. Verkäufer, Manager etc.",
-    "layoutSet": "Bietet die Möglichkeit, von Standard-Layouts abweichende Layouts zu haben. Der Layout-Satz wird auf Benutzer angewendet, die dieses Team als Standardteam festgelegt haben.",
-    "workingTimeCalendar": "Ein Kalender wird auf Benutzer angewendet, die dieses Team als Standardteam festgelegt haben."
-  },
   "labels": {
     "Create Team": "Team erstellen"
+  },
+  "tooltips": {
+    "workingTimeCalendar": "Ein Kalender wird auf Benutzer angewendet, die dieses Team als Standardteam festgelegt haben.",
+    "layoutSet": "Bietet die Möglichkeit, von den Standard-Layouts abweichende Layouts zu haben. Der Layout-Satz wird auf Benutzer angewendet, die dieses Team als Standardteam festgelegt haben.",
+    "roles": "Zugriffsrollen. Benutzer dieses Teams erhalten die Zugriffskontrollrechte aus den angegebenen Rollen.",
+    "positionList": "Verfügbare Positionen in diesem Team. Zum Beispiel Verkäufer, Manager usw."
   }
 }

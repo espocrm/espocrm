@@ -51,7 +51,8 @@
     "Import Results": "Importergebnisse",
     "Silent Mode": "Silent-Modus",
     "New import with same params": "Neuer Import mit gleichen Parametern",
-    "Run Manually": "Manuell ausführen"
+    "Run Manually": "Manuell ausführen",
+    "Parameters": "Parameter"
   },
   "messages": {
     "utf8": "Sollte UTF-8 kodiert sein",

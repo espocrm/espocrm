@@ -4,7 +4,7 @@
     "password": "Passwort",
     "monitoredFolders": "Überwachte Ordner",
     "fetchSince": "Holen seit",
-    "emailAddress": "E-Mail Adresse",
+    "emailAddress": "E-Mail-Adresse",
     "sentFolder": "Gesendet Ordner",
     "storeSentEmails": "Gesendete E-Mails speichern",
     "keepFetchedEmailsUnread": "Geholte E-Mails als ungelesen behalten",
@@ -19,7 +19,8 @@
     "useImap": "E-Mails abholen",
     "smtpAuthMechanism": "SMTP-Auth-Mechanismus",
     "security": "Sicherheit",
-    "connectedAt": "Verbunden mit"
+    "connectedAt": "Verbunden mit",
+    "folderMap": "Ordnerzuordnung"
   },
   "links": {
     "filters": "Filter",
@@ -32,20 +33,22 @@
     }
   },
   "labels": {
-    "Create EmailAccount": "E-Mail Konto erstellen",
+    "Create EmailAccount": "E-Mail-Konto erstellen",
     "Main": "Hauptteil",
     "Test Connection": "Verbindung überprüfen",
     "Send Test Email": "Test E-Mail senden"
   },
   "messages": {
-    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP Server herstellen",
+    "couldNotConnectToImap": "Kann keine Verbindung zum IMAP-Server herstellen",
     "connectionIsOk": "Verbindung ist in Ordnung",
-    "imapNotConnected": "Konnte keine Verbindung zu [IMAP account](#EmailAccount/view/{id}) herstellen."
+    "imapNotConnected": "Konnte keine Verbindung zu [IMAP account](#EmailAccount/view/{id}) herstellen.",
+    "noFolder": "Der zugeordnete Ordner existiert nicht."
   },
   "tooltips": {
     "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde.",
     "useSmtp": "Die Möglichkeit, E-Mails zu versenden.",
-    "emailAddress": "Der Benutzerdatensatz (zugeordneter Benutzer) sollte die gleiche E-Mail-Adresse haben, um dieses E-Mail-Konto zum Senden verwenden zu können."
+    "emailAddress": "Der Benutzerdatensatz (zugeordneter Benutzer) sollte die gleiche E-Mail-Adresse haben, um dieses E-Mail-Konto zum Senden verwenden zu können.",
+    "monitoredFolders": "Wählen Sie die zu importierenden IMAP-Ordner aus. Optional können Sie diese Espo-Ordnern zuordnen.\n\nSie können den Ordner „Gesendet“ hinzufügen, um E-Mails zu synchronisieren, die von einem externen E-Mail-Client gesendet wurden."
   },
   "presetFilters": {
     "active": "Aktiv"

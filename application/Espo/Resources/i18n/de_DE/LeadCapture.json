@@ -11,6 +11,7 @@
     "optInConfirmationLifetime": "Opt-In-Bestätigung Lebensdauer (Stunden)",
     "optInConfirmationSuccessMessage": "Text, der nach der Opt-In-Bestätigung angezeigt werden soll",
     "leadSource": "Quelle",
+    "apiKey": "API-Schlüssel",
     "targetTeam": "Zielteam",
     "exampleRequestMethod": "Methode",
     "exampleRequestPayload": "Nutzlast",
@@ -44,14 +45,14 @@
   },
   "labels": {
     "Create LeadCapture": "Einstiegspunkt erstellen",
-    "Generate New API Key": "Eines neuen API Key generieren",
+    "Generate New API Key": "Einen neuen API-Schlüssel generieren",
     "Request": "Anforderung",
     "Confirm Opt-In": "Opt-In bestätigen",
     "Generate New Form ID": "Neue Formular-ID generieren",
     "Web Form": "Webformular"
   },
   "messages": {
-    "generateApiKey": "Eines neuen API Key erstellen",
+    "generateApiKey": "Einen neuen API-Schlüssel erstellen",
     "optInConfirmationExpired": "Opt-in-Bestätigungslink ist abgelaufen.",
     "optInIsConfirmed": "Die Bestätigung ist bestätigt."
   },

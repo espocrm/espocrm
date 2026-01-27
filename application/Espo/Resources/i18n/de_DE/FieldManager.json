@@ -78,7 +78,6 @@
     "default": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
     "min": "Min. zulässiger Wert.",
     "max": "Max. zulässiger Wert.",
-    "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt.",
     "lengthOfCut": "Wie lang ein Text sein darf, bevor er gekürzt wird.",
     "maxLength": "Maximal zulässige Textlänge.",
     "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
@@ -102,7 +101,8 @@
     "linkReadOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden. Er kann aber durch eine Formel berechnet werden.\n\nAußerdem wird die Möglichkeit, einen Bezugsdatensatz aus Beziehungspaneelen zu erstellen, deaktiviert.",
     "relateOnImport": "Beim Importieren mit diesem Feld wird automatisch ein Datensatz mit einem passenden Fremddatensatz verknüpft. Verwenden Sie diese Funktion nur, wenn das Fremdfeld als eindeutig angesehen wird.",
     "preview": "Die Schaltfläche Vorschau anzeigen. Anwendbar, wenn Markdown aktiviert ist.",
-    "itemsEditable": "Elemente können bearbeitet werden. Gilt nur, wenn keine Optionen angegeben sind."
+    "itemsEditable": "Elemente können bearbeitet werden. Gilt nur, wenn keine Optionen angegeben sind.",
+    "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt."
   },
   "fieldParts": {
     "address": {
@@ -153,9 +153,10 @@
     "phone": "Eine Reihe von Telefonnummern mit ihren Parametern: Typ, Opted-Out, Ungültig, Primär.",
     "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt.",
     "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Viele-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
-    "linkParent": "Ein Datensatz, der über die Beziehung zwischen Eltern und Angehörigen in Beziehung steht. Kann von verschiedenen Entitätstypen sein.",
-    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder 1:n) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verlinken\" aktiviert ist.",
-    "urlMultiple": "Mehrere Weblinks."
+    "linkParent": "Ein Datensatz, der über eine „Belongs-To-Parent”-Beziehung verknüpft ist. Kann von verschiedenen Entitätstypen sein.",
+    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder 1:n) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verknüpfen\" aktiviert ist.",
+    "urlMultiple": "Mehrere Weblinks.",
+    "decimal": "Eine Dezimalzahl mit Festkomma-Genauigkeit."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Der Feldname '{field}' ist nicht erlaubt.",

@@ -13,14 +13,14 @@
     "campaign": "Kampagne",
     "targetLists": "Kontaktlisten",
     "targetList": "Kontaktliste",
-    "portalUser": "Portal Benutzer",
+    "portalUser": "Portalbenutzer",
     "originalLead": "Ursprünglicher Interessent",
     "acceptanceStatus": "Akzeptanzstatus",
     "accountIsInactive": "Inaktives Konto",
     "acceptanceStatusMeetings": "Akzeptanzstatus (Meetings)",
     "acceptanceStatusCalls": "Akzeptanzstatus (Anrufe)",
-    "title": "Konto-Titel",
-    "hasPortalUser": "Hat Portal-Benutzer",
+    "title": "Firmenfunktion",
+    "hasPortalUser": "Hat Portalbenutzer",
     "originalEmail": "Ursprüngliche E-Mail"
   },
   "links": {
@@ -32,7 +32,7 @@
     "account": "Firma (Primär)",
     "accounts": "Firmen",
     "casesPrimary": "Fälle (Primär)",
-    "portalUser": "Portal Benutzer",
+    "portalUser": "Portalbenutzer",
     "originalLead": "Ursprünglicher Interessent",
     "documents": "Dokumente",
     "tasksPrimary": "Aufgaben (erweitert)",
@@ -49,8 +49,8 @@
     }
   },
   "presetFilters": {
-    "portalUsers": "Portal Benutzer",
-    "notPortalUsers": "Keine Portal Benutzer",
+    "portalUsers": "Portalbenutzer",
+    "notPortalUsers": "Keine Portalbenutzer",
     "accountActive": "Aktiv"
   }
 }

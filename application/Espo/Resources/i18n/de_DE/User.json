@@ -8,14 +8,14 @@
     "phoneNumber": "Telefon",
     "roles": "Rollen",
     "portals": "Portale",
-    "portalRoles": "Portal Rollen",
+    "portalRoles": "Portal-Rollen",
     "password": "Passwort",
     "currentPassword": "Aktuelles Passwort",
     "passwordConfirm": "Passwort bestätigen",
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
     "isActive": "Ist aktiv",
-    "isPortalUser": "Ist Portal Benutzer",
+    "isPortalUser": "Ist Portalbenutzer",
     "contact": "Kontakt",
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
@@ -27,7 +27,7 @@
     "isSuperAdmin": "Ist Super-Admin",
     "lastAccess": "Letzter Zugriff",
     "type": "Art",
-    "apiKey": "API Schlüssel",
+    "apiKey": "API-Schlüssel",
     "secretKey": "Geheime Phrase",
     "authMethod": "Authentifizierungsmethode",
     "yourPassword": "Ihr aktuelles Passwort",
@@ -43,7 +43,7 @@
     "roles": "Rollen",
     "notes": "Notizen",
     "portals": "Portale",
-    "portalRoles": "Portal Rollen",
+    "portalRoles": "Portal-Rollen",
     "contact": "Kontakt",
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
@@ -66,10 +66,10 @@
     "Password Change Request": "Anforderung zur Passwortänderung",
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
-    "Email Accounts": "E-Mail Konten",
+    "Email Accounts": "E-Mail-Konten",
     "Create Portal User": "Portalbenutzer erstellen",
     "Proceed w/o Contact": "Weiter mit Kontakt",
-    "Generate New API Key": "Neuen API Schlüssel erstellen",
+    "Generate New API Key": "Neuen API-Schlüssel erstellen",
     "Generate New Password": "Neues Passwort generieren",
     "Back to login form": "Zurück zum Anmeldeformular",
     "Requirements": "Anforderungen",
@@ -82,14 +82,14 @@
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
-    "userName": "Erlaubte Zeichen sind die Buchstaben a-z, Ziffern, Punkt, @-Symbol, Strich und Unterstrich.",
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
-    "isActive": "Wenn nicht markiert, kann der Benutzer sich nicht einloggen.",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese, wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
+    "portalRoles": "Zusätzliche Portal-Rollen. Benutzen Sie diese, wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
     "portals": "Portale auf die der Benutzer Zugriff hat.",
-    "layoutSet": "Layouts aus einem bestimmten Satz werden anstelle der Standardlayouts für den Benutzer verwendet."
+    "userName": "Erlaubte Zeichen: `a-z`, `0-9`, `-_@.`.",
+    "isActive": "Wenn diese Option nicht aktiviert ist, kann der Benutzer sich nicht anmelden.",
+    "layoutSet": "Die Layouts aus dem angegebenen Layout-Set werden für den Benutzer angewendet. Die Standardlayouts werden überschrieben."
   },
   "messages": {
     "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet.",
@@ -150,7 +150,7 @@
       "regular": "Regulär"
     },
     "authMethod": {
-      "ApiKey": "API Schlüssel"
+      "ApiKey": "API-Schlüssel"
     }
   },
   "actions": {
