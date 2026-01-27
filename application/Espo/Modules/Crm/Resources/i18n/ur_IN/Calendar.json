@@ -1,0 +1,23 @@
+{
+  "modes": {
+    "month": "مہینہ",
+    "week": "ہفتے",
+    "agendaWeek": "ہفتے",
+    "day": "دن",
+    "agendaDay": "دن",
+    "timeline": "ٹائم لائن"
+  },
+  "labels": {
+    "Today": "آج",
+    "Create": "تخلیق کریں",
+    "Shared": "مشترکہ",
+    "Add User": "صارف شامل کریں",
+    "current": "موجودہ",
+    "time": "وقت",
+    "User List": "صارف کی فہرست",
+    "View Calendar": "کیلنڈر دیکھیں",
+    "Create Shared View": "مشترکہ نظریہ بنائیں",
+    "Edit Shared View": "مشترکہ نقطہ نظر میں ترمیم کریں",
+    "Shared Mode Options": "مشترکہ موڈ کے اختیارات"
+  }
+}

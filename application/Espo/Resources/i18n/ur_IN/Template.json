@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "نام",
+    "body": "جسم",
+    "entityType": "ہستی کی قسم",
+    "header": "ہیڈر",
+    "footer": "فوٹر",
+    "leftMargin": "بائیں مارجن",
+    "topMargin": "ٹاپ مارجن",
+    "rightMargin": "دائیں مارجن",
+    "bottomMargin": "نیچے مارجن",
+    "printFooter": "پرنٹ فوٹر",
+    "footerPosition": "فوٹر پوزیشن",
+    "variables": "دستیاب پلیس ہولڈرز",
+    "pageOrientation": "صفحہ واقفیت",
+    "pageFormat": "کاغذی شکل",
+    "fontFace": "فونٹ",
+    "pageWidth": "صفحہ کی چوڑائی (ملی میٹر)",
+    "pageHeight": "صفحہ اونچائی (ملی میٹر)",
+    "headerPosition": "ہیڈر پوزیشن",
+    "printHeader": "پرنٹ ہیڈر",
+    "title": "عنوان",
+    "style": "انداز",
+    "status": "حیثیت",
+    "filename": "فائل کا نام"
+  },
+  "labels": {
+    "Create Template": "ٹیمپلیٹ بنائیں"
+  },
+  "tooltips": {
+    "footer": "صفحہ نمبر پرنٹ کرنے کے لئے {pagenumber} استعمال کریں۔",
+    "variables": "کاپی پیسٹ کو ہیڈر ، جسم یا فوٹر کے لئے پلیس ہولڈر کی ضرورت ہے۔",
+    "filename": "ایک اختیاری فائل نام۔ ہستی کی خصوصیات کو پلیس ہولڈرز کے طور پر استعمال کیا جاسکتا ہے۔\n\nاضافی پلیس ہولڈر:\n- `{{آج}}`\n\nمثال:\n`دستاویز _ {{آج}} _ {{نام}}`"
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "پورٹریٹ",
+      "Landscape": "زمین کی تزئین کی"
+    },
+    "placeholders": {
+      "today": "آج (تاریخ)",
+      "now": "اب (تاریخ کا وقت)",
+      "pagebreak": "صفحہ وقفہ"
+    },
+    "pageFormat": {
+      "Custom": "رواج"
+    },
+    "status": {
+      "Active": "متحرک",
+      "Inactive": "غیر فعال"
+    }
+  }
+}

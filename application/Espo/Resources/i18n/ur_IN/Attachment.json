@@ -1,0 +1,29 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "دستاویز داخل کریں"
+  },
+  "fields": {
+    "role": "کردار",
+    "related": "متعلقہ",
+    "file": "فائل",
+    "type": "قسم",
+    "field": "فیلڈ",
+    "sourceId": "ماخذ ID",
+    "storage": "اسٹوریج",
+    "size": "سائز (بائٹس)",
+    "isBeingUploaded": "اپ لوڈ کیا جارہا ہے"
+  },
+  "options": {
+    "role": {
+      "Attachment": "منسلک",
+      "Inline Attachment": "ان لائن منسلک",
+      "Import File": "فائل درآمد کریں",
+      "Export File": "فائل برآمد کریں",
+      "Mail Merge": "میل جوڑیں",
+      "Mass Pdf": "ماس پی ڈی ایف"
+    }
+  },
+  "presetFilters": {
+    "orphan": "یتیم"
+  }
+}

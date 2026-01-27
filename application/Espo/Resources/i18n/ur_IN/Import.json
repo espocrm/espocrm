@@ -1,0 +1,112 @@
+{
+  "labels": {
+    "Revert Import": "امپورٹ کو تبدیل کریں",
+    "Return to Import": "درآمد پر واپس جائیں",
+    "Run Import": "درآمد چلائیں",
+    "Back": "واپس",
+    "Field Mapping": "فیلڈ میپنگ",
+    "Default Values": "پہلے سے طے شدہ اقدار",
+    "Add Field": "فیلڈ شامل کریں",
+    "Created": "تخلیق کیا",
+    "Updated": "تازہ کاری",
+    "Result": "نتیجہ",
+    "Show records": "ریکارڈ دکھائیں",
+    "Remove Duplicates": "نقلیں ہٹا دیں",
+    "importedCount": "درآمد (گنتی)",
+    "duplicateCount": "نقل (گنتی)",
+    "updatedCount": "تازہ کاری (گنتی)",
+    "Create Only": "صرف تخلیق کریں",
+    "Create and Update": "تخلیق کریں اور اپ ڈیٹ کریں",
+    "Update Only": "صرف اپ ڈیٹ کریں",
+    "Update by": "بذریعہ تازہ کاری کریں",
+    "Set as Not Duplicate": "ڈپلیکیٹ کے طور پر سیٹ کریں",
+    "File (CSV)": "فائل (CSV)",
+    "First Row Value": "پہلی صف کی قیمت",
+    "Skip": "چھوڑ دیں",
+    "Header Row Value": "ہیڈر قطار کی قیمت",
+    "Field": "فیلڈ",
+    "What to Import?": "کیا درآمد کریں؟",
+    "Entity Type": "ہستی کی قسم",
+    "What to do?": "کیا کرنا ہے؟",
+    "Header Row": "ہیڈر قطار",
+    "Person Name Format": "شخص کے نام کی شکل",
+    "John Smith": "جان اسمتھ",
+    "Smith John": "اسمتھ جان",
+    "Smith, John": "اسمتھ ، جان",
+    "Field Delimiter": "فیلڈ ڈیلیمیٹر",
+    "Date Format": "تاریخ کی شکل",
+    "Decimal Mark": "اعشاریہ نشان",
+    "Text Qualifier": "متن کوالیفائر",
+    "Time Format": "وقت کی شکل",
+    "Currency": "کرنسی",
+    "Preview": "پیش نظارہ",
+    "Next": "اگلا",
+    "Step 1": "مرحلہ 1",
+    "Step 2": "مرحلہ 2",
+    "Double Quote": "ڈبل اقتباس",
+    "Single Quote": "ایک حوالہ",
+    "Imported": "درآمد",
+    "Duplicates": "نقل",
+    "Skip searching for duplicates": "نقلوں کی تلاش کو چھوڑیں",
+    "Timezone": "ٹائم زون",
+    "Remove Import Log": "درآمد لاگ کو ہٹا دیں",
+    "New Import": "نئی درآمد",
+    "Import Results": "درآمد کے نتائج",
+    "Silent Mode": "خاموش موڈ",
+    "New import with same params": "ایک ہی پیرامس کے ساتھ نئی درآمد",
+    "Run Manually": "دستی طور پر چلائیں",
+    "Export": "برآمد",
+    "Parameters": "پیرامیٹرز"
+  },
+  "messages": {
+    "utf8": "UTF-8 انکوڈ ہونا چاہئے",
+    "duplicatesRemoved": "نقلیں ہٹا دی گئیں",
+    "inIdle": "idle میں (بڑے اعداد و شمار کے لئے ؛ کرون کے ذریعے) چلائیں",
+    "revert": "اس سے تمام درآمد شدہ ریکارڈ مستقل طور پر ختم ہوجائیں گے۔",
+    "removeDuplicates": "یہ مستقل طور پر تمام درآمدی ریکارڈوں کو ختم کردے گا جو نقل کے طور پر تسلیم کیے گئے تھے۔",
+    "confirmRevert": "اس سے تمام درآمد شدہ ریکارڈ مستقل طور پر ختم ہوجائیں گے۔ کیا آپ کو یقین ہے؟",
+    "confirmRemoveDuplicates": "یہ مستقل طور پر تمام درآمدی ریکارڈوں کو ختم کردے گا جو نقل کے طور پر تسلیم کیے گئے تھے۔ کیا آپ کو یقین ہے؟",
+    "removeImportLog": "یہ درآمد لاگ کو ختم کردے گا۔ تمام درآمد شدہ ریکارڈ رکھے جائیں گے۔ اگر آپ کو یقین ہے کہ درآمد ٹھیک ہے تو اسے استعمال کریں۔",
+    "confirmRemoveImportLog": "یہ درآمد لاگ کو ختم کردے گا۔ تمام درآمد شدہ ریکارڈ رکھے جائیں گے۔ آپ درآمدی نتائج کو واپس نہیں کرسکیں گے۔ کیا آپ کو یقین ہے؟",
+    "importRunning": "چل رہا ہے درآمد ...",
+    "noErrors": "کوئی غلطیاں نہیں"
+  },
+  "fields": {
+    "file": "فائل",
+    "entityType": "ہستی کی قسم",
+    "imported": "درآمد شدہ ریکارڈ",
+    "duplicates": "ڈپلیکیٹ ریکارڈز",
+    "updated": "تازہ ترین ریکارڈ",
+    "status": "حیثیت"
+  },
+  "options": {
+    "status": {
+      "Failed": "ناکام",
+      "In Process": "عمل میں",
+      "Complete": "مکمل",
+      "Standby": "اسٹینڈ بائی",
+      "Pending": "باقی"
+    },
+    "personNameFormat": {
+      "f l": "پہلا آخری",
+      "l f": "آخری پہلے",
+      "f m l": "پہلا وسط آخری",
+      "l f m": "آخری پہلا وسط",
+      "l, f": "آخری ، پہلے"
+    }
+  },
+  "strings": {
+    "commandToRun": "چلانے کا حکم (سی ایل آئی سے)",
+    "saveAsDefault": "بطور ڈیفالٹ محفوظ کریں"
+  },
+  "tooltips": {
+    "manualMode": "اگر جانچ پڑتال کی جائے تو ، آپ کو CLI سے دستی طور پر درآمد کرنے کی ضرورت ہوگی۔ درآمد ترتیب دینے کے بعد کمانڈ دکھایا جائے گا۔",
+    "silentMode": "بچت کے بعد اسکرپٹس کی اکثریت چھوڑ دی جائے گی ، اسٹریم نوٹ تیار نہیں کیے جائیں گے۔ درآمد تیزی سے چلے گا۔"
+  },
+  "links": {
+    "errors": "غلطیاں"
+  },
+  "params": {
+    "phoneNumberCountry": "ٹیلیفون کنٹری کوڈ"
+  }
+}

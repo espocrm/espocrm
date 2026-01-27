@@ -1,0 +1,48 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "مضمون بنائیں",
+    "Any": "کوئی بھی",
+    "Send in Email": "ای میل بھیجیں",
+    "Move Up": "آگے بڑھیں",
+    "Move Down": "نیچے منتقل",
+    "Move to Top": "اوپر کی طرف بڑھیں",
+    "Move to Bottom": "نیچے کی طرف بڑھیں"
+  },
+  "fields": {
+    "name": "نام",
+    "status": "حیثیت",
+    "type": "قسم",
+    "attachments": "منسلکات",
+    "publishDate": "تاریخ شائع کریں",
+    "expirationDate": "میعاد ختم ہونے کی تاریخ",
+    "description": "تفصیل",
+    "body": "جسم",
+    "categories": "زمرے",
+    "language": "زبان",
+    "portals": "پورٹلز",
+    "bodyPlain": "جسم کا سادہ"
+  },
+  "links": {
+    "cases": "معاملات",
+    "opportunities": "مواقع",
+    "categories": "زمرے",
+    "portals": "پورٹلز"
+  },
+  "options": {
+    "status": {
+      "In Review": "جائزہ میں",
+      "Draft": "مسودہ",
+      "Archived": "محفوظ شدہ دستاویزات",
+      "Published": "شائع ہوا"
+    },
+    "type": {
+      "Article": "مضمون"
+    }
+  },
+  "presetFilters": {
+    "published": "شائع ہوا"
+  },
+  "tooltips": {
+    "portals": "مضمون صرف مخصوص پورٹلز میں دستیاب ہوگا۔"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "layouts": {
+    "detailConvert": "لیڈ کو تبدیل کریں",
+    "listForAccount": "فہرست (اکاؤنٹ کے لئے)",
+    "listForContact": "فہرست (رابطے کے لئے)"
+  },
+  "templates": {
+    "invitation": "دعوت نامہ",
+    "reminder": "یاد دہانی",
+    "cancellation": "منسوخی"
+  }
+}

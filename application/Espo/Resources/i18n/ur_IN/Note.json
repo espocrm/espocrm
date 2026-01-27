@@ -1,0 +1,67 @@
+{
+  "fields": {
+    "post": "پوسٹ",
+    "attachments": "منسلکات",
+    "targetType": "ہدف",
+    "teams": "ٹیمیں",
+    "users": "صارفین",
+    "portals": "پورٹلز",
+    "type": "قسم",
+    "isGlobal": "عالمی ہے",
+    "isInternal": "اندرونی ہے (داخلی صارفین کے لئے)",
+    "related": "متعلقہ",
+    "createdByGender": "صنف کے ذریعہ تخلیق کیا گیا ہے",
+    "data": "ڈیٹا",
+    "number": "نمبر",
+    "isPinned": "پن ہے"
+  },
+  "filters": {
+    "all": "سب",
+    "posts": "پوسٹس",
+    "updates": "تازہ کارییں",
+    "activity": "سرگرمی"
+  },
+  "messages": {
+    "writeMessage": "اپنا پیغام یہاں لکھیں",
+    "pinnedMaxCountExceeded": "مزید نوٹوں کو پن نہیں کرسکتے ہیں۔ زیادہ سے زیادہ اجازت نمبر {گنتی} ہے۔"
+  },
+  "options": {
+    "type": {
+      "Post": "پوسٹ",
+      "Create": "تخلیق کریں",
+      "CreateRelated": "متعلقہ بنائیں",
+      "Update": "تازہ کاری",
+      "Status": "حیثیت",
+      "Assign": "تفویض",
+      "Relate": "متعلق",
+      "Unrelate": "غیر متزلزل",
+      "EmailReceived": "ای میل موصول ہوا",
+      "EmailSent": "ای میل بھیجا گیا"
+    },
+    "targetType": {
+      "self": "خود",
+      "users": "صارفین",
+      "teams": "ٹیمیں",
+      "all": "تمام داخلی صارفین",
+      "portals": "پورٹل صارفین"
+    }
+  },
+  "links": {
+    "superParent": "سپر والدین",
+    "related": "متعلقہ",
+    "portals": "پورٹلز",
+    "attachments": "منسلکات"
+  },
+  "labels": {
+    "View Posts": "پوسٹس دیکھیں",
+    "View Activity": "سرگرمی دیکھیں",
+    "Pin": "پن",
+    "Unpin": "انپن",
+    "Pinned": "پن",
+    "Quote Reply": "حوالہ جواب",
+    "View Attachments": "منسلکات دیکھیں"
+  },
+  "otherFields": {
+    "to": "to"
+  }
+}

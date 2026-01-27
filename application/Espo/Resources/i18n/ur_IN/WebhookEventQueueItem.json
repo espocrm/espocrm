@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "event": "واقعہ",
+    "target": "ہدف",
+    "data": "ڈیٹا",
+    "isProcessed": "عملدرآمد ہے",
+    "user": "صارف"
+  },
+  "links": {
+    "target": "ہدف",
+    "user": "صارف"
+  }
+}

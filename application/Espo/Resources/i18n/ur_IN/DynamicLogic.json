@@ -1,0 +1,31 @@
+{
+  "options": {
+    "operators": {
+      "equals": "مساوی",
+      "notEquals": "مساوی نہیں",
+      "greaterThan": "سے زیادہ",
+      "lessThan": "سے کم",
+      "greaterThanOrEquals": "اس سے زیادہ یا مساوی",
+      "lessThanOrEquals": "اس سے کم یا اس کے مساوی",
+      "in": "میں",
+      "notIn": "میں نہیں",
+      "inPast": "ماضی میں",
+      "inFuture": "مستقبل ہے",
+      "isToday": "آج ہے",
+      "isTrue": "سچ ہے",
+      "isFalse": "غلط ہے",
+      "isEmpty": "خالی ہے",
+      "isNotEmpty": "خالی نہیں ہے",
+      "contains": "پر مشتمل ہے",
+      "has": "پر مشتمل ہے",
+      "notContains": "پر مشتمل نہیں ہے",
+      "notHas": "پر مشتمل نہیں ہے",
+      "startsWith": "شروع ہوتا ہے",
+      "endsWith": "کے ساتھ ختم",
+      "matches": "میچز (ریگ ایکسپ)"
+    }
+  },
+  "labels": {
+    "Field": "فیلڈ"
+  }
+}

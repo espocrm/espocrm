@@ -1,0 +1,72 @@
+{
+  "fields": {
+    "name": "نام",
+    "roles": "کردار",
+    "assignmentPermission": "مقرر کی اجازت",
+    "userPermission": "صارف کی اجازت",
+    "portalPermission": "پورٹل اجازت",
+    "groupEmailAccountPermission": "گروپ ای میل اکاؤنٹ کی اجازت",
+    "exportPermission": "برآمد کی اجازت",
+    "dataPrivacyPermission": "ڈیٹا کی رازداری کی اجازت",
+    "massUpdatePermission": "بڑے پیمانے پر تازہ کاری کی اجازت",
+    "followerManagementPermission": "پیروکار کے انتظام کی اجازت",
+    "data": "ڈیٹا",
+    "fieldData": "فیلڈ ڈیٹا",
+    "messagePermission": "پیغام کی اجازت",
+    "auditPermission": "آڈٹ کی اجازت",
+    "mentionPermission": "اجازت کی اجازت",
+    "userCalendarPermission": "صارف کیلنڈر کی اجازت"
+  },
+  "links": {
+    "users": "صارفین",
+    "teams": "ٹیمیں"
+  },
+  "labels": {
+    "Access": "رسائی",
+    "Create Role": "کردار بنائیں",
+    "Scope Level": "رسائی کی سطح",
+    "Field Level": "فیلڈ لیول",
+    "Baseline": "بیس لائن"
+  },
+  "options": {
+    "accessList": {
+      "not-set": "سیٹ نہیں",
+      "enabled": "چالو",
+      "disabled": "بند"
+    },
+    "levelList": {
+      "all": "سب",
+      "team": "ٹیم",
+      "account": "اکاؤنٹ",
+      "contact": "رابطہ کریں",
+      "own": "اپنے",
+      "no": "نہیں",
+      "yes": "ہاں",
+      "not-set": "سیٹ نہیں"
+    }
+  },
+  "actions": {
+    "read": "پڑھیں",
+    "edit": "ترمیم کریں",
+    "delete": "حذف کریں",
+    "stream": "ندی",
+    "create": "تخلیق کریں"
+  },
+  "messages": {
+    "changesAfterClearCache": "کیشے کے صاف ہونے کے بعد رسائی کنٹرول میں تمام تبدیلیاں لاگو ہوں گی۔"
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "ذاتی ڈیٹا کو دیکھنے اور مٹانے کی اجازت دیتا ہے۔",
+    "followerManagementPermission": "مخصوص ریکارڈوں کے پیروکاروں کو سنبھالنے کی اجازت دیتا ہے۔",
+    "messagePermission": "دوسرے صارفین کو پیغامات بھیجنے کی اجازت دیتا ہے۔\n\n* سب - سب کو بھیج سکتے ہیں\n* ٹیم - صرف ٹیم کے ساتھیوں کو بھیج سکتی ہے\n* نہیں - نہیں بھیج سکتا",
+    "assignmentPermission": "دوسرے صارفین کو ریکارڈ تفویض کرنے کی اجازت دیتا ہے۔\n\n* تمام - کوئی پابندی نہیں\n* ٹیم - صرف ٹیم کے ساتھیوں کو تفویض کرسکتی ہے\n* نہیں - صرف خود کو تفویض کرسکتا ہے",
+    "portalPermission": "پورٹل معلومات تک رسائی ، پورٹل صارفین کو پیغامات پوسٹ کرنے کی صلاحیت۔",
+    "groupEmailAccountPermission": "گروپ ای میل اکاؤنٹس تک رسائی ، گروپ ایس ایم ٹی پی سے ای میل بھیجنے کی صلاحیت۔",
+    "exportPermission": "ریکارڈ برآمد کرنے کی اجازت دیتا ہے۔",
+    "massUpdatePermission": "ریکارڈوں کی بڑے پیمانے پر تازہ کاری کرنے کی صلاحیت۔",
+    "auditPermission": "آڈٹ لاگ دیکھنے کی اجازت دیتا ہے۔",
+    "mentionPermission": "ندی میں موجود دوسرے صارفین کا ذکر کرنے کی اجازت دیتا ہے۔\n\n* سب - سب کا ذکر کر سکتے ہیں\n* ٹیم - صرف ٹیم کے ساتھیوں کا ذکر کر سکتی ہے\n* نہیں - ذکر نہیں کرسکتا",
+    "userPermission": "دوسرے صارفین کے سلسلے کو دیکھنے کی اجازت دیتا ہے۔ صارفین کو رسائی کی سطح کو دیکھنے کی اجازت دیتا ہے جو دوسرے صارفین کو مخصوص ریکارڈوں کے لئے رکھتے ہیں۔",
+    "userCalendarPermission": "دوسرے صارفین کے کیلنڈرز دیکھنے کی اجازت دیتا ہے۔"
+  }
+}

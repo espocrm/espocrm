@@ -1,0 +1,62 @@
+{
+  "fields": {
+    "name": "نام",
+    "parent": "والدین",
+    "status": "حیثیت",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ اختتام",
+    "duration": "دورانیہ",
+    "description": "تفصیل",
+    "users": "صارفین",
+    "contacts": "رابطے",
+    "leads": "لیڈز",
+    "reminders": "یاد دہانی",
+    "account": "اکاؤنٹ",
+    "acceptanceStatus": "قبولیت کی حیثیت",
+    "dateStartDate": "تاریخ شروع (سارا دن)",
+    "dateEndDate": "تاریخ اختتام (سارا دن)",
+    "isAllDay": "سارا دن ہے",
+    "sourceEmail": "ماخذ ای میل",
+    "uid": "uid",
+    "joinUrl": "یو آر ایل میں شامل ہوں"
+  },
+  "options": {
+    "status": {
+      "Planned": "منصوبہ بند",
+      "Held": "منعقد",
+      "Not Held": "نہیں رکھا گیا"
+    },
+    "acceptanceStatus": {
+      "None": "کوئی نہیں",
+      "Accepted": "قبول",
+      "Declined": "انکار کردیا",
+      "Tentative": "عارضی"
+    }
+  },
+  "massActions": {
+    "setHeld": "سیٹ کیا گیا",
+    "setNotHeld": "سیٹ نہیں ہوا"
+  },
+  "labels": {
+    "Create Meeting": "میٹنگ بنائیں",
+    "Set Held": "سیٹ کیا گیا",
+    "Set Not Held": "سیٹ نہیں ہوا",
+    "Send Invitations": "دعوت نامے بھیجیں",
+    "on time": "وقت پر",
+    "before": "پہلے",
+    "All-Day": "سارا دن",
+    "Send Cancellation": "منسوخی بھیجیں",
+    "Acceptance": "قبولیت"
+  },
+  "presetFilters": {
+    "planned": "منصوبہ بند",
+    "held": "منعقد",
+    "todays": "آج کی بات ہے"
+  },
+  "messages": {
+    "nothingHasBeenSent": "کچھ بھی نہیں بھیجا گیا تھا",
+    "selectAcceptanceStatus": "اپنی قبولیت کی حیثیت طے کریں۔",
+    "sendInvitationsToSelectedAttendees": "دعوت نامے کے ای میلز منتخب شرکا کو بھیجے جائیں گے۔",
+    "sendCancellationsToSelectedAttendees": "منسوخی کے ای میلز منتخب شرکا کو بھیجے جائیں گے۔"
+  }
+}

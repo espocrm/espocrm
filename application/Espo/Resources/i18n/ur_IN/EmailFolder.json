@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "skipNotifications": "اطلاعات چھوڑیں"
+  },
+  "labels": {
+    "Create EmailFolder": "فولڈر بنائیں",
+    "Manage Folders": "فولڈرز کا انتظام کریں",
+    "Emails": "ای میلز"
+  }
+}

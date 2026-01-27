@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "نام",
+    "logo": "لوگو",
+    "companyLogo": "لوگو",
+    "url": "url",
+    "portalRoles": "کردار",
+    "isActive": "فعال ہے",
+    "isDefault": "پہلے سے طے شدہ ہے",
+    "tabList": "ٹیب کی فہرست",
+    "quickCreateList": "فوری تخلیق کی فہرست",
+    "theme": "تھیم",
+    "language": "زبان",
+    "dashboardLayout": "ڈیش بورڈ لے آؤٹ",
+    "dateFormat": "تاریخ کا طریقہ",
+    "timeFormat": "وقت کا طریقہ",
+    "timeZone": "علاقے کا وقت",
+    "weekStart": "ہفتے کا پہلا دن",
+    "defaultCurrency": "طے شدہ کرنسی",
+    "customUrl": "کسٹم یو آر ایل",
+    "customId": "کسٹم ID",
+    "layoutSet": "لے آؤٹ سیٹ",
+    "authenticationProvider": "توثیق فراہم کرنے والا",
+    "authTokenLifetime": "Auth ٹوکن لائف ٹائم (گھنٹے)",
+    "authTokenMaxIdleTime": "Auth ٹوکن زیادہ سے زیادہ بیکار وقت (گھنٹے)",
+    "applicationName": "درخواست کا نام"
+  },
+  "links": {
+    "users": "صارفین",
+    "portalRoles": "کردار",
+    "notes": "نوٹ",
+    "layoutSet": "لے آؤٹ سیٹ",
+    "authenticationProvider": "توثیق فراہم کرنے والا"
+  },
+  "tooltips": {
+    "portalRoles": "اس پورٹل کے تمام صارفین پر مخصوص پورٹل کردار لاگو ہوں گے۔",
+    "layoutSet": "وہ ترتیب رکھنے کی صلاحیت فراہم کرتا ہے جو معیاری سے مختلف ہیں۔"
+  },
+  "labels": {
+    "Create Portal": "پورٹل بنائیں",
+    "User Interface": "یوزر انٹرفیس",
+    "General": "جنرل",
+    "Settings": "ترتیبات"
+  }
+}

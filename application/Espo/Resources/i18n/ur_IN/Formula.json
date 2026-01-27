@@ -1,0 +1,23 @@
+{
+  "labels": {
+    "Check Syntax": "نحو چیک کریں",
+    "Run": "چلائیں"
+  },
+  "fields": {
+    "target": "ہدف",
+    "targetType": "ہدف کی قسم",
+    "script": "اسکرپٹ",
+    "output": "آؤٹ پٹ",
+    "error": "غلطی"
+  },
+  "messages": {
+    "runSuccess": "کامیابی سے انجام دیا گیا.",
+    "runError": "غلطی",
+    "checkSyntaxSuccess": "نحو درست ہے۔",
+    "checkSyntaxError": "نحو کی خرابی۔",
+    "emptyScript": "اسکرپٹ خالی ہے۔"
+  },
+  "tooltips": {
+    "output": "فنکشن `آؤٹ پٹ \\ پرنٹ لائن` کے ساتھ پرنٹ ویلیوز۔"
+  }
+}

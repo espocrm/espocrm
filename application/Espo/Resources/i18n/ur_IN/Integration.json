@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "enabled": "چالو",
+    "clientId": "کلائنٹ ID",
+    "clientSecret": "کلائنٹ کا خفیہ",
+    "redirectUri": "ری ڈائریکٹ uri",
+    "apiKey": "API کلید",
+    "siteKey": "سائٹ کی کلید",
+    "secretKey": "خفیہ کلید",
+    "scoreThreshold": "اسکور حد",
+    "mapId": "نقشہ ID"
+  },
+  "messages": {
+    "selectIntegration": "مینو سے انضمام منتخب کریں۔",
+    "noIntegrations": "کوئی انضمام دستیاب نہیں ہے۔"
+  },
+  "titles": {
+    "GoogleMaps": "گوگل نقشہ جات",
+    "GoogleReCaptcha": "گوگل recaptcha"
+  },
+  "help": {
+    "Google": "** گوگل ڈویلپرز کنسول سے OAuth 2.0 اسناد حاصل کریں۔ **\n\nOauth 2.0 اسناد جیسے کلائنٹ ID اور کلائنٹ سیکرٹ کو حاصل کرنے کے لئے [گوگل ڈویلپرز کنسول] (https://console.developers.google.com/project) ملاحظہ کریں جو گوگل اور ایسپو کریم دونوں درخواستوں کے نام سے جانا جاتا ہے۔",
+    "GoogleMaps": "API کلید حاصل کریں [یہاں] (https://developers.google.com/maps/docamentation/javascript/get-api-key)۔",
+    "GoogleReCaptcha": "[گوگل] (https://www.google.com/recaptcha/) سے سائٹ کی کلید اور خفیہ کلید حاصل کریں۔"
+  }
+}

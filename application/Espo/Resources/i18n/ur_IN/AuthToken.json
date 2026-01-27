@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "صارف",
+    "ipAddress": "IP ایڈریس",
+    "lastAccess": "آخری رسائی کی تاریخ",
+    "createdAt": "لاگ ان تاریخ",
+    "isActive": "فعال ہے",
+    "portal": "پورٹل"
+  },
+  "links": {
+    "actionHistoryRecords": "ایکشن کی تاریخ"
+  },
+  "presetFilters": {
+    "active": "متحرک",
+    "inactive": "غیر فعال"
+  },
+  "labels": {
+    "Set Inactive": "غیر فعال سیٹ کریں"
+  },
+  "massActions": {
+    "setInactive": "غیر فعال سیٹ کریں"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "messages": {
+    "infoMention": "قسم **@صارف نام ** پوسٹ میں صارف کا ذکر کرنے کے لئے۔",
+    "infoSyntax": "دستیاب مارک ڈاون نحو",
+    "couldNotAddFollowerUserHasNoAccessToStream": "پیروکاروں میں صارف کو '{صارف نام}' شامل نہیں کرسکا۔ صارف کے پاس ریکارڈ تک 'اسٹریم' رسائی نہیں ہے۔"
+  },
+  "syntaxItems": {
+    "code": "کوڈ",
+    "multilineCode": "ملٹی لائن کوڈ",
+    "strongText": "مضبوط متن",
+    "emphasizedText": "متن پر زور دیا",
+    "deletedText": "حذف شدہ متن",
+    "blockquote": "بلاک کوٹ",
+    "link": "لنک ٹیکسٹ"
+  }
+}

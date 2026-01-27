@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "نام",
+    "account": "اکاؤنٹ",
+    "stage": "شاہی",
+    "amount": "رقم",
+    "probability": "امکان ، ٪",
+    "leadSource": "لیڈ ماخذ",
+    "doNotCall": "کال نہ کریں",
+    "closeDate": "تاریخ بند کریں",
+    "contacts": "رابطے",
+    "description": "تفصیل",
+    "amountConverted": "رقم (تبدیل)",
+    "amountWeightedConverted": "مقدار وزن",
+    "campaign": "مہم",
+    "originalLead": "اصل لیڈ",
+    "amountCurrency": "رقم کی کرنسی",
+    "contactRole": "رابطہ کا کردار",
+    "lastStage": "آخری مرحلہ",
+    "contact": "رابطہ (پرائمری)"
+  },
+  "links": {
+    "contacts": "رابطے",
+    "documents": "دستاویزات",
+    "campaign": "مہم",
+    "originalLead": "اصل لیڈ",
+    "contact": "رابطہ (پرائمری)"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "توقع",
+      "Qualification": "قابلیت",
+      "Needs Analysis": "تجزیہ کی ضرورت ہے",
+      "Value Proposition": "قدر کی تجویز",
+      "Id. Decision Makers": "ID فیصلہ ساز",
+      "Perception Analysis": "تاثر تجزیہ",
+      "Proposal/Price Quote": "تجویز/قیمت کا حوالہ",
+      "Negotiation/Review": "مذاکرات/جائزہ",
+      "Closed Won": "بند جیت",
+      "Closed Lost": "بند گم",
+      "Proposal": "تجویز",
+      "Negotiation": "مذاکرات"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "موقع پیدا کریں"
+  },
+  "presetFilters": {
+    "open": "کھلا",
+    "won": "جیت",
+    "lost": "کھو گیا"
+  }
+}

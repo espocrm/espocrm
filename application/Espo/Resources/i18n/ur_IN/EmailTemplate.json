@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "حیثیت",
+    "body": "جسم",
+    "subject": "موضوع",
+    "attachments": "منسلکات",
+    "oneOff": "ایک دفعہ",
+    "category": "زمرہ",
+    "insertField": "پلیس ہولڈرز"
+  },
+  "labels": {
+    "Create EmailTemplate": "ای میل ٹیمپلیٹ بنائیں",
+    "Info": "معلومات",
+    "Available placeholders": "دستیاب پلیس ہولڈرز"
+  },
+  "tooltips": {
+    "oneOff": "چیک کریں کہ کیا آپ اس ٹیمپلیٹ کو صرف ایک بار استعمال کرنے جارہے ہیں۔ جیسے بڑے پیمانے پر ای میل کے لئے۔"
+  },
+  "placeholderTexts": {
+    "optOutLink": "ایک ان سبسکرائب لنک",
+    "today": "آج کی تاریخ",
+    "now": "موجودہ تاریخ اور وقت",
+    "currentYear": "موجودہ سال",
+    "optOutUrl": "ان سبسکرائب لنک کے لئے یو آر ایل"
+  },
+  "messages": {
+    "infoText": "دستیاب پلیس ہولڈرز:\n\n{آپٹورل} &#8211 ؛ URL کسی رکنیت کے ل link لنک کے لئے ؛\n\n{آپٹ آؤٹ لنک} &#8211 ؛ ایک ان سبسکرائب لنک۔"
+  },
+  "options": {
+    "status": {
+      "Active": "متحرک",
+      "Inactive": "غیر فعال"
+    }
+  },
+  "presetFilters": {
+    "actual": "متحرک"
+  }
+}

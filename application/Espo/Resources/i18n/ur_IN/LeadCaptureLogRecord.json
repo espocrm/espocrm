@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "number": "نمبر",
+    "data": "ڈیٹا",
+    "target": "ہدف",
+    "leadCapture": "لیڈ کیپچر",
+    "createdAt": "میں داخل ہوا",
+    "isCreated": "لیڈ تخلیق کیا گیا ہے"
+  },
+  "links": {
+    "leadCapture": "لیڈ کیپچر",
+    "target": "ہدف"
+  }
+}

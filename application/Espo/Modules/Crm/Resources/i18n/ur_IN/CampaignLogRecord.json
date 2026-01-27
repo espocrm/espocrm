@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "ایکشن",
+    "actionDate": "تاریخ",
+    "data": "ڈیٹا",
+    "campaign": "مہم",
+    "parent": "ہدف",
+    "object": "اعتراض",
+    "application": "درخواست",
+    "queueItem": "قطار آئٹم",
+    "stringData": "سٹرنگ ڈیٹا",
+    "stringAdditionalData": "اضافی ڈیٹا سٹرنگ کریں",
+    "isTest": "ٹیسٹ ہے"
+  },
+  "links": {
+    "queueItem": "قطار آئٹم",
+    "parent": "والدین",
+    "object": "اعتراض",
+    "campaign": "مہم"
+  },
+  "options": {
+    "action": {
+      "Sent": "بھیج دیا گیا",
+      "Opened": "کھلا",
+      "Opted Out": "آپ کا انتخاب کیا",
+      "Bounced": "باؤنس",
+      "Clicked": "کلک کیا",
+      "Lead Created": "لیڈ تخلیق کیا",
+      "Opted In": "انتخاب کیا"
+    }
+  },
+  "labels": {
+    "All": "سب"
+  },
+  "presetFilters": {
+    "sent": "بھیج دیا گیا",
+    "opened": "کھلا",
+    "optedOut": "آپ کا انتخاب کیا",
+    "bounced": "باؤنس",
+    "clicked": "کلک کیا",
+    "leadCreated": "لیڈ تخلیق کیا",
+    "optedIn": "انتخاب کیا"
+  }
+}

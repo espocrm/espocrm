@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "نام",
+    "emailAddress": "ای میل",
+    "accountRole": "عنوان",
+    "account": "اکاؤنٹ",
+    "accounts": "اکاؤنٹس",
+    "phoneNumber": "فون",
+    "accountType": "اکاؤنٹ کی قسم",
+    "doNotCall": "کال نہ کریں",
+    "address": "پتہ",
+    "opportunityRole": "مواقع کا کردار",
+    "description": "تفصیل",
+    "campaign": "مہم",
+    "targetLists": "ہدف کی فہرستیں",
+    "targetList": "ہدف کی فہرست",
+    "portalUser": "پورٹل صارف",
+    "originalLead": "اصل لیڈ",
+    "acceptanceStatus": "قبولیت کی حیثیت",
+    "accountIsInactive": "اکاؤنٹ غیر فعال",
+    "acceptanceStatusMeetings": "قبولیت کی حیثیت (ملاقاتیں)",
+    "acceptanceStatusCalls": "قبولیت کی حیثیت (کالز)",
+    "title": "اکاؤنٹ کا عنوان",
+    "hasPortalUser": "پورٹل صارف ہے",
+    "originalEmail": "اصل ای میل"
+  },
+  "links": {
+    "opportunities": "مواقع",
+    "cases": "معاملات",
+    "targetLists": "ہدف کی فہرستیں",
+    "campaignLogRecords": "مہم لاگ",
+    "campaign": "مہم",
+    "account": "اکاؤنٹ (پرائمری)",
+    "accounts": "اکاؤنٹس",
+    "casesPrimary": "معاملات (پرائمری)",
+    "portalUser": "پورٹل صارف",
+    "originalLead": "اصل لیڈ",
+    "documents": "دستاویزات",
+    "tasksPrimary": "کام (توسیع)",
+    "opportunitiesPrimary": "مواقع (پرائمری)"
+  },
+  "labels": {
+    "Create Contact": "رابطہ بنائیں"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "فیصلہ ساز",
+      "Evaluator": "تشخیص کار",
+      "Influencer": "اثر و رسوخ"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "پورٹل صارفین",
+    "notPortalUsers": "پورٹل صارفین نہیں",
+    "accountActive": "متحرک"
+  }
+}

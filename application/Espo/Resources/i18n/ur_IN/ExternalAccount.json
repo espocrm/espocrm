@@ -1,0 +1,11 @@
+{
+  "labels": {
+    "Connect": "جڑیں",
+    "Connected": "منسلک",
+    "Disconnect": "منقطع",
+    "Disconnected": "منقطع"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "انضمام کے لئے بیرونی اکاؤنٹ '{انضمام}' کو مربوط کرنے کے قابل نہ ہونے کی وجہ سے غیر فعال کردیا گیا ہے۔"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "پتہ"
+  },
+  "links": {
+    "meetings": "ملاقاتیں",
+    "calls": "کالز",
+    "tasks": "کام"
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypetranslated} بنائیں"
+  }
+}

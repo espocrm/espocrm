@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "status": "اسٹیٹس",
+    "executeTime": "بوقت عمل",
+    "attempts": "کوششیں باقی ہیں",
+    "failedAttempts": "ناکام کوششیں",
+    "serviceName": "خدمت",
+    "methodName": "طریقہ",
+    "scheduledJob": "شیڈول جاب",
+    "data": "ڈیٹا",
+    "method": "طریقہ (فرسودہ)",
+    "scheduledJobJob": "شیڈول ملازمت کا نام",
+    "executedAt": "بوقت عمل",
+    "startedAt": "شروع ہوا",
+    "targetType": "ہدف کی قسم",
+    "targetId": "ہدف ID",
+    "number": "نمبر",
+    "queue": "قطار",
+    "job": "نوکری",
+    "group": "گروپ",
+    "className": "کلاس کا نام",
+    "targetGroup": "ٹارگٹ گروپ"
+  },
+  "options": {
+    "status": {
+      "Pending": "باقی",
+      "Success": "مکمل",
+      "Running": "چل رہا ہے",
+      "Failed": "ناکام"
+    }
+  }
+}

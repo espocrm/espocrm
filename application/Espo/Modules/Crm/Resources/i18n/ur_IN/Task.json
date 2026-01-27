@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "نام",
+    "parent": "والدین",
+    "status": "حیثیت",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ دو",
+    "dateStartDate": "تاریخ شروع (سارا دن)",
+    "dateEndDate": "تاریخ اختتام (سارا دن)",
+    "priority": "ترجیح",
+    "description": "تفصیل",
+    "isOverdue": "واجب الادا ہے",
+    "account": "اکاؤنٹ",
+    "dateCompleted": "تاریخ مکمل",
+    "attachments": "منسلکات",
+    "reminders": "یاد دہانی",
+    "contact": "رابطہ کریں",
+    "originalEmail": "اصل ای میل"
+  },
+  "links": {
+    "attachments": "منسلکات",
+    "account": "اکاؤنٹ",
+    "contact": "رابطہ کریں",
+    "email": "ای میل"
+  },
+  "options": {
+    "status": {
+      "Not Started": "شروع نہیں ہوا",
+      "Started": "شروع ہوا",
+      "Completed": "مکمل",
+      "Canceled": "منسوخ",
+      "Deferred": "موخر"
+    },
+    "priority": {
+      "Low": "کم",
+      "Normal": "عام",
+      "High": "اعلی",
+      "Urgent": "فوری"
+    }
+  },
+  "labels": {
+    "Create Task": "کام بنائیں",
+    "Complete": "مکمل",
+    "overdue": "واجب الادا"
+  },
+  "presetFilters": {
+    "completed": "مکمل",
+    "todays": "آج کی بات ہے",
+    "overdue": "واجب الادا",
+    "deferred": "موخر",
+    "actual": "کھلا"
+  },
+  "nameOptions": {
+    "replyToEmail": "ای میل کو جواب دیں"
+  }
+}

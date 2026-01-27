@@ -1,0 +1,30 @@
+{
+  "fields": {
+    "user": "صارف",
+    "action": "ایکشن",
+    "createdAt": "تاریخ",
+    "target": "ہدف",
+    "targetType": "ہدف کی قسم",
+    "authToken": "Auth ٹوکن",
+    "ipAddress": "IP ایڈریس",
+    "authLogRecord": "Auth لاگ ریکارڈ",
+    "userType": "صارف کی قسم"
+  },
+  "links": {
+    "authToken": "Auth ٹوکن",
+    "user": "صارف",
+    "target": "ہدف",
+    "authLogRecord": "Auth لاگ ریکارڈ"
+  },
+  "presetFilters": {
+    "onlyMy": "صرف میرا"
+  },
+  "options": {
+    "action": {
+      "read": "پڑھیں",
+      "update": "تازہ کاری",
+      "delete": "حذف کریں",
+      "create": "تخلیق کریں"
+    }
+  }
+}

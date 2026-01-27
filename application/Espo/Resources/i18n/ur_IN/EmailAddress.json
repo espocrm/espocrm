@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Primary": "بنیادی",
+    "Opted Out": "آپ کا انتخاب کیا",
+    "Invalid": "غلط"
+  },
+  "fields": {
+    "optOut": "آپ کا انتخاب کیا",
+    "invalid": "غلط",
+    "lower": "کم کیس کا نام"
+  },
+  "presetFilters": {
+    "orphan": "یتیم"
+  }
+}

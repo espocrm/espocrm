@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "type": "قسم",
+    "optOut": "آپ کا انتخاب کیا",
+    "invalid": "غلط",
+    "numeric": "عددی قدر"
+  },
+  "presetFilters": {
+    "orphan": "یتیم"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "fields": {
+    "name": "نام",
+    "number": "نمبر",
+    "status": "حیثیت",
+    "account": "اکاؤنٹ",
+    "contact": "رابطہ کریں",
+    "contacts": "رابطے",
+    "priority": "ترجیح",
+    "type": "قسم",
+    "description": "تفصیل",
+    "lead": "لیڈ",
+    "attachments": "منسلکات",
+    "inboundEmail": "گروپ ای میل اکاؤنٹ",
+    "originalEmail": "اصل ای میل",
+    "isInternal": "پورٹل سے پوشیدہ"
+  },
+  "links": {
+    "account": "اکاؤنٹ",
+    "contact": "رابطہ (پرائمری)",
+    "Contacts": "رابطے",
+    "meetings": "ملاقاتیں",
+    "calls": "کالز",
+    "tasks": "کام",
+    "emails": "ای میلز",
+    "articles": "علم کے بنیادی مضامین",
+    "lead": "لیڈ",
+    "attachments": "منسلکات",
+    "inboundEmail": "گروپ ای میل اکاؤنٹ"
+  },
+  "options": {
+    "status": {
+      "New": "نیا",
+      "Assigned": "تفویض کیا گیا",
+      "Pending": "باقی",
+      "Closed": "بند",
+      "Rejected": "مسترد",
+      "Duplicate": "نقل"
+    },
+    "priority": {
+      "Low": "کم",
+      "Normal": "عام",
+      "High": "اعلی",
+      "Urgent": "فوری"
+    },
+    "type": {
+      "Question": "سوال",
+      "Incident": "واقعہ",
+      "Problem": "مسئلہ"
+    }
+  },
+  "labels": {
+    "Create Case": "کیس بنائیں",
+    "Close": "بند کریں",
+    "Reject": "مسترد",
+    "Closed": "بند",
+    "Rejected": "مسترد"
+  },
+  "presetFilters": {
+    "open": "کھلا",
+    "closed": "بند"
+  }
+}

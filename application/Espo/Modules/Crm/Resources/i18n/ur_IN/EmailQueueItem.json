@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "حیثیت",
+    "target": "ہدف",
+    "sentAt": "تاریخ بھیجی گئی",
+    "attemptCount": "کوششیں",
+    "emailAddress": "ای میل ایڈریس",
+    "massEmail": "بڑے پیمانے پر ای میل",
+    "isTest": "ٹیسٹ ہے"
+  },
+  "links": {
+    "target": "ہدف",
+    "massEmail": "بڑے پیمانے پر ای میل"
+  },
+  "options": {
+    "status": {
+      "Pending": "باقی",
+      "Sent": "بھیج دیا گیا",
+      "Failed": "ناکام",
+      "Sending": "بھیجنا"
+    }
+  },
+  "presetFilters": {
+    "pending": "باقی",
+    "sent": "بھیج دیا گیا",
+    "failed": "ناکام"
+  }
+}

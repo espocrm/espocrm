@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "پیغام",
+    "code": "کوڈ",
+    "level": "سطح",
+    "exceptionClass": "استثناء کلاس",
+    "file": "فائل",
+    "line": "لائن",
+    "requestMethod": "درخواست کا طریقہ",
+    "requestResourcePath": "وسائل کے راستے کی درخواست کریں"
+  },
+  "presetFilters": {
+    "errors": "غلطیاں"
+  }
+}

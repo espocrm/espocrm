@@ -1,0 +1,73 @@
+{
+  "fields": {
+    "dateFormat": "تاریخ کا طریقہ",
+    "timeFormat": "وقت کا طریقہ",
+    "timeZone": "علاقے کا وقت",
+    "weekStart": "ہفتے کا پہلا دن",
+    "thousandSeparator": "ہزار جداکار",
+    "decimalMark": "اعشاریہ نشان",
+    "defaultCurrency": "طے شدہ کرنسی",
+    "currencyList": "کرنسی کی فہرست",
+    "language": "زبان",
+    "exportDelimiter": "برآمد ڈیمیٹر",
+    "signature": "ای میل کے دستخط",
+    "dashboardTabList": "ٹیب کی فہرست",
+    "tabList": "ٹیب کی فہرست",
+    "defaultReminders": "طے شدہ یاد دہانی",
+    "theme": "تھیم",
+    "useCustomTabList": "کسٹم ٹیب کی فہرست",
+    "receiveAssignmentEmailNotifications": "تفویض کے بعد ای میل کی اطلاعات",
+    "receiveMentionEmailNotifications": "پوسٹس میں تذکروں کے بارے میں ای میل کی اطلاعات",
+    "receiveStreamEmailNotifications": "پوسٹس اور اسٹیٹس کی تازہ کاریوں کے بارے میں ای میل کی اطلاعات",
+    "dashboardLayout": "ڈیش بورڈ لے آؤٹ",
+    "emailReplyForceHtml": "HTML میں ای میل جواب دیں",
+    "autoFollowEntityTypeList": "عالمی آٹو فالو",
+    "emailReplyToAllByDefault": "سب کو بطور ڈیفالٹ ای میل جواب دیں",
+    "doNotFillAssignedUserIfNotRequired": "ریکارڈ تخلیق پر تفویض کردہ صارف کو پہلے سے بھریں",
+    "followEntityOnStreamPost": "اسٹریم میں پوسٹ کرنے کے بعد آٹو فالو ریکارڈ",
+    "followCreatedEntities": "آٹو فالو نے ریکارڈ بنائے",
+    "followCreatedEntityTypeList": "آٹو فالو نے مخصوص ہستی کی اقسام کے ریکارڈ بنائے ہیں",
+    "emailUseExternalClient": "بیرونی ای میل کلائنٹ کا استعمال کریں",
+    "assignmentNotificationsIgnoreEntityTypeList": "ان ایپ تفویض کی اطلاعات",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "ای میل تفویض کی اطلاعات",
+    "dashboardLocked": "لاک ڈیش بورڈ",
+    "textSearchStoringDisabled": "ٹیکسٹ فلٹر اسٹورنگ کو غیر فعال کریں",
+    "calendarSlotDuration": "کیلنڈر سلاٹ کی مدت",
+    "calendarScrollHour": "کیلنڈر ایک گھنٹہ تک اسکرول",
+    "defaultRemindersTask": "کاموں کے لئے پہلے سے طے شدہ یاد دہانی",
+    "addCustomTabs": "کسٹم ٹیبز شامل کریں",
+    "reactionNotifications": "رد عمل کے بارے میں ایپ میں اطلاعات",
+    "pageContentWidth": "مواد کی چوڑائی",
+    "reactionNotificationsNotFollowed": "غیر پیروی شدہ ریکارڈوں کے رد عمل کے بارے میں اطلاعات",
+    "followAsCollaborator": "جب بطور ساتھی شامل کیا گیا تو آٹو فالو"
+  },
+  "options": {
+    "weekStart": {
+      "0": "اتوار",
+      "1": "پیر"
+    },
+    "pageContentWidth": {
+      "": "عام",
+      "Wide": "چوڑا"
+    }
+  },
+  "labels": {
+    "Notifications": "اطلاعات",
+    "User Interface": "یوزر انٹرفیس",
+    "Misc": "متفرق",
+    "Locale": "مقام",
+    "Reset Dashboard to Default": "ڈیفالٹ میں ڈیش بورڈ کو دوبارہ ترتیب دیں"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "منتخب کردہ ہستی کی اقسام کے تمام نئے ریکارڈوں (کسی بھی صارف کے ذریعہ تخلیق کردہ) کو خود بخود فالو کریں۔ اسٹریم میں معلومات دیکھنے اور سسٹم میں موجود تمام ریکارڈوں کے بارے میں اطلاعات وصول کرنے کے ل .۔",
+    "addCustomTabs": "اگر جانچ پڑتال کی جائے تو ، کسٹم ٹیبز کو ڈیفالٹ ٹیبز میں شامل کیا جائے گا۔ بصورت دیگر ، پہلے سے طے شدہ ٹیبز کے بجائے کسٹم ٹیبز کا استعمال کیا جائے گا۔",
+    "doNotFillAssignedUserIfNotRequired": "نیا ریکارڈ بناتے وقت ، تفویض کردہ صارف کو اپنے صارف کے ساتھ پہلے سے بھر نہیں دیا جائے گا۔ اگر تفویض کردہ صارف فیلڈ کی ضرورت ہو تو ، پھر اس پیرامیٹر کا کوئی اثر نہیں پڑتا ہے۔",
+    "followCreatedEntities": "تخلیق شدہ ریکارڈوں کی خود بخود پیروی کی جائے گی ، اس سے قطع نظر کہ انہوں نے کس کو تفویض کیا ہے۔",
+    "followCreatedEntityTypeList": "منتخب کردہ ہستی کی اقسام کے ریکارڈوں کی خود بخود پیروی کی جائے گی ، قطع نظر اس سے کہ انہوں نے کس کو تفویض کیا ہے۔ صرف مخصوص ہستی کی اقسام کی پیروی کرنے کے لئے اس پیرامیٹر کا استعمال کریں۔"
+  },
+  "tabFields": {
+    "label": "لیبل",
+    "iconClass": "آئیکن",
+    "color": "رنگ"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create OAuthAccount": "OAuth اکاؤنٹ بنائیں",
+    "Connection": "کنکشن"
+  },
+  "fields": {
+    "provider": "فراہم کنندہ",
+    "hasAccessToken": "رسائی ٹوکن ہے",
+    "user": "صارف",
+    "providerIsActive": "فراہم کنندہ فعال ہے",
+    "data": "ڈیٹا"
+  },
+  "links": {
+    "provider": "فراہم کنندہ"
+  }
+}

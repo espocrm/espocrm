@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "name": "نام",
+    "description": "تفصیل",
+    "entryCount": "اندراج کی گنتی",
+    "campaigns": "مہمات",
+    "endDate": "آخری تاریخ",
+    "targetLists": "ہدف کی فہرستیں",
+    "includingActionList": "بشمول",
+    "excludingActionList": "چھوڑ کر",
+    "optedOutCount": "گنتی کا انتخاب کیا",
+    "targetStatus": "ہدف کی حیثیت",
+    "isOptedOut": "آپ کا انتخاب کیا گیا ہے",
+    "sourceCampaign": "ماخذ مہم",
+    "category": "زمرہ"
+  },
+  "links": {
+    "accounts": "اکاؤنٹس",
+    "contacts": "رابطے",
+    "leads": "لیڈز",
+    "campaigns": "مہمات",
+    "massEmails": "بڑے پیمانے پر ای میلز",
+    "category": "زمرہ"
+  },
+  "options": {
+    "type": {
+      "Email": "ای میل",
+      "Web": "ویب",
+      "Television": "ٹیلی ویژن",
+      "Radio": "ریڈیو",
+      "Newsletter": "نیوز لیٹر"
+    },
+    "targetStatus": {
+      "Opted Out": "آپ کا انتخاب کیا",
+      "Listed": "درج"
+    }
+  },
+  "labels": {
+    "Create TargetList": "ہدف کی فہرست بنائیں",
+    "Opted Out": "آپ کا انتخاب کیا",
+    "Cancel Opt-Out": "آپٹ آؤٹ منسوخ کریں",
+    "Opt-Out": "آپٹ آؤٹ"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "name": "نام",
+    "version": "ورژن",
+    "description": "تفصیل",
+    "isInstalled": "انسٹال",
+    "checkVersionUrl": "نئے ورژن کی جانچ پڑتال کے لئے ایک یو آر ایل"
+  },
+  "labels": {
+    "Uninstall": "انسٹال",
+    "Install": "انسٹال کریں"
+  },
+  "messages": {
+    "uninstalled": "توسیع {نام} انسٹال کیا گیا ہے",
+    "fileExceedsMaxUploadSize": "فائل کا سائز زیادہ سے زیادہ اپلوڈ سائز {میکسائز} سے زیادہ ہے۔ `post_max_size` بڑھانے پر غور کریں یا CLI کے ذریعے توسیع انسٹال کریں۔"
+  }
+}

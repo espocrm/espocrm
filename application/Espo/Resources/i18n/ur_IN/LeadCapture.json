@@ -1,0 +1,65 @@
+{
+  "fields": {
+    "name": "نام",
+    "campaign": "مہم",
+    "isActive": "فعال ہے",
+    "subscribeToTargetList": "ہدف کی فہرست کو سبسکرائب کریں",
+    "subscribeContactToTargetList": "اگر موجود ہے تو رابطے کو سبسکرائب کریں",
+    "targetList": "ہدف کی فہرست",
+    "fieldList": "پے لوڈ فیلڈز",
+    "optInConfirmation": "ڈبل آپٹ ان",
+    "optInConfirmationEmailTemplate": "آپٹ ان تصدیقی ای میل ٹیمپلیٹ",
+    "optInConfirmationLifetime": "آپٹ ان تصدیقی زندگی (گھنٹے)",
+    "optInConfirmationSuccessMessage": "آپٹ ان تصدیق کے بعد ظاہر کرنے کے لئے متن",
+    "leadSource": "لیڈ ماخذ",
+    "apiKey": "API کلید",
+    "targetTeam": "ٹارگٹ ٹیم",
+    "exampleRequestMethod": "طریقہ",
+    "exampleRequestUrl": "url",
+    "exampleRequestPayload": "پے لوڈ",
+    "createLeadBeforeOptInConfirmation": "تصدیق سے پہلے لیڈ بنائیں",
+    "duplicateCheck": "ڈپلیکیٹ چیک",
+    "skipOptInConfirmationIfSubscribed": "تصدیق چھوڑ دیں اگر لیڈ پہلے ہی ہدف کی فہرست میں ہے",
+    "smtpAccount": "ایس ایم ٹی پی اکاؤنٹ",
+    "inboundEmail": "گروپ ای میل اکاؤنٹ",
+    "exampleRequestHeaders": "ہیڈر",
+    "phoneNumberCountry": "ٹیلیفون کنٹری کوڈ",
+    "fieldParams": "فیلڈ پیرامس",
+    "formId": "فارم ID",
+    "formEnabled": "ویب فارم",
+    "formUrl": "url تشکیل دیں",
+    "formSuccessText": "فارم جمع کرانے کے بعد ظاہر کرنے کے لئے متن",
+    "formText": "فارم پر ظاہر کرنے کے لئے متن",
+    "formSuccessRedirectUrl": "URL فارم جمع کرانے کے بعد ری ڈائریکٹ کریں",
+    "formLanguage": "زبان فارم پر استعمال ہوتی ہے",
+    "formFrameAncestors": "فارم ایمبیڈنگ کے لئے میزبانوں کو اجازت دی گئی",
+    "formCaptcha": "کیپچا استعمال کریں",
+    "formTitle": "فارم کا عنوان",
+    "formTheme": "تھیم کی تشکیل"
+  },
+  "links": {
+    "targetList": "ہدف کی فہرست",
+    "campaign": "مہم",
+    "optInConfirmationEmailTemplate": "آپٹ ان تصدیقی ای میل ٹیمپلیٹ",
+    "targetTeam": "ٹارگٹ ٹیم",
+    "logRecords": "لاگ",
+    "inboundEmail": "گروپ ای میل اکاؤنٹ"
+  },
+  "labels": {
+    "Create LeadCapture": "انٹری پوائنٹ بنائیں",
+    "Generate New API Key": "نئی API کلید تیار کریں",
+    "Request": "درخواست",
+    "Confirm Opt-In": "آپٹ ان کی تصدیق کریں",
+    "Generate New Form ID": "نیا فارم ID تیار کریں",
+    "Web Form": "ویب فارم"
+  },
+  "messages": {
+    "generateApiKey": "نئی API کلید بنائیں",
+    "optInConfirmationExpired": "آپٹ ان تصدیقی لنک کی میعاد ختم ہوگئی ہے۔",
+    "optInIsConfirmed": "آپٹ ان کی تصدیق ہے۔"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "مارک ڈاون کی حمایت کی گئی ہے۔",
+    "formCaptcha": "کیپچا استعمال کرنے کے قابل ہونے کے ل you ، آپ کو ** انتظامیہ **> ** انضمام ** کے تحت تشکیل دینے کی ضرورت ہے۔"
+  }
+}

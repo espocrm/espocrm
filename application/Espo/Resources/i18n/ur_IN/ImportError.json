@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "type": "قسم",
+    "validationFailures": "توثیق کی ناکامی",
+    "import": "درآمد",
+    "rowIndex": "قطار انڈیکس",
+    "exportRowIndex": "برآمد قطار انڈیکس",
+    "lineNumber": "لائن نمبر",
+    "exportLineNumber": "ایکسپورٹ لائن نمبر",
+    "row": "قطار",
+    "entityType": "ہستی کی قسم"
+  },
+  "options": {
+    "type": {
+      "Validation": "توثیق",
+      "Access": "رسائی",
+      "Not-Found": "نہیں"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "اصل CSV میں ایک لائن نمبر۔",
+    "exportLineNumber": "ایکسپورٹ سی ایس وی میں ایک لائن نمبر۔"
+  }
+}

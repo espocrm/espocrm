@@ -1,0 +1,73 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "حیثیت",
+    "host": "میزبان",
+    "username": "صارف نام",
+    "password": "پاس ورڈ",
+    "port": "بندرگاہ",
+    "monitoredFolders": "نگرانی شدہ فولڈرز",
+    "fetchSince": "چونکہ بازیافت کریں",
+    "emailAddress": "ای میل ایڈریس",
+    "sentFolder": "فولڈر بھیجا",
+    "storeSentEmails": "اسٹور بھیجے ہوئے ای میلز",
+    "keepFetchedEmailsUnread": "بازیافت ای میلز کو بغیر پڑھے رکھیں",
+    "emailFolder": "فولڈر میں ڈالیں",
+    "useSmtp": "ایس ایم ٹی پی کا استعمال کریں",
+    "smtpHost": "ایس ایم ٹی پی میزبان",
+    "smtpPort": "ایس ایم ٹی پی پورٹ",
+    "smtpSecurity": "ایس ایم ٹی پی سیکیورٹی",
+    "smtpUsername": "ایس ایم ٹی پی صارف نام",
+    "smtpPassword": "ایس ایم ٹی پی پاس ورڈ",
+    "useImap": "ای میلز لائیں",
+    "smtpAuthMechanism": "SMTP AUTH میکانزم",
+    "security": "سلامتی",
+    "connectedAt": "at",
+    "folderMap": "فولڈر میپنگ"
+  },
+  "links": {
+    "filters": "فلٹرز",
+    "emails": "ای میلز"
+  },
+  "options": {
+    "status": {
+      "Active": "متحرک",
+      "Inactive": "غیر فعال"
+    },
+    "smtpAuthMechanism": {
+      "plain": "سادہ",
+      "login": "لاگ ان"
+    },
+    "smtpSecurity": {
+      "SSL": "ایس ایس ایل/ٹی ایل ایس",
+      "TLS": "starttls"
+    },
+    "security": {
+      "SSL": "ایس ایس ایل/ٹی ایل ایس",
+      "TLS": "starttls"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "ای میل اکاؤنٹ بنائیں",
+    "IMAP": "imap",
+    "Main": "اہم",
+    "Test Connection": "ٹیسٹ کنکشن",
+    "Send Test Email": "ٹیسٹ ای میل بھیجیں",
+    "SMTP": "smtp"
+  },
+  "messages": {
+    "couldNotConnectToImap": "IMAP سرور سے رابطہ قائم نہیں کرسکا",
+    "connectionIsOk": "کنکشن ٹھیک ہے",
+    "imapNotConnected": "[IMAP اکاؤنٹ] (#ای میل اکاؤنٹ/ویو/{ID}) سے رابطہ قائم نہیں کرسکا۔",
+    "noFolder": "میپڈ فولڈر موجود نہیں ہے۔"
+  },
+  "tooltips": {
+    "storeSentEmails": "بھیجے گئے ای میلز کو آئی ایم اے پی سرور پر اسٹور کیا جائے گا۔ ای میل ایڈریس فیلڈ سے میل ملاپ کرنا چاہئے ای میلز سے بھیج دیا جائے گا۔",
+    "useSmtp": "ای میل بھیجنے کی صلاحیت۔",
+    "emailAddress": "صارف کے ریکارڈ (تفویض کردہ صارف) کے پاس وہی ای میل ایڈریس ہونا چاہئے جو بھیجنے کے لئے اس ای میل اکاؤنٹ کو استعمال کرسکیں۔",
+    "monitoredFolders": "درآمد کے لئے IMAP فولڈرز کا انتخاب کریں۔ اختیاری طور پر ، ان کو ایسپو فولڈروں کا نقشہ بنائیں۔\n\nآپ کسی بیرونی ای میل کلائنٹ سے بھیجے گئے ای میلز کی مطابقت پذیری میں 'بھیجے گئے' فولڈر کو شامل کرسکتے ہیں۔"
+  },
+  "presetFilters": {
+    "active": "متحرک"
+  }
+}

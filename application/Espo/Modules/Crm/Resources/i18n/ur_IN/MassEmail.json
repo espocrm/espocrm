@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "نام",
+    "status": "حیثیت",
+    "storeSentEmails": "اسٹور بھیجے ہوئے ای میلز",
+    "startAt": "تاریخ شروع",
+    "fromAddress": "ایڈریس سے",
+    "fromName": "نام سے",
+    "replyToAddress": "جواب دیں",
+    "replyToName": "جواب دیں نام",
+    "campaign": "مہم",
+    "emailTemplate": "ای میل ٹیمپلیٹ",
+    "inboundEmail": "ای میل اکاؤنٹ",
+    "targetLists": "ہدف کی فہرستیں",
+    "excludingTargetLists": "ہدف کی فہرستوں کو چھوڑ کر",
+    "optOutEntirely": "مکمل طور پر آپٹ آؤٹ",
+    "smtpAccount": "ایس ایم ٹی پی اکاؤنٹ"
+  },
+  "links": {
+    "targetLists": "ہدف کی فہرستیں",
+    "excludingTargetLists": "ہدف کی فہرستوں کو چھوڑ کر",
+    "queueItems": "قطار آئٹمز",
+    "campaign": "مہم",
+    "emailTemplate": "ای میل ٹیمپلیٹ",
+    "inboundEmail": "ای میل اکاؤنٹ"
+  },
+  "options": {
+    "status": {
+      "Draft": "مسودہ",
+      "Pending": "باقی",
+      "In Process": "عمل میں",
+      "Complete": "مکمل",
+      "Canceled": "منسوخ",
+      "Failed": "ناکام"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "بڑے پیمانے پر ای میل بنائیں",
+    "Send Test": "ٹیسٹ بھیجیں",
+    "System SMTP": "سسٹم ایس ایم ٹی پی",
+    "system": "نظام",
+    "group": "گروپ"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "کم از کم ایک ہدف منتخب کریں۔",
+    "testSent": "ٹیسٹ ای میل (زبانیں) بھیجے جائیں گے"
+  },
+  "tooltips": {
+    "optOutEntirely": "وصول کنندگان کے ای میل پتے جن کو ان سبسکرائب کیا گیا ہے اس کو منتخب کیا جائے گا اور انہیں اب کوئی بڑے پیمانے پر ای میل موصول نہیں ہوں گے۔",
+    "targetLists": "اہداف جو پیغامات وصول کرنا چاہ .۔",
+    "excludingTargetLists": "اہداف جو پیغامات وصول نہیں کرنا چاہئے۔",
+    "storeSentEmails": "ای میلز کو CRM میں محفوظ کیا جائے گا۔"
+  },
+  "presetFilters": {
+    "complete": "مکمل",
+    "actual": "متحرک"
+  }
+}

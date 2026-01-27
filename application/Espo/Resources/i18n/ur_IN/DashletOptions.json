@@ -1,0 +1,49 @@
+{
+  "fields": {
+    "title": "عنوان",
+    "dateFrom": "تاریخ سے",
+    "dateTo": "تاریخ تک",
+    "autorefreshInterval": "آٹو ریفریش وقفہ",
+    "displayRecords": "ریکارڈ ڈسپلے کریں",
+    "isDoubleHeight": "دو گنا اونچائی",
+    "mode": "موڈ",
+    "enabledScopeList": "کیا ڈسپلے کرنا ہے",
+    "users": "صارفین",
+    "entityType": "ہستی کی قسم",
+    "primaryFilter": "پرائمری فلٹر",
+    "boolFilterList": "اضافی فلٹرز",
+    "expandedLayout": "لے آؤٹ",
+    "dateFilter": "تاریخ کا فلٹر",
+    "skipOwn": "اپنے ریکارڈ نہ دکھائیں",
+    "url": "url",
+    "text": "متن",
+    "folder": "فولڈر",
+    "includeShared": "مشترکہ شامل کریں",
+    "sortBy": "آرڈر بذریعہ",
+    "sortDirection": "آرڈر سمت"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "ہفتے کا (ایجنڈا)",
+      "basicWeek": "ہفتے",
+      "month": "مہینہ",
+      "basicDay": "دن",
+      "agendaDay": "دن کا (ایجنڈا)",
+      "timeline": "ٹائم لائن"
+    },
+    "sortDirection": {
+      "asc": "چڑھنے",
+      "desc": "اترتے ہوئے"
+    }
+  },
+  "messages": {
+    "selectEntityType": "ڈیشلیٹ کے اختیارات میں ہستی کی قسم منتخب کریں۔"
+  },
+  "tooltips": {
+    "skipOwn": "آپ کے صارف اکاؤنٹ کے ذریعہ کی جانے والی کارروائیوں کو ظاہر نہیں کیا جائے گا۔"
+  },
+  "otherFields": {
+    "soft": "نرم رنگ",
+    "small": "چھوٹے فونٹ"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "بلنگ ایڈریس",
+    "shippingAddress": "شپنگ ایڈریس",
+    "website": "ویب سائٹ"
+  },
+  "links": {
+    "meetings": "ملاقاتیں",
+    "calls": "کالز",
+    "tasks": "کام"
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypetranslated} بنائیں"
+  }
+}

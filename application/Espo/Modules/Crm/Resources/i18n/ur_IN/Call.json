@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "نام",
+    "parent": "والدین",
+    "status": "حیثیت",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ اختتام",
+    "direction": "سمت",
+    "duration": "دورانیہ",
+    "description": "تفصیل",
+    "users": "صارفین",
+    "contacts": "رابطے",
+    "leads": "لیڈز",
+    "reminders": "یاد دہانی",
+    "account": "اکاؤنٹ",
+    "acceptanceStatus": "قبولیت کی حیثیت",
+    "uid": "uid"
+  },
+  "options": {
+    "status": {
+      "Planned": "منصوبہ بند",
+      "Held": "منعقد",
+      "Not Held": "نہیں رکھا گیا"
+    },
+    "direction": {
+      "Outbound": "آؤٹ باؤنڈ",
+      "Inbound": "باؤنڈ"
+    },
+    "acceptanceStatus": {
+      "None": "کوئی نہیں",
+      "Accepted": "قبول",
+      "Declined": "انکار کردیا",
+      "Tentative": "عارضی"
+    }
+  },
+  "massActions": {
+    "setHeld": "سیٹ کیا گیا",
+    "setNotHeld": "سیٹ نہیں ہوا"
+  },
+  "labels": {
+    "Create Call": "کال بنائیں",
+    "Set Held": "سیٹ کیا گیا",
+    "Set Not Held": "سیٹ نہیں ہوا",
+    "Send Invitations": "دعوت نامے بھیجیں"
+  },
+  "presetFilters": {
+    "planned": "منصوبہ بند",
+    "held": "منعقد",
+    "todays": "آج کی بات ہے"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "کیلنڈر بنائیں"
+  },
+  "fields": {
+    "timeZone": "ٹائم زون",
+    "timeRanges": "ورک ڈے شیڈول",
+    "weekday0": "سورج",
+    "weekday1": "پیر",
+    "weekday2": "منگل",
+    "weekday3": "بدھ",
+    "weekday4": "thu",
+    "weekday5": "جمعہ",
+    "weekday6": "بیٹھا",
+    "weekday0TimeRanges": "سورج کا شیڈول",
+    "weekday1TimeRanges": "پیر کا شیڈول",
+    "weekday2TimeRanges": "منگل کا شیڈول",
+    "weekday3TimeRanges": "بدھ کا شیڈول",
+    "weekday4TimeRanges": "Thu شیڈول",
+    "weekday5TimeRanges": "جمعہ کا شیڈول",
+    "weekday6TimeRanges": "SAT شیڈول"
+  },
+  "links": {
+    "ranges": "مستثنیات"
+  }
+}

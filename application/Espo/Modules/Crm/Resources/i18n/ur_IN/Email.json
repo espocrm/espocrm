@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create Lead": "لیڈ بنائیں",
+    "Create Contact": "رابطہ بنائیں",
+    "Create Task": "کام بنائیں",
+    "Create Case": "کیس بنائیں",
+    "Add to Contact": "رابطے میں شامل کریں",
+    "Add to Lead": "لیڈ میں شامل کریں"
+  },
+  "fields": {
+    "tasks": "کام"
+  }
+}

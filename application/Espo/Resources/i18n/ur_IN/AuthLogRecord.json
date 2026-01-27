@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "username": "صارف نام",
+    "ipAddress": "IP ایڈریس",
+    "requestTime": "وقت کی درخواست کریں",
+    "createdAt": "درخواست کی",
+    "isDenied": "انکار کردیا گیا ہے",
+    "denialReason": "انکار کی وجہ",
+    "portal": "پورٹل",
+    "user": "صارف",
+    "authToken": "Auth ٹوکن نے تخلیق کیا",
+    "requestUrl": "یو آر ایل کی درخواست کریں",
+    "requestMethod": "درخواست کا طریقہ",
+    "authTokenIsActive": "Auth ٹوکن متحرک ہے",
+    "authenticationMethod": "توثیق کا طریقہ"
+  },
+  "links": {
+    "authToken": "Auth ٹوکن نے تخلیق کیا",
+    "user": "صارف",
+    "portal": "پورٹل",
+    "actionHistoryRecords": "ایکشن کی تاریخ"
+  },
+  "presetFilters": {
+    "denied": "انکار",
+    "accepted": "قبول"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "غلط اسناد",
+      "INACTIVE_USER": "غیر فعال صارف",
+      "IS_PORTAL_USER": "پورٹل صارف",
+      "IS_NOT_PORTAL_USER": "پورٹل صارف نہیں",
+      "USER_IS_NOT_IN_PORTAL": "صارف کا پورٹل سے متعلق نہیں ہے",
+      "IS_SYSTEM_USER": "سسٹم صارف ہے",
+      "FORBIDDEN": "حرام",
+      "WRONG_CODE": "غلط کوڈ"
+    }
+  }
+}

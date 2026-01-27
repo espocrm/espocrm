@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "event": "واقعہ",
+    "webhook": "ویب ہک",
+    "target": "ہدف",
+    "data": "ڈیٹا",
+    "status": "حیثیت",
+    "processedAt": "عمل میں",
+    "attempts": "کوششیں",
+    "processAt": "عمل پر عمل"
+  },
+  "links": {
+    "webhook": "ویب ہک"
+  },
+  "options": {
+    "status": {
+      "Pending": "باقی",
+      "Success": "مکمل",
+      "Failed": "ناکام"
+    }
+  }
+}

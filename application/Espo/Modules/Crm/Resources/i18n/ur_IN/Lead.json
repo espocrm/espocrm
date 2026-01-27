@@ -1,0 +1,71 @@
+{
+  "labels": {
+    "Converted To": "میں تبدیل",
+    "Create Lead": "لیڈ بنائیں",
+    "Convert": "تبدیل",
+    "convert": "تبدیل"
+  },
+  "fields": {
+    "name": "نام",
+    "emailAddress": "ای میل",
+    "title": "عنوان",
+    "website": "ویب سائٹ",
+    "phoneNumber": "فون",
+    "accountName": "اکاؤنٹ کا نام",
+    "doNotCall": "کال نہ کریں",
+    "address": "پتہ",
+    "status": "حیثیت",
+    "source": "ماخذ",
+    "opportunityAmount": "مواقع کی رقم",
+    "opportunityAmountConverted": "مواقع کی رقم (تبدیل)",
+    "description": "تفصیل",
+    "createdAccount": "اکاؤنٹ",
+    "createdContact": "رابطہ کریں",
+    "createdOpportunity": "موقع",
+    "campaign": "مہم",
+    "targetLists": "ہدف کی فہرستیں",
+    "targetList": "ہدف کی فہرست",
+    "industry": "صنعت",
+    "acceptanceStatus": "قبولیت کی حیثیت",
+    "opportunityAmountCurrency": "مواقع کی رقم کی کرنسی",
+    "acceptanceStatusMeetings": "قبولیت کی حیثیت (ملاقاتیں)",
+    "acceptanceStatusCalls": "قبولیت کی حیثیت (کالز)",
+    "convertedAt": "میں تبدیل",
+    "originalEmail": "اصل ای میل"
+  },
+  "links": {
+    "targetLists": "ہدف کی فہرستیں",
+    "campaignLogRecords": "مہم لاگ",
+    "campaign": "مہم",
+    "createdAccount": "اکاؤنٹ",
+    "createdContact": "رابطہ کریں",
+    "createdOpportunity": "موقع",
+    "cases": "معاملات",
+    "documents": "دستاویزات"
+  },
+  "options": {
+    "status": {
+      "New": "نیا",
+      "Assigned": "تفویض کیا گیا",
+      "In Process": "عمل میں",
+      "Converted": "تبدیل",
+      "Recycled": "ری سائیکلڈ",
+      "Dead": "مردہ"
+    },
+    "source": {
+      "Call": "کال کریں",
+      "Email": "ای میل",
+      "Existing Customer": "موجودہ گاہک",
+      "Partner": "ساتھی",
+      "Public Relations": "عوامی تعلقات",
+      "Web Site": "ویب سائٹ",
+      "Campaign": "مہم",
+      "Other": "دیگر"
+    }
+  },
+  "presetFilters": {
+    "active": "متحرک",
+    "converted": "تبدیل",
+    "actual": "کھلا"
+  }
+}

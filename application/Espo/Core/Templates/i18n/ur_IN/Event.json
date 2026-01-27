@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "والدین",
+    "dateStart": "تاریخ شروع",
+    "dateEnd": "تاریخ اختتام",
+    "duration": "دورانیہ",
+    "status": "حیثیت",
+    "reminders": "یاد دہانی",
+    "dateStartDate": "تاریخ شروع (سارا دن)",
+    "dateEndDate": "تاریخ اختتام (سارا دن)",
+    "isAllDay": "سارا دن ہے"
+  },
+  "links": {
+    "parent": "والدین"
+  },
+  "options": {
+    "status": {
+      "Planned": "منصوبہ بند",
+      "Held": "منعقد",
+      "Not Held": "نہیں رکھا گیا"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "{entityTypetranslated} بنائیں",
+    "Schedule {entityType}": "شیڈول {entityTepetranslated}",
+    "Log {entityType}": "لاگ {entityTyPetranslated}",
+    "Set Held": "سیٹ کیا گیا",
+    "Set Not Held": "سیٹ نہیں ہوا"
+  },
+  "massActions": {
+    "setHeld": "سیٹ کیا گیا",
+    "setNotHeld": "سیٹ نہیں ہوا"
+  },
+  "presetFilters": {
+    "planned": "منصوبہ بند",
+    "held": "منعقد",
+    "todays": "آج کی بات ہے"
+  }
+}

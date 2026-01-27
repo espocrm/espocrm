@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "زمرہ بنائیں",
+    "Manage Categories": "زمرے کا نظم کریں",
+    "EmailTemplates": "ای میل ٹیمپلیٹس"
+  },
+  "fields": {
+    "order": "آرڈر",
+    "childList": "بچوں کی فہرست"
+  },
+  "links": {
+    "emailTemplates": "ای میل ٹیمپلیٹس"
+  }
+}

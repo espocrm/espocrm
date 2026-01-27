@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "ہدف کی فہرستیں"
+  },
+  "fields": {
+    "acceptanceStatus": "قبولیت کی حیثیت",
+    "acceptanceStatusMeetings": "قبولیت کی حیثیت (ملاقاتیں)",
+    "acceptanceStatusCalls": "قبولیت کی حیثیت (کالز)"
+  }
+}

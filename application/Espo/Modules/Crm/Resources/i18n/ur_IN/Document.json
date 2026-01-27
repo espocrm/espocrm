@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create Document": "دستاویز بنائیں",
+    "Details": "تفصیلات"
+  },
+  "fields": {
+    "name": "نام",
+    "status": "حیثیت",
+    "file": "فائل",
+    "type": "قسم",
+    "publishDate": "تاریخ شائع کریں",
+    "expirationDate": "میعاد ختم ہونے کی تاریخ",
+    "description": "تفصیل",
+    "accounts": "اکاؤنٹس",
+    "folder": "فولڈر"
+  },
+  "links": {
+    "accounts": "اکاؤنٹس",
+    "opportunities": "مواقع",
+    "folder": "فولڈر",
+    "leads": "لیڈز",
+    "contacts": "رابطے"
+  },
+  "options": {
+    "status": {
+      "Active": "متحرک",
+      "Draft": "مسودہ",
+      "Expired": "میعاد ختم",
+      "Canceled": "منسوخ"
+    },
+    "type": {
+      "": "کوئی نہیں",
+      "Contract": "معاہدہ",
+      "NDA": "این ڈی اے",
+      "EULA": "eula",
+      "License Agreement": "لائسنس کا معاہدہ"
+    }
+  },
+  "presetFilters": {
+    "active": "متحرک",
+    "draft": "مسودہ"
+  }
+}

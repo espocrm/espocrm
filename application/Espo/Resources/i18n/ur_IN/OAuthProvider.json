@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "OAuth فراہم کنندہ بنائیں"
+  },
+  "fields": {
+    "isActive": "فعال ہے",
+    "clientId": "کلائنٹ ID",
+    "clientSecret": "کلائنٹ کا خفیہ",
+    "authorizationEndpoint": "اجازت اختتامی نقطہ",
+    "tokenEndpoint": "ٹوکن اینڈ پوائنٹ",
+    "authorizationRedirectUri": "اجازت نامہ URI کو ری ڈائریکٹ کریں",
+    "scopes": "اسکوپس",
+    "scopeSeparator": "دائرہ کار جداکار",
+    "hasAccessToken": "رسائی ٹوکن ہے",
+    "authorizationPrompt": "اجازت کا اشارہ",
+    "authorizationParams": "اجازت پیرام"
+  },
+  "links": {
+    "accounts": "اکاؤنٹس"
+  },
+  "tooltips": {
+    "authorizationParams": "اضافی استفسار پیرامیٹرز کو اجازت کے اختتامی نقطہ پر بھیجا جائے۔ JSON فارمیٹ میں بیان کیا گیا ہے۔"
+  }
+}

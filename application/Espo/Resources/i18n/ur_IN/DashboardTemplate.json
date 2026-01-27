@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "لے آؤٹ",
+    "append": "ضمیمہ (صارف کے ٹیبز کو نہ ہٹائیں)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "ٹیمپلیٹ بنائیں",
+    "Deploy to Users": "صارفین کو تعینات کریں",
+    "Deploy to Team": "ٹیم میں تعینات کریں"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "links": {
+    "users": "صارفین"
+  },
+  "labels": {
+    "Access": "رسائی",
+    "Create PortalRole": "پورٹل کا کردار بنائیں",
+    "Scope Level": "رسائی کی سطح",
+    "Field Level": "فیلڈ لیول"
+  },
+  "fields": {
+    "exportPermission": "برآمد کی اجازت",
+    "massUpdatePermission": "بڑے پیمانے پر تازہ کاری کی اجازت",
+    "data": "ڈیٹا",
+    "fieldData": "فیلڈ ڈیٹا"
+  }
+}

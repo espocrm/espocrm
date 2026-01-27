@@ -1,0 +1,90 @@
+{
+  "fields": {
+    "name": "نام",
+    "description": "تفصیل",
+    "status": "حیثیت",
+    "type": "قسم",
+    "startDate": "شروع کی تاریخ",
+    "endDate": "آخری تاریخ",
+    "targetLists": "ہدف کی فہرستیں",
+    "excludingTargetLists": "ہدف کی فہرستوں کو چھوڑ کر",
+    "sentCount": "بھیج دیا گیا",
+    "openedCount": "کھلا",
+    "clickedCount": "کلک کیا",
+    "optedOutCount": "آپ کا انتخاب کیا",
+    "bouncedCount": "باؤنس",
+    "hardBouncedCount": "سخت اچھال",
+    "softBouncedCount": "نرم باؤنس",
+    "leadCreatedCount": "لیڈز بنائے گئے",
+    "revenue": "محصول",
+    "revenueConverted": "محصول (تبدیل)",
+    "budget": "بجٹ",
+    "budgetConverted": "بجٹ (تبدیل)",
+    "contactsTemplate": "رابطے ٹیمپلیٹ",
+    "leadsTemplate": "ٹیمپلیٹ لیڈ کرتا ہے",
+    "accountsTemplate": "اکاؤنٹس ٹیمپلیٹ",
+    "usersTemplate": "صارفین ٹیمپلیٹ",
+    "mailMergeOnlyWithAddress": "ریکارڈ W/O بھرے ہوئے ایڈریس کو چھوڑیں",
+    "optedInCount": "انتخاب کیا",
+    "budgetCurrency": "بجٹ کرنسی"
+  },
+  "links": {
+    "targetLists": "ہدف کی فہرستیں",
+    "excludingTargetLists": "ہدف کی فہرستوں کو چھوڑ کر",
+    "accounts": "اکاؤنٹس",
+    "contacts": "رابطے",
+    "leads": "لیڈز",
+    "opportunities": "مواقع",
+    "campaignLogRecords": "لاگ",
+    "massEmails": "بڑے پیمانے پر ای میلز",
+    "trackingUrls": "URL سے باخبر رہنا",
+    "contactsTemplate": "رابطے ٹیمپلیٹ",
+    "leadsTemplate": "ٹیمپلیٹ لیڈ کرتا ہے",
+    "accountsTemplate": "اکاؤنٹس ٹیمپلیٹ",
+    "usersTemplate": "صارفین ٹیمپلیٹ"
+  },
+  "options": {
+    "type": {
+      "Email": "ای میل",
+      "Web": "ویب",
+      "Television": "ٹیلی ویژن",
+      "Radio": "ریڈیو",
+      "Newsletter": "نیوز لیٹر",
+      "Mail": "میل",
+      "Informational Email": "معلوماتی ای میل"
+    },
+    "status": {
+      "Planning": "منصوبہ بندی",
+      "Active": "متحرک",
+      "Inactive": "غیر فعال",
+      "Complete": "مکمل"
+    }
+  },
+  "labels": {
+    "Create Campaign": "مہم بنائیں",
+    "Target Lists": "ہدف لسٹ",
+    "Statistics": "اعداد و شمار",
+    "hard": "مشکل",
+    "soft": "نرم",
+    "Unsubscribe": "انسبسکرائب",
+    "Mass Emails": "مجموعی ای میلز",
+    "Email Templates": "ای میل ٹیمپلیٹس",
+    "Unsubscribe again": "ایک بار پھر سبسکرائب کریں",
+    "Subscribe again": "ایک بار پھر سبسکرائب کریں",
+    "Create Target List": "ہدف کی فہرست بنائیں",
+    "Mail Merge": "میل جوڑیں",
+    "Generate Mail Merge PDF": "میل کو پی ڈی ایف میں جوڑیں"
+  },
+  "presetFilters": {
+    "active": "متحرک"
+  },
+  "messages": {
+    "unsubscribed": "آپ کو ہماری میلنگ لسٹ سے سبسکرائب کیا گیا ہے۔",
+    "subscribedAgain": "آپ کو دوبارہ سبسکرائب کیا گیا ہے۔",
+    "cannotChangeType": "قسم تبدیل نہیں کرسکتے ہیں۔"
+  },
+  "tooltips": {
+    "targetLists": "اہداف جو پیغامات وصول کرنا چاہ .۔",
+    "excludingTargetLists": "اہداف جو پیغامات وصول نہیں کرنا چاہئے۔"
+  }
+}

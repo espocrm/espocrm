@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create Webhook": "ویب ہک بنائیں"
+  },
+  "fields": {
+    "event": "واقعہ",
+    "url": "url",
+    "isActive": "فعال ہے",
+    "user": "API صارف",
+    "entityType": "ہستی کی قسم",
+    "field": "فیلڈ",
+    "secretKey": "خفیہ کلید",
+    "skipOwn": "خود کو چھوڑیں"
+  },
+  "links": {
+    "user": "صارف",
+    "queueItems": "قطار آئٹمز"
+  },
+  "tooltips": {
+    "skipOwn": "اگر ایونٹ کا آغاز صارف نے ویب ہک کے مالک کے ذریعہ کیا تھا تو مت بھیجیں۔"
+  }
+}
