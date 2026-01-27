@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "action": "Ενέργεια",
+    "actionDate": "Ημερομηνία",
+    "data": "Δεδομενα",
+    "campaign": "Καμπάνια",
+    "parent": "Στόχος",
+    "object": "Αντικείμενο",
+    "application": "Εφαρμογή",
+    "queueItem": "Στοιχείο Ουράς",
+    "stringData": "Δεδομένα Κειμένου",
+    "stringAdditionalData": "Επιπλέον Δεδομένα Κειμένου",
+    "isTest": "Είναι Δοκιμαστικό"
+  },
+  "links": {
+    "queueItem": "Στοιχείο Ουράς",
+    "parent": "Γονικό",
+    "object": "Αντικείμενο",
+    "campaign": "Καμπάνια"
+  },
+  "options": {
+    "action": {
+      "Sent": "Αποστολή",
+      "Opened": "Ανοίχθηκαν",
+      "Opted Out": "Απεγγραφή",
+      "Bounced": "Απεγγραφή",
+      "Clicked": "Έγινε κλικ",
+      "Lead Created": "Δημιουργήθηκε Δυνητικός Πελάτης"
+    }
+  },
+  "labels": {
+    "All": "Όλα"
+  },
+  "presetFilters": {
+    "sent": "Απεσταλμένα",
+    "opened": "Ανοιγμένα",
+    "optedOut": "Απεγγραφές",
+    "bounced": "Δεν παραδόθηκαν",
+    "clicked": "Έγινε κλικ",
+    "leadCreated": "Δημιουργήθηκε Δυνητικός Πελάτης"
+  }
+}

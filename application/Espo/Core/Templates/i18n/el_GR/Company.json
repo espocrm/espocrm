@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "Διεύθυνση Τιμολόγησης",
+    "shippingAddress": "Διεύθυνση Αποστολής",
+    "website": "Ιστοσελίδα"
+  },
+  "links": {
+    "meetings": "Συναντήσεις",
+    "calls": "Κλήσεις",
+    "tasks": "Εργασίες"
+  },
+  "labels": {
+    "Create {entityType}": "Δημιουργία {entityTypeTranslated}"
+  }
+}

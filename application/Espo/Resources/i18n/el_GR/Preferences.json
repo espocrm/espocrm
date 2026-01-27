@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "dateFormat": "Μορφή Ημερομηνίας",
+    "timeFormat": "Μορφή Ώρας",
+    "timeZone": "Ζώνη Ώρας",
+    "weekStart": "Πρώτη Ημέρα της Εβδομάδας",
+    "thousandSeparator": "Διαχωριστής Χιλιάδων",
+    "decimalMark": "Σύμβολο Δεκαδικών",
+    "defaultCurrency": "Προκαθορισμένο Νόμισμα",
+    "currencyList": "Λίστα νομισμάτων",
+    "language": "Γλώσσα",
+    "exportDelimiter": "Εξαγωγέας εξαγωγής",
+    "signature": "Υπογραφή email",
+    "dashboardTabList": "Λίστα επιλογών",
+    "tabList": "Λίστα επιλογών",
+    "defaultReminders": "Προκαθορισμένοι υπενθυμιτές",
+    "theme": "Θέμα",
+    "useCustomTabList": "Λίστα προσαρμοσμένων καρτελών",
+    "receiveAssignmentEmailNotifications": "Ειδοποιήσεις με email κατα την ανάθεση ",
+    "receiveMentionEmailNotifications": "Ειδοποιήσεις email για αναφορές σε δημοσιεύσεις",
+    "receiveStreamEmailNotifications": "Ειδοποιήσεις email για δημοσιεύσεις και ενημερώσεις κατάστασης",
+    "dashboardLayout": "Μορφή Πίνακα ελέγχου",
+    "emailReplyForceHtml": "Απάντηση Email σε HTML",
+    "autoFollowEntityTypeList": "Καθολική Αυτόματη Παρακολούθηση",
+    "emailReplyToAllByDefault": "Προεπιλεγμένη Απάντηση σε Όλους",
+    "doNotFillAssignedUserIfNotRequired": "Να μην προ-συμπληρώνεται ο ανατεθειμένος χρήστης κατά τη δημιουργία εγγραφής ",
+    "followEntityOnStreamPost": "Αυτόματη παρακολούθηση εγγραφής μετά από δημοσίευση στο Stream",
+    "followCreatedEntities": "Αυτόματη παρακολούθηση δημιουργημένων εγγραφών",
+    "followCreatedEntityTypeList": "Αυτόματη παρακολούθηση δημιουργημένων εγγραφών συγκεκριμένων τύπων οντοτήτων",
+    "emailUseExternalClient": "Χρήση εξωτερικού προγράμματος email",
+    "dashboardLocked": "Κλείδωμα Πίνακα ελέγχου",
+    "calendarSlotDuration": "Προεπιλεγμένη διάρκεια γεγονότος στο ημερολόγιο"
+  },
+  "options": {
+    "weekStart": {
+      "0": "Κυριακή",
+      "1": "Δευτέρα"
+    }
+  },
+  "labels": {
+    "Notifications": "Ειδοποιήσεις",
+    "User Interface": "Διεπαφή Χρήστη",
+    "Misc": "Διάφορα",
+    "Locale": "Τοποθεσία"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "Αυτόματη παρακολούθηση ΟΛΩΝ των νέων εγγραφών (που δημιουργούνται από οποιονδήποτε χρήστη) για τους επιλεγμένους τύπους οντοτήτων.  \nΈτσι μπορείτε να βλέπετε πληροφορίες στο stream και να λαμβάνετε ειδοποιήσεις για όλες τις εγγραφές στο σύστημα."
+  },
+  "tabFields": {
+    "label": "Ετικέτα",
+    "iconClass": "Εικονίδιο",
+    "color": "Χρώμα"
+  }
+}

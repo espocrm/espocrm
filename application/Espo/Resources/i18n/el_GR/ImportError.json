@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "validationFailures": "Σφάλματα επαλήθευσης",
+    "entityType": "Τύπος Οντότητας"
+  },
+  "options": {
+    "type": {
+      "Validation": "Επικύρωση",
+      "Access": "Πρόσβαση",
+      "Not-Found": "Δεν-Βρεθηκε"
+    }
+  }
+}

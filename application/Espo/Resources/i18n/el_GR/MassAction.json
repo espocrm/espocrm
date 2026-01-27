@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "status": "Κατάσταση"
+  },
+  "options": {
+    "status": {
+      "Pending": "Εκκρεμεί",
+      "Success": "Επιτυχία",
+      "Failed": "Απέτυχε"
+    }
+  }
+}

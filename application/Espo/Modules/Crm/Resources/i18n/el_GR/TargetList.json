@@ -1,0 +1,40 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "description": "Περιγραφή",
+    "entryCount": "Αριθμός Εγγραφών",
+    "campaigns": "Καμπάνιες",
+    "endDate": "Ημερομηνία Λήξης",
+    "targetLists": "Λίστες στόχου",
+    "includingActionList": "Συμπεριλαμβάνοντας",
+    "excludingActionList": "Εξαιρώντας",
+    "optedOutCount": "Πλήθος Εξαιρέσεων",
+    "targetStatus": "Κατάσταση Στόχου",
+    "isOptedOut": "Είναι σε Εξαίρεση"
+  },
+  "links": {
+    "accounts": "Εταιρίες",
+    "contacts": "Επαφές",
+    "leads": "Δυνητικοί Πελάτες",
+    "campaigns": "Καμπάνιες",
+    "massEmails": "Μαζικά Emails"
+  },
+  "options": {
+    "type": {
+      "Web": "Διαδίκτυο",
+      "Television": "Τηλεόραση",
+      "Radio": "Ραδιόφωνο",
+      "Newsletter": "Λίστα Newsletter"
+    },
+    "targetStatus": {
+      "Opted Out": "Σε Εξαίρεση",
+      "Listed": "Καταχωρημένο"
+    }
+  },
+  "labels": {
+    "Create TargetList": "Δημιουργία λίστας στόχων",
+    "Opted Out": "Απεγγραφές",
+    "Cancel Opt-Out": "Ακύρωση απεγγραφής",
+    "Opt-Out": "Απεγγραφή"
+  }
+}

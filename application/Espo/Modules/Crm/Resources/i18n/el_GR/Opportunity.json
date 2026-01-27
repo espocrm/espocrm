@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "account": "Εταιρία",
+    "stage": "Στάδιο",
+    "amount": "Ποσό",
+    "probability": "Πιθανότητα, %",
+    "leadSource": "Πηγή Υποψηφίου",
+    "doNotCall": "Μην Καλέσετε",
+    "closeDate": "Ημερομηνία Κλεισίματος",
+    "contacts": "Επαφές",
+    "description": "Περιγραφή",
+    "amountConverted": "Ποσό (με μετατροπή)",
+    "amountWeightedConverted": "Ποσό κάτω αναλογία",
+    "campaign": "Καμπάνια",
+    "originalLead": "Αρχικος δυνητικός Πελάτης",
+    "amountCurrency": "Νόμισμα Ποσού",
+    "contactRole": "Ρόλος Επαφής",
+    "lastStage": "Τελευταίο Στάδιο",
+    "contact": "Επαφή (Κύρια)"
+  },
+  "links": {
+    "contacts": "Επαφές",
+    "documents": "Αρχεία",
+    "campaign": "Καμπάνια",
+    "originalLead": "Αρχικος δυνητικός Πελάτης",
+    "contact": "Επαφή (Κύρια)"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "Διερεύνηση",
+      "Qualification": "Ποιοτική Αξιολόγηση",
+      "Needs Analysis": "Ανάλυση Αναγκών",
+      "Value Proposition": "Προσφορά Αξίας",
+      "Id. Decision Makers": "Αναγνώριση Υπεύθυνων Αποφάσεων",
+      "Perception Analysis": "Ανάλυση Αντίληψης",
+      "Proposal/Price Quote": "Πρόταση/Προσφορά Τιμής",
+      "Negotiation/Review": "Διαπραγμάτευση/Αναθεώρηση",
+      "Closed Won": "Έκλεισε Επιτυχώς",
+      "Closed Lost": "Έκλεισε ανεπιτυχώς",
+      "Proposal": "Πρόταση",
+      "Negotiation": "Διαπραγμάτευση"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "Δημιουργία Ευκαιρίας Πώλησης"
+  },
+  "presetFilters": {
+    "open": "Ενεργές",
+    "won": "Κερδισμένες",
+    "lost": "Χαμένες"
+  }
+}

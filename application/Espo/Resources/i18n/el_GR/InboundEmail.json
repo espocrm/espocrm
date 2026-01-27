@@ -1,0 +1,77 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "emailAddress": "Ηλεκτρονική διεύθυνση",
+    "status": "Κατάσταση",
+    "assignToUser": "Αναθέστε στον χρήστη",
+    "host": "Πλήθος",
+    "username": "Όνομα Χρήστη",
+    "password": "Κωδικός πρόσβασης",
+    "port": "Θύρα",
+    "monitoredFolders": "Παρακολουθούμενοι Φάκελοι",
+    "trashFolder": "Κάδος Απορριμάτων",
+    "createCase": "Δημιουργία Υπόθεσης",
+    "reply": "Αυτό-Απάντηση",
+    "caseDistribution": "Διανομή Υπόθεσης",
+    "replyEmailTemplate": "Πρότυπο Απαντητικού Email",
+    "replyFromAddress": "Απάντηση Από Διεύθυνση",
+    "replyToAddress": "Απάντηση Σε Διεύθυνση",
+    "replyFromName": "Απάντησης Από Όνομα",
+    "targetUserPosition": "Στόχος Θέσης Χρήστη",
+    "fetchSince": "Ανάκτηση από τότε",
+    "addAllTeamUsers": "Για όλους τους χρήστες ομάδας",
+    "team": "Για την Ομάδα",
+    "teams": "Ομάδες",
+    "sentFolder": "Φάκελος απεσταλμένων",
+    "storeSentEmails": "Αποθήκευση Απεσταλμένων Email",
+    "useSmtp": "Χρήση SMTP",
+    "smtpHost": "Εξυπηρετητής SMTP",
+    "smtpPort": "Θύρα SMTP",
+    "smtpAuth": "Πιστοποίηση SMTP",
+    "smtpSecurity": "Ασφάλεια SMTP",
+    "smtpUsername": "Όνομα χρήστη SMTP",
+    "smtpPassword": "Κωδικός SMTP",
+    "fromName": "Όνομα Αποστολέα",
+    "smtpIsShared": "Το SMTP είναι Κοινόχρηστο",
+    "smtpIsForMassEmail": "Το SMTP είναι για Μαζικά Email",
+    "groupEmailFolder": "Φάκελος ομαδικών Email",
+    "isSystem": "Είναι συστήματος"
+  },
+  "tooltips": {
+    "reply": "Ενημερώστε τους αποστολείς email ότι τα email τους παραλήφθηκαν.\n\nΜόνο ένα email θα αποσταλεί σε έναν συγκεκριμένο παραλήπτη κατά τη διάρκεια μιας περιόδου προς αποφυγή επαναλήψεων.",
+    "caseDistribution": "Πως αναθέτονται οι υποθέσεις. Άμεση ανάθεση στο χρήστη ή στην ομάδα.",
+    "assignToUser": "Ο χρήστης στον οποίο θα ανατεθούν οι Υποθέσεις",
+    "team": "Η ομάδα στην οποία θα ανατεθούν οι Υποθέσεις. ",
+    "teams": "Οι ομάδες στις οποίες θα ανατεθούν τα email.",
+    "addAllTeamUsers": "Τα email θα εμφανιστούν στα εισερχόμενα όλων των χρηστών της επιλεγμανης ομάδας.",
+    "targetUserPosition": "Χρήστες με καθορισμένη θέση θα διανεμηθούν με υποθέσεις.",
+    "monitoredFolders": "Οι πολλαπλοί φάκελοι πρέπει να χωρίζονται με κόμμα",
+    "storeSentEmails": "Τα απεσταλμένα email θα αποθηκεύονται στον IMAP server.",
+    "isSystem": "Είναι το email του συστήματος"
+  },
+  "links": {
+    "filters": "Φίλτρα",
+    "assignToUser": "Ανάθεση σε χρήστη",
+    "groupEmailFolder": "Φάκελος ομαδικών Email"
+  },
+  "options": {
+    "status": {
+      "Active": "Ενεργός ",
+      "Inactive": "Ανενεργός"
+    },
+    "caseDistribution": {
+      "": "Τίποτα",
+      "Direct-Assignment": "Άμεση ανάθεση",
+      "Round-Robin": "Round-Robin\n",
+      "Least-Busy": "Λιγότερο απασχολημένος"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "Δημιουργία λογαριασμού ηλεκτρονικού ταχυδρομείου",
+    "Actions": "Δράσεις",
+    "Main": "Κύριος"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Δεν ήταν δυνατή η σύνδεση με διακομιστή IMAP"
+  }
+}

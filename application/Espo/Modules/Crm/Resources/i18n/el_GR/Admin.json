@@ -1,0 +1,12 @@
+{
+  "layouts": {
+    "detailConvert": "Μετατροπή του lead",
+    "listForAccount": "Λίστα (για τις Εταιρίες)",
+    "listForContact": "Λίστα (για Επαφή)"
+  },
+  "templates": {
+    "invitation": "Πρόσκληση",
+    "reminder": "Υπενθύμιση",
+    "cancellation": "Ακύρωση"
+  }
+}

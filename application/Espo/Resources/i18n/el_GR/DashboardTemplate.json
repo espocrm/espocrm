@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "Διάταξη",
+    "append": "Προσθήκη (Δεν αφαιρεί τις υπάρχουσες καρτέλες)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Δημιουργία προτύπου",
+    "Deploy to Users": "Ανάπτυξη σε χρήστες",
+    "Deploy to Team": "Ανάπτυξη σε ομάδα"
+  }
+}

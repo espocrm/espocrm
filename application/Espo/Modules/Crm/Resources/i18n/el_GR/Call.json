@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "parent": "Γονείς",
+    "status": "Κατηγορία",
+    "dateStart": "Ημερομηνία Έναρξης",
+    "dateEnd": "Ημερομηνία λήξης",
+    "direction": "Κατεύθυνση",
+    "duration": "Διάρκεια",
+    "description": "Περιγραφή",
+    "users": "Χρήστες",
+    "contacts": "Επαφές",
+    "leads": "Ευκαιρίες",
+    "reminders": "Υπενθύμιση",
+    "account": "Λογαριασμός",
+    "acceptanceStatus": "Κατάσταση αποδοχής"
+  },
+  "options": {
+    "status": {
+      "Planned": "Σχεδιασμένο",
+      "Held": "Πραγματοποιήθηκε",
+      "Not Held": "Δεν κρατείται"
+    },
+    "direction": {
+      "Outbound": "Εξερχόμενη",
+      "Inbound": "Εισερχόμενος"
+    },
+    "acceptanceStatus": {
+      "None": "Κανένα",
+      "Accepted": "Αποδεκτός",
+      "Declined": "Απορρίφθηκε",
+      "Tentative": "Υπό συζήτηση"
+    }
+  },
+  "massActions": {
+    "setHeld": "Ορισμός Ως Πραγματοποιημένο",
+    "setNotHeld": "Ορισμός Ως Μη Πραγματοποιημένο"
+  },
+  "labels": {
+    "Create Call": "Δημιουργία Κλήσης",
+    "Set Held": "Ορισμός Ως Πραγματοποιημένο",
+    "Set Not Held": "Ορισμός Ως Μη Πραγματοποιημένο",
+    "Send Invitations": "Αποστολή Προσκλήσεων"
+  },
+  "presetFilters": {
+    "planned": "Προγραμματισμένο",
+    "held": "Πραγματοποιημένο",
+    "todays": "Της Ημέρας"
+  }
+}

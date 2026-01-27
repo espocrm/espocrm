@@ -1,0 +1,8 @@
+{
+  "options": {
+    "job": {
+      "ProcessMassEmail": "Αποστολή μαζικών email",
+      "ControlKnowledgeBaseArticleStatus": "Έλεγχος Κατάστασης Άρθρου Βάσης Γνώσεων"
+    }
+  }
+}

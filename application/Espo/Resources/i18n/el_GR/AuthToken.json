@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "Χρήστης ",
+    "ipAddress": "Διεύθυνση IP",
+    "lastAccess": "Τελευταία ημερομηνία πρόσβασης",
+    "createdAt": "Ημερομηνία σύνδεσης",
+    "isActive": "Είναι Ενεργό",
+    "portal": "Πύλη"
+  },
+  "links": {
+    "actionHistoryRecords": "Ιστορικό Ενεργειών"
+  },
+  "presetFilters": {
+    "active": "Ενεργά",
+    "inactive": "Ανενεργά"
+  },
+  "labels": {
+    "Set Inactive": "Ορισμός ως Ανενεργό"
+  },
+  "massActions": {
+    "setInactive": "Ορισμός ως Ανενεργό"
+  }
+}

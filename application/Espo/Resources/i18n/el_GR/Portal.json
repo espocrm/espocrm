@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "logo": "Λογότυπο",
+    "companyLogo": "Λογότυπο",
+    "portalRoles": "Ρόλοι",
+    "isActive": "Είναι ενεργός",
+    "isDefault": "Προκαθορισμένο",
+    "tabList": "Λίστα επιλογών",
+    "quickCreateList": "Γρήγορη δημιουργία λίστας",
+    "theme": "Θέμα",
+    "language": "Γλώσσα",
+    "dashboardLayout": "Πρότυπο ταμπλό",
+    "dateFormat": "Μορφή ημερομηνίας",
+    "timeFormat": "Μορφή ώρας",
+    "timeZone": "Ζώνη ώρας",
+    "weekStart": "Πρώτη ημέρα της εβδομάδας",
+    "defaultCurrency": "Προκαθορισμένο νόμισμα",
+    "customUrl": "Προσαρμοσμένο URL",
+    "customId": "Προσαρμοσμένο ID",
+    "authenticationProvider": "Πάροχος Πιστοποίησης"
+  },
+  "links": {
+    "users": "Χρήστες",
+    "portalRoles": "Ρόλοι",
+    "notes": "Σημειώσεις",
+    "authenticationProvider": "Πάροχος Πιστοποίησης"
+  },
+  "tooltips": {
+    "portalRoles": "Οι καθορισμένοι ρόλοι πύλης θα εφαρμοστούν σε όλους τους χρήστες αυτής της πύλης."
+  },
+  "labels": {
+    "Create Portal": "Δημιουργία Πύλης",
+    "User Interface": "Διεπαφή Χρήστη",
+    "General": "Γενικά",
+    "Settings": "Ρυθμίσεις"
+  }
+}

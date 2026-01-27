@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Calendars": "Ημερολόγια",
+    "Create WorkingTimeRange": "Δημιουργία Εξαίρεσης"
+  },
+  "fields": {
+    "timeRanges": "Πρόγραμμα",
+    "dateStart": "Ημερομηνία έναρξης",
+    "dateEnd": "Ημερομηνία Λήξης",
+    "type": "Τύπος",
+    "calendars": "Ημερολόγιο",
+    "users": "Χρήστες"
+  },
+  "links": {
+    "calendars": "Ημερολόγια",
+    "users": "Χρήστες"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Δεν Λειτουργεί",
+      "Working": "Λειτουργεί"
+    }
+  },
+  "presetFilters": {
+    "actual": "Πραγματικός"
+  }
+}

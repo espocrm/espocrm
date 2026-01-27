@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "skipNotifications": "Παράκαμψη ειδοποιήσεων"
+  },
+  "labels": {
+    "Create EmailFolder": "Δημιουργία Φακέλου",
+    "Manage Folders": "Διαχείρηση Φακέλων"
+  }
+}

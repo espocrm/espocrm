@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "Δημιουργία κατηγορίας",
+    "Manage Categories": "Διαχείριση κατηγοριών"
+  },
+  "fields": {
+    "order": "Παραγγελία",
+    "childList": "Υπολίστα"
+  }
+}

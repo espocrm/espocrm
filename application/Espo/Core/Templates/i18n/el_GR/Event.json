@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Γονικό",
+    "dateStart": "Ημερομηνία Έναρξης",
+    "dateEnd": "Ημερομηνία λήξης",
+    "duration": "Διάρκεια",
+    "status": "Κατάσταση",
+    "reminders": "Υπενθυμίσεις",
+    "dateStartDate": "Ημερομηνία Έναρξης (όλη την ημέρα)",
+    "dateEndDate": "Ημερομηνία λήξης (όλη την ημέρα)",
+    "isAllDay": "Όλη την ημέρα"
+  },
+  "links": {
+    "parent": "Γονικό"
+  },
+  "options": {
+    "status": {
+      "Planned": "Προγραμματισμένο",
+      "Held": "Έχει συμβεί",
+      "Not Held": "Δεν Πραγματοποιήθηκε"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "Δημιουργία {entityTypeTranslated}",
+    "Schedule {entityType}": "Προγραμματισμός {entityTypeTranslated}",
+    "Log {entityType}": "Αρχείο καταγραφής {entityTypeTranslated}",
+    "Set Held": "Ορισμός ως Πραγματοποιηθέν",
+    "Set Not Held": "Ορισμός ως Μη Πραγματοποιηθέν"
+  },
+  "massActions": {
+    "setHeld": "Ορισμός ως Μη Πραγματοποιηθέν",
+    "setNotHeld": "Ορισμός ως Μη Πραγματοποιηθέν"
+  },
+  "presetFilters": {
+    "planned": "Προγραμματισμένο",
+    "held": "Έχουν συμβεί",
+    "todays": "Σημερινά"
+  }
+}

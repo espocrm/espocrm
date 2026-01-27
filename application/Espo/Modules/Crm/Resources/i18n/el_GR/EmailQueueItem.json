@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "status": "Κατάσταση",
+    "target": "Στόχος",
+    "sentAt": "Ημερομηνία Αποστολής",
+    "attemptCount": "Προσπάθειες",
+    "emailAddress": "Διεύθυνση email",
+    "massEmail": "Μαζικά email",
+    "isTest": "είναι Τεστ"
+  },
+  "links": {
+    "target": "Στόχος",
+    "massEmail": "Μαζικά email"
+  },
+  "options": {
+    "status": {
+      "Pending": "Σε εκκρεμότητα",
+      "Sent": "Απεσταλμένο",
+      "Failed": "Αποτυχία",
+      "Sending": "Σε Αποστολή"
+    }
+  },
+  "presetFilters": {
+    "pending": "Influencer",
+    "sent": "Απεσταλμένα",
+    "failed": "Αποτυχία"
+  }
+}

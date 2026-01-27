@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create DocumentFolder": "Δημιουργία φακέλου αρχείων",
+    "Manage Categories": "Διαχείρηση φακέλων",
+    "Documents": "Έγγραφα"
+  },
+  "links": {
+    "documents": "Έγγραφα"
+  }
+}

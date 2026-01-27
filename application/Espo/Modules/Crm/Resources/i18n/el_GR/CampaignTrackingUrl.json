@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "urlToUse": "Κώδικας προς εισαγωγή αντί URL",
+    "campaign": "Καμπάνια"
+  },
+  "links": {
+    "campaign": "Καμπάνια"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Δημιουργία Tracking URL"
+  }
+}

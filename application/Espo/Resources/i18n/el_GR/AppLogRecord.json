@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "message": "Μήνυμα",
+    "level": "Επίπεδο",
+    "file": "Αρχείο",
+    "line": "Γραμμή"
+  },
+  "presetFilters": {
+    "errors": "Σφάλματα"
+  }
+}

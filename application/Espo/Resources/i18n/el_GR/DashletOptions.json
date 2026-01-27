@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "title": "Τίτλος",
+    "dateFrom": "Ημερομηνία από",
+    "dateTo": "Ημερομηνία μέχρι",
+    "autorefreshInterval": "Αυτόματο διάστημα ανανέωσης",
+    "displayRecords": "Εμφάνιση Εγγραφών",
+    "isDoubleHeight": "Ύψος 2x",
+    "mode": "Τρόπος",
+    "enabledScopeList": "Τι να εμφανιστεί",
+    "users": "Χρήστες",
+    "entityType": "Τύπος Οντότητας",
+    "primaryFilter": "Κύριο Φίλτρο",
+    "boolFilterList": "Επιπλέον Φίλτρα",
+    "expandedLayout": "Διάταξη",
+    "dateFilter": "Φίλτρο ημερομηνίας",
+    "text": "Κείμενο",
+    "folder": "Φάκελος"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "Εβδομάδα (ημερήσια διάταξη)",
+      "basicWeek": "Εβδομάδα",
+      "month": "Μήνας",
+      "basicDay": "Ημέρα",
+      "agendaDay": "Ημερήσια (ατζέντα) ",
+      "timeline": "Χρονοδιάγραμμα"
+    },
+    "sortDirection": {
+      "asc": "Αύξουσα",
+      "desc": "Φθίνουσα"
+    }
+  },
+  "messages": {
+    "selectEntityType": "Επιλέξτε Τύπο Οντότητας στις επιλογές dashlet."
+  }
+}

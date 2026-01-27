@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "version": "Έκδοση",
+    "description": "Περιγραφή",
+    "isInstalled": "Εγκαταστάθηκε"
+  },
+  "labels": {
+    "Uninstall": "Απεγκαταστάθηκε",
+    "Install": "Εγκατάσταση"
+  },
+  "messages": {
+    "uninstalled": "Η επέκταση {name} έχει απεγκατασταθεί"
+  }
+}

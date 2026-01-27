@@ -1,0 +1,45 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "status": "Κατάσταση",
+    "host": "Πλήθος",
+    "username": "Όνομα χρήστη",
+    "password": "Κωδικός",
+    "port": "Πύλη",
+    "monitoredFolders": "Παρακολούθηση φακέλων",
+    "fetchSince": "Λήψη από",
+    "emailAddress": "Ηλεκτρονική Διεύθυνση",
+    "sentFolder": "Απεσταλμένα φάκελο",
+    "storeSentEmails": "Αποθηκεύστε τα ηλεκτρονικά μηνύματα",
+    "keepFetchedEmailsUnread": "Κρατήστε τα μηνύματα παραλαβής μη αναγνωσμένα",
+    "emailFolder": "Να μπει στον φάκελο",
+    "useSmtp": "Χρήση SMTP",
+    "smtpAuthMechanism": "Μηχανισμός SMTP Authentication",
+    "connectedAt": "Συνδέθηκε στις"
+  },
+  "links": {
+    "filters": "Φίλτρα"
+  },
+  "options": {
+    "status": {
+      "Active": "Ενεργό",
+      "Inactive": "Ανενεργόα"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "Δημιουργία λογαριασμού Email",
+    "Main": "Κύριος",
+    "Test Connection": "Δοκιμή σύνδεσης",
+    "Send Test Email": "Αποστολή Δοκιμαστικού Email"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Δεν ήταν δυνατή η σύνδεση με διακομιστή IMAP",
+    "connectionIsOk": "Η σύνδεση είναι σωστή"
+  },
+  "tooltips": {
+    "storeSentEmails": "Τα απεσταλμένα email θα αποθηκεύονται στον διακομιστή IMAP. Το πεδίο Διεύθυνση Email πρέπει να ταιριάζει με τη διεύθυνση από την οποία αποστέλλονται τα email.\n"
+  },
+  "presetFilters": {
+    "active": "Ενεργός"
+  }
+}

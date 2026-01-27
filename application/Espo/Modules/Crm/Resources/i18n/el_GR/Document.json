@@ -1,0 +1,41 @@
+{
+  "labels": {
+    "Create Document": "Δημιουργία Εγγράφου",
+    "Details": "Λεπτομέρειες"
+  },
+  "fields": {
+    "name": "Όνομα",
+    "status": "Κατάσταση",
+    "file": "Αρχείο",
+    "type": "Τύπος",
+    "publishDate": "Ημερομηνία Δημοσίευσης",
+    "expirationDate": "Ημερομηνία λήξης",
+    "description": "Περιγραφή",
+    "accounts": "Εταιρίες",
+    "folder": "Φάκελος"
+  },
+  "links": {
+    "accounts": "Εταιρίες",
+    "opportunities": "Ευκαιρίες",
+    "folder": "Φάκελος",
+    "leads": "Υποψήφιοι",
+    "contacts": "Επαφές"
+  },
+  "options": {
+    "status": {
+      "Active": "Ενεργό",
+      "Draft": "Πρόχειρο",
+      "Expired": "Έχει λήξει",
+      "Canceled": "Έχει ακυρωθεί"
+    },
+    "type": {
+      "": "Κανένα",
+      "Contract": "Επαφή",
+      "License Agreement": "Aδειας Xρήσης"
+    }
+  },
+  "presetFilters": {
+    "active": "Ενεργά",
+    "draft": "Πρόχειρα"
+  }
+}

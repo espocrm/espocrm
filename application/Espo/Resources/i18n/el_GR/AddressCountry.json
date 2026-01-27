@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "Create AddressCountry": "Δημιουργία Χώρας διεύθυνσης"
+  },
+  "fields": {
+    "code": "Κωδικός Χώρας",
+    "isPreferred": "Προτίμηση"
+  }
+}

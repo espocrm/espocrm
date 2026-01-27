@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "user": "Χρήστης",
+    "action": "Ενέργεια",
+    "createdAt": "Ημερομηνία",
+    "target": "Στόχος",
+    "targetType": "Τύπος Στόχου",
+    "authToken": "Token Εξουσιοδότησης",
+    "ipAddress": "Διεύθυνση IP",
+    "userType": "Τύπος Χρήστη"
+  },
+  "links": {
+    "authToken": "Token Εξουσιοδότησης",
+    "user": "Χρήστης",
+    "target": "Στόχος"
+  },
+  "presetFilters": {
+    "onlyMy": "Μόνο Δικά Μου"
+  },
+  "options": {
+    "action": {
+      "read": "Ανάγνωση",
+      "update": "Ενημέρωση",
+      "delete": "Διαγραφή",
+      "create": "Δημιουργία"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "attempts": "Προσπάθειες"
+  },
+  "options": {
+    "status": {
+      "Pending": "Σε αναμονή",
+      "Success": "Επιτυχία",
+      "Failed": "Απερτυχε"
+    }
+  }
+}

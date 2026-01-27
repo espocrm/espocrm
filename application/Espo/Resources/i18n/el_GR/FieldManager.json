@@ -1,0 +1,123 @@
+{
+  "labels": {
+    "Dynamic Logic": "Δυναμική λογική",
+    "Name": "Όνομα",
+    "Label": "Ετικέτα",
+    "Type": "Πληκτρολογήστε"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "Κανένα",
+      "javascript: return this.dateTime.getNow(1);": "Τώρα",
+      "javascript: return this.dateTime.getNow(5);": "Τώρα (5λ)",
+      "javascript: return this.dateTime.getNow(15);": "Τώρα (15λ)",
+      "javascript: return this.dateTime.getNow(30);": "Τώρα (30λ)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 ώρα",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 ώρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 ημέρα",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 ημέρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 ημέρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 ημέρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 ημέρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 ημέρες",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 εβδομάδα"
+    },
+    "dateDefault": {
+      "": "Κανένα",
+      "javascript: return this.dateTime.getToday();": "Σήμερα",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 ημέρα",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 ημέρες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 εβδομάδα",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 εβδομάδες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 εβδομάδες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 μήνα",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 μήνες",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 χρόνο"
+    },
+    "barcodeType": {
+      "QRcode": "QR κώδικας"
+    },
+    "globalRestrictions": {
+      "forbidden": "Απαγορευμένο",
+      "internal": "Εσωτερικό",
+      "onlyAdmin": "Μόνο Διαχειρηστές"
+    }
+  },
+  "tooltips": {
+    "audited": "Οι ενημερώσεις θα καταγράφουν στην ροή",
+    "required": "Το πεδίο θα είναι υποχρεωτικό. Δεν θα μπορεί να αφεθεί κενό.",
+    "default": "Προεπιλεγμένη τιμή κατα την δημιουργία",
+    "min": "Ελάχιστη αποδεκτή τιμή.",
+    "max": "Μέγιστη αποδεκτή τιμή.",
+    "lengthOfCut": "Πόσο μακρύ μπορεί να είναι ένα κείμενο πριν να περικοπεί.",
+    "maxLength": "Μέγιστο μέγεθος κειμένου.",
+    "before": "Η ημερομηνία πρέπει να είναι πριν από την ημερομηνία του επιλεγμένου πεδίου.",
+    "after": "Η ημερομηνία πρέπει να είναι μετά από την ημερομηνία του επιλεγμένου πεδίου.",
+    "readOnly": "Το πεδίο δεν είναι επεξεργάσιμο από χρήστη. Μπορεί να τροποποιηθεί μόνο από φόρμουλα.",
+    "maxFileSize": "Αν είναι κενό ή 0, τότε δεν υπάρχει όριο.",
+    "fileAccept": "Ποιους τύπους αρχείων να δέχεται. Είναι δυνατή η προσθήκη προσαρμοσμένων τύπων.",
+    "barcodeLastChar": "Για τύπο EAN-13.",
+    "displayAsList": "Κάθε είδος σε νέα γραμμή.",
+    "optionsReference": "Ξαναχρησιμοποιηστε τις επιλογές ενός αλλού πεδίου."
+  },
+  "fieldParts": {
+    "address": {
+      "street": "Οδός",
+      "city": "Πόλη",
+      "state": "Κατάσταση",
+      "country": "Χώρα",
+      "postalCode": "Ταχ. κωδικός",
+      "map": "Χάρτης"
+    },
+    "personName": {
+      "salutation": "Προσφώνηση",
+      "first": "Όνομα",
+      "last": "Επώνυμο",
+      "middle": "Μεσαίο"
+    },
+    "currency": {
+      "converted": "(Μετατράπηκε)",
+      "currency": "(Νόμισμα)"
+    },
+    "datetimeOptional": {
+      "date": "Ημερομηνία"
+    }
+  },
+  "fieldInfo": {
+    "date": "Ημερομηνία χωρίς ώρα",
+    "datetime": "Ημερομηνία και ώρα",
+    "attachmentMultiple": "Επιτρέπει το ανέβασμα πολλαπλών αρχείων",
+    "urlMultiple": "Πολλαπλοί σύνδεσμοι."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Το όνομα πεδίου '{field}' δεν επιτρέπεται.",
+    "fieldAlreadyExists": "το πεδίο '{field}' υπαρχει ηδη στο: '{entityType}'."
+  }
+}

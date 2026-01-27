@@ -1,0 +1,14 @@
+{
+  "messages": {
+    "infoMention": "Πληκτρολογήστε **@όνομα_χρήστη** για να αναφέρετε τον χρήστη στην ανάρτηση.",
+    "infoSyntax": "Διαθέσιμη σύνταξη markdown"
+  },
+  "syntaxItems": {
+    "code": "Κώδικας",
+    "multilineCode": "πολυγραμμικός κώδικας",
+    "strongText": "έντονο κείμενο",
+    "emphasizedText": "τονισμένο κείμενο",
+    "deletedText": "διαγραμμένο κείμενο",
+    "blockquote": "παράθεση"
+  }
+}

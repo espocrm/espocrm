@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "parent": "Γονικό",
+    "status": "Κατάσταση",
+    "dateStart": "Ημερομηνία Έναρξης",
+    "dateEnd": "Ημερομηνία λήξης ",
+    "dateStartDate": "Ημερομηνία Έναρξης (όλη την ημέρα)",
+    "dateEndDate": "Ημερομηνία λήξης (όλη την ημέρα)",
+    "priority": "Προτεραιότητα",
+    "description": "Περιγραφή",
+    "isOverdue": "Σε καθυστέρηση",
+    "account": "Εταιρία",
+    "dateCompleted": "Ημερομηνία που ολοκληρώθηκε",
+    "attachments": "Συνημμένα",
+    "reminders": "Υπενθυμίσεις",
+    "contact": "Επαφή"
+  },
+  "links": {
+    "attachments": "Συνημμένα",
+    "account": "Εταιρία",
+    "contact": "Επαφή"
+  },
+  "options": {
+    "status": {
+      "Not Started": "Δεν άρχισε ακόμα",
+      "Started": "Έχει αρχίσει",
+      "Completed": "Έτοιμα",
+      "Canceled": "Ακυρώθηκε",
+      "Deferred": "Αναβλήθηκαν"
+    },
+    "priority": {
+      "Low": "Χαμηλή",
+      "Normal": "Κανονική",
+      "High": "Υψηλή",
+      "Urgent": "Επείγον"
+    }
+  },
+  "labels": {
+    "Create Task": "Δημιουργία Εργασίας",
+    "Complete": "Ολοκληρώθηκε",
+    "overdue": "Παρέλευση "
+  },
+  "presetFilters": {
+    "completed": "Ολοκληρωμένα",
+    "todays": "Σημερινές",
+    "overdue": "Καθυστερημένα",
+    "deferred": "Αναβληθέντα"
+  }
+}

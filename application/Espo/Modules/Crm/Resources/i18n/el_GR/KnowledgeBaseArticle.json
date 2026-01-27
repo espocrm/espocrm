@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "Δημιουργία Εγγράφου",
+    "Any": "Οποιοδήποτε",
+    "Send in Email": "Αποστολή σε email",
+    "Move Up": "Προς τα πάνω",
+    "Move Down": "Προς τα κάτω",
+    "Move to Top": "Μετακίνηση στην αρχή",
+    "Move to Bottom": "Μετακίνηση στο τέλος"
+  },
+  "fields": {
+    "name": "Όνομα",
+    "status": "Κατάσταση",
+    "type": "Πληκτρολογήστε",
+    "attachments": "Συνημμένα",
+    "publishDate": "Ημερομηνία έκδοσης",
+    "expirationDate": "Ημερομηνία Λήξης",
+    "description": "Περιγραφή",
+    "body": "Σώμα",
+    "categories": "Κατηγορίες",
+    "language": "Γλώσσα",
+    "portals": "Πύλες"
+  },
+  "links": {
+    "cases": "Υποθέσεις",
+    "opportunities": "Ευκαιρίες",
+    "categories": "Κατηγορίες",
+    "portals": "Πύλες"
+  },
+  "options": {
+    "status": {
+      "In Review": "Προς έγκριση",
+      "Draft": "Πρόχειρο",
+      "Archived": "Αρχειοθετημένο",
+      "Published": "Έχει εκδοθεί"
+    },
+    "type": {
+      "Article": "Άρθρο"
+    }
+  },
+  "presetFilters": {
+    "published": "Έχουν εκδοθεί"
+  },
+  "tooltips": {
+    "portals": "Το άρθρο θα είναι διαθέσιμο μόνο σε καθορισμένες πύλες."
+  }
+}

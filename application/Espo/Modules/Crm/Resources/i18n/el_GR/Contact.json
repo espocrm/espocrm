@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "accountRole": "Τίτλος",
+    "account": "Εταιρία",
+    "accounts": "Εταιρίες",
+    "phoneNumber": "Τηλέφωνο",
+    "accountType": "Τύπος Εταιρίας",
+    "doNotCall": "Να Μην Κληθεί",
+    "address": "Διεύθυνση",
+    "opportunityRole": "Ρόλος Ευκαιρίας",
+    "description": "Περιγραφή",
+    "campaign": "Καμπάνια",
+    "targetLists": "Λίστες στόχων",
+    "targetList": "Λίστα στόχων",
+    "portalUser": "Χρήστης Πύλης",
+    "originalLead": "Αρχικός Υποψήφιος",
+    "acceptanceStatus": "Κατάσταση Αποδοχής",
+    "accountIsInactive": "Εταιρία ανενεργή",
+    "acceptanceStatusMeetings": "Κατάσταση Αποδοχής (Meetings)",
+    "acceptanceStatusCalls": "Κατάσταση αποδοχής (κλήσεις)",
+    "title": "Τίτλος εταιρίας",
+    "originalEmail": "Αρχικό email"
+  },
+  "links": {
+    "opportunities": "Ευκαιρίες",
+    "cases": "Υποθέσεις",
+    "targetLists": "Λίστες στόχων",
+    "campaignLogRecords": "Αρχείο Καταγραφής Καμπάνιας",
+    "campaign": "Καμπάνια",
+    "account": "Εταιρία",
+    "accounts": "Εταιρίες",
+    "casesPrimary": "Υποθέσεις (Κύριες)",
+    "portalUser": "Χρήστης Πύλης ",
+    "originalLead": "Αρχικός Υποψήφιος",
+    "documents": "Αρχεία",
+    "tasksPrimary": "Εργασίες (εκτεταμένες)"
+  },
+  "labels": {
+    "Create Contact": "Δημιουργία Επαφής"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "Υπεύθυνος Λήψης Αποφάσεων",
+      "Evaluator": "Αξιολογητής"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "Χρήστες Πύλης",
+    "notPortalUsers": "Όχι Χρήστες Πύλης",
+    "accountActive": "Ενεργή"
+  }
+}

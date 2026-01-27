@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "status": "Κατηγορία",
+    "executeTime": "Εκτελέστε At",
+    "attempts": "Προσπάθειες αριστερά",
+    "failedAttempts": "Αποτυχημένες προσπάθειες",
+    "serviceName": "Υπηρεσία ",
+    "methodName": "Μέθοδος ",
+    "scheduledJob": "Προγραμματισμένη εργασία ",
+    "data": "Δεδομένα",
+    "number": "Αριθμός",
+    "queue": "Ουρά"
+  },
+  "options": {
+    "status": {
+      "Pending": "Εκκρεμεί",
+      "Success": "Επιτυχία",
+      "Running": "Εκτελείται",
+      "Failed": "Απέτυχε"
+    }
+  }
+}

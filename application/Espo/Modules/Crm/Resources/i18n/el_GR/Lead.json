@@ -1,0 +1,68 @@
+{
+  "labels": {
+    "Converted To": "Σύνδεση με",
+    "Create Lead": "Δημιουργία δυνητικού Πελάτη",
+    "Convert": "Μετατροπή σε",
+    "convert": "Μετατροπή"
+  },
+  "fields": {
+    "name": "Όνομα",
+    "title": "Τίτλος",
+    "website": "Ιστοσελίδα",
+    "phoneNumber": "Τηλέφωνο",
+    "accountName": "Όνομα εταιρίας",
+    "doNotCall": "Μην κληθεί",
+    "address": "Διεύθυνση",
+    "status": "Κατάσταση",
+    "source": "Πηγή",
+    "opportunityAmount": "Ποσό Ευκαιρίας",
+    "opportunityAmountConverted": "Ποσό Ευκαιρίας Πώλησης",
+    "description": "Περιγραφή",
+    "createdAccount": "Εταιρία",
+    "createdContact": "Επαφή",
+    "createdOpportunity": "Ευκαιρία Πώλησης",
+    "campaign": "Καμπάνια",
+    "targetLists": "Λίστες στόχων",
+    "targetList": "Λίστα στόχων",
+    "industry": "Κλάδος",
+    "acceptanceStatus": "Κατάσταση Αποδοχής",
+    "opportunityAmountCurrency": "Νόμισμα Ποσού Ευκαιρίας",
+    "acceptanceStatusMeetings": "Κατάσταση Αποδοχής (Meetings)",
+    "acceptanceStatusCalls": "Κατάσταση αποδοχής (κλήσεις)",
+    "convertedAt": "Μετετράπησαν σε",
+    "originalEmail": "Αρχικό email"
+  },
+  "links": {
+    "targetLists": "Λίστες στόχων",
+    "campaignLogRecords": "Αρχείο Καταγραφής Καμπάνιας",
+    "campaign": "Καμπάνια",
+    "createdAccount": "Εταιρία",
+    "createdContact": "Επαφή",
+    "createdOpportunity": "Ευκαιρία Πώλησης",
+    "cases": "Υποθέσεις",
+    "documents": "Έγγραφα"
+  },
+  "options": {
+    "status": {
+      "New": "Νέο",
+      "Assigned": "Έχει ανατεθεί",
+      "In Process": "Σε Εξέλιξη",
+      "Converted": "Μετετράπη",
+      "Recycled": "Ανακυκλωμένα",
+      "Dead": "Aνενεργός"
+    },
+    "source": {
+      "Call": "Κλήση",
+      "Existing Customer": "Υπαρκτός Πελάτης",
+      "Partner": "Συνεργάτης",
+      "Public Relations": "Δημόσιες σχέσεις",
+      "Web Site": "Ιστοσελίδα",
+      "Campaign": "Καμπάνια",
+      "Other": "Άλλο"
+    }
+  },
+  "presetFilters": {
+    "active": "Ενεργά",
+    "converted": "Έχουν μετατραπεί"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "description": "Περιγραφή",
+    "status": "Κατάσταση",
+    "type": "Τύπος",
+    "startDate": "Ημερομηνία Έναρξης",
+    "endDate": "Ημερομηνία Λήξης",
+    "targetLists": "Λίστες Στόχων",
+    "excludingTargetLists": "Εξαίρεση Λιστών Στόχων",
+    "sentCount": "Απεσταλμένα",
+    "openedCount": "Ανοιγμένα",
+    "clickedCount": "Έγινε κλικ",
+    "optedOutCount": "Απεγγραφές",
+    "bouncedCount": "Μη παραδοτέα",
+    "hardBouncedCount": "Οριστικά μη παραδοτέα",
+    "softBouncedCount": "Προσωρινά μη παραδοτέα",
+    "leadCreatedCount": "Δημιουργήθηκαν Δυνητικοί Πελάτες",
+    "revenue": "Έσοδα",
+    "revenueConverted": "Έσοδα (converted)",
+    "budget": "Προϋπολογισμός",
+    "budgetConverted": "Προϋπολογισμός (converted)",
+    "contactsTemplate": "Πρότυπο επαφών",
+    "leadsTemplate": "Πρότυπο υποψήφιων πελατών",
+    "accountsTemplate": "Υπόδειγμα Εταιριών",
+    "usersTemplate": "Πρότυπο χρηστών",
+    "mailMergeOnlyWithAddress": "Παράλειψη εγγραφών χωρίς συμπληρωμένη διεύθυνση",
+    "budgetCurrency": "Νόμισμα Προϋπολογισμού"
+  },
+  "links": {
+    "targetLists": "Λίστες στόχου",
+    "excludingTargetLists": "Εξαίρεση Λιστών Στόχων",
+    "accounts": "Εταιρίες",
+    "contacts": "Επαφές",
+    "leads": "Πιθανοί πελάτες (Leads)",
+    "opportunities": "Ευκαιρίες",
+    "campaignLogRecords": "αρχείo καταγραφής",
+    "massEmails": "Μαζικά Emails",
+    "trackingUrls": "Σύνδεσμοι Παρακολούθησης",
+    "contactsTemplate": "Πρότυπο Επαφών",
+    "leadsTemplate": "Πρότυπο υποψήφιων πελατών",
+    "accountsTemplate": "Πρότυπο λογαριασμών",
+    "usersTemplate": "Πρότυπο χρηστών"
+  },
+  "options": {
+    "type": {
+      "Email": "Διεύθυνση Ηλ. Ταχυδρομείου",
+      "Web": "Ιστός",
+      "Television": "Τηλεόραση",
+      "Radio": "Ραδιόφωνο",
+      "Newsletter": "Ενημερωτικό δελτίο",
+      "Mail": "Ταχυδρομείο"
+    },
+    "status": {
+      "Planning": "Προγραμματισμός",
+      "Active": "Ενεργό",
+      "Inactive": "Μη Ενεργό",
+      "Complete": "Ολοκληρωμένο"
+    }
+  },
+  "labels": {
+    "Create Campaign": "Δημιουργία Καμπάνιας",
+    "Target Lists": "Λίστες στόχου",
+    "Statistics": "Στατιστικά",
+    "hard": "σκληρό",
+    "soft": "μαλακό",
+    "Unsubscribe": "Διαγραφή από λίστα",
+    "Mass Emails": "Μαζικά Emails",
+    "Email Templates": "Υποδείγματα Emails",
+    "Unsubscribe again": "Απεγγραφή ξανά",
+    "Subscribe again": "Εγγραφή ξανά",
+    "Create Target List": "Δημιουργία λίστας στόχων",
+    "Mail Merge": "Συγχώνευση Αλληλογραφίας",
+    "Generate Mail Merge PDF": "Δημιουργία PDF Συγχώνευσης Αλληλογραφίας"
+  },
+  "presetFilters": {
+    "active": "Ενεργά"
+  },
+  "messages": {
+    "unsubscribed": "Έχετε διαγραφεί από την λίστα αλληλογραφίας μας.",
+    "subscribedAgain": "Έχετε ξαναεγγραφεί"
+  },
+  "tooltips": {
+    "targetLists": "Στόχοι που θα λάβουν emails",
+    "excludingTargetLists": "Στόχοι που δεν πρέπει να λάβουν emails"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "number": "Αριθμός",
+    "data": "Δεδομένα",
+    "target": "Στόχος",
+    "leadCapture": "Συλλογή Leads",
+    "createdAt": "Καταχωρήθηκε στις",
+    "isCreated": "Έχει Δημιουργηθεί Lead"
+  },
+  "links": {
+    "leadCapture": "Συλλογή Leads"
+  }
+}

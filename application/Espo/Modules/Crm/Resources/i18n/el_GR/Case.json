@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "number": "Αριθμός",
+    "status": "Κατάσταση",
+    "account": "Εταιρία",
+    "contact": "Επαφή",
+    "contacts": "Επαφές",
+    "priority": "Προτεραιότητα",
+    "type": "Τύπος",
+    "description": "Περιγραφή",
+    "lead": "Δυνητικός πελάτης",
+    "attachments": "Συνημμένα",
+    "inboundEmail": "Λογαριασμός Ομαδικού Email",
+    "originalEmail": "Αρχικό email"
+  },
+  "links": {
+    "account": "Εταιρία",
+    "contact": "Επαφή (Κύρια)",
+    "Contacts": "Επαφές",
+    "meetings": "Συναντήσεις",
+    "calls": "Κλήσεις",
+    "tasks": "Εργασίες",
+    "articles": "Άρθρα Γνωσιακής Βάσης",
+    "lead": "Δυνητικός πελάτης",
+    "attachments": "Συνημμένα",
+    "inboundEmail": "Λογαριασμός Ομαδικού Email"
+  },
+  "options": {
+    "status": {
+      "New": "Νέο",
+      "Assigned": "Σε ανάθεση",
+      "Pending": "Σε εκκρεμότητα",
+      "Closed": "Ολοκληρωμένα",
+      "Rejected": "Απορρίφθηκε",
+      "Duplicate": "Διπλότυπο"
+    },
+    "priority": {
+      "Low": "Χαμηλή",
+      "Normal": "Κανονική",
+      "High": "Υψηλή",
+      "Urgent": "Επείγον"
+    },
+    "type": {
+      "Question": "Ερώτηση",
+      "Incident": "Περιστατικό",
+      "Problem": "Πρόβλημα"
+    }
+  },
+  "labels": {
+    "Create Case": "Δημιουργία Υπόθεσης",
+    "Close": "Ολοκλήρωση",
+    "Reject": "Απόρριψη",
+    "Closed": "Ολοκληρωμένη",
+    "Rejected": "Απορρίφθηκε"
+  },
+  "presetFilters": {
+    "open": "Ανοιχτές",
+    "closed": "Ολοκληρωμένες"
+  }
+}

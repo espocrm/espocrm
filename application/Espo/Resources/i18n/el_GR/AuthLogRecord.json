@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "username": "Όνομα χρήστη",
+    "ipAddress": "Διεύθυνση IP",
+    "user": "Χρήστης",
+    "authenticationMethod": "Μέθοδος Ταυτοποίησης"
+  },
+  "links": {
+    "user": "Χρήστης",
+    "actionHistoryRecords": "Ιστορικό ενεργειών"
+  },
+  "presetFilters": {
+    "accepted": "Έχουν αποδεχθεί"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Λανθασμένα στοιχεία εισόδου",
+      "INACTIVE_USER": "Ανενεργός χρήστης",
+      "IS_SYSTEM_USER": "Είναι χρήστης συστήματος",
+      "FORBIDDEN": "Απαγορευμένο",
+      "WRONG_CODE": "Λάθος κωδικός"
+    }
+  }
+}

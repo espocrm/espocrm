@@ -1,0 +1,25 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Δημιουργία Ημερολογίου"
+  },
+  "fields": {
+    "timeZone": "Ζώνη Ώρας",
+    "weekday0": "Κυρ",
+    "weekday1": "Δε",
+    "weekday2": "Τρ",
+    "weekday3": "Τετ",
+    "weekday4": "Πεμ",
+    "weekday5": "Παρ",
+    "weekday6": "Σαβ",
+    "weekday0TimeRanges": "Πρόγραμμα Κυρ",
+    "weekday1TimeRanges": "Πρόγραμμα Δε",
+    "weekday2TimeRanges": "Πρόγραμμα Τρ",
+    "weekday3TimeRanges": "Πρόγραμμα Τετ",
+    "weekday4TimeRanges": "Πρόγραμμα Πε",
+    "weekday5TimeRanges": "Πρόγραμμα Παρ",
+    "weekday6TimeRanges": "Πρόγραμμα Σαβ"
+  },
+  "links": {
+    "ranges": "Eξαιρέσεις"
+  }
+}

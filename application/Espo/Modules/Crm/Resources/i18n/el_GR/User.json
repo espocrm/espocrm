@@ -1,0 +1,10 @@
+{
+  "links": {
+    "targetLists": "Λίστες στόχων"
+  },
+  "fields": {
+    "acceptanceStatus": "Κατάσταση αποδοχής",
+    "acceptanceStatusMeetings": "Κατάσταση Αποδοχής (Meetings)",
+    "acceptanceStatusCalls": "Κατάσταση αποδοχής (κλήσεις)"
+  }
+}

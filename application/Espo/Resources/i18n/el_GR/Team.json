@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "roles": "Ρόλοι",
+    "positionList": "Λίστα Θέσεων",
+    "userRole": "Ρόλος Χρήστη"
+  },
+  "links": {
+    "users": "Χρήστες",
+    "notes": "Σημειώσεις",
+    "roles": "Ρόλοι",
+    "inboundEmails": "Ομαδικοί Λογαριασμοί email",
+    "groupEmailFolders": "Φάκελοι ομαδικών Email"
+  },
+  "labels": {
+    "Create Team": "Δημιουργία Ομάδας"
+  }
+}

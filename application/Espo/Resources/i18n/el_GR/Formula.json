@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Check Syntax": "Έλεγξε την σύνταξη"
+  },
+  "fields": {
+    "target": "Στόχος",
+    "targetType": "Τύπος Στόχου",
+    "output": "Αποτέλεσμα",
+    "error": "Σφάλμα"
+  },
+  "messages": {
+    "runError": "Σφάλμα.",
+    "checkSyntaxError": "Σφάλμα Σύνταξης"
+  }
+}

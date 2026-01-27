@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "status": "Κατάσταση",
+    "storeSentEmails": "Αποθήκευση Απεσταλμένων Email",
+    "startAt": "Ημερομηνία Έναρξης",
+    "fromAddress": "Διεύθυνση Αποστολέα",
+    "fromName": "Όνομα Αποστολέα",
+    "replyToAddress": "Διεύθυνση Απάντησης",
+    "replyToName": "Όνομα Απάντησης",
+    "campaign": "Καμπάνια",
+    "emailTemplate": "Πρότυπο Email",
+    "inboundEmail": "Λογαριασμός email",
+    "targetLists": "Λίστες στόχων",
+    "excludingTargetLists": "Εξαίρεση Λιστών Στόχων",
+    "optOutEntirely": "Οριστική απεγγραφή ",
+    "smtpAccount": "Λογαριασμός SMTP"
+  },
+  "links": {
+    "targetLists": "Λίστες στόχων",
+    "excludingTargetLists": "Εξαίρεση Λιστών Στόχων",
+    "queueItems": "Στοιχεία σε ουρά",
+    "campaign": "Καμπάνια",
+    "emailTemplate": "Προσχέδιο Email",
+    "inboundEmail": "Λογαριασμός Email"
+  },
+  "options": {
+    "status": {
+      "Draft": "Πρόχειρο",
+      "Pending": "Σε αναμονή",
+      "In Process": "Σε Επεξεργασία",
+      "Complete": "Έτοιμο",
+      "Canceled": "Ακυρωμένο",
+      "Failed": "Αποτυχία"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "Δημιουργία Μαζικού email",
+    "Send Test": "Δοκιμαστική αποστολή",
+    "System SMTP": "SMTP Συστήματος",
+    "system": "σύστημα",
+    "group": "ομάδα"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Επιλέξτε τουλάχιστον ένα στόχο",
+    "testSent": "Δοκιμαστικό(ά) email που πρέπει να σταλούν"
+  },
+  "tooltips": {
+    "optOutEntirely": "Οι διευθύνσεις email παραληπτών που απεγγράφηκαν θα σημειωθούν ως opted out και δεν θα λαμβάνουν πλέον μαζικά email.",
+    "targetLists": "Στόχοι που θα λάβουν μηνύματα",
+    "excludingTargetLists": "Στόχοι που δεν θα λάβουν μηνύματα",
+    "storeSentEmails": "Τα email θα αποθηκευτούν στο CRM"
+  },
+  "presetFilters": {
+    "complete": "Έτοιμα"
+  }
+}

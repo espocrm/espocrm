@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "parent": "Γονικό",
+    "status": "Κατάσταση",
+    "dateStart": "Ημερομηνία Έναρξης",
+    "dateEnd": "Ημερομηνία λήξης",
+    "duration": "Διάρκεια",
+    "description": "Περιγραφή",
+    "users": "Χρήστες",
+    "contacts": "Επαφές",
+    "leads": "Δυνητικός πελάτης",
+    "reminders": "Υπενθυμίσεις",
+    "account": "Εταιρία",
+    "acceptanceStatus": "Κατάσταση αποδοχής",
+    "dateStartDate": "Ημερομηνία Έναρξης (όλη την ημέρα)",
+    "dateEndDate": "Ημερομηνία λήξης (όλη την ημέρα)",
+    "isAllDay": "Όλη την ημέρα"
+  },
+  "options": {
+    "status": {
+      "Planned": "Προγραμματισμένη",
+      "Held": "Έγινε",
+      "Not Held": "Δεν έγινε"
+    },
+    "acceptanceStatus": {
+      "None": "Καμία",
+      "Accepted": "Αποδεκτή",
+      "Declined": "Μη αποδεκτή",
+      "Tentative": "Πιθανή"
+    }
+  },
+  "massActions": {
+    "setHeld": "Ορισμός ως 'Έγινε'",
+    "setNotHeld": "Ορισμός ως 'Δεν εγινε'"
+  },
+  "labels": {
+    "Create Meeting": "Δημιουργία Συνάντησης",
+    "Set Held": "Ορισμός ως 'Έγινε'",
+    "Set Not Held": "Ορισμός ως 'Δεν έγινε'",
+    "Send Invitations": "Αποστολή Προσκλήσεων",
+    "on time": "Όταν αρχίζει",
+    "before": "Πριν",
+    "Send Cancellation": "Αποστολή Ακύρωσης",
+    "Acceptance": "Αποδοχή"
+  },
+  "presetFilters": {
+    "planned": "Σχεδιασμένα",
+    "held": "Έχουν γίνει",
+    "todays": "Σημερινά"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Δεν στάλθηκε τίποτα",
+    "selectAcceptanceStatus": "Ορίστε την κατάσταση αποδοχής σας.",
+    "sendInvitationsToSelectedAttendees": "Θα σταλθούν email στου επιλεγμένους συμμετέχοντες.",
+    "sendCancellationsToSelectedAttendees": "Θα σταλθούν ακυρωτικά email στου επιλεγμένους συμμετέχοντες."
+  }
+}

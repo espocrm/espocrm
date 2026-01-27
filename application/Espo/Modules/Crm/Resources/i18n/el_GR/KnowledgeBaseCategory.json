@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "Δημιουργία Κατηγορίας",
+    "Manage Categories": "Διαχείρηση Κατηγοριών",
+    "Articles": "Άρθρα"
+  },
+  "links": {
+    "articles": "Άρθρα"
+  }
+}

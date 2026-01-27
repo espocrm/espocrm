@@ -1,0 +1,29 @@
+{
+  "options": {
+    "operators": {
+      "equals": "Ίσο με",
+      "notEquals": "Δεν Ισούται",
+      "greaterThan": "Περισσότερο από",
+      "lessThan": "Λιγότερο από",
+      "greaterThanOrEquals": "Περισσότερο ή ίσο με",
+      "lessThanOrEquals": "Λιγότερο ή ίσο με",
+      "in": "Σε",
+      "notIn": "Όχι Σε",
+      "inPast": "Στο παρελθόν",
+      "inFuture": "Στο μέλλον",
+      "isToday": "Είναι σήμερα",
+      "isTrue": "Αληθές",
+      "isFalse": "Μη αληθές",
+      "isEmpty": "Είναι άδειο",
+      "isNotEmpty": "Δεν είναι άδειο",
+      "contains": "Περιέχει",
+      "has": "Περιέχει",
+      "notContains": "Δεν περιέχει",
+      "notHas": "Δεν περιέχει",
+      "endsWith": "Τελειώνει με"
+    }
+  },
+  "labels": {
+    "Field": "Πεδίο"
+  }
+}

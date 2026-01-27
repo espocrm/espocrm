@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "campaign": "Καμπάνια",
+    "isActive": "Είναι ενεργό",
+    "optInConfirmationSuccessMessage": "Κείμενο που θα εμφανίζεται μετά την επιβεβαίωση opt-in",
+    "leadSource": "Πηγή Lead",
+    "apiKey": "Κλειδί API",
+    "targetTeam": "Ομάδα Στόχος",
+    "exampleRequestMethod": "Μέθοδος",
+    "exampleRequestPayload": "Φορτίο Δεδομένων",
+    "duplicateCheck": "Έλεγχος διπλοτύπων",
+    "phoneNumberCountry": "Τηλεφωνικός κωδικός Χώρας"
+  },
+  "links": {
+    "targetList": "Λίστα Στόχων",
+    "campaign": "Καμπάνια",
+    "optInConfirmationEmailTemplate": "Πρότυπο email επιβεβαίωσης opt-in",
+    "targetTeam": "Ομάδα Στόχος",
+    "logRecords": "Καταγραφή"
+  },
+  "labels": {
+    "Create LeadCapture": "Δημιουργία Σημείου Εισόδου",
+    "Generate New API Key": "Δημιουργία Νέου Κλειδιού API",
+    "Request": "Αίτημα",
+    "Confirm Opt-In": "Επιβεβαίωση Opt-In"
+  },
+  "messages": {
+    "generateApiKey": "Δημιουργία νέου API key",
+    "optInConfirmationExpired": "Ο σύνδεσμος επιβεβαίωσης opt-in έχει λήξει.",
+    "optInIsConfirmed": "Το opt-in επιβεβαιώθηκε."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Υποστηρίζεται το Markdown."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "links": {
+    "meetings": "Συναντήσεις",
+    "calls": "Κλήσεις",
+    "tasks": "Εργασίες"
+  },
+  "labels": {
+    "Create {entityType}": "Δημιουργία {entityTypeTranslated}"
+  }
+}

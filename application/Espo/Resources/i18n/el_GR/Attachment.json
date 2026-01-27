@@ -1,0 +1,20 @@
+{
+  "insertFromSourceLabels": {
+    "Document": "Εισαγωγή εγγράφου"
+  },
+  "fields": {
+    "role": "Ρόλος",
+    "related": "Σχετικό",
+    "file": "Αρχείο",
+    "type": "Πληκτρολογήστε",
+    "field": "Πεδίο",
+    "size": "Μέγεθος (bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Συνημμένο",
+      "Import File": "Εισαγωγή αρχείου",
+      "Export File": "Εξαγωγή αρχείου"
+    }
+  }
+}

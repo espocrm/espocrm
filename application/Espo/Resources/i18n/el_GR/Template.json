@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "Όνομα",
+    "body": "Σώμα",
+    "entityType": "Τύπος Οντότητας",
+    "header": "Επικεφαλίδα",
+    "footer": "Υποσέλιδο",
+    "leftMargin": "Αριστερό περιθώριο",
+    "topMargin": "Κορυφή περιθώριο",
+    "rightMargin": "Δεξί περιθώριο",
+    "bottomMargin": "Κάτω περιθώριο",
+    "printFooter": "Υποσέλιδο εκτύπωσης",
+    "footerPosition": "Θέση υποσέλιδου",
+    "variables": "Διαθέσιμα Placeholders",
+    "pageOrientation": "Προσανατολισμός Σελίδας",
+    "pageFormat": "Διάταξη χαρτιού",
+    "fontFace": "Γραμματοσειρά",
+    "headerPosition": "Θέση Κεφαλίδας",
+    "style": "Στυλ"
+  },
+  "labels": {
+    "Create Template": "Δημιουργία προτύπου"
+  },
+  "tooltips": {
+    "footer": "Χρησιμοποιήστε {page Number} για να εκτυπώσετε τον αριθμό της σελίδας.",
+    "variables": "Αντιγράψτε-επικολλήστε το απαιτούμενο placeholder στην Κεφαλίδα, Σώμα ή Υποσέλιδο."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Κάθετος",
+      "Landscape": "Οριζόντιος"
+    },
+    "placeholders": {
+      "today": "Σήμερα (ημερομηνία)",
+      "now": "Τώρα (ημερομηνία-ώρα)"
+    },
+    "pageFormat": {
+      "Custom": "Προσαρμοσμένο"
+    }
+  }
+}

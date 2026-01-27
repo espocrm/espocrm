@@ -1,0 +1,17 @@
+{
+  "links": {
+    "users": "Χρήστες"
+  },
+  "labels": {
+    "Access": "Πρόσβαση",
+    "Create PortalRole": "Δημιουργία Ρόλου Πύλης",
+    "Scope Level": "Επίπεδο Εμβέλειας",
+    "Field Level": "Επίπεδο Πεδίου"
+  },
+  "fields": {
+    "exportPermission": "Δικαίωμα Εξαγωγής",
+    "massUpdatePermission": "Δικαίωμα Μαζικής Ενημέρωσης",
+    "data": "Δεδομένα",
+    "fieldData": "Δεδομένα πεδίων"
+  }
+}

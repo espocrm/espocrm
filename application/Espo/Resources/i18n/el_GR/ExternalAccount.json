@@ -1,0 +1,8 @@
+{
+  "labels": {
+    "Connect": "Σύνδεση",
+    "Connected": "Συνδέθηκε",
+    "Disconnect": "Αποσύνδεση",
+    "Disconnected": "Αποσυνδεδεμένο"
+  }
+}
