@@ -48,7 +48,7 @@ use ZipArchive;
 
 class ExportCustom
 {
-    private string $minVersion = '8.0.0';
+    private string $minVersion = '9.1.0';
 
     /** @var string[] */
     private array $metadataFolderList = [
@@ -59,6 +59,7 @@ class ExportCustom
         'selectDefs',
         'aclDefs',
         'entityAcl',
+        'logicDefs',
         'formula',
     ];
 
