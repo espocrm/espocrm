@@ -53,7 +53,7 @@ use Espo\Core\Loaders\Metadata as MetadataLoader;
  */
 class ContainerBuilder
 {
-    /** @var class-string<ContainerInterface> */
+    /** @var class-string<ContainerInterface & Container> */
     private string $containerClassName = Container::class;
     /** @var class-string<Configuration> */
     private string $containerConfigurationClassName = ContainerConfiguration::class;
@@ -117,7 +117,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param class-string<ContainerInterface> $containerClassName
+     * @param class-string<ContainerInterface & Container> $containerClassName
      */
     public function withContainerClassName(string $containerClassName): self
     {
@@ -207,7 +207,10 @@ class ContainerBuilder
         $this->services['systemConfig'] = $systemConfig;
 
         $bindingLoader = $this->bindingLoader ?? (
-            new EspoBindingLoader($module)
+            new EspoBindingLoader(
+                module: $module,
+                binding: $this->params?->binding,
+            )
         );
 
         $bindingContainer = new BindingContainer($bindingLoader->load());

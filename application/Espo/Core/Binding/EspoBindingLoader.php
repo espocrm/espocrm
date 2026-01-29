@@ -37,8 +37,10 @@ class EspoBindingLoader implements BindingLoader
     /** @var string[] */
     private array $moduleNameList;
 
-    public function __construct(Module $module)
-    {
+    public function __construct(
+        Module $module,
+        private ?BindingProcessor $binding = null,
+    ) {
         $this->moduleNameList = $module->getOrderedList();
     }
 
@@ -54,6 +56,8 @@ class EspoBindingLoader implements BindingLoader
         }
 
         $this->loadCustom($binder);
+
+        $this->binding?->process($binder);
 
         return $data;
     }

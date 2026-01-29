@@ -29,12 +29,19 @@
 
 namespace Espo\Core\Application;
 
+use Espo\Core\Binding\BindingProcessor;
+
 /**
  * @since 9.2.0
  */
 readonly class ApplicationParams
 {
+    /**
+     * @param bool $noErrorHandler Disable error handling for tests.
+     * @param ?BindingProcessor $binding Additional DI binding for integration tests. Since v9.3.
+     */
     public function __construct(
         public bool $noErrorHandler = false,
+        public ?BindingProcessor $binding = null,
     ) {}
 }

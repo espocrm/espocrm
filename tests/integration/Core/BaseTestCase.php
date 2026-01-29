@@ -32,6 +32,7 @@ namespace tests\integration\Core;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Application;
+use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\InjectableFactory;
@@ -75,9 +76,18 @@ abstract class BaseTestCase extends TestCase
      */
     protected $initData = null;
 
-    protected function createApplication(bool $clearCache = true, ?string $portalId = null): Application
-    {
-        return $this->espoTester->getApplication(true, $clearCache, $portalId);
+    protected function createApplication(
+        bool $clearCache = true,
+        ?string $portalId = null,
+        ?BindingProcessor $binding = null,
+    ): Application {
+
+        return $this->espoTester->getApplication(
+            reload: true,
+            clearCache: $clearCache,
+            portalId: $portalId,
+            binding: $binding,
+        );
     }
 
     protected function setApplication(Application $application): void

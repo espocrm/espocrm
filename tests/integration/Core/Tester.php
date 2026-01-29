@@ -34,6 +34,9 @@ use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 
 use Espo\Core\Application;
+use Espo\Core\Binding\BindingProcessor;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Portal\Application as PortalApplication;
@@ -190,7 +193,8 @@ class Tester
     public function getApplication(
         bool $reload = false,
         bool $clearCache = true,
-        ?string $portalId = null
+        ?string $portalId = null,
+        ?BindingProcessor $binding = null,
     ): Application {
 
         $portalId = $portalId ?? $this->portalId ?? null;
@@ -200,11 +204,20 @@ class Tester
                 $this->clearCache();
             }
 
-            $applicationParams = new Application\ApplicationParams(noErrorHandler: true);
+            $applicationParams = new Application\ApplicationParams(
+                noErrorHandler: true,
+                binding: $binding,
+            );
 
-            $this->application = !$portalId ?
-                new Application($applicationParams) :
-                new PortalApplication($portalId, $applicationParams);
+            if ($portalId) {
+                try {
+                    $this->application = new PortalApplication($portalId, $applicationParams);
+                } catch (Forbidden|NotFound $e) {
+                    throw new RuntimeException(previous: $e);
+                }
+            } else {
+                $this->application = new Application($applicationParams);
+            }
 
             $auth = $this->application
                 ->getContainer()
