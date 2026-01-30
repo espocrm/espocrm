@@ -172,18 +172,18 @@ class RecordListSettingsView extends View {
         const list = this.layoutProvider() || [];
         const map = this.helper.getHiddenColumnMap() || {};
 
-        return list.filter(item => item.name && !item.link && !item.noLabel && !item.customLabel)
+        return list.filter(item => item.name && !item.link && !item.noLabel && item.customLabel !== '')
             .map(item => {
                 const label = item.label || item.name;
                 const hidden = (item.name in map) ? map[item.name] : !!item.hidden;
 
                 return {
                     name: item.name,
-                    label: this.translate(label, 'fields', this.entityType),
+                    label: item.customLabel ?? this.translate(label, 'fields', this.entityType),
                     hidden: hidden,
                     hiddenDefault: !!item.hidden,
                 };
-            })
+            });
     }
 
     /**
