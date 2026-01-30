@@ -26,43 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import SettingsEditRecordView from 'views/settings/record/edit';
-import EditView from 'views/edit';
+import ListView from 'views/list';
 
-export default class extends SettingsEditRecordView {
+export default class extends ListView {
 
-    layoutName = 'currency'
-
-    saveAndContinueEditingAction = false
-
-    setup() {
-        super.setup();
-
-        this.listenTo(this.model, 'change:currencyList', (model, value, o) => {
-            if (!o.ui) {
-                return;
-            }
-
-            const currencyList = Espo.Utils.clone(model.get('currencyList'));
-
-            this.setFieldOptionList('defaultCurrency', currencyList);
-            this.setFieldOptionList('baseCurrency', currencyList);
-        });
-
-        this.whenReady().then(() => {
-            const view = /** @type {EditView} view */
-                this.getParentView();
-
-            if (!view instanceof EditView) {
-                return;
-            }
-
-            view.addMenuItem('buttons', {
-                name: 'currencyRecords',
-                link: '#CurrencyRecord/list/fromSettings=true',
-                labelTranslation: 'Settings.labels.Currency Rates',
-                iconClass: 'fas fa-euro-sign',
-            });
-        });
-    }
+    keepCurrentRootUrl = true
 }

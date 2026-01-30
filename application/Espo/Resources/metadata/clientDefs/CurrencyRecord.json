@@ -10,6 +10,9 @@
     "filterList": [
         "active"
     ],
+    "views": {
+        "list": "views/currency-record/list"
+    },
     "viewSetupHandlers": {
         "record/detail": [
             "handlers/currency-record/record-detail"
@@ -23,6 +26,19 @@
             },
             "view": "views/currency-record/record/panels/rates",
             "unlinkDisabled": true
+        }
+    },
+    "menu": {
+        "list": {
+            "buttons": [
+                {
+                    "name": "settings",
+                    "labelTranslation": "Global.scopeNames.Settings",
+                    "link": "#Admin/currency",
+                    "handler": "handlers/currency-record/menu-action-settings",
+                    "checkVisibilityFunction": "isVisible"
+                }
+            ]
         }
     }
 }
