@@ -426,7 +426,11 @@ class EditModalView extends ModalView {
 
             if (wasNew) {
                 const url = `#${this.scope}/view/${model.id}`;
-                const name = model.attributes[this.nameAttribute] || this.model.id;
+                let name = model.attributes[this.nameAttribute];
+
+                if (name === undefined) {
+                    name = this.translate(this.scope, 'scopeNames');
+                }
 
                 const msg = this.translate('Created') + '\n' +
                     `[${name}](${url})`;
