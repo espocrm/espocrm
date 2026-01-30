@@ -50,12 +50,17 @@ class Decimal implements FieldConverter
         $dbType = $fieldDefs->getParam(FieldParam::DB_TYPE) ?? Types::DECIMAL;
         $precision = $fieldDefs->getParam(FieldParam::PRECISION) ?? self::DEFAULT_PRECISION;
         $scale = $fieldDefs->getParam(FieldParam::SCALE) ?? self::DEFAULT_SCALE;
+        $notStorable = $fieldDefs->getParam(FieldParam::NOT_STORABLE);
 
         $defs = AttributeDefs::create($name)
             ->withType(AttributeType::VARCHAR)
             ->withDbType($dbType)
             ->withParam(AttributeParam::PRECISION, $precision)
             ->withParam(AttributeParam::SCALE, $scale);
+
+        if ($notStorable) {
+            $defs = $defs->withParam(AttributeParam::NOT_STORABLE, $notStorable);
+        }
 
         return EntityDefs::create()
             ->withAttribute($defs);
