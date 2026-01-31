@@ -39,6 +39,8 @@ class ConfigDataProvider
     private const FAILED_ATTEMPTS_PERIOD =  '60 seconds';
     private const FAILED_CODE_ATTEMPTS_PERIOD =  '5 minutes';
     private const MAX_FAILED_ATTEMPT_NUMBER = 10;
+    private const int MAX_USERNAME_FAILED_ATTEMPT_NUMBER = 30;
+    private const int USERNAME_FAILED_ATTEMPT_DELAY = 2;
 
     public function __construct(private Config $config, private Metadata $metadata)
     {}
@@ -65,6 +67,24 @@ class ConfigDataProvider
     public function getMaxFailedAttemptNumber(): int
     {
         return $this->config->get('authMaxFailedAttemptNumber', self::MAX_FAILED_ATTEMPT_NUMBER);
+    }
+
+    /**
+     * Max failed log in attempts for a specific username regardless of the IP address.
+     */
+    public function getMaxUsernameFailedAttemptNumber(): int
+    {
+        return $this->config->get('authMaxUsernameFailedAttemptNumber', self::MAX_USERNAME_FAILED_ATTEMPT_NUMBER);
+    }
+
+    public function isUsernameFailedAttemptsLimitEnabled(): bool
+    {
+        return (bool) $this->config->get('authUsernameFailedAttemptsLimitEnabled');
+    }
+
+    public function isUsernameFailedAttemptsDelay(): int
+    {
+        return $this->config->get('authUsernameFailedAttemptsDelay', self::USERNAME_FAILED_ATTEMPT_DELAY);
     }
 
     /**

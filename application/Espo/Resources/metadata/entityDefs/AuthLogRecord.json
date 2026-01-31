@@ -105,6 +105,9 @@
         },
         "requestTime": {
             "columns": ["requestTime"]
+        },
+        "usernameIpAddress": {
+            "columns": ["username", "ipAddress"]
         }
     },
     "hooksDisabled": true
