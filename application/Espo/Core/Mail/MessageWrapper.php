@@ -50,7 +50,8 @@ class MessageWrapper implements Message
         private int $id,
         private ?Storage $storage = null,
         private ?Parser $parser = null,
-        private ?string $fullRawContent = null
+        private ?string $fullRawContent = null,
+        private bool $peek = false,
     ) {
         if ($storage) {
             $data = $storage->getHeaderAndFlags($id);
@@ -112,7 +113,7 @@ class MessageWrapper implements Message
                 throw new RuntimeException();
             }
 
-            $this->rawContent = $this->storage->getRawContent($this->id);
+            $this->rawContent = $this->storage->getRawContent($this->id, $this->peek);
         }
 
         return $this->rawContent ?? '';

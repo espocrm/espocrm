@@ -275,7 +275,12 @@ class Fetcher
             ->withGroupEmailFolderId($groupEmailFolderId);
 
         try {
-            $message = new MessageWrapper($id, $storage, $parser);
+            $message = new MessageWrapper(
+                id: $id,
+                storage: $storage,
+                parser: $parser,
+                peek: $account->keepFetchedEmailsUnread(),
+            );
 
             $hookResult = null;
 

@@ -37,6 +37,8 @@ interface Storage
     /**
      * Mark as unseen.
      *
+     * @todo Move to the Message interface. Call from the MessageWrapper.
+     *
      * @throws ImapError
      */
     public function unmarkSeen(int $id): void;
@@ -53,7 +55,7 @@ interface Storage
      *
      * @throws ImapError
      */
-    public function getRawContent(int $id): string;
+    public function getRawContent(int $id, bool $peek): string;
 
     /**
      * Get IDs from unique ID.

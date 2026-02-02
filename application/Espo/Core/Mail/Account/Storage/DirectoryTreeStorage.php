@@ -102,7 +102,7 @@ class DirectoryTreeStorage implements Storage
      * @inheritDoc
      * @noinspection PhpRedundantCatchClauseInspection
      */
-    public function getRawContent(int $id): string
+    public function getRawContent(int $id, bool $peek): string
     {
         $folder = $this->getSelectedFolder();
 
@@ -112,6 +112,10 @@ class DirectoryTreeStorage implements Storage
                 ->withFlags()
                 ->withBody()
                 ->find($id);
+
+            if ($message instanceof Message && !$peek) {
+                $message->markSeen();
+            }
         } catch (CommonException $e) {
             throw new ImapError($e->getMessage(), previous: $e);
         }
