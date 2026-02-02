@@ -777,12 +777,17 @@ class ListWithCategories extends ListView {
             rootUrl += `/list/primaryFilter=${filterPart}`;
         }
 
-        const root = document.createElement('a');
-        root.href = rootUrl;
-        root.textContent = this.translate(this.scope, 'scopeNamesPlural');
-        root.dataset.action = 'openCategory';
-        root.classList.add('action');
+        const root = document.createElement('span');
         root.style.userSelect = 'none';
+
+        const a = document.createElement('a');
+        a.href = rootUrl;
+        a.textContent = this.translate(this.scope, 'scopeNamesPlural');
+        a.dataset.action = 'openCategory';
+        a.classList.add('action');
+        a.style.userSelect = 'none';
+
+        root.append(a);
 
         const iconHtml = this.getHeaderIconHtml();
 
