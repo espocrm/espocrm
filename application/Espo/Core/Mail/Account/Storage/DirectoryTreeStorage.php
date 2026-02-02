@@ -151,6 +151,8 @@ class DirectoryTreeStorage implements Storage
          */
         assert($query instanceof MessageQuery);
 
+        $query->setFetchOrderAsc();
+
         try {
             $query->each(function (MessageInterface $message) use (&$output) {
                 $output[] = $message->uid();
@@ -189,6 +191,8 @@ class DirectoryTreeStorage implements Storage
          * @phpstan-ignore-next-line
          */
         assert($query instanceof MessageQuery);
+
+        $query->setFetchOrderAsc();
 
         try {
             $query->each(function (MessageInterface $message) use (&$output) {
