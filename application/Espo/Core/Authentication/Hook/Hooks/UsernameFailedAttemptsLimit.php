@@ -68,8 +68,8 @@ class UsernameFailedAttemptsLimit implements BeforeLogin
             return;
         }
 
-        $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
-        $delay = $this->configDataProvider->isUsernameFailedAttemptsDelay();
+        $failedAttemptsPeriod = $this->configDataProvider->getUsernameFailedAttemptsPeriod();
+        $delay = $this->configDataProvider->getUsernameFailedAttemptsDelay();
 
         $ipAddress = $this->util->obtainIpFromRequest($request);
 

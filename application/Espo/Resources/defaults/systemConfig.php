@@ -109,6 +109,7 @@ return [
         'authMaxUsernameFailedAttemptNumber',
         'authUsernameFailedAttemptsLimitEnabled',
         'authUsernameFailedAttemptsDelay',
+        'authUsernameFailedAttemptsPeriod',
         'ipAddressServerParam',
         'jobNoTableLocking',
         'passwordRecoveryRequestLifetime',
