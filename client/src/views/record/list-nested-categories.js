@@ -197,7 +197,7 @@ class ListNestedCategoriesRecordView extends View {
         this.listenTo(this.collection, 'sync', () => this.reRender());
         this.listenTo(this.itemCollection, 'sync', () => this.reRender());
 
-        this.addActionHandler('createCategory', () => this.actionCreateCategory());
+        this.addActionHandler('createCategory', event => this.handleCreateCategory(event));
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -211,9 +211,12 @@ class ListNestedCategoriesRecordView extends View {
     }
 
     /**
+     * @param {MouseEvent} event
      * @private
      */
-    async actionCreateCategory() {
+    async handleCreateCategory(event) {
+        event.preventDefault();
+
         const categoryData = this.collection.categoryData || {};
 
         const view = await new RecordModalHelper().showCreate(this, {

@@ -123,6 +123,7 @@ Espo.Utils = {
         else if (typeof view[method] === 'function') {
             if (view?.events[`click [data-action="${action}"]`]) {
                 // Prevents from firing if a handler is already assigned. Important.
+                // Does not prevent if handled from a nested view. @todo
                 return false;
             }
 
