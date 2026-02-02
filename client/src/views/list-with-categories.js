@@ -111,7 +111,7 @@ class ListWithCategories extends ListView {
         this.categoriesDisabled =
             this.categoriesDisabled ||
             this.getMetadata().get(['scopes', this.categoryScope, 'disabled']) ||
-            !this.getAcl().checkScope(this.categoryScope);
+            !this.getAcl().checkScope(this.categoryScope, 'read');
 
         if (this.categoriesDisabled) {
             this.isExpanded = true;
