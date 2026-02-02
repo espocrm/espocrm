@@ -226,21 +226,22 @@ class EditModalView extends ModalView {
                     model.id = this.id;
                 }
 
-                model.fetch()
-                    .then(() => {
-                        if (!this.headerText) {
-                            this.headerHtml = this.composeHeaderHtml();
-                        }
+                await this.setupLate();
 
-                        this.createRecordView(model);
-                    });
+                await model.fetch();
+
+                if (!this.headerText) {
+                    this.headerHtml = this.composeHeaderHtml();
+                }
+
+                this.createRecordView(model);
 
                 return;
             }
 
-            await new DefaultsPopulator().populate(model);
-
             this.model = model;
+
+            await new DefaultsPopulator().populate(model);
 
             if (this.options.relate) {
                 model.setRelate(this.options.relate);
@@ -249,6 +250,8 @@ class EditModalView extends ModalView {
             if (this.options.attributes) {
                 model.set(this.options.attributes);
             }
+
+            await this.setupLate();
 
             if (!this.headerText) {
                 this.headerHtml = this.composeHeaderHtml();
@@ -263,6 +266,14 @@ class EditModalView extends ModalView {
             }
         });
     }
+
+    /**
+     * Additional setup with the modal ready.
+     *
+     * @protected
+     * @since 9.3.0
+     */
+    async setupLate() {}
 
     /**
      * @param {module:model} model

@@ -198,7 +198,7 @@ class DetailModalView extends ModalView {
 
         this.sourceModel = this.model;
 
-        this.getModelFactory().create(this.entityType).then(model => {
+        this.getModelFactory().create(this.entityType).then(async model => {
             if (!this.sourceModel) {
                 this.model = model;
                 this.model.id = this.id;
@@ -216,7 +216,9 @@ class DetailModalView extends ModalView {
                     this.createRecordView();
                 });
 
-                this.model.fetch();
+                await this.setupLate();
+
+                await this.model.fetch();
 
                 return;
             }
@@ -256,6 +258,14 @@ class DetailModalView extends ModalView {
             });
         }
     }
+
+    /**
+     * Additional setup with the modal ready.
+     *
+     * @protected
+     * @since 9.3.0
+     */
+    async setupLate() {}
 
     /** @private */
     setupActionItems() {

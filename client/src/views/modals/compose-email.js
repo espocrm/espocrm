@@ -116,6 +116,10 @@ class ComposeEmailModalView extends EditModalView {
 
         this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
 
+        this.once('remove', () => {
+            this.dialogIsHidden = false;
+        });
+
         const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
 
         if (helper.toUse()) {
@@ -125,14 +129,10 @@ class ComposeEmailModalView extends EditModalView {
             const attributes = this.options.attributes || {};
 
             this.once('after:render', () => document.location.href = helper.composeLink(attributes));
-
-            return;
         }
+    }
 
-        this.once('remove', () => {
-            this.dialogIsHidden = false;
-        });
-
+    async setupLate() {
         this.listenTo(this.model, 'change', (m, o) => {
             if (o.ui) {
                 this.wasModified = true;
