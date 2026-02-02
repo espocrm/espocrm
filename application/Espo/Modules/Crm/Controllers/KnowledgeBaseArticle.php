@@ -36,7 +36,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SearchParams;
-use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Utils\Json;
 use Espo\Modules\Crm\Tools\KnowledgeBase\Service as KBService;
 
