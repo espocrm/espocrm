@@ -784,6 +784,12 @@ class ListWithCategories extends ListView {
         root.classList.add('action');
         root.style.userSelect = 'none';
 
+        const iconHtml = this.getHeaderIconHtml();
+
+        if (iconHtml) {
+            root.insertAdjacentHTML('afterbegin', iconHtml);
+        }
+
         /** @type {*[]} */
         const list = [root];
 
