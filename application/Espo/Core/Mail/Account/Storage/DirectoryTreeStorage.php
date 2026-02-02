@@ -128,7 +128,6 @@ class DirectoryTreeStorage implements Storage
     }
 
     /**
-     * @todo Test.
      * @inheritDoc
      * @noinspection PhpRedundantCatchClauseInspection
      */
@@ -155,6 +154,13 @@ class DirectoryTreeStorage implements Storage
         } catch (CommonException $e) {
             throw new ImapError($e->getMessage(), previous: $e);
         }
+
+        // May return wrong items. Do not return one with matching id.
+        $output = array_filter($output, fn ($it) => $it > $id);
+        $output = array_values($output);
+
+        // Otherwise, it's in reverse order.
+        sort($output);
 
         return $output;
     }
@@ -187,6 +193,9 @@ class DirectoryTreeStorage implements Storage
         } catch (CommonException $e) {
             throw new ImapError($e->getMessage(), previous: $e);
         }
+
+        // Otherwise, it's in reverse order.
+        sort($output);
 
         return $output;
     }
