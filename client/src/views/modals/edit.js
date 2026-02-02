@@ -268,7 +268,7 @@ class EditModalView extends ModalView {
     }
 
     /**
-     * Additional setup with the modal ready.
+     * Additional setup with the model ready.
      *
      * @protected
      * @since 9.3.0
