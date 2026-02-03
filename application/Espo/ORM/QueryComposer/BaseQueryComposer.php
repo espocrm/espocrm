@@ -97,6 +97,7 @@ abstract class BaseQueryComposer implements QueryComposer
         'fromQuery',
         'forUpdate',
         'forShare',
+        'withRecursive',
     ];
 
     /** @var string[] */
@@ -646,6 +647,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $tailPart = $this->getSelectTailPart($params);
         $joinsPart = $this->getJoinsPart($entity, $params, true);
         $groupByPart = $this->getGroupByPart($entity, $params);
+        $withRecursivePart = $this->getWithRecursivePart($params);
 
         // @todo remove 'customWhere' support
         if (!empty($params['customWhere'])) {
@@ -683,19 +685,20 @@ abstract class BaseQueryComposer implements QueryComposer
         /** @var string $fromAlias */
 
         return $this->composeSelectQuery(
-            $fromPart,
-            $selectPart,
-            $fromAlias,
-            $joinsPart,
-            $wherePart,
-            $orderPart,
-            $params['offset'],
-            $params['limit'],
-            $params['distinct'],
-            $groupByPart,
-            $havingPart,
-            $indexKeyList,
-            $tailPart
+            from: $fromPart,
+            select: $selectPart,
+            alias: $fromAlias,
+            joins: $joinsPart,
+            where: $wherePart,
+            order: $orderPart,
+            offset: $params['offset'],
+            limit: $params['limit'],
+            distinct: $params['distinct'],
+            groupBy: $groupByPart,
+            having: $havingPart,
+            indexKeyList: $indexKeyList,
+            tailPart: $tailPart,
+            withRecursivePart: $withRecursivePart,
         );
     }
 
@@ -3505,10 +3508,15 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $groupBy = null,
         ?string $having = null,
         ?array $indexKeyList = null,
-        ?string $tailPart = null
+        ?string $tailPart = null,
+        ?string $withRecursivePart = null,
     ): string {
 
         $sql = "SELECT";
+
+        if ($withRecursivePart !== null) {
+            $sql = "$withRecursivePart " . $sql;
+        }
 
         if (!empty($distinct) && empty($groupBy)) {
             $sql .= " DISTINCT";
@@ -3796,4 +3804,47 @@ abstract class BaseQueryComposer implements QueryComposer
      * Add a LIMIT part to an SQL query.
      */
     abstract protected function limit(string $sql, ?int $offset = null, ?int $limit = null): string;
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function getWithRecursivePart(array $params): ?string
+    {
+        $items = $params['withRecursive'] ?? null;
+
+        if (!is_array($items)) {
+            return null;
+        }
+
+        $bodyParts = [];
+
+        foreach ($items as $item) {
+            if (!is_array($item) || count($item) < 2) {
+                continue;
+            }
+
+            $query = $item[0];
+            $name = $item[1];
+
+            if (!$query instanceof Union || !is_string($name)) {
+                continue;
+            }
+
+            $bodyParts[] = $this->getWithRecursivePartItem($query, $name);
+        }
+
+        if ($bodyParts === []) {
+            return null;
+        }
+
+        return "WITH RECURSIVE " . implode(', ', $bodyParts);
+    }
+
+    private function getWithRecursivePartItem(Union $query, string $name): string
+    {
+        $unionPart = $this->composeUnion($query);
+        $namePart = $this->quoteIdentifier($this->toDb($name));
+
+        return "$namePart AS ($unionPart)";
+    }
 }

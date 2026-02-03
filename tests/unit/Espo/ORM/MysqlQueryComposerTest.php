@@ -29,10 +29,12 @@
 
 namespace tests\unit\Espo\ORM;
 
+use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Join;
 use Espo\ORM\Query\Part\Where\Comparison;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\UnionBuilder;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 use Espo\ORM\QueryComposer\Part\FunctionConverter;
 
@@ -3628,5 +3630,74 @@ class MysqlQueryComposerTest extends TestCase
         $sql = $this->query->composeSelect($query);
 
         $this->assertEquals($expectedSql, $sql);
+    }
+
+
+    public function testWithRecursive1(): void
+    {
+        $query = (new SelectBuilder())
+            ->select('id')
+            ->from('Test', 'test')
+            ->withRecursive(
+                UnionBuilder::create()
+                    ->all()
+                    ->query(
+                        SelectBuilder::create()
+                            ->select([
+                                'order',
+                                'id',
+                                'parentId'
+                            ])
+                            ->from('Category')
+                            ->where(['parentId' => null])
+                            ->build()
+                    )
+                    ->query(
+                        SelectBuilder::create()
+                            ->select([
+                                'order',
+                                'id',
+                                'parentId',
+                            ])
+                            ->from('Category')
+                            ->join(
+                                Join::createWithTableTarget('CommonTable', 'comTab')
+                                    ->withConditions(
+                                        Cond::equal(
+                                            Expression::column('comTab.id'),
+                                            Expression::column('parentId'),
+                                        )
+                                    )
+                            )
+                            ->where(['parentId' => null])
+                            ->build()
+                    )
+                    ->build(),
+                'CommonTable'
+            )
+            ->join(
+                Join::createWithTableTarget('CommonTable', 'comTab')
+                    ->withConditions(
+                        Cond::equal(
+                            Expression::column('comTab.id'),
+                            Expression::column('categoryId'),
+                        )
+                    )
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expected =
+            "WITH RECURSIVE `common_table` AS (" .
+            "(SELECT category.order AS `order`, category.id AS `id`, category.parent_id AS `parentId` FROM `category` " .
+            "WHERE category.parent_id IS NULL) UNION ALL " .
+            "(SELECT category.order AS `order`, category.id AS `id`, category.parent_id AS `parentId` FROM `category` " .
+            "JOIN `common_table` AS `comTab` ON comTab.id = category.parent_id " .
+            "WHERE category.parent_id IS NULL)) SELECT test.id AS `id` FROM `test` AS `test` " .
+            "JOIN `common_table` AS `comTab` ON comTab.id = test.category_id";
+
+        $this->assertEquals($expected, $sql);
     }
 }

@@ -601,4 +601,15 @@ return [
             ],
         ],
     ],
+
+    'Category' => [
+        'attributes' => [
+            'id' => [
+                'type' => Entity::ID,
+            ],
+            'parentId' => [
+                'type' => Entity::FOREIGN_ID,
+            ],
+        ],
+    ],
 ];

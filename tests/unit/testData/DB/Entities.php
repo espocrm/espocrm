@@ -66,6 +66,10 @@ class Article extends TestEntity
 
 }
 
+class Category extends TestEntity
+{
+}
+
 class Job extends TestEntity
 {
     public function getFromContainerOriginal(string $attribute)

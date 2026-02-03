@@ -290,6 +290,22 @@ class SelectBuilder implements Builder
     }
 
     /**
+     * Add an item to a with recursive statement.
+     *
+     * @param Union $query A query.
+     * @param string $name A CTE name. In UpperCamelCase.
+     * @since 9.3.0
+     */
+    public function withRecursive(Union $query, string $name): self
+    {
+        $this->params['withRecursive'] ??= [];
+
+        $this->params['withRecursive'][] = [$query, $name];
+
+        return $this;
+    }
+
+    /**
      * @param array<Expression|Selection|mixed[]> $itemList
      * @return array<array{0: string, 1?: string}|string>
      */
