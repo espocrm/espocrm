@@ -337,7 +337,7 @@
         "Reactions": "Reactions"
     },
     "messages": {
-        "checkLogsForDetails": "Check logs for details",
+        "checkLogsForDetails": "Check logs for details.",
         "pleaseWait": "Please wait...",
         "loading": "Loading...",
         "saving": "Saving...",
