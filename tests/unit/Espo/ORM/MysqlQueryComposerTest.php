@@ -31,6 +31,7 @@ namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\Where\Comparison;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\SelectBuilder;
@@ -3644,7 +3645,7 @@ class MysqlQueryComposerTest extends TestCase
                     ->query(
                         SelectBuilder::create()
                             ->select([
-                                'order',
+                                Selection::fromString('order')->withNoAlias(),
                                 'id',
                                 'parentId'
                             ])
@@ -3655,7 +3656,7 @@ class MysqlQueryComposerTest extends TestCase
                     ->query(
                         SelectBuilder::create()
                             ->select([
-                                'order',
+                                Selection::fromString('order')->withNoAlias(),
                                 'id',
                                 'parentId',
                             ])
@@ -3691,9 +3692,9 @@ class MysqlQueryComposerTest extends TestCase
 
         $expected =
             "WITH RECURSIVE `common_table` AS (" .
-            "(SELECT category.order AS `order`, category.id AS `id`, category.parent_id AS `parentId` FROM `category` " .
+            "(SELECT category.order, category.id AS `id`, category.parent_id AS `parentId` FROM `category` " .
             "WHERE category.parent_id IS NULL) UNION ALL " .
-            "(SELECT category.order AS `order`, category.id AS `id`, category.parent_id AS `parentId` FROM `category` " .
+            "(SELECT category.order, category.id AS `id`, category.parent_id AS `parentId` FROM `category` " .
             "JOIN `common_table` AS `comTab` ON comTab.id = category.parent_id " .
             "WHERE category.parent_id IS NULL)) SELECT test.id AS `id` FROM `test` AS `test` " .
             "JOIN `common_table` AS `comTab` ON comTab.id = test.category_id";

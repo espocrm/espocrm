@@ -1793,11 +1793,22 @@ abstract class BaseQueryComposer implements QueryComposer
 
         foreach ($itemPairList as $item) {
             $expression = $item[0];
+
+            if ($expression === '') {
+                throw new RuntimeException("Bad select expression.");
+            }
+
+            if ($item[1] === '') {
+                $selectPartItemList[] = $expression;
+
+                continue;
+            }
+
             /** @noinspection PhpDeprecationInspection */
             $alias = $this->sanitizeSelectAlias($item[1]);
 
-            if ($expression === '' || $alias === '') {
-                throw new RuntimeException("Bad select expression.");
+            if ($alias === '') {
+                throw new RuntimeException("Bad alias.");
             }
 
             $selectPartItemList[] = "$expression AS " . $this->quoteIdentifier($alias);

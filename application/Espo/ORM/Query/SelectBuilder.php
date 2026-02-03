@@ -166,7 +166,7 @@ class SelectBuilder implements Builder
         if (is_string($select)) {
             $this->params['select'] = $this->params['select'] ?? [];
 
-            $this->params['select'][] = $alias ?
+            $this->params['select'][] = $alias !== null ?
                 [$select, $alias] :
                 $select;
 
@@ -321,7 +321,7 @@ class SelectBuilder implements Builder
             }
 
             if ($item instanceof Selection) {
-                $resultList[] = $item->getAlias() ?
+                $resultList[] = $item->getAlias() !== null ?
                     [$item->getExpression()->getValue(), $item->getAlias()] :
                     [$item->getExpression()->getValue()];
 
