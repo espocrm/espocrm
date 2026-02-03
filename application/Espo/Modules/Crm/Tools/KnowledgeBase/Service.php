@@ -154,6 +154,7 @@ class Service
             ->order([
                 ['order', 'DESC'],
             ])
+            ->limit()
             ->build();
 
         /** @var ?KnowledgeBaseArticle $previousEntity */
@@ -211,6 +212,7 @@ class Service
             ->order([
                 ['order', 'ASC'],
             ])
+            ->limit()
             ->build();
 
         /** @var ?KnowledgeBaseArticle $nextEntity */
@@ -268,6 +270,7 @@ class Service
             ->order([
                 ['order', 'ASC'],
             ])
+            ->limit()
             ->build();
 
         /** @var ?KnowledgeBaseArticle $previousEntity */
@@ -322,6 +325,7 @@ class Service
             ->order([
                 ['order', 'DESC'],
             ])
+            ->limit()
             ->build();
 
         /** @var ?KnowledgeBaseArticle $nextEntity */
