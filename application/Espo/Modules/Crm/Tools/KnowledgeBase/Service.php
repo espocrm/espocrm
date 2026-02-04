@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -171,8 +172,8 @@ class Service
 
         $previousEntity->set('order', $currentIndex);
 
-        $this->entityManager->saveEntity($entity);
-        $this->entityManager->saveEntity($previousEntity);
+        $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
+        $this->entityManager->saveEntity($previousEntity, [SaveOption::SILENT => true]);
     }
 
     /**
@@ -229,8 +230,8 @@ class Service
 
         $nextEntity->set('order', $currentIndex);
 
-        $this->entityManager->saveEntity($entity);
-        $this->entityManager->saveEntity($nextEntity);
+        $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
+        $this->entityManager->saveEntity($nextEntity, [SaveOption::SILENT => true]);
     }
 
     /**
@@ -285,7 +286,7 @@ class Service
 
         $entity->set('order', $previousEntity->getOrder() - 1);
 
-        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
     }
 
     /**
@@ -340,6 +341,6 @@ class Service
 
         $entity->set('order', $nextEntity->getOrder() + 1);
 
-        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
     }
 }
