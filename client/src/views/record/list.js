@@ -659,7 +659,7 @@ class ListRecordView extends View {
         },
         /** @this ListRecordView */
         'click [data-action="showMore"]': async function () {
-            await this.showMoreRecords();
+            this.showMoreRecords();
 
             this.focusOnList();
         },
