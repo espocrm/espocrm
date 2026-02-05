@@ -101,6 +101,7 @@ class ListRecordView extends View {
      * @property {boolean} [forceSettings] Force settings. As of v9.2.0.
      * @property {boolean} [forceAllResultSelectable] Force select all result. As of v9.2.0.
      * @property {module:search-manager~whereItem} [allResultWhereItem] Where item for select all result. As of v9.2.0.
+     * @property {boolean} [storeSettings=true] To store settings. As of v9.4.0.
      */
 
     /**
@@ -3754,11 +3755,13 @@ class ListRecordView extends View {
             return;
         }
 
-        this._listSettingsHelper = this.options.settingsHelper || new ListSettingsHelper(
+        this._listSettingsHelper = this.options.settingsHelper ?? new ListSettingsHelper(
             this.entityType,
             this.layoutName,
             this.getUser().id,
-            this.getStorage()
+            {
+                useStorage: this.options.storeSettings ?? true,
+            }
         );
 
         const view = new RecordListSettingsView({

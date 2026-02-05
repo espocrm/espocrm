@@ -26,6 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Storage from 'storage';
+import SessionStorage from 'session-storage';
+
 class ListSettingsHelper {
 
     /**
@@ -35,15 +39,35 @@ class ListSettingsHelper {
      */
 
     /**
+     * @private
+     * @type {Storage}
+     */
+    @inject(Storage)
+    storage
+
+    /**
+     * @private
+     * @type {SessionStorage}
+     */
+    @inject(SessionStorage)
+    sessionStorage
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    useStorage
+
+    /**
+     * Note: Do not change the signature for the first 3 parameters.
+     * @internal
+     *
      * @param {string} entityType
      * @param {string} type
      * @param {string} userId
-     * @param {module:storage} storage
+     * @param {{useStorage?: boolean}} options
      */
-    constructor(entityType, type, userId, storage) {
-        /** @private */
-        this.storage = storage;
-
+    constructor(entityType, type, userId, options = {}) {
         /** @private */
         this.layoutColumnsKey = `${type}-${entityType}-${userId}`;
 
@@ -70,6 +94,59 @@ class ListSettingsHelper {
          * @type {function()[]}
          */
         this.columnWidthChangeFunctions = [];
+
+        this.useStorage = options.useStorage ?? true;
+
+        if (!this.useStorage) {
+            this.layoutColumnsKey += 'listSettings-' + Math.random().toString(36).substring(2, 8);
+        }
+    }
+
+    /**
+     * @private
+     * @param {string} key
+     * @return {*}
+     */
+    getStored(key) {
+        if (this.useStorage) {
+            return this.storage.get(key, this.layoutColumnsKey);
+        }
+
+        return this.sessionStorage.get(this.getSessionKey(key));
+    }
+
+    /**
+     * @private
+     * @param {string} key
+     * @param {*} value
+     */
+    store(key, value) {
+        if (this.useStorage) {
+            this.storage.set(key, this.layoutColumnsKey, value);
+        }
+
+        return this.sessionStorage.set(this.getSessionKey(key), value);
+    }
+
+    /**
+     * @private
+     * @param {string} key
+     */
+    clearStored(key) {
+        if (this.useStorage) {
+            return this.storage.clear(key, this.layoutColumnsKey);
+        }
+
+        return this.sessionStorage.clear(this.getSessionKey(key));
+    }
+
+    /**
+     * @private
+     * @param {string} key
+     * @return {string}
+     */
+    getSessionKey(key) {
+        return this.layoutColumnsKey + '-' + key;
     }
 
     /**
@@ -82,7 +159,8 @@ class ListSettingsHelper {
             return this.hiddenColumnMapCache;
         }
 
-        this.hiddenColumnMapCache = this.storage.get('listHiddenColumns', this.layoutColumnsKey) || {};
+        this.hiddenColumnMapCache = /** @type {Object} */
+            this.getStored('listHiddenColumns') ?? {};
 
         return this.hiddenColumnMapCache;
     }
@@ -121,7 +199,7 @@ class ListSettingsHelper {
      */
     getColumnResize() {
         if (this.columnResize === undefined) {
-            this.columnResize = this.storage.get('listColumnResize', this.layoutColumnsKey) || false;
+            this.columnResize = this.getStored('listColumnResize') ?? false;
         }
 
         return this.columnResize;
@@ -135,7 +213,7 @@ class ListSettingsHelper {
     storeColumnResize(columnResize) {
         this.columnResize = columnResize;
 
-        this.storage.set('listColumnResize', this.layoutColumnsKey, columnResize);
+        this.store('listColumnResize', columnResize);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -145,7 +223,7 @@ class ListSettingsHelper {
     clearColumnResize() {
         this.columnResize = undefined;
 
-        this.storage.clear('listColumnResize', this.layoutColumnsKey);
+        this.clearStored('listColumnResize');
     }
 
     /**
@@ -156,7 +234,7 @@ class ListSettingsHelper {
     storeHiddenColumnMap(map) {
         this.hiddenColumnMapCache = undefined;
 
-        this.storage.set('listHiddenColumns', this.layoutColumnsKey, map);
+        this.store('listHiddenColumns', map);
     }
 
     /**
@@ -165,7 +243,7 @@ class ListSettingsHelper {
     clearHiddenColumnMap() {
         this.hiddenColumnMapCache = undefined;
 
-        this.storage.clear('listHiddenColumns', this.layoutColumnsKey);
+        this.clearStored('listHiddenColumns');
     }
 
     /**
@@ -178,7 +256,8 @@ class ListSettingsHelper {
             return this.columnWidthMapCache;
         }
 
-        this.columnWidthMapCache = this.storage.get('listColumnsWidths', this.layoutColumnsKey) || {};
+        this.columnWidthMapCache = /** @type {Object} */
+            this.getStored('listColumnsWidths') ?? {};
 
         return this.columnWidthMapCache;
     }
@@ -191,7 +270,7 @@ class ListSettingsHelper {
     storeColumnWidthMap(map) {
         this.columnWidthMapCache = undefined;
 
-        this.storage.set('listColumnsWidths', this.layoutColumnsKey, map);
+        this.store('listColumnsWidths', map);
     }
 
     /**
@@ -200,7 +279,7 @@ class ListSettingsHelper {
     clearColumnWidthMap() {
         this.columnWidthMapCache = undefined;
 
-        this.storage.clear('listColumnsWidths', this.layoutColumnsKey);
+        this.clearStored('listColumnsWidths');
     }
 
     /**
