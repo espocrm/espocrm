@@ -2294,6 +2294,10 @@ class ListRecordView extends View {
 
     onRemove() {
         this.destroyStickyBar();
+
+        if (this._listSettingsHelper) {
+            this._listSettingsHelper.clearTemporaryStorage();
+        }
     }
 
     afterRender() {

@@ -63,13 +63,13 @@ class ListSettingsHelper {
      * @internal
      *
      * @param {string} entityType
-     * @param {string} type
+     * @param {string} key A key used for storage.
      * @param {string} userId
      * @param {{useStorage?: boolean}} options
      */
-    constructor(entityType, type, userId, options = {}) {
+    constructor(entityType, key, userId, options = {}) {
         /** @private */
-        this.layoutColumnsKey = `${type}-${entityType}-${userId}`;
+        this.layoutColumnsKey = `${key}-${entityType}-${userId}`;
 
         /**
          * @private
@@ -138,6 +138,26 @@ class ListSettingsHelper {
         }
 
         return this.sessionStorage.clear(this.getSessionKey(key));
+    }
+
+
+    /**
+     * @internal
+     */
+    clearTemporaryStorage() {
+        if (this.useStorage) {
+            return;
+        }
+
+        const keys = [
+            'listHiddenColumns',
+            'listColumnResize',
+            'listColumnsWidths',
+        ];
+
+        for (const key of keys) {
+            this.clearStored(this.getSessionKey(key));
+        }
     }
 
     /**
