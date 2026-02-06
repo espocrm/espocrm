@@ -63,8 +63,10 @@ class DompdfInitializer
     {
         $options = new Options();
 
-        $options->setIsPdfAEnabled($params->isPdfA());
-        $options->setDefaultFont($this->getFontFace($template));
+        $options
+            ->setIsPdfAEnabled($params->isPdfA())
+            ->setDefaultFont($this->getFontFace($template))
+            ->setIsJavascriptEnabled(false);
 
         $pdf = new Dompdf($options);
 
