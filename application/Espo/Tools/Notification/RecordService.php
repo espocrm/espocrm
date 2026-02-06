@@ -472,12 +472,15 @@ class RecordService
 
     private function prepareSetFields(Notification $entity): void
     {
-        if ($entity->getRelated() && $entity->getData()?->relatedName) {
-            $entity->set('relatedName', $entity->getData()->relatedName);
+        $relatedName = $entity->getData()->relatedName ?? null;
+        $createdByName = $entity->getData()->createdByName ?? null;
+
+        if ($entity->getRelated() && $relatedName !== null) {
+            $entity->set('relatedName', $relatedName);
         }
 
-        if ($entity->getCreatedBy() && $entity->getData()?->createdByName) {
-            $entity->set('createdByName', $entity->getData()->createdByName);
+        if ($entity->getCreatedBy() && $createdByName !== null) {
+            $entity->set('createdByName', $createdByName);
         }
     }
 }
