@@ -267,8 +267,12 @@ class Image implements EntryPoint
             }
         }
 
-        if ($targetWidth < 1 || $targetHeight < 1) {
-            throw new RuntimeException("No width or height.");
+        if ($targetWidth < 1) {
+            $targetWidth = 1;
+        }
+
+        if ($targetHeight < 1) {
+            $targetHeight = 1;
         }
 
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
