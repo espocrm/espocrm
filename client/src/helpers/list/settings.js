@@ -28,7 +28,7 @@
 
 import {inject} from 'di';
 import Storage from 'storage';
-import SessionStorage from 'session-storage';
+import Utils from 'utils';
 
 class ListSettingsHelper {
 
@@ -44,13 +44,6 @@ class ListSettingsHelper {
      */
     @inject(Storage)
     storage
-
-    /**
-     * @private
-     * @type {SessionStorage}
-     */
-    @inject(SessionStorage)
-    sessionStorage
 
     /**
      * @private
@@ -96,10 +89,6 @@ class ListSettingsHelper {
         this.columnWidthChangeFunctions = [];
 
         this.useStorage = options.useStorage ?? true;
-
-        if (!this.useStorage) {
-            this.layoutColumnsKey += 'listSettings-' + Math.random().toString(36).substring(2, 8);
-        }
     }
 
     /**
@@ -112,7 +101,7 @@ class ListSettingsHelper {
             return this.storage.get(key, this.layoutColumnsKey);
         }
 
-        return this.sessionStorage.get(this.getSessionKey(key));
+        return null;
     }
 
     /**
@@ -124,8 +113,6 @@ class ListSettingsHelper {
         if (this.useStorage) {
             this.storage.set(key, this.layoutColumnsKey, value);
         }
-
-        return this.sessionStorage.set(this.getSessionKey(key), value);
     }
 
     /**
@@ -134,39 +121,8 @@ class ListSettingsHelper {
      */
     clearStored(key) {
         if (this.useStorage) {
-            return this.storage.clear(key, this.layoutColumnsKey);
+            this.storage.clear(key, this.layoutColumnsKey);
         }
-
-        return this.sessionStorage.clear(this.getSessionKey(key));
-    }
-
-
-    /**
-     * @internal
-     */
-    clearTemporaryStorage() {
-        if (this.useStorage) {
-            return;
-        }
-
-        const keys = [
-            'listHiddenColumns',
-            'listColumnResize',
-            'listColumnsWidths',
-        ];
-
-        for (const key of keys) {
-            this.clearStored(this.getSessionKey(key));
-        }
-    }
-
-    /**
-     * @private
-     * @param {string} key
-     * @return {string}
-     */
-    getSessionKey(key) {
-        return this.layoutColumnsKey + '-' + key;
     }
 
     /**
@@ -252,7 +208,7 @@ class ListSettingsHelper {
      * @param {Object.<string, boolean>} map
      */
     storeHiddenColumnMap(map) {
-        this.hiddenColumnMapCache = undefined;
+        this.hiddenColumnMapCache = Utils.cloneDeep(map);
 
         this.store('listHiddenColumns', map);
     }
@@ -288,7 +244,7 @@ class ListSettingsHelper {
      * @param {Object.<string, ListSettingsHelper~columnWidth>} map
      */
     storeColumnWidthMap(map) {
-        this.columnWidthMapCache = undefined;
+        this.columnWidthMapCache = Utils.cloneDeep(map);
 
         this.store('listColumnsWidths', map);
     }
