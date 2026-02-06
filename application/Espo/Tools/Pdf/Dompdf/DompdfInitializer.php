@@ -68,6 +68,12 @@ class DompdfInitializer
             ->setDefaultFont($this->getFontFace($template))
             ->setIsJavascriptEnabled(false);
 
+        $fontDir = $this->metadata->get('app.pdfEngines.Dompdf.additionalParams.fontDir');
+
+        if ($fontDir) {
+            $options->setFontDir($fontDir);
+        }
+
         $pdf = new Dompdf($options);
 
         $this->mapFonts($pdf, $params->isPdfA());
