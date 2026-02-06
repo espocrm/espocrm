@@ -32,6 +32,7 @@ namespace Espo\Tools\Pdf\Dompdf;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
 
@@ -41,8 +42,21 @@ class DompdfInitializer
 
     private const PT = 2.83465;
 
+    /** @var array<string, string> */
+    private array $standardFontMapping = [
+        'courier' => 'DejaVu Sans Mono',
+        'fixed' => 'DejaVu Sans Mono',
+        'helvetica' => 'DejaVu Sans',
+        'monospace' => 'DejaVu Sans Mono',
+        'sans-serif' => 'DejaVu Sans',
+        'serif' => 'DejaVu Serif',
+        'times' => 'DejaVu Serif',
+        'times-roman' => 'DejaVu Serif',
+    ];
+
     public function __construct(
         private Config $config,
+        private Metadata $metadata,
     ) {}
 
     public function initialize(Template $template, Params $params): Dompdf
@@ -54,9 +68,7 @@ class DompdfInitializer
 
         $pdf = new Dompdf($options);
 
-        if ($params->isPdfA()) {
-            $this->mapFonts($pdf);
-        }
+        $this->mapFonts($pdf, $params->isPdfA());
 
         $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
             [0.0, 0.0, $template->getPageWidth() * self::PT, $template->getPageHeight() * self::PT] :
@@ -79,18 +91,30 @@ class DompdfInitializer
             $this->defaultFontFace;
     }
 
-    private function mapFonts(Dompdf $pdf): void
+    private function mapFonts(Dompdf $pdf, bool $isPdfA): void
     {
-        // Fonts are included in PDF/A. Map standard fonts to open source analogues.
+        // When fonts are included in PDF/A, we need to map standard fonts to open source analogues.
+        // Also need to support popular fonts specified in CSS styles.
         $fontMetrics = $pdf->getFontMetrics();
 
-        $fontMetrics->setFontFamily('courier', $fontMetrics->getFamily('DejaVu Sans Mono'));
-        $fontMetrics->setFontFamily('fixed', $fontMetrics->getFamily('DejaVu Sans Mono'));
-        $fontMetrics->setFontFamily('helvetica', $fontMetrics->getFamily('DejaVu Sans'));
-        $fontMetrics->setFontFamily('monospace', $fontMetrics->getFamily('DejaVu Sans Mono'));
-        $fontMetrics->setFontFamily('sans-serif', $fontMetrics->getFamily('DejaVu Sans'));
-        $fontMetrics->setFontFamily('serif', $fontMetrics->getFamily('DejaVu Serif'));
-        $fontMetrics->setFontFamily('times', $fontMetrics->getFamily('DejaVu Serif'));
-        $fontMetrics->setFontFamily('times-roman', $fontMetrics->getFamily('DejaVu Serif'));
+        if ($isPdfA) {
+            foreach ($this->standardFontMapping as $key => $value) {
+                $fontMetrics->setFontFamily($key, $fontMetrics->getFamily($value));
+            }
+
+            return;
+        }
+
+        /** @var string[] $fontList */
+        $fontList = $this->metadata->get('app.pdfEngines.Dompdf.fontFaceList') ?? [];
+        $fontList = array_map(fn ($it) => strtolower($it), $fontList);
+
+        foreach ($this->standardFontMapping as $key => $value) {
+            if (in_array(strtolower($key), $fontList)) {
+                continue;
+            }
+
+            $fontMetrics->setFontFamily($key, $fontMetrics->getFamily($value));
+        }
     }
 }
