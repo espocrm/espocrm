@@ -35,6 +35,7 @@ export default class LinkFieldIconHelper {
      * @param {import('views/fields/link').default} view
      * @param {{
      *     iconClass: string,
+     *     getIconClass: function(): string|null,
      *     getColor: function(): string,
      * }} options
      */
@@ -91,6 +92,14 @@ export default class LinkFieldIconHelper {
         const icon = document.createElement('span');
         icon.className = 'icon-in-input ' + this.options.iconClass;
         icon.style.color = this.options.getColor();
+
+        const iconClass = this.options.getIconClass();
+
+        if (!iconClass) {
+            return;
+        }
+
+        icon.className += ' ' + iconClass;
 
         const input = view.element.querySelector('.input-group > input');
 
