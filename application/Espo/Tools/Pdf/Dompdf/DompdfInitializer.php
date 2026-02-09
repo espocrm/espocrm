@@ -30,8 +30,10 @@
 namespace Espo\Tools\Pdf\Dompdf;
 
 use Dompdf\Dompdf;
+use Dompdf\FontMetrics;
 use Dompdf\Options;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
@@ -39,6 +41,8 @@ use Espo\Tools\Pdf\Template;
 class DompdfInitializer
 {
     private string $defaultFontFace = 'DejaVu Sans';
+    private string $cacheDir = 'data/cache/application/dompdf';
+    private string $pdfaCacheDir = 'data/cache/application/pdfa-dompdf';
 
     private const PT = 2.83465;
 
@@ -57,6 +61,7 @@ class DompdfInitializer
     public function __construct(
         private Config $config,
         private Metadata $metadata,
+        private FileManager $fileManager,
     ) {}
 
     public function initialize(Template $template, Params $params): Dompdf
@@ -68,15 +73,18 @@ class DompdfInitializer
             ->setDefaultFont($this->getFontFace($template))
             ->setIsJavascriptEnabled(false);
 
-        $fontDir = $this->metadata->get('app.pdfEngines.Dompdf.additionalParams.fontDir');
+        $dir = $params->isPdfA() ? $this->pdfaCacheDir : $this->cacheDir;
 
-        if ($fontDir) {
-            $options->setFontDir($fontDir);
+        $options->setFontDir($dir);
+        $options->setFontCache($dir);
+
+        if (!$this->fileManager->isDir($dir)) {
+            $this->fileManager->mkdir($dir);
         }
 
         $pdf = new Dompdf($options);
 
-        $this->mapFonts($pdf, $params->isPdfA());
+        $this->mapFonts($pdf, $params->isPdfA(), $dir);
 
         $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
             [0.0, 0.0, $template->getPageWidth() * self::PT, $template->getPageHeight() * self::PT] :
@@ -99,8 +107,14 @@ class DompdfInitializer
             $this->defaultFontFace;
     }
 
-    private function mapFonts(Dompdf $pdf, bool $isPdfA): void
+    private function mapFonts(Dompdf $pdf, bool $isPdfA, string $dir): void
     {
+        $file = $dir . '/' . FontMetrics::USER_FONTS_FILE;
+
+        if ($this->fileManager->exists($file)) {
+            return;
+        }
+
         // When fonts are included in PDF/A, we need to map standard fonts to open source analogues.
         // Also need to support popular fonts specified in CSS styles.
         $fontMetrics = $pdf->getFontMetrics();
