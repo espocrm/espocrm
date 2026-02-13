@@ -23,7 +23,7 @@
             "type": "decimal",
             "decimalPlaces": 6,
             "min": 0.0001,
-            "precision": 15,
+            "precision": 20,
             "scale": 8,
             "required": true,
             "audited": true,
