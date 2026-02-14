@@ -438,6 +438,27 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "checklist"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "isSorted": {
+                                "type": "boolean",
+                                "description": "Sort the dropdown options alphabetically."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "varchar"},
                                     {"const": "array"},
                                     {"const": "multiEnum"}

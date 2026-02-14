@@ -108,8 +108,14 @@ class ExpandedLayoutDashletFieldView extends BaseFieldView {
 
         this.addActionHandler('editItem', (event, target) => this.editItem(target.dataset.name));
 
-        this.targetEntityType = this.model.get('entityType') ||
+        this.targetEntityType = this.model.attributes.entityType ??
             this.getMetadata().get(['dashlets', this.dataObject.dashletName, 'entityType']);
+
+        this.listenTo(this.model, 'change:entityType', () => {
+            if (this.model.attributes.entityType) {
+                this.targetEntityType = this.model.attributes.entityType;
+            }
+        });
     }
 
     /**

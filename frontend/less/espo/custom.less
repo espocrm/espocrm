@@ -2364,24 +2364,41 @@ td.cell {
     }
 }
 
-div:has(.avatar-in-input):not(:has(.being-typed)) {
-    > .input-group > input {
-        padding-left: var(--33px);
+div:has(.avatar-in-input),
+div:has(.icon-in-input) {
+    &:not(:has(.being-typed)) {
+        > .input-group > input {
+            padding-left: var(--33px);
+        }
+
+        &:has(.color-icon) {
+            > .input-group > input {
+                padding-left: var(--21px);
+            }
+        }
+
+        > .icon-in-input,
+        > .avatar-in-input {
+            display: inline-block;
+            position: absolute;
+            z-index: 3;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        > .avatar-in-input {
+            top: var(--9px);
+            left: var(--10px);
+        }
+
+        > .icon-in-input {
+            top: var(--11px);
+            left: var(--10px);
+        }
     }
 
-    > .avatar-in-input {
-        display: inline-block;
-        position: absolute;
-        top: var(--9px);
-        left: var(--10px);
-        z-index: 3;
-        user-select: none;
-        pointer-events: none;
-    }
-}
-
-div:has(.avatar-in-input) {
-    > .avatar-in-input {
+    > .avatar-in-input,
+    > .icon-in-input {
         display: none;
     }
 }

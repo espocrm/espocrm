@@ -33,6 +33,11 @@
                         }
                     ]
                 }
+            },
+            "additionalParams": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Additional engine-wise parameters."
             }
         }
     }

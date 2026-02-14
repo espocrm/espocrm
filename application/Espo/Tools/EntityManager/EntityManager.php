@@ -724,6 +724,7 @@ class EntityManager
             'collection.order',
             'collection.textFilterFields',
             'collection.fullTextSearch',
+            'collection.countDisabled',
         ]);
 
         foreach ($this->getAdditionalParamLocationMap($name) as $it) {

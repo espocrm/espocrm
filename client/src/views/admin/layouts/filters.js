@@ -118,6 +118,16 @@ class LayoutFiltersView extends LayoutRowsView {
             return false;
         }
 
+        /** @type {string[]|null} */
+        const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+
+        if (
+            layoutList &&
+            !layoutList.includes(this.type)
+        ) {
+            return false;
+        }
+
         return !model.getFieldParam(name, 'disabled') &&
             !model.getFieldParam(name, 'utility') &&
             !model.getFieldParam(name, 'layoutFiltersDisabled');

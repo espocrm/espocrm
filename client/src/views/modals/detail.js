@@ -223,8 +223,7 @@ class DetailModalView extends ModalView {
                 return;
             }
 
-            this.model = this.sourceModel.clone();
-            this.model.collection = this.sourceModel.collection.clone();
+            this.cloneSourceModel();
 
             this.setupAfterModelCreated();
 
@@ -257,6 +256,23 @@ class DetailModalView extends ModalView {
                 groupIndex: 0,
             });
         }
+    }
+
+    /**
+     * @private
+     */
+    cloneSourceModel() {
+        this.model = this.sourceModel.clone();
+
+        const sourceCollection = this.sourceModel.collection;
+
+        if (!sourceCollection) {
+            return;
+        }
+
+        this.model.collection = sourceCollection.clone();
+
+        this.listenTo(this.model.collection, 'update-source', () => sourceCollection.fetch())
     }
 
     /**
@@ -502,7 +518,7 @@ class DetailModalView extends ModalView {
         if (nextButtonEnabled) {
             this.enableButton('next');
         } else {
-             this.disableButton('next');
+            this.disableButton('next');
         }
     }
 
@@ -512,6 +528,7 @@ class DetailModalView extends ModalView {
         }
 
         const previousModel = this.model;
+        const previousCollection = this.model.collection;
 
         this.sourceModel = this.model.collection.at(indexOfRecord);
 
@@ -524,11 +541,14 @@ class DetailModalView extends ModalView {
         this.id = this.sourceModel.id;
         this.scope = this.sourceModel.entityType;
 
-        this.model = this.sourceModel.clone();
-        this.model.collection = this.sourceModel.collection.clone();
+        this.cloneSourceModel();
 
         this.stopListening(previousModel, 'change');
         this.stopListening(previousModel, 'sync');
+
+        if (previousCollection) {
+            this.stopListening(previousCollection, 'update-source');
+        }
 
         this.listenTo(this.model, 'change', () => {
             this.sourceModel.set(this.model.getClonedAttributes());

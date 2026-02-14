@@ -14,8 +14,12 @@
                 false
             ],
             [
+                {"name": "users"},
+                false
+            ],
+            [
                 {"name": "calendars"},
-                {"name": "users"}
+                false
             ],
             [
                 {"name": "description"}

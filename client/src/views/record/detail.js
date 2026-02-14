@@ -846,7 +846,8 @@ class DetailRecordView extends BaseRecordView {
         if (this.duplicateAction) {
             if (
                 this.getAcl().check(this.entityType, 'create') &&
-                !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])
+                !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled']) &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
             ) {
                 this.addDropdownItem({
                     label: 'Duplicate',

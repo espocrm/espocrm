@@ -84,6 +84,7 @@ class Service
 
         $this->entityManager->saveEntity($entity);
 
+        $service->loadAdditionalFields($entity);
         $service->prepareEntityForOutput($entity);
 
         return $entity;
@@ -108,6 +109,7 @@ class Service
 
         $this->entityManager->saveEntity($entity);
 
+        $service->loadAdditionalFields($entity);
         $service->prepareEntityForOutput($entity);
 
         return $entity;

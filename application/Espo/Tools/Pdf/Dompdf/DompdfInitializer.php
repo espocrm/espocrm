@@ -30,33 +30,61 @@
 namespace Espo\Tools\Pdf\Dompdf;
 
 use Dompdf\Dompdf;
+use Dompdf\FontMetrics;
 use Dompdf\Options;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
 
 class DompdfInitializer
 {
     private string $defaultFontFace = 'DejaVu Sans';
+    private string $cacheDir = 'data/cache/application/dompdf';
+    private string $pdfaCacheDir = 'data/cache/application/pdfa-dompdf';
 
     private const PT = 2.83465;
 
+    /** @var array<string, string> */
+    private array $standardFontMapping = [
+        'courier' => 'DejaVu Sans Mono',
+        'fixed' => 'DejaVu Sans Mono',
+        'helvetica' => 'DejaVu Sans',
+        'monospace' => 'DejaVu Sans Mono',
+        'sans-serif' => 'DejaVu Sans',
+        'serif' => 'DejaVu Serif',
+        'times' => 'DejaVu Serif',
+        'times-roman' => 'DejaVu Serif',
+    ];
+
     public function __construct(
         private Config $config,
+        private Metadata $metadata,
+        private FileManager $fileManager,
     ) {}
 
     public function initialize(Template $template, Params $params): Dompdf
     {
         $options = new Options();
 
-        $options->setIsPdfAEnabled($params->isPdfA());
-        $options->setDefaultFont($this->getFontFace($template));
+        $options
+            ->setIsPdfAEnabled($params->isPdfA())
+            ->setDefaultFont($this->getFontFace($template))
+            ->setIsJavascriptEnabled(false);
+
+        $dir = $params->isPdfA() ? $this->pdfaCacheDir : $this->cacheDir;
+
+        $options->setFontDir($dir);
+        $options->setFontCache($dir);
+
+        if (!$this->fileManager->isDir($dir)) {
+            $this->fileManager->mkdir($dir);
+        }
 
         $pdf = new Dompdf($options);
 
-        if ($params->isPdfA()) {
-            $this->mapFonts($pdf);
-        }
+        $this->mapFonts($pdf, $params->isPdfA(), $dir);
 
         $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
             [0.0, 0.0, $template->getPageWidth() * self::PT, $template->getPageHeight() * self::PT] :
@@ -79,18 +107,36 @@ class DompdfInitializer
             $this->defaultFontFace;
     }
 
-    private function mapFonts(Dompdf $pdf): void
+    private function mapFonts(Dompdf $pdf, bool $isPdfA, string $dir): void
     {
-        // Fonts are included in PDF/A. Map standard fonts to open source analogues.
+        $file = $dir . '/' . FontMetrics::USER_FONTS_FILE;
+
+        if ($this->fileManager->exists($file)) {
+            return;
+        }
+
+        // When fonts are included in PDF/A, we need to map standard fonts to open source analogues.
+        // Also need to support popular fonts specified in CSS styles.
         $fontMetrics = $pdf->getFontMetrics();
 
-        $fontMetrics->setFontFamily('courier', $fontMetrics->getFamily('DejaVu Sans Mono'));
-        $fontMetrics->setFontFamily('fixed', $fontMetrics->getFamily('DejaVu Sans Mono'));
-        $fontMetrics->setFontFamily('helvetica', $fontMetrics->getFamily('DejaVu Sans'));
-        $fontMetrics->setFontFamily('monospace', $fontMetrics->getFamily('DejaVu Sans Mono'));
-        $fontMetrics->setFontFamily('sans-serif', $fontMetrics->getFamily('DejaVu Sans'));
-        $fontMetrics->setFontFamily('serif', $fontMetrics->getFamily('DejaVu Serif'));
-        $fontMetrics->setFontFamily('times', $fontMetrics->getFamily('DejaVu Serif'));
-        $fontMetrics->setFontFamily('times-roman', $fontMetrics->getFamily('DejaVu Serif'));
+        if ($isPdfA) {
+            foreach ($this->standardFontMapping as $key => $value) {
+                $fontMetrics->setFontFamily($key, $fontMetrics->getFamily($value));
+            }
+
+            return;
+        }
+
+        /** @var string[] $fontList */
+        $fontList = $this->metadata->get('app.pdfEngines.Dompdf.fontFaceList') ?? [];
+        $fontList = array_map(fn ($it) => strtolower($it), $fontList);
+
+        foreach ($this->standardFontMapping as $key => $value) {
+            if (in_array(strtolower($key), $fontList)) {
+                continue;
+            }
+
+            $fontMetrics->setFontFamily($key, $fontMetrics->getFamily($value));
+        }
     }
 }

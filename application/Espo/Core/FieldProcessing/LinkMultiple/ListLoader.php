@@ -65,7 +65,11 @@ class ListLoader implements LoaderInterface
         foreach ($this->getFieldList($entityType) as $field) {
             if (
                 !in_array($field . 'Ids', $select) &&
-                !in_array($field . 'Names', $select)
+                !in_array($field . 'Names', $select) &&
+                (
+                    !$entity->hasAttribute($field . 'Columns') ||
+                    !in_array($field . 'Columns', $select)
+                )
             ) {
                 continue;
             }
