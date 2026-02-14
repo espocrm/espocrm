@@ -35,8 +35,10 @@ use Dompdf\Options;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Module;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
+use RuntimeException;
 
 class DompdfInitializer
 {
@@ -62,6 +64,7 @@ class DompdfInitializer
         private Config $config,
         private Metadata $metadata,
         private FileManager $fileManager,
+        private Module $module,
     ) {}
 
     public function initialize(Template $template, Params $params): Dompdf
@@ -81,6 +84,8 @@ class DompdfInitializer
         if (!$this->fileManager->isDir($dir)) {
             $this->fileManager->mkdir($dir);
         }
+
+        $this->setupFontOptions($options);
 
         $pdf = new Dompdf($options);
 
@@ -127,6 +132,8 @@ class DompdfInitializer
             return;
         }
 
+        $this->setupAdditionalFonts($pdf);
+
         /** @var string[] $fontList */
         $fontList = $this->metadata->get('app.pdfEngines.Dompdf.fontFaceList') ?? [];
         $fontList = array_map(fn ($it) => strtolower($it), $fontList);
@@ -138,5 +145,59 @@ class DompdfInitializer
 
             $fontMetrics->setFontFamily($key, $fontMetrics->getFamily($value));
         }
+    }
+
+    private function setupFontOptions(Options $options): void
+    {
+        $dirs = ['application/Espo/Resources/fonts'];
+
+        foreach ($this->module->getOrderedList() as $module) {
+            $dirs[] = $this->module->getModulePath($module) . '/Resources/fonts';
+        }
+
+        $dirs[] = 'custom/Espo/Custom/Resources/fonts';
+
+        $dirs = array_filter($dirs, fn ($dir) => $this->fileManager->isDir($dir));
+        $dirs = array_values($dirs);
+
+        $options->setChroot($dirs);
+    }
+
+    private function setupAdditionalFonts(Dompdf $pdf): void
+    {
+        /** @var array{family?: string, style?: string, weight?: string, source?: string}[] $fonts */
+        $fonts = $this->metadata->get("app.pdfEngines.Dompdf.additionalParams.fonts") ?? [];
+
+        foreach ($fonts as $defs) {
+            $family = $defs['family'] ?? throw new RuntimeException("Not font 'family'.");
+            $style = $defs['style'] ?? throw new RuntimeException("Not font 'style'.");
+            $weight = $defs['weight'] ?? throw new RuntimeException("Not font 'weight'.");
+            $source = $defs['source'] ?? throw new RuntimeException("Not font 'source'.");
+
+            $this->registerFont(
+                pdf: $pdf,
+                family: $family,
+                style: $style,
+                weight: $weight,
+                source: $source,
+            );
+        }
+    }
+
+    private function registerFont(
+        Dompdf $pdf,
+        string $family,
+        string $style,
+        string $weight,
+        string $source,
+    ): void {
+
+        $fontMetrics = $pdf->getFontMetrics();
+
+        $fontMetrics->registerFont([
+            'family' => $family,
+            'style' => $style,
+            'weight' => $weight,
+        ], $source);
     }
 }
