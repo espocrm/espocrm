@@ -169,10 +169,10 @@ class DompdfInitializer
         $fonts = $this->metadata->get("app.pdfEngines.Dompdf.additionalParams.fonts") ?? [];
 
         foreach ($fonts as $defs) {
-            $family = $defs['family'] ?? throw new RuntimeException("Not font 'family'.");
-            $style = $defs['style'] ?? throw new RuntimeException("Not font 'style'.");
-            $weight = $defs['weight'] ?? throw new RuntimeException("Not font 'weight'.");
-            $source = $defs['source'] ?? throw new RuntimeException("Not font 'source'.");
+            $family = $defs['family'] ?? throw new RuntimeException("No font 'family'.");
+            $style = $defs['style'] ?? throw new RuntimeException("No font 'style'.");
+            $weight = $defs['weight'] ?? throw new RuntimeException("No font 'weight'.");
+            $source = $defs['source'] ?? throw new RuntimeException("No font 'source'.");
 
             $this->registerFont(
                 pdf: $pdf,
