@@ -590,6 +590,9 @@ select.form-control.native-select {
         appearance: base-select;
     }
 
+    // Otherwise, the picker displayed in a wrong place.
+    display: inline-flex;
+
     &:open {
         border-color: var(--input-border-focus);
         outline: 0;
