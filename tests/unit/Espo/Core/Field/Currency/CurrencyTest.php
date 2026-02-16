@@ -39,11 +39,19 @@ use InvalidArgumentException;
 
 class CurrencyTest extends TestCase
 {
-    public function testValue()
+    public function testValue1()
     {
         $value = Currency::create(2.0, 'USD');
 
         $this->assertEquals(2.0, $value->getAmount());
+        $this->assertEquals('USD', $value->getCode());
+    }
+
+    public function testValue()
+    {
+        $value = Currency::create(0.5, 'USD');
+
+        $this->assertEquals('0.5', $value->getAmountAsString());
         $this->assertEquals('USD', $value->getCode());
     }
 
@@ -67,7 +75,7 @@ class CurrencyTest extends TestCase
         $this->assertEquals('USD', $value->getCode());
     }
 
-    public function testMultiply()
+    public function testMultiply1()
     {
         $value = (new Currency(2.0, 'USD'))->multiply(3.0);
 
@@ -75,11 +83,27 @@ class CurrencyTest extends TestCase
         $this->assertEquals('USD', $value->getCode());
     }
 
-    public function testDivide()
+    public function testMultiply2()
+    {
+        $value = (new Currency(2.0, 'USD'))->multiply(0.5);
+
+        $this->assertEquals('1.00000000000000', $value->getAmountAsString());
+        $this->assertEquals('USD', $value->getCode());
+    }
+
+    public function testDivide1()
     {
         $value = (new Currency(6.0, 'USD'))->divide(3.0);
 
         $this->assertEquals(2.0, $value->getAmount());
+        $this->assertEquals('USD', $value->getCode());
+    }
+
+    public function testDivide2()
+    {
+        $value = (new Currency(6.0, 'USD'))->divide(0.5);
+
+        $this->assertEquals('12.00000000000000', $value->getAmount());
         $this->assertEquals('USD', $value->getCode());
     }
 

@@ -38,6 +38,8 @@ use InvalidArgumentException;
  */
 class Currency
 {
+    private const int DEFAULT_SCALE = 14;
+
     /** @var numeric-string */
     private string $amount;
     private string $code;
@@ -57,8 +59,10 @@ class Currency
             throw new InvalidArgumentException("Bad currency code.");
         }
 
-        if (is_float($amount) || is_int($amount)) {
+        if (is_int($amount)) {
             $amount = (string) $amount;
+        } else if (is_float($amount)) {
+            $amount = self::floatToString($amount);
         }
 
         $this->amount = $amount;
@@ -136,10 +140,9 @@ class Currency
      */
     public function multiply(float|int|string $multiplier): self
     {
-        $amount = CalculatorUtil::multiply(
-            $this->getAmountAsString(),
-            (string) $multiplier
-        );
+        $multiplier = is_float($multiplier) ? self::floatToString($multiplier) : (string) $multiplier;
+
+        $amount = CalculatorUtil::multiply($this->getAmountAsString(), $multiplier);
 
         return new self($amount, $this->getCode());
     }
@@ -151,10 +154,9 @@ class Currency
      */
     public function divide(float|int|string $divider): self
     {
-        $amount = CalculatorUtil::divide(
-            $this->getAmountAsString(),
-            (string) $divider
-        );
+        $divider = is_float($divider) ? self::floatToString($divider) : (string) $divider;
+
+        $amount = CalculatorUtil::divide($this->getAmountAsString(), $divider);
 
         return new self($amount, $this->getCode());
     }
@@ -207,5 +209,14 @@ class Currency
     public static function create($amount, string $code): self
     {
         return new self($amount, $code);
+    }
+
+    /**
+     * @return numeric-string
+     */
+    private static function floatToString(float $amount): string
+    {
+        /** @var numeric-string */
+        return rtrim(rtrim(sprintf('%.' . self::DEFAULT_SCALE . 'f', $amount), '0'), '.');
     }
 }
