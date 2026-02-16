@@ -179,7 +179,7 @@ class TemplateStyleFieldView extends TextFieldView {
     fetch() {
         const data = {};
 
-        data[this.name] = this.editor.getValue();
+        data[this.name] = this.editor.getValue() || null;
 
         return data;
     }

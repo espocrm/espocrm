@@ -25,6 +25,18 @@ You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
 
 For more information about server configuration, see [this article](https://docs.espocrm.com/administration/server-configuration/).
 
+### Download
+
+[Download](https://www.espocrm.com/download/) the latest release from our website or from GitHub [releases](https://github.com/espocrm/espocrm/releases).
+
+### Release notes
+
+Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
+
+### Documentation
+
+See the [documentation](https://docs.espocrm.com) for administrators, users and developers.
+
 ### Why EspoCRM?
 
 * Open-source transparency. EspoCRM's source code is open and accessible, so anyone can inspect it and see how data is being managed within the CRM.
@@ -46,18 +58,6 @@ See installation instructions:
 * [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
 * [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
 * [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
-
-### Download
-
-[Download](https://www.espocrm.com/download/) the latest release from our website. You can also download the latest and previous release packages from GitHub [releases](https://github.com/espocrm/espocrm/releases).
-
-### Release notes
-
-Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
-
-### Documentation
-
-See the [documentation](https://docs.espocrm.com) for administrators, users and developers.
 
 ### Bug reporting
 

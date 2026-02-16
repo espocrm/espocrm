@@ -36,7 +36,6 @@ use Espo\ORM\Repository\Option\UnrelateOptions;
  * An afterUnrelate hook.
  *
  * @template TEntity of Entity = Entity
- * @template TRelatedEntity of Entity = Entity
  */
 interface AfterUnrelate
 {
@@ -45,7 +44,6 @@ interface AfterUnrelate
      *
      * @param TEntity $entity An entity.
      * @param string $relationName A relation name.
-     * @param TRelatedEntity $relatedEntity An entity is being unrelated.
      * @param UnrelateOptions $options Options.
      */
     public function afterUnrelate(
