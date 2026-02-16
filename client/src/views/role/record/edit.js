@@ -56,7 +56,7 @@ class RoleEditRecordView extends EditRecordView {
             this.listenTo(view, 'change', () => {
                 const data = this.fetch();
 
-                this.model.set(data);
+                this.model.setMultiple(data, {ui: true});
             });
         });
     }
