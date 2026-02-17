@@ -267,6 +267,10 @@ class Processor
                 continue;
             }
 
+            $service = $this->recordServiceContainer->get($relatedEntity->getEntityType());
+
+            $service->loadAdditionalFields($relatedEntity);
+
             if (!$skipAcl) {
                 try {
                     $hasAccess = $this->aclManager->checkEntityRead($user, $relatedEntity);
