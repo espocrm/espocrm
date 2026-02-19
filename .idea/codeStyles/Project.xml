@@ -7,6 +7,7 @@
       <option name="GROUP_USE_WRAP" value="2" />
       <option name="VARIABLE_NAMING_STYLE" value="CAMEL_CASE" />
       <option name="KEEP_RPAREN_AND_LBRACE_ON_ONE_LINE" value="true" />
+      <option name="SPACE_BEFORE_SHORT_CLOSURE_LEFT_PARENTHESIS" value="true" />
       <option name="FORCE_EMPTY_METHODS_IN_ONE_LINE" value="true" />
     </PHPCodeStyleSettings>
     <codeStyleSettings language="JSON">
@@ -19,6 +20,8 @@
       <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
       <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
       <option name="ALIGN_MULTILINE_FOR" value="false" />
+      <option name="SPACE_AROUND_UNARY_OPERATOR" value="true" />
+      <option name="SPACE_AFTER_TYPE_CAST" value="true" />
       <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
       <option name="METHOD_CALL_CHAIN_WRAP" value="5" />
     </codeStyleSettings>

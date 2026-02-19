@@ -33,7 +33,7 @@ use DivisionByZeroError;
 
 class CalculatorUtil
 {
-    private const SCALE = 14;
+    private const int SCALE = 14;
 
     /**
      * @param numeric-string $arg1
@@ -43,16 +43,10 @@ class CalculatorUtil
     public static function add(string $arg1, string $arg2): string
     {
         if (!function_exists('bcadd')) {
-            return (string) (
-                (float) $arg1 + (float) $arg2
-            );
+            return self::floatToString((float) $arg1 + (float) $arg2);
         }
 
-        return bcadd(
-            $arg1,
-            $arg2,
-            self::SCALE
-        );
+        return bcadd($arg1, $arg2, self::SCALE);
     }
 
     /**
@@ -63,56 +57,42 @@ class CalculatorUtil
     public static function subtract(string $arg1, string $arg2): string
     {
         if (!function_exists('bcsub')) {
-            return (string) (
-                (float) $arg1 - (float) $arg2
-            );
+            return self::floatToString((float) $arg1 - (float) $arg2);
         }
 
-        return bcsub(
-            $arg1,
-            $arg2,
-            self::SCALE
-        );
+        return bcsub($arg1, $arg2, self::SCALE);
     }
 
     /**
      * @param numeric-string $arg1
      * @param numeric-string $arg2
      * @return numeric-string
+     *
+     * @todo For the result, trim right zeros. Then, trim dot.
      */
     public static function multiply(string $arg1, string $arg2): string
     {
         if (!function_exists('bcmul')) {
-            return (string) (
-                (float) $arg1 * (float) $arg2
-            );
+            return self::floatToString((float) $arg1 * (float) $arg2);
         }
 
-        return bcmul(
-            $arg1,
-            $arg2,
-            self::SCALE
-        );
+        return bcmul($arg1, $arg2, self::SCALE);
     }
 
     /**
      * @param numeric-string $arg1
      * @param numeric-string $arg2
      * @return numeric-string
+     *
+     * @todo For the result, trim right zeros. Then, trim dot.
      */
     public static function divide(string $arg1, string $arg2): string
     {
         if (!function_exists('bcdiv')) {
-            return (string) (
-                (float) $arg1 / (float) $arg2
-            );
+            return self::floatToString((float) $arg1 / (float) $arg2);
         }
 
-        $result = bcdiv(
-            $arg1,
-            $arg2,
-            self::SCALE
-        );
+        $result = bcdiv($arg1, $arg2, self::SCALE);
 
         if ($result === null) { /** @phpstan-ignore-line  */
             throw new DivisionByZeroError();
@@ -128,7 +108,9 @@ class CalculatorUtil
     public static function round(string $arg, int $precision = 0): string
     {
         if (!function_exists('bcadd')) {
-            return (string) round((float) $arg, $precision);
+            return self::floatToString(
+                round((float) $arg, $precision)
+            );
         }
 
         $addition = '0.' . str_repeat('0', $precision) . '5';
@@ -139,11 +121,7 @@ class CalculatorUtil
 
         assert(is_numeric($addition));
 
-        return bcadd(
-            $arg,
-            $addition,
-            $precision
-        );
+        return bcadd($arg, $addition, $precision);
     }
 
     /**
@@ -156,10 +134,15 @@ class CalculatorUtil
             return (float) $arg1 <=> (float) $arg2;
         }
 
-        return bccomp(
-            $arg1,
-            $arg2,
-            self::SCALE
-        );
+        return bccomp($arg1, $arg2, self::SCALE);
+    }
+
+    /**
+     * @return numeric-string
+     */
+    private static function floatToString(float $amount): string
+    {
+        /** @var numeric-string */
+        return rtrim(rtrim(sprintf('%.' . self::SCALE . 'f', $amount), '0'), '.');
     }
 }

@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Field\Date;
 use Espo\Core\Formula\Manager as FormulaManager;
 use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Tools\Currency\RateEntryProvider;
 use Espo\Tools\Currency\RateService;
 use Espo\Core\Currency\Rates;
@@ -177,5 +178,89 @@ class CurrencyTest extends BaseTestCase
         $script = "ext\\currency\\convert('0.5', 'EUR', 'USD')";
         $value = $formulaManager->run($script);
         $this->assertEquals(1.0, (float) $value);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDefaultCurrencyJoinMode(): void
+    {
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+
+        $configWriter->set('currencyNoJoinMode', false);
+        $configWriter->set('currencyList', ['USD', 'EUR']);
+        $configWriter->set('defaultCurrency', 'USD');
+        $configWriter->set('baseCurrency', 'EUR');
+        $configWriter->save();
+
+        $this->getInjectableFactory()->create(SyncManager::class)->sync();
+
+        $rateService = $this->getInjectableFactory()->create(RateService::class);
+        $rateService->set(Rates::fromAssoc([
+            'USD' => 0.5,
+        ], 'EUR'));
+
+        $this->getDataManager()->rebuild();
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $opp = $em->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $opp->setAmount(Currency::create('10.0', 'USD'));
+        $em->saveEntity($opp);
+        $em->refreshEntity($opp);
+
+        $this->assertEquals(10, $opp->get('amountConverted'));
+
+        //
+
+        $opp = $em->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $opp->setAmount(Currency::create('10.0', 'EUR'));
+        $em->saveEntity($opp);
+        $em->refreshEntity($opp);
+
+        $this->assertEquals(20, $opp->get('amountConverted'));
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDefaultCurrencyNoJoinMode(): void
+    {
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+
+        $configWriter->set('currencyNoJoinMode', true);
+        $configWriter->set('currencyList', ['USD', 'EUR']);
+        $configWriter->set('defaultCurrency', 'USD');
+        $configWriter->set('baseCurrency', 'EUR');
+        $configWriter->save();
+
+        $this->getInjectableFactory()->create(SyncManager::class)->sync();
+
+        $rateService = $this->getInjectableFactory()->create(RateService::class);
+        $rateService->set(Rates::fromAssoc([
+            'USD' => 0.5,
+        ], 'EUR'));
+
+        $this->getDataManager()->rebuild();
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $opp = $em->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $opp->setAmount(Currency::create('10.0', 'USD'));
+        $em->saveEntity($opp);
+        $em->refreshEntity($opp);
+
+        $this->assertEquals(10, $opp->get('amountConverted'));
+
+        //
+
+        $opp = $em->getRDBRepositoryByClass(Opportunity::class)->getNew();
+        $opp->setAmount(Currency::create('10.0', 'EUR'));
+        $em->saveEntity($opp);
+        $em->refreshEntity($opp);
+
+        $this->assertEquals(20, $opp->get('amountConverted'));
     }
 }

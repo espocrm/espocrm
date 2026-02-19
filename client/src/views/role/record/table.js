@@ -117,6 +117,22 @@ class RoleRecordTableView extends View {
 
     /**
      * @private
+     * @type {({
+     *     list: {
+     *         level: string|false,
+     *         name: string,
+     *         action: string,
+     *         levelList: string[]|null,
+     *     }[],
+     *     name: string,
+     *     type: 'boolean'|'record',
+     *     access: 'not-set'|'enabled'|'disabled',
+     * }|false)[]}
+     */
+    tableDataList
+
+    /**
+     * @private
      * @type {
      *     {
      *         name: string,
@@ -126,6 +142,7 @@ class RoleRecordTableView extends View {
      *                 action: 'read'|'edit',
      *                 value: 'yes'|'no',
      *                 name: string,
+     *                 levelList: string[]|null,
      *            }[],
      *          }[],
      *     }[]
@@ -143,7 +160,7 @@ class RoleRecordTableView extends View {
         data.fieldActionList = this.fieldActionList;
         data.fieldLevelList = this.fieldLevelList;
 
-        data.tableDataList = this.getTableDataList();
+        data.tableDataList = this.tableDataList;
         data.fieldTableDataList = this.fieldTableDataList;
 
         let hasFieldLevelData = false;
@@ -375,7 +392,7 @@ class RoleRecordTableView extends View {
 
         const promises = [];
 
-        this.getTableDataList().forEach(scopeItem => {
+        this.tableDataList.forEach(scopeItem => {
             if (!scopeItem) {
                 return;
             }
@@ -529,7 +546,7 @@ class RoleRecordTableView extends View {
 
             if (actionItem.action === 'read') {
                 this.listenTo(this.formModel, `change:${scope}-${field}-read`, (m, value) => {
-                    this.controlFieldEditSelect(scope, field, value, true);
+                    this.controlFieldEditSelect(scope, field, value);
                 });
             }
         });
@@ -538,7 +555,7 @@ class RoleRecordTableView extends View {
             const readLevel = this.formModel.attributes[`${scope}-${field}-read`];
 
             if (readLevel) {
-                this.controlFieldEditSelect(scope, field, readLevel);
+                this.controlFieldEditSelect(scope, field, readLevel, true);
             }
         }
 
@@ -564,6 +581,7 @@ class RoleRecordTableView extends View {
         }
 
         this.setupScopeList();
+        this.tableDataList = this.getTableDataList();
         this.setupFieldTableDataList();
     }
 
@@ -679,6 +697,7 @@ class RoleRecordTableView extends View {
                         name: `${scope}-${field}-${action}`,
                         action: action,
                         value: scopeData[field][action] || 'yes',
+                        levelList: [...this.fieldLevelList],
                     })
                 });
 
@@ -826,7 +845,7 @@ class RoleRecordTableView extends View {
         const options = this.fieldLevelList
             .filter(item => this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue));
 
-        if (!dontChange) {
+        if (!dontChange && this.hasFieldAction(scope, field, 'edit')) {
             this.formModel.set(attribute, value);
         }
 
@@ -861,7 +880,7 @@ class RoleRecordTableView extends View {
         const options = this.getLevelList(scope, action)
             .filter(item => this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue));
 
-        if (!dontChange) {
+        if (!dontChange && this.hasAction(scope, action)) {
             setTimeout(() => this.formModel.set(attribute, value), 0);
         }
 
@@ -872,6 +891,43 @@ class RoleRecordTableView extends View {
         if (view) {
             view.setOptionList(options);
         }
+    }
+
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} action
+     * @return {boolean}
+     */
+    hasAction(scope, action) {
+        if (this.tableDataList === false) {
+            return false;
+        }
+
+        return !!this.tableDataList
+            ?.find(it => it.name === scope)
+            ?.list
+            .find(it => it.action === action)
+            ?.levelList
+            ?.length;
+    }
+
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} field
+     * @param {string} action
+     * @return {boolean}
+     */
+    hasFieldAction(scope, field, action) {
+        return !!this.fieldTableDataList
+            ?.find(it => it.name === scope)
+            ?.list
+            ?.find(it => it.name === field)
+            ?.list
+            .find(it => it.action === action)
+            ?.levelList
+            ?.length;
     }
 
     /**
@@ -908,11 +964,13 @@ class RoleRecordTableView extends View {
                                     name: `${scope}-${field}-read`,
                                     action: 'read',
                                     value: 'no',
+                                    levelList: [...this.fieldLevelList],
                                 },
                                 {
                                     name: `${scope}-${field}-edit`,
                                     action: 'edit',
                                     value: 'no',
+                                    levelList: [...this.fieldLevelList],
                                 },
                             ]
                         };
