@@ -37,6 +37,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\CaseObj;
+use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Type\RelationType;
@@ -59,6 +60,7 @@ class CollaboratorsUpdateHook implements UpdateHook
      */
     private array $enabledByDefaultEntityTypeList = [
         CaseObj::ENTITY_TYPE,
+        Task::ENTITY_TYPE,
     ];
 
     public function __construct(
