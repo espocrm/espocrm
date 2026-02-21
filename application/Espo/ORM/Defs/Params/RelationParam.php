@@ -107,4 +107,9 @@ class RelationParam
      * @since 9.2.5
      */
     public const ORDER = 'order';
+
+    /**
+     * @since 9.4.0
+     */
+    public const READ_ONLY = 'readOnly';
 }

@@ -94,7 +94,7 @@ class CollaboratorsUpdateHook implements UpdateHook
                         'autocompleteOnEmpty',
                         'maxCount',
                         'inlineEditDisabled',
-                        'tooltipText'
+                        'tooltipText',
                     ]
                 ],
             ],
@@ -104,6 +104,7 @@ class CollaboratorsUpdateHook implements UpdateHook
                     'entity' => User::ENTITY_TYPE,
                     RelationParam::RELATION_NAME => self::RELATION_NAME,
                     'layoutRelationshipsDisabled' => true,
+                    RelationParam::READ_ONLY => true,
                 ],
             ],
         ]);
