@@ -580,6 +580,21 @@ class AclManager
     }
 
     /**
+     * Check access to a link.
+     *
+     * @param string $scope A scope (entity type).
+     * @param string $link A link to check.
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
+     * @noinspection PhpDocSignatureInspection
+     *
+     * @since 9.4.0
+     */
+    public function checkLink(User $user, string $scope, string $link, string $action = Table::ACTION_READ): bool
+    {
+        return !in_array($link, $this->getScopeForbiddenLinkList($user, $scope, $action));
+    }
+
+    /**
      * Whether a user has access to another user over a specific permission.
      *
      * @param User|string $target User entity or user ID.

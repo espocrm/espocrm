@@ -187,6 +187,13 @@ class GlobalRestriction
                         $value = $this->metadata->get(['entityDefs', $scope, 'links', $link, $type]);
                     }
 
+                    if (
+                        $type === self::TYPE_FORBIDDEN &&
+                        $this->metadata->get("entityDefs.$scope.links.$link.disabled")
+                    ) {
+                        $value = true;
+                    }
+
                     if (!$value) {
                         continue;
                     }

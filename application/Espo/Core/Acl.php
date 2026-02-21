@@ -277,6 +277,21 @@ class Acl
     }
 
     /**
+     * Check access to a link.
+     *
+     * @param string $scope A scope (entity type).
+     * @param string $link A link to check.
+     * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
+     * @noinspection PhpDocSignatureInspection
+     *
+     * @since 9.4.0
+     */
+    public function checkLink(string $scope, string $link, string $action = Table::ACTION_READ): bool
+    {
+        return $this->aclManager->checkLink($this->user, $scope, $link, $action);
+    }
+
+    /**
      * Get links forbidden for a user.
      *
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.

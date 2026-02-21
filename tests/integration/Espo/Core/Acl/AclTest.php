@@ -156,4 +156,24 @@ class AclTest extends BaseTestCase
         $this->assertFalse($acl->checkField(Account::ENTITY_TYPE, 'assignedUser'));
         $this->assertTrue($acl->checkField(Account::ENTITY_TYPE, 'name'));
     }
+
+    public function testDisabledLink(): void
+    {
+        $metadata = $this->getMetadata();
+
+        $metadata->set('entityDefs', 'Account', [
+            'links' => [
+                'opportunities' => [
+                    'disabled' => true,
+                ]
+            ]
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
+        $acl = $this->getContainer()->getByClass(Acl::class);
+
+        $this->assertFalse($acl->checkLink('Account', 'opportunities'));
+    }
 }

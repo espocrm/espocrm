@@ -1494,6 +1494,10 @@
                     "type": "boolean",
                     "description": "The link will be hidden from the user on the UI but not disabled."
                 },
+                "disabled": {
+                    "type": "boolean",
+                    "description": "Disables the link."
+                },
                 "apiSpecDisabled": {
                     "type": "boolean",
                     "description": "Do not print the link in the API specification. As of v9.3."

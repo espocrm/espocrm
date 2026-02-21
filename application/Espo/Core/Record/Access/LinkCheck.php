@@ -291,6 +291,10 @@ class LinkCheck
     {
         $entityType = $entity->getEntityType();
 
+        if (!$this->acl->checkLink($entityType, $link)) {
+            throw new ForbiddenSilent("Link $link is forbidden.");
+        }
+
         /** @var AclTable::ACTION_*|null $action */
         $action = $this->getParam($entityType, $link, 'linkRequiredAccess');
 
