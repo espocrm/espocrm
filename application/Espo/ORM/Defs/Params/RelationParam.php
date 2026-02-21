@@ -112,4 +112,11 @@ class RelationParam
      * @since 9.4.0
      */
     public const READ_ONLY = 'readOnly';
+
+    /**
+     * Disabled.
+     *
+     * @since 9.4.0
+     */
+    public const DISABLED = 'disabled';
 }

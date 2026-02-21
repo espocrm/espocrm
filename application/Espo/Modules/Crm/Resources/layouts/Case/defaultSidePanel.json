@@ -6,6 +6,9 @@
         "name": "teams"
     },
     {
+        "name": "collaborators"
+    },
+    {
         "name": "isInternal"
     }
 ]

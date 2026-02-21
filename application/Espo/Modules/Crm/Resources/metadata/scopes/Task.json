@@ -19,5 +19,6 @@
     "statusField": "status",
     "stream": true,
     "kanbanStatusIgnoreList": ["Canceled", "Deferred"],
-    "statusFieldLocked": true
+    "statusFieldLocked": true,
+    "collaborators": true
 }

@@ -155,6 +155,21 @@
             "type": "linkMultiple",
             "view": "views/fields/teams"
         },
+        "collaborators": {
+            "type": "linkMultiple",
+            "view": "views/fields/collaborators",
+            "maxCount": 30,
+            "fieldManagerParamList": [
+                "readOnly",
+                "readOnlyAfterCreate",
+                "audited",
+                "autocompleteOnEmpty",
+                "maxCount",
+                "inlineEditDisabled",
+                "tooltipText"
+            ],
+            "dynamicLogicVisibleDisabled": true
+        },
         "attachments": {
             "type": "attachmentMultiple",
             "sourceList": ["Document"]
@@ -178,6 +193,12 @@
             "type": "hasMany",
             "entity": "Team",
             "relationName": "entityTeam",
+            "layoutRelationshipsDisabled": true
+        },
+        "collaborators": {
+            "type": "hasMany",
+            "entity": "User",
+            "relationName": "entityCollaborator",
             "layoutRelationshipsDisabled": true
         },
         "parent": {

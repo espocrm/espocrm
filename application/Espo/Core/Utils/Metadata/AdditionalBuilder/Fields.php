@@ -33,6 +33,7 @@ use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Metadata\AdditionalBuilder;
 use Espo\Core\Utils\Metadata\BuilderHelper;
 use Espo\Core\Utils\Util;
+use RuntimeException;
 use stdClass;
 
 class Fields implements AdditionalBuilder
@@ -75,6 +76,10 @@ class Fields implements AdditionalBuilder
             }
 
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
+                if (!is_object($fieldDefsItem)) {
+                    throw new RuntimeException("Bad definition for $entityType.$field field.");
+                }
+
                 $additionalFields = $this->builderHelper->getAdditionalFields(
                     field: $field,
                     params: Util::objectToArray($fieldDefsItem),

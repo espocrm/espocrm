@@ -17,5 +17,6 @@
     "importable": true,
     "notifications": true,
     "object": true,
-    "statusField": "status"
+    "statusField": "status",
+    "collaborators": true
 }
