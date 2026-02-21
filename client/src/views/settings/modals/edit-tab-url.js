@@ -94,7 +94,10 @@ class SettingsEditTabUrlModalView extends Modal {
                             name: 'onlyAdmin',
                             labelText: this.translate('onlyAdmin', 'fields', 'Admin'),
                         },
-                        false
+                        {
+                            name: 'openInNewTab',
+                            labelText: this.translate('openInNewTab', 'fields', 'Admin'),
+                        },
                     ]
                 ]
             }
@@ -128,6 +131,9 @@ class SettingsEditTabUrlModalView extends Modal {
                     tooltip: 'Admin.tabUrlAclScope',
                 },
                 onlyAdmin: {
+                    type: 'bool',
+                },
+                openInNewTab: {
                     type: 'bool',
                 },
             },

@@ -27,6 +27,7 @@
                                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                                     class="{{aClassName}}"
                                     {{#if color}}style="border-color: {{color}}"{{/if}}
+                                    {{#if openInNewTab}} target="_blank" {{/if}}
                                 {{#if isGroup}}
                                     id="nav-tab-group-{{name}}"
                                     data-toggle="dropdown"
@@ -69,6 +70,7 @@
                                                     id="nav-tab-group-{{name}}"
                                                     data-toggle="dropdown"
                                                 {{/if}}
+                                                {{#if openInNewTab}} target="_blank" {{/if}}
                                             >
                             <span class="short-label"{{#if color}} style="color: {{color}}"{{/if}}>
                                 {{#if iconClass}}
@@ -116,6 +118,7 @@
                                             id="nav-tab-group-{{name}}"
                                             data-toggle="dropdown"
                                         {{/if}}
+                                        {{#if openInNewTab}} target="_blank" {{/if}}
                                     >
                             <span class="short-label"{{#if color}} style="color: {{color}}"{{/if}}>
                                 {{#if iconClass}}
@@ -155,6 +158,7 @@
                                                             id="nav-tab-group-{{name}}"
                                                             data-toggle="dropdown"
                                                         {{/if}}
+                                                        {{#if openInNewTab}} target="_blank" {{/if}}
                                                     >
                                     <span class="short-label"{{#if color}} style="color: {{color}}"{{/if}}>
                                         {{#if iconClass}}

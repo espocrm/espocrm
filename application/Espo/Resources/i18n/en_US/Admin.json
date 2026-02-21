@@ -242,7 +242,8 @@
         "aclScope": "ACL Scope",
         "onlyAdmin": "Only for Admin",
         "notStorable": "Not Storable",
-        "itemsEditable": "Items Editable"
+        "itemsEditable": "Items Editable",
+        "openInNewTab": "Open in new tab"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

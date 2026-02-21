@@ -1260,7 +1260,8 @@ class NavbarSiteView extends View {
      *     label: string,
      *     isGroup: boolean,
      *     aClassName: string,
-     *     iconClass: null
+     *     iconClass: null,
+     *     openInNewTab: boolean,
      * }}
      */
     prepareTabItemDefs(params, tab, i, vars) {
@@ -1273,6 +1274,7 @@ class NavbarSiteView extends View {
         let isUrl = false;
         let name = tab;
         let aClassName = 'nav-link';
+        let openInNewTab = false;
 
         const label = this.tabsHelper.getTranslatedTabLabel(tab);
 
@@ -1290,6 +1292,7 @@ class NavbarSiteView extends View {
             link = tab.url || '#';
             color = tab.color;
             iconClass = tab.iconClass;
+            openInNewTab = tab.openInNewTab ?? false;
 
             this.urlList.push({name: name, url: link});
         } else if (this.tabsHelper.isTabGroup(tab)) {
@@ -1336,6 +1339,7 @@ class NavbarSiteView extends View {
             aClassName: aClassName,
             isGroup: isGroup,
             isDivider: isDivider,
+            openInNewTab,
         };
 
         if (isGroup) {
