@@ -3,7 +3,14 @@
     "layouts": true,
     "tab": true,
     "acl": true,
-    "aclPortal": "recordAllAccountContactOwnNo",
+    "aclPortal": true,
+    "aclPortalLevelList":  [
+        "all",
+        "account",
+        "contact",
+        "own",
+        "no"
+    ],
     "module": "Crm",
     "customizable": true,
     "stream": true,
