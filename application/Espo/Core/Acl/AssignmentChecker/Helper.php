@@ -209,7 +209,11 @@ class Helper
         $userIds = $entity->getLinkMultipleIdList($field);
 
         if ($userIds === []) {
-            if ($assignmentPermission === Table::LEVEL_NO && !$user->isApi()) {
+            if (
+                $assignmentPermission === Table::LEVEL_NO &&
+                !$user->isApi() &&
+                $field !== Field::COLLABORATORS
+            ) {
                 return false;
             }
 
