@@ -2414,6 +2414,15 @@ class MysqlQueryComposerTest extends TestCase
         $this->assertEquals(['test'], $list);
     }
 
+    public function testGetAllAttributesFromComplexExpression4()
+    {
+        $expression = "SUM:('тестван', test1, 'тест', test2, link.test3)";
+
+        $list = Util::getAllAttributesFromComplexExpression($expression);
+
+        $this->assertEquals(['test1', 'test2', 'link.test3'], $list);
+    }
+
     public function testComplexExpressionString1(): void
     {
         $queryBuilder = new QueryBuilder();
