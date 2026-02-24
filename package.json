@@ -102,5 +102,10 @@
   "engines": {
     "npm": ">=8",
     "node": ">=20"
+  },
+  "overrides": {
+     "grunt": {
+         "minimatch": "~3.1.3"
+     }
   }
 }
