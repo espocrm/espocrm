@@ -32,4 +32,6 @@ namespace Espo\Core\Templates\Entities;
 use Espo\Core\Entities\CategoryTreeItem;
 
 class CategoryTree extends CategoryTreeItem
-{}
+{
+    public const string TEMPLATE_TYPE = 'CategoryTree';
+}

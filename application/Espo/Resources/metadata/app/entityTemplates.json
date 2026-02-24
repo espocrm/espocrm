@@ -18,5 +18,10 @@
     "Person": {
         "entityClassName": "Espo\\Core\\Templates\\Entities\\Person",
         "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\Person"
+    },
+    "CategoryTree": {
+        "entityClassName": "Espo\\Core\\Templates\\Entities\\CategoryTree",
+        "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\CategoryTree",
+        "isNotCreatable": true
     }
 }

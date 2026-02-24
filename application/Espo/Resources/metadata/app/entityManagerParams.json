@@ -167,6 +167,13 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
             }
+        },
+        "categories": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@BasePlus": {
@@ -215,6 +222,13 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
+            }
+        },
+        "categories": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     }

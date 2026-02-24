@@ -1,10 +1,26 @@
 {
     "entity": true,
-    "layouts": true,
-    "tab": true,
+    "tab": false,
     "acl": true,
     "aclPortal": true,
-    "customizable": true,
+    "aclLevelList": [
+        "all",
+        "team",
+        "no"
+    ],
+    "aclPortalLevelList": [
+        "all",
+        "no"
+    ],
     "importable": false,
-    "notifications": false
+    "notifications": false,
+    "customizable": false,
+    "entityManager": {
+        "fields": false,
+        "formula": false,
+        "relationships": false,
+        "addField": false,
+        "edit": false,
+        "layouts": false
+    }
 }

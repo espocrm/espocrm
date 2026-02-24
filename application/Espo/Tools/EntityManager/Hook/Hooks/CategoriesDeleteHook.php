@@ -27,18 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager;
+namespace Espo\Tools\EntityManager\Hook\Hooks;
 
-readonly class CreateParams
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Entities\BasePlus;
+use Espo\Tools\EntityManager\Hook\DeleteHook;
+use Espo\Tools\EntityManager\Params;
+
+/**
+ * @noinspection PhpUnused
+ */
+class CategoriesDeleteHook implements DeleteHook
 {
-    /**
-     * @param array<string, string> $replaceData
-     */
+    private const string PARAM = 'categories';
+
     public function __construct(
-        public bool $forceCreate = false,
-        public array $replaceData = [],
-        public bool $skipCustomPrefix = false,
-        public bool $isNotRemovable = false,
-        public bool $addTab = true,
+        private CategoriesUpdateHook $categoriesUpdateHook,
     ) {}
+
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
+    public function process(Params $params): void
+    {
+        if (!in_array($params->getType(), [BasePlus::TEMPLATE_TYPE, Base::TEMPLATE_TYPE])) {
+            return;
+        }
+
+        if (!$params->get(self::PARAM)) {
+            return;
+        }
+
+        $this->categoriesUpdateHook->remove($params->getName());
+    }
 }

@@ -1,7 +1,8 @@
 [
-   "Base",
-   "BasePlus",
-   "Event",
-   "Person",
-   "Company"
+    "Base",
+    "BasePlus",
+    "Event",
+    "Person",
+    "Company",
+    "CategoryTree"
 ]

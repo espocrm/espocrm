@@ -27,18 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager;
+namespace Espo\Tools\LayoutManager;
 
-readonly class CreateParams
+/**
+ * @since 9.4.0
+ */
+class LayoutName
 {
-    /**
-     * @param array<string, string> $replaceData
-     */
-    public function __construct(
-        public bool $forceCreate = false,
-        public array $replaceData = [],
-        public bool $skipCustomPrefix = false,
-        public bool $isNotRemovable = false,
-        public bool $addTab = true,
-    ) {}
+    const string DETAIL = 'detail';
+    const string DETAIL_SMALL = 'detailSmall';
 }

@@ -9,6 +9,13 @@
                     "link": "#{entityType}/list",
                     "acl": "read",
                     "style": "default"
+                },
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.{subjectEntityType}",
+                    "link": "#{subjectEntityType}",
+                    "acl": "read",
+                    "style": "default",
+                    "aclScope": "{subjectEntityType}"
                 }
             ]
         },
@@ -19,6 +26,13 @@
                     "link": "#{entityType}",
                     "acl": "read",
                     "style": "default"
+                },
+                {
+                    "labelTranslation": "Global.scopeNamesPlural.{subjectEntityType}",
+                    "link": "#{subjectEntityType}",
+                    "acl": "read",
+                    "style": "default",
+                    "aclScope": "{subjectEntityType}"
                 }
             ]
         }

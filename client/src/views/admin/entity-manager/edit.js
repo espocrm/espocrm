@@ -381,12 +381,15 @@ class EntityManagerEditView extends View {
     setupDefs() {
         const scope = this.scope;
 
+        const typeList = (this.getMetadata().get('app.entityTemplateList') || ['Base'])
+            .filter(it => !this.getMetadata().get(`app.entityTemplates.${it}.isNotCreatable`));
+
         const defs = {
             fields: {
                 type: {
                     type: 'enum',
                     required: true,
-                    options: this.getMetadata().get('app.entityTemplateList') || ['Base'],
+                    options: typeList,
                     readOnly: scope !== false,
                     tooltip: true,
                 },

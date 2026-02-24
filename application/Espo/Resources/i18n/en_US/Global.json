@@ -521,7 +521,8 @@
         "names": "Names",
         "types": "Types",
         "targetListIsOptedOut": "Is Opted Out (Target List)",
-        "childList": "Child List"
+        "childList": "Child List",
+        "category": "Category"
     },
     "links": {
         "assignedUser": "Assigned User",

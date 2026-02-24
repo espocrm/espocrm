@@ -6,11 +6,13 @@
     "deleteHookClassNameList": [
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\PlusDeleteHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\EventDeleteHook",
-        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\DeleteHasChildrenLinks"
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\DeleteHasChildrenLinks",
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesDeleteHook"
     ],
     "updateHookClassNameList": [
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\AssignedUsersUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CollaboratorsUpdateHook",
-        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\StreamUpdateHook"
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\StreamUpdateHook",
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesUpdateHook"
     ]
 }
