@@ -70,13 +70,6 @@ class Settings
 
     private function getConfigData(): stdClass
     {
-        $data = $this->service->getConfigData();
-        $metadataData = $this->service->getMetadataConfigData();
-
-        foreach (get_object_vars($metadataData) as $key => $value) {
-            $data->$key = $value;
-        }
-
-        return $data;
+        return $this->service->getConfigData();
     }
 }
