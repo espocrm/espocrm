@@ -130,6 +130,9 @@
         "oidcLogoutUrl": {
             "level": "admin"
         },
+        "oidcAuthorizationPkce": {
+            "level": "admin"
+        },
         "apiCorsAllowedMethodList": {
             "level": "admin"
         },

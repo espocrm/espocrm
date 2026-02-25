@@ -298,6 +298,7 @@ return [
     'oidcFallback' => true,
     'oidcScopes' => ['profile', 'email', 'phone'],
     'oidcAuthorizationPrompt' => 'consent',
+    'oidcAuthorizationPkce' => true,
     'listViewSettingsDisabled' => false,
     'cleanupDeletedRecords' => true,
     'phoneNumberNumericSearch' => true,

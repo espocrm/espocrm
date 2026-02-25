@@ -82,9 +82,11 @@ class OidcLoginHandler extends LoginHandler {
      *  clientId: string,
      *  redirectUri: string,
      *  scopes: string[],
-     *  claims: ?string,
+     *  claims: string|null,
      *  prompt: 'login'|'consent'|'select_account',
-     *  maxAge: ?Number,
+     *  maxAge: Number|null,
+     *  codeChallenge: string|null,
+     *  codeChallengeMethod: string|null
      * }} data
      * @param {WindowProxy} proxy
      * @return {Promise<{code: string, nonce: string}>}
@@ -102,6 +104,11 @@ class OidcLoginHandler extends LoginHandler {
             nonce: nonce,
             prompt: data.prompt,
         };
+
+        if (data.codeChallenge && data.codeChallengeMethod) {
+            params.code_challenge = data.codeChallenge;
+            params.code_challenge_method = data.codeChallengeMethod;
+        }
 
         if (data.maxAge || data.maxAge === 0) {
             params.max_age = data.maxAge;

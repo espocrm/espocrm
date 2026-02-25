@@ -91,5 +91,8 @@
     },
     "applicationConfig": {
         "className": "Espo\\Core\\Utils\\Config\\ApplicationConfig"
+    },
+    "session": {
+        "className": "Espo\\Core\\Session\\DefaultSession"
     }
 }

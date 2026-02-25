@@ -166,6 +166,7 @@
         "oidcAllowAdminUser": "OIDC Allow OIDC login for admin users",
         "oidcLogoutUrl": "OIDC Logout URL",
         "oidcAuthorizationPrompt": "OIDC Authorization Prompt",
+        "oidcAuthorizationPkce": "OIDC Use PKCE",
         "pdfEngine": "PDF Engine",
         "quickSearchFullTextAppendWildcard": "Append wildcard in quick search",
         "authIpAddressCheck": "Restrict access by IP address",

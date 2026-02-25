@@ -104,7 +104,9 @@
                     {
                         "name": "oidcAuthorizationPrompt"
                     },
-                    false
+                    {
+                        "name": "oidcAuthorizationPkce"
+                    }
                 ]
             ]
         },

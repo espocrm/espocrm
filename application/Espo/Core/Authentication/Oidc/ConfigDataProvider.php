@@ -222,6 +222,11 @@ class ConfigDataProvider
         return $this->object->get('oidcAuthorizationPrompt') ?? 'consent';
     }
 
+    public function useAuthorizationPkce(): bool
+    {
+        return (bool) $this->object->get('oidcAuthorizationPkce');
+    }
+
     public function getAuthorizationMaxAge(): ?int
     {
         return $this->config->get('oidcAuthorizationMaxAge');

@@ -912,6 +912,10 @@
                 "select_account"
             ]
         },
+        "oidcAuthorizationPkce": {
+            "type": "bool",
+            "default": true
+        },
         "pdfEngine": {
             "type": "enum",
             "view": "views/settings/fields/pdf-engine"
