@@ -45,11 +45,15 @@ export default class extends VarcharFieldView {
         {{/if}}
     `
 
+    /**
+     * @private
+     * @type {import('collection').default|null}
+     */
     portalCollection = null
 
     data() {
         const isNotEmpty = this.model.entityType !== 'AuthenticationProvider' ||
-            this.portalCollection;
+            (this.portalCollection && this.portalCollection.length);
 
         return {
             value: this.getValueForDisplay(),
