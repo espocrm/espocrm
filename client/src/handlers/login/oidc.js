@@ -154,8 +154,7 @@ class OidcLoginHandler extends LoginHandler {
 
                 try {
                     url = proxy.location.href;
-                }
-                catch (e) {
+                } catch (e) {
                     return;
                 }
 
@@ -181,7 +180,13 @@ class OidcLoginHandler extends LoginHandler {
 
                 if (parsedData.error) {
                     fail();
-                    Espo.Ui.error(parsedData.errorDescription || this.loginView.translate('Error'), true);
+
+                    const message = parsedData.errorDescription || this.loginView.translate('Error') + '\n' +
+                        parsedData.error;
+
+                    Espo.Ui.error(message, true);
+
+                    console.log(parsedData);
 
                     return;
                 }
