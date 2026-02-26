@@ -154,7 +154,8 @@ class CategoriesUpdateHook implements UpdateHook
         ]);
 
         $this->metadata->save();
-        $this->dataManager->rebuild();
+        $this->dataManager->rebuild([$entityType]);
+        $this->dataManager->rebuild([$name]);
 
         $this->layoutCustomizer->addDetailField($name, self::FIELD, LayoutName::DETAIL);
         $this->layoutCustomizer->addDetailField($name, self::FIELD, LayoutName::DETAIL_SMALL);
@@ -185,7 +186,8 @@ class CategoriesUpdateHook implements UpdateHook
         ]);
 
         $this->metadata->save();
-        $this->dataManager->rebuild();
+        $this->dataManager->rebuild([$entityType]);
+        $this->dataManager->rebuild([$name]);
 
         $this->layoutCustomizer->removeInDetail($name, self::FIELD, LayoutName::DETAIL);
         $this->layoutCustomizer->removeInDetail($name, self::FIELD, LayoutName::DETAIL_SMALL);
