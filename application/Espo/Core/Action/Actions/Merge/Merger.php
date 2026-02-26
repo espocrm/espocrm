@@ -64,8 +64,21 @@ class Merger
      * @param string[] $sourceIdList
      * @throws NotFound
      * @throws Forbidden
+     * @noinspection PhpDocRedundantThrowsInspection
      */
     public function process(Params $params, array $sourceIdList, stdClass $data): void
+    {
+        $this->entityManager->getTransactionManager()->run(function () use ($params, $sourceIdList, $data) {
+            $this->processInternal($params, $sourceIdList, $data);
+        });
+    }
+
+    /**
+     * @param string[] $sourceIdList
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    private function processInternal(Params $params, array $sourceIdList, stdClass $data): void
     {
         $clonedData = ObjectUtil::clone($data);
 
