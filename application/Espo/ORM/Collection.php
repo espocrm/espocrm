@@ -35,7 +35,7 @@ use stdClass;
 /**
  * A collection of entities.
  *
- * @template-covariant TEntity of Entity
+ * @template-covariant TEntity of Entity = Entity
  * @extends Traversable<int, TEntity>
  */
 interface Collection extends Traversable
