@@ -1256,6 +1256,15 @@
                     },
                     "description": "Dependee attributes."
                 },
+                "massUpdateActionList": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Actions for mass update. Overrides the value from fields metadata."
+                },
+                "notLockable": {
+                    "type": "boolean",
+                    "description": "Is not locked when the record is locked. As of v9.4."
+                },
                 "select": {
                     "type": "object",
                     "description": "A custom complex expression to be used for the field when reading from DB. It's possible to define leftJoins and joins that are needed to be applied when the field is being selected.",
@@ -1354,11 +1363,6 @@
                                 "description": "Apply DISTINCT to the query."
                             }
                         }
-                    },
-                    "massUpdateActionList": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Actions for mass update. Overrides the value from fields metadata."
                     }
                 }
             }

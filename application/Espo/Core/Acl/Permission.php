@@ -43,4 +43,5 @@ class Permission
     public const USER_CALENDAR = 'userCalendar';
     public const FOLLOWER_MANAGEMENT = 'followerManagement';
     public const GROUP_EMAIL_ACCOUNT = 'groupEmailAccount';
+    public const LOCK = 'lock';
 }

@@ -121,6 +121,15 @@
             "view": "views/role/fields/permission",
             "audited": true
         },
+        "lockPermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList",
+            "view": "views/role/fields/permission",
+            "audited": true
+        },
         "data": {
             "type": "jsonObject",
             "audited": true

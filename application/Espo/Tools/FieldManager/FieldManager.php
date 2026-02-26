@@ -705,6 +705,12 @@ class FieldManager
             ],
         ];
 
+        if ($this->metadata->get("scopes.$scope.lockable") === true) {
+            $additionalParamList['notLockable'] = [
+                FieldParam::TYPE => FieldType::BOOL,
+            ];
+        }
+
         $type = $fieldDefs[FieldParam::TYPE] ?? null;
 
         if (!$type) {

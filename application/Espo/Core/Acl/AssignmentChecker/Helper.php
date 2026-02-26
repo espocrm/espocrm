@@ -38,6 +38,7 @@ use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
@@ -333,6 +334,7 @@ class Helper
         }
 
         return $fieldDefs->getType() === FieldType::LINK &&
+            !$fieldDefs->getParam(FieldParam::DISABLED) &&
             $entityDefs->hasRelation(Field::ASSIGNED_USER) &&
             $entityDefs->getRelation(Field::ASSIGNED_USER)->getForeignEntityType() === User::ENTITY_TYPE;
     }

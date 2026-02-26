@@ -243,7 +243,8 @@
         "onlyAdmin": "Only for Admin",
         "notStorable": "Not Storable",
         "itemsEditable": "Items Editable",
-        "openInNewTab": "Open in new tab"
+        "openInNewTab": "Open in new tab",
+        "notLockable": "Not Lockable"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

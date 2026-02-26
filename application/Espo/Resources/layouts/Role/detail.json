@@ -29,6 +29,11 @@
                 {"name": "auditPermission"},
                 {"name": "userPermission"},
                 {"name": "dataPrivacyPermission"}
+            ],
+            [
+                {"name": "lockPermission"},
+                false,
+                false
             ]
         ]
     }

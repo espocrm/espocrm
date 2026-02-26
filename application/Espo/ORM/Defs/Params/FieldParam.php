@@ -75,6 +75,13 @@ class FieldParam
     public const READ_ONLY = 'readOnly';
 
     /**
+     * Read-only after create.
+     *
+     * @since 9.4.0
+     */
+    public const READ_ONLY_AFTER_CREATE = 'readOnlyAfterCreate';
+
+    /**
      * Decimal.
      */
     public const DECIMAL = 'decimal';

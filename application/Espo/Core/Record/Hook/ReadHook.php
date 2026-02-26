@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\Core\Record\ReadParams;
 
 /**
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface ReadHook
 {

@@ -28,6 +28,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Contact": {
@@ -54,6 +61,13 @@
             }
         },
         "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
@@ -90,6 +104,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Opportunity": {
@@ -101,6 +122,13 @@
             }
         },
         "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
@@ -122,6 +150,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Case": {
@@ -138,6 +173,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "KnowledgeBaseArticle": {
@@ -149,6 +191,13 @@
             }
         },
         "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
@@ -192,6 +241,13 @@
                 "tooltip": true,
                 "view": "crm:views/admin/entity-manager/fields/status-list"
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Call": {
@@ -230,6 +286,13 @@
                 "tooltip": true,
                 "view": "crm:views/admin/entity-manager/fields/status-list"
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Task": {
@@ -264,10 +327,24 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "TargetList": {
         "collaborators": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
@@ -342,6 +419,13 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
+            }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     }

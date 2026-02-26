@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Log;
 
+use Espo\ORM\Exceptions\ValidationException;
 use LogicException;
 use Psr\Log\LogLevel;
 use RuntimeException;
@@ -80,6 +81,11 @@ class ErrorOutput
         Conflict::class,
         BadRequest::class,
         NotFound::class,
+    ];
+
+    /** @var array<class-string<Throwable>, int> */
+    private array $statusCodeMap = [
+        ValidationException::class => 409,
     ];
 
     public function __construct(private Log $log)
@@ -135,6 +141,8 @@ class ErrorOutput
             'exception' => $exception,
             'request' => $request,
         ]);
+
+        $statusCode = $this->statusCodeMap[$exception::class] ?? $statusCode;
 
         if (!in_array($statusCode, $this->allowedStatusCodeList)) {
             $statusCode = 500;

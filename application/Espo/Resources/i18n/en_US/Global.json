@@ -165,6 +165,8 @@
         "Linked": "Linked",
         "Unlinked": "Unlinked",
         "Done": "Done",
+        "Bad request": "Bad request",
+        "Conflict": "Conflict",
         "Access denied": "Access denied",
         "Not found": "Not found",
         "Internal server error": "Internal server error",
@@ -334,7 +336,9 @@
         "View User Access": "View User Access",
         "Reacted": "Reacted",
         "Reaction Removed": "Reaction Removed",
-        "Reactions": "Reactions"
+        "Reactions": "Reactions",
+        "Lock": "Lock",
+        "Unlock": "Unlock"
     },
     "messages": {
         "checkLogsForDetails": "Check logs for details.",
@@ -452,7 +456,15 @@
         "duplicateConflict": "A record already exists.",
         "cannotRemoveCategoryWithChildCategory": "Cannot remove a category that has a child category.",
         "cannotRemoveNotEmptyCategory": "Cannot remove a non-empty category.",
-        "sameRecordIsAlreadyBeingEdited": "The record is already being edited."
+        "sameRecordIsAlreadyBeingEdited": "The record is already being edited.",
+        "confirmMassLock": "Are you sure you want to lock selected records?",
+        "confirmMassUnlock": "Are you sure you want to unlock selected records?",
+        "locked": "Record is locked",
+        "unlocked": "Record is unlocked",
+        "massLockDone": "{count} locked",
+        "massUnlockDone": "{count} unlocked",
+        "cannotModifyLockedRecord": "Cannot modify the field *{field}*. The record is locked.",
+        "cannotRemoveLockedRecord": "Cannot remove a locked record."
     },
     "boolFilters": {
         "onlyMy": "Only My",
@@ -478,7 +490,9 @@
         "unfollow": "Unfollow",
         "convertCurrency": "Convert Currency",
         "recalculateFormula": "Recalculate Formula",
-        "printPdf": "Print to PDF"
+        "printPdf": "Print to PDF",
+        "lock": "Lock",
+        "unlock": "Unlock"
     },
     "fields": {
         "name": "Name",
@@ -522,7 +536,8 @@
         "types": "Types",
         "targetListIsOptedOut": "Is Opted Out (Target List)",
         "childList": "Child List",
-        "category": "Category"
+        "category": "Category",
+        "isLocked": "Locked"
     },
     "links": {
         "assignedUser": "Assigned User",

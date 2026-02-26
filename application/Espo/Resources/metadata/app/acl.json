@@ -176,7 +176,8 @@
         "portalPermission",
         "groupEmailAccountPermission",
         "followerManagementPermission",
-        "dataPrivacyPermission"
+        "dataPrivacyPermission",
+        "lockPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
@@ -190,7 +191,8 @@
         "dataPrivacyPermission": "yes",
         "auditPermission": "yes",
         "mentionPermission": "yes",
-        "userCalendarPermission": "all"
+        "userCalendarPermission": "all",
+        "lockPermission": "yes"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
@@ -204,6 +206,7 @@
         "dataPrivacyPermission": "no",
         "auditPermission": "no",
         "mentionPermission": "no",
-        "userCalendarPermission": "no"
+        "userCalendarPermission": "no",
+        "lockPermission": "no"
     }
 }

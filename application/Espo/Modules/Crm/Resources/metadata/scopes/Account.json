@@ -12,5 +12,6 @@
     "notifications": true,
     "object": true,
     "hasPersonalData": true,
-    "duplicateCheckFieldList": ["name", "emailAddress"]
+    "duplicateCheckFieldList": ["name", "emailAddress"],
+    "lockable": true
 }

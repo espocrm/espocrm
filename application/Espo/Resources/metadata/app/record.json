@@ -1,5 +1,14 @@
 {
     "selectApplierClassNameList": [
         "Espo\\Core\\Select\\Applier\\AdditionalAppliers\\IsStarred"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\Record\\Common\\Lock\\BeforeSaveValidation"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\Record\\Common\\Lock\\BeforeSaveValidation"
+    ],
+    "beforeDeleteHookClassNameList": [
+        "Espo\\Classes\\Record\\Common\\Lock\\BeforeDeleteValidation"
     ]
 }

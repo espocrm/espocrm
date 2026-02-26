@@ -32,7 +32,7 @@ namespace Espo\Core\Record\Hook;
 use Espo\ORM\Entity;
 
 /**
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface UnlinkHook
 {

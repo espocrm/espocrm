@@ -16,5 +16,11 @@
     },
     "delete": {
         "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassDelete"
+    },
+    "lock": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassLock"
+    },
+    "unlock": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassUnlock"
     }
 }

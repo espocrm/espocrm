@@ -37,7 +37,7 @@ use Espo\ORM\Entity;
 /**
  * On record create or update.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  * @since 8.1.0.
  */
 interface SaveHook

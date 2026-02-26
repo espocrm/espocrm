@@ -31,6 +31,7 @@ namespace Espo\Core\Action;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
@@ -55,6 +56,7 @@ class Service
      * @throws Forbidden
      * @throws BadRequest
      * @throws NotFound
+     * @throws Conflict
      */
     public function process(string $entityType, string $action, string $id, stdClass $data): Entity
     {

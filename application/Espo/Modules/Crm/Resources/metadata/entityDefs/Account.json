@@ -160,6 +160,15 @@
         "campaign": {
             "type": "link"
         },
+        "isLocked": {
+            "type": "bool",
+            "readOnly": true,
+            "audited": true,
+            "layoutAvailabilityList": [
+                "filters",
+                "list"
+            ]
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true,
@@ -188,11 +197,13 @@
         },
         "assignedUser": {
             "type": "link",
-            "view": "views/fields/assigned-user"
+            "view": "views/fields/assigned-user",
+            "notLockable": true
         },
         "teams": {
             "type": "linkMultiple",
-            "view": "views/fields/teams"
+            "view": "views/fields/teams",
+            "notLockable": true
         },
         "targetLists": {
             "type": "linkMultiple",

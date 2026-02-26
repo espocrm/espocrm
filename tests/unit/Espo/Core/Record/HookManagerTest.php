@@ -214,8 +214,10 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
         $this->metadata
             ->expects($this->any())
             ->method('get')
-            ->with(['recordDefs', $this->entityType, $type . 'HookClassNameList'])
-            ->willReturn($hookClassNameList);
+            ->willReturnMap([
+                ["app.record.{$type}HookClassNameList", [], []],
+                ["recordDefs.$this->entityType.{$type}HookClassNameList", [], $hookClassNameList],
+            ]);
 
         foreach ($hookClassNameList as $i => $className) {
             $this->injectableFactory

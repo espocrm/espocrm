@@ -69,6 +69,13 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@Person": {
@@ -117,6 +124,13 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
+            }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
             }
         }
     },
@@ -174,6 +188,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "lockable": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@BasePlus": {
@@ -225,6 +246,13 @@
             }
         },
         "categories": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",

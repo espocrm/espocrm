@@ -277,6 +277,10 @@ class AclManager {
             return this.checkScope(subject, action, precise);
         }
 
+        if (!subject) {
+            throw new Error("No model.");
+        }
+
         return this.checkModel(subject, action, precise);
     }
 

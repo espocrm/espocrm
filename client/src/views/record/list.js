@@ -2330,7 +2330,7 @@ class ListRecordView extends View {
 
     /** @private */
     setupMassActions() {
-        if (this.massActionsDisabled) {
+        if (this.massActionsDisabled || !this.checkboxes) {
             this.massActionList = [];
             this.checkAllResultMassActionList = [];
             this.massActionDefs = {};
@@ -2391,7 +2391,7 @@ class ListRecordView extends View {
 
             if (
                 !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
+                this.entityType && !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
             ) {
                 return;
             }

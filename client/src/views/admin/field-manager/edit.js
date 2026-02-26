@@ -87,6 +87,12 @@ class FieldManagerEditView extends View {
      */
     paramDataList
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isEntityTypeLockable
+
     data() {
         return {
             scope: this.scope,
@@ -145,6 +151,8 @@ class FieldManagerEditView extends View {
         };
 
         this.entityTypeIsCustom = !!this.getMetadata().get(['scopes', this.scope, 'isCustom']);
+
+        this.isEntityTypeLockable = this.getMetadata().get(`scopes.${this.scope}.lockable`) === true;
 
         this.globalRestriction = {};
 
@@ -308,6 +316,16 @@ class FieldManagerEditView extends View {
                 ) {
                     this.paramList.push({
                         name: 'inlineEditDisabled',
+                        type: 'bool',
+                    });
+                }
+
+                if (
+                    this.isEntityTypeLockable &&
+                    !this.globalRestriction.readOnly
+                ) {
+                    this.paramList.push({
+                        name: 'notLockable',
                         type: 'bool',
                     });
                 }

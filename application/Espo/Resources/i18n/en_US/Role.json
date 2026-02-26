@@ -14,6 +14,7 @@
         "auditPermission": "Audit Permission",
         "mentionPermission": "Mention Permission",
         "userCalendarPermission": "User Calendar Permission",
+        "lockPermission": "Lock Permission",
         "data": "Data",
         "fieldData": "Field Data"
     },
@@ -22,6 +23,7 @@
         "teams": "Teams"
     },
     "tooltips": {
+        "lockPermission": "Allows to lock and unlock records.",
         "messagePermission": "Allows to send messages to other users.\n\n* all – can send to all\n* team – can send only to teammates\n* no – cannot send",
         "assignmentPermission": "Allows to assign records to other users.\n\n* all – no restriction\n* team – can assign only to teammates\n* no – can assign only to self",
         "userPermission": "Allows to view stream of other users. Allows users to view the access levels other users have for specific records.",

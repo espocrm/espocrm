@@ -45,6 +45,12 @@ class DefaultSidePanelView extends SidePanelView {
      */
     complexModifiedDisabled
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    hasIsLocked
+
     data() {
         const data = super.data();
 
@@ -74,11 +80,23 @@ class DefaultSidePanelView extends SidePanelView {
             allFieldList.includes('modifiedAt') ||
             allFieldList.includes('modifiedBy');
 
+        this.hasIsLocked = this.getMetadata().get(`scopes.${this.model.entityType}.lockable`) === true;
+
         super.setup();
     }
 
     setupFields() {
         super.setupFields();
+
+        if (this.hasIsLocked) {
+            this.fieldList.push({
+                name: 'isLocked',
+                view: 'views/global/fields/is-locked',
+            });
+
+            this.controlIsLockedField();
+            this.listenTo(this.model, 'change:isLocked', () => this.controlIsLockedField());
+        }
 
         if (!this.complexCreatedDisabled) {
             if (this.hasComplexCreated) {
@@ -193,6 +211,17 @@ class DefaultSidePanelView extends SidePanelView {
         }
 
         this.recordViewObject.hideField('followers');
+    }
+
+    /**
+     * @private
+     */
+    controlIsLockedField() {
+        if (this.model.attributes.isLocked) {
+            this.recordViewObject.showField('isLocked');
+        } else {
+            this.recordViewObject.hideField('isLocked');
+        }
     }
 }
 

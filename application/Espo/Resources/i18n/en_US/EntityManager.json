@@ -56,7 +56,8 @@
         "collaborators": "Collaborators",
         "aclContactLink": "ACL Contact Link",
         "aclAccountLink": "ACL Account Link",
-        "categories": "Categories"
+        "categories": "Categories",
+        "lockable": "Lockable"
     },
     "options": {
         "type": {
@@ -99,6 +100,7 @@
         "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
+        "lockable": "Enables the ability to lock records.",
         "categories": "Enable the category tree feature. Records can be placed into categories.",
         "aclContactLink": "The link with Contact to use when applying access control for portal users.",
         "aclAccountLink": "The link with Account to use when applying access control for portal users.",

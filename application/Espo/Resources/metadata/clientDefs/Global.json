@@ -15,6 +15,56 @@
             "checkVisibilityFunction": "isAvailable",
             "handler": "handlers/record/view-user-access",
             "groupIndex": 4
+        },
+        {
+            "name": "lock",
+            "acl": "edit",
+            "label": "Lock",
+            "handler": "handlers/record/lock-action",
+            "checkVisibilityFunction": "canBeLocked",
+            "actionFunction": "actionLock",
+            "groupIndex": 9
+        },
+        {
+            "name": "unlock",
+            "acl": "edit",
+            "label": "Unlock",
+            "handler": "handlers/record/lock-action",
+            "checkVisibilityFunction": "canBeUnlocked",
+            "actionFunction": "actionUnlock",
+            "groupIndex": 9
         }
-    ]
+    ],
+    "massActionList": [
+        "lock",
+        "unlock"
+    ],
+    "checkAllResultMassActionList": [
+        "lock",
+        "unlock"
+    ],
+    "massActionDefs": {
+        "lock": {
+            "acl": "edit",
+            "handler": "handlers/record/lock-mass-action",
+            "actionFunction": "actionLock",
+            "initFunction": "initLock",
+            "groupIndex": 9
+        },
+        "unlock": {
+            "acl": "edit",
+            "handler": "handlers/record/lock-mass-action",
+            "actionFunction": "actionUnlock",
+            "initFunction": "initUnlock",
+            "groupIndex": 9
+        }
+    },
+    "viewSetupHandlers": {
+        "record/detail": [
+            "handlers/record/lock-view-setup"
+        ],
+        "record/edit": [
+            "handlers/record/lock-view-setup"
+        ]
+    }
 }

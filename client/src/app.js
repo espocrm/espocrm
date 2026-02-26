@@ -1268,6 +1268,11 @@ class App {
 
                         break;
 
+                    case 409:
+                        this._processErrorAlert(xhr, 'Conflict');
+
+                        break;
+
                     case 404:
                         // noinspection JSUnresolvedReference
                         if (options.main) {

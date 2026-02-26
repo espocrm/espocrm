@@ -580,7 +580,7 @@ class Service implements Crud,
             ->getFieldList();
 
         foreach ($fieldDefsList as $fieldDefs) {
-            if (!$fieldDefs->getParam('readOnlyAfterCreate')) {
+            if (!$fieldDefs->getParam(FieldParam::READ_ONLY_AFTER_CREATE)) {
                 continue;
             }
 
