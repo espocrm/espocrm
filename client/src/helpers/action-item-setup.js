@@ -84,18 +84,30 @@ class ActionItemSetupHelper {
             throw new Error();
         }
 
-        const actionDefsList = [
+        /** @type {({name?: string} & Record | string)[]} */
+        const actionDefsListOriginal = [
             ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
             ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
         ];
 
-        actionDefsList.forEach(item => {
+        /** @type {({name?: string} & Object.<string, *>)[]} */
+        let actionDefsList = actionDefsListOriginal.map(item => {
             if (typeof item === 'string') {
-                item = {name: item};
+                return {name: item};
             }
 
-            item = Espo.Utils.cloneDeep(item);
+            return Espo.Utils.cloneDeep(item);
+        })
 
+        actionDefsList.reverse();
+
+        actionDefsList = actionDefsList.filter((it, i, self) => {
+            return self.findIndex(sIt => sIt.name === it.name) === i;
+        });
+
+        actionDefsList.reverse();
+
+        actionDefsList.forEach(item => {
             const name = item.name;
 
             if (!item.label) {

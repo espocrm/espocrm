@@ -2378,12 +2378,12 @@ class ListRecordView extends View {
         const metadataMassActionList = [
             ...this.getMetadata().get(['clientDefs', 'Global', 'massActionList']) || [],
             ...this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || [],
-        ];
+        ].filter((it, i, self) => self.indexOf(it) === i);
 
         const metadataCheckAllMassActionList = [
             ...this.getMetadata().get(['clientDefs', 'Global', 'checkAllResultMassActionList']) || [],
             ...this.getMetadata().get(['clientDefs', this.scope, 'checkAllResultMassActionList']) || [],
-        ];
+        ].filter((it, i, self) => self.indexOf(it) === i);
 
         metadataMassActionList.forEach(item => {
             const defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
