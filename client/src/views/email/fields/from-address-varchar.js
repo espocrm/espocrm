@@ -385,6 +385,8 @@ class EmailFromAddressVarchar extends BaseFieldView {
      */
     createPerson(scope, address) {
         const fromString = this.model.get('fromString') || this.model.get('fromName');
+
+        /** @type {string|null} */
         let name = this.nameHash[address] || null;
 
         if (!name && this.name === 'from' && fromString) {
@@ -394,7 +396,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
         }
 
         if (name) {
-            name = this.getHelper().escapeString(name);
+            name = EmailFromAddressVarchar.stripQuotesFromName(name);
         }
 
         const attributes = {
@@ -465,7 +467,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
         }
 
         if (name) {
-            name = this.getHelper().escapeString(name);
+            name = EmailFromAddressVarchar.stripQuotesFromName(name);
         }
 
         const attributes = {
@@ -556,6 +558,19 @@ class EmailFromAddressVarchar extends BaseFieldView {
         await view.render();
 
         Espo.Ui.notify();
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     * @return {string}
+     */
+    static stripQuotesFromName(name) {
+        if (name && /^(['"]).*\1$/.test(name)) {
+            name = name.substring(1, name.length - 1);
+        }
+
+        return name;
     }
 
     fetchSearch() {
