@@ -31,6 +31,7 @@
 import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 import Autocomplete from 'ui/autocomplete';
+import CascadeLinksHelper from 'helpers/field/cascade-links';
 
 /**
  * A link field (belongs-to relation).
@@ -47,6 +48,9 @@ class LinkFieldView extends BaseFieldView {
      *     Record
      * } [params] Parameters.
      * @property {boolean} [createDisabled] Disable create button in the select modal.
+     * @property {{
+     *     items: {localField: string, foreignField: string, matchRequired: boolean}[]
+     * }} [cascadingFieldsLogic] Cascading fields logic. As of 9.4.0.
      */
 
     /**
@@ -355,7 +359,10 @@ class LinkFieldView extends BaseFieldView {
 
         Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
-        return attributes;
+        return {
+            ...attributes,
+            ...this._getCascadingCreateAttributes(),
+        };
     }
 
     /** @inheritDoc */
@@ -631,61 +638,33 @@ class LinkFieldView extends BaseFieldView {
             url += '&select=' + select.join(',');
         }
 
-        if (this.panelDefs.selectHandler) {
-            return new Promise(resolve => {
-                this._getSelectFilters().then(filters => {
-                    if (filters.bool) {
-                        url += '&' + $.param({'boolFilterList': filters.bool});
-                    }
+        return new Promise(async resolve => {
+            const filters = await this._getSelectFilters();
 
-                    if (filters.primary) {
-                        url += '&' + $.param({'primaryFilter': filters.primary});
-                    }
+            if (filters.bool) {
+                url += '&' + $.param({'boolFilterList': filters.bool});
+            }
 
-                    if (filters.advanced && Object.keys(filters.advanced).length) {
-                        url += '&' + $.param({'where': filters.advanced});
-                    }
+            if (filters.primary) {
+                url += '&' + $.param({'primaryFilter': filters.primary});
+            }
 
-                    const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
-                    const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
+            if (filters.advanced && Object.keys(filters.advanced).length) {
+                url += '&' + $.param({'where': filters.advanced});
+            }
 
-                    if (orderBy) {
-                        url += '&' + $.param({
-                            orderBy: orderBy,
-                            order: orderDirection || 'asc',
-                        });
-                    }
+            const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+            const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
 
-                    resolve(url);
+            if (orderBy) {
+                url += '&' + $.param({
+                    orderBy: orderBy,
+                    order: orderDirection || 'asc',
                 });
-            });
-        }
+            }
 
-        const boolList = [
-            ...(this.getSelectBoolFilterList() || []),
-            ...(this.panelDefs.selectBoolFilterList || []),
-        ];
-
-        const primary = this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName;
-
-        if (boolList.length) {
-            url += '&' + $.param({'boolFilterList': boolList});
-        }
-
-        if (primary) {
-            url += '&' + $.param({'primaryFilter': primary});
-        }
-
-        if (this.panelDefs.selectOrderBy) {
-            const direction = this.panelDefs.selectOrderDirection || 'asc';
-
-            url += '&' + $.param({
-                orderBy: this.panelDefs.selectOrderBy,
-                order: direction,
-            });
-        }
-
-        return url;
+            resolve(url);
+        });
     }
 
     /** @inheritDoc */
@@ -1139,7 +1118,7 @@ class LinkFieldView extends BaseFieldView {
      */
     getCreateAttributesProvider() {
         return () => {
-            const attributes = this.getCreateAttributes() || {};
+            const attributes = this.getCreateAttributes() ?? {};
 
             if (!this.panelDefs.createHandler) {
                 return Promise.resolve(attributes);
@@ -1274,12 +1253,15 @@ class LinkFieldView extends BaseFieldView {
                 ] :
                 undefined;
 
-            const advanced = this.getSelectFilters() || {};
+            const advanced = {
+                ...(this.getSelectFilters() ?? {}),
+                ...(!this.isSearchMode() ? this._getCascadingFilters() : {}),
+            };
 
             this._applyAdditionalFilter(advanced);
 
             return Promise.resolve({
-                primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
+                primary: this.getSelectPrimaryFilterName() ?? this.panelDefs.selectPrimaryFilterName,
                 bool: boolFilterList,
                 advanced: advanced,
             });
@@ -1292,7 +1274,12 @@ class LinkFieldView extends BaseFieldView {
                     return handler.getFilters(this.model);
                 })
                 .then(filters => {
-                    const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+                    const advanced = {
+                        ...(this.getSelectFilters() ?? {}),
+                        ...(filters.advanced ?? {}),
+                        ...this._getCascadingFilters(),
+                    };
+
                     const primaryFilter = this.getSelectPrimaryFilterName() ||
                         filters.primary || this.panelDefs.selectPrimaryFilterName;
 
@@ -1318,6 +1305,44 @@ class LinkFieldView extends BaseFieldView {
                     });
                 });
         });
+    }
+
+    /**
+     * @private
+     * @return {CascadeLinksHelper|null}
+     */
+    _createCascadeLinksHelper() {
+        const items = this.options.cascadingLogic?.items ?? [];
+
+        if (!items.length) {
+            return null;
+        }
+
+        if (!this.foreignScope) {
+            return null;
+        }
+
+        return new CascadeLinksHelper({
+            model: this.model,
+            foreignEntityType: this.foreignScope,
+            items: items,
+        });
+    }
+
+    /**
+     * @private
+     * @return {Object.<string, module:search-manager~advancedFilter>}
+     */
+    _getCascadingFilters() {
+        return this._createCascadeLinksHelper()?.prepareFilters() ?? {};
+    }
+
+    /**
+     * @private
+     * @return {Object.<string, *>}
+     */
+    _getCascadingCreateAttributes() {
+        return this._createCascadeLinksHelper()?.prepareCreateAttributes() ?? {};
     }
 
     actionSelectOneOf() {

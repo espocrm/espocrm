@@ -762,7 +762,7 @@ class BaseRecordView extends View {
                 return;
             }
 
-            this.processDynamicLogic();
+            this.processDynamicLogic({action: o.action});
         });
 
         this.processDynamicLogic();
@@ -772,9 +772,10 @@ class BaseRecordView extends View {
      * Process dynamic logic.
      *
      * @protected
+     * @param {{action?: string|'ui'}} [options] Options.
      */
-    processDynamicLogic() {
-        this.dynamicLogic.process();
+    processDynamicLogic(options = {}) {
+        this.dynamicLogic.process(options);
     }
 
     /**

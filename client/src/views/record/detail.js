@@ -63,7 +63,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [inlineEditDisabled] Disable inline edit.
      * @property {boolean} [buttonsDisabled] Disable buttons.
      * @property {string} [navigateButtonsDisabled]
-     * @property {Object} [dynamicLogicDefs]
+     * @property {module:dynamic-logic~defs} [dynamicLogicDefs]
      * @property {module:view-record-helper} [recordHelper] A record helper. For a form state management.
      * @property {Object.<string, *>} [attributes]
      * @property {module:views/record/detail~button[]} [buttonList] Buttons.
@@ -451,8 +451,7 @@ class DetailRecordView extends BaseRecordView {
      * Dynamic logic. Can be overridden by an option parameter.
      *
      * @protected
-     * @type {Object}
-     * @todo Add typedef.
+     * @type {module:dynamic-logic~defs}
      */
     dynamicLogicDefs = {}
 
@@ -2002,7 +2001,7 @@ class DetailRecordView extends BaseRecordView {
         this.navigateButtonsDisabled = this.options.navigateButtonsDisabled ||
             this.navigateButtonsDisabled;
         this.portalLayoutDisabled = this.options.portalLayoutDisabled || this.portalLayoutDisabled;
-        this.dynamicLogicDefs = this.options.dynamicLogicDefs || this.dynamicLogicDefs;
+        this.dynamicLogicDefs = this.options.dynamicLogicDefs ?? this.dynamicLogicDefs;
 
         this.accessControlDisabled = this.options.accessControlDisabled || this.accessControlDisabled;
 
@@ -3271,6 +3270,10 @@ class DetailRecordView extends BaseRecordView {
 
                             o[optionName] = cellDefs.options[optionName];
                         }
+                    }
+
+                    if (this.dynamicLogicDefs?.cascadingFields?.[name]) {
+                        o.cascadingLogic = this.dynamicLogicDefs?.cascadingFields?.[name];
                     }
 
                     const cell = {

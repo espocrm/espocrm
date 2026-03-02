@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,15 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import VarcharFieldView from 'views/fields/varchar';
+namespace Espo\Tools\DynamicLogic\CascadingFields;
 
-class IdFieldView extends VarcharFieldView {
-
-    searchTypeList = [
-        'equals',
-        'notEquals',
-        'isEmpty',
-    ]
+readonly class Item
+{
+    public function __construct(
+        public string $localField,
+        public string $foreignField,
+        public bool $matchRequired,
+    ) {}
 }
-
-export default IdFieldView;

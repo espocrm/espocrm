@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,15 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import VarcharFieldView from 'views/fields/varchar';
+namespace Espo\Tools\DynamicLogic\CascadingFields;
 
-class IdFieldView extends VarcharFieldView {
+use Espo\Core\Utils\Metadata;
 
-    searchTypeList = [
-        'equals',
-        'notEquals',
-        'isEmpty',
-    ]
+class ItemsProvider
+{
+    public function __construct(
+        private Metadata $metadata,
+    ) {}
+
+    /**
+     * @return Item[]
+     */
+    public function get(string $entityType, string $field): array
+    {
+        /** @var array<string, mixed>[] $rawItems */
+        $rawItems = $this->metadata->get("logicDefs.$entityType.cascadingFields.$field.items") ?? [];
+
+        $items = [];
+
+        foreach ($rawItems as $raw) {
+            $localField = $raw['localField'] ?? null;
+            $foreignField = $raw['foreignField'] ?? null;
+            $matchRequired = $raw['matchRequired'] ?? false;
+
+            if (!$localField || !$foreignField) {
+                continue;
+            }
+
+            $items[] = new Item(
+                localField: $localField,
+                foreignField: $foreignField,
+                matchRequired: $matchRequired,
+            );
+        }
+
+        return $items;
+    }
 }
-
-export default IdFieldView;

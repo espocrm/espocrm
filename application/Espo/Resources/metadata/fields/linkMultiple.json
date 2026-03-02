@@ -60,8 +60,12 @@
     ],
     "mandatoryValidationList": [
         "pattern",
-        "columnsValid"
+        "columnsValid",
+        "cascadingSelect"
     ],
+    "validatorClassNameMap": {
+        "cascadingSelect": "Espo\\Classes\\FieldValidators\\Common\\LinkMultiple\\CascadingSelect"
+    },
     "notCreatable": true,
     "notSortable": true,
     "filter": true,

@@ -205,6 +205,7 @@
         "dynamicLogicOptions": "Conditional options",
         "dynamicLogicInvalid": "Conditions making field invalid",
         "dynamicLogicReadOnlySaved": "Saved state conditions making field read-only",
+        "dynamicLogicCascading": "Cascading select",
         "probabilityMap": "Stage Probabilities (%)",
         "notActualOptions": "Not Actual Options",
         "activeOptions": "Active Options",

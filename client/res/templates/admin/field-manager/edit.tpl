@@ -78,6 +78,12 @@
                         <div class="field" data-name="dynamicLogicReadOnlySaved">{{{dynamicLogicReadOnlySaved}}}</div>
                     </div>
                 {{/if}}
+                {{#if dynamicLogicCascading}}
+                <div class="cell form-group" data-name="dynamicLogicCascading">
+                    <label class="control-label" data-name="dynamicLogicCascading">{{translate 'dynamicLogicCascading' scope='Admin' category='fields'}}</label>
+                    <div class="field" data-name="dynamicLogicCascading">{{{dynamicLogicCascading}}}</div>
+                </div>
+                {{/if}}
             </div>
         </div>
     </div>

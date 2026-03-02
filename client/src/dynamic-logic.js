@@ -29,54 +29,111 @@
 /** @module dynamic-logic */
 
 /**
- * Dynamic logic. Handles form appearance and behaviour depending on conditions.
+ * @typedef {Record} module:dynamic-logic~defs
+ * @property {Object.<string, module:dynamic-logic~fieldDefs>} [fields] Fields.
+ * @property {Object.<string, module:dynamic-logic~panelDefs>} [panels] Panels.
+ * @property {Object.<string, *>} [options] Options.
+ * @property {Object.<string, module:dynamic-logic~cascadingFieldDefs>} [cascadingFields] Cascading fields.
+ */
+
+/**
+ * @typedef {Record} module:dynamic-logic~fieldDefs
+ * @property {{conditionGroup: module:dynamic-logic~conditionGroup}} [visible] Visibility conditions.
+ * @property {{conditionGroup: module:dynamic-logic~conditionGroup}} [required] Requiring conditions.
+ * @property {{conditionGroup: module:dynamic-logic~conditionGroup}} [readOnly] Read-only conditions.
+ * @property {{conditionGroup: module:dynamic-logic~conditionGroup}} [readOnlySaved] Read-only saved conditions.
+ * @property {{conditionGroup: module:dynamic-logic~conditionGroup}} [invalid] Invalidity conditions.
+ */
+
+/**
+ * @typedef {Record} module:dynamic-logic~panelDefs
+ * @property {{conditionGroup: module:dynamic-logic~conditionGroup}} [visible] Visibility conditions.
+ */
+
+/**
+ * @typedef {Record} module:dynamic-logic~cascadingFieldDefs
+ * @property {{localField: string, foreignField: string, matchRequired: boolean}[]} [items] Visibility conditions.
+ */
+
+/**
+ * @typedef {Record[]} module:dynamic-logic~conditionGroup
+ */
+
+import {inject} from 'di';
+import FieldManager from 'field-manager';
+
+/**
+ * Dynamic logic. Handles form appearance and behavior depending on conditions.
  *
  * @internal Instantiated in advanced-pack.
  */
 class DynamicLogic {
 
     /**
-     * @param {Object} defs Definitions.
-     * @param {module:views/record/base} recordView A record view.
+     * @private
+     * @type {module:dynamic-logic~defs} defs Definitions.
+     */
+    defs
+
+    /**
+     * @private
+     * @type {import('views/record/base').default}
+     */
+    recordView
+
+    /**
+     * @private
+     * @type {string[]}
+     * @const
+     */
+    fieldTypeList = [
+        'visible',
+        'required',
+        'readOnlySaved',
+        'readOnly',
+    ]
+
+    /**
+     * @private
+     * @type {string[]}
+
+     */
+    panelTypeList = [
+        'visible',
+        'styled',
+    ]
+
+    /**
+     * @private
+     * @type {Object.<string, string[]>}
+     */
+    cascadingClearDefs
+
+    /**
+     * @private
+     * @type {FieldManager}
+     */
+    @inject(FieldManager)
+    fieldManager
+
+    /**
+     * @param {module:dynamic-logic~defs} defs Definitions.
+     * @param {import('views/record/base').default} recordView A record view.
      */
     constructor(defs, recordView) {
-
-        /**
-         * @type {Object} Definitions.
-         * @private
-         */
-        this.defs = defs || {};
-
-        /**
-         *
-         * @type {module:views/record/base}
-         * @private
-         */
+        this.defs = defs ?? {};
         this.recordView = recordView;
 
-        /**
-         * @type {string[]}
-         * @private
-         */
-        this.fieldTypeList = [
-            'visible',
-            'required',
-            'readOnlySaved',
-            'readOnly',
-        ];
-
-        /**
-         * @type {string[]}
-         * @private
-         */
-        this.panelTypeList = ['visible', 'styled'];
+        this.cascadingClearDefs = this.buildCascadingClearDefs();
     }
 
     /**
      * Process.
+     *
+     * @param {{action?: string|'ui'}} [options] Options.
      */
-    process() {
-        const fields = this.defs.fields || {};
+    process(options = {}) {
+        const fields = this.defs.fields ?? {};
 
         Object.keys(fields).forEach(field => {
             /** @type {Record} */
@@ -138,7 +195,7 @@ class DynamicLogic {
             });
         });
 
-        const panels = this.defs.panels || {};
+        const panels = this.defs.panels ?? {};
 
         Object.keys(panels).forEach(panel => {
             this.panelTypeList.forEach(type => {
@@ -146,12 +203,12 @@ class DynamicLogic {
             });
         });
 
-        const options = this.defs.options || {};
+        const optionsDefs = this.defs.options ?? {};
 
-        Object.keys(options).forEach(field => {
-            const itemList = options[field];
+        Object.keys(optionsDefs).forEach(field => {
+            const itemList = optionsDefs[field];
 
-            if (!options[field]) {
+            if (!optionsDefs[field]) {
                 return;
             }
 
@@ -173,6 +230,88 @@ class DynamicLogic {
                 this.resetOptionList(field);
             }
         });
+
+        if (options.action === 'ui') {
+            this.processCascadingClear();
+        }
+    }
+
+    /**
+     * @private
+     * @return {Object.<string, string[]>}
+     */
+    buildCascadingClearDefs() {
+        const fields = this.defs.cascadingFields ?? null;
+
+        if (!fields || Object.keys(fields).length === 0) {
+            return {};
+        }
+
+        const model = this.recordView.model;
+
+        /** @type {Object.<string, string[]>} */
+        const map = {};
+
+        for (const [field, defs] of Object.entries(fields)) {
+            const items = defs.items;
+
+            if (!items || !items.length) {
+                continue;
+            }
+
+            for (const item of items) {
+                if (!item.matchRequired) {
+                    continue;
+                }
+
+                const type = model.getFieldType(item.localField);
+
+                const idAttribute = type === 'linkMultiple' ? item.localField + 'Ids' : item.localField + 'Id';
+
+                map[idAttribute] ??= [];
+
+                const attributeList = this.fieldManager.getEntityTypeFieldAttributeList(model.entityType, field);
+
+                map[idAttribute].push(...attributeList);
+            }
+        }
+
+        for (const [attribute, a] of Object.entries(map)) {
+            map[attribute] = a.filter((it, i) => a.indexOf(it) === i);
+        }
+
+        return map;
+    }
+
+    /**
+     * @private
+     */
+    processCascadingClear() {
+        const attributeList = Object.keys(this.cascadingClearDefs);
+        const model = this.recordView.model;
+
+        const fieldsToUnset = [];
+
+        for (const attribute of attributeList) {
+            if (model.hasChanged(attribute)) {
+                fieldsToUnset.push(...this.cascadingClearDefs[attribute]);
+            }
+        }
+
+        if (!fieldsToUnset.length) {
+            return;
+        }
+
+        const map = fieldsToUnset.reduce((p, it) => {
+            p[it] = null;
+
+            return p;
+        }, {})
+
+
+        setTimeout(() => {
+            model.setMultiple(map)
+        }, 0)
     }
 
     /**
@@ -181,7 +320,7 @@ class DynamicLogic {
      * @private
      */
     processPanel(panel, type) {
-        const panels = this.defs.panels || {};
+        const panels = this.defs.panels ?? {};
         const item = (panels[panel] || {});
 
         if (!(type in item)) {
@@ -564,8 +703,8 @@ class DynamicLogic {
      * @param {Object} item Condition definitions.
      */
     addPanelVisibleCondition(name, item) {
-        this.defs.panels = this.defs.panels || {};
-        this.defs.panels[name] = this.defs.panels[name] || {};
+        this.defs.panels = this.defs.panels ?? {};
+        this.defs.panels[name] = this.defs.panels[name] ?? {};
 
         this.defs.panels[name].visible = item;
 
@@ -579,8 +718,8 @@ class DynamicLogic {
      * @param {Object} item Condition definitions.
      */
     addPanelStyledCondition(name, item) {
-        this.defs.panels = this.defs.panels || {};
-        this.defs.panels[name] = this.defs.panels[name] || {};
+        this.defs.panels = this.defs.panels ?? {};
+        this.defs.panels[name] = this.defs.panels[name] ?? {};
 
         this.defs.panels[name].styled = item;
 

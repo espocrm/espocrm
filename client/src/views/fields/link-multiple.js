@@ -31,6 +31,7 @@
 import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 import Autocomplete from 'ui/autocomplete';
+import CascadeLinksHelper from 'helpers/field/cascade-links';
 
 /**
  * A link-multiple field (for has-many relations).
@@ -47,6 +48,9 @@ class LinkMultipleFieldView extends BaseFieldView {
      *     Record
      * } [params] Parameters.
      * @property {boolean} [createDisabled] Disable create button in the select modal.
+     * @property {{
+     *     items: {localField: string, foreignField: string, matchRequired: boolean}[]
+     * }} [cascadingLogic] Cascading fields logic. As of 9.4.0.
      */
 
     /**
@@ -356,7 +360,10 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
-        return attributes;
+        return {
+            ...attributes,
+            ...this._getCascadingCreateAttributes(),
+        };
     }
 
     /** @inheritDoc */
@@ -525,70 +532,39 @@ class LinkMultipleFieldView extends BaseFieldView {
             } :
             {};
 
-        if (this.panelDefs.selectHandler) {
-            return new Promise(resolve => {
-                this._getSelectFilters().then(filters => {
-                    if (filters.bool) {
-                        url += '&' + $.param({boolFilterList: filters.bool});
-                    }
 
-                    if (filters.primary) {
-                        url += '&' + $.param({primaryFilter: filters.primary});
-                    }
+        return new Promise(async resolve => {
+            const filters = await this._getSelectFilters();
 
-                    const advanced = {
-                        ...notSelectedFilter,
-                        ...(filters.advanced || {}),
-                    };
+            if (filters.bool) {
+                url += '&' + $.param({boolFilterList: filters.bool});
+            }
 
-                    if (Object.keys(advanced).length) {
-                        url += '&' + $.param({where: advanced});
-                    }
+            if (filters.primary) {
+                url += '&' + $.param({primaryFilter: filters.primary});
+            }
 
-                    const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
-                    const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
+            const advanced = {
+                ...notSelectedFilter,
+                ...(filters.advanced ?? {}),
+            };
 
-                    if (orderBy) {
-                        url += '&' + $.param({
-                            orderBy: orderBy,
-                            order: orderDirection || 'asc',
-                        });
-                    }
+            if (Object.keys(advanced).length) {
+                url += '&' + $.param({where: advanced});
+            }
 
-                    resolve(url);
+            const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+            const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
+
+            if (orderBy) {
+                url += '&' + $.param({
+                    orderBy: orderBy,
+                    order: orderDirection || 'asc',
                 });
-            });
-        }
+            }
 
-        const boolList = [
-            ...(this.getSelectBoolFilterList() || []),
-            ...(this.panelDefs.selectBoolFilterList || []),
-        ];
-
-        if (boolList.length) {
-            url += '&' + $.param({'boolFilterList': boolList});
-        }
-
-        const primary = this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName;
-
-        if (primary) {
-            url += '&' + $.param({'primaryFilter': primary});
-        }
-
-        if (Object.keys(notSelectedFilter).length) {
-            url += '&' + $.param({'where': notSelectedFilter});
-        }
-
-        if (this.panelDefs.selectOrderBy) {
-            const direction = this.panelDefs.selectOrderDirection || 'asc';
-
-            url += '&' + $.param({
-                orderBy: this.panelDefs.selectOrderBy,
-                order: direction,
-            });
-        }
-
-        return url;
+            resolve(url);
+        });
     }
 
     /** @inheritDoc */
@@ -1150,7 +1126,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      */
     getCreateAttributesProvider() {
         return () => {
-            const attributes = this.getCreateAttributes() || {};
+            const attributes = this.getCreateAttributes() ?? {};
 
             if (!this.panelDefs.createHandler) {
                 return Promise.resolve(attributes);
@@ -1203,34 +1179,44 @@ class LinkMultipleFieldView extends BaseFieldView {
         if (!handler || this.isSearchMode()) {
             const boolFilterList = (localBoolFilterList || this.panelDefs.selectBoolFilterList) ?
                 [
-                    ...(localBoolFilterList || []),
-                    ...(this.panelDefs.selectBoolFilterList || []),
+                    ...(localBoolFilterList ?? []),
+                    ...(this.panelDefs.selectBoolFilterList ?? []),
                 ] :
                 undefined;
 
+            const advanced = {
+                ...(this.getSelectFilters() ?? {}),
+                ...(!this.isSearchMode() ? this._getCascadingFilters() : {}),
+            };
+
             return Promise.resolve({
-                primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
+                primary: this.getSelectPrimaryFilterName() ?? this.panelDefs.selectPrimaryFilterName,
                 bool: boolFilterList,
-                advanced: this.getSelectFilters() || undefined,
+                advanced: advanced,
             });
         }
 
-        return new Promise(resolve => {
+        return new Promise(async resolve => {
             Espo.loader.requirePromise(handler)
                 .then(Handler => new Handler(this.getHelper()))
                 .then(/** module:handlers/select-related */handler => {
                     return handler.getFilters(this.model);
                 })
                 .then(filters => {
-                    const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+                    const advanced = {
+                        ...(this.getSelectFilters() || {}),
+                        ...(filters.advanced || {}),
+                        ...this._getCascadingFilters(),
+                    };
+
                     const primaryFilter = this.getSelectPrimaryFilterName() ||
                         filters.primary || this.panelDefs.selectPrimaryFilterName;
 
                     const boolFilterList = (localBoolFilterList || filters.bool || this.panelDefs.selectBoolFilterList) ?
                         [
-                            ...(localBoolFilterList || []),
-                            ...(filters.bool || []),
-                            ...(this.panelDefs.selectBoolFilterList || []),
+                            ...(localBoolFilterList ?? []),
+                            ...(filters.bool ?? []),
+                            ...(this.panelDefs.selectBoolFilterList ?? []),
                         ] :
                         undefined;
 
@@ -1284,6 +1270,44 @@ class LinkMultipleFieldView extends BaseFieldView {
      */
     getOnEmptyAutocomplete() {
         return undefined;
+    }
+
+    /**
+     * @private
+     * @return {CascadeLinksHelper|null}
+     */
+    _createCascadeLinksHelper() {
+        const items = this.options.cascadingLogic?.items ?? [];
+
+        if (!items.length) {
+            return null;
+        }
+
+        if (!this.foreignScope) {
+            return null;
+        }
+
+        return new CascadeLinksHelper({
+            model: this.model,
+            foreignEntityType: this.foreignScope,
+            items: items,
+        });
+    }
+
+    /**
+     * @private
+     * @return {Object.<string, module:search-manager~advancedFilter>}
+     */
+    _getCascadingFilters() {
+        return this._createCascadeLinksHelper()?.prepareFilters() ?? {};
+    }
+
+    /**
+     * @private
+     * @return {Object.<string, *>}
+     */
+    _getCascadingCreateAttributes() {
+        return this._createCascadeLinksHelper()?.prepareCreateAttributes() ?? {};
     }
 }
 

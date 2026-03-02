@@ -27,5 +27,10 @@
             "endsWith": "Ends With",
             "matches": "Matches (reg exp)"
         }
+    },
+    "fields": {
+        "localField": "Local Field",
+        "foreignField": "Foreign Field",
+        "matchRequired": "Match Required"
     }
 }

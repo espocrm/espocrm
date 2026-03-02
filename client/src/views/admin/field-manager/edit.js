@@ -596,6 +596,25 @@ class FieldManagerEditView extends View {
             this.hasDynamicLogicPanel = true;
         }
 
+        if (!defs.dynamicLogicCascadingDisabled && ['link', 'linkOne', 'linkMultiple'].includes(this.type)) {
+            const foreignScope = this.getMetadata().get(`entityDefs.${this.scope}.links.${this.field}.entity`);
+
+            if (foreignScope) {
+                const value = this.getMetadata().get(['logicDefs', this.scope, 'cascadingFields', this.field]);
+
+                this.model.set('dynamicLogicCascading', value);
+
+                promiseList.push(
+                    this.createFieldView(null, 'dynamicLogicCascading', null, {
+                        view: 'views/admin/field-manager/fields/dynamic-logic-cascading',
+                        scope: this.scope,
+                        field: this.field,
+                        foreignScope: foreignScope,
+                    })
+                );
+            }
+        }
+
         return Promise.all(promiseList);
     }
 
