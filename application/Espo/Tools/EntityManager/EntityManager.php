@@ -272,6 +272,7 @@ class EntityManager
 
         $this->processMetadataCreateSelectDefs($templatePath, $name, $type);
         $this->processMetadataCreateRecordDefs($templatePath, $name, $type);
+        $this->processMetadataCreateLogicDefs($templatePath, $name, $type);
 
         $this->baseLanguage->set('Global', 'scopeNames', $name, $labelSingular);
         $this->baseLanguage->set('Global', 'scopeNamesPlural', $name, $labelPlural);
@@ -352,6 +353,21 @@ class EntityManager
         $data = Json::decode($contents, true);
 
         $this->metadata->set('recordDefs', $name, $data);
+    }
+
+    private function processMetadataCreateLogicDefs(string $templatePath, string $name, string $type): void
+    {
+        $path = $templatePath . "/Metadata/$type/logicDefs.json";
+
+        if (!$this->fileManager->isFile($path)) {
+            return;
+        }
+
+        $contents = $this->fileManager->getContents($path);
+
+        $data = Json::decode($contents, true);
+
+        $this->metadata->set('logicDefs', $name, $data);
     }
 
     /**
@@ -563,6 +579,7 @@ class EntityManager
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/clientDefs/$name.json");
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/recordDefs/$name.json");
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/selectDefs/$name.json");
+        $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/logicDefs/$name.json");
         $this->fileManager->removeFile("custom/Espo/Custom/Resources/metadata/scopes/$name.json");
 
         $this->fileManager->removeFile("custom/Espo/Custom/Entities/$normalizedName.php");

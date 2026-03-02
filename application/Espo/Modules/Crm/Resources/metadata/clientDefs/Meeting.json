@@ -129,19 +129,5 @@
             "type": "bottomPanelsEditSmall"
         }
     },
-    "dynamicLogic":{
-        "fields": {
-            "duration": {
-                "readOnly": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isAllDay"
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "iconClass": "fas fa-calendar-check"
 }

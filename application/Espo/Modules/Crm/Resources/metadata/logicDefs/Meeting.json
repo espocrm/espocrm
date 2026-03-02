@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "duration": {
+            "readOnly": {
+                "conditionGroup": [
+                    {
+                        "type": "isTrue",
+                        "attribute": "isAllDay"
+                    }
+                ]
+            }
+        }
+    }
+}

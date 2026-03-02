@@ -121,61 +121,6 @@
     "boolFilterList": [
         "onlyMy"
     ],
-    "dynamicLogic": {
-        "fields": {
-            "name": {
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isEmpty",
-                            "attribute": "accountName"
-                        },
-                        {
-                            "type": "isEmpty",
-                            "attribute": "emailAddress"
-                        },
-                        {
-                            "type": "isEmpty",
-                            "attribute": "phoneNumber"
-                        }
-                    ]
-                }
-            },
-            "convertedAt": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "and",
-                            "value": [
-                                {
-                                    "type": "equals",
-                                    "attribute": "status",
-                                    "value": "Converted"
-                                },
-                                {
-                                    "type": "isNotEmpty",
-                                    "attribute": "convertedAt"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        "panels": {
-            "convertedTo": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "equals",
-                            "attribute": "status",
-                            "value": "Converted"
-                        }
-                    ]
-                }
-            }
-        }
-    },
     "color": "#d6a2c9",
     "iconClass": "fas fa-address-card"
 }
