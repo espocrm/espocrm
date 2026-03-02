@@ -86,7 +86,6 @@ class PO
             '"POT-Creation-Date: \\n"\n' +
             '"PO-Revision-Date: \\n"\n' +
             '"Last-Translator: \\n"\n' +
-            '"Language-Team: EspoCRM <infobox@espocrm.com>\\n"\n' +
             '"MIME-Version: 1.0\\n"\n' +
             '"Content-Type: text/plain; charset=UTF-8\\n"\n' +
             '"Content-Transfer-Encoding: 8bit\\n"\n' +
