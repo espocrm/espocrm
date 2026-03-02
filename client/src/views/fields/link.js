@@ -50,7 +50,7 @@ class LinkFieldView extends BaseFieldView {
      * @property {boolean} [createDisabled] Disable create button in the select modal.
      * @property {{
      *     items: {localField: string, foreignField: string, matchRequired: boolean}[]
-     * }} [cascadingFieldsLogic] Cascading fields logic. As of 9.4.0.
+     * }} [cascadingLogic] Cascading fields logic. As of 9.4.0.
      */
 
     /**
