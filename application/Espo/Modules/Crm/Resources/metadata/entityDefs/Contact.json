@@ -221,7 +221,8 @@
                 }
             },
             "customizationOptionsDisabled": true,
-            "textFilterDisabled": true
+            "textFilterDisabled": true,
+            "importEnabled": true
         },
         "description": {
             "type": "text"
