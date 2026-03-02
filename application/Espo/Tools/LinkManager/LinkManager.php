@@ -278,6 +278,9 @@ class LinkManager
             throw new Conflict("Field $entityForeign::$linkForeign already exists.");
         }
 
+        $this->checkLinkNameNotForbidden($link);
+        $this->checkLinkNameNotForbidden($linkForeign);
+
         if ($entity === $entityForeign) {
             if (
                 $link === lcfirst($entity) ||
@@ -1195,5 +1198,24 @@ class LinkManager
         }
 
         $this->metadata->save();
+    }
+
+    /**
+     * @throws Conflict
+     */
+    private function checkLinkNameNotForbidden(string $link): void
+    {
+        if (
+            in_array($link, NameUtil::FIELD_FORBIDDEN_NAME_LIST)
+        ) {
+            throw Conflict::createWithBody(
+                "Field '$link' is not allowed.",
+                Error\Body::create()
+                    ->withMessageTranslation('fieldNameIsNotAllowed', 'FieldManager', [
+                        'field' => $link,
+                    ])
+                    ->encode()
+            );
+        }
     }
 }
