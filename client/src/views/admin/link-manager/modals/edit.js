@@ -1165,7 +1165,7 @@ class LinkManagerEditModalView extends ModalView {
                         console.error(statusReasonHeader);
                     }
 
-                    Espo.Ui.error(msg);
+                    Espo.Ui.error(msg, {closeButton: true});
 
                     xhr.errorIsHandled = true;
                 }
