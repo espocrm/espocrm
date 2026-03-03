@@ -36,6 +36,8 @@ use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\Hook\Hook\AfterUnrelate;
 use Espo\Core\Hook\Hook\BeforeRemove;
 use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Hook\Hook\LateAfterRemove;
+use Espo\Core\Hook\Hook\LateAfterSave;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Repository\Option\MassRelateOptions;
@@ -52,8 +54,10 @@ class GeneralInvoker
 {
     private const HOOK_BEFORE_SAVE = 'beforeSave';
     private const HOOK_AFTER_SAVE = 'afterSave';
+    private const HOOK_LATE_AFTER_SAVE = 'lateAfterSave';
     private const HOOK_BEFORE_REMOVE = 'beforeRemove';
     private const HOOK_AFTER_REMOVE = 'afterRemove';
+    private const HOOK_LATE_AFTER_REMOVE = 'lateAfterRemove';
     private const HOOK_AFTER_RELATE = 'afterRelate';
     private const HOOK_AFTER_UNRELATE = 'afterUnrelate';
     private const HOOK_AFTER_MASS_RELATE = 'afterMassRelate';
@@ -93,6 +97,16 @@ class GeneralInvoker
             return;
         }
 
+        if ($name === self::HOOK_LATE_AFTER_SAVE && $hook instanceof LateAfterSave) {
+            if (!$subject instanceof Entity) {
+                throw new LogicException();
+            }
+
+            $hook->lateAfterSave($subject, SaveOptions::fromAssoc($options));
+
+            return;
+        }
+
         if ($name === self::HOOK_BEFORE_REMOVE &&  $hook instanceof BeforeRemove) {
             if (!$subject instanceof Entity) {
                 throw new LogicException();
@@ -109,6 +123,16 @@ class GeneralInvoker
             }
 
             $hook->afterRemove($subject, RemoveOptions::fromAssoc($options));
+
+            return;
+        }
+
+        if ($name === self::HOOK_LATE_AFTER_REMOVE && $hook instanceof LateAfterRemove) {
+            if (!$subject instanceof Entity) {
+                throw new LogicException();
+            }
+
+            $hook->lateAfterRemove($subject, RemoveOptions::fromAssoc($options));
 
             return;
         }

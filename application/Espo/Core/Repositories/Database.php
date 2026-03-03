@@ -140,11 +140,11 @@ class Database extends RDBRepository
             $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
                 $this->saveInternal($entity, $options);
             });
-
-            return;
+        } else {
+            $this->saveInternal($entity, $options);
         }
 
-        $this->saveInternal($entity, $options);
+        $this->lateAfterSave($entity, $options);
     }
 
     /**
@@ -171,6 +171,17 @@ class Database extends RDBRepository
     }
 
     /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    private function lateAfterSave(Entity $entity, array $options): void
+    {
+        if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
+            $this->hookManager->process($this->entityType, 'lateAfterSave', $entity, $options);
+        }
+    }
+
+    /**
      * Remove a record (mark as deleted).
      */
     public function remove(Entity $entity, array $options = []): void
@@ -179,11 +190,22 @@ class Database extends RDBRepository
             $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
                 $this->removeInternal($entity, $options);
             });
-
-            return;
+        } else {
+            $this->removeInternal($entity, $options);
         }
 
-        $this->removeInternal($entity, $options);
+        $this->lateAfterRemove($entity, $options);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    private function lateAfterRemove(Entity $entity, array $options): void
+    {
+        if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
+            $this->hookManager->process($this->entityType, 'lateAfterRemove', $entity, $options);
+        }
     }
 
     /**
