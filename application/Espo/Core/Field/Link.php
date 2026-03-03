@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Field;
 
+use Espo\Core\Name\Field;
+use Espo\ORM\Entity;
 use InvalidArgumentException;
 
 /**
@@ -39,6 +41,9 @@ class Link
     private string $id;
     private ?string $name = null;
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct(string $id)
     {
         if (!$id) {
@@ -78,9 +83,23 @@ class Link
 
     /**
      * Create from an ID.
+     *
+     * @throws InvalidArgumentException
      */
     public static function create(string $id, ?string $name = null): self
     {
         return (new self($id))->withName($name);
+    }
+
+    /**
+     * Create from an entity.
+     *
+     * @throws InvalidArgumentException
+     *
+     * @since 9.4.0
+     */
+    public static function fromEntity(Entity $entity): self
+    {
+        return self::create($entity->getId());
     }
 }
