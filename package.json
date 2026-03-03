@@ -95,7 +95,7 @@
     "summernote": "^0.9.1",
     "timepicker": "^1.11.15",
     "turndown": "^7.2.0",
-    "underscore": "^1.13.1",
+    "underscore": "^1.13.8",
     "vis-data": "^7.1.6",
     "vis-timeline": "^7.7.2"
   },
