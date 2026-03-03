@@ -1,0 +1,71 @@
+{
+    "fields": {
+        "name": "שם",
+        "roles": "תפקידים",
+        "assignmentPermission": "הרשאת הקצאה",
+        "userPermission": "הרשאת משתמש",
+        "messagePermission": "הרשאת הודעות",
+        "portalPermission": "הרשאת פורטל",
+        "groupEmailAccountPermission": "הרשאת חשבון אימייל קבוצתי",
+        "exportPermission": "הרשאת ייצוא",
+        "massUpdatePermission": "הרשאת עדכון המוני",
+        "followerManagementPermission": "הרשאת ניהול עוקבים",
+        "dataPrivacyPermission": "הרשאת פרטיות נתונים",
+        "auditPermission": "הרשאת ביקורת",
+        "mentionPermission": "הרשאת אזכור",
+        "userCalendarPermission": "הרשאת לוח שנה של משתמש",
+        "data": "נתונים",
+        "fieldData": "נתוני שדה"
+    },
+    "links": {
+        "users": "משתמשים",
+        "teams": "צוותים"
+    },
+    "tooltips": {
+        "messagePermission": "מאפשר לשלוח הודעות למשתמשים אחרים.\n\n* כולם – יכול לשלוח לכולם\n* צוות – יכול לשלוח רק לחברי צוות\n* לא – לא יכול לשלוח",
+        "assignmentPermission": "מאפשר להקצות רשומות למשתמשים אחרים.\n\n* כולם – ללא הגבלה\n* צוות – יכול להקצות רק לחברי צוות\n* לא – יכול להקצות רק לעצמו",
+        "userPermission": "מאפשר לצפות בזרם של משתמשים אחרים. מאפשר למשתמשים לראות את רמות הגישה של אחרים לרשומות מסוימות.",
+        "userCalendarPermission": "מאפשר לצפות בלוחות שנה של משתמשים אחרים.",
+        "portalPermission": "גישה למידע פורטל, אפשרות לשלוח הודעות למשתמשי הפורטל.",
+        "groupEmailAccountPermission": "גישה לחשבונות אימייל קבוצתיים, אפשרות לשלוח דוא\"ל דרך SMTP קבוצתי.",
+        "exportPermission": "מאפשר לייצא רשומות.",
+        "massUpdatePermission": "אפשרות לבצע עדכון המוני של רשומות.",
+        "followerManagementPermission": "מאפשר לנהל עוקבים של רשומות מסוימות.",
+        "dataPrivacyPermission": "מאפשר לצפות ולמחוק נתונים אישיים.",
+        "auditPermission": "מאפשר לצפות ביומן הביקורת.",
+        "mentionPermission": "מאפשר לאזכר משתמשים אחרים בזרם.\n\n* כולם – יכול לאזכר את כולם\n* צוות – יכול לאזכר רק את חברי הצוות\n* לא – לא יכול לאזכר"
+    },
+    "labels": {
+        "Access": "גישה",
+        "Create Role": "צור תפקיד",
+        "Scope Level": "רמת טווח",
+        "Field Level": "רמת שדה"
+    },
+    "options": {
+        "accessList": {
+            "not-set": "לא הוגדר",
+            "enabled": "מופעל",
+            "disabled": "מנוטרל"
+        },
+        "levelList": {
+            "all": "כולם",
+            "team": "צוות",
+            "account": "חשבון",
+            "contact": "איש קשר",
+            "own": "שלי",
+            "no": "לא",
+            "yes": "כן",
+            "not-set": "לא הוגדר"
+        }
+    },
+    "actions": {
+        "read": "קריאה",
+        "edit": "עריכה",
+        "delete": "מחיקה",
+        "stream": "זרם",
+        "create": "יצירה"
+    },
+    "messages": {
+        "changesAfterClearCache": "כל השינויים בשליטת הגישה ייכנסו לתוקף לאחר ניקוי מטמון."
+    }
+}
