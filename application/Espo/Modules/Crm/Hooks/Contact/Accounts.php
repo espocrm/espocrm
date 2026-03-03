@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Contact;
 
 use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultipleItem;
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Modules\Crm\Entities\Contact;
@@ -51,18 +52,9 @@ class Accounts implements BeforeSave, AfterSave
 
     public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        if (
-            !$entity->isAttributeChanged(Contact::ATTR_ACCOUNT_ID) &&
-            !$entity->isAttributeChanged(Contact::FIELD_ACCOUNTS . 'Ids')
-        ) {
-            return;
-        }
+        $this->setPrimary($entity);
+        $this->restoreAccounts($entity);
 
-        if (!$entity->getAccount() && $entity->getAccountsLinkMultiple()->getList()) {
-            $first = $entity->getAccountsLinkMultiple()->getList()[0];
-
-            $entity->setAccount(Link::create($first->getId(), $first->getName()));
-        }
     }
 
     public function afterSave(Entity $entity, SaveOptions $options): void
@@ -112,5 +104,46 @@ class Accounts implements BeforeSave, AfterSave
         if ($titleChanged && $accountContact && $title !== $accountContact->get(self::COLUMN_ROLE)) {
             $relation->updateColumnsById($accountId, [self::COLUMN_ROLE => $title]);
         }
+    }
+
+    private function setPrimary(Contact $entity): void
+    {
+        if (
+            !$entity->isAttributeChanged(Contact::ATTR_ACCOUNT_ID) &&
+            !$entity->isAttributeChanged(Contact::FIELD_ACCOUNTS . 'Ids')
+        ) {
+            return;
+        }
+
+        if (!$entity->getAccount() && $entity->getAccountsLinkMultiple()->getList()) {
+            $first = $entity->getAccountsLinkMultiple()->getList()[0];
+
+            $entity->setAccount(Link::create($first->getId(), $first->getName()));
+        }
+    }
+
+    /**
+     * When the form is saved but there is no the accounts, the columns is still sent. Restore the accounts then.
+     */
+    private function restoreAccounts(Contact $entity): void
+    {
+        $account = $entity->getAccount();
+
+        if (!$account || !$entity->isAttributeChanged(Contact::FIELD_ACCOUNTS . 'Columns')) {
+            return;
+        }
+
+        $accounts = $entity->getAccountsLinkMultiple();
+
+        if ($accounts->hasId($account->getId())) {
+            return;
+        }
+
+        $accounts = $accounts->withAdded(
+            LinkMultipleItem::fromEntity($account)->withName($account->getName())
+                ->withColumnValue(self::COLUMN_ROLE, null)
+        );
+
+        $entity->setAccounts($accounts);
     }
 }

@@ -81,6 +81,16 @@ class Contact extends Person
     }
 
     /**
+     * Set accounts.
+     *
+     * @since 9.4.0
+     */
+    public function setAccounts(LinkMultiple $accounts): self
+    {
+        return $this->setValueObject(self::FIELD_ACCOUNTS, $accounts);
+    }
+
+    /**
      * Get accounts.
      *
      * @return EntityCollection<Account>
