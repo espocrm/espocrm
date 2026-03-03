@@ -69,6 +69,13 @@ class Database extends RDBRepository
      */
     protected $hooksDisabled = false;
 
+    /**
+     * To save and remove in a DB transaction.
+     *
+     * @since 9.4.0
+     */
+    protected bool $transactionalSave = false;
+
     /** @var ?array<string, mixed> */
     private $restoreData = null;
     /** @var Metadata */
@@ -97,6 +104,8 @@ class Database extends RDBRepository
         $this->recordIdGenerator = $recordIdGenerator;
 
         $this->hooksDisabled = $this->hooksDisabled || $metadata->get("entityDefs.$entityType.hooksDisabled");
+        $this->transactionalSave = $this->transactionalSave ||
+            $metadata->get("entityDefs.$entityType.transactionalSave");
 
         $hookMediator = null;
 
@@ -127,6 +136,23 @@ class Database extends RDBRepository
      */
     public function save(Entity $entity, array $options = []): void
     {
+        if ($this->transactionalSave) {
+            $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
+                $this->saveInternal($entity, $options);
+            });
+
+            return;
+        }
+
+        $this->saveInternal($entity, $options);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    private function saveInternal(Entity $entity, array $options = []): void
+    {
         if (
             $entity->isNew() &&
             !$entity->has(self::ATTR_ID) &&
@@ -142,6 +168,31 @@ class Database extends RDBRepository
         $this->restoreData = [];
 
         parent::save($entity, $options);
+    }
+
+    /**
+     * Remove a record (mark as deleted).
+     */
+    public function remove(Entity $entity, array $options = []): void
+    {
+        if ($this->transactionalSave) {
+            $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
+                $this->removeInternal($entity, $options);
+            });
+
+            return;
+        }
+
+        $this->removeInternal($entity, $options);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    private function removeInternal(Entity $entity, array $options = []): void
+    {
+        parent::remove($entity, $options);
     }
 
     /**

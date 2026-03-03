@@ -92,6 +92,10 @@
             "type": "boolean",
             "description": "Disable hooks. As of v8.2."
         },
+        "transactionalSave": {
+            "type": "boolean",
+            "description": "Enables record saving and removing in a DB transaction. As of v9.4."
+        },
         "entityClassName": {
             "type": "string",
             "description": "An entity. Should implement Espo\\ORM\\Entity. Usually should extend Espo\\Core\\ORM\\Entity. As of v8.2."

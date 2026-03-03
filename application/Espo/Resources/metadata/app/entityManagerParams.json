@@ -76,6 +76,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@Person": {
@@ -128,6 +135,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
@@ -195,6 +209,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "@BasePlus": {
@@ -254,6 +275,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true

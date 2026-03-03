@@ -35,6 +35,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Contact": {
@@ -69,6 +76,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
@@ -111,6 +125,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Opportunity": {
@@ -130,6 +151,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
@@ -157,6 +185,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Case": {
@@ -180,6 +215,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "KnowledgeBaseArticle": {
@@ -199,6 +241,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
@@ -248,6 +297,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Call": {
@@ -293,6 +349,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "Task": {
@@ -334,6 +397,13 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
         }
     },
     "TargetList": {
@@ -346,6 +416,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
@@ -423,6 +500,13 @@
         },
         "lockable": {
             "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
+        "transactionalSave": {
+            "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
