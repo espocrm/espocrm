@@ -578,6 +578,8 @@ class Util
      *
      * @param mixed $var1
      * @param mixed $var2
+     * @deprecated As of v9.4.
+     * @todo Remove in v10.0.
      */
     public static function areEqual($var1, $var2): bool
     {
@@ -596,6 +598,8 @@ class Util
      * Sort array recursively.
      *
      * @param array<string|int, mixed> $array
+     * @deprecated As of v9.4.
+     * @todo Remove in v10.0.
      */
     public static function ksortRecursive(&$array): bool
     {
