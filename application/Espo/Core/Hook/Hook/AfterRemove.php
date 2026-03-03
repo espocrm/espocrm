@@ -40,7 +40,7 @@ use Espo\ORM\Repository\Option\RemoveOptions;
 interface AfterRemove
 {
     /**
-     * Processed after an entity is remove from within a repository.
+     * Processed after an entity is removed from within a repository.
      *
      * @param TEntity $entity An entity.
      * @param RemoveOptions $options Options.

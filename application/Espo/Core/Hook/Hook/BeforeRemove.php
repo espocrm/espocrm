@@ -40,7 +40,7 @@ use Espo\ORM\Repository\Option\RemoveOptions;
 interface BeforeRemove
 {
     /**
-     * Processed before an entity is remove from within a repository.
+     * Processed before an entity is removed from within a repository.
      *
      * @param TEntity $entity An entity.
      * @param RemoveOptions $options Options.
