@@ -31,19 +31,22 @@ namespace Espo\Modules\Crm\Hooks\Contact;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultipleItem;
+use Espo\Core\Hook\Hook\AfterRelate;
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Repository\Option\RelateOptions;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
  * @implements BeforeSave<Contact>
  * @implements AfterSave<Contact>
+ * @implements AfterRelate<Contact>
  */
-class Accounts implements BeforeSave, AfterSave
+class Accounts implements BeforeSave, AfterSave, AfterRelate
 {
     private const string COLUMN_ROLE = Contact::COLUMN_ACCOUNTS_ROLE;
     private const string ATTR_TITLE = 'title';
@@ -54,7 +57,6 @@ class Accounts implements BeforeSave, AfterSave
     {
         $this->setPrimary($entity);
         $this->restoreAccounts($entity);
-
     }
 
     public function afterSave(Entity $entity, SaveOptions $options): void
@@ -145,5 +147,30 @@ class Accounts implements BeforeSave, AfterSave
         );
 
         $entity->setAccounts($accounts);
+    }
+
+    public function afterRelate(
+        Entity $entity,
+        string $relationName,
+        Entity $relatedEntity,
+        array $columnData,
+        RelateOptions $options,
+    ): void {
+
+        if ($relationName !== Contact::FIELD_ACCOUNTS) {
+            return;
+        }
+
+        if ($entity->getAccount()) {
+            return;
+        }
+
+        $relation = $this->entityManager->getRelation($entity, Contact::FIELD_ACCOUNT);
+
+        if ($relation->findOne()) {
+            return;
+        }
+
+        $relation->relate($relatedEntity);
     }
 }

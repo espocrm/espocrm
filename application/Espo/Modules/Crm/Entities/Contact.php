@@ -44,6 +44,8 @@ class Contact extends Person
     public const string ATTR_ACCOUNT_ID = 'accountId';
     /** @since v9.3.0. */
     public const string FIELD_ACCOUNTS = 'accounts';
+    /** @since v9.3.0. */
+    public const string FIELD_ACCOUNT = 'account';
 
     /** @since v9.3.0. */
     public const string RELATIONSHIP_ACCOUNT_CONTACT = 'AccountContact';
