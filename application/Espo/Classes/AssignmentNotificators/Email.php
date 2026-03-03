@@ -280,7 +280,7 @@ class Email implements AssignmentNotificator
                 ->setType(Notification::TYPE_EMAIL_RECEIVED)
                 ->setUserId($userId)
                 ->setData($data)
-                ->setRelated(LinkParent::createFromEntity($entity))
+                ->setRelated(LinkParent::fromEntity($entity))
                 ->setActionId($params->getActionId());
 
             $this->entityManager->saveEntity($notification);

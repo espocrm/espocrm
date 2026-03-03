@@ -79,7 +79,7 @@ class CollaboratorsNotificator
                 'relatedName' => $entity->get(Field::NAME),
                 'createdByName' => $this->user->getName(),
             ])
-            ->setRelated(LinkParent::createFromEntity($entity))
+            ->setRelated(LinkParent::fromEntity($entity))
             ->setActionId($params->getActionId());
 
         $this->entityManager->saveEntity($notification);

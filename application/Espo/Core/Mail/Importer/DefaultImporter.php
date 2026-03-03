@@ -613,7 +613,7 @@ class DefaultImporter implements Importer
     {
         foreach ($inlineAttachmentList as $attachment) {
             $attachment->setTargetField('body');
-            $attachment->setRelated(LinkParent::createFromEntity($email));
+            $attachment->setRelated(LinkParent::fromEntity($email));
 
             $this->entityManager->saveEntity($attachment);
         }

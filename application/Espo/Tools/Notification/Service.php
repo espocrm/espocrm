@@ -61,7 +61,7 @@ class Service
             ->setType(Notification::TYPE_MENTION_IN_POST)
             ->setData(['noteId' => $note->getId()])
             ->setUserId($userId)
-            ->setRelated(LinkParent::createFromEntity($note));
+            ->setRelated(LinkParent::fromEntity($note));
 
         $this->entityManager->saveEntity($notification);
     }
@@ -140,7 +140,7 @@ class Service
                 ->setData(['noteId' => $note->getId()])
                 ->setType(Notification::TYPE_NOTE)
                 ->setUserId($user->getId())
-                ->setRelated(LinkParent::createFromEntity($note))
+                ->setRelated(LinkParent::fromEntity($note))
                 ->setRelatedParent(
                     $note->getParentType() && $note->getParentId() ?
                         LinkParent::create($note->getParentType(), $note->getParentId()) : null

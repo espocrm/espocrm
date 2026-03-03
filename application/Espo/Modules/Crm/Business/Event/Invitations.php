@@ -151,7 +151,7 @@ class Invitations
             ->setSubject($subject)
             ->setBody($body)
             ->setIsHtml()
-            ->setParent(LinkParent::createFromEntity($entity));
+            ->setParent(LinkParent::fromEntity($entity));
 
         $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
 
@@ -195,7 +195,7 @@ class Invitations
             $terminateAt = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
-        $uid->setTarget(LinkParent::createFromEntity($entity));
+        $uid->setTarget(LinkParent::fromEntity($entity));
         $uid->setTerminateAt(DateTimeField::fromString($terminateAt));
 
         $this->entityManager->saveEntity($uid);

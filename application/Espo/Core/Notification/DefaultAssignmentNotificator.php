@@ -127,7 +127,7 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
                 'userId' => $this->user->getId(),
                 'userName' => $this->user->getName(),
             ])
-            ->setRelated(LinkParent::createFromEntity($entity));
+            ->setRelated(LinkParent::fromEntity($entity));
 
         $this->entityManager->saveEntity($notification);
     }

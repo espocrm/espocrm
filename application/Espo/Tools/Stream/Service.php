@@ -587,7 +587,7 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_CREATE);
-        $note->setParent(LinkParent::createFromEntity($entity));
+        $note->setParent(LinkParent::fromEntity($entity));
 
         $this->setSuperParent($entity, $note, true);
 
@@ -751,7 +751,7 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_ASSIGN);
-        $note->setParent(LinkParent::createFromEntity($entity));
+        $note->setParent(LinkParent::fromEntity($entity));
 
         $this->setSuperParent($entity, $note, true);
         $this->setAssignData($entity, $note);
@@ -912,7 +912,7 @@ class Service
         $note = $this->getNewNote();
 
         $note->setType(Note::TYPE_UPDATE);
-        $note->setParent(LinkParent::createFromEntity($entity));
+        $note->setParent(LinkParent::fromEntity($entity));
 
         $note->setData([
             'fields' => $updatedFieldList,

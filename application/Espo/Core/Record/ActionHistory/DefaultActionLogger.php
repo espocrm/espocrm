@@ -57,7 +57,7 @@ class DefaultActionLogger implements ActionLogger
             ->setAuthTokenId($this->user->get('authTokenId'))
             ->setAuthLogRecordId($this->user->get('authLogRecordId'))
             ->setIpAddress($this->user->get('ipAddress'))
-            ->setTarget(LinkParent::createFromEntity($entity));
+            ->setTarget(LinkParent::fromEntity($entity));
 
         $this->entityManager->saveEntity($historyRecord);
     }
