@@ -43,6 +43,8 @@ interface LateAfterSave
 {
     /**
      * Processed after an entity is saved, after the transaction (if one is used).
+     * To check whether the entity was new before save, obtain the save context
+     * from the options and call `isNew`.
      *
      * @param TEntity $entity An entity.
      * @param SaveOptions $options Options.

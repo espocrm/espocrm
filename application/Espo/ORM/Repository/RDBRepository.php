@@ -67,6 +67,13 @@ class RDBRepository implements Repository
     protected HookMediator $hookMediator;
     protected RDBTransactionManager $transactionManager;
 
+    /**
+     * To save and remove in a DB transaction.
+     *
+     * @since 9.4.0
+     */
+    protected bool $transactionalSave = false;
+
     public function __construct(
         protected string $entityType,
         protected EntityManager $entityManager,
@@ -137,6 +144,29 @@ class RDBRepository implements Repository
             $options[SaveContext::NAME] = new SaveContext();
         }
 
+        $context = $options[SaveContext::NAME];
+
+        if ($context instanceof SaveContext) {
+            $context->setIsNew($entity->isNew());
+        }
+
+        if ($this->transactionalSave) {
+            $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
+                $this->saveInternal($entity, $options);
+            });
+        } else {
+            $this->saveInternal($entity, $options);
+        }
+
+        $this->lateAfterSave($entity, $options);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    private function saveInternal(Entity $entity, array $options = []): void
+    {
         $this->processCheckEntity($entity);
 
         if ($entity instanceof BaseEntity) {
@@ -192,6 +222,13 @@ class RDBRepository implements Repository
     }
 
     /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    protected function lateAfterSave(Entity $entity, array $options): void
+    {}
+
+    /**
      * Restore a record flagged as deleted.
      */
     public function restoreDeleted(string $id): void
@@ -220,6 +257,30 @@ class RDBRepository implements Repository
      * Remove a record (mark as deleted).
      */
     public function remove(Entity $entity, array $options = []): void
+    {
+        if ($this->transactionalSave) {
+            $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
+                $this->removeInternal($entity, $options);
+            });
+        } else {
+            $this->removeInternal($entity, $options);
+        }
+
+        $this->lateAfterRemove($entity, $options);
+    }
+
+    /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    protected function lateAfterRemove(Entity $entity, array $options): void
+    {}
+
+    /**
+     * @param TEntity $entity
+     * @param array<string, mixed> $options
+     */
+    private function removeInternal(Entity $entity, array $options = []): void
     {
         $this->processCheckEntity($entity);
         $this->beforeRemove($entity, $options);

@@ -32,6 +32,7 @@ namespace Espo\Core\ORM\Repository\Option;
 use Closure;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Repository\Option\SaveOptions;
+use LogicException;
 
 /**
  * A save context.
@@ -47,6 +48,7 @@ class SaveContext
 
     private string $actionId;
     private bool $linkUpdated = false;
+    private ?bool $isNew = null;
 
     /** @var Closure[] */
     private array $deferredActions = [];
@@ -158,5 +160,29 @@ class SaveContext
     public function createDerived(): self
     {
         return new self($this->actionId);
+    }
+
+    /**
+     * @internal
+     * @since 9.4.0
+     */
+    public function setIsNew(bool $isNew): void
+    {
+        if ($this->isNew !== null) {
+            throw new LogicException("Cannot set already set isNew.");
+        }
+
+        $this->isNew = $isNew;
+    }
+
+    /**
+     * Was the entity new before save. Can be accessed only after save is started.
+     * To be used for late hooks, when then entity is already not new, to check.
+     *
+     * @since 9.4.0
+     */
+    public function isNew(): bool
+    {
+        return $this->isNew ?? throw new LogicException("Cannot access isNew before it's set.");
     }
 }

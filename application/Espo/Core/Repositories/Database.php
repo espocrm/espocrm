@@ -69,13 +69,6 @@ class Database extends RDBRepository
      */
     protected $hooksDisabled = false;
 
-    /**
-     * To save and remove in a DB transaction.
-     *
-     * @since 9.4.0
-     */
-    protected bool $transactionalSave = false;
-
     /** @var ?array<string, mixed> */
     private $restoreData = null;
     /** @var Metadata */
@@ -136,22 +129,16 @@ class Database extends RDBRepository
      */
     public function save(Entity $entity, array $options = []): void
     {
-        if ($this->transactionalSave) {
-            $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
-                $this->saveInternal($entity, $options);
-            });
-        } else {
-            $this->saveInternal($entity, $options);
-        }
+        $this->prepareSaveInternal($entity, $options);
 
-        $this->lateAfterSave($entity, $options);
+        parent::save($entity, $options);
     }
 
     /**
      * @param TEntity $entity
      * @param array<string, mixed> $options
      */
-    private function saveInternal(Entity $entity, array $options = []): void
+    private function prepareSaveInternal(Entity $entity, array $options = []): void
     {
         if (
             $entity->isNew() &&
@@ -166,15 +153,13 @@ class Database extends RDBRepository
         }
 
         $this->restoreData = [];
-
-        parent::save($entity, $options);
     }
 
     /**
      * @param TEntity $entity
      * @param array<string, mixed> $options
      */
-    private function lateAfterSave(Entity $entity, array $options): void
+    final protected function lateAfterSave(Entity $entity, array $options): void
     {
         if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
             $this->hookManager->process($this->entityType, 'lateAfterSave', $entity, $options);
@@ -182,39 +167,14 @@ class Database extends RDBRepository
     }
 
     /**
-     * Remove a record (mark as deleted).
-     */
-    public function remove(Entity $entity, array $options = []): void
-    {
-        if ($this->transactionalSave) {
-            $this->entityManager->getTransactionManager()->run(function () use ($entity, $options) {
-                $this->removeInternal($entity, $options);
-            });
-        } else {
-            $this->removeInternal($entity, $options);
-        }
-
-        $this->lateAfterRemove($entity, $options);
-    }
-
-    /**
      * @param TEntity $entity
      * @param array<string, mixed> $options
      */
-    private function lateAfterRemove(Entity $entity, array $options): void
+    final protected function lateAfterRemove(Entity $entity, array $options): void
     {
         if (!$this->hooksDisabled && empty($options[SaveOption::SKIP_HOOKS])) {
             $this->hookManager->process($this->entityType, 'lateAfterRemove', $entity, $options);
         }
-    }
-
-    /**
-     * @param TEntity $entity
-     * @param array<string, mixed> $options
-     */
-    private function removeInternal(Entity $entity, array $options = []): void
-    {
-        parent::remove($entity, $options);
     }
 
     /**
