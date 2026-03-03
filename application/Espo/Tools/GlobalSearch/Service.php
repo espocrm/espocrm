@@ -113,7 +113,7 @@ class Service
             $builder->order('relevance', Order::DESC);
         }
 
-        $builder->order('order', Order::DESC);
+        $builder->order('order');
         $builder->order(Field::NAME);
 
         $unionQuery = $builder->build();
