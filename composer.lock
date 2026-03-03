@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98b1f44b7ef26d873c9f8dcfde1dd1d9",
+    "content-hash": "c2f50edd82d711d5f56b2a91686689a5",
     "packages": [
         {
             "name": "async-aws/core",
@@ -636,16 +636,16 @@
         },
         {
             "name": "directorytree/imapengine",
-            "version": "v1.22.3",
+            "version": "v1.22.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DirectoryTree/ImapEngine.git",
-                "reference": "87fca56affd9527e6907a705e6d600c5174d9a5a"
+                "reference": "e41dd11f94bc9077a905de1e0c17bea87632ee64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DirectoryTree/ImapEngine/zipball/87fca56affd9527e6907a705e6d600c5174d9a5a",
-                "reference": "87fca56affd9527e6907a705e6d600c5174d9a5a",
+                "url": "https://api.github.com/repos/DirectoryTree/ImapEngine/zipball/e41dd11f94bc9077a905de1e0c17bea87632ee64",
+                "reference": "e41dd11f94bc9077a905de1e0c17bea87632ee64",
                 "shasum": ""
             },
             "require": {
@@ -686,7 +686,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DirectoryTree/ImapEngine/issues",
-                "source": "https://github.com/DirectoryTree/ImapEngine/tree/v1.22.3"
+                "source": "https://github.com/DirectoryTree/ImapEngine/tree/v1.22.4"
             },
             "funding": [
                 {
@@ -694,7 +694,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-03T15:43:20+00:00"
+            "time": "2026-02-24T15:50:11+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -2364,16 +2364,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v2.0.9",
+            "version": "v2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "8f631589ab07b7b52fead814965f5a800459cb3e"
+                "reference": "870fc81d2f879903dfc5b60bf8a0f94a1609e669"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/8f631589ab07b7b52fead814965f5a800459cb3e",
-                "reference": "8f631589ab07b7b52fead814965f5a800459cb3e",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/870fc81d2f879903dfc5b60bf8a0f94a1609e669",
+                "reference": "870fc81d2f879903dfc5b60bf8a0f94a1609e669",
                 "shasum": ""
             },
             "require": {
@@ -2421,7 +2421,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2026-02-03T06:55:34+00:00"
+            "time": "2026-02-20T19:59:49+00:00"
         },
         {
             "name": "lasserafn/php-initial-avatar-generator",
@@ -10054,10 +10054,10 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cboden/ratchet": 20,
         "laminas/laminas-ldap": 20,
-        "lasserafn/php-initial-avatar-generator": 20,
-        "zordius/lightncandy": 20
+        "zordius/lightncandy": 20,
+        "cboden/ratchet": 20,
+        "lasserafn/php-initial-avatar-generator": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -10075,7 +10075,7 @@
         "ext-pdo": "*",
         "ext-ctype": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.3.0"
     },

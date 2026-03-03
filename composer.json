@@ -37,7 +37,6 @@
         "michelf/php-markdown": "^1.9",
         "robthree/twofactorauth": "^1.8",
         "nesbot/carbon": "^3.11.0",
-        "zbateson/mail-mime-parser": "^3.0",
         "phpoffice/phpspreadsheet": "^5.0",
         "doctrine/dbal": "^3.10",
         "league/flysystem-async-aws-s3": "^3.0",
@@ -55,7 +54,8 @@
         "psr/clock": "^1.0",
         "react/child-process": "^0.6.6",
         "lasserafn/php-initial-avatar-generator": "dev-update-image-lib#a46ab8f1427f93c5b37957e739205da7fcca0290",
-        "directorytree/imapengine": "^1.19"
+        "directorytree/imapengine": "^1.19",
+        "zbateson/mail-mime-parser": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
