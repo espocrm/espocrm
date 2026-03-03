@@ -29,7 +29,9 @@
 
 namespace Espo\Modules\Crm\Hooks\Contact;
 
+use Espo\Core\Field\Link;
 use Espo\Core\Hook\Hook\AfterSave;
+use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -37,28 +39,45 @@ use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
+ * @implements BeforeSave<Contact>
  * @implements AfterSave<Contact>
  */
-class Accounts implements AfterSave
+class Accounts implements BeforeSave, AfterSave
 {
+    private const string COLUMN_ROLE = Contact::COLUMN_ACCOUNTS_ROLE;
+    private const string ATTR_TITLE = 'title';
+
     public function __construct(private EntityManager $entityManager) {}
 
-    /**
-     * @param Contact $entity
-     */
+    public function beforeSave(Entity $entity, SaveOptions $options): void
+    {
+        if (
+            !$entity->isAttributeChanged(Contact::ATTR_ACCOUNT_ID) &&
+            !$entity->isAttributeChanged(Contact::FIELD_ACCOUNTS . 'Ids')
+        ) {
+            return;
+        }
+
+        if (!$entity->getAccount() && $entity->getAccountsLinkMultiple()->getList()) {
+            $first = $entity->getAccountsLinkMultiple()->getList()[0];
+
+            $entity->setAccount(Link::create($first->getId(), $first->getName()));
+        }
+    }
+
     public function afterSave(Entity $entity, SaveOptions $options): void
     {
-        $accountIdChanged = $entity->isAttributeChanged('accountId');
-        $titleChanged = $entity->isAttributeChanged('title');
+        $accountIdChanged = $entity->isAttributeChanged(Contact::ATTR_ACCOUNT_ID);
+        $titleChanged = $entity->isAttributeChanged(self::ATTR_TITLE);
 
         /** @var ?string $fetchedAccountId */
-        $fetchedAccountId = $entity->getFetched('accountId');
+        $fetchedAccountId = $entity->getFetched(Contact::ATTR_ACCOUNT_ID);
         $accountId = $entity->getAccount()?->getId();
         $title = $entity->getTitle();
 
         $relation = $this->entityManager
             ->getRDBRepositoryByClass(Contact::class)
-            ->getRelation($entity, 'accounts');
+            ->getRelation($entity, Contact::FIELD_ACCOUNTS);
 
         if (!$accountId && $fetchedAccountId) {
             $relation->unrelateById($fetchedAccountId);
@@ -75,8 +94,8 @@ class Accounts implements AfterSave
         }
 
         $accountContact = $this->entityManager
-            ->getRDBRepository('AccountContact')
-            ->select(['role'])
+            ->getRDBRepository(Contact::RELATIONSHIP_ACCOUNT_CONTACT)
+            ->select([self::COLUMN_ROLE])
             ->where([
                 'accountId' => $accountId,
                 'contactId' => $entity->getId(),
@@ -85,13 +104,13 @@ class Accounts implements AfterSave
             ->findOne();
 
         if (!$accountContact && $accountIdChanged) {
-            $relation->relateById($accountId, ['role' => $title]);
+            $relation->relateById($accountId, [self::COLUMN_ROLE => $title]);
 
             return;
         }
 
-        if ($titleChanged && $accountContact && $title !== $accountContact->get('role')) {
-            $relation->updateColumnsById($accountId, ['role' => $title]);
+        if ($titleChanged && $accountContact && $title !== $accountContact->get(self::COLUMN_ROLE)) {
+            $relation->updateColumnsById($accountId, [self::COLUMN_ROLE => $title]);
         }
     }
 }
