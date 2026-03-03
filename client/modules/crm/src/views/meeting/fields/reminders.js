@@ -238,7 +238,7 @@ class MeetingRemindersField extends BaseFieldView {
             sortDirection: 'desc',
             /**
              * @param {string} search
-             * @param {{value: string}} item
+             * @param {{value: string, text: string}} item
              * @return {number}
              */
             score: (search, item) => {
@@ -249,7 +249,13 @@ class MeetingRemindersField extends BaseFieldView {
                     return 0;
                 }
 
-                const numOpposite = Number.MAX_SAFE_INTEGER - num;
+                const boost = item.value.startsWith(search) ? 1 : 0;
+
+                const numOpposite = Number.MAX_SAFE_INTEGER - num + boost;
+
+                if (/[a-z]/i.test(search) && item.text) {
+                    return item.text.startsWith(search) ? 1 : 0;
+                }
 
                 if (searchNum === 0 && num === 0) {
                     return numOpposite;
