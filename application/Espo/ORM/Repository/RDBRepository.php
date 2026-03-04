@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;

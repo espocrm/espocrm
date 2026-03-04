@@ -32,7 +32,7 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Acl\AssignmentChecker\Helper;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Name\Field;
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Metadata;

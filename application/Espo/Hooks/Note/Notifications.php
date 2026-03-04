@@ -30,7 +30,7 @@
 namespace Espo\Hooks\Note;
 
 use Espo\Core\Hook\Hook\AfterSave;
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Tools\Notification\HookProcessor\Params;

@@ -42,7 +42,7 @@ use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\RemoveOption;
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Access\LinkCheck;

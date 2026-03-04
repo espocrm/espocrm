@@ -33,7 +33,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificator\Params as AssignmentNotificatorParams;
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
 use Espo\Tools\Stream\Service as StreamService;

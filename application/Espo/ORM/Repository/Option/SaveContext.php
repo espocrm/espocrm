@@ -27,11 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ORM\Repository\Option;
+namespace Espo\ORM\Repository\Option;
 
 use Closure;
 use Espo\Core\Utils\Util;
-use Espo\ORM\Repository\Option\SaveOptions;
 use LogicException;
 
 /**
@@ -40,7 +39,9 @@ use LogicException;
  * If a save invokes another save, the context instance should not be re-used.
  * If a save invokes a relate action, the context can be passed to that action.
  *
- * @since 9.1.0
+ * @since 9.4.0
+ *
+ * Before 9.4.0, since 9.1.0 it was located in the `Core` namespace.
  */
 class SaveContext
 {

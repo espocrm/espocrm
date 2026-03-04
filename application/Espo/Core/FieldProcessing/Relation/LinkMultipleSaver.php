@@ -33,7 +33,7 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Defs\Params\RelationParam;
 use RuntimeException;

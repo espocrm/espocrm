@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\Repository\Option;
 
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Repository\Option\Traits\Options;
 use UnexpectedValueException;
 

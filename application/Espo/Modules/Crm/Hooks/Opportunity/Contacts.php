@@ -30,7 +30,7 @@
 namespace Espo\Modules\Crm\Hooks\Opportunity;
 
 use Espo\Core\Hook\Hook\AfterSave;
-use Espo\Core\ORM\Repository\Option\SaveContext;
+use Espo\ORM\Repository\Option\SaveContext;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Entity;
