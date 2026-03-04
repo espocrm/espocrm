@@ -809,11 +809,11 @@ class BaseEntity implements Entity
         /** @var string $type */
         $type = $this->getAttributeType($name);
 
-        return !self::areValuesEqual(
-            $type,
-            $this->get($name),
-            $this->getFetched($name),
-            $this->getAttributeParam($name, 'isUnordered') ?? false
+        return !Util::areValuesEqual(
+            type: $type,
+            v1: $this->get($name),
+            v2: $this->getFetched($name),
+            isUnordered: $this->getAttributeParam($name, 'isUnordered') ?? false,
         );
     }
 
@@ -823,77 +823,6 @@ class BaseEntity implements Entity
     public function isAttributeWritten(string $name): bool
     {
         return $this->writtenMap[$name] ?? false;
-    }
-
-    /**
-     * @param mixed $v1
-     * @param mixed $v2
-     */
-    protected static function areValuesEqual(string $type, $v1, $v2, bool $isUnordered = false): bool
-    {
-        if ($type === self::JSON_ARRAY) {
-            if (is_array($v1) && is_array($v2)) {
-                if ($isUnordered) {
-                    sort($v1);
-                    sort($v2);
-                }
-
-                if ($v1 != $v2) {
-                    return false;
-                }
-
-                foreach ($v1 as $i => $itemValue) {
-                    if (is_object($itemValue) && is_object($v2[$i])) {
-                        if (!self::areValuesEqual(self::JSON_OBJECT, $itemValue, $v2[$i])) {
-                            return false;
-                        }
-
-                        continue;
-                    }
-
-                    if ($itemValue !== $v2[$i]) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        } else if ($type === self::JSON_OBJECT) {
-            if (is_object($v1) && is_object($v2)) {
-                if ($v1 != $v2) {
-                    return false;
-                }
-
-                $a1 = get_object_vars($v1);
-                $a2 = get_object_vars($v2);
-
-                foreach (get_object_vars($v1) as $key => $itemValue) {
-                    if (is_object($a1[$key]) && is_object($a2[$key])) {
-                        if (!self::areValuesEqual(self::JSON_OBJECT, $a1[$key], $a2[$key])) {
-                            return false;
-                        }
-
-                        continue;
-                    }
-
-                    if (is_array($a1[$key]) && is_array($a2[$key])) {
-                        if (!self::areValuesEqual(self::JSON_ARRAY, $a1[$key], $a2[$key])) {
-                            return false;
-                        }
-
-                        continue;
-                    }
-
-                    if ($a1[$key] !== $a2[$key]) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        }
-
-        return $v1 === $v2;
     }
 
     /**
