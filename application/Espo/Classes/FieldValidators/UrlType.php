@@ -30,19 +30,17 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 class UrlType
 {
-    private Metadata $metadata;
 
-    private VarcharType $varcharType;
-
-    public function __construct(Metadata $metadata, VarcharType $varcharType)
-    {
-        $this->metadata = $metadata;
-        $this->varcharType = $varcharType;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private VarcharType $varcharType,
+        private Defs $defs,
+    ) {}
 
     public function checkRequired(Entity $entity, string $field): bool
     {
@@ -60,6 +58,15 @@ class UrlType
 
         if ($value === null) {
             return true;
+        }
+
+        if (
+            $this->defs
+                ->getEntity($entity->getEntityType())
+                ->tryGetField($field)
+                ?->getParam('protocolRequired')
+        ) {
+            return filter_var($value, FILTER_VALIDATE_URL) !== false;
         }
 
         /** @var string $pattern */

@@ -52,6 +52,7 @@ class UrlFieldView extends VarcharFieldView {
      * @property {boolean} [required] Required.
      * @property {boolean} [copyToClipboard] To display a Copy-to-clipboard button.
      * @property {boolean} [strip] To strip.
+     * @property {boolean} [protocolRequired] Require protocol. As of v9.4.
      */
 
     /**
@@ -83,7 +84,7 @@ class UrlFieldView extends VarcharFieldView {
     noSpellCheck = true
     optionalProtocol = true
 
-    DEFAULT_MAX_LENGTH =255
+    DEFAULT_MAX_LENGTH = 255
 
     data() {
         const data = super.data();
@@ -91,6 +92,14 @@ class UrlFieldView extends VarcharFieldView {
         data.url = this.getUrl();
 
         return data;
+    }
+
+    setup() {
+        super.setup();
+
+        if (this.params.protocolRequired) {
+            this.optionalProtocol = false;
+        }
     }
 
     afterRender() {
@@ -141,7 +150,7 @@ class UrlFieldView extends VarcharFieldView {
     parse(value) {
         value = value.trim();
 
-        if (this.params.strip) {
+        if (this.params.strip && !this.params.protocolRequired) {
             value = this.strip(value);
         }
 
@@ -194,14 +203,7 @@ class UrlFieldView extends VarcharFieldView {
             return false;
         }
 
-        const patternName = this.optionalProtocol ? 'uriOptionalProtocol' : 'uri';
-
-        /** @var {string} */
-        const pattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
-
-        const regExp = new RegExp('^' + pattern + '$');
-
-        if (regExp.test(value)) {
+        if (this.isValid(value)) {
             return false;
         }
 
@@ -211,6 +213,34 @@ class UrlFieldView extends VarcharFieldView {
         this.showValidationMessage(msg);
 
         return true;
+    }
+
+    /**
+     * @private
+     * @param {string} value
+     * @return {boolean}
+     */
+    isValid(value) {
+        if (!this.optionalProtocol) {
+            try {
+                new URL(value);
+
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        /** @var {string} */
+        const pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+
+        const regExp = new RegExp('^' + pattern + '$');
+
+        if (regExp.test(value)) {
+            return true;
+        }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols

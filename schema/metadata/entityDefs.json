@@ -495,6 +495,10 @@
                             "copyToClipboard": {
                                 "type": "boolean",
                                 "description": "Display 'Copy to Clipboard' button."
+                            },
+                            "protocolRequired": {
+                                "type": "boolean",
+                                "description": "Require protocol. As of v9.4."
                             }
                         }
                     }

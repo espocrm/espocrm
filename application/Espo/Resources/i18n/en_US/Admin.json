@@ -245,7 +245,8 @@
         "notStorable": "Not Storable",
         "itemsEditable": "Items Editable",
         "openInNewTab": "Open in new tab",
-        "notLockable": "Not Lockable"
+        "notLockable": "Not Lockable",
+        "protocolRequired": "Protocol Required"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"
