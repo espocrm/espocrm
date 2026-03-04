@@ -63,14 +63,14 @@ class ProcessingTest extends BaseTestCase
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.create',
             'userId' => $user->getId(),
-            'url' => 'https://test',
+            'url' => 'https://test.com',
             'skipOwn' => true,
         ]);
 
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.update',
             'userId' => $user->getId(),
-            'url' => 'https://test',
+            'url' => 'https://test.com',
             'skipOwn' => true,
         ]);
 
@@ -203,7 +203,7 @@ class ProcessingTest extends BaseTestCase
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.delete',
             'userId' => $user->getId(),
-            'url' => 'https://test',
+            'url' => 'https://test.com',
             'skipOwn' => true,
         ]);
 
@@ -289,7 +289,7 @@ class ProcessingTest extends BaseTestCase
         $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.fieldUpdate.name',
             'userId' => $user->getId(),
-            'url' => 'https://test',
+            'url' => 'https://test.com',
         ]);
 
         $app = $this->createApplication();

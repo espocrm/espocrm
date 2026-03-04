@@ -21,14 +21,16 @@
             "default": "Active"
         },
         "host": {
-            "type": "varchar"
+            "type": "varchar",
+            "massUpdateDisabled": true
         },
         "port": {
             "type": "int",
             "min": 0,
             "max": 65535,
             "default": 993,
-            "disableFormatting": true
+            "disableFormatting": true,
+            "massUpdateDisabled": true
         },
         "security": {
             "type": "enum",
@@ -122,14 +124,16 @@
             "tooltip": true
         },
         "smtpHost": {
-            "type": "varchar"
+            "type": "varchar",
+            "massUpdateDisabled": true
         },
         "smtpPort": {
             "type": "int",
             "min": 0,
             "max": 65535,
             "default": 587,
-            "disableFormatting": true
+            "disableFormatting": true,
+            "massUpdateDisabled": true
         },
         "smtpAuth": {
             "type": "bool",

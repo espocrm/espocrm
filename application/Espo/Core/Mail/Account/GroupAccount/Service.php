@@ -30,16 +30,19 @@
 namespace Espo\Core\Mail\Account\GroupAccount;
 
 use Espo\Core\Exceptions\ErrorSilent;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Account\Account as Account;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
+use Espo\Core\Mail\Account\Util\AddressUtil;
 use Espo\Core\Mail\Account\Util\NotificationHelper;
 use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Sender\Message;
 use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Security\HostCheck;
 use Exception;
 
 class Service
@@ -49,7 +52,9 @@ class Service
         private AccountFactory $accountFactory,
         private StorageFactory $storageFactory,
         private Log $log,
-        private NotificationHelper $notificationHelper
+        private NotificationHelper $notificationHelper,
+        private HostCheck $hostCheck,
+        private AddressUtil $addressUtil,
     ) {}
 
     /**
@@ -77,9 +82,18 @@ class Service
      * @return string[]
      * @throws Error
      * @throws ImapError
+     * @throws Forbidden
      */
     public function getFolderList(Params $params): array
     {
+        if (
+            $params->getHost() &&
+            !$this->addressUtil->isAllowedAddress($params) &&
+            !$this->hostCheck->isNotInternalHost($params->getHost())
+        ) {
+            throw new Forbidden("Not allowed internal host.");
+        }
+
         if ($params->getId()) {
             $account = $this->accountFactory->create($params->getId());
 
@@ -95,6 +109,7 @@ class Service
 
     /**
      * @throws Error
+     * @throws Forbidden
      */
     public function testConnection(Params $params): void
     {
@@ -104,6 +119,14 @@ class Service
             $params = $params
                 ->withPassword($this->getPassword($params, $account))
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
+        }
+
+        if (
+            $params->getHost() &&
+            !$this->addressUtil->isAllowedAddress($params) &&
+            !$this->hostCheck->isNotInternalHost($params->getHost())
+        ) {
+            throw new Forbidden("Not allowed internal host.");
         }
 
         try {

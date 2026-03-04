@@ -30,6 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Account\GroupAccount\Service;
 use Espo\Core\Mail\Account\Storage\Params as StorageParams;
 
@@ -48,6 +49,7 @@ class InboundEmail extends Record
      * @return string[]
      * @throws Error
      * @throws ImapError
+     * @throws Forbidden
      */
     public function postActionGetFolders(Request $request): array
     {
@@ -67,6 +69,7 @@ class InboundEmail extends Record
 
     /**
      * @throws Error
+     * @throws Forbidden
      */
     public function postActionTestConnection(Request $request): bool
     {

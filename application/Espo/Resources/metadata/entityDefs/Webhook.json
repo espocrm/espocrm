@@ -10,7 +10,10 @@
             "type": "varchar",
             "maxLength": 512,
             "required": true,
-            "copyToClipboard": true
+            "copyToClipboard": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Webhook\\Url\\NotInternal"
+            ]
         },
         "isActive": {
             "type": "bool",

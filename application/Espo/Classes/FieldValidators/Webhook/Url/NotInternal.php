@@ -27,37 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Security;
+namespace Espo\Classes\FieldValidators\Webhook\Url;
 
-use const FILTER_VALIDATE_URL;
-use const PHP_URL_HOST;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Core\Utils\Security\UrlCheck;
+use Espo\Core\Webhook\AddressUtil;
+use Espo\ORM\Entity;
 
-class UrlCheck
+/**
+ * @implements Validator<Entity>
+ */
+class NotInternal implements Validator
 {
     public function __construct(
-        private HostCheck $hostCheck,
+        private UrlCheck $urlCheck,
+        private AddressUtil $addressUtil,
     ) {}
 
-    public function isUrl(string $url): bool
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
-    }
+        $value = $entity->get($field);
 
-    /**
-     * Checks whether a URL does not follow to an internal host.
-     */
-    public function isNotInternalUrl(string $url): bool
-    {
-        if (!$this->isUrl($url)) {
-            return false;
+        if (!$value) {
+            return null;
         }
 
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if (!is_string($host)) {
-            return false;
+        if (!$this->urlCheck->isUrl($value)) {
+            return null;
         }
 
-        return $this->hostCheck->isNotInternalHost($host);
+        if ($this->addressUtil->isAllowedUrl($value)) {
+            return null;
+        }
+
+        if (!$this->urlCheck->isNotInternalUrl($value)) {
+            return Failure::create();
+        }
+
+        return null;
     }
 }

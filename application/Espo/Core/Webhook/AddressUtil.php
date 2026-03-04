@@ -27,37 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Security;
+namespace Espo\Core\Webhook;
 
-use const FILTER_VALIDATE_URL;
-use const PHP_URL_HOST;
+use Espo\Core\Utils\Config;
 
-class UrlCheck
+/**
+ * @internal
+ */
+class AddressUtil
 {
     public function __construct(
-        private HostCheck $hostCheck,
+        private Config $config,
     ) {}
 
-    public function isUrl(string $url): bool
-    {
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
-    }
-
     /**
-     * Checks whether a URL does not follow to an internal host.
+     * @internal
      */
-    public function isNotInternalUrl(string $url): bool
+    public function isAllowedUrl(string $url): bool
     {
-        if (!$this->isUrl($url)) {
+        /** @var string[] $allowedAddressList */
+        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
+
+        if (!$allowedAddressList) {
             return false;
         }
 
         $host = parse_url($url, PHP_URL_HOST);
+        $port = parse_url($url, PHP_URL_PORT);
+        $scheme = parse_url($url, PHP_URL_SCHEME);
 
         if (!is_string($host)) {
             return false;
         }
 
-        return $this->hostCheck->isNotInternalHost($host);
+        if (!is_int($port)) {
+            if ($scheme === 'https') {
+                $port = 443;
+            } else if ($scheme === 'http') {
+                $port = 80;
+            }
+        }
+
+        if (!is_int($port)) {
+            return false;
+        }
+
+        $address = $host . ':' . $port;
+
+        return in_array($address, $allowedAddressList);
     }
 }

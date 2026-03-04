@@ -27,37 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Security;
+namespace Espo\Classes\FieldValidators\Common\Host;
 
-use const FILTER_VALIDATE_URL;
-use const PHP_URL_HOST;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Core\Utils\Security\HostCheck;
+use Espo\ORM\Entity;
 
-class UrlCheck
+/**
+ * @implements Validator<Entity>
+ * @since 9.3.2
+ */
+class NotInternal implements Validator
 {
     public function __construct(
         private HostCheck $hostCheck,
     ) {}
 
-    public function isUrl(string $url): bool
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
-    }
+        $value = $entity->get($field);
 
-    /**
-     * Checks whether a URL does not follow to an internal host.
-     */
-    public function isNotInternalUrl(string $url): bool
-    {
-        if (!$this->isUrl($url)) {
-            return false;
+        if (!$value) {
+            return null;
         }
 
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if (!is_string($host)) {
-            return false;
+        if (!$this->hostCheck->isNotInternalHost($value)) {
+            return Failure::create();
         }
 
-        return $this->hostCheck->isNotInternalHost($host);
+        return null;
     }
 }
