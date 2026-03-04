@@ -7,9 +7,10 @@
             "view": "views/webhook/fields/event"
         },
         "url": {
-            "type": "varchar",
+            "type": "url",
             "maxLength": 512,
             "required": true,
+            "protocolRequired": true,
             "copyToClipboard": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Webhook\\Url\\NotInternal"
