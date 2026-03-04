@@ -53,15 +53,25 @@ class Util
                 }
 
                 foreach ($v1 as $i => $itemValue) {
-                    if (is_object($itemValue) && is_object($v2[$i])) {
-                        if (!self::areValuesEqual(AttributeType::JSON_OBJECT, $itemValue, $v2[$i])) {
+                    $otherValue = $v2[$i];
+
+                    if (is_object($itemValue) && is_object($otherValue)) {
+                        if (!self::areValuesEqual(AttributeType::JSON_OBJECT, $itemValue, $otherValue)) {
                             return false;
                         }
 
                         continue;
                     }
 
-                    if ($itemValue !== $v2[$i]) {
+                    if (is_array($itemValue) && is_array($otherValue)) {
+                        if (!self::areValuesEqual(AttributeType::JSON_ARRAY, $itemValue, $otherValue)) {
+                            return false;
+                        }
+
+                        continue;
+                    }
+
+                    if ($itemValue !== $otherValue) {
                         return false;
                     }
                 }
