@@ -790,9 +790,12 @@ class Util
 
     /**
      * Check whether values are equal.
+     * Not to be used for comparing user input values.
      *
      * @param mixed $v1
      * @param mixed $v2
+     *
+     * @internal
      */
     public static function areValuesEqual($v1, $v2, bool $isUnordered = false): bool
     {
