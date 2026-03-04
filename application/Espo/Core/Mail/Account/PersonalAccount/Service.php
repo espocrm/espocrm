@@ -30,9 +30,11 @@
 namespace Espo\Core\Mail\Account\PersonalAccount;
 
 use Espo\Core\Exceptions\ErrorSilent;
+use Espo\Core\Mail\Account\Util\AddressUtil;
 use Espo\Core\Mail\Account\Util\NotificationHelper;
 use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Exceptions\NoImap;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Mail\Account\Account as Account;
 use Espo\Core\Exceptions\Forbidden;
@@ -40,6 +42,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
+use Espo\Core\Utils\Security\HostCheck;
 use Espo\Entities\User;
 use Espo\Core\Mail\Sender\Message;
 
@@ -53,7 +56,9 @@ class Service
         private StorageFactory $storageFactory,
         private User $user,
         private Log $log,
-        private NotificationHelper $notificationHelper
+        private NotificationHelper $notificationHelper,
+        private HostCheck $hostCheck,
+        private AddressUtil $addressUtil,
     ) {}
 
     /**
@@ -95,6 +100,14 @@ class Service
             throw new Forbidden();
         }
 
+        if (
+            $params->getHost() &&
+            !$this->addressUtil->isAllowedAddress($params) &&
+            !$this->hostCheck->isNotInternalHost($params->getHost())
+        ) {
+            throw new Forbidden("Not allowed internal host.");
+        }
+
         if ($params->getId()) {
             $account = $this->accountFactory->create($params->getId());
 
@@ -126,6 +139,14 @@ class Service
 
         if (!$params->getId() && $params->getPassword() === null) {
             throw new Forbidden();
+        }
+
+        if (
+            $params->getHost() &&
+            !$this->addressUtil->isAllowedAddress($params) &&
+            !$this->hostCheck->isNotInternalHost($params->getHost())
+        ) {
+            throw new Forbidden("Not allowed host.");
         }
 
         if ($params->getId()) {

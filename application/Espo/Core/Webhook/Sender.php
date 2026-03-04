@@ -32,6 +32,7 @@ namespace Espo\Core\Webhook;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Security\UrlCheck;
 use Espo\Entities\Webhook;
 
 /**
@@ -42,8 +43,11 @@ class Sender
     private const CONNECT_TIMEOUT = 5;
     private const TIMEOUT = 10;
 
-    public function __construct(private Config $config)
-    {}
+    public function __construct(
+        private Config $config,
+        private UrlCheck $urlCheck,
+        private AddressUtil $addressUtil,
+    ) {}
 
     /**
      * @param array<int, mixed> $dataList
@@ -83,6 +87,17 @@ class Sender
 
         if (!$url) {
             throw new Error("Webhook does not have URL.");
+        }
+
+        if (!$this->urlCheck->isUrl($url)) {
+            throw new Error("'$url' is not valid URL.");
+        }
+
+        if (
+            !$this->addressUtil->isAllowedUrl($url) &&
+            !$this->urlCheck->isNotInternalUrl($url)
+        ) {
+            throw new Error("URL '$url' points to an internal host, not allowed.");
         }
 
         $handler = curl_init($url);

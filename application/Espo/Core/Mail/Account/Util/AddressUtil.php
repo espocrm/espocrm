@@ -27,37 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Security;
+namespace Espo\Core\Mail\Account\Util;
 
-use const FILTER_VALIDATE_URL;
-use const PHP_URL_HOST;
+use Espo\Core\Mail\Account\Storage\Params;
+use Espo\Core\Mail\SmtpParams;
+use Espo\Core\Utils\Config;
 
-class UrlCheck
+/**
+ * @internal
+ */
+class AddressUtil
 {
     public function __construct(
-        private HostCheck $hostCheck,
+        private Config $config,
     ) {}
 
-    public function isUrl(string $url): bool
+    /**
+     * @internal
+     */
+    public function isAllowedAddress(Params|SmtpParams $params): bool
     {
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+        $host = $params instanceof Params ? $params->getHost() : $params->getServer();
+        $port = $params->getPort();
+
+        if ($port === null || !$host) {
+            return false;
+        }
+
+        $address = $host . ':' . $port;
+
+        return in_array($address, $this->getAllowedAddressList());
     }
 
     /**
-     * Checks whether a URL does not follow to an internal host.
+     * @return string[]
      */
-    public function isNotInternalUrl(string $url): bool
+    private function getAllowedAddressList(): array
     {
-        if (!$this->isUrl($url)) {
-            return false;
-        }
-
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if (!is_string($host)) {
-            return false;
-        }
-
-        return $this->hostCheck->isNotInternalHost($host);
+        return $this->config->get('emailServerAllowedAddressList') ?? [];
     }
 }
