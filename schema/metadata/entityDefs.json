@@ -1633,6 +1633,28 @@
                             }
                         }
                     }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "hasMany"},
+                                    {"const": "hasChildren"},
+                                    {"const": "hasOne"},
+                                    {"const": "belongsTo"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "cascadeRemoval": {
+                                "type": "boolean",
+                                "description": "Cascade removal. Related records will be removed along with the parent record removal. Not allowed for many-to-many and many-to-one. As of v9.4."
+                            }
+                        }
+                    }
                 }
             ]
         },

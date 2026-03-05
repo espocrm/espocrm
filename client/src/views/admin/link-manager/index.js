@@ -180,7 +180,8 @@ class LinkManagerIndexView extends View {
 
             const isRemovable = defs.isCustom;
 
-            const hasEditParams = defs.type === 'hasMany' || defs.type === 'hasChildren';
+            const hasEditParams = ['hasChildren', 'hasMany'].includes(defs.type) ||
+                ['oneToOneLeft', 'oneToOneRight', 'oneToMany'].includes(type);
 
             this.linkDataList.push({
                 link: link,

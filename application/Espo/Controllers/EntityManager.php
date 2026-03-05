@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\BadRequest;
@@ -443,11 +444,15 @@ class EntityManager
             throw new BadRequest();
         }
 
-        /** @var array{readOnly?: bool} $params */
+        /** @var array{readOnly?: bool, cascadeRemocal?: bool} $params */
         $params = [];
 
-        if (property_exists($rawParams, 'readOnly')) {
-            $params['readOnly'] = (bool) $rawParams->readOnly;
+        if (property_exists($rawParams, RelationParam::READ_ONLY)) {
+            $params[RelationParam::READ_ONLY] = (bool) $rawParams->{RelationParam::READ_ONLY};
+        }
+
+        if (property_exists($rawParams, RelationParam::CASCADE_REMOVAL)) {
+            $params[RelationParam::CASCADE_REMOVAL] = (bool) $rawParams->{RelationParam::CASCADE_REMOVAL};
         }
 
         $this->linkManager->updateParams($entityType, $link, $params);

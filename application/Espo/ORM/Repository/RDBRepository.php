@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Repository;
 
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityCollection;
@@ -285,6 +286,7 @@ class RDBRepository implements Repository
         $this->processCheckEntity($entity);
         $this->beforeRemove($entity, $options);
         $this->getMapper()->delete($entity);
+        $this->cascadeRemoveRelated($entity, $options);
         $this->afterRemove($entity, $options);
     }
 
@@ -846,5 +848,64 @@ class RDBRepository implements Repository
         }
 
         $mapper->deleteFromDb($this->entityType, $id, $onlyDeleted);
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function cascadeRemoveRelated(Entity $entity, array $options): void
+    {
+        $relations = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->getRelationList();
+
+        foreach ($relations as $relation) {
+            if (!$relation->getParam(RelationParam::CASCADE_REMOVAL)) {
+                continue;
+            }
+
+            $this->cascadeRemoveRelation($entity, $relation, $options);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function cascadeRemoveRelation(Entity $entity, RelationDefs $relation, array $options): void
+    {
+        $foreignEntityType = $relation->tryGetForeignEntityType();
+        $foreign = $relation->tryGetForeignRelationName();
+
+        if (!$foreignEntityType || !$foreign) {
+            return;
+        }
+
+        $foreignType = $this->entityManager
+            ->getDefs()
+            ->tryGetEntity($foreignEntityType)
+            ?->tryGetRelation($foreign)
+            ?->getType();
+
+        if (!$foreignType) {
+            return;
+        }
+
+        if (!Util::isRelationshipEligibleForCascadeRemoval($relation->getType(), $foreignType)) {
+            return;
+        }
+
+        $link = $relation->getName();
+
+        $collection = $this->entityManager
+            ->getRelation($entity, $link)
+            ->sth()
+            ->find();
+
+        unset($options[SaveContext::NAME]);
+
+        foreach ($collection as $relatedEntity) {
+            $this->entityManager->removeEntity($relatedEntity, $options);
+        }
     }
 }

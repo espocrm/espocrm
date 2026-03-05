@@ -59,6 +59,7 @@ class RelationConverter
         RelationParam::ADDITIONAL_COLUMNS,
         'noJoin',
         RelationParam::INDEXES,
+        RelationParam::CASCADE_REMOVAL,
     ];
 
     /** @var string[] */

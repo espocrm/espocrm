@@ -30,17 +30,15 @@
 namespace Espo\Core\Record\Deleted;
 
 use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 
 /**
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface Restorer
 {
     /**
      * @param TEntity $entity A deleted entity.
-     * @throws Forbidden
      * @throws Conflict
      */
     public function restore(Entity $entity): void;

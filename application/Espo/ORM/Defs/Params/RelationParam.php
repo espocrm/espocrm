@@ -119,4 +119,11 @@ class RelationParam
      * @since 9.4.0
      */
     public const DISABLED = 'disabled';
+
+    /**
+     * Cascade removal Only for one-to-many, one-to-one, and parent-to-children.
+     *
+     * @since 9.4.0
+     */
+    public const string CASCADE_REMOVAL = 'cascadeRemoval';
 }

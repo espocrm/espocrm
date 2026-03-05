@@ -27,42 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Repository;
+namespace Espo\Core\Record\Deleted;
 
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 
-use Espo\ORM\Type\RelationType;
-use ReflectionClass;
-use InvalidArgumentException;
-
-class Util
+class RestorerFactory
 {
-    /**
-     * @internal
-     * @param class-string<Entity> $className
-     */
-    public static function getEntityTypeByClass(string $className): string
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory,
+        private User $user,
+    ) {}
+
+    public function create(string $entityType): Restorer
     {
-        $class = new ReflectionClass($className);
+        /** @var class-string<Restorer<Entity>> $restorerClassName */
+        $restorerClassName = $this->metadata->get("recordDefs.$entityType.deletedRestorerClassName") ??
+            DefaultRestorer::class;
 
-        if (!$class->implementsInterface(Entity::class)) {
-            throw new InvalidArgumentException();
-        }
-
-        if ($class->hasConstant('ENTITY_TYPE'))  {
-            return (string) $class->getConstant('ENTITY_TYPE');
-        }
-
-        return $class->getShortName();
+        /** @var Restorer */
+        return $this->injectableFactory->createWithBinding($restorerClassName, $this->createBinding());
     }
 
-    /**
-     * @internal
-     */
-    public static function isRelationshipEligibleForCascadeRemoval(string $type, string $foreignType): bool
+    private function createBinding(): BindingContainer
     {
-        return in_array($type, [RelationType::HAS_CHILDREN, RelationType::HAS_ONE]) ||
-            $type === RelationType::BELONGS_TO && $foreignType === RelationType::HAS_ONE ||
-            $type === RelationType::HAS_MANY && $foreignType === RelationType::BELONGS_TO;
+        return BindingContainerBuilder::create()
+            ->bindInstance(User::class, $this->user)
+            ->build();
     }
 }

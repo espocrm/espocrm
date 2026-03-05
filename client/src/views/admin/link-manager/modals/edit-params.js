@@ -44,6 +44,18 @@ export default class LinkManagerEditParamsModalView extends ModalView {
     type
 
     /**
+     * @private
+     * @type {string|null}
+     */
+    foreignType = null
+
+    /**
+     * @private
+     * @type {string|null}
+     */
+    foreignEntityType
+
+    /**
      * @param {{
      *     entityType: string,
      *     link: string,
@@ -60,9 +72,20 @@ export default class LinkManagerEditParamsModalView extends ModalView {
             this.translate(this.props.entityType, 'scopeNames') + ' · ' +
             this.translate(this.props.link, 'links', this.props.entityType);
 
-        /** @type {{type: string, isCustom: boolean}} */
+        this.systemEntityTypeList = ['User', 'Team'];
+
+        /** @type {{type: string, isCustom?: boolean, entity?: string, foreign?: string|null}} */
         const defs = this.getMetadata().get(`entityDefs.${this.props.entityType}.links.${this.props.link}`) || {};
         this.type = defs.type;
+
+        const foreignEntityType = defs.entity ?? null;
+        const foreign = defs.foreign;
+
+        this.foreignEntityType = foreignEntityType;
+
+        if (foreignEntityType && foreign) {
+            this.foreignType = this.getMetadata().get(`entityDefs.${foreignEntityType}.links.${foreign}.type`);
+        }
 
         this.buttonList = [
             {
@@ -104,18 +127,35 @@ export default class LinkManagerEditParamsModalView extends ModalView {
                                 }),
                             },
                             false
+                        ],
+                        [
+                            {
+                                view: new BoolFieldView({
+                                    name: 'cascadeRemoval',
+                                    labelText: this.translate('cascadeRemoval', 'fields', 'Admin'),
+                                    params: {
+                                        tooltip: 'EntityManager.linkParamCascadeRemoval',
+                                    },
+                                }),
+                            },
+                            false
                         ]
                     ]
                 }
             ]
         });
 
-        if (!this.hasReadOnly()) {
-            this.recordView.hideField('readOnly');
-            this.recordView.setFieldReadOnly('readOnly');
-        }
+        this.assignView('record', this.recordView).then(() => {
+            if (!this.hasReadOnly()) {
+                this.recordView.hideField('readOnly');
+                this.recordView.setFieldReadOnly('readOnly');
+            }
 
-        this.assignView('record', this.recordView, '.record');
+            if (!this.hasCascadeRemoval()) {
+                this.recordView.hideField('cascadeRemoval');
+                this.recordView.setFieldReadOnly('cascadeRemoval');
+            }
+        });
     }
 
     /**
@@ -128,6 +168,23 @@ export default class LinkManagerEditParamsModalView extends ModalView {
 
     /**
      * @private
+     * @return {boolean}
+     */
+    hasCascadeRemoval() {
+        if (!this.foreignEntityType) {
+            return false;
+        }
+
+        const isObject = this.getMetadata().get(`scopes.${this.foreignEntityType}.object`) &&
+            !this.systemEntityTypeList.includes(this.foreignEntityType);
+
+        return ['hasChildren', 'hasOne'].includes(this.type) ||
+            (this.type === 'belongsTo' && this.foreignType === 'hasOne') ||
+            (this.type === 'hasMany' && this.foreignType === 'belongsTo');
+    }
+
+    /**
+     * @private
      * @return {Record}
      */
     getParamsFromMetadata() {
@@ -135,7 +192,8 @@ export default class LinkManagerEditParamsModalView extends ModalView {
         const defs = this.getMetadata().get(`entityDefs.${this.props.entityType}.links.${this.props.link}`) || {};
 
         return {
-            readOnly: defs.readOnly || false,
+            readOnly: defs.readOnly ?? false,
+            cascadeRemoval: defs.cascadeRemoval ?? false,
         };
     }
 
@@ -170,6 +228,10 @@ export default class LinkManagerEditParamsModalView extends ModalView {
 
         if (this.hasReadOnly()) {
             params.readOnly = this.formModel.attributes.readOnly;
+        }
+
+        if (this.hasCascadeRemoval()) {
+            params.cascadeRemoval = this.formModel.attributes.cascadeRemoval;
         }
 
         try {

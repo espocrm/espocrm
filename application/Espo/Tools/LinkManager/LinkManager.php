@@ -38,10 +38,13 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
+use Espo\Entities\Team;
+use Espo\Entities\User;
 use Espo\ORM\Defs\Params\EntityParam;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
+use Espo\ORM\Repository\Util as RepositoryUtil;
 use Espo\ORM\Type\RelationType;
 use Espo\Tools\LinkManager\Hook\HookProcessor as LinkHookProcessor;
 use Espo\Tools\LinkManager\Params as LinkParams;
@@ -1152,20 +1155,47 @@ class LinkManager
     }
 
     /**
-     * @param array{readOnly?: bool} $params
+     * @param array{readOnly?: bool, cascadeRemoval?: bool} $params
      * @throws Error
      */
     public function updateParams(string $entityType, string $link, array $params): void
     {
         $type = $this->metadata->get("entityDefs.$entityType.links.$link.type");
+        $foreignEntityType = $this->metadata->get("entityDefs.$entityType.links.$link.entity");
+        $foreign = $this->metadata->get("entityDefs.$entityType.links.$link.foreign");
+        $foreignType = null;
+        $isObject = false;
+        $isSystem = false;
+
+        if ($foreignEntityType && $foreign) {
+            $foreignType = $this->metadata->get("entityDefs.$foreignEntityType.links.$foreign.type");
+
+            $isObject = $this->metadata->get("scopes.$foreignEntityType.object");
+            $isSystem = in_array($foreignEntityType, [
+                User::ENTITY_TYPE,
+                Team::ENTITY_TYPE,
+            ]);
+        }
 
         $defs = [];
 
         if (
             in_array($type, [RelationType::HAS_MANY, RelationType::HAS_CHILDREN]) &&
-            array_key_exists('readOnly', $params)
+            array_key_exists(RelationParam::READ_ONLY, $params)
         ) {
-            $defs['readOnly'] = $params['readOnly'];
+            $defs[RelationParam::READ_ONLY] = $params[RelationParam::READ_ONLY];
+        }
+
+        if (
+            $foreignEntityType &&
+            $foreignType &&
+            RepositoryUtil::isRelationshipEligibleForCascadeRemoval($type, $foreignType) &&
+            array_key_exists(RelationParam::CASCADE_REMOVAL, $params) &&
+            $isObject &&
+            !$isSystem
+        ) {
+            // @todo Check non-system and object.
+            $defs[RelationParam::CASCADE_REMOVAL] = $params[RelationParam::CASCADE_REMOVAL];
         }
 
         $this->metadata->set('entityDefs', $entityType, [
@@ -1184,7 +1214,8 @@ class LinkManager
     public function resetToDefault(string $entityType, string $link): void
     {
         $this->metadata->delete('entityDefs', $entityType, [
-            "links.$link.readOnly",
+            "links.$link." . RelationParam::READ_ONLY,
+            "links.$link." . RelationParam::CASCADE_REMOVAL,
         ]);
 
         $this->metadata->save();

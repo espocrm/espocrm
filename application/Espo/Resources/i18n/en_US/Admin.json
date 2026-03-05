@@ -246,7 +246,8 @@
         "itemsEditable": "Items Editable",
         "openInNewTab": "Open in new tab",
         "notLockable": "Not Lockable",
-        "protocolRequired": "Protocol Required"
+        "protocolRequired": "Protocol Required",
+        "cascadeRemoval": "Cascade Removal"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"
