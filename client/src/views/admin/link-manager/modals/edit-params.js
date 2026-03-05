@@ -175,8 +175,12 @@ export default class LinkManagerEditParamsModalView extends ModalView {
             return false;
         }
 
-        const isObject = this.getMetadata().get(`scopes.${this.foreignEntityType}.object`) &&
-            !this.systemEntityTypeList.includes(this.foreignEntityType);
+        if (
+            !this.getMetadata().get(`scopes.${this.foreignEntityType}.object`) ||
+            this.systemEntityTypeList.includes(this.foreignEntityType)
+        ) {
+            return false;
+        }
 
         return ['hasChildren', 'hasOne'].includes(this.type) ||
             (this.type === 'belongsTo' && this.foreignType === 'hasOne') ||
