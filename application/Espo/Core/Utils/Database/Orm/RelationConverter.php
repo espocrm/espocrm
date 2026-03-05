@@ -59,7 +59,6 @@ class RelationConverter
         RelationParam::ADDITIONAL_COLUMNS,
         'noJoin',
         RelationParam::INDEXES,
-        RelationParam::CASCADE_REMOVAL,
     ];
 
     /** @var string[] */
@@ -119,8 +118,14 @@ class RelationConverter
         $raw = $convertedEntityDefs->toAssoc();
 
         if (isset($raw[EntityParam::RELATIONS][$name])) {
-            $this->mergeParams($raw[EntityParam::RELATIONS][$name], $params, $foreignParams ?? [], $linkType);
-            $this->correct($raw[EntityParam::RELATIONS][$name]);
+            $defs = &$raw[EntityParam::RELATIONS][$name];
+
+            $this->mergeParams($defs, $params, $foreignParams ?? [], $linkType);
+            $this->correct($defs);
+
+            if ($params[RelationParam::CASCADE_REMOVAL] ?? false) {
+                $defs[RelationParam::CASCADE_REMOVAL] = true;
+            }
         }
 
         return [$entityType => $raw];
