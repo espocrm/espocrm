@@ -6,7 +6,7 @@
                 "type": "bool",
                 "tooltip": true
             },
-            "groupIndex": 3
+            "groupIndex": 5
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -15,7 +15,7 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             },
-            "groupIndex": 3
+            "groupIndex": 5
         },
         "collaborators": {
             "location": "scopes",
@@ -57,7 +57,7 @@
                 "type": "bool",
                 "tooltip": true
             },
-            "groupIndex": 3
+            "groupIndex": 5
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -66,7 +66,7 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             },
-            "groupIndex": 3
+            "groupIndex": 5
         },
         "collaborators": {
             "location": "scopes",
@@ -108,7 +108,7 @@
                 "type": "bool",
                 "tooltip": true
             },
-            "groupIndex": 3
+            "groupIndex": 5
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -117,7 +117,7 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             },
-            "groupIndex": 3
+            "groupIndex": 5
         },
         "collaborators": {
             "location": "scopes",
@@ -535,7 +535,7 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-contact-link"
             },
-            "groupIndex": 4
+            "groupIndex": 7
         },
         "aclAccountLink": {
             "location": "aclDefs",
@@ -545,7 +545,7 @@
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
             },
-            "groupIndex": 4
+            "groupIndex": 7
         },
         "lockable": {
             "location": "scopes",
