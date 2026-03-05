@@ -28,7 +28,8 @@
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 3
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -36,21 +37,24 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
-            }
+            },
+            "groupIndex": 3
         },
         "collaborators": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "aclContactLink": {
             "location": "aclDefs",
@@ -59,7 +63,8 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-contact-link"
-            }
+            },
+            "groupIndex": 4
         },
         "aclAccountLink": {
             "location": "aclDefs",
@@ -68,21 +73,24 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
-            }
+            },
+            "groupIndex": 4
         },
         "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         },
         "transactionalSave": {
             "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         }
     },
     "@Person": {
@@ -91,7 +99,8 @@
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 3
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -99,21 +108,24 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
-            }
+            },
+            "groupIndex": 3
         },
         "collaborators": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "aclContactLink": {
             "location": "aclDefs",
@@ -122,7 +134,8 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-contact-link"
-            }
+            },
+            "groupIndex": 4
         },
         "aclAccountLink": {
             "location": "aclDefs",
@@ -131,21 +144,24 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
-            }
+            },
+            "groupIndex": 4
         },
         "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         },
         "transactionalSave": {
             "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         }
     },
     "@Base": {
@@ -154,7 +170,8 @@
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 3
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -162,21 +179,24 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
-            }
+            },
+            "groupIndex": 3
         },
         "collaborators": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "aclContactLink": {
             "location": "aclDefs",
@@ -185,7 +205,8 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-contact-link"
-            }
+            },
+            "groupIndex": 4
         },
         "aclAccountLink": {
             "location": "aclDefs",
@@ -194,28 +215,32 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
-            }
+            },
+            "groupIndex": 4
         },
         "categories": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         },
         "transactionalSave": {
             "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         }
     },
     "@BasePlus": {
@@ -224,7 +249,8 @@
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 3
         },
         "duplicateCheckFieldList": {
             "location": "scopes",
@@ -232,21 +258,24 @@
                 "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
-            }
+            },
+            "groupIndex": 3
         },
         "collaborators": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "assignedUsers": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "aclContactLink": {
             "location": "aclDefs",
@@ -255,7 +284,8 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-contact-link"
-            }
+            },
+            "groupIndex": 4
         },
         "aclAccountLink": {
             "location": "aclDefs",
@@ -264,28 +294,32 @@
                 "type": "enum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/acl-account-link"
-            }
+            },
+            "groupIndex": 4
         },
         "categories": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 1
         },
         "lockable": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         },
         "transactionalSave": {
             "location": "entityDefs",
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
-            }
+            },
+            "groupIndex": 2
         }
     }
 }

@@ -34,6 +34,10 @@
                 "fieldDefs": {
                     "description": "Field definitions. The defined field will be rendered on the entity manager edit view.",
                     "$ref": "./../entityDefs.json#/definitions/fieldDefs"
+                },
+                "groupIndex": {
+                    "type": "integer",
+                    "description": "An index to group related parameters into panels. As of v9.4."
                 }
             }
         }

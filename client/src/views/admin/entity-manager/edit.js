@@ -38,6 +38,7 @@ class EntityManagerEditView extends View {
      *     string: {
      *         fieldDefs: Object.<string, *>,
      *         location?: string,
+     *         groupIndex?: number,
      *     }
      * }}
      */
@@ -49,6 +50,12 @@ class EntityManagerEditView extends View {
      * @type {string[]}
      */
     enumFieldList
+
+    /**
+     * @private
+     * @type {string|null}
+     */
+    scope
 
     data() {
         return {
@@ -77,66 +84,9 @@ class EntityManagerEditView extends View {
         this.hasColorField = !this.getConfig().get('scopeColorsDisabled');
 
         if (scope) {
-            this.additionalParams = Espo.Utils.cloneDeep({
-                ...this.getMetadata().get(['app', 'entityManagerParams', 'Global']),
-                ...this.getMetadata().get(['app', 'entityManagerParams', '@' + (templateType || '_')]),
-                ...this.getMetadata().get(['app', 'entityManagerParams', scope]),
-            });
+            this.setupAdditionalParams(templateType, scope);
+            this.setupModelValues(scope);
 
-            this.model.set('name', scope);
-            this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
-            this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
-            this.model.set('type', this.getMetadata().get('scopes.' + scope + '.type') || '');
-            this.model.set('stream', this.getMetadata().get('scopes.' + scope + '.stream') || false);
-            this.model.set('disabled', this.getMetadata().get('scopes.' + scope + '.disabled') || false);
-
-            this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.orderBy'));
-            this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.order'));
-
-            this.model.set('textFilterFields',
-                this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']
-            );
-
-            this.model.set('fullTextSearch',
-                this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false
-            );
-
-            this.model.set('countDisabled',
-                this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false
-            );
-
-            this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
-
-            if (this.hasColorField) {
-                this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
-            }
-
-            this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
-
-            this.model.set(
-                'kanbanViewMode',
-                this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false
-            );
-
-            this.model.set(
-                'kanbanStatusIgnoreList',
-                this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
-            );
-
-            for (const param in this.additionalParams) {
-                /** @type {{fieldDefs: Object, location?: string, param?: string}} */
-                const defs = this.additionalParams[param];
-                const location = defs.location || this.defaultParamLocation;
-                const defaultValue = defs.fieldDefs.type === 'bool' ? false : null;
-                const actualParam = defs.param || param;
-
-                const value = this.getMetadata().get([location, scope, actualParam]) || defaultValue;
-
-                this.model.set(param, value);
-            }
-        }
-
-        if (scope) {
             /** @type {Record.<string, Record>} */
             const fieldDefs = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
 
@@ -221,6 +171,13 @@ class EntityManagerEditView extends View {
             this.translatedStatusOptions = {};
         }
 
+        this.setupDetailLayout();
+    }
+
+    /**
+     * @private
+     */
+    setupDetailLayout() {
         this.detailLayout = [
             {
                 rows: [
@@ -307,50 +264,146 @@ class EntityManagerEditView extends View {
             },
         ];
 
-        if (this.scope) {
-            const rows1 = [];
-            const rows2 = [];
+        if (!this.scope) {
+            return;
+        }
 
-            const paramList1 = Object.keys(this.additionalParams)
-                .filter(item => !!this.getMetadata().get(['app', 'entityManagerParams', 'Global', item]));
+        /** @var {string[][]}*/
+        const groups = [];
 
-            const paramList2 = Object.keys(this.additionalParams)
-                .filter(item => !paramList1.includes(item));
+        for (const [param, it] of Object.entries(this.additionalParams)) {
+            const index = (it.groupIndex === undefined ? 9999 : it.groupIndex) + 100;
 
-            const add = function (rows, list) {
-                list.forEach((param, i) => {
-                    if (i % 2 === 0) {
-                        rows.push([]);
-                    }
-
-                    const row = rows[rows.length - 1];
-
-                    row.push({name: param});
-
-                    if (
-                        i === list.length - 1 &&
-                        row.length === 1
-                    ) {
-                        row.push(false);
-                    }
-                });
-            };
-
-            add(rows1, paramList1);
-            add(rows2, paramList2);
-
-            if (rows1.length) {
-                this.detailLayout.push({rows: rows1});
+            if (groups[index] === undefined) {
+                groups[index] = [];
             }
 
-            if (rows2.length) {
-                this.detailLayout.push({rows: rows2});
+            groups[index] ??= [];
+            groups[index].push(param);
+        }
+
+        const add = function (rows, list) {
+            list.forEach((param, i) => {
+                if (i % 2 === 0) {
+                    rows.push([]);
+                }
+
+                const row = rows[rows.length - 1];
+
+                row.push({name: param});
+
+                if (
+                    i === list.length - 1 &&
+                    row.length === 1
+                ) {
+                    row.push(false);
+                }
+            });
+        };
+
+        groups.forEach(paramList => {
+            const rows = [];
+
+            add(rows, paramList);
+
+            if (rows.length) {
+                this.detailLayout.push({rows: rows});
             }
+        });
+    }
+
+    /**
+     * @private
+     */
+    setupModelValues() {
+        const scope = this.scope;
+
+        this.model.set('name', scope);
+        this.model.set('labelSingular', this.translate(scope, 'scopeNames'));
+        this.model.set('labelPlural', this.translate(scope, 'scopeNamesPlural'));
+        this.model.set('type', this.getMetadata().get(`scopes.${scope}.type`) || '');
+        this.model.set('stream', this.getMetadata().get(`scopes.${scope}.stream`) || false);
+        this.model.set('disabled', this.getMetadata().get(`scopes.${scope}.disabled`) || false);
+
+        this.model.set('sortBy', this.getMetadata().get(`entityDefs.${scope}.collection.orderBy`));
+        this.model.set('sortDirection', this.getMetadata().get(`entityDefs.${scope}.collection.order`));
+
+        this.model.set('textFilterFields',
+            this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']
+        );
+
+        this.model.set('fullTextSearch',
+            this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false
+        );
+
+        this.model.set('countDisabled',
+            this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false
+        );
+
+        this.model.set('statusField', this.getMetadata().get(`scopes.${scope}.statusField`) || null);
+
+        if (this.hasColorField) {
+            this.model.set('color', this.getMetadata().get(['clientDefs', scope, 'color']) || null);
+        }
+
+        this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
+
+        this.model.set(
+            'kanbanViewMode',
+            this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false
+        );
+
+        this.model.set(
+            'kanbanStatusIgnoreList',
+            this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
+        );
+
+        for (const param in this.additionalParams) {
+            /** @type {{fieldDefs: Object, location?: string, param?: string}} */
+            const defs = this.additionalParams[param];
+            const location = defs.location || this.defaultParamLocation;
+            const defaultValue = defs.fieldDefs.type === 'bool' ? false : null;
+            const actualParam = defs.param || param;
+
+            const value = this.getMetadata().get([location, scope, actualParam]) || defaultValue;
+
+            this.model.set(param, value);
         }
     }
 
+    /**
+     * @private
+     */
+    setupAdditionalParams() {
+        const scope = this.scope;
+        const templateType = this.getMetadata().get(`scopes.${this.scope}.type`) ?? null;
+
+        const tKey = '@' + (templateType ?? '_');
+
+        /** @var {Record.<string, *>} */
+        const globalParams = Espo.Utils.cloneDeep(this.getMetadata().get('app.entityManagerParams.Global', {}));
+        /** @var {Record.<string, *>} */
+        const templateParams = Espo.Utils.cloneDeep(this.getMetadata().get(`app.entityManagerParams.${tKey}`, {}));
+        /** @var {Record.<string, *>} */
+        const scopeParams = Espo.Utils.cloneDeep(this.getMetadata().get(`app.entityManagerParams.${scope}`, {}));
+
+        for (const [, it] of Object.entries(globalParams)) {
+            it.groupIndex ??= -100;
+        }
+
+        for (const [, it] of Object.entries(templateParams)) {
+            it.groupIndex ??= 50;
+        }
+
+        for (const [, it] of Object.entries(scopeParams)) {
+            it.groupIndex ??= 100;
+        }
+
+        this.additionalParams = {...globalParams, ...templateParams, ...scopeParams};
+    }
+
     setup() {
-        const scope = this.scope = this.options.scope || false;
+        const scope = this.scope = this.options.scope ?? null;
         this.isNew = !scope;
 
         this.model = new Model();
