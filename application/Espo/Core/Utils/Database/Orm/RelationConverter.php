@@ -52,7 +52,11 @@ class RelationConverter
 {
     private const DEFAULT_VARCHAR_LENGTH = 255;
 
-    /** @var string[] */
+    /**
+     * Parameters to merge from both sides.
+     *
+     * @var string[]
+     */
     private $mergeParams = [
         RelationParam::RELATION_NAME,
         RelationParam::CONDITIONS,
