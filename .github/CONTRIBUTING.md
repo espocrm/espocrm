@@ -3,8 +3,9 @@
 #### Guidelines
 
 When reporting a possible bug, provide detail steps so that we will be able
-to reproduce the issue. Steps to reproduce should be clear and unambiguous. Try not to use phrases like "very big bug",
-"huge issue", "useless feature", etc. No need to use exclamation marks as well.
+to reproduce the issue. Steps to reproduce should be clear and unambiguous.
+
+Try not to use phrases like "very big bug", "huge issue", "useless feature", etc. No need to use exclamation marks as well.
 
 #### No support
 
