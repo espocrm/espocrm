@@ -860,6 +860,7 @@ class LinkManager
 
             $this->metadata->delete('logicDefs', $entity, [
                 "fields.$link",
+                "cascadingFields.$link",
             ]);
 
             $this->metadata->save();
@@ -914,10 +915,12 @@ class LinkManager
 
         $this->metadata->delete('logicDefs', $entity, [
             "fields.$link",
+            "cascadingFields.$link",
         ]);
 
         $this->metadata->delete('logicDefs', $entityForeign, [
             "fields.$linkForeign",
+            "cascadingFields.$linkForeign",
         ]);
 
         $this->metadata->delete('entityDefs', $entity, [
