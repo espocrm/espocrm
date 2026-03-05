@@ -855,7 +855,9 @@ class LinkManager
                 "links.$link",
             ]);
 
-            $this->metadata->delete('clientDefs', $entity, ["dynamicLogic.fields.$link"]);
+            $this->metadata->delete('logicDefs', $entity, [
+                "fields.$link",
+            ]);
 
             $this->metadata->save();
 
@@ -907,8 +909,13 @@ class LinkManager
                 ->build();
         }
 
-        $this->metadata->delete('clientDefs', $entity, ["dynamicLogic.fields.$link"]);
-        $this->metadata->delete('clientDefs', $entityForeign, ["dynamicLogic.fields.$linkForeign"]);
+        $this->metadata->delete('logicDefs', $entity, [
+            "fields.$link",
+        ]);
+
+        $this->metadata->delete('logicDefs', $entityForeign, [
+            "fields.$linkForeign",
+        ]);
 
         $this->metadata->delete('entityDefs', $entity, [
             "fields.$link",
