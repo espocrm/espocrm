@@ -356,6 +356,16 @@
         "actionClassName": "Espo\\Tools\\Notification\\Api\\GetGroup"
     },
     {
+        "route": "/Notification/group",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Notification\\Api\\GetGroupAll"
+    },
+    {
+        "route": "/Notification/group/:id",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Notification\\Api\\DeleteGroup"
+    },
+    {
         "route": "/EmailTemplate/:id/prepare",
         "method": "post",
         "actionClassName": "Espo\\Tools\\EmailTemplate\\Api\\PostPrepare"

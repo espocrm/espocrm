@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Acl\AssignmentChecker\Helper as AsssignmentHelper;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
@@ -105,7 +106,8 @@ class Service
         private SelectBuilderFactory $selectBuilderFactory,
         private UserAclManagerProvider $userAclManagerProvider,
         private RecordServiceContainer $recordServiceContainer,
-        private SystemUser $systemUser
+        private SystemUser $systemUser,
+        private AsssignmentHelper $assignmentHelper,
     ) {}
 
     private function getStatusField(string $entityType): ?string
@@ -593,27 +595,30 @@ class Service
 
         $data = [];
 
-        if ($entity->get('assignedUserId')) {
-            $this->loadAssignedUserName($entity);
-
-            $data['assignedUserId'] = $entity->get('assignedUserId');
-            $data['assignedUserName'] = $entity->get('assignedUserName');
-        } else if (
+        if (
             $entity instanceof CoreEntity &&
-            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
-            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== [] &&
             // Exclude for Email as the assignedUsers serves not for direct assignment.
-            $entity->getEntityType() !== Email::ENTITY_TYPE
+            $entity->getEntityType() !== Email::ENTITY_TYPE &&
+            $this->assignmentHelper->hasAssignedUsersField($entity->getEntityType()) &&
+            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== []
         ) {
             /** @var LinkMultiple $users */
             $users = $entity->getValueObject(self::FIELD_ASSIGNED_USERS);
 
-            $data['assignedUsers'] = array_map(function ($it) {
+            $data[Note::DATA_ATTR_ASSIGNED_USERS] = array_map(function ($it) {
                 return [
                     Attribute::ID => $it->getId(),
-                    'name' => $it->getName(),
+                    Field::NAME => $it->getName(),
                 ];
             }, $users->getList());
+        } else if (
+            $this->assignmentHelper->hasAssignedUserField($entity->getEntityType()) &&
+            $entity->get(Field::ASSIGNED_USER . 'Id')
+        ) {
+            $this->loadAssignedUserName($entity);
+
+            $data[Note::DATA_ATTR_ASSIGNED_USER_ID] = $entity->get(Field::ASSIGNED_USER . 'Id');
+            $data[Note::DATA_ATTR_ASSIGNED_USER_NAME] = $entity->get(Field::ASSIGNED_USER . 'Name');
         }
 
         $field = $this->getStatusField($entityType);
@@ -622,12 +627,12 @@ class Service
             $value = $entity->get($field);
 
             if ($value) {
-                $data['statusValue'] = $value;
-                $data['statusField'] = $field;
+                $data[Note::DATA_ATTR_STATUS_VALUE] = $value;
+                $data[Note::DATA_ATTR_STATUS_FIELD] = $field;
             }
         }
 
-        $note->set('data', (object) $data);
+        $note->setData($data);
 
         $noteOptions = [];
 
@@ -915,8 +920,8 @@ class Service
         $note->setParent(LinkParent::fromEntity($entity));
 
         $note->setData([
-            'fields' => $updatedFieldList,
-            'attributes' => [
+            Note::DATA_ATTR_FIELDS => $updatedFieldList,
+            Note::DATA_ATTR_ATTRIBUTES => [
                 'was' => (object) $was,
                 'became' => (object) $became,
             ],
@@ -1160,9 +1165,10 @@ class Service
     {
         if (
             $entity instanceof CoreEntity &&
-            $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
+            $entity->getEntityType() !== Email::ENTITY_TYPE &&
             // Exclude for Email as the assignedUsers serves not for direct assignment.
-            $entity->getEntityType() !== Email::ENTITY_TYPE
+            $this->assignmentHelper->hasAssignedUsersField($entity->getEntityType()) &&
+            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS) !== []
         ) {
             $data = [];
 
@@ -1179,17 +1185,17 @@ class Service
             $removedIds = array_values(array_diff($prevIds, $newIds));
             $names = array_merge($prevNames, $newNames);
 
-            $data['addedAssignedUsers'] = array_map(function ($id) use ($names) {
+            $data[Note::DATA_ATTR_ADDED_ASSIGNED_USERS] = array_map(function ($id) use ($names) {
                 return [
-                    'id' => $id,
-                    'name' => $names[$id] ?? null,
+                    Attribute::ID => $id,
+                    Field::NAME => $names[$id] ?? null,
                 ];
             }, $addedIds);
 
-            $data['removedAssignedUsers'] = array_map(function ($id) use ($names) {
+            $data[Note::DATA_ATTR_REMOVED_ASSIGNED_USERS] = array_map(function ($id) use ($names) {
                 return [
-                    'id' => $id,
-                    'name' => $names[$id] ?? null,
+                    Attribute::ID => $id,
+                    Field::NAME => $names[$id] ?? null,
                 ];
             }, $removedIds);
 
@@ -1198,18 +1204,22 @@ class Service
             return;
         }
 
-        if ($entity->get('assignedUserId')) {
+        if (
+            $this->assignmentHelper->hasAssignedUserField($entity->getEntityType()) &&
+            $entity->get(Field::ASSIGNED_USER . 'Id')
+        ) {
             $this->loadAssignedUserName($entity);
 
             $note->setData([
-                'assignedUserId' => $entity->get('assignedUserId'),
-                'assignedUserName' => $entity->get('assignedUserName'),
+                Note::DATA_ATTR_ASSIGNED_USER_ID => $entity->get(Field::ASSIGNED_USER . 'Id'),
+                Note::DATA_ATTR_ASSIGNED_USER_NAME => $entity->get(Field::ASSIGNED_USER . 'Name'),
             ]);
 
             return;
         }
 
-        $note->setData(['assignedUserId' => null]);
+
+        $note->setData([Note::DATA_ATTR_ASSIGNED_USER_ID => null]);
     }
 
     /**

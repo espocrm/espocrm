@@ -147,6 +147,10 @@
             [
                 {"name": "reactionNotifications"},
                 {"name": "reactionNotificationsNotFollowed"}
+            ],
+            [
+                {"name": "notificationGrouping"},
+                false
             ]
         ]
     }

@@ -243,6 +243,10 @@ class NoteStreamView extends View {
             id = this.model.attributes.parentId;
         }
 
+        if (this.options.isInGroup) {
+            return null;
+        }
+
         if (this.isThis && this.parentModel && scope === this.parentModel.entityType) {
             return null;
         }

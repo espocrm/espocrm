@@ -28,6 +28,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import NotificationListRecordView from 'views/notification/record/list';
+import NotificationPanelView from 'views/notification/panel';
 
 class NotificationContainerFieldView extends BaseFieldView {
 
@@ -59,26 +60,32 @@ class NotificationContainerFieldView extends BaseFieldView {
     isGroupExpanded = false
 
     data() {
+        const count = this.model.attributes.groupedCount ?? 0;
+
         return {
-            hasGrouped: (this.model.attributes.groupedCount ?? 0) > 1,
+            hasGrouped: count > 1 || count < 0,
             isGroupExpanded: this.isGroupExpanded,
         };
     }
 
     setup() {
-        switch (this.model.attributes.type) {
-            case 'Note':
-                this.processNote(this.model.attributes.noteData);
+        if (this.model.attributes.groupType) {
+            this.wait(this.processGroup());
+        } else {
+            switch (this.model.attributes.type) {
+                case 'Note':
+                    this.processNote(this.model.attributes.noteData);
 
-                break;
+                    break;
 
-            case 'MentionInPost':
-                this.processMentionInPost(this.model.attributes.noteData);
+                case 'MentionInPost':
+                    this.processMentionInPost(this.model.attributes.noteData);
 
-                break;
+                    break;
 
-            default:
-                this.process();
+                default:
+                    this.process();
+            }
         }
 
         this.addActionHandler('showGrouped', () => this.showGrouped());
@@ -113,6 +120,32 @@ class NotificationContainerFieldView extends BaseFieldView {
 
     /**
      * @private
+     */
+    async processGroup() {
+        const groupType = this.model.attributes.groupType;
+
+        let viewName;
+
+        if (groupType === 'Note') {
+            viewName = 'views/notification/items/group-note';
+        } else if (groupType === 'EmailReceived') {
+            viewName = 'views/notification/items/group-email-received';
+        }
+
+        if (!viewName) {
+            return;
+        }
+
+        const parentSelector = this.options.containerSelector ?? this.getSelector();
+
+        await this.createView('notification', viewName, {
+            model: this.model,
+            fullSelector: `${parentSelector} li[data-id="${this.model.id}"]`,
+        });
+    }
+
+    /**
+     * @private
      * @param {Record} data
      */
     processNote(data) {
@@ -140,6 +173,7 @@ class NotificationContainerFieldView extends BaseFieldView {
                 fullSelector: `${parentSelector} li[data-id="${this.model.id}"] .cell[data-name="data"]`,
                 onlyContent: true,
                 isNotification: true,
+                isInGroup: this.options.isInGroup ?? false,
             });
 
             this.wait(false);
@@ -183,7 +217,14 @@ class NotificationContainerFieldView extends BaseFieldView {
     async showGrouped() {
         const collection = await this.getCollectionFactory().create('Notification');
 
-        collection.url = `Notification/${this.model.id}/group`;
+        if (this.model.attributes.groupType) {
+            collection.url = `Notification/group?type=${this.model.attributes.groupType}&id=` +
+                this.model.id;
+
+            collection.maxSize = this.getConfig().get('recordsPerPageSmall');
+        } else {
+            collection.url = `Notification/${this.model.id}/group`;
+        }
 
         const button = this.element.querySelector('a[data-action="showGrouped"]');
 
@@ -221,6 +262,9 @@ class NotificationContainerFieldView extends BaseFieldView {
                         {
                             name: 'data',
                             view: 'views/notification/fields/container',
+                            options: {
+                                isInGroup: true,
+                            },
                         },
                     ],
                 ],
@@ -235,6 +279,20 @@ class NotificationContainerFieldView extends BaseFieldView {
         await this.assignView('groupedList', view);
 
         await this.reRender();
+
+        let viewPointer = this;
+
+        while (true) {
+            viewPointer = viewPointer.getParentView();
+
+            if (!viewPointer || viewPointer instanceof NotificationPanelView) {
+                break;
+            }
+        }
+
+        if (viewPointer instanceof NotificationPanelView) {
+            viewPointer.trigger('collection-fetched');
+        }
     }
 }
 

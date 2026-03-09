@@ -108,7 +108,20 @@ class NotificationListRecordView extends ListExpandedRecordView {
      * @return {Promise}
      */
     showNewRecords() {
+        if (this.isGroupingEnabled()) {
+            return this.collection.fetch();
+        }
+
         return this.collection.fetchNew();
+    }
+
+    /**
+     * @todo Preferences?
+     * @private
+     * @return {boolean}
+     */
+    isGroupingEnabled() {
+        return true;
     }
 }
 

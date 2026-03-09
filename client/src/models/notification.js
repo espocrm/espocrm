@@ -26,32 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import BaseNotificationItemView from 'views/notification/items/base';
+import Model from 'model';
 
-class AssignNotificationItemView extends BaseNotificationItemView {
+export default class Notification extends Model {
 
-    messageName = 'assign'
+    /**
+     * @inheritDoc
+     */
+    constructor(attributes, options) {
+        super(attributes, options);
 
-    template = 'notification/items/assign'
-
-    setup() {
-        const data = this.model.get('data') || {};
-
-        this.userId = data.userId;
-
-        this.messageData['entityType'] = this.translateEntityType(data.entityType);
-
-        this.messageData['entity'] = 'field:related';
-
-        this.messageData['user'] =
-            $('<a>')
-                .attr('href', '#User/view/' + data.userId)
-                .attr('data-id', data.userId)
-                .attr('data-scope', 'User')
-                .text(data.userName);
-
-        this.createMessage();
+        if (
+            !options.url &&
+            this.attributes.groupType
+        ) {
+            this.urlRoot = 'Notification/group';
+        }
     }
 }
-
-export default AssignNotificationItemView;

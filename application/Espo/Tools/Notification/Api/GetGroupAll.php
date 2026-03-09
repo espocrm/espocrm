@@ -27,84 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Notification\Api;
 
-use Espo\Core\Name\Field;
-use Espo\Entities\Notification as NotificationEntity;
-use Espo\Tools\Notification\RecordService as Service;
-
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Select\SearchParams;
+use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Entities\Notification;
+use Espo\Tools\Notification\GroupAllService;
 
-use stdClass;
-
-class Notification extends RecordBase
+/**
+ * @noinspection PhpUnused
+ */
+class GetGroupAll implements Action
 {
-    public static $defaultAction = 'list';
+    public function __construct(
+        private GroupAllService $service,
+        private SearchParamsFetcher $searchParamsFetcher,
+    ) {}
 
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     * @throws Error
-     */
-    public function getActionList(Request $request, Response $response): stdClass
+    public function process(Request $request): Response
     {
-        $searchParamsAux = $this->searchParamsFetcher->fetch($request);
+        $type = $request->getQueryParam('type') ?? throw new BadRequest("No `type`.");
+        $id = $request->getQueryParam('id') ?? throw new BadRequest("No `id`.");
 
-        $offset = $searchParamsAux->getOffset();
-        $maxSize = $searchParamsAux->getMaxSize();
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $after = $request->getQueryParam('after');
         $beforeNumber = $request->getQueryParam('beforeNumber');
 
-        $searchParams = SearchParams
-            ::create()
-            ->withOffset($offset)
-            ->withMaxSize($maxSize);
-
-        if ($after) {
+        if ($beforeNumber) {
             $searchParams = $searchParams
                 ->withWhereAdded(
                     WhereItem
                         ::createBuilder()
-                        ->setAttribute(Field::CREATED_AT)
-                        ->setType(WhereItem\Type::AFTER)
-                        ->setValue($after)
+                        ->setAttribute(Notification::ATTR_NUMBER)
+                        ->setType(WhereItem\Type::LESS_THAN)
+                        ->setValue($beforeNumber)
                         ->build()
                 );
         }
 
-        $recordCollection = $this->getNotificationService()->get($this->user, $searchParams, $beforeNumber);
+        $collection = $this->service->get($type, $id, $searchParams);
 
-        return $recordCollection->toApiOutput();
-    }
-
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function getActionNotReadCount(): int
-    {
-        return $this->getNotificationService()->getNotReadCount($this->user);
-    }
-
-    public function postActionMarkAllRead(Request $request): bool
-    {
-        $userId = $this->user->getId();
-
-        $this->getNotificationService()->markAllRead($userId);
-
-        return true;
-    }
-
-    private function getNotificationService(): Service
-    {
-        return $this->injectableFactory->create(Service::class);
+        return ResponseComposer::json(
+            $collection->toApiOutput()
+        );
     }
 }

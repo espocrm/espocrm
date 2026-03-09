@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,32 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import BaseNotificationItemView from 'views/notification/items/base';
+namespace Espo\Core\Upgrades\Migrations\V9_4;
 
-class AssignNotificationItemView extends BaseNotificationItemView {
+use Espo\Core\Upgrades\Migration\Script;
+use Espo\Entities\Preferences;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
 
-    messageName = 'assign'
+class AfterUpgrade implements Script
+{
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
-    template = 'notification/items/assign'
+    public function run(): void
+    {
+        $this->updatePreferences();
+    }
 
-    setup() {
-        const data = this.model.get('data') || {};
+    private function updatePreferences(): void
+    {
+        $users = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->sth()
+            ->where([
+                User::ATTR_IS_ACTIVE => true,
+                User::ATTR_TYPE => [
+                    User::TYPE_ADMIN,
+                    User::TYPE_REGULAR,
+                    User::TYPE_PORTAL,
+                ]
+            ])
+            ->find();
 
-        this.userId = data.userId;
+        foreach ($users as $user) {
+            $preferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($user->getId());
 
-        this.messageData['entityType'] = this.translateEntityType(data.entityType);
+            if (!$preferences) {
+                continue;
+            }
 
-        this.messageData['entity'] = 'field:related';
-
-        this.messageData['user'] =
-            $('<a>')
-                .attr('href', '#User/view/' + data.userId)
-                .attr('data-id', data.userId)
-                .attr('data-scope', 'User')
-                .text(data.userName);
-
-        this.createMessage();
+            $preferences->set('notificationGrouping', true);
+            $this->entityManager->saveEntity($preferences);
+        }
     }
 }
-
-export default AssignNotificationItemView;

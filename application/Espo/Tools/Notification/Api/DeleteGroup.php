@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,32 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import BaseNotificationItemView from 'views/notification/items/base';
+namespace Espo\Tools\Notification\Api;
 
-class AssignNotificationItemView extends BaseNotificationItemView {
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Tools\Notification\GroupAllService;
 
-    messageName = 'assign'
+/**
+ * @noinspection PhpUnused
+ */
+class DeleteGroup implements Action
+{
+    public function __construct(
+        private GroupAllService $service,
+    ) {}
 
-    template = 'notification/items/assign'
+    public function process(Request $request): Response
+    {
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
 
-    setup() {
-        const data = this.model.get('data') || {};
+        $this->service->remove($id);
 
-        this.userId = data.userId;
-
-        this.messageData['entityType'] = this.translateEntityType(data.entityType);
-
-        this.messageData['entity'] = 'field:related';
-
-        this.messageData['user'] =
-            $('<a>')
-                .attr('href', '#User/view/' + data.userId)
-                .attr('data-id', data.userId)
-                .attr('data-scope', 'User')
-                .text(data.userName);
-
-        this.createMessage();
+        return ResponseComposer::json(true);
     }
 }
-
-export default AssignNotificationItemView;

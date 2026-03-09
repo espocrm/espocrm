@@ -46,7 +46,28 @@
             "readOnly": true,
             "index": true
         },
+        "isFeatured": {
+            "type": "bool",
+            "readOnly": true
+        },
         "groupedCount": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "utility": true
+        },
+        "groupType": {
+            "type": "enum",
+            "notStorable": true,
+            "readOnly": true,
+            "utility": true,
+            "options": [
+                "",
+                "Note",
+                "EmailReceived"
+            ]
+        },
+        "groupedUnreadCount": {
             "type": "int",
             "notStorable": true,
             "readOnly": true,

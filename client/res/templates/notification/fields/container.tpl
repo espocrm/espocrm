@@ -1,6 +1,6 @@
 <div class="notification-container">{{{notification}}}</div>
 {{#if hasGrouped}}
-    <div class="notification-grouped">
+    <div class="notification-grouped list-container-panel">
     {{#if isGroupExpanded}}
         {{{groupedList}}}
     {{else}}
