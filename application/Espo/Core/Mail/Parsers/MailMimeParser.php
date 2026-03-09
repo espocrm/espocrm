@@ -58,6 +58,27 @@ class MailMimeParser implements Parser
         'png' => 'image/png',
         'gif' => 'image/gif',
         'webp' => 'image/webp',
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'csv' => 'text/csv',
+        'txt' => 'text/plain',
+        'html' => 'text/html',
+        'htm' => 'text/html',
+        'xml' => 'application/xml',
+        'zip' => 'application/zip',
+        'gz' => 'application/gzip',
+        'eml' => 'message/rfc822',
+        'svg' => 'image/svg+xml',
+        'bmp' => 'image/bmp',
+        'tif' => 'image/tiff',
+        'tiff' => 'image/tiff',
     ];
 
     private ?WrappeeParser $parser = null;
@@ -434,9 +455,9 @@ class MailMimeParser implements Parser
             return null;
         }
 
-        $ext = explode('.', $filename)[1] ?? null;
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-        if (!$ext) {
+        if ($ext === '') {
             return null;
         }
 
