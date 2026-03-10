@@ -134,7 +134,15 @@ class EntityDuplicator
     {
         $type = $fieldDefs->getType();
 
-        if (in_array($type, [FieldType::AUTOINCREMENT, FieldType::NUMBER, FieldType::LINK_ONE])) {
+        if (
+            in_array($type, [
+                FieldType::AUTOINCREMENT,
+                FieldType::NUMBER,
+                FieldType::LINK_ONE,
+                // Additional measure. It's not fetched.
+                FieldType::PASSWORD,
+            ])
+        ) {
             return true;
         }
 
