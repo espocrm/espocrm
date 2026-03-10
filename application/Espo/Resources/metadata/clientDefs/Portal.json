@@ -12,6 +12,9 @@
         },
         "authenticationProvider": {
             "createDisabled": true
+        },
+        "portalRoles": {
+            "createDisabled": true
         }
     },
     "searchPanelDisabled": true
