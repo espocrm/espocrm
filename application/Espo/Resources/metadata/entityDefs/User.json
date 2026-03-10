@@ -12,6 +12,7 @@
                 "inlineEditDisabled"
             ],
             "index": true,
+            "duplicateIgnore": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\User\\UserName\\Valid"
             ]
@@ -53,6 +54,7 @@
             "fieldManagerParamList": [
                 "tooltipText"
             ],
+            "duplicateIgnore": true,
             "orderDisabled": true
         },
         "passwordConfirm": {
@@ -63,6 +65,7 @@
             "notStorable": true,
             "orderDisabled": true,
             "directAccessDisabled": true,
+            "duplicateIgnore": true,
             "fieldManagerParamList": []
         },
         "authMethod": {
@@ -90,6 +93,7 @@
             ],
             "copyToClipboard": true,
             "dynamicLogicVisibleDisabled": true,
+            "duplicateIgnore": true,
             "orderDisabled": true
         },
         "secretKey": {
@@ -106,6 +110,7 @@
                 "tooltipText"
             ],
             "copyToClipboard": true,
+            "duplicateIgnore": true,
             "dynamicLogicVisibleDisabled": true
         },
         "salutationName": {
@@ -436,6 +441,7 @@
             "defaultAttributes": {
                 "avatarId": null
             },
+            "duplicateIgnore": true,
             "layoutAvailabilityList": []
         },
         "avatarColor": {
@@ -503,6 +509,7 @@
         "userData": {
             "type": "linkOne",
             "utility": true,
+            "duplicateIgnore": true,
             "customizationDisabled": true
         },
         "lastAccess": {
