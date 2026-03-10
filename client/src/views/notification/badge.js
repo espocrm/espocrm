@@ -568,7 +568,6 @@ class NotificationBadgeView extends View {
             });
 
             this.listenTo(view, 'collection-fetched', () => {
-                console.log(1);
                 this.checkUpdates();
                 this.broadcastNotificationsRead();
             });
