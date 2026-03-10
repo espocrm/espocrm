@@ -134,7 +134,7 @@ class EntityDuplicator
     {
         $type = $fieldDefs->getType();
 
-        if (in_array($type, [FieldType::AUTOINCREMENT, FieldType::NUMBER])) {
+        if (in_array($type, [FieldType::AUTOINCREMENT, FieldType::NUMBER, FieldType::LINK_ONE])) {
             return true;
         }
 

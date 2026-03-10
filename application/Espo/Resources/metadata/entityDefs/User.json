@@ -394,6 +394,7 @@
                 "tooltipText"
             ],
             "audited": true,
+            "duplicateIgnore": true,
             "dynamicLogicVisibleDisabled": true
         },
         "accounts": {

@@ -216,19 +216,22 @@
         "createdAccount": {
             "type": "link",
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "duplicateIgnore": true
         },
         "createdContact": {
             "type": "link",
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "view": "crm:views/lead/fields/created-contact"
+            "view": "crm:views/lead/fields/created-contact",
+            "duplicateIgnore": true
         },
         "createdOpportunity": {
             "type": "link",
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
-            "view": "crm:views/lead/fields/created-opportunity"
+            "view": "crm:views/lead/fields/created-opportunity",
+            "duplicateIgnore": true
         },
         "targetLists": {
             "type": "linkMultiple",

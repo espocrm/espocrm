@@ -343,6 +343,7 @@ class LinkManager
                         'fields' => [
                             $linkForeign => [
                                 FieldParam::TYPE => FieldType::LINK,
+                                'duplicateIgnore' => true,
                             ],
                         ],
                         'links' => [
@@ -359,6 +360,7 @@ class LinkManager
                         'fields' => [
                             $link => [
                                 FieldParam::TYPE => FieldType::LINK,
+                                'duplicateIgnore' => true,
                             ],
                         ],
                         'links' => [
