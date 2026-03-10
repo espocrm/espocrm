@@ -1421,13 +1421,13 @@ section {
         .notification-grouped > .list > .list-group {
             > li {
                 &:first-child {
-                    border-top-left-radius: var(--border-radius);
-                    border-top-right-radius: var(--border-radius);
+                    //border-top-left-radius: var(--border-radius);
+                    //border-top-right-radius: var(--border-radius);
                 }
 
                 &:last-child {
-                    border-bottom-left-radius: var(--border-radius);
-                    border-bottom-right-radius: var(--border-radius);
+                    //border-bottom-left-radius: var(--border-radius);
+                    //border-bottom-right-radius: var(--border-radius);
                 }
             }
 
@@ -2147,7 +2147,9 @@ td > span.color-icon {
         top: var(--minus-1px);
     }
 
-    padding-left: var(--29px);
+    &:not(:first-child) {
+        padding-left: var(--29px);
+    }
 
     > .icon:first-child {
         min-width: var(--16px);
@@ -2236,6 +2238,11 @@ td > span.color-icon {
 
 .stream-head-container {
     margin-bottom: var(--4px);
+
+    > .stream-head-left-icon-container {
+        width: var(--26px);
+        text-align: center;
+    }
 }
 
 .stream-head-container .internal-badge {

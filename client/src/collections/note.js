@@ -32,6 +32,9 @@ import Collection from 'collection';
 
 class NoteCollection extends Collection {
 
+    /**
+     * @type {boolean}
+     */
     paginationByNumber = false
 
     /**

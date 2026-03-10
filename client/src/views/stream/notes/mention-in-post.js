@@ -58,7 +58,10 @@ class MentionInPostNoteStreamView extends NoteStreamView {
             this.messageName = 'mentionInPostTarget';
         }
 
-        if (!this.isUserStream || this.options.userId !== this.getUser().id) {
+        if (
+            (!this.options.isNotification) &&
+            (!this.isUserStream || this.options.userId !== this.getUser().id)
+        ) {
             this.createMessage();
 
             return;

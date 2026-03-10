@@ -102,14 +102,8 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
         this.messageData['user'] = userElement;
 
         if (relatedParentId && relatedParentType) {
-            const relatedParentElement = document.createElement('a');
-            relatedParentElement.href = `#${relatedParentType}/view/${relatedParentId}`;
-            relatedParentElement.dataset.id = relatedParentId;
-            relatedParentElement.dataset.scope = relatedParentType;
-            relatedParentElement.textContent = data.entityName || relatedParentType;
-
             this.messageData['entityType'] = this.translateEntityType(relatedParentType);
-            this.messageData['entity'] = relatedParentElement;
+            this.messageData['entity'] = 'field:relatedParent';
 
             this.messageName = 'userPostInParentReaction';
         }

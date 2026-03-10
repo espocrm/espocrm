@@ -26,32 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+
 import BaseNotificationItemView from 'views/notification/items/base';
 
-class AssignNotificationItemView extends BaseNotificationItemView {
+// noinspection JSUnusedGlobalSymbols
+export default class GroupNoteNotificationItemView extends BaseNotificationItemView {
 
-    messageName = 'assign'
+    // language=Handlebars
+    templateContent = `
+        <div class="stream-head-container">
+            <div class="pull-left stream-head-left-icon-container">
+                <span
+                    class="far fa-envelope text-soft icon"
+                >
+            </div>
+            <div class="stream-head-text-container">
+                <span class="text-muted message">{{{message}}}</span>
+            </div>
+        </div>
 
-    template = 'notification/items/assign'
+        <div class="stream-date-container">
+            <span class="text-muted small">{{{createdAt}}}</span>
+        </div>
+    `
+
+    data() {
+        return {
+            ...super.data(),
+        };
+    }
 
     setup() {
-        const data = this.model.get('data') || {};
+        const newCount = this.model.attributes.groupedUnreadCount ?? 0;
 
-        this.userId = data.userId;
+        this.messageData['number'] = newCount.toString();
 
-        this.messageData['entityType'] = this.translateEntityType(data.entityType);
+        this.messageName = 'groupEmailsReceivedNew';
 
-        this.messageData['entity'] = 'field:related';
-
-        this.messageData['user'] =
-            $('<a>')
-                .attr('href', '#User/view/' + data.userId)
-                .attr('data-id', data.userId)
-                .attr('data-scope', 'User')
-                .text(data.userName);
+        if (newCount === 0) {
+            this.messageName = 'groupEmailsReceived';
+        }
 
         this.createMessage();
     }
 }
-
-export default AssignNotificationItemView;

@@ -338,7 +338,8 @@
         "Reaction Removed": "Reaction Removed",
         "Reactions": "Reactions",
         "Lock": "Lock",
-        "Unlock": "Unlock"
+        "Unlock": "Unlock",
+        "Assigned": "Assigned"
     },
     "messages": {
         "checkLogsForDetails": "Check logs for details.",
@@ -566,7 +567,12 @@
         "emailInbox": "{user} added email {entity} to your inbox",
         "userPostReaction": "{user} reacted to your {post}",
         "addedToCollaborators": "{user} added you as a collaborator to {entityType} {entity}",
-        "userPostInParentReaction": "{user} reacted to your {post} in {entityType} {entity}"
+        "userPostInParentReaction": "{user} reacted to your {post} in {entityType} {entity}",
+        "groupUpdatesMultiple": "{entityType} {entity} – {number} new activities",
+        "groupUpdatesOne": "{entityType} {entity} – new activity",
+        "groupUpdates": "{entityType} {entity}",
+        "groupEmailsReceivedNew": "Emails received – {number} new",
+        "groupEmailsReceived": "Emails received"
     },
     "streamMessages": {
         "post": "{user} posted on {entityType} {entity}",

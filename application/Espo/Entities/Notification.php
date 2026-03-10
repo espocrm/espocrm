@@ -54,6 +54,22 @@ class Notification extends Entity
     public const ATTR_ACTION_ID = 'actionId';
     public const ATTR_NUMBER = 'number';
 
+    public const string ATTR_RELATED_TYPE = 'relatedType';
+    public const string ATTR_RELATED_ID = 'relatedId';
+    public const string ATTR_RELATED_PARENT_TYPE = 'relatedParentType';
+    public const string ATTR_RELATED_PARENT_ID = 'relatedParentId';
+
+    public const string FIELD_DATA = 'data';
+    public const string FIELD_MESSAGE = 'message';
+    public const string FIELD_TYPE = 'type';
+    public const string FIELD_RELATED_PARENT = 'relatedParent';
+    public const string FIELD_IS_FEATURED = 'isFeatured';
+
+    public const string GROUP_TYPE_NOTE = Notification::TYPE_NOTE;
+    public const string GROUP_TYPE_EMAIL_RECEIVED = Notification::TYPE_EMAIL_RECEIVED;
+
+    public const string DATE_ATTR_NOTE_ID = 'noteId';
+
     public function getType(): ?string
     {
         return $this->get('type');
@@ -128,6 +144,12 @@ class Notification extends Entity
         return $this;
     }
 
+    public function getRelatedParent(): ?LinkParent
+    {
+        /** @var ?LinkParent */
+        return $this->getValueObject('relatedParent');
+    }
+
     public function setRelatedParent(LinkParent|Entity|null $relatedParent): self
     {
         if ($relatedParent instanceof LinkParent) {
@@ -185,8 +207,27 @@ class Notification extends Entity
         return $this->get('actionId');
     }
 
+    /**
+     * @internal
+     */
     public function setGroupedCount(?int $groupedCount): self
     {
         return $this->set('groupedCount', $groupedCount);
+    }
+
+    /**
+     * @internal
+     */
+    public function getGroupType(): ?string
+    {
+        return $this->get('groupType');
+    }
+
+    /**
+     * @since 9.4.0
+     */
+    public function setIsFeatured(bool $isFeatured): self
+    {
+        return $this->set(self::FIELD_IS_FEATURED, $isFeatured);
     }
 }

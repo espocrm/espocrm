@@ -64,6 +64,16 @@ class Note extends Entity
     public const TYPE_EMAIL_RECEIVED = 'EmailReceived';
     public const TYPE_EMAIL_SENT = 'EmailSent';
 
+    public const string DATA_ATTR_ADDED_ASSIGNED_USERS = 'addedAssignedUsers';
+    public const string DATA_ATTR_REMOVED_ASSIGNED_USERS = 'removedAssignedUsers';
+    public const string DATA_ATTR_ASSIGNED_USERS = 'assignedUsers';
+    public const string DATA_ATTR_STATUS_VALUE = 'statusValue';
+    public const string DATA_ATTR_STATUS_FIELD = 'statusField';
+    public const string DATA_ATTR_ASSIGNED_USER_ID = 'assignedUserId';
+    public const string DATA_ATTR_ASSIGNED_USER_NAME = 'assignedUserName';
+    public const string DATA_ATTR_FIELDS = 'fields';
+    public const string DATA_ATTR_ATTRIBUTES = 'attributes';
+
     private bool $aclIsProcessed = false;
 
     public function isPost(): bool

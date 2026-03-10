@@ -48,12 +48,35 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Union;
+use Espo\ORM\Query\UnionBuilder;
+use Espo\ORM\Repository\RDBSelectBuilder;
 use Espo\Tools\Stream\NoteAccessControl;
+use Espo\Tools\User\PreferencesProvider;
+use PDO;
+use UnexpectedValueException;
 
 class RecordService
 {
+    private const string COLUMN_GROUP_TYPE = 'groupType';
+    private const string COLUMN_GROUP_UNREAD_COUNT = 'groupedUnreadCount';
+
+    /** @var string[] */
+    private array $noGroupAttributes = [
+        Attribute::DELETED,
+        Field::CREATED_BY . 'Id',
+        Notification::ATTR_ACTION_ID,
+        Notification::FIELD_DATA,
+        Notification::FIELD_MESSAGE,
+        Notification::FIELD_TYPE,
+        Notification::ATTR_RELATED_ID,
+        Notification::ATTR_RELATED_TYPE,
+    ];
+
     public function __construct(
         private EntityManager $entityManager,
         private Acl $acl,
@@ -61,6 +84,7 @@ class RecordService
         private NoteAccessControl $noteAccessControl,
         private SelectBuilderFactory $selectBuilderFactory,
         private Config $config,
+        private PreferencesProvider $preferencesProvider,
     ) {}
 
     /**
@@ -70,20 +94,14 @@ class RecordService
      * @throws Error
      * @throws BadRequest
      * @throws Forbidden
+     *
+     * @internal
      */
-    public function get(User $user, SearchParams $searchParams): RecordCollection
+    public function get(User $user, SearchParams $searchParams, ?string $beforeNumber = null): RecordCollection
     {
-        $queryBuilder = $this->selectBuilderFactory
-            ->create()
-            ->from(Notification::ENTITY_TYPE)
-            ->withSearchParams($searchParams)
-            ->buildQueryBuilder()
-            ->where([Notification::ATTR_USER_ID => $user->getId()])
-            ->order(Notification::ATTR_NUMBER, SearchParams::ORDER_DESC);
-
-        if ($this->isGroupingEnabled()) {
-            $queryBuilder->where($this->getActionIdWhere($user->getId()));
-        }
+        $queryBuilder = $this->isGroupingEnabled($user) ?
+            $this->prepareGroupingQueryBuilder($user, $searchParams, beforeNumber: $beforeNumber) :
+            $this->prepareQueryBuilder($user, $searchParams, beforeNumber: $beforeNumber);
 
         $offset = $searchParams->getOffset();
         $limit = $searchParams->getMaxSize();
@@ -92,23 +110,16 @@ class RecordService
             $queryBuilder->limit($offset, $limit + 1);
         }
 
-        $ignoreScopeList = $this->getIgnoreScopeList();
-
-        if ($ignoreScopeList !== []) {
-            $queryBuilder->where([
-                'OR' => [
-                    'relatedParentType' => null,
-                    'relatedParentType!=' => $ignoreScopeList,
-                ],
-            ]);
-        }
-
         $query = $queryBuilder->build();
 
-        $collection = $this->entityManager
-            ->getRDBRepositoryByClass(Notification::class)
-            ->clone($query)
-            ->find();
+        if ($query instanceof Union) {
+            $collection = $this->fetchAndPrepareCollectionFromUnion($query);
+        } else {
+            $collection = $this->entityManager
+                ->getRDBRepositoryByClass(Notification::class)
+                ->clone($query)
+                ->find();
+        }
 
         if (!$collection instanceof EntityCollection) {
             throw new Error("Collection is not instance of EntityCollection.");
@@ -116,7 +127,7 @@ class RecordService
 
         $collection = $this->prepareCollection($collection, $user);
 
-        $groupedCountMap = $this->getGroupedCountMap($collection, $user->getId());
+        $groupedCountMap = $this->getActionGroupedCountMap($collection, $user->getId());
 
         $ids = [];
         $actionIds = [];
@@ -126,11 +137,19 @@ class RecordService
                 break;
             }
 
-            $ids[] = $entity->getId();
+            if (!$entity->getGroupType()) {
+                $ids[] = $entity->getId();
+            }
 
             $groupedCount = null;
 
-            if ($entity->getActionId() && $this->isGroupingEnabled()) {
+            if ($this->isGroupingEnabled($user) && $entity->getGroupType()) {
+                $groupedCount = -1;
+
+                $entity->loadParentNameField(Notification::FIELD_RELATED_PARENT);
+            }
+
+            if ($entity->getActionId() && $this->isActionGroupingEnabled()) {
                 $actionIds[] = $entity->getActionId();
 
                 $groupedCount = $groupedCountMap[$entity->getActionId()] ?? 0;
@@ -252,33 +271,35 @@ class RecordService
         $entity->set('noteData', $note->getValueMap());
     }
 
-    public function getNotReadCount(string $userId): int
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    public function getNotReadCount(User $user): int
     {
-        $whereClause = [
-            Notification::ATTR_USER_ID => $userId,
-            Notification::ATTR_READ => false,
-        ];
+        $searchParams = SearchParams::create();
 
-        $ignoreScopeList = $this->getIgnoreScopeList();
+        $queryBuilder = $this->isGroupingEnabled($user) ?
+            $this->prepareGroupingQueryBuilder($user, $searchParams, true) :
+            $this->prepareQueryBuilder($user, $searchParams, true);
 
-        if (count($ignoreScopeList)) {
-            $whereClause[] = [
-                'OR' => [
-                    'relatedParentType' => null,
-                    'relatedParentType!=' => $ignoreScopeList,
-                ]
-            ];
+        $countQuery = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->fromQuery($queryBuilder->build(), 'q')
+            ->select('COUNT:(q.id)', 'c')
+            ->build();
+
+        $sth = $this->entityManager->getQueryExecutor()->execute($countQuery);
+
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
+
+        $count = $row['c'] ?? null;
+
+        if (!is_int($count)) {
+            throw new UnexpectedValueException();
         }
 
-        $builder = $this->entityManager
-            ->getRDBRepositoryByClass(Notification::class)
-            ->where($whereClause);
-
-        if ($this->isGroupingEnabled()) {
-            $builder->where($this->getActionIdWhere($userId));
-        }
-
-        return $builder->count();
+        return $count;
     }
 
     public function markAllRead(string $userId): bool
@@ -422,9 +443,9 @@ class RecordService
      * @param EntityCollection<Notification> $collection
      * @return array<string, int>
      */
-    private function getGroupedCountMap(EntityCollection $collection, string $userId): array
+    private function getActionGroupedCountMap(EntityCollection $collection, string $userId): array
     {
-        if (!$this->isGroupingEnabled()) {
+        if (!$this->isActionGroupingEnabled()) {
             return [];
         }
 
@@ -464,7 +485,7 @@ class RecordService
         return $groupedCountMap;
     }
 
-    private function isGroupingEnabled(): bool
+    private function isActionGroupingEnabled(): bool
     {
         // @todo Param in preferences?
         return (bool) ($this->config->get('notificationGrouping') ?? true);
@@ -482,5 +503,395 @@ class RecordService
         if ($entity->getCreatedBy() && $createdByName !== null) {
             $entity->set('createdByName', $createdByName);
         }
+    }
+
+    private function isGroupingEnabled(User $user): bool
+    {
+        return $this->preferencesProvider->tryGet($user->getId())?->get('notificationGrouping') ?? false;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function prepareGroupingQueryBuilder(
+        User $user,
+        SearchParams $searchParams,
+        bool $notRead = false,
+        ?string $beforeNumber = null,
+    ): UnionBuilder {
+
+        $noteGroupBuilder = $this->prepareNoteGroupBuilder(
+            searchParams: $searchParams,
+            user: $user,
+            notRead: $notRead,
+            beforeNumber: $beforeNumber,
+        );
+
+        $emailGroupBuilder = $this->prepareEmailGroupBuilder(
+            searchParams: $searchParams,
+            user: $user,
+            notRead: $notRead,
+            beforeNumber: $beforeNumber,
+        );
+
+        $restBuilder = $this->prepareRestBuilder(
+            searchParams: $searchParams,
+            user: $user,
+            notRead: $notRead,
+            beforeNumber: $beforeNumber,
+        );
+
+        return UnionBuilder::create()
+            ->query($noteGroupBuilder->build())
+            ->query($emailGroupBuilder->build())
+            ->query($restBuilder->build())
+            ->order(Notification::ATTR_NUMBER, Order::DESC);
+    }
+
+    /**
+     * @param RDBSelectBuilder<Notification>|SelectBuilder $builder
+     */
+    private function applyRelatedAccess(RDBSelectBuilder|SelectBuilder $builder): void
+    {
+        $ignoreScopeList = $this->getIgnoreScopeList();
+
+        if ($ignoreScopeList === []) {
+            return;
+        }
+
+        $builder->where([
+            'OR' => [
+                Notification::ATTR_RELATED_PARENT_TYPE => null,
+                Notification::ATTR_RELATED_PARENT_TYPE . '!=' => $ignoreScopeList,
+            ],
+        ]);
+    }
+
+    /**
+     * @return EntityCollection<Notification>
+     */
+    private function fetchAndPrepareCollectionFromUnion(Union $query): EntityCollection
+    {
+        $sth = $this->entityManager->getQueryExecutor()->execute($query);
+
+        /** @var EntityCollection<Notification> $collection */
+        $collection = $this->entityManager->getCollectionFactory()->create(Notification::ENTITY_TYPE);
+
+        while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+            $entity = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+            $entity->setMultiple($row);
+            $entity->setAsFetched();
+
+            $collection[] = $entity;
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @return Selection[]
+     */
+    private function getNullNoGroupSelections(): array
+    {
+        return array_map(function ($attribute) {
+            return Selection::create(Expr::value(null), $attribute);
+        }, $this->noGroupAttributes);
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function prepareQueryBuilder(
+        User $user,
+        SearchParams $searchParams,
+        bool $notRead = false,
+        ?string $beforeNumber = null,
+    ): SelectBuilder {
+
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Notification::ENTITY_TYPE)
+            ->withSearchParams($searchParams)
+            ->buildQueryBuilder()
+            ->where([Notification::ATTR_USER_ID => $user->getId()])
+            ->order(Notification::ATTR_NUMBER, SearchParams::ORDER_DESC);
+
+        if ($notRead) {
+            $builder->where([Notification::ATTR_READ => false]);
+        }
+
+        if ($beforeNumber) {
+            $builder->where([Notification::ATTR_NUMBER . '<' => $beforeNumber]);
+        }
+
+        $this->applyRelatedAccess($builder);
+
+        if ($this->isActionGroupingEnabled()) {
+            $builder->where($this->getActionIdWhere($user->getId()));
+        }
+
+        return $builder;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function prepareNoteGroupBuilder(
+        SearchParams $searchParams,
+        User $user,
+        bool $notRead,
+        ?string $beforeNumber,
+    ): SelectBuilder {
+
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Notification::ENTITY_TYPE)
+            ->withSearchParams($searchParams)
+            ->buildQueryBuilder()
+            ->select([
+                Selection::create(
+                    Expr::value(Notification::GROUP_TYPE_NOTE),
+                    self::COLUMN_GROUP_TYPE
+                ),
+                Selection::create(
+                    Expr::concat(
+                        Expr::value(Notification::GROUP_TYPE_NOTE),
+                        Expr::value('_'),
+                        Expr::column(Notification::ATTR_RELATED_PARENT_TYPE),
+                        Expr::value('_'),
+                        Expr::column(Notification::ATTR_RELATED_PARENT_ID),
+                    ),
+                    Attribute::ID
+                ),
+                Selection::create(
+                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    Notification::ATTR_NUMBER
+                ),
+                Notification::ATTR_RELATED_PARENT_ID,
+                Notification::ATTR_RELATED_PARENT_TYPE,
+                Selection::create(
+                    Expr::switch(
+                        Expr::greater(Expr::sum(Expr::not(Expr::column(Notification::ATTR_READ))), 0),
+                        Expr::value(false),
+                        Expr::value(true),
+                    ),
+                    Notification::ATTR_READ
+                ),
+                Selection::create(
+                    Expr::sum(
+                        Expr::switch(
+                            Expr::column(Notification::ATTR_READ),
+                            Expr::value(0),
+                            Expr::value(1),
+                        ),
+                    ),
+                    self::COLUMN_GROUP_UNREAD_COUNT
+                ),
+                Selection::create(
+                    Expr::max(Expr::column(Field::CREATED_AT)),
+                    Field::CREATED_AT,
+                ),
+                Selection::create(
+                    Expr::switch(
+                        Expr::greater(
+                            Expr::sum(
+                                Expr::and(
+                                    Expr::not(Expr::column(Notification::ATTR_READ)),
+                                    Expr::column(Notification::FIELD_IS_FEATURED),
+                                )
+                            ),
+                            0
+                        ),
+                        true,
+                        false,
+                    ),
+                    Notification::FIELD_IS_FEATURED
+                ),
+                ...$this->getNullNoGroupSelections(),
+            ])
+            ->where([
+                Notification::ATTR_RELATED_PARENT_ID . '!=' => null,
+                Notification::FIELD_TYPE => Notification::TYPE_NOTE,
+            ])
+            ->where([Notification::ATTR_USER_ID => $user->getId()])
+            ->group(Notification::ATTR_RELATED_PARENT_ID)
+            ->group(Notification::ATTR_RELATED_PARENT_TYPE)
+            ->order(Notification::ATTR_NUMBER, Order::DESC);
+
+        if ($beforeNumber) {
+            $builder->having(
+                Cond::less(
+                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    Expr::value($beforeNumber)
+                )
+            );
+        }
+
+        $this->applyRelatedAccess($builder);
+
+        if ($notRead) {
+            $builder->where([Notification::ATTR_READ => false]);
+        }
+
+        return $builder;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function prepareEmailGroupBuilder(
+        SearchParams $searchParams,
+        User $user,
+        bool $notRead,
+        ?string $beforeNumber,
+    ): SelectBuilder {
+
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Notification::ENTITY_TYPE)
+            ->withSearchParams($searchParams)
+            ->buildQueryBuilder()
+            ->select([
+                Selection::create(
+                    Expr::value(Notification::GROUP_TYPE_EMAIL_RECEIVED),
+                    self::COLUMN_GROUP_TYPE
+                ),
+                Selection::create(
+                    Expr::concat(
+                        Expr::value(Notification::GROUP_TYPE_EMAIL_RECEIVED),
+                        Expr::value('_'),
+                    ),
+                    Attribute::ID
+                ),
+                Selection::create(
+                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    Notification::ATTR_NUMBER
+                ),
+                Selection::create(
+                    Expr::value(null),
+                    Notification::ATTR_RELATED_PARENT_ID,
+                ),
+                Selection::create(
+                    Expr::value(null),
+                    Notification::ATTR_RELATED_PARENT_TYPE,
+                ),
+                Selection::create(
+                    Expr::switch(
+                        Expr::greater(Expr::sum(Expr::not(Expr::column(Notification::ATTR_READ))), 0),
+                        Expr::value(false),
+                        Expr::value(true),
+                    ),
+                    Notification::ATTR_READ
+                ),
+                Selection::create(
+                    Expr::sum(
+                        Expr::switch(
+                            Expr::column(Notification::ATTR_READ),
+                            Expr::value(0),
+                            Expr::value(1),
+                        ),
+                    ),
+                    self::COLUMN_GROUP_UNREAD_COUNT
+                ),
+                Selection::create(
+                    Expr::max(Expr::column(Field::CREATED_AT)),
+                    Field::CREATED_AT,
+                ),
+                Selection::create(
+                    Expr::value(null),
+                    Notification::FIELD_IS_FEATURED,
+                ),
+                ...$this->getNullNoGroupSelections(),
+            ])
+            ->where([
+                Notification::FIELD_TYPE => Notification::TYPE_EMAIL_RECEIVED,
+            ])
+            ->where([Notification::ATTR_USER_ID => $user->getId()])
+            ->group(Notification::FIELD_TYPE)
+            ->order(Notification::ATTR_NUMBER, Order::DESC);
+
+        if ($beforeNumber) {
+            $builder->having(
+                Cond::less(
+                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    Expr::value($beforeNumber)
+                )
+            );
+        }
+
+        if ($notRead) {
+            $builder->where([Notification::ATTR_READ => false]);
+        }
+
+        return $builder;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function prepareRestBuilder(
+        SearchParams $searchParams,
+        User $user,
+        bool $notRead,
+        ?string $beforeNumber,
+    ): SelectBuilder {
+
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from(Notification::ENTITY_TYPE)
+            ->withSearchParams($searchParams)
+            ->buildQueryBuilder()
+            ->select([
+                Selection::create(
+                    Expr::value(null),
+                    self::COLUMN_GROUP_TYPE,
+                ),
+                Attribute::ID,
+                Notification::ATTR_NUMBER,
+                Notification::ATTR_RELATED_PARENT_ID,
+                Notification::ATTR_RELATED_PARENT_TYPE,
+                Notification::ATTR_READ,
+                Selection::create(
+                    Expr::switch(
+                        Expr::column(Notification::ATTR_READ),
+                        Expr::value(0),
+                        Expr::value(1),
+                    ),
+                    self::COLUMN_GROUP_UNREAD_COUNT
+                ),
+                Field::CREATED_AT,
+                Selection::create(
+                    Expr::value(null),
+                    Notification::FIELD_IS_FEATURED,
+                ),
+                ...$this->noGroupAttributes,
+            ])
+            ->where([
+                [
+                    'OR' => [
+                        Notification::FIELD_TYPE . '!=' => Notification::TYPE_NOTE,
+                        Notification::ATTR_RELATED_PARENT_ID => null,
+                    ],
+                ],
+                Notification::FIELD_TYPE . '!=' => Notification::TYPE_EMAIL_RECEIVED,
+            ])
+            ->where([Notification::ATTR_USER_ID => $user->getId()])
+            ->order(Notification::ATTR_NUMBER, Order::DESC);
+
+        if ($notRead) {
+            $builder->where([Notification::ATTR_READ => false]);
+        }
+
+        if ($beforeNumber) {
+            $builder->where([Notification::ATTR_NUMBER . '<' => $beforeNumber]);
+        }
+
+        return $builder;
     }
 }
