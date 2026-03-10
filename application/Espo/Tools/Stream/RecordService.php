@@ -141,7 +141,7 @@ class RecordService
         ];
 
         if ($this->user->isPortal()) {
-            $where[] = ['isInternal' => true];
+            $where[] = ['isInternal' => false];
         }
 
         $this->applyPortalAccess($builder, $where);
