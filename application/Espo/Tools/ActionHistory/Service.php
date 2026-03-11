@@ -69,7 +69,7 @@ class Service
             ->getRDBRepositoryByClass(ActionHistoryRecord::class)
             ->where([
                 'userId' => $this->user->getId(),
-                'action' => Action::READ,
+                'action' => [Action::READ, Action::CREATE],
                 'targetType' => $targetTypeList,
             ])
             ->order('MAX:' . Field::CREATED_AT, 'DESC')
