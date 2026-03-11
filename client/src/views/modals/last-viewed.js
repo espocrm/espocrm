@@ -68,8 +68,7 @@ class LastViewedModalView extends ModalView {
     }
 
     loadList() {
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listLastViewed') ||
-            'views/record/list';
+        const viewName = 'views/record/list';
 
         this.listenToOnce(this.collection, 'sync', () => {
             this.createView('list', viewName, {
@@ -79,7 +78,6 @@ class LastViewedModalView extends ModalView {
                 checkboxes: false,
                 massActionsDisabled: true,
                 rowActionsView: false,
-                searchManager: this.searchManager,
                 checkAllResultDisabled: true,
                 buttonsDisabled: true,
                 headerDisabled: true,

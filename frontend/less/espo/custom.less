@@ -1961,18 +1961,21 @@ textarea.auto-height {
     overflow-x: hidden;
 }
 
-#global-search-panel {
+#global-search-panel,
+#last-viewed-panel {
      > .panel {
         .panel-heading {
             .close-link {
                 display: none;
             }
         }
+
         > .panel-body {
             max-height: @navbar-panel-body-max-height;
             overflow-y: auto;
             overflow-x: hidden;
             padding-bottom: var(--panel-padding);
+            scrollbar-gutter: stable;
         }
     }
 }
@@ -3114,7 +3117,8 @@ table.table td.cell .html-container {
     left: auto;
 }
 
-#global-search-panel {
+#global-search-panel,
+#last-viewed-panel {
     position: absolute;
     width: @global-search-panel-width;
     z-index: 1001;
@@ -3625,7 +3629,8 @@ table.table-admin-panel {
         height: 100%;
     }
 
-    #global-search-panel {
+    #global-search-panel,
+    #last-viewed-panel {
         position: fixed;
         width: 100%;
         top: 0;
@@ -3635,7 +3640,8 @@ table.table-admin-panel {
         height: 100%;
     }
 
-    #global-search-panel {
+    #global-search-panel,
+    #last-viewed-panel {
          > .panel {
             .panel-heading {
                 .close-link {

@@ -29,6 +29,7 @@
 import Autocomplete from 'ui/autocomplete';
 import TabsHelper from 'helpers/site/tabs';
 import SiteNavbarItemView from 'views/site/navbar/item';
+import WindowPanelHelper from 'helpers/site/window-panel-helper';
 
 /** @module views/global-search/global-search */
 
@@ -314,8 +315,10 @@ class GlobalSearchView extends SiteNavbarItemView {
         this.createView('panel', 'views/global-search/panel', {
             fullSelector: '#global-search-panel',
             collection: this.collection,
-        }, view => {
-            view.render();
+        }).then(async view => {
+            await view.render();
+
+            new WindowPanelHelper(view);
 
             this.listenToOnce(view, 'close', this.closePanel);
         });

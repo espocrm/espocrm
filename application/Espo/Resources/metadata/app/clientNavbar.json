@@ -6,6 +6,12 @@
             "order": 5,
             "disabled": false
         },
+        "lastViewed": {
+            "view": "views/site/navbar/last-viewed",
+            "class": "",
+            "order": 7,
+            "disabled": false
+        },
         "quickCreate": {
             "view": "views/site/navbar/quick-create",
             "class": "dropdown hidden-xs quick-create-container",
@@ -36,15 +42,6 @@
             "groupIndex": 1,
             "link": "#Preferences",
             "labelTranslation": "Global.labels.Preferences"
-        },
-        "lastViewed": {
-            "order": 0,
-            "groupIndex": 5,
-            "link": "#LastViewed",
-            "labelTranslation": "Global.scopeNamesPlural.LastViewed",
-            "configCheck": "!actionHistoryDisabled",
-            "handler": "handlers/navbar-menu",
-            "actionFunction": "lastViewed"
         },
         "about": {
             "order": 0,

@@ -55,18 +55,7 @@ class NotificationPanelView extends View {
 
         this.wait(promise);
 
-        this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
-        this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
-
         this.once('remove', () => {
-            $(window).off('resize.notifications-height');
-
-            if (this.overflowWasHidden) {
-                $('body').css('overflow', 'unset');
-
-                this.overflowWasHidden = false;
-            }
-
             if (this.collection) {
                 this.collection.abortLastFetch();
             }
@@ -77,13 +66,6 @@ class NotificationPanelView extends View {
         this.collection.fetch()
             .then(() => this.createRecordView())
             .then(view => view.render());
-
-        const $window = $(window);
-
-        $window.off('resize.notifications-height');
-        $window.on('resize.notifications-height', this.processSizing.bind(this));
-
-        this.processSizing();
 
         $('#navbar li.notifications-badge-container').addClass('open');
 
@@ -129,45 +111,6 @@ class NotificationPanelView extends View {
     actionMarkAllRead() {
         Espo.Ajax.postRequest('Notification/action/markAllRead')
             .then(() => this.trigger('all-read'));
-    }
-
-    processSizing() {
-        const $window = $(window);
-        const windowHeight = $window.height();
-        const windowWidth = $window.width();
-
-        const diffHeight = this.$el.find('.panel-heading').outerHeight();
-
-        const cssParams = {};
-
-        if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
-            cssParams.height = (windowHeight - diffHeight) + 'px';
-            cssParams.overflow = 'auto';
-
-            $('body').css('overflow', 'hidden');
-            this.overflowWasHidden = true;
-
-            this.$el.find('.panel-body').css(cssParams);
-
-            return;
-        }
-
-        cssParams.height = 'unset';
-        cssParams.overflow = 'none';
-
-        if (this.overflowWasHidden) {
-            $('body').css('overflow', 'unset');
-
-            this.overflowWasHidden = false;
-        }
-
-        if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-            const maxHeight = windowHeight - this.navbarPanelHeightSpace;
-
-            cssParams.maxHeight = maxHeight + 'px';
-        }
-
-        this.$el.find('.panel-body').css(cssParams);
     }
 
     close() {

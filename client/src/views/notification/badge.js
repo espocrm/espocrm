@@ -29,6 +29,7 @@
 import View from 'view';
 import {inject} from 'di';
 import WebSocketManager from 'web-socket-manager';
+import WindowPanelHelper from 'helpers/site/window-panel-helper';
 
 class NotificationBadgeView extends View {
 
@@ -556,8 +557,10 @@ class NotificationBadgeView extends View {
 
         this.createView('panel', 'views/notification/panel', {
             fullSelector: '#notifications-panel',
-        }, view => {
-            view.render();
+        }).then(async view => {
+            await view.render();
+
+            new WindowPanelHelper(view);
 
             this.$el.closest('.navbar-body').removeClass('in');
 
