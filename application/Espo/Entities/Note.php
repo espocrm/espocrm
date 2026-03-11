@@ -351,6 +351,16 @@ class Note extends Entity
         return $this;
     }
 
+    /**
+     * @since 9.4.0
+     */
+    public function setIsInternal(bool $isInternal): self
+    {
+        $this->set('isInternal', $isInternal);
+
+        return $this;
+    }
+
     public function getParent(): ?OrmEntity
     {
         return $this->relations->getOne(Field::PARENT);
