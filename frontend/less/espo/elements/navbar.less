@@ -153,6 +153,25 @@
                 display: inline-block;
                 float: right;
             }
+
+            > li.menu-container {
+                float: right;
+
+                > a {
+                    float: right;
+
+                    &::after {
+                        content: " ";
+                        clear: both;
+                        display: table;
+                    }
+                }
+
+                > ul {
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+            }
         }
 
         .notifications-badge-container > .notifications-button > .number-badge {
