@@ -7,7 +7,7 @@
         },
         {
             "name": "default",
-            "type": "text"
+            "type": "wysiwyg"
         },
         {
             "name": "height",
