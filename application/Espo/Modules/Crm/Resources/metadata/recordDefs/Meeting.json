@@ -9,6 +9,9 @@
         "Espo\\Core\\FieldProcessing\\Reminder\\Saver",
         "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Meeting\\SourceEmailSaver"
     ],
+    "earlyBeforeCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Meeting\\BeforeCreateExternalServiceCheck"
+    ],
     "beforeCreateHookClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Meeting\\BeforeCreateSourceEmailCheck"
     ],

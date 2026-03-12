@@ -18,7 +18,8 @@
         "isAllDay": "Is All-Day",
         "sourceEmail": "Source Email",
         "uid": "UID",
-        "joinUrl": "Join URL"
+        "joinUrl": "Join URL",
+        "externalService": "Online Location"
     },
     "links": {},
     "options": {

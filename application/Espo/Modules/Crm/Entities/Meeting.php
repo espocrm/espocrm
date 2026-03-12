@@ -247,4 +247,12 @@ class Meeting extends Entity
     {
         return $this->get('joinUrl');
     }
+
+    /**
+     * @since 9.4.0
+     */
+    public function getExternalService(): ?string
+    {
+        return $this->get('externalService');
+    }
 }

@@ -15,11 +15,13 @@
     "viewSetupHandlers": {
         "record/detail": [
             "__APPEND__",
-            "crm:handlers/event/reminders-handler"
+            "crm:handlers/event/reminders-handler",
+            "modules/crm/handlers/meeting/external-service"
         ],
         "record/edit": [
             "__APPEND__",
-            "crm:handlers/event/reminders-handler"
+            "crm:handlers/event/reminders-handler",
+            "modules/crm/handlers/meeting/external-service"
         ]
     },
     "sidePanels":{

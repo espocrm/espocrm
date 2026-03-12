@@ -96,6 +96,20 @@
             "default": null,
             "customizationDefaultDisabled": true
         },
+        "externalService": {
+            "type": "enum",
+            "maxLength": 100,
+            "readOnlyAfterCreate": true,
+            "fieldManagerParamList": [
+                "tooltipText"
+            ],
+            "isSorted": true,
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Meeting\\ExternalService\\Valid"
+            ],
+            "view": "modules/crm/views/meeting/fields/external-service",
+            "dynamicLogicDisabled": true
+        },
         "acceptanceStatus": {
             "type": "enum",
             "notStorable": true,
