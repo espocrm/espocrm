@@ -139,13 +139,9 @@ class Language {
      * @returns {string}
      */
     translateOption(value, field, scope) {
-        let translation = this.translate(field, 'options', scope);
+        const map = this.translate(field, 'options', scope) ?? {};
 
-        if (typeof translation !== 'object') {
-            translation = {};
-        }
-
-        return translation[value] || value;
+        return map[value] || value;
     }
 
     /**
