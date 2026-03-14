@@ -93,6 +93,8 @@ export default class LastViewedSiteNavbarItemView extends SiteNavbarItemView {
         document.addEventListener('mouseup', this.onMouseUpBind);
         document.addEventListener('click', this.onClickBind);
 
+        this.element.classList.add('open');
+
         await view.processFetch();
     }
 
@@ -103,6 +105,8 @@ export default class LastViewedSiteNavbarItemView extends SiteNavbarItemView {
         if (this.hasView('panel')) {
             this.getView('panel').remove();
         }
+
+        this.element.classList.remove('open');
 
         this.panelElement?.parentElement?.removeChild(this.panelElement);
 
