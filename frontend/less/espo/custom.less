@@ -1961,11 +1961,15 @@ textarea.auto-height {
     overflow-x: hidden;
 }
 
+#last-viewed-panel {
+    > .panel {
+        border-top-right-radius: 0;
+    }
+}
+
 #global-search-panel,
 #last-viewed-panel {
      > .panel {
-         border-top-right-radius: 0;
-
         .panel-heading {
             .close-link {
                 display: none;
