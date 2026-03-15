@@ -35,7 +35,6 @@ use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Security\UrlCheck;
 use Espo\Entities\Webhook;
 use Espo\Core\HttpClient;
-use GuzzleHttp\Psr7\Request;
 use LogicException;
 use Psr\Http\Message\RequestInterface;
 
