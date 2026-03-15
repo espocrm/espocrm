@@ -27,28 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Webhook;
+namespace Espo\Core\HttpClient;
 
-use Espo\Core\HttpClient\Util;
-use Espo\Core\Utils\Config;
-
-/**
- * @internal
- */
-class AddressUtil
+enum ConnectErrorReason
 {
-    public function __construct(
-        private Config $config,
-    ) {}
-
-    /**
-     * @internal
-     */
-    public function isAllowedUrl(string $url): bool
-    {
-        /** @var string[] $allowedAddressList */
-        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
-
-        return Util::matchUrlToAddressList($url, $allowedAddressList);
-    }
+    case Timeout;
 }

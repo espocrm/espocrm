@@ -27,28 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Webhook;
+namespace Espo\Core\HttpClient;
 
-use Espo\Core\HttpClient\Util;
-use Espo\Core\Utils\Config;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\StreamInterface;
 
-/**
- * @internal
- */
-class AddressUtil
+class Util
 {
-    public function __construct(
-        private Config $config,
-    ) {}
+    /**
+     * @param resource|string|int|float|bool|StreamInterface $resource
+     * @since 9.4.0
+     */
+    public static function streamFor($resource): StreamInterface
+    {
+        return Utils::streamFor($resource);
+    }
 
     /**
      * @internal
+     * @param string[] $addressList
      */
-    public function isAllowedUrl(string $url): bool
+    public static function matchUrlToAddressList(string $url, array $addressList): bool
     {
-        /** @var string[] $allowedAddressList */
-        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
+        if (!$addressList) {
+            return false;
+        }
 
-        return Util::matchUrlToAddressList($url, $allowedAddressList);
+        $host = parse_url($url, PHP_URL_HOST);
+        $port = parse_url($url, PHP_URL_PORT);
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        if (!is_string($host)) {
+            return false;
+        }
+
+        if (!is_int($port)) {
+            if ($scheme === 'https') {
+                $port = 443;
+            } else if ($scheme === 'http') {
+                $port = 80;
+            }
+        }
+
+        if (!is_int($port)) {
+            return false;
+        }
+
+        $address = $host . ':' . $port;
+
+        return in_array($address, $addressList);
     }
 }

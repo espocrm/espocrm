@@ -27,28 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Webhook;
+namespace Espo\Core\HttpClient;
 
-use Espo\Core\HttpClient\Util;
-use Espo\Core\Utils\Config;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\InjectableFactory;
 
 /**
- * @internal
+ * An HTTP client factory.
+ *
+ * @since 9.4.0
  */
-class AddressUtil
+class ClientFactory
 {
     public function __construct(
-        private Config $config,
+        private InjectableFactory $injectableFactory,
     ) {}
 
-    /**
-     * @internal
-     */
-    public function isAllowedUrl(string $url): bool
+    public function create(Options $options): Client
     {
-        /** @var string[] $allowedAddressList */
-        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(Options::class, $options)
+            ->build();
 
-        return Util::matchUrlToAddressList($url, $allowedAddressList);
+        return $this->injectableFactory->createWithBinding(Client::class, $binding);
     }
 }
