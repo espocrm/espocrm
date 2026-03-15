@@ -150,7 +150,7 @@ class Sender
         ?string $legacySignature,
     ): RequestInterface {
 
-        $request = (new Request('POST', $url))
+        $request = HttpClient\RequestCreator::create('POST', $url)
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('Content-Length', (string) strlen($payload));
 
