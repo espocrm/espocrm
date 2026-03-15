@@ -87,8 +87,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "tests\\unit\\Espo\\": "tests/unit/Espo",
-            "tests\\integration\\Espo\\": "tests/integration/Espo",
+            "tests\\unit\\": "tests/unit/",
+            "tests\\integration\\": "tests/integration/",
+            "tests\\unit\\Espo\\": "tests/unit/Espo/",
+            "tests\\integration\\Espo\\": "tests/integration/Espo/",
             "EspoDev\\": "dev/"
         }
     },
