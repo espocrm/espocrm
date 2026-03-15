@@ -27,28 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Webhook;
+namespace Espo\Core\HttpClient\Options;
 
-use Espo\Core\HttpClient\Util;
-use Espo\Core\Utils\Config;
+use Espo\Core\HttpClient\Protocol;
 
-/**
- * @internal
- */
-class AddressUtil
+readonly class Redirect
 {
-    public function __construct(
-        private Config $config,
-    ) {}
-
     /**
-     * @internal
+     * Use named parameters when calling.
+     *
+     * @param Protocol[] $protocols
      */
-    public function isAllowedUrl(string $url): bool
-    {
-        /** @var string[] $allowedAddressList */
-        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
-
-        return Util::matchUrlToAddressList($url, $allowedAddressList);
-    }
+    public function __construct(
+        public bool $allow = false,
+        public array $protocols = [Protocol::https],
+        public ?int $maxNumber = null,
+        public bool $strict = false,
+    ) {}
 }

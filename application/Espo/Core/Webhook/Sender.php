@@ -34,19 +34,23 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Security\UrlCheck;
 use Espo\Entities\Webhook;
+use Espo\Core\HttpClient;
+use GuzzleHttp\Psr7\Request;
+use LogicException;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Sends a portion.
  */
 class Sender
 {
-    private const CONNECT_TIMEOUT = 5;
-    private const TIMEOUT = 10;
+    private const int CONNECT_TIMEOUT = 5;
+    private const int TIMEOUT = 10;
 
     public function __construct(
         private Config $config,
         private UrlCheck $urlCheck,
-        private AddressUtil $addressUtil,
+        private HttpClient\ClientFactory $clientFactory,
     ) {}
 
     /**
@@ -57,91 +61,44 @@ class Sender
     {
         $payload = Json::encode($dataList);
 
-        $signature = null;
-        $legacySignature = null;
+        [$signature, $legacySignature] = $this->prepareSignatures($webhook, $payload);
 
-        $secretKey = $webhook->getSecretKey();
+        $options = new HttpClient\Options(
+            protocols: [HttpClient\Protocol::https, HttpClient\Protocol::http],
+            redirect: new HttpClient\Options\Redirect(
+                allow: true,
+                protocols: [HttpClient\Protocol::https],
+            ),
+            timeout: $this->getTimeout(),
+            connectTimeout: $this->getConnectTimeout(),
+            internalHostRestriction: new HttpClient\Options\InternalHostRestriction(
+                restrict: true,
+                allowed: $this->getAllowedAddressList(),
+            ),
+        );
 
-        if ($secretKey) {
-            $signature = $this->buildSignature($webhook, $payload, $secretKey);
-            $legacySignature = $this->buildSignatureLegacy($webhook, $payload, $secretKey);
+        $request = $this->prepareRequest(
+            url: $this->getUrl($webhook),
+            payload: $payload,
+            signature: $signature,
+            legacySignature: $legacySignature,
+        );
+
+        $client = $this->clientFactory->create($options);
+
+        try {
+            $response = $client->send($request);
+        } catch (HttpClient\Exceptions\ConnectException $e) {
+            if ($e->getReason() === HttpClient\ConnectErrorReason::Timeout) {
+                return 408;
+            }
+
+            throw new Error("Connect error.", previous: $e);
+        } catch (HttpClient\Exceptions\TooManyRedirectsException $e) {
+            throw new Error("Too many redirects.", previous: $e);
         }
 
-        $connectTimeout = $this->config->get('webhookConnectTimeout', self::CONNECT_TIMEOUT);
-        $timeout = $this->config->get('webhookTimeout', self::TIMEOUT);
-
-        $headerList = [];
-
-        $headerList[] = 'Content-Type: application/json';
-        $headerList[] = 'Content-Length: ' . strlen($payload);
-
-        if ($signature) {
-            $headerList[] = 'Signature: ' . $signature;
-        }
-
-        if ($legacySignature) {
-            $headerList[] = 'X-Signature: ' . $legacySignature;
-        }
-
-        $url = $webhook->getUrl();
-
-        if (!$url) {
-            throw new Error("Webhook does not have URL.");
-        }
-
-        if (!$this->urlCheck->isUrl($url)) {
-            throw new Error("'$url' is not valid URL.");
-        }
-
-        if (
-            !$this->addressUtil->isAllowedUrl($url) &&
-            !$this->urlCheck->isNotInternalUrl($url)
-        ) {
-            throw new Error("URL '$url' points to an internal host, not allowed.");
-        }
-
-        $handler = curl_init($url);
-
-        if ($handler === false) {
-            throw new Error("Could not init CURL for URL {$url}.");
-        }
-
-        curl_setopt($handler, \CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($handler, \CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($handler, \CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($handler, \CURLOPT_HEADER, true);
-        curl_setopt($handler, \CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($handler, \CURLOPT_CONNECTTIMEOUT, $connectTimeout);
-        curl_setopt($handler, \CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($handler, \CURLOPT_PROTOCOLS, \CURLPROTO_HTTPS | \CURLPROTO_HTTP);
-        curl_setopt($handler, \CURLOPT_REDIR_PROTOCOLS, \CURLPROTO_HTTPS);
-        curl_setopt($handler, \CURLOPT_HTTPHEADER, $headerList);
-        curl_setopt($handler, \CURLOPT_POSTFIELDS, $payload);
-
-        curl_exec($handler);
-
-        $code = curl_getinfo($handler, \CURLINFO_HTTP_CODE);
-
-        if (!is_numeric($code)) {
-            $code = 0;
-        }
-
-        if (!is_int($code)) {
-            $code = intval($code);
-        }
-
-        $errorNumber = curl_errno($handler);
-
-        if (
-            $errorNumber &&
-            in_array($errorNumber, [\CURLE_OPERATION_TIMEDOUT, \CURLE_OPERATION_TIMEOUTED])
-        ) {
-            $code = 408;
-        }
-
-        curl_close($handler);
-
-        return $code;
+        return $response->getStatusCode();
     }
 
     private function buildSignature(Webhook $webhook, string $payload, string $secretKey): string
@@ -158,5 +115,87 @@ class Sender
     private function buildSignatureLegacy(Webhook $webhook, string $payload, string $secretKey): string
     {
         return base64_encode($webhook->getId() . ':' . hash_hmac('sha256', $payload, $secretKey, true));
+    }
+
+    /**
+     * @return string
+     * @throws Error
+     */
+    private function getUrl(Webhook $webhook): string
+    {
+        $url = $webhook->getUrl() ?? throw new Error("Webhook does not have URL.");
+
+        if (!$this->urlCheck->isUrl($url)) {
+            throw new Error("'$url' is not valid URL.");
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAllowedAddressList(): array
+    {
+        /** @var string[] $allowedAddressList */
+        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
+
+        return $allowedAddressList;
+    }
+
+    private function prepareRequest(
+        string $url,
+        string $payload,
+        ?string $signature,
+        ?string $legacySignature,
+    ): RequestInterface {
+
+        $request = (new Request('POST', $url))
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Content-Length', (string) strlen($payload));
+
+        if ($signature) {
+            $request = $request->withHeader('Signature', $signature);
+        }
+
+        if ($legacySignature) {
+            $request = $request->withHeader('X-Signature', $legacySignature);
+        }
+
+        $request = $request->withBody(HttpClient\Util::streamFor($payload));
+
+        if (!$request instanceof RequestInterface) {
+            throw new LogicException();
+        }
+
+        return $request;
+    }
+
+    /**
+     * @return array{0: ?string, 1: ?string}
+     */
+    private function prepareSignatures(Webhook $webhook, string $payload): array
+    {
+        $signature = null;
+        $legacySignature = null;
+
+        $secretKey = $webhook->getSecretKey();
+
+        if ($secretKey) {
+            $signature = $this->buildSignature($webhook, $payload, $secretKey);
+            $legacySignature = $this->buildSignatureLegacy($webhook, $payload, $secretKey);
+        }
+
+        return [$signature, $legacySignature];
+    }
+
+    private function getConnectTimeout(): ?int
+    {
+        return $this->config->get('webhookConnectTimeout', self::CONNECT_TIMEOUT);
+    }
+
+    private function getTimeout(): ?int
+    {
+        return $this->config->get('webhookTimeout', self::TIMEOUT);
     }
 }

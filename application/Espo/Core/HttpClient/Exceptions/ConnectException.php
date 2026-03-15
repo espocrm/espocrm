@@ -27,28 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Webhook;
+namespace Espo\Core\HttpClient\Exceptions;
 
-use Espo\Core\HttpClient\Util;
-use Espo\Core\Utils\Config;
+use Espo\Core\HttpClient\ConnectErrorReason;
+use Exception;
 
-/**
- * @internal
- */
-class AddressUtil
+final class ConnectException extends SendException
 {
-    public function __construct(
-        private Config $config,
-    ) {}
+    private ?ConnectErrorReason $reason = null;
 
     /**
      * @internal
      */
-    public function isAllowedUrl(string $url): bool
+    public static function create(?Exception $previous, ?ConnectErrorReason $reason): ConnectException
     {
-        /** @var string[] $allowedAddressList */
-        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
+        $exception = new ConnectException(previous: $previous);
+        $exception->reason = $reason;
 
-        return Util::matchUrlToAddressList($url, $allowedAddressList);
+        return $exception;
+    }
+
+    public function getReason(): ?ConnectErrorReason
+    {
+        return $this->reason;
     }
 }
