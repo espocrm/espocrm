@@ -408,6 +408,7 @@ class DetailView extends MainView {
             className: 'btn-s-wide',
             text: this.translate('Starred'),
             hidden: !isStarred,
+            style: 'text',
             //title: this.translate('Unstar'),
             onClick: () => this.actionUnstar(),
         }, true);
@@ -417,6 +418,7 @@ class DetailView extends MainView {
             iconHtml: '<span class="far fa-star fa-sm"></span>',
             className: 'btn-s-wide',
             text: this.translate('Star'),
+            style: 'text',
             //title: this.translate('Star'),
             hidden: isStarred || !this.model.has('isStarred'),
             onClick: () => this.actionStar(),

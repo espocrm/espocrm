@@ -807,7 +807,8 @@
                         "success",
                         "warning",
                         "danger",
-                        "info"
+                        "info",
+                        "text"
                     ],
                     "description": "A style."
                 },

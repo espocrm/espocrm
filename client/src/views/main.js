@@ -62,7 +62,7 @@ class MainView extends View {
      * @property {string} [link] A link.
      * @property {string} [label] A translatable label.
      * @property {string} [labelTranslation] A label translation path.
-     * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
+     * @property {'default'|'danger'|'success'|'warning'|'text'} [style] A style. Only for buttons.
      * @property {boolean} [hidden] Hidden.
      * @property {boolean} [disabled] Disabled.
      * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
@@ -781,16 +781,29 @@ class MainView extends View {
      * @private
      */
     adjustButtons() {
-        const $buttons = this.$headerActionsContainer.find('.btn');
+        /** @type {HTMLElement[]} */
+        let buttons = [...this.$headerActionsContainer.get(0)?.querySelectorAll('.btn')];
 
-        $buttons
-            .removeClass('radius-left')
-            .removeClass('radius-right');
+        if (!buttons) {
+            return;
+        }
 
-        const $buttonsVisible = $buttons.filter(':not(.hidden)');
+        for (const it of buttons) {
+            it.classList.remove('radius-left', 'radius-right');
+        }
 
-        $buttonsVisible.first().addClass('radius-left');
-        $buttonsVisible.last().addClass('radius-right');
+        buttons = buttons.filter(it => !it.classList.contains('hidden'));
+
+
+        for (const [i, it] of buttons.entries()) {
+            if (i === 0 || buttons[i - 1].classList.contains('btn-text')) {
+                it.classList.add('radius-left');
+            }
+
+            if (i === buttons.length - 1 || buttons[i + 1].classList.contains('btn-text')) {
+                it.classList.add('radius-right');
+            }
+        }
     }
 
     /**
