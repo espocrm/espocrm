@@ -119,8 +119,6 @@ class KeysProvider
         $error = curl_error($curl);
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        curl_close($curl);
-
         if ($response === false) {
             $response = '';
         }

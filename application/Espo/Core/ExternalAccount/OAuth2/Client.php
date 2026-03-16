@@ -389,8 +389,6 @@ class Client
 
         $resultArray = json_decode($responseBody, true);
 
-        curl_close($ch);
-
         /** @var array<string, mixed>|string $result */
         $result = ($resultArray !== null) ?
             $resultArray :

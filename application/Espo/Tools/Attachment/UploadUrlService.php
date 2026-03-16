@@ -152,8 +152,6 @@ class UploadUrlService
         $response = curl_exec($ch);
 
         if ($response === false) {
-            curl_close($ch);
-
             return null;
         }
 
@@ -184,8 +182,6 @@ class UploadUrlService
 
             $type = $this->mimeType->getMimeTypeByExtension($extension);
         }
-
-        curl_close($ch);
 
         if (!$type) {
             return null;

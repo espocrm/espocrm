@@ -131,7 +131,6 @@ class ApiClient
         $parsedResponse = $this->parseResponse($lastResponse);
 
         if ($this->getResponseHttpCode() == 200 && !empty($parsedResponse['body'])) {
-            curl_close($ch);
             return json_decode($parsedResponse['body'], true);
         }
 
@@ -139,7 +138,6 @@ class ApiClient
         $errorCode = $this->getResponseHttpCode();
         $errorMessage = !empty($header['X-Status-Reason']) ? $header['X-Status-Reason'] : $errorCode;
 
-        curl_close($ch);
         throw new \Exception($errorMessage, $errorCode);
     }
 

@@ -92,8 +92,6 @@ class Checker
             throw new RuntimeException($message);
         }
 
-        curl_close($ch);
-
         $responseData = Json::decode($response, true);
 
         if (!is_array($responseData)) {

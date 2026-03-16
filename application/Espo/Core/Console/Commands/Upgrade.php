@@ -444,8 +444,6 @@ class Upgrade implements Command
 
         $result = curl_exec($ch);
 
-        curl_close($ch);
-
         try {
             $data = json_decode($result); /** @phpstan-ignore-line */
         } catch (Exception) { /** @phpstan-ignore-line */
@@ -493,7 +491,6 @@ class Upgrade implements Command
 
             curl_setopt_array($ch, $options);
             curl_exec($ch);
-            curl_close($ch);
         }
 
         if (!$this->fileManager->isFile($localFilePath)) {
