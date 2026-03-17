@@ -62,6 +62,50 @@ class Client
      */
     public function send(RequestInterface $request): ResponseInterface
     {
+        $client = $this->prepareGuzzleClient();
+
+        try {
+            return $client->send($request);
+        } catch (GuzzleHttp\Exception\ConnectException $e) {
+            Util::handleConnectException($e);
+        } catch (GuzzleHttp\Exception\TooManyRedirectsException $e) {
+            throw new TooManyRedirectsException(previous: $e);
+        } catch (GuzzleHttp\Exception\GuzzleException $e) {
+            throw new RuntimeException(previous: $e);
+        }
+    }
+
+    /**
+     * Send a request in async.
+     */
+    public function sendAsync(RequestInterface $request): Promise
+    {
+        $client = $this->prepareGuzzleClient();
+
+        $promise = $client->sendAsync($request);
+
+        return new Promise($promise);
+    }
+
+    /**
+     * @param string[] $allowed
+     * @throws NotAllowedInternalHost
+     */
+    private function checkUrl(string $url, array $allowed): void
+    {
+        if (
+            !Util::matchUrlToAddressList($url, $allowed) &&
+            !$this->urlCheck->isNotInternalUrl($url)
+        ) {
+            throw new NotAllowedInternalHost("Not allowed internal host in '$url'.");
+        }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function prepareOptions(): array
+    {
         $options = [
             'protocols' => array_map(
                 fn (Protocol $protocol) => $protocol->value,
@@ -106,38 +150,13 @@ class Client
             $options['handler'] = $stack;
         }
 
-        $client = new GuzzleHttp\Client($options);
-
-        try {
-            return $client->send($request);
-        } catch (GuzzleHttp\Exception\ConnectException $e) {
-            $context = $e->getHandlerContext();
-
-            $reason = null;
-
-            if (($context['errno'] ?? 0) === CURLE_OPERATION_TIMEDOUT) {
-                $reason = ConnectErrorReason::Timeout;
-            }
-
-            throw ConnectException::create(previous: $e, reason: $reason);
-        } catch (GuzzleHttp\Exception\TooManyRedirectsException $e) {
-            throw new TooManyRedirectsException(previous: $e);
-        } catch (GuzzleHttp\Exception\GuzzleException $e) {
-            throw new RuntimeException(previous: $e);
-        }
+        return $options;
     }
 
-    /**
-     * @param string[] $allowed
-     * @throws NotAllowedInternalHost
-     */
-    private function checkUrl(string $url, array $allowed): void
+    private function prepareGuzzleClient(): GuzzleHttp\Client
     {
-        if (
-            !Util::matchUrlToAddressList($url, $allowed) &&
-            !$this->urlCheck->isNotInternalUrl($url)
-        ) {
-            throw new NotAllowedInternalHost("Not allowed internal host in '$url'.");
-        }
+        $options = $this->prepareOptions();
+
+        return new GuzzleHttp\Client($options);
     }
 }

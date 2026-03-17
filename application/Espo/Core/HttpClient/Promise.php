@@ -29,71 +29,55 @@
 
 namespace Espo\Core\HttpClient;
 
+use Closure;
 use Espo\Core\HttpClient\Exceptions\ConnectException;
-use GuzzleHttp\Psr7\Utils;
+use Espo\Core\HttpClient\Exceptions\TooManyRedirectsException;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp;
-use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
+use UnexpectedValueException;
 
-class Util
+class Promise
 {
     /**
-     * @param resource|string|int|float|bool|StreamInterface $resource
-     * @since 9.4.0
+     * @internal
      */
-    public static function streamFor($resource): StreamInterface
-    {
-        return Utils::streamFor($resource);
-    }
+    public function __construct(
+        private PromiseInterface $promise,
+    ) {}
 
     /**
-     * @internal
-     * @param string[] $addressList
-     */
-    public static function matchUrlToAddressList(string $url, array $addressList): bool
-    {
-        if (!$addressList) {
-            return false;
-        }
-
-        $host = parse_url($url, PHP_URL_HOST);
-        $port = parse_url($url, PHP_URL_PORT);
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        if (!is_string($host)) {
-            return false;
-        }
-
-        if (!is_int($port)) {
-            if ($scheme === 'https') {
-                $port = 443;
-            } else if ($scheme === 'http') {
-                $port = 80;
-            }
-        }
-
-        if (!is_int($port)) {
-            return false;
-        }
-
-        $address = $host . ':' . $port;
-
-        return in_array($address, $addressList);
-    }
-
-    /**
-     * @internal
+     * @throws TooManyRedirectsException
      * @throws ConnectException
+     * @internal
      */
-    public static function handleConnectException(GuzzleHttp\Exception\ConnectException $exception): never
+    public function wait(): ResponseInterface
     {
-        $context = $exception->getHandlerContext();
+        $value = $this->requestCallback(fn () => $this->promise->wait());
 
-        $reason = null;
-
-        if (($context['errno'] ?? 0) === CURLE_OPERATION_TIMEDOUT) {
-            $reason = ConnectErrorReason::Timeout;
+        if (!$value instanceof ResponseInterface) {
+            throw new UnexpectedValueException();
         }
 
-        throw ConnectException::create(previous: $exception, reason: $reason);
+        return $value;
+    }
+
+    /**
+     * @throws TooManyRedirectsException
+     * @throws ConnectException
+     * @noinspection PhpRedundantCatchClauseInspection
+     */
+    private function requestCallback(Closure $closure): mixed
+    {
+        try {
+            return $closure();
+        } catch (GuzzleHttp\Exception\ConnectException $e) {
+            Util::handleConnectException($e);
+        } catch (GuzzleHttp\Exception\TooManyRedirectsException $e) {
+            throw new TooManyRedirectsException(previous: $e);
+        } catch (GuzzleHttp\Exception\GuzzleException $e) {
+            throw new RuntimeException(previous: $e);
+        }
     }
 }
