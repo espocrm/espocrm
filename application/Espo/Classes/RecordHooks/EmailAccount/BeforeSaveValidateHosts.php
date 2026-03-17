@@ -97,6 +97,10 @@ class BeforeSaveValidateHosts implements SaveHook
 
         $address = $host . ':' . $port;
 
+        if (in_array($address, $this->getAllowedAddressList())) {
+            return;
+        }
+
         if (!$this->hostCheck->isNotInternalHost($host)) {
             $message = $this->composeErrorMessage($host, $address);
 
