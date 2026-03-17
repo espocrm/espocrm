@@ -83,6 +83,7 @@ class MainView extends View {
      * @property {string} [actionFunction] An action method in the handler.
      * @property {string} [checkVisibilityFunction] A method in the handler that determine whether an item is available.
      * @property {function()} [onClick] A click handler.
+     * @property {number} [index] An order index. Only for buttons. If not specified, 0 is implied. As of v9.4.
      */
 
     /**
@@ -90,7 +91,7 @@ class MainView extends View {
      *
      * @type {{
      *     buttons: module:views/main~MenuItem[],
-     *     dropdown: module:views/main~MenuItem[],
+     *     dropdown: Array<module:views/main~MenuItem|false>,
      *     actions: module:views/main~MenuItem[],
      * }} menu
      * @private
@@ -134,15 +135,21 @@ class MainView extends View {
 
     /** @inheritDoc */
     init() {
-        this.scope = this.options.scope || this.scope;
+        this.scope = this.options.scope ?? this.scope;
         this.menu = {};
 
-        this.options.params = this.options.params || {};
+        this.options.params = this.options.params ?? {};
 
         if (this.name && this.scope) {
-            const key = this.name.charAt(0).toLowerCase() + this.name.slice(1);
+            const key = `clientDefs.${this.scope}.menu.${Espo.Utils.lowerCaseFirst(this.name)}`;
 
-            this.menu = this.getMetadata().get(['clientDefs', this.scope, 'menu', key]) || {};
+            this.menu =
+                /** @type {{
+                     buttons: module:views/main~MenuItem[],
+                     dropdown: module:views/main~MenuItem[],
+                     actions: module:views/main~MenuItem[],
+                 }} */
+                this.getMetadata().get(key) ?? {};
         }
 
         /**
@@ -156,11 +163,9 @@ class MainView extends View {
         let globalMenu = {};
 
         if (this.name) {
-            globalMenu = Espo.Utils.cloneDeep(
-                this.getMetadata()
-                    .get(['clientDefs', 'Global', 'menu',
-                        this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {}
-            );
+            const key = `clientDefs.Global.menu.${Espo.Utils.lowerCaseFirst(this.name)}`;
+
+            globalMenu = Espo.Utils.cloneDeep(this.getMetadata().get(key) ?? {});
         }
 
         this._reRenderHeaderOnSync = false;
@@ -168,10 +173,15 @@ class MainView extends View {
         this._menuHandlers = {};
 
         this.headerActionItemTypeList.forEach(type => {
-            this.menu[type] = this.menu[type] || [];
-            this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
+            let itemList = (this.menu[type] ?? []).concat(globalMenu[type] ?? []);
 
-            const itemList = this.menu[type];
+            if (type === 'buttons') {
+                itemList = itemList.sort((a, b) => {
+                    return (a.index ?? 0) - (b.index ?? 0);
+                });
+            }
+
+            this.menu[type] = itemList;
 
             itemList.forEach(item => {
                 const viewObject = this;
@@ -472,33 +482,50 @@ class MainView extends View {
      * @param {boolean} [doNotReRender=false] Skip re-render.
      */
     addMenuItem(type, item, toBeginning, doNotReRender) {
-        if (item) {
-            item.name = item.name || item.action || Espo.Utils.generateId();
+        /** @type {Array<module:views/main~MenuItem|false>} */
+        const list = this.menu[type];
 
+        if (item) {
+            item.name = item.name ?? item.action ?? Espo.Utils.generateId();
             const name = item.name;
 
-            let index = -1;
-
-            this.menu[type].forEach((data, i) => {
-                data = data || {};
-
-                if (data.name === name) {
-                    index = i;
-                }
-            });
+            const index = list.findIndex(it => (it || {}).name === name);
 
             if (~index) {
-                this.menu[type].splice(index, 1);
+                list.splice(index, 1);
             }
         }
 
-        let method = 'push';
+        if (type === 'buttons') {
+            const itemIndex = item.index ?? 0;
 
-        if (toBeginning) {
-            method  = 'unshift';
+            if (toBeginning) {
+                const index = list.findIndex(it => ((it || {}).index ?? 0) >= itemIndex);
+
+                if (index === -1) {
+                    itemIndex < (list[list.length - 1]?.index ?? 0) ?
+                        list.unshift(item) :
+                        list.push(item);
+                } else {
+                    list.splice(index, 0, item);
+                }
+            } else {
+                const index = list.length -
+                    list.slice().reverse().findIndex(it => ((it || {}).index ?? 0) <= itemIndex);
+
+                if (index === list.length + 1) {
+                    itemIndex < (list[0]?.index ?? 0) ?
+                        list.unshift(item) :
+                        list.push(item);
+                } else {
+                    list.splice(index, 0, item);
+                }
+            }
+        } else {
+            toBeginning ?
+                list.unshift(item) :
+                list.push(item);
         }
-
-        this.menu[type][method](item);
 
         if (!doNotReRender && this.isRendered()) {
             this.getHeaderView().reRender();

@@ -855,6 +855,10 @@
                 "hidden": {
                     "type": "boolean",
                     "description": "Hidden."
+                },
+                "index": {
+                    "type": "integer",
+                    "description": "A position index. As of v9.4."
                 }
             }
         },
