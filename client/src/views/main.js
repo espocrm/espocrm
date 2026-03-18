@@ -808,8 +808,14 @@ class MainView extends View {
      * @private
      */
     adjustButtons() {
+        const nodes = this.$headerActionsContainer.get(0)?.querySelectorAll('.btn');
+
+        if (!nodes) {
+            return;
+        }
+
         /** @type {HTMLElement[]} */
-        let buttons = [...this.$headerActionsContainer.get(0)?.querySelectorAll('.btn')];
+        let buttons = [...nodes];
 
         if (!buttons) {
             return;
