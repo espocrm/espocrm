@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
@@ -386,5 +387,11 @@ class Note extends Entity
     {
         /** @var EntityCollection<Attachment> */
         return $this->relations->getMany('attachments');
+    }
+
+    public function getCreatedBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('createdBy');
     }
 }
