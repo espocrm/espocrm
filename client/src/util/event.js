@@ -27,6 +27,7 @@
  ************************************************************************/
 
 /**
+ * @internal
  * Listen to model attribute change.
  *
  * @param {{
@@ -87,6 +88,7 @@ export function onModelChange(params) {
 }
 
 /**
+ * @internal
  * Listen to sync.
  *
  * @param {{

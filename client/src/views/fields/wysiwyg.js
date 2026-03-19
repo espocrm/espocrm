@@ -30,7 +30,6 @@
 
 import TextFieldView from 'views/fields/text';
 import {init as initSummernoteCustom} from 'helpers/misc/summernote-custom';
-import {onModelChange} from 'util/event';
 
 /**
  * A wysiwyg field.
@@ -159,9 +158,8 @@ class WysiwygFieldView extends TextFieldView {
             return;
         }
 
-        onModelChange({
+        this.model.onChange({
             owner: this,
-            target: this.model,
             attributes: ['isHtml'],
             callback: o => {
                 if (o.ui && this.isEditMode()) {
@@ -198,7 +196,7 @@ class WysiwygFieldView extends TextFieldView {
                     this.reRender();
                 }
             },
-        })
+        });
     }
 
     data() {

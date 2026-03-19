@@ -31,6 +31,7 @@
 import {Events, View as BullView} from 'bullbone';
 import _ from 'underscore';
 import DefaultValueProvider from 'helpers/model/default-value-provider';
+import {onModelChange, onSync} from 'util/event';
 
 /**
  * When attributes have changed.
@@ -1075,6 +1076,59 @@ class Model {
         if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
             this.lastSyncPromise.abort();
         }
+    }
+
+    /**
+     * Listen to attribute change.
+     *
+     * Important. Owner must be specified.
+     *
+     * @param {{
+     *     owner: import('view').default | import('model').default | import('collection').default,
+     *     attributes?: string[],
+     *     once?: boolean,
+     *     callback: function({
+     *         ui: boolean|null,
+     *         action: string|'ui'|'save'|'fetch'|'cancel-edit'|null,
+     *     }),
+     * }} params
+     * @return {{stop: function()}}
+     * @since 9.4.0
+     */
+    onChange(params) {
+        return onModelChange({
+            owner: params.owner,
+            once: params.once,
+            target: this,
+            attributes: params.attributes,
+            callback: params.callback,
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Listen to sync.
+     *
+     * Important. Owner must be specified.
+     *
+     * @param {{
+     *     owner: import('view').default | import('model').default | import('collection').default,
+     *     once?: boolean,
+     *     callback: function({
+     *         action: 'fetch'|'save'|'destroy'|null,
+     *         response: *,
+     *     }),
+     * }} params
+     * @return {{stop: function()}}
+     * @since 9.4.0
+     */
+    onSync(params) {
+        return onSync({
+            owner: params.owner,
+            once: params.once,
+            target: this,
+            callback: params.callback,
+        });
     }
 }
 

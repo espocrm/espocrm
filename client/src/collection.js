@@ -31,6 +31,7 @@
 import Model from 'model';
 import {Events, View as BullView} from 'bullbone';
 import _ from 'underscore';
+import {onSync} from 'util/event';
 
 /**
  * On sync with backend.
@@ -1001,6 +1002,31 @@ class Collection {
      */
     composeSyncUrl() {
         return this.url;
+    }
+
+    /**
+     * Listen to sync.
+     *
+     * Important. Owner must be specified.
+     *
+     * @param {{
+     *     owner: import('view').default | import('model').default | import('collection').default,
+     *     once?: boolean,
+     *     callback: function({
+     *         action: 'fetch'|'save'|'destroy'|null,
+     *         response: *,
+     *     }),
+     * }} params
+     * @return {{stop: function()}}
+     * @since 9.4.0
+     */
+    onSync(params) {
+        return onSync({
+            owner: params.owner,
+            once: params.once,
+            target: this,
+            callback: params.callback,
+        });
     }
 
     /** @private */

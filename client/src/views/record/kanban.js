@@ -30,7 +30,6 @@
 
 import ListRecordView from 'views/record/list';
 import RecordModal from 'helpers/record-modal';
-import {onSync} from 'util/event';
 
 /**
  * A kanban record view.
@@ -328,9 +327,8 @@ class KanbanRecordView extends ListRecordView {
             throw new Error('Collection has not been injected into Record.List view.');
         }
 
-        onSync({
+        this.collection.onSync({
             owner: this,
-            target: this.collection,
             callback: o => {
                 this.subCollectionList = undefined;
                 // noinspection JSUnresolvedReference
