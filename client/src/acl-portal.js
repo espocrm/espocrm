@@ -101,10 +101,8 @@ class AclPortal extends Acl {
             return true;
         }
 
-        if (isOwner) {
-            if (value === 'own' || value === 'account' || value === 'contact') {
-                return true;
-            }
+        if (isOwner && (value === 'own' || value === 'account' || value === 'contact')) {
+            return true;
         }
 
         let result = false;
@@ -113,14 +111,27 @@ class AclPortal extends Acl {
             result = inAccount;
 
             if (inAccount === null) {
-                if (precise) {
-                    result = null;
-                } else {
+                if (!precise) {
                     return true;
                 }
-            }
-            else if (inAccount) {
+
+                result = null;
+            } else if (inAccount) {
                 return true;
+            }
+
+            if (!result) {
+                result = isOwnContact;
+
+                if (isOwnContact === null) {
+                    if (!precise) {
+                        return true;
+                    }
+
+                    result = null;
+                } else if (isOwnContact) {
+                    return true;
+                }
             }
         }
 
@@ -128,23 +139,22 @@ class AclPortal extends Acl {
             result = isOwnContact;
 
             if (isOwnContact === null) {
-                if (precise) {
-                    result = null;
-                } else {
+                if (!precise) {
                     return true;
                 }
-            }
-            else if (isOwnContact) {
+
+                result = null;
+            } else if (isOwnContact) {
                 return true;
             }
         }
 
         if (isOwner === null) {
-            if (precise) {
-                result = null;
-            } else {
+            if (!precise) {
                 return true;
             }
+
+            result = null;
         }
 
         return result;
