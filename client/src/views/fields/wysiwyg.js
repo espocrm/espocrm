@@ -30,6 +30,7 @@
 
 import TextFieldView from 'views/fields/text';
 import {init as initSummernoteCustom} from 'helpers/misc/summernote-custom';
+import {onModelChange} from 'util/event';
 
 /**
  * A wysiwyg field.
@@ -158,41 +159,46 @@ class WysiwygFieldView extends TextFieldView {
             return;
         }
 
-        this.listenTo(this.model, 'change:isHtml', (model, value, o) => {
-            if (o.ui && this.isEditMode()) {
-                if (!this.isRendered()) {
-                    return;
-                }
-
-                if (this.isHtml()) {
-                    let value = this.plainToHtml(this.model.get(this.name));
-
-                    if (
-                        this.lastHtmlValue &&
-                        this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)
-                    ) {
-                        value = this.lastHtmlValue;
+        onModelChange({
+            owner: this,
+            target: this.model,
+            attributes: ['isHtml'],
+            callback: o => {
+                if (o.ui && this.isEditMode()) {
+                    if (!this.isRendered()) {
+                        return;
                     }
 
-                    this.model.set(this.name, value, {skipReRender: true});
-                    this.enableWysiwygMode();
+                    if (this.isHtml()) {
+                        let value = this.plainToHtml(this.model.get(this.name));
+
+                        if (
+                            this.lastHtmlValue &&
+                            this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)
+                        ) {
+                            value = this.lastHtmlValue;
+                        }
+
+                        this.model.set(this.name, value, {skipReRender: true});
+                        this.enableWysiwygMode();
+
+                        return;
+                    }
+
+                    this.lastHtmlValue = this.model.get(this.name);
+                    const value = this.htmlToPlain(this.model.get(this.name));
+
+                    this.disableWysiwygMode();
+                    this.model.set(this.name, value);
 
                     return;
                 }
 
-                this.lastHtmlValue = this.model.get(this.name);
-                const value = this.htmlToPlain(this.model.get(this.name));
-
-                this.disableWysiwygMode();
-                this.model.set(this.name, value);
-
-                return;
-            }
-
-            if (this.isDetailMode() && this.isRendered()) {
-                this.reRender();
-            }
-        });
+                if (this.isDetailMode() && this.isRendered()) {
+                    this.reRender();
+                }
+            },
+        })
     }
 
     data() {
