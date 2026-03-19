@@ -74,9 +74,9 @@ class Note extends Entity
     public const string DATA_ATTR_ASSIGNED_USER_NAME = 'assignedUserName';
     public const string DATA_ATTR_FIELDS = 'fields';
     public const string DATA_ATTR_ATTRIBUTES = 'attributes';
-    public const string DATA_ATTR_PERSON_ENTITY_TYPE = 'personEntityType';
-    public const string DATA_ATTR_PERSON_ENTITY_NAME = 'personEntityName';
-    public const string DATA_ATTR_PERSON_ENTITY_ID = 'personEntityId';
+    public const string DATA_ATTR_PERSON_TYPE = 'personEntityType';
+    public const string DATA_ATTR_PERSON_NAME = 'personEntityName';
+    public const string DATA_ATTR_PERSON_ID = 'personEntityId';
     public const string DATA_ATTR_FROM_STRING = 'fromString';
 
     public const string FIELD_TYPE = 'type';

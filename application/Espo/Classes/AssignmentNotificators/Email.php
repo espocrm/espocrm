@@ -166,9 +166,9 @@ class Email implements AssignmentNotificator
             ]);
 
             if ($person) {
-                $data[Note::DATA_ATTR_PERSON_ENTITY_TYPE] = $person->getEntityType();
-                $data[Note::DATA_ATTR_PERSON_ENTITY_NAME] = $person->get(Field::NAME);
-                $data[Note::DATA_ATTR_PERSON_ENTITY_ID] = $person->getId();
+                $data[Note::DATA_ATTR_PERSON_TYPE] = $person->getEntityType();
+                $data[Note::DATA_ATTR_PERSON_NAME] = $person->get(Field::NAME);
+                $data[Note::DATA_ATTR_PERSON_ID] = $person->getId();
             }
         }
 
@@ -178,7 +178,7 @@ class Email implements AssignmentNotificator
             $userIdFrom = $person->getId();
         }
 
-        if (empty($data[Note::DATA_ATTR_PERSON_ENTITY_ID])) {
+        if (empty($data[Note::DATA_ATTR_PERSON_ID])) {
             $data[Note::DATA_ATTR_FROM_STRING] = Util::parseFromName($entity->getFromString() ?? '');
 
             if (empty($data[Note::DATA_ATTR_FROM_STRING]) && $from) {
