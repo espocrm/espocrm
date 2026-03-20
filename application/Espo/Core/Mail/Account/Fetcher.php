@@ -63,7 +63,7 @@ class Fetcher
         private EntityManager $entityManager,
         private ParserFactory $parserFactory,
         private ?BeforeFetchHook $beforeFetchHook,
-        private ?AfterFetchHook $afterFetchHook
+        private ?AfterFetchHook $afterFetchHook,
     ) {}
 
     /**
@@ -312,10 +312,10 @@ class Fetcher
                 $storage->unmarkSeen($id);
             }
         } catch (Throwable $e) {
-            $this->log->error(
-                "{$account->getEntityType()} {$account->getId()}, get message; " .
-                "{$e->getCode()} {$e->getMessage()}"
-            );
+            $message = "{$account->getEntityType()} {$account->getId()}, get message; " .
+                "{$e->getCode()} {$e->getMessage()}";
+
+            $this->log->error($message, ['exception' => $e]);
 
             return null;
         }
@@ -333,10 +333,10 @@ class Fetcher
                 $hookResult ?? BeforeFetchHookResult::create()
             );
         } catch (Throwable $e) {
-            $this->log->error(
-                "{$account->getEntityType()} {$account->getId()}, after-fetch hook; " .
-                "{$e->getCode()} {$e->getMessage()}"
-            );
+            $message = "{$account->getEntityType()} {$account->getId()}, after-fetch hook; " .
+                "{$e->getCode()} {$e->getMessage()}";
+
+            $this->log->error($message, ['exception' => $e]);
         }
 
         return $email;
@@ -349,10 +349,10 @@ class Fetcher
         try {
             return $this->beforeFetchHook->process($account, $message);
         } catch (Throwable $e) {
-            $this->log->error(
-                "{$account->getEntityType()} {$account->getId()}, before-fetch hook; " .
-                "{$e->getCode()} {$e->getMessage()}"
-            );
+            $message = "{$account->getEntityType()} {$account->getId()}, before-fetch hook; " .
+                "{$e->getCode()} {$e->getMessage()}";
+
+            $this->log->error($message, ['exception' => $e]);
         }
 
         return BeforeFetchHookResult::create()->withToSkip();
