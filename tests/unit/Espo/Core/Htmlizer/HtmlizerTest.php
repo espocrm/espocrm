@@ -34,16 +34,14 @@ use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\DateTime;
-
 use Espo\Core\ORM\Entity;
-
 use Espo\Entities\User;
+use Espo\ORM\Entity as EntityAlias;
 use Espo\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -57,32 +55,32 @@ class HtmlizerTest extends TestCase
 
     private $entityAttributes = [
         'id' => [
-            'type' => Entity::ID,
+            'type' => EntityAlias::ID,
         ],
         'name' => [
-            'type' => Entity::VARCHAR,
+            'type' => EntityAlias::VARCHAR,
             'len' => 255,
         ],
         'date' => [
-            'type' => Entity::DATE
+            'type' => EntityAlias::DATE
         ],
         'dateTime' => [
-            'type' => Entity::DATETIME
+            'type' => EntityAlias::DATETIME
         ],
         'int' => [
-            'type' => Entity::INT
+            'type' => EntityAlias::INT
         ],
         'float' => [
-            'type' => Entity::FLOAT
+            'type' => EntityAlias::FLOAT
         ],
         'list' => [
-            'type' => Entity::JSON_ARRAY
+            'type' => EntityAlias::JSON_ARRAY
         ],
         'object' => [
-            'type' => Entity::JSON_OBJECT
+            'type' => EntityAlias::JSON_OBJECT
         ],
         'deleted' => [
-            'type' => Entity::BOOL,
+            'type' => EntityAlias::BOOL,
             'default' => 0,
         ]
     ];
@@ -96,17 +94,17 @@ class HtmlizerTest extends TestCase
         $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kyiv');
         $this->number = new NumberUtil('.', ',');
         $this->htmlizer = new Htmlizer(
-            $this->dateTime,
-            $this->number,
-            $this->createMock(SelectBuilderFactory::class),
-            $this->createMock(User::class),
-            $this->entityManager,
-            $this->createMock(Metadata::class),
-            $this->createMock(Language::class),
-            $this->createMock(Config::class),
-            $this->createMock(Log::class),
-            $this->createMock(InjectableFactory::class),
-            $this->createMock(PrecisionProvider::class)
+            dateTime: $this->dateTime,
+            number: $this->number,
+            selectBuilderFactory: $this->createMock(SelectBuilderFactory::class),
+            user: $this->createMock(User::class),
+            entityManager: $this->entityManager,
+            metadata: $this->createMock(Metadata::class),
+            language: $this->createMock(Language::class),
+            config: $this->createMock(Config::class),
+            log: $this->createMock(Log::class),
+            injectableFactory: $this->createMock(InjectableFactory::class),
+            precisionProvider: $this->createMock(PrecisionProvider::class),
         );
     }
 
@@ -129,10 +127,10 @@ class HtmlizerTest extends TestCase
         $entity->set('int', 3);
         $entity->set('float', 3.5);
 
-        $item1 = new StdClass();
+        $item1 = new stdClass();
         $item1->value = 1;
 
-        $item2 = new StdClass();
+        $item2 = new stdClass();
         $item2->value = 2000.5;
 
         $list = [$item1, $item2];
@@ -140,61 +138,87 @@ class HtmlizerTest extends TestCase
         $entity->set('list', $list);
 
         $template = "{{name}} test {{date}} {{dateTime}} {{#each list}}{{value}} {{/each}}{{int}} {{float}}";
+
+
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test test 09/15/2015 09/15/2015 01:00 PM 1 2,000.50 3 3.50', $html);
 
+        //
+
         $template = "{{float}}";
+
         $entity->set('float', 3);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('3.00', $html);
 
-
-        $template = "{{float}}";
         $entity->set('float', 3);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('3.00', $html);
 
-        $template = "{{float}}";
         $entity->set('float', 10000.50);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10,000.50', $html);
 
+        //
+
         $template = "{{int}}";
+
         $entity->set('int', 3000);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('3,000', $html);
 
+        //
+
         $template = "{{float_RAW}}";
+
         $entity->set('float', 10000.50);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10000.5', $html);
 
+        //
+
         $template = "{{numberFormat float_RAW}}";
+
         $entity->set('float', 10000.60);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10,001', $html);
 
+        //
+
         $template = "{{numberFormat float_RAW decimals=2}}";
+
         $entity->set('float', 10000.601);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10,000.60', $html);
 
+        //
+
         $template = "{{numberFormat float_RAW decimals=0}}";
+
         $entity->set('float', 10000.1);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10,000', $html);
 
+        //
+
         $template = "{{numberFormat float_RAW decimals=2 decimalPoint='.' thousandsSeparator=' '}}";
+
         $entity->set('float', 10000.60);
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('10 000.60', $html);
 
+        //
+
         $template = "{{file name}}";
+
         $entity->set('name', '1');
-        $html = $this->htmlizer->render($entity, $template, null, false, skipInlineAttachmentHandling: true);
+        $html = $this->htmlizer->render($entity, $template, skipInlineAttachmentHandling: true);
         $this->assertEquals('?entryPoint=attachment&id=1', $html);
 
+        //
+
         $template = "{{#ifEqual name '1'}}hello{{/ifEqual}}";
+
         $entity->set('name', '1');
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('hello', $html);
