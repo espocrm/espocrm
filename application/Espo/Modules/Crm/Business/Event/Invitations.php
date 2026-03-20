@@ -129,7 +129,6 @@ class Invitations
         $subject = $htmlizer->render(
             $entity,
             $subjectTpl,
-            "$type-email-subject-{$entity->getEntityType()}",
             $data,
             true,
             true
@@ -138,7 +137,6 @@ class Invitations
         $body = $htmlizer->render(
             $entity,
             $bodyTpl,
-            "$type-email-body-{$entity->getEntityType()}",
             $data,
             false,
             true

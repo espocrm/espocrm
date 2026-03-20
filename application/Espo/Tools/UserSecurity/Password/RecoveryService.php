@@ -435,8 +435,8 @@ class RecoveryService
 
         $htmlizer = $this->htmlizerFactory->create(true);
 
-        $subject = $htmlizer->render($user, $subjectTpl, null, $data, true);
-        $body = $htmlizer->render($user, $bodyTpl, null, $data, true);
+        $subject = $htmlizer->render($user, $subjectTpl, $data, true);
+        $body = $htmlizer->render($user, $bodyTpl, $data, true);
 
         $email
             ->setSubject($subject)

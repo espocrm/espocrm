@@ -93,7 +93,6 @@ class Htmlizer
     /**
      * Generate an HTML for entity by a given template.
      *
-     * @param ?string $cacheId @deprecated To be skipped.
      * @param ?array<string, mixed> $additionalData Data will be passed to the template.
      * @param bool $skipLinks Do not process related records.
      * @internal
@@ -101,19 +100,16 @@ class Htmlizer
     public function render(
         ?Entity $entity,
         string $template,
-        ?string $cacheId = null,
         ?array $additionalData = null,
         bool $skipLinks = false,
-        bool $skipInlineAttachmentHandling = false
+        bool $skipInlineAttachmentHandling = false,
     ): string {
 
         $helpers = $this->getHelpers();
 
         $template = $this->prepare($template, array_keys($helpers));
 
-        $options = new Options(
-            helpers: $helpers,
-        );
+        $options = new Options(helpers: $helpers);
 
         $renderer = Handlebars::compile($template, $options);
 

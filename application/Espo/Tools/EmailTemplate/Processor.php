@@ -91,7 +91,7 @@ class Processor
                 }
 
                 if ($handlebarsInBody) {
-                    $body = $htmlizer->render($parent, $body, null, null, false, true);
+                    $body = $htmlizer->render($parent, $body, null, false, true);
                 }
             }
         }

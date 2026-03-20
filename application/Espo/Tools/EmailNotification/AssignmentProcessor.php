@@ -157,19 +157,17 @@ class AssignmentProcessor
         $templateData['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($templateData['entityType']);
 
         $subject = $this->getHtmlizer()->render(
-            $entity,
-            $subjectTpl,
-            'assignment-email-subject-' . $entity->getEntityType(),
-            $templateData,
-            true
+            entity: $entity,
+            template: $subjectTpl,
+            additionalData: $templateData,
+            skipLinks: true
         );
 
         $body = $this->getHtmlizer()->render(
-            $entity,
-            $bodyTpl,
-            'assignment-email-body-' . $entity->getEntityType(),
-            $templateData,
-            true
+            entity: $entity,
+            template: $bodyTpl,
+            additionalData: $templateData,
+            skipLinks: true
         );
 
         $email->set([

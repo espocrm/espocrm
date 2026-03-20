@@ -191,7 +191,7 @@ class HtmlizerTest extends TestCase
 
         $template = "{{file name}}";
         $entity->set('name', '1');
-        $html = $this->htmlizer->render($entity, $template, skipInlineAttachmentHandling: true);
+        $html = $this->htmlizer->render($entity, $template, null, false, skipInlineAttachmentHandling: true);
         $this->assertEquals('?entryPoint=attachment&id=1', $html);
 
         $template = "{{#ifEqual name '1'}}hello{{/ifEqual}}";
@@ -224,7 +224,7 @@ class HtmlizerTest extends TestCase
         /** @noinspection HtmlUnknownAttribute */
         $template = "<ul><li iterate=\"{{items}}\">{{name}}</li></ul><ul><li iterate=\"{{items}}\">{{name}}</li></ul>";
 
-        $html = $this->htmlizer->render(null, $template, null, [
+        $html = $this->htmlizer->render(null, $template, [
             'items' => [
                 ['name' => '1'],
                 ['name' => '2'],
@@ -243,7 +243,7 @@ class HtmlizerTest extends TestCase
         $template = "<ul><li x-if=\"{{and (equal 1 1) true}}\">1</li><li x-if=\"{{false}}\">2</li>".
             "<li x-if=\"{{1}}\">true</li></ul>";
 
-        $html = $this->htmlizer->render(null, $template, null, []);
+        $html = $this->htmlizer->render(null, $template, []);
 
         /** @noinspection HtmlUnknownAttribute */
         $expected = "<ul><li>1</li><li>true</li></ul>";
