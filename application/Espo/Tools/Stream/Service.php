@@ -1176,6 +1176,8 @@ class Service
             /** @var array<string, ?string> $newNames */
             $newNames = get_object_vars($entity->get(self::FIELD_ASSIGNED_USERS . 'Names') ?? (object) []);
 
+            $this->prepareUserNameMap($newIds, $newNames);
+
             /** @var string[] $prevIds */
             $prevIds = $entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Ids') ?? [];
             /** @var array<string, ?string> $prevNames */
@@ -1337,5 +1339,22 @@ class Service
         }
 
         return $statusData;
+    }
+
+    /**
+     * @param string[] $ids
+     * @param array<string, ?string> $names
+     */
+    private function prepareUserNameMap(array $ids, array &$names): void
+    {
+        foreach ($ids as $id) {
+            if (array_key_exists($id, $names) && $names[$id] !== null) {
+                continue;
+            }
+
+            $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($id);
+
+            $names[$id] = $user?->getName() ?? null;
+        }
     }
 }
