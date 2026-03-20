@@ -25,7 +25,6 @@
         "dragonmantank/cron-expression": "^3.4",
         "laminas/laminas-ldap": "2.20.x-dev#e7b9fe0e295f3898fb97d08b320654c92849918a",
         "monolog/monolog": "^3.9",
-        "zordius/lightncandy": "dev-espo#v1.2.5e",
         "composer/semver": "^3",
         "spatie/async": "^1.8.1",
         "symfony/process": "^7",
@@ -56,7 +55,8 @@
         "lasserafn/php-initial-avatar-generator": "dev-update-image-lib#a46ab8f1427f93c5b37957e739205da7fcca0290",
         "directorytree/imapengine": "^1.19",
         "zbateson/mail-mime-parser": "^3.0",
-        "guzzlehttp/guzzle": "^7.10"
+        "guzzlehttp/guzzle": "^7.10",
+        "devtheorem/php-handlebars": "^0.9.9"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
@@ -95,10 +95,6 @@
         }
     },
     "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/yurikuzn/lightncandy.git"
-        },
         {
             "type": "git",
             "url": "https://github.com/yurikuzn/laminas-ldap.git"

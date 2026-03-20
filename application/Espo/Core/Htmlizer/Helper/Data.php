@@ -35,9 +35,9 @@ use Closure;
 class Data
 {
     /**
-     * @param mixed[] $argumentList
+     * @internal
+     * @param array<int, mixed> $argumentList
      * @param array<string, mixed> $rootContext
-     * @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection
      */
     public function __construct(
         private string $name,
@@ -46,7 +46,7 @@ class Data
         private mixed $context,
         private array $rootContext,
         private ?Closure $func,
-        private ?Closure $inverseFunc
+        private ?Closure $inverseFunc,
     ) {}
 
     public function getName(): string
@@ -55,7 +55,9 @@ class Data
     }
 
     /**
-     * @return mixed A context.
+     * A scope context.
+     *
+     * @return mixed
      */
     public function getContext(): mixed
     {
@@ -63,6 +65,8 @@ class Data
     }
 
     /**
+     * A root context.
+     *
      * @return array<string, mixed>
      */
     public function getRootContext(): array
@@ -70,29 +74,36 @@ class Data
         return $this->rootContext;
     }
 
+    /**
+     * Specified helper options (parameters).
+     *
+     * @return stdClass
+     */
     public function getOptions(): stdClass
     {
         return $this->options;
     }
 
     /**
-     * @return mixed[]
-     * @noinspection PhpPluralMixedCanBeReplacedWithArrayInspection
+     * @return array<int, mixed>
      */
     public function getArgumentList(): array
     {
         return $this->argumentList;
     }
 
+    /**
+     * Has a specified helper option (parameter).
+     */
     public function hasOption(string $name): bool
     {
         return property_exists($this->options, $name);
     }
 
     /**
-     * @return mixed
+     * Get the value of a specified helper option (parameter).
      */
-    public function getOption(string $name)
+    public function getOption(string $name): mixed
     {
         return $this->options->$name ?? null;
     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e508d38a30eb43d18cd36d7412dd02d",
+    "content-hash": "af96bcd2ee292e2b37ba362dbdbf96ba",
     "packages": [
         {
             "name": "async-aws/core",
@@ -633,6 +633,63 @@
                 }
             ],
             "time": "2025-08-20T19:15:30+00:00"
+        },
+        {
+            "name": "devtheorem/php-handlebars",
+            "version": "v0.9.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/devtheorem/php-handlebars.git",
+                "reference": "7bfbe91b0330cd92dc0abc55585bcc6128b6506b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/devtheorem/php-handlebars/zipball/7bfbe91b0330cd92dc0abc55585bcc6128b6506b",
+                "reference": "7bfbe91b0330cd92dc0abc55585bcc6128b6506b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.87",
+                "jbboehr/handlebars-spec": "dev-master",
+                "phpstan/phpstan": "^2.1.28",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DevTheorem\\Handlebars\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Theodore Brown",
+                    "email": "theodorejb@outlook.com"
+                },
+                {
+                    "name": "Zordius Chen",
+                    "email": "zordius@gmail.com"
+                }
+            ],
+            "description": "A fast, spec-compliant PHP implementation of Handlebars.",
+            "keywords": [
+                "compile",
+                "handlebars",
+                "php",
+                "render",
+                "template"
+            ],
+            "support": {
+                "issues": "https://github.com/devtheorem/php-handlebars/issues",
+                "source": "https://github.com/devtheorem/php-handlebars/tree/v0.9.9"
+            },
+            "time": "2025-10-15T19:05:55+00:00"
         },
         {
             "name": "directorytree/imapengine",
@@ -8181,51 +8238,6 @@
                 }
             ],
             "time": "2024-04-29T21:42:39+00:00"
-        },
-        {
-            "name": "zordius/lightncandy",
-            "version": "dev-espo",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yurikuzn/lightncandy.git",
-                "reference": "207d424c4ced34644663fdc0758c19d5b6974adc"
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "LightnCandy\\": "src"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Zordius Chen",
-                    "email": "zordius@gmail.com"
-                }
-            ],
-            "description": "An extremely fast PHP implementation of handlebars ( http://handlebarsjs.com/ ) and mustache ( http://mustache.github.io/ ).",
-            "homepage": "https://github.com/zordius/lightncandy",
-            "keywords": [
-                "PHP",
-                "handlebars",
-                "logicless",
-                "mustache",
-                "template"
-            ],
-            "time": "2021-02-18T13:06:28+00:00"
         }
     ],
     "packages-dev": [
@@ -10054,10 +10066,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cboden/ratchet": 20,
         "laminas/laminas-ldap": 20,
-        "lasserafn/php-initial-avatar-generator": 20,
-        "zordius/lightncandy": 20
+        "cboden/ratchet": 20,
+        "lasserafn/php-initial-avatar-generator": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -10075,9 +10086,9 @@
         "ext-pdo": "*",
         "ext-ctype": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.3.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

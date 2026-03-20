@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Htmlizer\Helper;
 
-use LightnCandy\SafeString as LightnCandySafeString;
+use DevTheorem\Handlebars\SafeString as SafeStringHandlebars;
 
 class SafeString
 {
-    private $wrappee;
+    private SafeStringHandlebars $internalSafeString;
 
     public function __construct(string $value)
     {
-        $this->wrappee = new LightnCandySafeString($value);
+        $this->internalSafeString = new SafeStringHandlebars($value);
     }
 
     public static function create(string $value): self
@@ -45,13 +45,16 @@ class SafeString
         return new self($value);
     }
 
-    public function getWrappee(): LightnCandySafeString
+    /**
+     * @internal
+     */
+    public function getInternal(): SafeStringHandlebars
     {
-        return $this->wrappee;
+        return $this->internalSafeString;
     }
 
     public function __toString()
     {
-        return (string) $this->wrappee;
+        return (string) $this->internalSafeString;
     }
 }
