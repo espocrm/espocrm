@@ -36,6 +36,7 @@ use Espo\Core\Notification\EmailNotificationHandler;
 use Espo\Core\Mail\SenderParams;
 use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Markdown\Markdown;
 use Espo\Entities\Note;
 use Espo\ORM\Collection;
 use Espo\Repositories\Portal as PortalRepository;
@@ -57,8 +58,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Core\Utils\Util;
 use Espo\Tools\Stream\NoteAccessControl;
-
-use Michelf\Markdown;
 
 use Exception;
 use DateTime;
@@ -325,11 +324,10 @@ class Processor
 
         $data['userName'] = $note->get('createdByName');
 
-        $post = Markdown::defaultTransform(
-            $note->get('post') ?? ''
-        );
+        $post = $note->getPost() ?? '';
 
-        $data['post'] = $post;
+
+        $data['post'] = Markdown::transform($post);
 
         $subjectTpl = $this->templateFileManager->getTemplate('mention', 'subject');
         $bodyTpl = $this->templateFileManager->getTemplate('mention', 'body');
@@ -486,9 +484,7 @@ class Processor
 
         $data['userName'] = $note->get('createdByName');
 
-        $post = Markdown::defaultTransform($note->getPost() ?? '');
-
-        $data['post'] = $post;
+        $data['post'] = Markdown::transform($note->getPost() ?? '');
 
         $parent = null;
 
