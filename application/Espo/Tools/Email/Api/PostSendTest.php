@@ -115,7 +115,7 @@ class PostSendTest implements Action
 
         if (
             !$this->addressUtil->isAllowedAddress($smtpParams) &&
-            !$this->hostCheck->isNotInternalHost($server)
+            !$this->hostCheck->isHostAndNotInternal($server)
         ) {
             throw new Forbidden("Not allowed internal host.");
         }

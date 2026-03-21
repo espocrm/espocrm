@@ -62,7 +62,7 @@ class NotInternal implements Validator
             return null;
         }
 
-        if (!$this->urlCheck->isNotInternalUrl($value)) {
+        if (!$this->urlCheck->isUrlAndNotIternal($value)) {
             return Failure::create();
         }
 
