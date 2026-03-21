@@ -63,7 +63,7 @@ class Clearer
             return;
         }
 
-        $part = $user->getId() . '.php';
+        $part = basename($user->getId() . '.php');
 
         $this->fileManager->remove('data/cache/application/acl/' . $part);
         $this->fileManager->remove('data/cache/application/aclMap/' . $part);
@@ -77,7 +77,7 @@ class Clearer
             ->find();
 
         foreach ($portals as $portal) {
-            $part = $portal->getId() . '/' . $user->getId() . '.php';
+            $part = basename($portal->getId()) . '/' . basename($user->getId() . '.php');
 
             $this->fileManager->remove('data/cache/application/aclPortal/' . $part);
             $this->fileManager->remove('data/cache/application/aclPortalMap/' . $part);

@@ -178,7 +178,9 @@ class MassUpdate implements MassAction
 
     private function clearRoleCache(string $id): void
     {
-        $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
+        $part = basename($id);
+
+        $this->fileManager->removeFile("data/cache/application/acl/$part.php");
     }
 
     private function clearPortalRolesCache(): void
