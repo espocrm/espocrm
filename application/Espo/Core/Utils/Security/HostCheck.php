@@ -50,6 +50,12 @@ class HostCheck
             return $this->ipAddressIsNotInternal($host);
         }
 
+        $normalized = $this->normalizeIpAddress($host);
+
+        if ($normalized !== false && filter_var($normalized, FILTER_VALIDATE_IP)) {
+            return false;
+        }
+
         if (!filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
             return false;
         }
@@ -92,5 +98,61 @@ class HostCheck
     public function isNotInternalHost(string $host): bool
     {
         return $this->isHostAndNotInternal($host);
+    }
+
+    private function normalizeIpAddress(string $ip): string|false
+    {
+        if (!str_contains($ip, '.')) {
+            return self::normalizePart($ip);
+        }
+
+        $parts = explode('.', $ip);
+
+        if (count($parts) !== 4) {
+            return false;
+        }
+
+        $result = [];
+
+        foreach ($parts as $part) {
+            if (preg_match('/^0x[0-9a-f]+$/i', $part)) {
+                $num = hexdec($part);
+            } else if (preg_match('/^0[0-7]+$/', $part) && $part !== '0') {
+                $num = octdec($part);
+            } else if (ctype_digit($part)) {
+                $num = (int)$part;
+            } else {
+                return false;
+            }
+
+            if ($num < 0 || $num > 255) {
+                return false;
+            }
+
+            $result[] = $num;
+        }
+
+        return implode('.', $result);
+    }
+
+    private static function normalizePart(string $ip): string|false
+    {
+        if (preg_match('/^0x[0-9a-f]+$/i', $ip)) {
+            $num = hexdec($ip);
+        } elseif (preg_match('/^0[0-7]+$/', $ip) && $ip !== '0') {
+            $num = octdec($ip);
+        } elseif (ctype_digit($ip)) {
+            $num = (int) $ip;
+        } else {
+            return false;
+        }
+
+        if ($num < 0 || $num > 0xFFFFFFFF) {
+            return false;
+        }
+
+        $num = (int) $num;
+
+        return long2ip($num);
     }
 }
