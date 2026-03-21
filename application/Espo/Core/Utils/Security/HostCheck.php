@@ -166,7 +166,7 @@ class HostCheck
         $hasNoNumeric = false;
 
         foreach (explode('.', $host) as $it) {
-            if (!is_numeric($it)) {
+            if (!is_numeric($it) && !self::isHex($it)) {
                 $hasNoNumeric = true;
 
                 break;
@@ -174,5 +174,10 @@ class HostCheck
         }
 
         return $hasNoNumeric;
+    }
+
+    private function isHex(string $value): bool
+    {
+        return preg_match('/^0x[0-9a-fA-F]+$/', $value) === 1;
     }
 }

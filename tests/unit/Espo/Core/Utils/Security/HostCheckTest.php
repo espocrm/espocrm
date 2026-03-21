@@ -65,5 +65,9 @@ class HostCheckTest extends TestCase
         $this->assertFalse(
             $hostCheck->isHostAndNotInternal('0x7f000001')
         );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('0x7f.1')
+        );
     }
 }
