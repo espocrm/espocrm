@@ -44,7 +44,9 @@ class UrlCheck
     }
 
     /**
-     * Checks whether a URL does not follow to an internal host.
+     * Checks whether it's a URL, and it does not follow to an internal host.
+     *
+     * @since 9.3.4
      */
     public function isUrlAndNotIternal(string $url): bool
     {
@@ -59,5 +61,14 @@ class UrlCheck
         }
 
         return $this->hostCheck->isHostAndNotInternal($host);
+    }
+
+    /**
+     * @deprecated Since 9.3.4. Use `isUrlAndNotIternal`.
+     * @todo Remove in 9.5.0.
+     */
+    public function isNotInternalUrl(string $url): bool
+    {
+        return $this->isUrlAndNotIternal($url);
     }
 }
