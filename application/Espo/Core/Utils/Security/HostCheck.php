@@ -60,6 +60,10 @@ class HostCheck
             return false;
         }
 
+        if (!$this->hasNoNumericItem($host)) {
+            return false;
+        }
+
         $records = dns_get_record($host, DNS_A);
 
         if (!$records) {
@@ -154,5 +158,21 @@ class HostCheck
         $num = (int) $num;
 
         return long2ip($num);
+    }
+
+
+    private function hasNoNumericItem(string $host): bool
+    {
+        $hasNoNumeric = false;
+
+        foreach (explode('.', $host) as $it) {
+            if (!is_numeric($it)) {
+                $hasNoNumeric = true;
+
+                break;
+            }
+        }
+
+        return $hasNoNumeric;
     }
 }

@@ -50,13 +50,17 @@ class HostCheckTest extends TestCase
             $hostCheck->isHostAndNotInternal('0177.0.0.1')
         );
 
-        /*$this->assertFalse(
+        $this->assertFalse(
             $hostCheck->isHostAndNotInternal('127.1')
         );
 
         $this->assertFalse(
             $hostCheck->isHostAndNotInternal('127.0.1')
-        );*/
+        );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('2130706433')
+        );
 
         $this->assertFalse(
             $hostCheck->isHostAndNotInternal('0x7f000001')
