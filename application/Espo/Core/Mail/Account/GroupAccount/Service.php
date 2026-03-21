@@ -89,7 +89,7 @@ class Service
         if (
             $params->getHost() &&
             !$this->addressUtil->isAllowedAddress($params) &&
-            !$this->hostCheck->isNotInternalHost($params->getHost())
+            !$this->hostCheck->isHostAndNotInternal($params->getHost())
         ) {
             throw new Forbidden("Not allowed internal host.");
         }
@@ -124,7 +124,7 @@ class Service
         if (
             $params->getHost() &&
             !$this->addressUtil->isAllowedAddress($params) &&
-            !$this->hostCheck->isNotInternalHost($params->getHost())
+            !$this->hostCheck->isHostAndNotInternal($params->getHost())
         ) {
             throw new Forbidden("Not allowed internal host.");
         }

@@ -46,7 +46,7 @@ class UrlCheck
     /**
      * Checks whether a URL does not follow to an internal host.
      */
-    public function isNotInternalUrl(string $url): bool
+    public function isUrlAndNotIternal(string $url): bool
     {
         if (!$this->isUrl($url)) {
             return false;
@@ -58,6 +58,6 @@ class UrlCheck
             return false;
         }
 
-        return $this->hostCheck->isNotInternalHost($host);
+        return $this->hostCheck->isHostAndNotInternal($host);
     }
 }

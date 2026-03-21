@@ -32,17 +32,29 @@ namespace Espo\Core\Utils\Security;
 use const DNS_A;
 use const FILTER_FLAG_NO_PRIV_RANGE;
 use const FILTER_FLAG_NO_RES_RANGE;
+use const FILTER_FLAG_HOSTNAME;
+use const FILTER_VALIDATE_DOMAIN;
 use const FILTER_VALIDATE_IP;
 
 class HostCheck
 {
-    public function isNotInternalHost(string $host): bool
+    /**
+     * Validates the string is a host and it's not internal.
+     * If not a host, returns false.
+     *
+     * @since 9.3.4
+     */
+    public function isHostAndNotInternal(string $host): bool
     {
-        $records = dns_get_record($host, DNS_A);
-
         if (filter_var($host, FILTER_VALIDATE_IP)) {
             return $this->ipAddressIsNotInternal($host);
         }
+
+        if (!filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
+            return false;
+        }
+
+        $records = dns_get_record($host, DNS_A);
 
         if (!$records) {
             return true;
@@ -71,5 +83,14 @@ class HostCheck
             FILTER_VALIDATE_IP,
             FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
         );
+    }
+
+    /**
+     * @deprecated Since 9.3.4. Use `isHostAndNotInternal`.
+     * @todo Remove in 9.4.0.
+     */
+    public function isNotInternalHost(string $host): bool
+    {
+        return $this->isHostAndNotInternal($host);
     }
 }

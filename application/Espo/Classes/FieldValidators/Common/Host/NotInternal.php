@@ -53,7 +53,7 @@ class NotInternal implements Validator
             return null;
         }
 
-        if (!$this->hostCheck->isNotInternalHost($value)) {
+        if (!$this->hostCheck->isHostAndNotInternal($value)) {
             return Failure::create();
         }
 

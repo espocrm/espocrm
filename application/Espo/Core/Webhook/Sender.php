@@ -95,7 +95,7 @@ class Sender
 
         if (
             !$this->addressUtil->isAllowedUrl($url) &&
-            !$this->urlCheck->isNotInternalUrl($url)
+            !$this->urlCheck->isUrlAndNotIternal($url)
         ) {
             throw new Error("URL '$url' points to an internal host, not allowed.");
         }
