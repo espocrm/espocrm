@@ -114,9 +114,20 @@ class UploadUrlService
     /**
      * @param non-empty-string $url
      * @return ?array{string, string} A type and contents.
+     * @throws ForbiddenSilent
      */
     private function getImageDataByUrl(string $url): ?array
     {
+        $resolve = $this->urlCheck->getCurlResolve($url);
+
+        if ($resolve === []) {
+            throw new ForbiddenSilent("Could not resolve the host.");
+        }
+
+        if ($resolve !== null && !$this->urlCheck->validateCurlResolveNotInternal($resolve)) {
+            throw new ForbiddenSilent("Forbidden host.");
+        }
+
         $type = null;
 
         if (!function_exists('curl_init')) {
@@ -143,6 +154,10 @@ class UploadUrlService
         $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
         $opts[\CURLOPT_PROTOCOLS] = \CURLPROTO_HTTPS | \CURLPROTO_HTTP;
         $opts[\CURLOPT_REDIR_PROTOCOLS] = \CURLPROTO_HTTPS;
+
+        if ($resolve) {
+            $opts[CURLOPT_RESOLVE] = $resolve;
+        }
 
         $ch = curl_init();
 

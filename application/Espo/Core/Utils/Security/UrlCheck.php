@@ -29,9 +29,6 @@
 
 namespace Espo\Core\Utils\Security;
 
-use const FILTER_VALIDATE_URL;
-use const PHP_URL_HOST;
-
 class UrlCheck
 {
     public function __construct(
@@ -64,11 +61,101 @@ class UrlCheck
     }
 
     /**
+     * @return ?string[] Null if not a domain name or not a URL.
+     * @internal
+     * @since 9.3.4
+     */
+    public function getCurlResolve(string $url): ?array
+    {
+        if (!$this->isUrl($url)) {
+            return null;
+        }
+
+        $host = parse_url($url, PHP_URL_HOST);
+        $port = parse_url($url, PHP_URL_PORT);
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        if ($port === null && $scheme) {
+            $port = match (strtolower($scheme)) {
+                'http' => 80,
+                'https'=> 443,
+                'ftp' => 21,
+                'ssh' => 22,
+                'smtp' => 25,
+                default  => null,
+            };
+        }
+
+        if ($port === null) {
+            return [];
+        }
+
+        if (!is_string($host)) {
+            return null;
+        }
+
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            return null;
+        }
+
+        if (!$this->hostCheck->isDomainHost($host)) {
+            return null;
+        }
+
+        $ipAddresses = $this->hostCheck->getHostIpAddresses($host);
+
+        $output = [];
+
+        foreach ($ipAddresses as $ipAddress) {
+            $ipPart = $ipAddress;
+
+            if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                $ipPart = "[$ipPart]";
+            }
+
+            $output[] = "$host:$port:$ipPart";
+        }
+
+        return $output;
+    }
+
+    /**
      * @deprecated Since 9.3.4. Use `isUrlAndNotIternal`.
      * @todo Remove in 9.5.0.
      */
     public function isNotInternalUrl(string $url): bool
     {
         return $this->isUrlAndNotIternal($url);
+    }
+
+    /**
+     * @param string[] $resolve
+     * @internal
+     */
+    public function validateCurlResolveNotInternal(array $resolve): bool
+    {
+        if ($resolve === []) {
+            return false;
+        }
+
+        foreach ($resolve as $item) {
+            $arr = explode(':', $item, 3);
+
+            if (count($arr) < 3) {
+                return false;
+            }
+
+            $ipAddress = $arr[2];
+
+            if (str_starts_with($ipAddress, '[') && str_ends_with($ipAddress, ']')) {
+                $ipAddress = substr($ipAddress, 1, -1);
+            }
+
+            if (!$this->hostCheck->ipAddressIsNotInternal($ipAddress)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

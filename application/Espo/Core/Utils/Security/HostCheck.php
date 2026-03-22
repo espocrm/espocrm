@@ -50,6 +50,31 @@ class HostCheck
             return $this->ipAddressIsNotInternal($host);
         }
 
+        if (!$this->isDomainHost($host)) {
+            return false;
+        }
+
+        $ipAddresses = $this->getHostIpAddresses($host);
+
+        if ($ipAddresses === []) {
+            return false;
+        }
+
+        foreach ($ipAddresses as $idAddress) {
+            if (!$this->ipAddressIsNotInternal($idAddress)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @internal
+     * @since 9.3.4
+     */
+    public function isDomainHost(string $host): bool
+    {
         $normalized = $this->normalizeIpAddress($host);
 
         if ($normalized !== false && filter_var($normalized, FILTER_VALIDATE_IP)) {
@@ -64,29 +89,46 @@ class HostCheck
             return false;
         }
 
+        if (filter_var($host, FILTER_VALIDATE_DOMAIN)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string[]
+     * @internal
+     * @since 9.3.4
+     */
+    public function getHostIpAddresses(string $host): array
+    {
         $records = dns_get_record($host, DNS_A);
 
         if (!$records) {
-            return true;
+            return [];
         }
+
+        $output = [];
 
         foreach ($records as $record) {
             /** @var ?string $idAddress */
             $idAddress = $record['ip'] ?? null;
 
             if (!$idAddress) {
-                return false;
+                continue;
             }
 
-            if (!$this->ipAddressIsNotInternal($idAddress)) {
-                return false;
-            }
+            $output[] = $idAddress;
         }
 
-        return true;
+        return $output;
     }
 
-    private function ipAddressIsNotInternal(string $ipAddress): bool
+    /**
+     * @internal
+     */
+    public function ipAddressIsNotInternal(string $ipAddress): bool
     {
         return (bool) filter_var(
             $ipAddress,
