@@ -31,7 +31,6 @@ namespace Espo\Tools\Email;
 
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FileStorage\Manager;
 use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Importer;
@@ -56,16 +55,13 @@ class ImportEmlService
     /**
      * Import an EML.
      *
-     * @param string $fileId An attachment ID.
      * @param ?string $userId A user ID to relate an email with.
      * @return Email An Email.
-     * @throws NotFound
      * @throws Error
      * @throws Conflict
      */
-    public function import(string $fileId, ?string $userId = null): Email
+    public function import(Attachment $attachment, ?string $userId = null): Email
     {
-        $attachment = $this->getAttachment($fileId);
         $contents = $this->fileStorageManager->getContents($attachment);
 
         try {
@@ -91,20 +87,6 @@ class ImportEmlService
         $this->entityManager->removeEntity($attachment);
 
         return $email;
-    }
-
-    /**
-     * @throws NotFound
-     */
-    private function getAttachment(string $fileId): Attachment
-    {
-        $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($fileId);
-
-        if (!$attachment) {
-            throw new NotFound("Attachment not found.");
-        }
-
-        return $attachment;
     }
 
     /**
