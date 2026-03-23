@@ -38,8 +38,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-use const CURLE_OPERATION_TIMEDOUT;
-
 class Client
 {
     private const int MAX_REDIRECT_NUMBER = 5;
@@ -95,7 +93,7 @@ class Client
     {
         if (
             !Util::matchUrlToAddressList($url, $allowed) &&
-            !$this->urlCheck->isNotInternalUrl($url)
+            !$this->urlCheck->isUrlAndNotIternal($url)
         ) {
             throw new NotAllowedInternalHost("Not allowed internal host in '$url'.");
         }
