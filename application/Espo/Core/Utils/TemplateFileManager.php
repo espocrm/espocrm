@@ -124,7 +124,13 @@ class TemplateFileManager
         ?string $entityType = null
     ): string {
 
+        $type = basename($type);
+        $language = basename($language);
+        $name = basename($name);
+
         if ($entityType) {
+            $entityType = basename($entityType);
+
             return "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
         }
 
@@ -152,7 +158,13 @@ class TemplateFileManager
         ?string $entityType = null
     ): string {
 
+        $type = basename($type);
+        $language = basename($language);
+        $name = basename($name);
+
         if ($entityType) {
+            $entityType = basename($entityType);
+
             return "templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
         }
 
