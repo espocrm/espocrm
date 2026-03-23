@@ -56,7 +56,7 @@
         "directorytree/imapengine": "^1.19",
         "zbateson/mail-mime-parser": "^3.0",
         "guzzlehttp/guzzle": "^7.10",
-        "devtheorem/php-handlebars": "^0.9.9"
+        "devtheorem/php-handlebars": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af96bcd2ee292e2b37ba362dbdbf96ba",
+    "content-hash": "5b50faa25593b8f60e0bb5fc0050844f",
     "packages": [
         {
             "name": "async-aws/core",
@@ -636,25 +636,26 @@
         },
         {
             "name": "devtheorem/php-handlebars",
-            "version": "v0.9.9",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/devtheorem/php-handlebars.git",
-                "reference": "7bfbe91b0330cd92dc0abc55585bcc6128b6506b"
+                "reference": "59f5bc256bdca286f90917a80d038cb7f000f207"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/devtheorem/php-handlebars/zipball/7bfbe91b0330cd92dc0abc55585bcc6128b6506b",
-                "reference": "7bfbe91b0330cd92dc0abc55585bcc6128b6506b",
+                "url": "https://api.github.com/repos/devtheorem/php-handlebars/zipball/59f5bc256bdca286f90917a80d038cb7f000f207",
+                "reference": "59f5bc256bdca286f90917a80d038cb7f000f207",
                 "shasum": ""
             },
             "require": {
+                "devtheorem/php-handlebars-parser": "^1.1.0",
                 "php": ">=8.2"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.87",
+                "friendsofphp/php-cs-fixer": "^3.94",
                 "jbboehr/handlebars-spec": "dev-master",
-                "phpstan/phpstan": "^2.1.28",
+                "phpstan/phpstan": "^2.1.42",
                 "phpunit/phpunit": "^11.5"
             },
             "type": "library",
@@ -671,25 +672,76 @@
                 {
                     "name": "Theodore Brown",
                     "email": "theodorejb@outlook.com"
-                },
-                {
-                    "name": "Zordius Chen",
-                    "email": "zordius@gmail.com"
                 }
             ],
-            "description": "A fast, spec-compliant PHP implementation of Handlebars.",
+            "description": "A blazing fast, spec-compliant PHP implementation of Handlebars.",
             "keywords": [
                 "compile",
                 "handlebars",
-                "php",
+                "mustache",
+                "parse",
                 "render",
                 "template"
             ],
             "support": {
                 "issues": "https://github.com/devtheorem/php-handlebars/issues",
-                "source": "https://github.com/devtheorem/php-handlebars/tree/v0.9.9"
+                "source": "https://github.com/devtheorem/php-handlebars/tree/v1.0.0"
             },
-            "time": "2025-10-15T19:05:55+00:00"
+            "time": "2026-03-23T04:09:08+00:00"
+        },
+        {
+            "name": "devtheorem/php-handlebars-parser",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/devtheorem/php-handlebars-parser.git",
+                "reference": "cd9fcd2a2ea8869378a999ff420625b2c25b9571"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/devtheorem/php-handlebars-parser/zipball/cd9fcd2a2ea8869378a999ff420625b2c25b9571",
+                "reference": "cd9fcd2a2ea8869378a999ff420625b2c25b9571",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.94",
+                "ircmaxell/php-yacc": "dev-master",
+                "jbboehr/handlebars-spec": "dev-master",
+                "phpstan/phpstan": "^2.1.40",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DevTheorem\\HandlebarsParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Theodore Brown",
+                    "email": "theodorejb@outlook.com"
+                }
+            ],
+            "description": "Parse Handlebars templates to a spec-compliant AST with PHP.",
+            "keywords": [
+                "ast",
+                "handlebars",
+                "parse",
+                "php",
+                "template"
+            ],
+            "support": {
+                "issues": "https://github.com/devtheorem/php-handlebars-parser/issues",
+                "source": "https://github.com/devtheorem/php-handlebars-parser/tree/v1.1.0"
+            },
+            "time": "2026-02-25T01:18:54+00:00"
         },
         {
             "name": "directorytree/imapengine",

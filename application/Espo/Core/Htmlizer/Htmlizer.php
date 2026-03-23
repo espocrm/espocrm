@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Htmlizer;
 
+use Closure;
 use DevTheorem\Handlebars\Handlebars;
 use DevTheorem\Handlebars\HelperOptions;
-use DevTheorem\Handlebars\Options;
 use DOMDocument;
 use DOMElement;
 use DOMException;
@@ -109,9 +109,7 @@ class Htmlizer
 
         $template = $this->prepare($template, array_keys($helpers));
 
-        $options = new Options(helpers: $helpers);
-
-        $renderer = Handlebars::compile($template, $options);
+        $renderer = Handlebars::compile($template);
 
         $data = $this->prepareRendererData(
             additionalData: $additionalData,
@@ -120,7 +118,7 @@ class Htmlizer
             template: $template,
         );
 
-        $html = $renderer($data);
+        $html = $renderer($data, ['helpers' => $helpers]);
 
         return $this->postProcessHtml($skipInlineAttachmentHandling, $html);
     }
@@ -268,7 +266,7 @@ class Htmlizer
     }
 
     /**
-     * @return array<string, callable>
+     * @return array<string, Closure>
      */
     private function getHelpers(): array
     {
@@ -339,14 +337,13 @@ class Htmlizer
                     return '';
                 }
 
-                /** @noinspection PhpUndefinedClassInspection, PhpUndefinedNamespaceInspection */
-                /** @phpstan-ignore-next-line */
-                return new DevTheorem\Handlebars\SafeString("?entryPoint=attachment&id=" . $id);
+                /** @noinspection PhpFullyQualifiedNameUsageInspection */
+                return new \DevTheorem\Handlebars\SafeString("?entryPoint=attachment&id=" . $id);
             },
             'pagebreak' => function () {
-                /** @noinspection PhpUndefinedClassInspection, HtmlUnknownAttribute, PhpUndefinedNamespaceInspection */
-                /** @phpstan-ignore-next-line */
-                return new DevTheorem\Handlebars\SafeString('<br pagebreak="true">');
+                /** @noinspection PhpFullyQualifiedNameUsageInspection */
+                /** @noinspection HtmlUnknownAttribute */
+                return new \DevTheorem\Handlebars\SafeString('<br pagebreak="true">');
             },
             'imageTag' => function () {
                 $args = func_get_args();
@@ -387,9 +384,8 @@ class Htmlizer
                 /** @noinspection HtmlRequiredAltAttribute */
                 $html = "<img src=\"?entryPoint=attachment&id=$id\"$attributesPart>";
 
-                /** @noinspection PhpUndefinedNamespaceInspection, PhpUndefinedClassInspection */
-                /** @phpstan-ignore-next-line */
-                return new DevTheorem\Handlebars\SafeString($html);
+                /** @noinspection PhpFullyQualifiedNameUsageInspection */
+                return new \DevTheorem\Handlebars\SafeString($html);
             },
             'var' => function () {
                 $args = func_get_args();
@@ -480,10 +476,8 @@ class Htmlizer
                 /** @phpstan-ignore-next-line */
                 $paramsString = urlencode(json_encode($params));
 
-                /** @noinspection PhpUndefinedNamespaceInspection */
-                /** @noinspection PhpUndefinedClassInspection */
-                /** @phpstan-ignore-next-line */
-                return new DevTheorem\Handlebars\SafeString("<barcodeimage data=\"$paramsString\"/>");
+                /** @noinspection PhpFullyQualifiedNameUsageInspection */
+                return new \DevTheorem\Handlebars\SafeString("<barcodeimage data=\"$paramsString\"/>");
             },
             'ifEqual' => function () {
                 $args = func_get_args();
@@ -583,10 +577,8 @@ class Htmlizer
                     $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
                 }
 
-                /** @noinspection PhpUndefinedNamespaceInspection */
-                /** @noinspection PhpUndefinedClassInspection */
-                /** @phpstan-ignore-next-line */
-                return new DevTheorem\Handlebars\SafeString($html);
+                /** @noinspection PhpFullyQualifiedNameUsageInspection */
+                return new \DevTheorem\Handlebars\SafeString($html);
             },
         ];
 
@@ -628,8 +620,8 @@ class Htmlizer
                 options: (object) $hash,
                 context: $context->scope,
                 rootContext: $rootData,
-                func: $context->fn,
-                inverseFunc: $context->inverse,
+                func: fn () => $context->fn(),
+                inverseFunc: fn () => $context->inverse(),
             );
 
             $helper = $injectableFactory->create($className);
