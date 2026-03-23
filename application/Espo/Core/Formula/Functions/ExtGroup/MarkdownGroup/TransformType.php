@@ -33,7 +33,7 @@ use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
-use Michelf\Markdown;
+use Espo\Core\Utils\Markdown\Markdown;
 
 /**
  * @noinspection PhpUnused
@@ -52,6 +52,6 @@ class TransformType implements Func
             throw BadArgumentType::create(1, 'string');
         }
 
-        return Markdown::defaultTransform($string);
+        return Markdown::transform($string);
     }
 }

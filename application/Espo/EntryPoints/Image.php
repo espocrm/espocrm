@@ -174,7 +174,9 @@ class Image implements EntryPoint
 
         $sourceId = $attachment->getSourceId();
 
-        $cacheFilePath = "data/upload/thumbs/{$sourceId}_$size";
+        $file = basename("{$sourceId}_$size");
+
+        $cacheFilePath = "data/upload/thumbs/$file";
 
         if ($useCache && $this->fileManager->isFile($cacheFilePath)) {
             return $this->fileManager->getContents($cacheFilePath);

@@ -27,25 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\TemplateHelpers;
+namespace Espo\Core\Utils\Markdown;
 
-use Espo\Core\Htmlizer\Helper;
-use Espo\Core\Htmlizer\Helper\Data;
-use Espo\Core\Htmlizer\Helper\Result;
-use Espo\Core\Utils\Markdown\Markdown;
+use Michelf\Markdown as MarkdownParser;
 
-class MarkdownText implements Helper
+/**
+ * @internal
+ */
+class Markdown
 {
-    public function render(Data $data): Result
+    /**
+     * @internal
+     */
+    public static function transform(string $text): string
     {
-        $value = $data->getArgumentList()[0] ?? null;
+        $parser = new MarkdownParser();
+        $parser->no_markup = true;
+        $parser->no_entities = true;
 
-        if (!$value || !is_string($value)) {
-            return Result::createEmpty();
-        }
-
-        $transformed = Markdown::transform($value);
-
-        return Result::createSafeString($transformed);
+        return $parser->transform($text);
     }
 }

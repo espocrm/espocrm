@@ -27,25 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\TemplateHelpers;
+namespace tests\unit\Espo\Core\Utils\Security;
 
-use Espo\Core\Htmlizer\Helper;
-use Espo\Core\Htmlizer\Helper\Data;
-use Espo\Core\Htmlizer\Helper\Result;
-use Espo\Core\Utils\Markdown\Markdown;
+use Espo\Core\Utils\Security\HostCheck;
+use PHPUnit\Framework\TestCase;
 
-class MarkdownText implements Helper
+class HostCheckTest extends TestCase
 {
-    public function render(Data $data): Result
+    public function testIsHostAndNotInternal(): void
     {
-        $value = $data->getArgumentList()[0] ?? null;
+        $hostCheck = new HostCheck();
 
-        if (!$value || !is_string($value)) {
-            return Result::createEmpty();
-        }
+        $this->assertTrue(
+            $hostCheck->isHostAndNotInternal('200.1.1.1')
+        );
 
-        $transformed = Markdown::transform($value);
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('172.20.0.1')
+        );
 
-        return Result::createSafeString($transformed);
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('0177.0.0.1')
+        );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('127.1')
+        );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('127.0.1')
+        );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('2130706433')
+        );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('0x7f000001')
+        );
+
+        $this->assertFalse(
+            $hostCheck->isHostAndNotInternal('0x7f.1')
+        );
     }
 }
