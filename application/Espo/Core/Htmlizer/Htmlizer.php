@@ -594,18 +594,8 @@ class Htmlizer
             $hash = $context->hash;
             $rootData = $context->data['root'];
 
-            $injectableFactory = $rootData['__injectableFactory'];
-            $metadata = $rootData['__metadata'];
-
-            /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-            if (!$injectableFactory instanceof \Espo\Core\InjectableFactory) {
-                throw new RuntimeException();
-            }
-
-            /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-            if (!$metadata instanceof \Espo\Core\Utils\Metadata) {
-                throw new RuntimeException();
-            }
+            $injectableFactory = $this->injectableFactory;
+            $metadata = $this->metadata;
 
             $name = $context->name;
 
@@ -1155,13 +1145,6 @@ class Htmlizer
             $data['now_RAW'] = date(DateTime::SYSTEM_DATE_TIME_FORMAT);
         }
 
-        $data['__injectableFactory'] = $this->injectableFactory;
-        $data['__config'] = $this->config;
-        $data['__dateTime'] = $this->dateTime;
-        $data['__metadata'] = $this->metadata;
-        $data['__entityManager'] = $this->entityManager;
-        $data['__language'] = $this->language;
-        $data['__log'] = $this->log;
         $data['__entityType'] = $entity?->getEntityType();
 
         return $data;
