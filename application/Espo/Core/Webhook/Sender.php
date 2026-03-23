@@ -100,6 +100,19 @@ class Sender
             throw new Error("URL '$url' points to an internal host, not allowed.");
         }
 
+        $resolve = $this->urlCheck->getCurlResolve($url);
+
+        if ($resolve === []) {
+            throw new Error("Could not resolve the host.");
+        }
+
+        /** @var string[] $allowedAddressList */
+        $allowedAddressList = $this->config->get('webhookAllowedAddressList') ?? [];
+
+        if ($resolve !== null && !$this->urlCheck->validateCurlResolveNotInternal($resolve, $allowedAddressList)) {
+            throw new Error("Forbidden host.");
+        }
+
         $handler = curl_init($url);
 
         if ($handler === false) {
@@ -117,6 +130,10 @@ class Sender
         curl_setopt($handler, \CURLOPT_REDIR_PROTOCOLS, \CURLPROTO_HTTPS);
         curl_setopt($handler, \CURLOPT_HTTPHEADER, $headerList);
         curl_setopt($handler, \CURLOPT_POSTFIELDS, $payload);
+
+        if ($resolve) {
+            curl_setopt($handler, CURLOPT_RESOLVE, $resolve);
+        }
 
         curl_exec($handler);
 

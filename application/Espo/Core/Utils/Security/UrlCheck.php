@@ -130,13 +130,16 @@ class UrlCheck
 
     /**
      * @param string[] $resolve
+     * @param string[] $allowed An allowed address list in the `{host}:{port}` format.
      * @internal
      */
-    public function validateCurlResolveNotInternal(array $resolve): bool
+    public function validateCurlResolveNotInternal(array $resolve, array $allowed = []): bool
     {
         if ($resolve === []) {
             return false;
         }
+
+        $ipAddresses = [];
 
         foreach ($resolve as $item) {
             $arr = explode(':', $item, 3);
@@ -146,11 +149,21 @@ class UrlCheck
             }
 
             $ipAddress = $arr[2];
+            $port = $arr[1];
+            $domain = $arr[0];
+
+            if (in_array("$ipAddress:$port", $allowed) || in_array("$domain:$port", $allowed)) {
+                return true;
+            }
 
             if (str_starts_with($ipAddress, '[') && str_ends_with($ipAddress, ']')) {
                 $ipAddress = substr($ipAddress, 1, -1);
             }
 
+            $ipAddresses[] = $ipAddress;
+        }
+
+        foreach ($ipAddresses as $ipAddress) {
             if (!$this->hostCheck->ipAddressIsNotInternal($ipAddress)) {
                 return false;
             }
