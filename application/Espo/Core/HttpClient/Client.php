@@ -132,9 +132,9 @@ class Client
             $options['connect_timeout'] = $this->options->connectTimeout;
         }
 
-        if ($this->options->internalHostRestriction->restrict) {
-            $stack = GuzzleHttp\HandlerStack::create();
+        $stack = GuzzleHttp\HandlerStack::create(new GuzzleHttp\Handler\CurlHandler());
 
+        if ($this->options->internalHostRestriction->restrict) {
             $stack->push(
                 GuzzleHttp\Middleware::mapRequest(function (RequestInterface $request) {
                     $url = (string) $request->getUri();
@@ -145,8 +145,31 @@ class Client
                 })
             );
 
-            $options['handler'] = $stack;
+            $stack->push(function (callable $handler) {
+                return function (RequestInterface $request, array $options) use ($handler) {
+                    $url = (string) $request->getUri();
+
+                    $resolve = $this->urlCheck->getCurlResolve($url);
+
+                    if ($resolve === []) {
+                        throw new NotAllowedInternalHost("Could not resolve host for '$url'.");
+                    }
+
+                    $allowed = $this->options->internalHostRestriction->allowed;
+
+                    if ($resolve !== null && !$this->urlCheck->validateCurlResolveNotInternal($resolve, $allowed)) {
+                        throw new NotAllowedInternalHost("Not allowed internal host in '$url'.");
+                    }
+
+                    $options['curl'] ??= [];
+                    $options['curl'][CURLOPT_RESOLVE] = $resolve;
+
+                    return $handler($request, $options);
+                };
+            });
         }
+
+        $options['handler'] = $stack;
 
         return $options;
     }
