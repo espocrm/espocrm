@@ -241,6 +241,12 @@ class HtmlizerTest extends TestCase
         $template = "{{#if (not false)}}test{{/if}}";
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test', $html);
+
+        $template = "{{#ifEqual name '1'}}{{#ifEqual name '1'}}hello{{/ifEqual}}{{/ifEqual}}";
+
+        $entity->set('name', '1');
+        $html = $this->htmlizer->render($entity, $template);
+        $this->assertEquals('hello', $html);
     }
 
     public function testIterate(): void
