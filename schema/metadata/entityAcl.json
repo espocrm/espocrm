@@ -62,6 +62,10 @@
                     }
                 }
             }
+        },
+        "systemWriteForbidden": {
+            "type": "boolean",
+            "description": "Restricts record update and removal in formula and other potential configuration tools. As of v9.4."
         }
     }
 }

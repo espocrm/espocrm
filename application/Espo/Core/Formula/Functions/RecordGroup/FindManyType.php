@@ -33,8 +33,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
-use Espo\Core\Formula\Exceptions\BadArgumentValue;
-use Espo\Core\Formula\Exceptions\Error as FormulaError;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
@@ -43,13 +42,16 @@ use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\Part\Order;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FindManyType implements Func
 {
     public function __construct(
         private EntityManager $entityManager,
-        private SelectBuilderFactory $selectBuilderFactory
+        private SelectBuilderFactory $selectBuilderFactory,
+        private FindQueryUtil $findQueryUtil,
     ) {}
 
     /**
@@ -58,14 +60,14 @@ class FindManyType implements Func
      */
     public function process(EvaluatedArgumentList $arguments): array
     {
-        if (count($arguments) < 4) {
-            throw TooFewArguments::create(4);
+        if (count($arguments) < 2) {
+            throw TooFewArguments::create(2);
         }
 
         $entityType = $arguments[0];
         $limit = $arguments[1];
-        $orderBy = $arguments[2];
-        $order = $arguments[3] ?? Order::ASC;
+        $orderBy = $arguments[2] ?? null;
+        $order = $arguments[3] ?? null;
 
         if (!is_string($entityType)) {
             throw BadArgumentType::create(1, 'string');
@@ -79,22 +81,16 @@ class FindManyType implements Func
             throw BadArgumentType::create(3, 'string|null');
         }
 
-        if (!is_bool($order) && !is_string($order)) {
-            throw BadArgumentType::create(4, 'string|bool');
-        }
-
-        if (is_string($order)) {
-            $order = strtoupper($order);
-
-            if ($order !== Order::ASC && $order !== Order::DESC) {
-                throw BadArgumentValue::create(4, 'Bad order value.');
-            }
+        if ($order !== null && !is_bool($order) && !is_string($order)) {
+            throw BadArgumentType::create(4, 'string|bool|null');
         }
 
         $builder = $this->selectBuilderFactory
             ->create()
             ->withPrimaryFilter(All::NAME)
             ->from($entityType);
+
+        $this->findQueryUtil->applyOrder($builder, $orderBy, $order, 4);
 
         $whereClause = [];
 
@@ -105,13 +101,15 @@ class FindManyType implements Func
                 $filter = $arguments[4];
             }
 
-            (new FindQueryUtil())->applyFilter($builder, $filter, 5);
+            $this->findQueryUtil->applyFilter($builder, $filter, 5);
         } else {
             $i = 4;
 
             while ($i < count($arguments) - 1) {
                 $key = $arguments[$i];
                 $value = $arguments[$i + 1];
+
+                $this->findQueryUtil->assertWhereClauseKeyValid($entityType, $key);
 
                 $whereClause[] = [$key => $value];
 
@@ -122,15 +120,11 @@ class FindManyType implements Func
         try {
             $queryBuilder = $builder->buildQueryBuilder();
         } catch (BadRequest|Forbidden $e) {
-            throw new FormulaError($e->getMessage(), $e->getCode(), $e);
+            throw new NotAllowedUsage($e->getMessage(), $e->getCode(), $e);
         }
 
         if (!empty($whereClause)) {
             $queryBuilder->where($whereClause);
-        }
-
-        if ($orderBy) {
-            $queryBuilder->order($orderBy, $order);
         }
 
         $queryBuilder

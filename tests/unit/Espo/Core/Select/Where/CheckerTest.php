@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Helpers\EntityHelper;
 use Espo\Core\Select\Where\Checker;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\Params;
@@ -44,10 +45,11 @@ class CheckerTest extends TestCase
 {
     /** @var Checker|null */
     protected $checker = null;
-    /** @var EntityManager|null */
-    protected $entityManager = null;
+    protected ?EntityManager $entityManager = null;
     /** @var Acl|null  */
     protected $acl = null;
+
+    protected ?EntityHelper $entityHelper = null;
 
     protected ?string $entityType = null;
     protected ?string $foreignEntityType = null;
@@ -59,14 +61,30 @@ class CheckerTest extends TestCase
     {
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->acl = $this->createMock(Acl::class);
+        $systemRestriction = $this->createMock(Acl\SystemRestriction::class);
+        $this->entityHelper = $this->createMock(EntityHelper::class);
+
+        $systemRestriction
+            ->method('checkAttributeRead')
+            ->willReturn(true);
+
+        $systemRestriction
+            ->method('checkLinkRead')
+            ->willReturn(true);
+
+        $systemRestriction
+            ->method('checkFieldRead')
+            ->willReturn(true);
 
         $this->entityType = 'Test';
         $this->foreignEntityType = 'TestForeign';
 
         $this->checker = new Checker(
-            $this->entityType,
-            $this->entityManager,
-            $this->acl,
+            entityType: $this->entityType,
+            entityManager: $this->entityManager,
+            acl: $this->acl,
+            systemRestriction: $systemRestriction,
+            entityHelper: $this->entityHelper,
         );
 
         $this->params = $this->createMock(Params::class);
@@ -124,8 +142,21 @@ class CheckerTest extends TestCase
                 ['test2', true],
             ]);
 
+        $this->entityHelper
+            ->method('getRelationEntityType')
+            ->willReturnMap([
+                [$this->entity, 'test3', 'AnotherEntity'],
+            ]);
+
+        $another = $this->createMock(Entity::class);
+
+        $this->entityManager
+            ->method('getEntityById')
+            ->willReturnMap([
+                ['AnotherEntity', 'value3', $another]
+            ]);
+
         $this->entity
-            ->expects($this->once())
             ->method('hasRelation')
             ->with('test3')
             ->willReturn(true);
@@ -295,6 +326,17 @@ class CheckerTest extends TestCase
             ->method('checkEntityRead')
             ->willReturnMap([
                 [$foreign, true]
+            ]);
+
+        $this->entity
+            ->method('hasRelation')
+            ->with('test3')
+            ->willReturn(true);
+
+        $this->entityHelper
+            ->method('getRelationEntityType')
+            ->willReturnMap([
+                [$this->entity, 'test3', $this->foreignEntityType],
             ]);
 
         $this->checker->check($item, $this->params);

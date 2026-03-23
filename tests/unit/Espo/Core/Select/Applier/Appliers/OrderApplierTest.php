@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\Acl\SystemRestriction;
 use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\User;
@@ -68,15 +69,21 @@ class OrderApplierTest extends TestCase
         $aclManager = $this->createMock(AclManager::class);
         $user = $this->createMock(User::class);
 
+        $restriction = $this->createMock(SystemRestriction::class);
+        $restriction
+            ->method('checkFieldRead')
+            ->willReturn(true);
+
         $this->entityType = 'Test';
 
         $this->applier = new OrderApplier(
-            $this->entityType,
-            $this->metadataProvider,
-            $this->itemConverterFactory,
-            $this->ordererFactory,
-            $aclManager,
-            $user,
+            entityType: $this->entityType,
+            metadataProvider: $this->metadataProvider,
+            itemConverterFactory: $this->itemConverterFactory,
+            ordererFactory: $this->ordererFactory,
+            aclManager: $aclManager,
+            user: $user,
+            systemRestriction: $restriction,
         );
     }
 

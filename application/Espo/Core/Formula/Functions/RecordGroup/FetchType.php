@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\Acl\SystemRestriction;
 use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
@@ -41,7 +42,10 @@ use stdClass;
 
 class FetchType implements Func
 {
-    public function __construct(private EntityManager $entityManager) {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private SystemRestriction $systemRestriction,
+    ) {}
 
     public function process(EvaluatedArgumentList $arguments): ?stdClass
     {
@@ -67,6 +71,10 @@ class FetchType implements Func
         }
 
         $this->load($entity);
+
+        foreach ($this->systemRestriction->getReadRestrictedAttributeList($entityType) as $attribute) {
+            $entity->clear($attribute);
+        }
 
         return $entity->getValueMap();
     }

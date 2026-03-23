@@ -29,30 +29,64 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Acl\SystemRestriction;
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\Functions\BaseFunction;
-use Espo\Core\ORM\Entity;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Exceptions\NotPassedEntity;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
+use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\ORM\Entity;
 
-class SetLinkMultipleColumnType extends BaseFunction
+/**
+ * @noinspection PhpUnused
+ */
+class SetLinkMultipleColumnType implements Func
 {
-    public function process(ArgumentList $args)
+    public function __construct(
+        private SystemRestriction $systemRestriction,
+        private ?Entity $entity = null,
+    ) {}
+
+    public function process(EvaluatedArgumentList $arguments): null
     {
-        if (count($args) < 4) {
-            $this->throwTooFewArguments(4);
+        $entity = $this->entity ?? throw new NotPassedEntity();
+
+        if (!$entity instanceof CoreEntity) {
+            throw new Error("Non-core entity.");
         }
 
-        $link = $this->evaluate($args[0]);
-        $id = $this->evaluate($args[1]);
-        $column = $this->evaluate($args[2]);
-        $value = $this->evaluate($args[3]);
+        if (count($arguments) < 4) {
+            throw TooFewArguments::create(4);
+        }
 
-        $entity = $this->getEntity();
+        $link = $arguments[0];
+        $id = $arguments[1];
+        $column = $arguments[2];
+        $value = $arguments[3];
 
-        if (!$entity instanceof Entity) {
-            throw new Error();
+        if (!is_string($link)) {
+            throw BadArgumentType::create(1, 'string');
+        }
+
+        if (!is_string($id)) {
+            throw BadArgumentType::create(2, 'string');
+        }
+
+        if (!is_string($column)) {
+            throw BadArgumentType::create(3, 'string');
+        }
+
+        $entityType = $entity->getEntityType();
+
+        if (!$this->systemRestriction->checkFieldWrite($entityType, $link)) {
+            throw new NotAllowedUsage("Cannot write restricted field $entityType.$link.");
         }
 
         $entity->setLinkMultipleColumn($link, $column, $id, $value);
+
+        return null;
     }
 }

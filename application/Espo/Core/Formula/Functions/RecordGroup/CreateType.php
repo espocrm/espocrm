@@ -29,46 +29,52 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
-use Espo\Core\Formula\Functions\BaseFunction;
-use Espo\Core\Di;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Utils\EntityUtil;
-use RuntimeException;
+use Espo\ORM\EntityManager;
 use stdClass;
 
 /**
  * @noinspection PhpUnused
  */
-class CreateType extends BaseFunction implements
-    Di\EntityManagerAware
+class CreateType implements Func
 {
-    use Di\EntityManagerSetter;
+    public function __construct(
+        private EntityManager $entityManager,
+        private EntityUtil $entityUtil,
+    ) {}
 
-    public function process(ArgumentList $args)
+    public function process(EvaluatedArgumentList $arguments): ?string
     {
-        if (count($args) < 1) {
-            $this->throwTooFewArguments(1);
+        if (count($arguments) < 1) {
+            throw TooFewArguments::create(1);
         }
 
-        $args = $this->evaluate($args);
-
-        if (!is_array($args)) {
-            throw new RuntimeException();
-        }
-
-        $entityType = $args[0];
+        $entityType = $arguments[0];
 
         if (!is_string($entityType)) {
-            $this->throwBadArgumentType(1, 'string');
+            throw BadArgumentType::create(1, 'string');
         }
 
-        $data = $this->getData($args, $entityType);
+        $data = $this->getData($arguments, $entityType);
+
+        $notAllowedAttributes = array_intersect(
+            array_keys($data),
+            $this->entityUtil->getWriteRestrictedAttributeList($entityType),
+        );
+
+        if ($notAllowedAttributes) {
+            throw new NotAllowedUsage("Cannot write $entityType.$notAllowedAttributes[0].");
+        }
 
         $entity = $this->entityManager->getNewEntity($entityType);
         $entity->setMultiple($data);
 
-        EntityUtil::checkUpdateAccess($entity);
+        $this->entityUtil->assertUpdateAccess($entity);
 
         $this->entityManager->saveEntity($entity);
 
@@ -76,11 +82,10 @@ class CreateType extends BaseFunction implements
     }
 
     /**
-     * @param array<int, mixed> $args
      * @return array<string, mixed>
      * @throws BadArgumentType
      */
-    private function getData(array $args, mixed $entityType): array
+    private function getData(EvaluatedArgumentList $args, mixed $entityType): array
     {
         if (count($args) >= 2 && $args[1] instanceof stdClass) {
             return get_object_vars($args[1]);
@@ -94,7 +99,7 @@ class CreateType extends BaseFunction implements
             $attribute = $args[$i];
 
             if (!is_string($entityType)) {
-                $this->throwBadArgumentType($i + 1, 'string');
+                throw BadArgumentType::create($i + 1, 'string');
             }
 
             /** @var string $attribute */

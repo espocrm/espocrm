@@ -27,25 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\EntityGroup;
+namespace Espo\Core\Acl\Exceptions;
 
-use Espo\Core\Formula\Exceptions\BadArgumentType;
-use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Exception;
 
-class AttributeType extends \Espo\Core\Formula\Functions\AttributeType
-{
-    public function process(\stdClass $item)
-    {
-        if (count($item->value) < 1) {
-            throw TooFewArguments::create(1);
-        }
-
-        $attribute = $this->evaluate($item->value[0]);
-
-        if (!is_string($attribute)) {
-            throw BadArgumentType::create(1, 'string');
-        }
-
-        return $this->getAttributeValue($attribute);
-    }
-}
+/**
+ * @since 9.4.0
+ */
+class Restricted extends Exception
+{}

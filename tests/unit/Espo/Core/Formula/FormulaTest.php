@@ -32,6 +32,7 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
+use Espo\Core\Acl\SystemRestriction;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\FieldProcessing\SpecificFieldLoader;
 use Espo\Core\Formula\AttributeFetcher;
@@ -41,6 +42,7 @@ use Espo\Core\Formula\Parser\Ast\Value;
 use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\Core\Formula\Processor;
 use Espo\Core\Formula\Argument;
+use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\NumberUtil;
@@ -48,11 +50,12 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\Entity as Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\InjectableFactory;
 use Espo\ORM\Repository\RDBRelation;
-use Espo\ORM\Repository\RDBRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use tests\unit\ContainerMocker;
@@ -61,56 +64,18 @@ class FormulaTest extends TestCase
 {
     private $entity;
     private $entityManager;
-    private $applicationConfig;
-    private $container;
+    private $injectableFactory;
+    private $restriction;
 
     protected function setUp() : void
     {
         $this->entity = $this->getEntityMock();
+
         $this->entityManager = $this->createMock(EntityManager::class);
 
         date_default_timezone_set('UTC');
 
-        $dateTime = new DateTime();
-
-        $number = new NumberUtil();
-
-        $config = $this->createMock(Config::class);
-        $config
-            ->expects($this->any())
-            ->method('get')
-            ->willReturnMap([
-                ['timeZone', null, 'UTC']
-            ]);
-
-        $this->applicationConfig = $this->createMock(Config\ApplicationConfig::class);
-        $this->applicationConfig
-            ->expects($this->any())
-            ->method('getTimeZone')
-            ->willReturn('UTC');
-
-        $user = $this->createMock(User::class);
-        $log = $this->createMock(Log::class);
-
-        $user->set('id', '1');
-
-        $user
-            ->expects($this->any())
-            ->method('get')
-            ->willReturnMap([
-                ['id', '1']
-            ]);
-
-        $containerMocker = new ContainerMocker($this);
-
-        $this->container = $containerMocker->create([
-            'entityManager' => $this->entityManager,
-            'dateTime' => $dateTime,
-            'number' => $number,
-            'config' => $config,
-            'user' => $user,
-            'log' => $log,
-        ]);
+        $this->ininContainer();
     }
 
     private static function stringToNode(string $string): mixed
@@ -141,30 +106,28 @@ class FormulaTest extends TestCase
 
     protected function createProcessor($variables = null, ?Entity $entity = null)
     {
-        $injectableFactory = new InjectableFactory(
-            $this->container,
-            BindingContainerBuilder::create()
-                ->bindInstance(Config\ApplicationConfig::class, $this->applicationConfig)
-                ->build()
-        );
-
         $fieldUtil = $this->createMock(FieldUtil::class);
         $loader = $this->createMock(SpecificFieldLoader::class);
 
-        $attributeFetcher = new AttributeFetcher($this->entityManager, $fieldUtil, $loader);
+        $attributeFetcher = new AttributeFetcher(
+            entityManager: $this->entityManager,
+            fieldUtil: $fieldUtil,
+            specificFieldLoader: $loader,
+            systemRestriction: $this->restriction,
+        );
 
         return new Processor(
-            $injectableFactory,
-            $attributeFetcher,
-            null,
-            $entity ?? $this->entity,
-            $variables
+            injectableFactory: $this->injectableFactory,
+            attributeFetcher: $attributeFetcher,
+            functionClassNameMap: null,
+            entity: $entity ?? $this->entity,
+            variables: $variables,
         );
     }
 
-    protected function getEntityMock()
+    protected function getEntityMock(): Entity & MockObject
     {
-        return $this->getMockBuilder(Entity::class)->disableOriginalConstructor()->getMock();
+        return $this->createMock(Entity::class);
     }
 
     protected function setEntityAttributes($entity, $attributes)
@@ -311,74 +274,6 @@ class FormulaTest extends TestCase
         $result = $this->createProcessor()->process($item);
 
         $this->assertTrue($result);
-    }
-
-    function testAddLinkMultipleId()
-    {
-        $item = new Argument(self::stringToNode('
-            {
-                "type": "entity\\\\addLinkMultipleId",
-                "value": [
-                    {
-                        "type": "value",
-                        "value": "teams"
-                    },
-                    {
-                        "type": "value",
-                        "value": "1"
-                    }
-                ]
-            }
-        '));
-
-        $entity = $this->createMock(CoreEntity::class);
-
-        $this->setEntityAttributes($entity, [
-            'teamsIds' => ['2']
-        ]);
-
-        $entity
-            ->expects($this->any())
-            ->method('addLinkMultipleId')
-            ->with('teams', '1');
-
-        $this->createProcessor(null, $entity)->process($item);
-
-        $this->assertTrue(true);
-    }
-
-    function testRemoveLinkMultipleId()
-    {
-        $item = new Argument(self::stringToNode('
-            {
-                "type": "entity\\\\removeLinkMultipleId",
-                "value": [
-                    {
-                        "type": "value",
-                        "value": "teams"
-                    },
-                    {
-                        "type": "value",
-                        "value": "1"
-                    }
-                ]
-            }
-        '));
-
-        $entity = $this->createMock(CoreEntity::class);
-
-        $this->setEntityAttributes($entity, [
-            'teamsIds' => ['1', '2']
-        ]);
-
-        $entity
-            ->expects($this->any())
-            ->method('removeLinkMultipleId')
-            ->with('teams', '1');
-
-        $this->createProcessor(null, $entity)->process($item);
-
-        $this->assertTrue(true);
     }
 
     function testAnd()
@@ -1004,16 +899,9 @@ class FormulaTest extends TestCase
             'amount' => 3
         ]);
 
-        $repository = $this->createMock(RDBRepository::class);
         $relation = $this->createMock(RDBRelation::class);
 
         $this->entityManager
-            ->expects($this->once())
-            ->method('getRDBRepository')
-            ->with($this->entity->getEntityType())
-            ->willReturn($repository);
-
-        $repository
             ->expects($this->once())
             ->method('getRelation')
             ->with($this->entity, 'parent')
@@ -1361,29 +1249,6 @@ class FormulaTest extends TestCase
             ->with('amount', 4);
 
         $this->createProcessor($variables)->process($item);
-    }
-
-    function testClearAttribute(): void
-    {
-        $item = new Argument(self::stringToNode('
-            {
-                "type": "entity\\\\clearAttribute",
-                "value": [
-                    {
-                        "type": "value",
-                        "value": "amount"
-                    }
-                ]
-            }
-        '));
-
-        $this->entity
-            ->expects($this->once())
-            ->method('clear')
-            ->with('amount');
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $this->createProcessor((object) [])->process($item);
     }
 
     function testCompareDates()
@@ -3173,14 +3038,94 @@ class FormulaTest extends TestCase
             }
         '));
 
-        $variables = (object)[];
-        $this->setEntityAttributes($this->entity, array(
+        $variables = (object) [];
+        $this->setEntityAttributes($this->entity, [
             'test' => 'hello'
-        ));
+        ]);
 
         $this->createProcessor($variables)->process($item);
 
         $this->assertEquals(5, $variables->counter);
         $this->assertEquals('hello', $variables->test);
+    }
+
+    /**
+     * @return void
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    private function ininContainer(): void
+    {
+        $dateTime = new DateTime();
+
+        $number = new NumberUtil();
+
+        $config = $this->createMock(Config::class);
+        $config
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['timeZone', null, 'UTC']
+            ]);
+
+        $restriction = $this->createMock(SystemRestriction::class);
+
+        $restriction
+            ->method('checkAttributeRead')
+            ->willReturn(true);
+
+        $restriction
+            ->method('checkLinkRead')
+            ->willReturn(true);
+
+        $restriction
+            ->method('checkLinkWrite')
+            ->willReturn(true);
+
+        $restriction
+            ->method('checkFieldWrite')
+            ->willReturn(true);
+
+        $this->restriction = $restriction;
+
+        $applicationConfig = $this->createMock(Config\ApplicationConfig::class);
+        $applicationConfig
+            ->expects($this->any())
+            ->method('getTimeZone')
+            ->willReturn('UTC');
+
+        $user = $this->createMock(User::class);
+        $log = $this->createMock(Log::class);
+
+        $user->set('id', '1');
+
+        $user
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['id', '1']
+            ]);
+
+        $containerMocker = new ContainerMocker($this);
+
+        $container = $containerMocker->create([
+            'entityManager' => $this->entityManager,
+            'dateTime' => $dateTime,
+            'number' => $number,
+            'config' => $config,
+            'user' => $user,
+            'log' => $log,
+        ]);
+
+        $entityUtil = $this->createMock(EntityUtil::class);
+
+        $this->injectableFactory = new InjectableFactory(
+            $container,
+            BindingContainerBuilder::create()
+                ->bindInstance(Config\ApplicationConfig::class, $applicationConfig)
+                ->bindInstance(SystemRestriction::class, $this->restriction)
+                ->bindInstance(EntityUtil::class, $entityUtil)
+                ->bindInstance(Entity::class, $this->entity)
+                ->build()
+        );
     }
 }

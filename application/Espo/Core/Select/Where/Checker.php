@@ -32,14 +32,13 @@ namespace Espo\Core\Select\Where;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Acl;
+use Espo\Core\Select\Helpers\EntityHelper;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Entities\Team;
-use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\QueryComposer\Util;
 use Espo\ORM\QueryComposer\Util as QueryUtil;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
-use Espo\ORM\BaseEntity;
 
 /**
  * Checks Where parameters. Throws an exception if anything not allowed is met.
@@ -93,6 +92,8 @@ class Checker
         private string $entityType,
         private EntityManager $entityManager,
         private Acl $acl,
+        private Acl\SystemRestriction $systemRestriction,
+        private EntityHelper $entityHelper,
     ) {}
 
     /**
@@ -137,9 +138,7 @@ class Checker
             foreach ($argumentList as $argument) {
                 $this->checkAttributeExistence($argument, $type);
 
-                if ($checkWherePermission) {
-                    $this->checkAttributePermission($argument, $type, $value);
-                }
+                $this->checkAttributePermission($argument, $type, $value, $checkWherePermission);
             }
         }
 
@@ -177,46 +176,95 @@ class Checker
      * @throws Forbidden
      * @throws BadRequest
      */
-    private function checkAttributePermission(string $attribute, string $type, mixed $value): void
+    private function checkAttributePermission(string $attribute, string $type, mixed $value, bool $aclCheck): void
     {
         $entityType = $this->entityType;
 
         if (str_contains($attribute, '.')) {
             [$link, $attribute] = explode('.', $attribute);
 
-            if (!$this->getSeed()->hasRelation($link)) {
-                // TODO allow alias
-                throw new Forbidden("Bad relation '$link' in where.");
-            }
-
-            $foreignEntityType = $this->getRelationEntityType($this->getSeed(), $link);
-
-            if (!$foreignEntityType) {
-                throw new Forbidden("Bad relation '$link' in where.");
-            }
-
-            if (
-                !$this->acl->checkScope($foreignEntityType) ||
-                in_array($link, $this->acl->getScopeForbiddenLinkList($entityType))
-            ) {
-                throw new Forbidden("Forbidden relation '$link' in where.");
-            }
-
-            if (in_array($attribute, $this->acl->getScopeForbiddenAttributeList($foreignEntityType))) {
-                throw new Forbidden("Forbidden attribute '$link.$attribute' in where.");
-            }
+            $this->checkAttributePermissionWithLink(
+                entityType: $entityType,
+                aclCheck: $aclCheck,
+                link: $link,
+                attribute: $attribute,
+            );
 
             return;
         }
 
         if (in_array($type, $this->linkTypeList)) {
-            $this->checkLink($type, $entityType, $attribute, $value);
+            $this->checkLink(
+                type: $type,
+                entityType: $entityType,
+                link: $attribute,
+                value: $value,
+                aclCheck: $aclCheck,
+            );
+
+            return;
+        }
+
+        if (!$aclCheck) {
+            $this->assertAttributeSystemRead($entityType, $attribute);
 
             return;
         }
 
         if (in_array($attribute, $this->acl->getScopeForbiddenAttributeList($entityType))) {
             throw new Forbidden("Forbidden attribute '$attribute' in where.");
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws BadRequest
+     */
+    private function checkAttributePermissionWithLink(
+        string $entityType,
+        bool $aclCheck,
+        string $link,
+        string $attribute,
+    ): void {
+
+        if (!$link) {
+            throw new BadRequest("Empty relation in path in where.");
+        }
+
+        if (!$attribute) {
+            throw new BadRequest("Empty attribute in path in where.");
+        }
+
+        if (!$this->getSeed()->hasRelation($link)) {
+            // TODO allow alias
+            throw new Forbidden("Bad relation '$link' in where.");
+        }
+
+        $foreignEntityType = $this->getRelationEntityType($this->getSeed(), $link);
+
+        if (!$foreignEntityType) {
+            throw new Forbidden("Bad relation '$link' in where.");
+        }
+
+        if (!$aclCheck) {
+            $this->assertLinkSystemRead($entityType, $link);
+
+            if (!$this->systemRestriction->checkAttributeRead($foreignEntityType, $attribute)) {
+                throw new Forbidden("System restricted attribute '$link.$attribute' in where.");
+            }
+
+            return;
+        }
+
+        if (
+            !$this->acl->checkScope($foreignEntityType) ||
+            in_array($link, $this->acl->getScopeForbiddenLinkList($entityType))
+        ) {
+            throw new Forbidden("Forbidden relation '$link' in where.");
+        }
+
+        if (in_array($attribute, $this->acl->getScopeForbiddenAttributeList($foreignEntityType))) {
+            throw new Forbidden("Forbidden attribute '$link.$attribute' in where.");
         }
     }
 
@@ -227,29 +275,23 @@ class Checker
         return $this->seed;
     }
 
-    private function getRelationEntityType(Entity $entity, string $relation): mixed
+    private function getRelationEntityType(Entity $entity, string $relation): ?string
     {
-        if ($entity instanceof BaseEntity) {
-            return $entity->getRelationParam($relation, RelationParam::ENTITY);
-        }
-
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entity->getEntityType());
-
-        if (!$entityDefs->hasRelation($relation)) {
-            return null;
-        }
-
-        return $entityDefs->getRelation($relation)->getParam(RelationParam::ENTITY);
+        return $this->entityHelper->getRelationEntityType($entity, $relation);
     }
 
     /**
      * @throws BadRequest
      * @throws Forbidden
      */
-    private function checkLink(string $type, string $entityType, string $link, mixed $value): void
-    {
+    private function checkLink(
+        string $type,
+        string $entityType,
+        string $link,
+        mixed $value,
+        bool $aclCheck,
+    ): void {
+
         if (!$this->getSeed()->hasRelation($link)) {
             throw new Forbidden("Bad relation '$link' in where.");
         }
@@ -257,19 +299,24 @@ class Checker
         $foreignEntityType = $this->getRelationEntityType($this->getSeed(), $link);
 
         if (!$foreignEntityType) {
-            throw new Forbidden("Bad relation '$link' in where.");
+            throw new Forbidden("Bad relation '$link' in where, no foreign entity type.");
         }
 
         if ($type === self::TYPE_IS_USER_FROM_TEAMS) {
             $foreignEntityType = Team::ENTITY_TYPE;
         }
 
-        if (
-            in_array($link, $this->acl->getScopeForbiddenFieldList($entityType)) ||
-            !$this->acl->checkScope($foreignEntityType) ||
-            in_array($link, $this->acl->getScopeForbiddenLinkList($entityType))
-        ) {
-            throw new Forbidden("Forbidden relation '$link' in where.");
+        if ($aclCheck) {
+            if (
+                in_array($link, $this->acl->getScopeForbiddenFieldList($entityType)) ||
+                !$this->acl->checkScope($foreignEntityType) ||
+                in_array($link, $this->acl->getScopeForbiddenLinkList($entityType))
+            ) {
+                throw new Forbidden("Forbidden link '$link' in where.");
+            }
+        } else {
+            $this->assertLinkSystemRead($entityType, $link);
+            $this->assertFieldSystemRead($entityType, $link);
         }
 
         if (!in_array($type, $this->linkWithIdsTypeList)) {
@@ -299,9 +346,39 @@ class Checker
                 throw new Forbidden("Record '$foreignEntityType' `$id` not found.");
             }
 
-            if (!$this->acl->checkEntityRead($entity)) {
+            if ($aclCheck && !$this->acl->checkEntityRead($entity)) {
                 throw new Forbidden("No access to '$foreignEntityType' `$id`.");
             }
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertLinkSystemRead(string $entityType, string $link): void
+    {
+        if (!$this->systemRestriction->checkLinkRead($entityType, $link)) {
+            throw new Forbidden("System restricted link '$link' in where.");
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertFieldSystemRead(string $entityType, string $field): void
+    {
+        if (!$this->systemRestriction->checkFieldRead($entityType, $field)) {
+            throw new Forbidden("System restricted field '$field' in where.");
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertAttributeSystemRead(string $entityType, string $attribute): void
+    {
+        if (!$this->systemRestriction->checkAttributeRead($entityType, $attribute)) {
+            throw new Forbidden("System restricted attribute '$attribute' in where.");
         }
     }
 }
