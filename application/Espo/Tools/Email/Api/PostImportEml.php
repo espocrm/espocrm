@@ -48,6 +48,8 @@ use Espo\Tools\Email\ImportEmlService;
  */
 class PostImportEml implements Action
 {
+    private const string RELATED_TYPE = 'ImportEml';
+
     public function __construct(
         private Acl $acl,
         private User $user,
@@ -86,6 +88,14 @@ class PostImportEml implements Action
 
         if (!$this->acl->checkEntityRead($attachment)) {
             throw new Forbidden("No access to attachment.");
+        }
+
+        if ($attachment->getCreatedBy()?->getId() !== $this->user->getId()) {
+            throw new Forbidden("Attachment is not owned.");
+        }
+
+        if ($attachment->getRelatedType() !== self::RELATED_TYPE) {
+            throw new Forbidden("Attachment is not for import EML.");
         }
 
         return $attachment;
