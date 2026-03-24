@@ -87,7 +87,7 @@ class Download implements EntryPoint
         if (in_array($type, $inlineMimeTypeList)) {
             $disposition = 'inline';
 
-            $response->setHeader('Content-Security-Policy', "default-src 'self'");
+            $response->setHeader('Content-Security-Policy', "default-src 'self'; script-src 'none'; object-src 'none';");
         }
 
         $response->setHeader('Content-Description', 'File Transfer');
