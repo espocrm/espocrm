@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\Link;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
@@ -214,5 +215,14 @@ class Attachment extends Entity
         $this->relations->set('related', $related);
 
         return $this;
+    }
+
+    /**
+     * @since 9.3.5
+     */
+    public function getCreatedBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject(Field::CREATED_BY);
     }
 }
