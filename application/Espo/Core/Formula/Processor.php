@@ -156,7 +156,7 @@ class Processor
     }
 
     /**
-     * @return mixed[]
+     * @return array<int, mixed>
      * @throws Error
      * @throws ExecutionException
      */

@@ -182,7 +182,7 @@ abstract class BaseFunction
             return;
         }
 
-        $this->log->warning("Formula function: {$this->name}, argument {$index} should be '{$type}'.");
+        $this->log->warning("Formula function: $this->name, argument $index should be '$type'.");
     }
 
     /**
