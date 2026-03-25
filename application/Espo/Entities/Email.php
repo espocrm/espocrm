@@ -54,6 +54,7 @@ class Email extends Entity
     public const STATUS_SENT = 'Sent';
     public const STATUS_SENDING = 'Sending';
     public const STATUS_DRAFT = 'Draft';
+    public const STATUS_FAILED = 'Failed';
 
     public const RELATIONSHIP_EMAIL_USER = 'EmailUser';
     public const ALIAS_INBOX = 'emailUserInbox';

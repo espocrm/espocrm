@@ -29,19 +29,19 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\UserGroup;
 
+use Espo\Core\Formula\Exceptions\FunctionRuntimeError;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Job\JobSchedulerFactory;
-
 use Espo\Tools\UserSecurity\Password\Jobs\SendAccessInfo as SendAccessInfoJob;
 use Espo\Core\Job\Job\Data as JobData;
-
 use Espo\Entities\User;
-
 use Espo\Core\Di;
 
+/**
+ * @noinspection PhpUnused
+ */
 class SendAccessInfoType extends BaseFunction implements
-
     Di\EntityManagerAware,
     Di\InjectableFactoryAware
 {
@@ -65,16 +65,15 @@ class SendAccessInfoType extends BaseFunction implements
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
-            $this->log("User '$userId' does not exist.");
-
-            return;
+            throw new FunctionRuntimeError("User '$userId' does not exist.");
         }
 
         $this->createJobScheduledFactory()
             ->create()
             ->setClassName(SendAccessInfoJob::class)
             ->setData(
-                JobData::create()->withTargetId($user->getId())
+                JobData::create()
+                    ->withTargetId($user->getId())
             )
             ->schedule();
     }

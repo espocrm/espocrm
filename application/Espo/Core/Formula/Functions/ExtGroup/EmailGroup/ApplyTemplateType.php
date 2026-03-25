@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\ExtGroup\EmailGroup;
 
+use Espo\Core\Formula\Exceptions\FunctionRuntimeError;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Email;
 use Espo\Core\Formula\ArgumentList;
@@ -39,6 +41,9 @@ use Espo\Tools\EmailTemplate\Data;
 use Espo\Tools\EmailTemplate\Params;
 use Espo\Tools\EmailTemplate\Processor;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ApplyTemplateType extends BaseFunction implements
 
     Di\EntityManagerAware,
@@ -78,35 +83,27 @@ class ApplyTemplateType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        /** @var ?Email $email */
-        $email = $em->getEntityById(Email::ENTITY_TYPE, $id);
-        /** @var ?EmailTemplate $emailTemplate */
-        $emailTemplate = $em->getEntityById(EmailTemplate::ENTITY_TYPE, $templateId);
+        $email = $em->getRDBRepositoryByClass(Email::class)->getById($id);
+        $emailTemplate = $em->getRDBRepositoryByClass(EmailTemplate::class)->getById($templateId);
 
         if (!$email) {
-            $this->log("Email {$id} does not exist.");
-
-            return false;
+            throw new FunctionRuntimeError("Email $id does not exist.");
         }
 
         if (!$emailTemplate) {
-            $this->log("EmailTemplate {$templateId} does not exist.");
-
-            return false;
+            throw new FunctionRuntimeError("EmailTemplate $templateId does not exist.");
         }
 
         $status = $email->getStatus();
 
         if ($status && $status === Email::STATUS_SENT) {
-            $this->log("Can't apply template to email with 'Sent' status.");
-
-            return false;
+            throw new FunctionRuntimeError("Can't apply template to email with 'Sent' status.");
         }
 
         $processor = $this->injectableFactory->create(Processor::class);
 
         $params = Params::create()
-            ->withCopyAttachments(true)
+            ->withCopyAttachments()
             ->withApplyAcl(false);
 
         $data = Data::create();
@@ -144,7 +141,7 @@ class ApplyTemplateType extends BaseFunction implements
         $systemUserId = $this->injectableFactory->create(SystemUser::class)->getId();
 
         $em->saveEntity($email, [
-            'modifiedById' => $systemUserId,
+            SaveOption::MODIFIED_BY_ID => $systemUserId,
         ]);
 
         return true;

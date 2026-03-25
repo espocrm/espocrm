@@ -30,12 +30,12 @@
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
 use Espo\Core\Di;
+use Espo\Core\Formula\Exceptions\FunctionRuntimeError;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Functions\BaseFunction;
-
 use DateTime;
+use DateMalformedStringException;
 use Exception;
 
 abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
@@ -82,14 +82,16 @@ abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
         try {
             $dateTime = new DateTime($dateTimeString);
         } catch (Exception) {
-            $this->log('bad date-time value passed', 'warning');
-
-            return null;
+            throw new FunctionRuntimeError("Bad date-time value '$dateTimeString'.");
         }
 
-        $dateTime->modify(
-            ($interval > 0 ? '+' : '') . strval($interval) . ' ' . $this->intervalTypeString
-        );
+        $modifier = ($interval > 0 ? '+' : '') . $interval . ' ' . $this->intervalTypeString;
+
+        try {
+            $dateTime->modify($modifier);
+        } catch (DateMalformedStringException $e) {
+            throw new FunctionRuntimeError($e->getMessage(), previous: $e);
+        }
 
         if ($isTime) {
             return $dateTime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
