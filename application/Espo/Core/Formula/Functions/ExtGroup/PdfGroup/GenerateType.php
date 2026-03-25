@@ -67,7 +67,7 @@ class GenerateType extends BaseFunction implements
         $entityType = $args[0];
         $id = $args[1];
         $templateId = $args[2];
-        $fileName = $args[3];
+        $fileName = $args[3] ?? null;
 
         if (!$entityType || !is_string($entityType)) {
             $this->throwBadArgumentType(1, 'string');
