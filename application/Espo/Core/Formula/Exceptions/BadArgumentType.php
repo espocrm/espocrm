@@ -57,6 +57,6 @@ class BadArgumentType extends Error
         $position = (string) ($this->position ?? '?');
         $type = $this->type ?? '?';
 
-        return "Bad argument type on position {$position}, must be {$type}.";
+        return "Bad argument type at position {$position}, must be {$type}.";
     }
 }

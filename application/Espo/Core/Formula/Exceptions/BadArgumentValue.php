@@ -55,7 +55,7 @@ class BadArgumentValue extends Error
     {
         $position = (string) ($this->position ?? '?');
 
-        $message = "Bad argument value on position $position.";
+        $message = "Bad argument value at position $position.";
 
         if ($this->logMessage) {
             $message .= " " . $this->logMessage;
