@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Formula;
 
+use Espo\Core\Acl\SystemRestriction;
 use Espo\Core\FieldProcessing\SpecificFieldLoader;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\EmailAddress;
@@ -53,41 +55,29 @@ class AttributeFetcher
         private EntityManager $entityManager,
         private FieldUtil $fieldUtil,
         private SpecificFieldLoader $specificFieldLoader,
+        private SystemRestriction $systemRestriction,
     ) {}
 
+    /**
+     * @throws NotAllowedUsage
+     */
     public function fetch(Entity $entity, string $attribute, bool $getFetchedAttribute = false): mixed
     {
         if (str_contains($attribute, '.')) {
             $arr = explode('.', $attribute);
 
-            $relationName = $arr[0];
+            $link = $arr[0];
+            $relatedAttribute = $arr[1] ?? null;
 
-            $key = $this->buildKey($entity, $relationName);
-
-            if (
-                !array_key_exists($key, $this->relatedEntitiesCacheMap) &&
-                $entity->hasRelation($relationName) &&
-                !in_array(
-                    $entity->getRelationType($relationName),
-                    [Entity::MANY_MANY, Entity::HAS_MANY, Entity::HAS_CHILDREN]
-                )
-            ) {
-                $this->relatedEntitiesCacheMap[$key] = $this->entityManager
-                    ->getRDBRepository($entity->getEntityType())
-                    ->getRelation($entity, $relationName)
-                    ->findOne();
+            if (!$relatedAttribute) {
+                return null;
             }
 
-            $relatedEntity = $this->relatedEntitiesCacheMap[$key] ?? null;
+            return $this->fetchRelated($entity, $link, $relatedAttribute);
+        }
 
-            if (
-                $relatedEntity instanceof Entity &&
-                count($arr) > 1
-            ) {
-                return $this->fetch($relatedEntity, $arr[1]);
-            }
-
-            return null;
+        if (!$this->systemRestriction->checkAttributeRead($entity->getEntityType(), $attribute)) {
+            throw new NotAllowedUsage("Cannot read restricted attribute {$entity->getEntityType()}.$attribute.");
         }
 
         if ($getFetchedAttribute) {
@@ -183,5 +173,40 @@ class AttributeFetcher
     private function buildKey(Entity $entity, string $link): string
     {
         return spl_object_hash($entity) . '-' . $link;
+    }
+
+    /**
+     * @throws NotAllowedUsage
+     */
+    private function fetchRelated(Entity $entity, string $link, string $attribute): mixed
+    {
+        $entityType = $entity->getEntityType();
+
+        if (!$this->systemRestriction->checkLinkRead($entityType, $link) ) {
+            throw new NotAllowedUsage("Cannot read restricted link $entityType.$link.");
+        }
+
+        $key = $this->buildKey($entity, $link);
+
+        if (
+            !array_key_exists($key, $this->relatedEntitiesCacheMap) &&
+            $entity->hasRelation($link) &&
+            !in_array(
+                $entity->getRelationType($link),
+                [Entity::MANY_MANY, Entity::HAS_MANY, Entity::HAS_CHILDREN]
+            )
+        ) {
+            $this->relatedEntitiesCacheMap[$key] = $this->entityManager
+                ->getRelation($entity, $link)
+                ->findOne();
+        }
+
+        $relatedEntity = $this->relatedEntitiesCacheMap[$key] ?? null;
+
+        if (!$relatedEntity instanceof Entity) {
+            return null;
+        }
+
+        return $this->fetch($relatedEntity, $attribute);
     }
 }

@@ -29,8 +29,74 @@
 
 namespace Espo\ORM\QueryComposer;
 
+use InvalidArgumentException;
+
 class Util
 {
+    /** @var string[] */
+    private const array COMPARISON_OPERATORS = [
+        '!=s',
+        '=s',
+        '!=',
+        '!*',
+        '*',
+        '>=',
+        '<=',
+        '>',
+        '<',
+        '=',
+        '>=any',
+        '<=any',
+        '>any',
+        '<any',
+        '!=any',
+        '=any',
+        '>=all',
+        '<=all',
+        '>all',
+        '<all',
+        '!=all',
+        '=all',
+    ];
+
+    /**
+     * @return array{0: string, 1: string}
+     * @internal
+     * @since 9.4.0
+     */
+    public static function splitWhereKey(string $whereKey): array
+    {
+        try {
+            return self::splitWhereKeyThrowing($whereKey);
+        } catch (InvalidArgumentException) {}
+
+        return [$whereKey, '='];
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     * @internal
+     * @since 9.4.0
+     */
+    public static function splitWhereKeyThrowing(string $whereKey): array
+    {
+        if (preg_match('/^[a-z0-9]+$/i', $whereKey)) {
+            return [$whereKey, '='];
+        }
+
+        foreach (self::COMPARISON_OPERATORS as $operator) {
+            if (!str_ends_with($whereKey, $operator)) {
+                continue;
+            }
+
+            $expression = trim(substr($whereKey, 0, -strlen($operator)));
+
+            return [$expression, $operator];
+        }
+
+        throw new InvalidArgumentException();
+    }
+
     public static function isComplexExpression(string $string): bool
     {
         if (

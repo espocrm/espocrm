@@ -29,17 +29,23 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Acl\SystemRestriction;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
 
+/**
+ * @noinspection PhpUnused
+ */
 class RelationColumnType extends BaseFunction implements
-    Di\EntityManagerAware
+    Di\EntityManagerAware,
+    Di\InjectableFactoryAware
 {
     use Di\EntityManagerSetter;
+    use Di\InjectableFactorySetter;
 
     public function process(ArgumentList $args)
     {
@@ -55,25 +61,27 @@ class RelationColumnType extends BaseFunction implements
         $foreignId = $args[3];
         $column = $args[4];
 
-        if (!$entityType) {
-            $this->throwError("Empty entityType.");
+        if (!is_string($entityType)) {
+            throw BadArgumentType::create(1, 'string');
         }
 
-        if (!$id) {
-            return null;
+        if (!is_string($id)) {
+            throw BadArgumentType::create(2, 'string');
         }
 
-        if (!$link) {
-            $this->throwError("Empty link.");
+        if (!is_string($link)) {
+            throw BadArgumentType::create(3, 'string');
         }
 
-        if (!$foreignId) {
-            return null;
+        if (!is_string($foreignId)) {
+            throw BadArgumentType::create(4, 'string');
         }
 
-        if (!$column) {
-            $this->throwError("Empty column.");
+        if (!is_string($column)) {
+            throw BadArgumentType::create(5, 'string');
         }
+
+        $this->assertLinkRead($entityType, $link);
 
         $em = $this->entityManager;
 
@@ -87,6 +95,19 @@ class RelationColumnType extends BaseFunction implements
             return null;
         }
 
-        return $em->getRelation($entity, $link)->getColumnById($foreignId, $column);
+        return $em->getRelation($entity, $link)
+            ->getColumnById($foreignId, $column);
+    }
+
+    /**
+     * @throws NotAllowedUsage
+     */
+    private function assertLinkRead(string $entityType, string $link): void
+    {
+        $restriction = $this->injectableFactory->create(SystemRestriction::class);
+
+        if (!$restriction->checkLinkRead($entityType, $link) ) {
+            throw new NotAllowedUsage("Cannot read restricted link $entityType.$link.");
+        }
     }
 }

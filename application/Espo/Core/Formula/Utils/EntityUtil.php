@@ -29,8 +29,9 @@
 
 namespace Espo\Core\Formula\Utils;
 
+use Espo\Core\Acl\SystemRestriction;
+use Espo\Core\Acl\Exceptions\Restricted;
 use Espo\Core\Formula\Exceptions\NotAllowedUsage;
-use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 /**
@@ -39,46 +40,39 @@ use Espo\ORM\Entity;
  */
 class EntityUtil
 {
+    public function __construct(
+        private SystemRestriction $systemRestriction,
+    ) {}
+
     /**
      * @throws NotAllowedUsage
      */
-    public static function checkUpdateAccess(Entity $entity): void
+    public function assertUpdateAccess(Entity $entity): void
     {
-        if ($entity instanceof User) {
-            $restrictedTypeList = self::getUserRestrictedTypeList();
-
-            if (
-                $entity->isAttributeChanged(User::ATTR_TYPE) &&
-                (
-                    in_array($entity->getFetched(User::ATTR_TYPE), $restrictedTypeList) ||
-                    in_array($entity->getType(), $restrictedTypeList)
-                )
-            ) {
-                throw new NotAllowedUsage("Cannot change user type.");
-            }
+        try {
+            $this->systemRestriction->assertUpdate($entity);
+        } catch (Restricted $e) {
+            throw new NotAllowedUsage($e->getMessage(), previous: $e);
         }
     }
 
     /**
      * @throws NotAllowedUsage
      */
-    public static function checkRemoveAccess(Entity $entity): void
+    public function assertRemoveAccess(Entity $entity): void
     {
-        if ($entity instanceof User) {
-            if (in_array($entity->getType(), self::getUserRestrictedTypeList())) {
-                throw new NotAllowedUsage("Cannot remove the user.");
-            }
+        try {
+            $this->systemRestriction->assertRemoval($entity);
+        } catch (Restricted $e) {
+            throw new NotAllowedUsage($e->getMessage(), previous: $e);
         }
     }
 
     /**
      * @return string[]
      */
-    private static function getUserRestrictedTypeList(): array
+    public function getWriteRestrictedAttributeList(string $entityType): array
     {
-        return [
-            User::TYPE_SUPER_ADMIN,
-            User::TYPE_SYSTEM,
-        ];
+        return $this->systemRestriction->getWriteRestrictedAttributeList($entityType);
     }
 }

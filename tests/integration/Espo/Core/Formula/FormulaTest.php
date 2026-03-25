@@ -32,6 +32,7 @@ namespace tests\integration\Espo\Core\Formula;
 use Espo\Core\Acl\Table;
 use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
 use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
@@ -44,7 +45,7 @@ use tests\integration\Core\BaseTestCase;
 
 class FormulaTest extends BaseTestCase
 {
-    public function testCountRelatedAndSumRelated()
+    public function testCountRelatedAndSumRelated(): void
     {
         $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
@@ -252,7 +253,7 @@ class FormulaTest extends BaseTestCase
         $this->assertEquals(null, $result);
     }
 
-    public function testFindMany(): void
+    public function testRecordFindMany(): void
     {
         $fm = $this->getContainer()->getByClass(Manager::class);
         $em = $this->getContainer()->getByClass(EntityManager::class);
@@ -330,7 +331,7 @@ class FormulaTest extends BaseTestCase
             'parentId' => $account->getId(),
         ]);
 
-        $c0 = $em->createEntity('Contact', [
+        $em->createEntity('Contact', [
             'lastName' => '0',
         ]);
 
@@ -1194,5 +1195,371 @@ class FormulaTest extends BaseTestCase
         ";
         $result = $fm->run($script, $account1);
         $this->assertEquals(100.0, $result);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testRestrictedRead(): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $user = $em->createEntity(User::ENTITY_TYPE);
+        $userId = $user->getId();
+
+        $script = "record\\attribute('User', '$userId', 'password')";
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "record\\attribute('User', '$userId', 'userDataId')";
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testRestrictedWrite(): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $user = $em->createEntity(User::ENTITY_TYPE);
+        $userId = $user->getId();
+
+        $script = "record\\update('User', '$userId', 'userDataId', '1')";
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testEntityFunctions(): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $account = $em->createEntity('Account');
+        /** @var Contact $contact */
+        $contact = $em->createEntity('Contact', ['accountId' => $account->getId()]);
+        $team = $em->createEntity('Team');
+
+        //
+
+        $script = "entity\\addLinkMultipleId('teams', '{$team->getId()}')";
+        $fm->run($script, $account);
+
+        $this->assertEquals([$team->getId()], $account->get('teamsIds'));
+
+        //
+
+        $script = "entity\\hasLinkMultipleId('teams', '{$team->getId()}')";
+        $result = $fm->run($script, $account);
+
+        $this->assertTrue($result);
+
+        //
+
+        $script = "entity\\removeLinkMultipleId('teams', '{$team->getId()}')";
+        $fm->run($script, $account);
+
+        $this->assertEquals([], $account->get('teamsIds'));
+
+        //
+
+        $script = "entity\\clearAttribute('teamsIds')";
+        $fm->run($script, $account);
+
+        $this->assertFalse($account->has('teamsIds'));
+
+        //
+
+        $script = "entity\\setLinkMultipleColumn('accounts', '{$account->getId()}', 'role', 'Tester')";
+        $fm->run($script, $contact);
+
+        $this->assertEquals('Tester', $contact->getLinkMultipleColumn('accounts', 'role', $account->getId()));
+
+        //
+
+        $em->saveEntity($contact);
+
+        $script = "entity\\getLinkColumn('accounts', '{$account->getId()}', 'role')";
+        $value = $fm->run($script, $contact);
+
+        $this->assertEquals('Tester', $value);
+
+        //
+
+        $script = "entity\\countRelated('accounts')";
+        $value = $fm->run($script, $contact);
+
+        $this->assertEquals(1, $value);
+
+        //
+
+        $script = "entity\\isRelated('accounts', '{$account->getId()}')";
+        $value = $fm->run($script, $contact);
+
+        $this->assertTrue($value);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testSystemRestriction(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $user = $this->getContainer()->getByClass(User::class);
+
+        //
+
+        $script = "
+            record\\findOne('User', 'password', 'ASC');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            record\\findOne('User', null, null, 'password', '1');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            record\\findMany('User', 1, null, null, 'password', '1');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$item = object\\create();
+            \$item['attribute'] = 'password';
+            \$item['type'] = 'equals';
+            \$item['value'] = '1';
+
+            record\\findOne('User', null, null, \$item);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            record\\findRelatedOne('User', '{$user->getId()}', 'userData');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            record\\findRelatedMany('User', '{$user->getId()}', 'userData', 1);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            entity\\countRelated('userData');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            entity\\sumRelated('userData', 'id');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$a = password;
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            authLogRecordId = '1';
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$a = entity\\attribute('password');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$a = record\\attribute('User', '{$user->getId()}', 'password');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            record\\fetch('User', '{$user->getId()}');
+        ";
+
+        $data = $fm->run($script);
+
+        $this->assertFalse(property_exists($data, 'password'));
+        $this->assertTrue(property_exists($data, 'name'));
+
+        //
+
+        $script = "
+            record\\update('User', '{$user->getId()}', 'authLogRecordId' , '1');
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$data = object\\create();
+            record\\create('Job', \$data);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
     }
 }

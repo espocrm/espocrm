@@ -27,55 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\EntityGroup;
+namespace Espo\Core\Select\Helpers;
 
-use Espo\Core\Acl\SystemRestriction;
-use Espo\Core\Formula\EvaluatedArgumentList;
-use Espo\Core\Formula\Exceptions\BadArgumentType;
-use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\Exceptions\NotAllowedUsage;
-use Espo\Core\Formula\Exceptions\NotPassedEntity;
-use Espo\Core\Formula\Exceptions\TooFewArguments;
-use Espo\Core\Formula\Func;
-use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs;
+use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Entity;
 
 /**
- * @noinspection PhpUnused
+ * @internal
  */
-class ClearAttributeType implements Func
+class EntityHelper
 {
     public function __construct(
-        private SystemRestriction $systemRestriction,
-        private ?Entity $entity = null,
+        private Defs $defs,
     ) {}
 
-    public function process(EvaluatedArgumentList $arguments): null
+    /**
+     * @internal
+     */
+    public function getRelationEntityType(Entity $entity, string $relation): ?string
     {
-        $entity = $this->entity ?? throw new NotPassedEntity();
-
-        if (!$entity instanceof CoreEntity) {
-            throw new Error("Non-core entity.");
+        if ($entity instanceof BaseEntity) {
+            return $entity->getRelationParam($relation, RelationParam::ENTITY);
         }
 
-        if (count($arguments) < 1) {
-            throw TooFewArguments::create(1);
+        $entityDefs = $this->defs->getEntity($entity->getEntityType());
+
+        if (!$entityDefs->hasRelation($relation)) {
+            return null;
         }
 
-        $attribute = $arguments[0];
-
-        if (!is_string($attribute)) {
-            throw BadArgumentType::create(1, 'string');
-        }
-
-        $entityType = $entity->getEntityType();
-
-        if (!$this->systemRestriction->checkAttributeWrite($entityType, $attribute)) {
-            throw new NotAllowedUsage("Cannot write restricted attribute $entityType.$attribute.");
-        }
-
-        $entity->clear($attribute);
-
-        return null;
+        return $entityDefs
+            ->getRelation($relation)
+            ->tryGetForeignEntityType();
     }
 }

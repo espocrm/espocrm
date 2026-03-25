@@ -29,17 +29,20 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Acl\SystemRestriction;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
 
 class UpdateRelationColumnType extends BaseFunction implements
-    Di\EntityManagerAware
+    Di\EntityManagerAware,
+    Di\InjectableFactoryAware
 {
     use Di\EntityManagerSetter;
+    use Di\InjectableFactorySetter;
 
     public function process(ArgumentList $args)
     {
@@ -56,28 +59,30 @@ class UpdateRelationColumnType extends BaseFunction implements
         $column = $args[4];
         $value = $args[5];
 
-        if (!$entityType) {
-            $this->throwError("Empty entityType.");
+        if (!is_string($entityType)) {
+            throw BadArgumentType::create(1, 'string');
         }
 
-        if (!$id) {
-            return null;
+        if (!is_string($id)) {
+            throw BadArgumentType::create(2, 'string');
         }
 
-        if (!$link) {
-            $this->throwError("Empty link.");
+        if (!is_string($link)) {
+            throw BadArgumentType::create(3, 'string');
         }
 
-        if (!$foreignId) {
-            return null;
-        }
-
-        if (!$column) {
-            $this->throwError("Empty column.");
+        if (!is_string($foreignId)) {
+            throw BadArgumentType::create(4, 'string');
         }
 
         if (!is_string($column)) {
-            $this->throwError("Column is not string.");
+            throw BadArgumentType::create(5, 'string');
+        }
+
+        $this->assertLinkWrite($entityType, $link);
+
+        if (!$column) {
+            $this->throwError("Empty column.");
         }
 
         $em = $this->entityManager;
@@ -97,5 +102,17 @@ class UpdateRelationColumnType extends BaseFunction implements
             ->updateColumnsById($foreignId, [$column => $value]);
 
         return true;
+    }
+
+    /**
+     * @throws NotAllowedUsage
+     */
+    private function assertLinkWrite(string $entityType, string $link): void
+    {
+        $restriction = $this->injectableFactory->create(SystemRestriction::class);
+
+        if (!$restriction->checkLinkWrite($entityType, $link) ) {
+            throw new NotAllowedUsage("Cannot write restricted link $entityType.$link.");
+        }
     }
 }

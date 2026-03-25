@@ -29,8 +29,15 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+
 class AttributeFetchedType extends AttributeType
 {
+    /**
+     * @throws NotAllowedUsage
+     * @throws Error
+     */
     protected function getAttributeValue($attribute)
     {
         return $this->attributeFetcher->fetch($this->getEntity(), $attribute, true);

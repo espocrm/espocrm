@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
+use Espo\Core\Formula\Exceptions\Error;
+
 class IsNewType extends \Espo\Core\Formula\Functions\Base
 {
     /**
      * @return bool
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
     public function process(\stdClass $item)
     {

@@ -29,44 +29,67 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-use Espo\Core\Exceptions\Error;
-
+use Espo\Core\Acl\SystemRestriction;
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Exceptions\NotPassedEntity;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
+use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
-use Espo\Core\Di;
-
-class GetLinkColumnType extends \Espo\Core\Formula\Functions\Base implements
-    Di\EntityManagerAware
+/**
+ * @noinspection PhpUnused
+ */
+class GetLinkColumnType implements Func
 {
-    use Di\EntityManagerSetter;
+    public function __construct(
+        private SystemRestriction $systemRestriction,
+        private EntityManager $entityManager,
+        private ?Entity $entity = null,
+    ) {}
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @return mixed
-     * @throws Error
-     * @throws \Espo\Core\Formula\Exceptions\Error
-     */
-    public function process(\stdClass $item)
+    public function process(EvaluatedArgumentList $arguments): mixed
     {
-        $args = $item->value ?? [];
+        $entity = $this->entity ?? throw new NotPassedEntity();
 
-        if (count($args) < 3) {
-            throw new Error("Formula: entity\\isRelated: no argument.");
+        if (!$entity instanceof CoreEntity) {
+            throw new Error("Non-core entity.");
         }
 
-        $link = $this->evaluate($args[0]);
-        $id = $this->evaluate($args[1]);
-        $column = $this->evaluate($args[2]);
+        if (count($arguments) < 3) {
+            throw TooFewArguments::create(3);
+        }
 
-        $entityType = $this->getEntity()->getEntityType();
+        $link = $arguments[0];
+        $id = $arguments[1];
+        $column = $arguments[2];
+
+        if (!is_string($link)) {
+            throw BadArgumentType::create(1, 'string');
+        }
+
+        if (!is_string($id)) {
+            throw BadArgumentType::create(2, 'string');
+        }
+
+        if (!is_string($column)) {
+            throw BadArgumentType::create(3, 'string');
+        }
+
+        $entityType = $entity->getEntityType();
+
+        if (!$this->systemRestriction->checkFieldRead($entityType, $link)) {
+            throw new NotAllowedUsage("Cannot read restricted field $entityType.$link.");
+        }
+
         $repository = $this->entityManager->getRDBRepository($entityType);
 
         return $repository
-            ->getRelation($this->getEntity(), $link)
+            ->getRelation($entity, $link)
             ->getColumnById($id, $column);
     }
 }

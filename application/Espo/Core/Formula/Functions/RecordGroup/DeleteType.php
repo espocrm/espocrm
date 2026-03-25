@@ -36,11 +36,17 @@ use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\ORM\EntityManager;
 
+/**
+ * @noinspection PhpUnused
+ */
 class DeleteType implements Func
 {
-    public function __construct(private EntityManager $entityManager) {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private EntityUtil $entityUtil,
+    ) {}
 
-    public function process(EvaluatedArgumentList $arguments): mixed
+    public function process(EvaluatedArgumentList $arguments): null
     {
         if (count($arguments) < 2) {
             throw TooFewArguments::create(2);
@@ -63,7 +69,7 @@ class DeleteType implements Func
             return null;
         }
 
-        EntityUtil::checkRemoveAccess($entity);
+        $this->entityUtil->assertRemoveAccess($entity);
 
         $this->entityManager->removeEntity($entity);
 

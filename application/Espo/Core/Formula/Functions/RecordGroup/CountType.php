@@ -31,48 +31,52 @@ namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
-use Espo\Core\Di;
 use Espo\Core\Select\Primary\Filters\All;
 use Espo\Core\Select\SelectBuilderFactory;
+use Espo\ORM\EntityManager;
 
 /**
  * @noinspection PhpUnused
  */
-class CountType extends BaseFunction implements
-    Di\EntityManagerAware,
-    Di\InjectableFactoryAware,
-    Di\UserAware
+class CountType implements Func
 {
-    use Di\EntityManagerSetter;
-    use Di\InjectableFactorySetter;
-    use Di\UserSetter;
+    public function __construct(
+        private EntityManager $entityManager,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private FindQueryUtil $findQueryUtil,
+    ) {}
 
-    public function process(ArgumentList $args)
+    public function process(EvaluatedArgumentList $arguments): int
     {
-        if (count($args) < 1) {
-            $this->throwTooFewArguments(1);
+        if (count($arguments) < 1) {
+            throw TooFewArguments::create(1);
         }
 
-        $entityType = $this->evaluate($args[0]);
+        $entityType = $arguments[0];
 
-        if (count($args) < 3) {
+        if (!is_string($entityType)) {
+            throw BadArgumentType::create(1, 'string');
+        }
+
+        if (count($arguments) < 3) {
             $filter = null;
 
-            if (count($args) === 2) {
-                $filter = $this->evaluate($args[1]);
+            if (count($arguments) === 2) {
+                $filter = $arguments[1];
             }
 
-            $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
+            $builder = $this->selectBuilderFactory
                 ->create()
-                ->forUser($this->user)
                 ->withPrimaryFilter(All::NAME)
                 ->from($entityType);
 
-            (new FindQueryUtil())->applyFilter($builder, $filter, 2);
+            $this->findQueryUtil->applyFilter($builder, $filter, 2);
 
             try {
                 return $this->entityManager
@@ -80,7 +84,7 @@ class CountType extends BaseFunction implements
                     ->clone($builder->build())
                     ->count();
             } catch (BadRequest|Forbidden $e) {
-                throw new Error($e->getMessage(), 0, $e);
+                throw new NotAllowedUsage($e->getMessage(), 0, $e);
             }
         }
 
@@ -88,9 +92,11 @@ class CountType extends BaseFunction implements
 
         $i = 1;
 
-        while ($i < count($args) - 1) {
-            $key = $this->evaluate($args[$i]);
-            $value = $this->evaluate($args[$i + 1]);
+        while ($i < count($arguments) - 1) {
+            $key = $arguments[$i];
+            $value = $arguments[$i + 1];
+
+            $this->findQueryUtil->assertWhereClauseKeyValid($entityType, $key);
 
             $whereClause[] = [$key => $value];
 

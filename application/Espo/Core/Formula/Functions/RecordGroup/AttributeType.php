@@ -29,9 +29,11 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\Error;
 
 use Espo\Core\Di;
+use stdClass;
 
 class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implements
     Di\EntityManagerAware
@@ -41,7 +43,7 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implement
     /**
      * @throws Error
      */
-    public function process(\stdClass $item)
+    public function process(stdClass $item)
     {
         if (count($item->value) < 3) {
             throw new Error("record\\attribute: too few arguments.");
@@ -51,16 +53,16 @@ class AttributeType extends \Espo\Core\Formula\Functions\AttributeType implement
         $id = $this->evaluate($item->value[1]);
         $attribute = $this->evaluate($item->value[2]);
 
-        if (!$entityType) {
-            throw new Error("Formula record\\attribute: Empty entityType.");
+        if (!is_string($entityType)) {
+            throw BadArgumentType::create(1, 'string');
         }
 
-        if (!$id) {
-            return null;
+        if (!is_string($id)) {
+            throw BadArgumentType::create(2, 'string');
         }
 
-        if (!$attribute) {
-            throw new Error("Formula record\\attribute: Empty attribute.");
+        if (!is_string($attribute)) {
+            throw BadArgumentType::create(3, 'string');
         }
 
         $entity = $this->entityManager->getEntityById($entityType, $id);

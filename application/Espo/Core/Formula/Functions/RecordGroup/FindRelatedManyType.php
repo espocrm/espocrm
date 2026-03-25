@@ -29,117 +29,105 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
+use Espo\Core\Acl\SystemRestriction;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\BadArgumentType;
 use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
 use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Functions\RecordGroup\Util\FindQueryUtil;
 use Espo\Core\ORM\Entity as CoreEntity;
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Functions\BaseFunction;
-use Espo\Core\Di;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Select\Primary\Filters\All;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Defs\Params\RelationParam;
+use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\RelationType;
 
 /**
  * @noinspection PhpUnused
  */
-class FindRelatedManyType extends BaseFunction implements
-    Di\EntityManagerAware,
-    Di\MetadataAware,
-    Di\InjectableFactoryAware,
-    Di\UserAware
+class FindRelatedManyType implements Func
 {
-    use Di\EntityManagerSetter;
-    use Di\MetadataSetter;
-    use Di\InjectableFactorySetter;
-    use Di\UserSetter;
+    public function __construct(
+        private EntityManager $entityManager,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private FindQueryUtil $findQueryUtil,
+        private RandomStringGenerator $randomStringGenerator,
+        private SystemRestriction $systemRestriction,
+    ) {}
 
     /**
+     * @return string[]
      * @throws Error
      * @throws TooFewArguments
      * @throws BadArgumentType
-     * @throws ExecutionException
      */
-    public function process(ArgumentList $args)
+    public function process(EvaluatedArgumentList $arguments): array
     {
-        $args = $this->evaluate($args);
-
-        if (count($args) < 4) {
-            $this->throwTooFewArguments(4);
+        if (count($arguments) < 4) {
+            throw TooFewArguments::create(4);
         }
 
         $entityManager = $this->entityManager;
 
-        $entityType = $args[0];
-        $id = $args[1];
-        $link = $args[2];
-        $limit = $args[3];
+        $entityType = $arguments[0];
+        $id = $arguments[1];
+        $link = $arguments[2];
+        $limit = $arguments[3];
 
         $orderBy = null;
         $order = null;
 
-        if (count($args) > 4) {
-            $orderBy = $args[4];
+        if (count($arguments) > 4) {
+            $orderBy = $arguments[4];
         }
 
-        if (count($args) > 5) {
-            $order = $args[5];
+        if (count($arguments) > 5) {
+            $order = $arguments[5];
         }
 
         if (!$entityType || !is_string($entityType)) {
-            $this->throwBadArgumentType(1, 'string');
-        }
-
-        if (!$id) {
-            $this->log("Empty ID.");
-
-            return [];
+            throw BadArgumentType::create(1, 'string');
         }
 
         if (!is_string($id)) {
-            $this->throwBadArgumentType(2, 'string');
+            throw BadArgumentType::create(2, 'string');
         }
 
         if (!$link || !is_string($link)) {
-            $this->throwBadArgumentType(3, 'string');
+            throw BadArgumentType::create(3, 'string');
         }
 
         if (!is_int($limit)) {
-            $this->throwBadArgumentType(4, 'string');
+            throw BadArgumentType::create(4, 'int');
         }
+
+        if ($orderBy !== null && !is_string($orderBy)) {
+            throw BadArgumentType::create(5, 'string|null');
+        }
+
+        if ($order !== null && !is_string($order) && !is_bool($order)) {
+            throw BadArgumentType::create(6, 'string|bool|null');
+        }
+
+        $this->assertLinkRead($entityType, $link);
 
         $entity = $entityManager->getEntityById($entityType, $id);
 
         if (!$entity) {
-            $this->log("record\\findRelatedMany: Entity $entityType $id not found.", 'notice');
-
             return [];
         }
 
-        $metadata = $this->metadata;
-
-        if (!$orderBy) {
-            $orderBy = $metadata->get(['entityDefs', $entityType, 'collection', 'orderBy']);
-
-            if (is_null($order)) {
-                $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'asc';
-            }
-        } else {
-            $order = $order ?? 'asc';
-        }
-
         if (!$entity instanceof CoreEntity) {
-            $this->throwError("Only core entities are supported.");
+            throw new Error("Non-core entity.");
         }
 
-        $relationType = $entity->getRelationParam($link, 'type');
+        $relationType = $entity->getRelationType($link);
 
         if (
             in_array($relationType, [
@@ -148,42 +136,45 @@ class FindRelatedManyType extends BaseFunction implements
                 RelationType::BELONGS_TO_PARENT,
             ])
         ) {
-            $this->throwError("Not supported link type '$relationType'.");
+            throw new NotAllowedUsage("Not supported link type '$relationType'.");
         }
 
         $foreignEntityType = $entity->getRelationParam($link, RelationParam::ENTITY);
 
         if (!$foreignEntityType) {
-            $this->throwError("Bad or not supported link '$link'.");
+            throw new NotAllowedUsage("Bad or not supported link '$link'.");
         }
 
         $foreignLink = $entity->getRelationParam($link, RelationParam::FOREIGN);
 
         if (!$foreignLink) {
-            $this->throwError("Not supported link '$link'.");
+            throw new NotAllowedUsage("Not supported link '$link'.");
         }
 
-        $builder = $this->injectableFactory->create(SelectBuilderFactory::class)
+        $builder = $this->selectBuilderFactory
             ->create()
-            ->forUser($this->user)
             ->withPrimaryFilter(All::NAME)
             ->from($foreignEntityType);
 
+        $this->findQueryUtil->applyOrder($builder, $orderBy, $order, 6);
+
         $whereClause = [];
 
-        if (count($args) <= 7) {
+        if (count($arguments) <= 7) {
             $filter = null;
-            if (count($args) == 7) {
-                $filter = $args[6];
+            if (count($arguments) == 7) {
+                $filter = $arguments[6];
             }
 
-            (new FindQueryUtil())->applyFilter($builder, $filter, 7);
+            $this->findQueryUtil->applyFilter($builder, $filter, 7);
         } else {
             $i = 6;
 
-            while ($i < count($args) - 1) {
-                $key = $args[$i];
-                $value = $args[$i + 1];
+            while ($i < count($arguments) - 1) {
+                $key = $arguments[$i];
+                $value = $arguments[$i + 1];
+
+                $this->findQueryUtil->assertWhereClauseKeyValid($entityType, $key);
 
                 $whereClause[] = [$key => $value];
 
@@ -194,7 +185,7 @@ class FindRelatedManyType extends BaseFunction implements
         try {
             $queryBuilder = $builder->buildQueryBuilder();
         } catch (BadRequest|Forbidden $e) {
-            throw new Error($e->getMessage(), 0, $e);
+            throw new NotAllowedUsage($e->getMessage(), 0, $e);
         }
 
         if (!empty($whereClause)) {
@@ -218,10 +209,6 @@ class FindRelatedManyType extends BaseFunction implements
 
         $queryBuilder->limit(0, $limit);
 
-        if ($orderBy) {
-            $queryBuilder->order($orderBy, $order);
-        }
-
         $collection = $entityManager
             ->getRDBRepository($foreignEntityType)
             ->clone($queryBuilder->build())
@@ -239,8 +226,16 @@ class FindRelatedManyType extends BaseFunction implements
 
     private function generateRandomString(): string
     {
-        $generator =  $this->injectableFactory->create(RandomStringGenerator::class);
+        return $this->randomStringGenerator->generate();
+    }
 
-        return $generator->generate();
+    /**
+     * @throws NotAllowedUsage
+     */
+    private function assertLinkRead(string $entityType, string $link): void
+    {
+        if (!$this->systemRestriction->checkLinkRead($entityType, $link) ) {
+            throw new NotAllowedUsage("Cannot read restricted link $entityType.$link.");
+        }
     }
 }

@@ -29,12 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
+use Espo\Core\Formula\Exceptions\Error;
+
 class IsAttributeNotChangedType extends IsAttributeChangedType
 {
     /**
      * @param string $attribute
      * @return bool
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
     protected function check($attribute)
     {
