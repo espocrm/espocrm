@@ -108,6 +108,10 @@ class Processor
             return $function->process($item->getArgumentList());
         } catch (UndefinedKey $e) {
             throw UndefinedKey::cloneWithLevelRisen($e);
+        } catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
+            $message = sprintf('Function %s; %s', $item->getType(), $e->getLogMessage());
+
+            throw new Error($message);
         } catch (FunctionRuntimeError $e) {
             $message = sprintf('Function %s; %s', $item->getType(), $e->getMessage());
 
