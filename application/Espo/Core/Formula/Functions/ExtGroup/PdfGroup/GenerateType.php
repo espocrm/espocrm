@@ -35,7 +35,6 @@ use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 use Espo\Entities\Template;
 use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
