@@ -27,37 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\ArrayGroup;
+namespace Espo\Core\Formula\Exceptions;
 
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Exceptions\FunctionRuntimeError;
-use Espo\Core\Formula\Functions\BaseFunction;
-
-class AtType extends BaseFunction
-{
-    public function process(ArgumentList $args)
-    {
-        $args = $this->evaluate($args);
-
-        if (count($args) < 2) {
-            $this->throwTooFewArguments();
-        }
-
-        $array = $args[0] ?? [];
-        $index = $args[1];
-
-        if (!is_array($array)) {
-            $this->throwBadArgumentType(1, 'array');
-        }
-
-        if (!is_int($index)) {
-            $this->throwBadArgumentType(2, 'int');
-        }
-
-        if (!array_key_exists($index, $array)) {
-            throw new FunctionRuntimeError("Cannot access array value by non-existing index $index.");
-        }
-
-        return $array[$index];
-    }
-}
+/**
+ * For various errors happened inside a function in runtime.
+ *.
+ * @since 9.4.0
+ */
+class FunctionRuntimeError extends Error
+{}
