@@ -29,7 +29,8 @@
         {
             "name": "suppressHook",
             "type": "bool",
-            "default": false
+            "default": false,
+            "hidden": true
         }
     ],
     "filter": true,
