@@ -11,6 +11,7 @@
     "notifications": true,
     "object": true,
     "statusField": "status",
+    "statusFieldLocked": true,
     "hasPersonalData": true,
     "duplicateCheckFieldList": ["name", "emailAddress"]
 }

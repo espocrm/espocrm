@@ -18,5 +18,6 @@
     "notifications": true,
     "object": true,
     "statusField": "status",
+    "statusFieldLocked": true,
     "collaborators": true
 }
