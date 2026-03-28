@@ -153,6 +153,20 @@
                 }
             }
         },
+        "wysiwyg": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/base",
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains", "matches"],
+            "conditionTypes": {
+                "contains": {
+                    "valueType": "varchar",
+                    "itemView": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
+                },
+                "notContains": {
+                    "valueType": "varchar",
+                    "itemView": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
+                }
+            }
+        },
         "int": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
             "typeList": [
