@@ -1,0 +1,12 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "notSortable": true
+    },
+    {
+        "name": "status",
+        "width": 50,
+        "notSortable": true
+    }
+]

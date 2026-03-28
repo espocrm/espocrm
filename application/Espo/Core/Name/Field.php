@@ -50,4 +50,14 @@ class Field
     public const PHONE_NUMBER = 'phoneNumber';
     public const VERSION_NUMBER = 'versionNumber';
     public const string IS_LOCKED = 'isLocked';
+
+    /**
+     * @since 9.4.0
+     */
+    public const string PIPELINE = 'pipeline';
+
+    /**
+     * @since 9.4.0
+     */
+    public const string PIPELINE_STAGE = 'pipelineStage';
 }

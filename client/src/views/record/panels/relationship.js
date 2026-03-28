@@ -91,7 +91,10 @@ class RelationshipPanelView extends BottomPanelView {
     noCreateScopeList = ['User', 'Team', 'Role', 'Portal']
 
     /**
-     * @private
+     * Records per page. If not set, the value from config is used.
+     *
+     * @protected
+     * @type {number|null}
      */
     recordsPerPage = null
 

@@ -1,0 +1,77 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 50,
+            "required": true
+        },
+        "pipeline": {
+            "type": "link",
+            "readOnlyAfterCreate": true,
+            "required": true
+        },
+        "order": {
+            "type": "int",
+            "readOnly": true
+        },
+        "mappedStatus": {
+            "type": "enum",
+            "maxLength": 100,
+            "readOnlyAfterCreate": true,
+            "required": true,
+            "view": "views/pipeline-stage/fields/mapped-status"
+        },
+        "entityType": {
+            "type": "foreign",
+            "link": "pipeline",
+            "field": "entityType"
+        },
+        "field": {
+            "type": "foreign",
+            "link": "pipeline",
+            "field": "field"
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user",
+            "fieldManagerParamList": []
+        }
+    },
+    "links": {
+        "pipeline": {
+            "type": "belongsTo",
+            "entity": "Pipeline",
+            "foreign": "stages"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc"
+    }
+}

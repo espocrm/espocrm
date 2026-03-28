@@ -58,7 +58,8 @@
         "aclAccountLink": "ACL Account Link",
         "categories": "Categories",
         "lockable": "Lockable",
-        "transactionalSave": "Transactional Save"
+        "transactionalSave": "Transactional Save",
+        "pipelines": "Pipelines"
     },
     "options": {
         "type": {
@@ -101,6 +102,7 @@
         "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
+        "pipelines": "Enables multiple pipelines. Pipelines can be configured at Administration > Pipelines.",
         "transactionalSave": "Record saves and removals will be wrapped into DB transactions.",
         "lockable": "Enables the ability to lock records.",
         "categories": "Enable the category tree feature. Records can be placed into categories.",

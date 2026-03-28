@@ -70,7 +70,9 @@
         "OAuthAccount": "OAuth Account",
         "OpenApi": "OpenAPI",
         "CurrencyRecord": "Currency Record",
-        "CurrencyRecordRate": "Currency Rate"
+        "CurrencyRecordRate": "Currency Rate",
+        "Pipeline": "Pipeline",
+        "PipelineStage": "Pipeline Stage"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -131,7 +133,9 @@
         "OAuthAccount": "OAuth Accounts",
         "OpenApi": "OpenAPI",
         "CurrencyRecord": "Currencies",
-        "CurrencyRecordRate": "Currency Rates"
+        "CurrencyRecordRate": "Currency Rates",
+        "Pipeline": "Pipelines",
+        "PipelineStage": "Pipeline Stages"
     },
     "labels": {
         "Previous Page": "Previous Page",
@@ -342,6 +346,7 @@
         "Assigned": "Assigned"
     },
     "messages": {
+        "cannotRemoveUsed": "Cannot remove the record as it is used.",
         "checkLogsForDetails": "Check logs for details.",
         "pleaseWait": "Please wait...",
         "loading": "Loading...",
@@ -538,7 +543,9 @@
         "targetListIsOptedOut": "Is Opted Out (Target List)",
         "childList": "Child List",
         "category": "Category",
-        "isLocked": "Locked"
+        "isLocked": "Locked",
+        "pipeline": "Pipeline",
+        "pipelineStage": "Pipeline Stage"
     },
     "links": {
         "assignedUser": "Assigned User",
@@ -552,7 +559,9 @@
         "users": "Users",
         "parent": "Parent",
         "children": "Children",
-        "category": "Category"
+        "category": "Category",
+        "pipeline": "Pipeline",
+        "pipelineStage": "Pipeline Stage"
     },
     "dashlets": {
         "Stream": "Stream",

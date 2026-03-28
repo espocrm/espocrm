@@ -1,0 +1,29 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "pipeline"
+                }
+            ],
+            [
+                {
+                    "name": "mappedStatus"
+                },
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ]
+    }
+]

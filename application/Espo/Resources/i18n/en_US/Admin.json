@@ -87,6 +87,7 @@
         "Fail": "Fail",
         "Configuration Instructions": "Configuration Instructions",
         "Formula Sandbox": "Formula Sandbox",
+        "Pipelines": "Pipelines",
         "is recommended": "is recommended",
         "extension is missing": "extension is missing"
     },
@@ -253,6 +254,7 @@
         "rebuildRequired": "Rebuild is required"
     },
     "messages": {
+        "noPipelinesEnabled": "No entity types have pipelines enabled.",
         "cacheIsDisabled": "Cache is disabled, the application will run slow. Enable cache in the [settings](#Admin/settings).",
         "formulaFunctions": "More functions can be found in [documentation]({documentationUrl}).",
         "rebuildRequired": "You need to run rebuild from CLI.",
@@ -328,7 +330,8 @@
         "pdfTemplates": "Templates for printing to PDF.",
         "formulaSandbox": "Write and test formula scripts.",
         "addressCountries": "Countries available for address fields.",
-        "oAuthProviders": "OAuth providers for integrations."
+        "oAuthProviders": "OAuth providers for integrations.",
+        "pipelines": "Configure multiple pipelines."
     },
     "keywords": {
         "settings": "system",

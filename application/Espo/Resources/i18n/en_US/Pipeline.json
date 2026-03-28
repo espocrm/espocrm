@@ -1,0 +1,21 @@
+{
+    "labels": {
+        "Create Pipeline": "Create Pipeline"
+    },
+    "fields": {
+        "order": "Order",
+        "status": "Status",
+        "entityType": "Entity Type",
+        "field": "Field",
+        "isAvailableForAll": "Available for All"
+    },
+    "links": {
+        "stages": "Stages"
+    },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    }
+}

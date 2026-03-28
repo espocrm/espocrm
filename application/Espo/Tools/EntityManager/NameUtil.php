@@ -157,6 +157,8 @@ class NameUtil
         Field::MODIFIED_BY,
         Field::MODIFIED_AT,
         Field::IS_LOCKED,
+        Field::PIPELINE,
+        Field::PIPELINE_STAGE,
 
         'emailAddressList',
         'userEmailAddressList',

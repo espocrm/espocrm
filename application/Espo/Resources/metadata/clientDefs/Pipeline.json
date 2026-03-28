@@ -1,0 +1,49 @@
+{
+    "controller": "controllers/record",
+    "massRemoveDisabled": true,
+    "massUpdateDisabled": true,
+    "mergeDisabled": true,
+    "rowActionList": [
+        "moveUp",
+        "moveDown"
+    ],
+    "views": {
+        "detail": "views/pipeline/detail"
+    },
+    "rowActionDefs": {
+        "moveUp": {
+            "label": "Move Up",
+            "groupIndex": 3,
+            "handler": "handlers/pipeline/move-row-action",
+            "acl": "edit"
+        },
+        "moveDown": {
+            "label": "Move Down",
+            "groupIndex": 3,
+            "handler": "handlers/pipeline/move-row-action",
+            "acl": "edit"
+        }
+    },
+    "relationshipPanels": {
+        "stages": {
+            "view": "views/pipeline/record/panels/stages",
+            "selectDisabled": true,
+            "unlinkDisabled": true,
+            "layout": "listForPipeline",
+            "rowActionList": [
+                "moveUp",
+                "moveDown"
+            ],
+            "createAttributeMap": {
+                "entityType": "entityType",
+                "field": "field"
+            },
+            "orderBy": "order",
+            "orderDirection": "asc",
+            "mandatoryAttributeList": [
+                "entityType",
+                "field"
+            ]
+        }
+    }
+}

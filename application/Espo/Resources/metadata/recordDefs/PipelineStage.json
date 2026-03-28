@@ -1,0 +1,15 @@
+{
+    "massActions": {
+        "delete": {
+            "disabled": true
+        },
+        "update": {
+            "disabled": true
+        }
+    },
+    "actions": {
+        "merge": {
+            "disabled": true
+        }
+    }
+}

@@ -1,0 +1,12 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "notSortable": true
+    },
+    {
+        "name": "mappedStatus",
+        "width": 40,
+        "notSortable": true
+    }
+]

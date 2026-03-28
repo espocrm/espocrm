@@ -169,6 +169,14 @@
             },
             "groupIndex": 1
         },
+        "pipelines": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            },
+            "groupIndex": 1
+        },
         "lockable": {
             "location": "scopes",
             "fieldDefs": {

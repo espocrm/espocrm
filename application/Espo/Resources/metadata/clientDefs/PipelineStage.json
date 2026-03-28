@@ -1,0 +1,19 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "massRemoveDisabled": true,
+    "massUpdateDisabled": true,
+    "mergeDisabled": true,
+    "rowActionDefs": {
+        "moveUp": {
+            "label": "Move Up",
+            "groupIndex": 3,
+            "handler": "handlers/pipeline-stage/move-row-action"
+        },
+        "moveDown": {
+            "label": "Move Down",
+            "groupIndex": 3,
+            "handler": "handlers/pipeline-stage/move-row-action"
+        }
+    }
+}

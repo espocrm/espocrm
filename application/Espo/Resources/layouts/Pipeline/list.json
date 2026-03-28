@@ -1,0 +1,22 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "notSortable": true
+    },
+    {
+        "name": "status",
+        "width": 20,
+        "notSortable": true
+    },
+    {
+        "name": "entityType",
+        "width": 20,
+        "notSortable": true
+    },
+    {
+        "name": "field",
+        "width": 20,
+        "notSortable": true
+    }
+]

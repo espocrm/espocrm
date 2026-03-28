@@ -14,6 +14,7 @@
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CollaboratorsUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\StreamUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesUpdateHook",
-        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\LockableUpdateHook"
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\LockableUpdateHook",
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\PipelinesUpdateHook"
     ]
 }
