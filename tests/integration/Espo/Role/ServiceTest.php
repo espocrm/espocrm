@@ -107,7 +107,7 @@ class ServiceTest extends BaseTestCase
             Account::ENTITY_TYPE => (object) [
                 Table::ACTION_CREATE => Table::LEVEL_YES,
                 Table::ACTION_READ => Table::LEVEL_ALL,
-                Table::ACTION_EDIT => TablePortal::LEVEL_CONTACT,
+                Table::ACTION_EDIT => TablePortal::LEVEL_ACCOUNT,
                 Table::ACTION_DELETE => Table::LEVEL_NO,
                 Table::ACTION_STREAM => TablePortal::LEVEL_ACCOUNT,
             ],
