@@ -785,7 +785,7 @@ class ListView extends MainView {
      * params.options.categoryName = this.currentCategoryName;
      * ```
      *
-     * @param {{controller?: string, action?: string, options?: Record}} params Parameters to be modified.
+     * @param {{controller?: string, action?: string|null, options?: Record}} params Parameters to be modified.
      * Unset `controller` if bypass return dispatching (to force to come back to the `returnUrl`).
      */
     prepareCreateReturnDispatchParams(params) {}
