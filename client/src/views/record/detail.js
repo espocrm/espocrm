@@ -3562,7 +3562,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        if (this.returnDispatchParams) {
+        if (this.returnDispatchParams && this.returnDispatchParams.controller) {
             const controller = this.returnDispatchParams.controller;
             const action = this.returnDispatchParams.action;
             options = this.returnDispatchParams.options || {};
