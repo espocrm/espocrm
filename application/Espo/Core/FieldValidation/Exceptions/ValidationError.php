@@ -36,7 +36,7 @@ use Espo\Core\FieldValidation\Failure;
 
 use LogicException;
 
-class ValidationError extends BadRequest implements HasLogMessage
+final class ValidationError extends BadRequest implements HasLogMessage
 {
     private ?Failure $failure = null;
 
@@ -74,6 +74,14 @@ class ValidationError extends BadRequest implements HasLogMessage
         $exception->failure = $failure;
 
         return $exception;
+    }
+
+    /**
+     * @since 9.4.0
+     */
+    public function hasFailure(): bool
+    {
+        return $this->failure !== null;
     }
 
     public function getFailure(): Failure
