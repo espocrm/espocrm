@@ -443,7 +443,7 @@ class EntityManagerEditView extends View {
                     type: 'enum',
                     required: true,
                     options: typeList,
-                    readOnly: scope !== false,
+                    readOnly: scope !== null,
                     tooltip: true,
                 },
                 stream: {
@@ -460,7 +460,7 @@ class EntityManagerEditView extends View {
                     required: true,
                     trim: true,
                     maxLength: 64,
-                    readOnly: scope !== false,
+                    readOnly: scope !== null,
                 },
                 labelSingular: {
                     type: 'varchar',
