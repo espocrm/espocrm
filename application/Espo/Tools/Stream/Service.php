@@ -558,10 +558,18 @@ class Service
         if (!$user->isSystem()) {
             $person = $user;
         } else {
-            $from = $email->getFromAddress();
+            $createdBy = $email->getCreatedBy();
 
-            if ($from) {
-                $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
+            if ($createdBy) {
+                $person = $this->entityManager->getEntityById(User::ENTITY_TYPE, $createdBy->getId());
+            }
+
+            if (!$person) {
+                $from = $email->getFromAddress();
+
+                if ($from) {
+                    $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
+                }
             }
         }
 
