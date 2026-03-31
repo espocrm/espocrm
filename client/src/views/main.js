@@ -145,7 +145,7 @@ class MainView extends View {
      *     scope?: string,
      *     params: Record<string, *>,
      *     rootUrl?: string,
-     * } & Record}
+     * } & Record<string, *>}
      */
     options
 
