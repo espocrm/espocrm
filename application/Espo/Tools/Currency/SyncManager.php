@@ -35,6 +35,7 @@ use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\DataCache;
 use Espo\Entities\CurrencyRecord;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\Tools\Currency\Exceptions\NotEnabled;
 
@@ -116,6 +117,7 @@ class SyncManager
             ->getRDBRepositoryByClass(CurrencyRecord::class)
             ->forUpdate()
             ->sth()
+            ->select(Attribute::ID)
             ->find();
     }
 

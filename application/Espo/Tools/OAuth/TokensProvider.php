@@ -159,6 +159,7 @@ class TokensProvider
             ->getRDBRepositoryByClass(OAuthAccount::class)
             ->forUpdate()
             ->sth()
+            ->select(Attribute::ID)
             ->where([Attribute::ID => $account->getId()])
             ->find();
 
