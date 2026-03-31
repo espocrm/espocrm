@@ -203,10 +203,10 @@ class ListView extends MainView {
         this.rootData = {};
 
         /**
-         * @type {string}
+         * @type {string|null}
          * @protected
          */
-        this._primaryFilter = this.options.params.primaryFilter;
+        this._primaryFilter = this.options.params.primaryFilter ?? null;
         this._fromAdmin = this.options.params.fromAdmin;
 
         this.setupModes();

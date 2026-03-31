@@ -133,6 +133,28 @@ class MainView extends View {
 
     lastUrl
 
+    /**
+     * A root URL.
+     *
+     * @type {string}
+     */
+    rootUrl
+
+    /**
+     * @type {{
+     *     scope?: string,
+     *     params: Record<string, *>,
+     *     rootUrl?: string,
+     * } & Record}
+     */
+    options
+
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
+
     /** @inheritDoc */
     init() {
         this.scope = this.options.scope ?? this.scope;
@@ -660,7 +682,8 @@ class MainView extends View {
         event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            const rootUrl = this.rootUrl ??
+                (this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope);
 
             this.getRouter().navigate(rootUrl, {trigger: true, isReturn: true});
         });

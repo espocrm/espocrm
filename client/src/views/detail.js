@@ -75,7 +75,7 @@ class DetailView extends MainView {
      *
      * @type {string}
      */
-    rootUrl = ''
+    rootUrl
 
     /**
      * Is return.
@@ -314,11 +314,13 @@ class DetailView extends MainView {
             o[option] = this.options[option];
         });
 
-        if (this.options.params && this.options.params.rootUrl) {
-            o.rootUrl = this.options.params.rootUrl;
+        const params = this.options.params ?? {};
+
+        if (params.rootUrl) {
+            o.rootUrl = params.rootUrl;
         }
 
-        if (this.options.params && this.options.params.rootData) {
+        if (params.rootData) {
             o.rootData = this.options.params.rootData;
         }
 
