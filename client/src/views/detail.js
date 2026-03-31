@@ -148,7 +148,7 @@ class DetailView extends MainView {
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
 
-        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        this.rootUrl = this.options.rootUrl ?? this.options.params.rootUrl ?? this.rootUrl ?? '#' + this.scope;
         this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
 
         this.nameAttribute = this.getMetadata().get(`clientDefs.${this.entityType}.nameAttribute`) || 'name';
@@ -316,9 +316,7 @@ class DetailView extends MainView {
 
         const params = this.options.params ?? {};
 
-        if (params.rootUrl) {
-            o.rootUrl = params.rootUrl;
-        }
+        o.rootUrl = this.rootUrl;
 
         if (params.rootData) {
             o.rootData = this.options.params.rootData;

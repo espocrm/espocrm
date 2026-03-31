@@ -683,7 +683,9 @@ class MainView extends View {
 
         this.getRouter().checkConfirmLeaveOut(() => {
             const rootUrl = this.rootUrl ??
-                (this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope);
+                this.options.rootUrl ??
+                this.options.params.rootUrl ??
+                '#' + this.scope;
 
             this.getRouter().navigate(rootUrl, {trigger: true, isReturn: true});
         });

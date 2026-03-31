@@ -3526,15 +3526,13 @@ class DetailRecordView extends BaseRecordView {
             url = this.returnUrl;
         } else {
             if (after === 'delete') {
-                url = this.options.rootUrl;
+                url = this.options.rootUrl ?? `#${this.scope}`;
 
-                if (url) {
+                if (url !== `#${this.scope}`) {
                     this.getRouter().navigate(url, {trigger: true});
 
                     return;
                 }
-
-                url = '#' + this.scope;
 
                 this.getRouter().navigate(url, {trigger: false});
                 this.getRouter().dispatch(this.scope, null, {isReturn: true});
@@ -3560,7 +3558,7 @@ class DetailRecordView extends BaseRecordView {
                     this.getRouter().dispatch(this.scope, 'view', options);
                 }
             } else {
-                url = this.options.rootUrl || '#' + this.scope;
+                url = this.options.rootUrl ?? '#' + this.scope;
             }
         }
 

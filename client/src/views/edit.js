@@ -91,7 +91,7 @@ class EditView extends MainView {
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
 
-        this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        this.rootUrl = this.options.rootUrl ?? this.options.params.rootUrl ?? this.rootUrl ?? '#' + this.scope;
 
         this.nameAttribute = this.getMetadata().get(`clientDefs.${this.entityType}.nameAttribute`) || 'name';
 
@@ -136,9 +136,7 @@ class EditView extends MainView {
 
         const params = this.options.params || {};
 
-        if (params.rootUrl) {
-            o.rootUrl = params.rootUrl;
-        }
+        o.rootUrl = this.rootUrl;
 
         if (params.rootData) {
             o.rootData = params.rootData;
