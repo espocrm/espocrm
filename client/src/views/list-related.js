@@ -280,7 +280,7 @@ class ListRelatedView extends MainView {
         );
 
         this.addActionHandler('fullRefresh', () => this.actionFullRefresh());
-        this.addActionHandler('removeRelated', () => this.actionRemoveRelated());
+        this.addActionHandler('removeRelated', (e, target) => this.actionRemoveRelated({id: target.dataset.id}));
     }
 
     /**
