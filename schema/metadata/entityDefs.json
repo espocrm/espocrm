@@ -1027,6 +1027,13 @@
                     "type": "boolean",
                     "description": "Always to perform validation, regardless whether field values are sent. As of v8.2."
                 },
+                "validationDependsOnFieldList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Change of any of the listed fields triggers the validation. As of v9.4."
+                },
                 "validatorClassNameMap": {
                     "type": "object",
                     "description": "Validators defined as validation-type => class-name map. Classes should implement Espo\\Core\\FieldValidation\\Validator interface. If not defined for a type, metadata > fields > {fieldType} > validatorClassNameMap > {type} is used.",
