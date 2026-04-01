@@ -120,6 +120,9 @@ export default class PipelineFieldView extends LinkFieldView {
         this.setupSub();
     }
 
+    /**
+     * @private
+     */
     setupSub() {
         this.subModel = new Model();
 
@@ -149,7 +152,7 @@ export default class PipelineFieldView extends LinkFieldView {
             options.unshift('');
         }
 
-        if (!options.includes(currentId)) {
+        if (currentId && !options.includes(currentId)) {
             options.push(currentId);
         }
 
