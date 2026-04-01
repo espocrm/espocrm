@@ -91,6 +91,10 @@ class AccessChecker implements AccessEntityCREDChecker
             return true;
         }
 
+        if (!$data->isFalse()) {
+            return false;
+        }
+
         $pipeline = $entity->getPipeline();
 
         if (!$this->aclManager->checkScope($user, $pipeline->getTargetEntityType())) {

@@ -87,6 +87,10 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
+        if (!$data->isFalse()) {
+            return false;
+        }
+
         $pipeline = $entity->getPipeline();
 
         if (!$this->aclManager->checkScope($user, $pipeline->getTargetEntityType())) {

@@ -1,5 +1,8 @@
 {
     "primaryFilterClassNameMap": {
         "active": "Espo\\Classes\\Select\\Pipeline\\PrimaryFilters\\Active"
+    },
+    "accessControlFilterClassNameMap": {
+        "mandatory": "Espo\\Classes\\Select\\Pipeline\\AccessControlFilters\\Mandatory"
     }
 }

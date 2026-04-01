@@ -1,0 +1,14 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "pipeline",
+        "width": 35
+    },
+    {
+        "name": "mappedStatus",
+        "width": 30
+    }
+]
