@@ -1,53 +1,75 @@
 {
-  "fields": {
-    "name": "Ім'я",
-    "status": "Статус",
-    "host": "Хост",
-    "username": "Ім'я користувача",
-    "password": "Пароль",
-    "port": "Порт",
-    "monitoredFolders": "Відстежувані папки",
-    "fetchSince": "Отримати з",
-    "emailAddress": "Електронна адреса",
-    "sentFolder": "Папка відправлені",
-    "storeSentEmails": "Зберігати надіслані листи",
-    "keepFetchedEmailsUnread": "Залишати завантажені листи непрочитаними",
-    "emailFolder": "Помістити в папку",
-    "useSmtp": "Використати SMTP",
-    "smtpHost": "SMTP Хост",
-    "smtpPort": "SMTP Порт",
-    "smtpAuth": "SMTP Аутентифікація",
-    "smtpSecurity": "SMTP Безпека",
-    "smtpUsername": "SMTP Ім'я користувача",
-    "smtpPassword": "SMTP Пароль",
-    "useImap": "Отримати електронні листи",
-    "smtpAuthMechanism": "Механізм аутентифікації SMTP",
-    "security": "Безпека"
-  },
-  "links": {
-    "filters": "Фільтри",
-    "emails": "Електронні листи"
-  },
-  "options": {
-    "status": {
-      "Active": "Активний",
-      "Inactive": "Неактивний"
+    "fields": {
+        "name": "Ім'я",
+        "status": "Статус",
+        "host": "Хост",
+        "username": "Ім'я користувача",
+        "password": "Пароль",
+        "port": "Порт",
+        "monitoredFolders": "Відстежувані папки",
+        "security": "Безпека",
+        "fetchSince": "Отримати з",
+        "emailAddress": "Електронна адреса",
+        "sentFolder": "Папка \"Надіслані\"",
+        "storeSentEmails": "Зберігати надіслані листи",
+        "keepFetchedEmailsUnread": "Залишати завантажені листи непрочитаними",
+        "emailFolder": "Помістити в папку",
+        "connectedAt": "Підключено о",
+        "useImap": "Отримати електронні листи",
+        "useSmtp": "Використати SMTP",
+        "smtpHost": "SMTP-хост",
+        "smtpPort": "SMTP-порт",
+        "smtpAuth": "Аутентифікація SMTP",
+        "smtpSecurity": "Безпека SMTP",
+        "smtpAuthMechanism": "Механізм аутентифікації SMTP",
+        "smtpUsername": "Ім'я користувача SMTP",
+        "smtpPassword": "Пароль SMTP",
+        "folderMap": "Відображення папок"
+    },
+    "links": {
+        "filters": "Фільтри",
+        "emails": "Електронні листи"
+    },
+    "options": {
+        "status": {
+            "Active": "Активний",
+            "Inactive": "Неактивний"
+        },
+        "smtpAuthMechanism": {
+            "plain": "PLAIN",
+            "login": "LOGIN",
+            "crammd5": "CRAM-MD5"
+        },
+        "smtpSecurity": {
+            "SSL": "SSL/TLS",
+            "TLS": "STARTTLS"
+        },
+        "security": {
+            "SSL": "SSL/TLS",
+            "TLS": "STARTTLS"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "Створити поштову скриньку",
+        "IMAP": "IMAP",
+        "Main": "Основне",
+        "Test Connection": "Перевірка з'єднання",
+        "Send Test Email": "Надіслати тестовий електронний лист",
+        "SMTP": "SMTP"
+    },
+    "presetFilters": {
+        "active": "Активні"
+    },
+    "messages": {
+        "noFolder": "Призначеної папки не існує.",
+        "couldNotConnectToImap": "Не вдається приєднатися до сервера IMAP",
+        "connectionIsOk": "З'єднання успішне",
+        "imapNotConnected": "Не вдалося підключитися до [облікового запису IMAP](#EmailAccount/view/{id})."
+    },
+    "tooltips": {
+        "useSmtp": "Можливість надсилати електронні листи.",
+        "emailAddress": "Запис користувача (відповідальний користувач) повинен мати ту саму адресу електронної пошти, щоб мати можливість використовувати цей обліковий запис електронної пошти для надсилання.",
+        "monitoredFolders": "Кілька папок слід розділяти комою.\n\nВи можете додати папку \"Надіслані\" для синхронізації електронних листів, надісланих зовнішнім поштовим клієнтом.",
+        "storeSentEmails": "Надіслані повідомлення будуть зберігатися на сервері IMAP. Поле електронної адреси має збігатися з адресою, з якої надсилатимуться електронні листи."
     }
-  },
-  "labels": {
-    "Create EmailAccount": "Створити поштову скриньку",
-    "Main": "Основне",
-    "Test Connection": "Перевірка з'єднання",
-    "Send Test Email": "Надіслати тестовий електронний лист"
-  },
-  "messages": {
-    "couldNotConnectToImap": "Не вдається приєднатися до сервера IMAP",
-    "connectionIsOk": "З'єднання успішне"
-  },
-  "tooltips": {
-    "monitoredFolders": "Кілька папок слід розділяти комою.\n\nВи можете додати папку \"Надіслані\" для синхронізації електронних листів, надісланих зовнішнім поштовим клієнтом.",
-    "storeSentEmails": "Відправлені повідомлення будуть зберігатися на сервері IMAP. Поле електронної адреси має збігатися з адресою, з якої надсилатимуться електронні листи.",
-    "useSmtp": "Можливість надсилати електронні листи.",
-    "emailAddress": "Запис користувача (відповідальний користувач) повинен мати ту саму адресу електронної пошти, щоб мати можливість використовувати цей обліковий запис електронної пошти для надсилання."
-  }
 }

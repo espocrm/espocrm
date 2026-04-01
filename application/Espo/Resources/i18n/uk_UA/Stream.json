@@ -1,16 +1,16 @@
 {
-  "messages": {
-    "infoMention": "Введіть **@username** щоб згадати користувача в пості.",
-    "infoSyntax": "Доступний синтаксис розмітки",
-    "couldNotAddFollowerUserHasNoAccessToStream": "Не вдалося додати користувача '{userName}' до підписників. Користувач не має доступу до 'потоку' запису."
-  },
-  "syntaxItems": {
-    "code": "код",
-    "multilineCode": "багаторядковий код",
-    "strongText": "жирний текст",
-    "emphasizedText": "підкреслений текст",
-    "deletedText": "закреслений текст",
-    "blockquote": "блок цитування",
-    "link": "посилання"
-  }
+    "messages": {
+        "infoMention": "Введіть **@username** щоб згадати користувача в пості.",
+        "infoSyntax": "Доступний синтаксис розмітки",
+        "couldNotAddFollowerUserHasNoAccessToStream": "Не вдалося додати користувача '{userName}' до підписників. Користувач не має доступу до 'потоку' запису."
+    },
+    "syntaxItems": {
+        "code": "код",
+        "multilineCode": "багаторядковий код",
+        "strongText": "жирний текст",
+        "emphasizedText": "підкреслений текст",
+        "deletedText": "закреслений текст",
+        "blockquote": "блок цитування",
+        "link": "посилання"
+    }
 }

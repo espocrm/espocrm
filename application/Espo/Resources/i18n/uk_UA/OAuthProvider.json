@@ -1,0 +1,24 @@
+{
+    "labels": {
+        "Create OAuthProvider": "Створити провайдер OAuth"
+    },
+    "fields": {
+        "isActive": "Активний",
+        "clientId": "ID клієнта",
+        "clientSecret": "Секрет клієнта",
+        "authorizationEndpoint": "Кінцева точка авторизації",
+        "tokenEndpoint": "Кінцева точка токена",
+        "authorizationRedirectUri": "URI перенаправлення авторизації",
+        "scopes": "Області доступу",
+        "scopeSeparator": "Роздільник областей доступу",
+        "hasAccessToken": "Має токен доступу",
+        "authorizationPrompt": "Запит авторизації",
+        "authorizationParams": "Параметри авторизації"
+    },
+    "links": {
+        "accounts": "Облікові записи"
+    },
+    "tooltips": {
+        "authorizationParams": "Додаткові параметри запиту, що будуть надіслані до кінцевої точки авторизації. Вказуються у форматі JSON."
+    }
+}

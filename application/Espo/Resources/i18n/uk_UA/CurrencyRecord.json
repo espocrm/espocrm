@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "code": "Код",
+        "status": "Статус",
+        "label": "Мітка",
+        "symbol": "Символ",
+        "isBase": "Базова",
+        "rate": "Курс",
+        "rateDate": "Дата курсу"
+    },
+    "links": {
+        "rates": "Курси"
+    },
+    "options": {
+        "status": {
+            "Active": "Активний",
+            "Inactive": "Неактивний"
+        }
+    }
+}

@@ -1,16 +1,22 @@
 {
-  "labels": {
-    "Create Webhook": "Створити вебхук"
-  },
-  "fields": {
-    "event": "Подія",
-    "isActive": "Активний",
-    "user": "API користувач",
-    "entityType": "Тип сутності",
-    "field": "Поле",
-    "secretKey": "Секретний ключ"
-  },
-  "links": {
-    "user": "Користувач"
-  }
+    "labels": {
+        "Create Webhook": "Створити вебхук"
+    },
+    "fields": {
+        "event": "Подія",
+        "url": "URL",
+        "isActive": "Активний",
+        "user": "API користувач",
+        "entityType": "Тип сутності",
+        "field": "Поле",
+        "secretKey": "Секретний ключ",
+        "skipOwn": "Пропускати власні"
+    },
+    "links": {
+        "user": "Користувач",
+        "queueItems": "Елементи черги"
+    },
+    "tooltips": {
+        "skipOwn": "Не надсилати, якщо подію ініційовано користувачем, якому належить вебхук."
+    }
 }

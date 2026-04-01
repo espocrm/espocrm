@@ -1,8 +1,12 @@
 {
-  "labels": {
-    "Connect": "Під'єднати",
-    "Connected": "Під'єднаний",
-    "Disconnect": "Від'єднати",
-    "Disconnected": "Від'єднаний"
-  }
+    "labels": {
+        "Connect": "Під'єднати",
+        "Disconnect": "Від'єднати",
+        "Disconnected": "Від'єднаний",
+        "Connected": "Під'єднаний"
+    },
+    "help": {},
+    "messages": {
+        "externalAccountNoConnectDisabled": "Зовнішній обліковий запис для інтеграції '{integration}' було вимкнено через неможливість підключення."
+    }
 }

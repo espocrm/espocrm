@@ -1,55 +1,75 @@
 {
-  "fields": {
-    "dateFormat": "Формат дати",
-    "timeFormat": "Формат часу",
-    "timeZone": "Часовий пояс",
-    "weekStart": "Перший день тижня",
-    "thousandSeparator": "Роздільник тисяч",
-    "decimalMark": "Розділювач десяткових",
-    "defaultCurrency": "Валюта за замовчуванням",
-    "currencyList": "Список валют",
-    "language": "Мова",
-    "exportDelimiter": "Розділювач при експорті даних",
-    "signature": "Підпис у електронному листі",
-    "dashboardTabList": "Список вкладок",
-    "tabList": "Список вкладок",
-    "defaultReminders": "Нагадування за замовчуванням",
-    "theme": "Тема",
-    "useCustomTabList": "Власний список вкладок",
-    "receiveAssignmentEmailNotifications": "Отримувати електронні сповіщення при призначенні",
-    "receiveMentionEmailNotifications": "Сповіщення по електронній пошті про згадку в повідомленнях",
-    "receiveStreamEmailNotifications": "Сповіщення по електронній пошті про повідомлення та оновлення статусу",
-    "dashboardLayout": "Макет панелі дашлетів",
-    "emailReplyForceHtml": "Відправити відповідь в HTML",
-    "autoFollowEntityTypeList": "Авто-підписка",
-    "emailReplyToAllByDefault": "Відправити відповідь всім за замовчуванням",
-    "doNotFillAssignedUserIfNotRequired": "Не заповнювати відповідального користувача при створенні запису",
-    "followEntityOnStreamPost": "Автоматично підписатись після публікації в потоці",
-    "followCreatedEntities": "Автоматично підписатись на всі створені записи",
-    "followCreatedEntityTypeList": "Автоматично підписатись на всі створені записи певного типу сутності",
-    "emailUseExternalClient": "Використовуйте зовнішній поштовий клієнт",
-    "scopeColorsDisabled": "Вимкнути кольори меж",
-    "tabColorsDisabled": "Вимкнути кольори вкладок",
-    "assignmentNotificationsIgnoreEntityTypeList": "Сповіщення про призначення через додаток",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Сповіщення про призначення по електронній пошті"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Неділя",
-      "1": "Понеділок"
+    "fields": {
+        "dateFormat": "Формат дати",
+        "timeFormat": "Формат часу",
+        "timeZone": "Часовий пояс",
+        "weekStart": "Перший день тижня",
+        "thousandSeparator": "Роздільник тисяч",
+        "decimalMark": "Розділювач десяткових",
+        "defaultCurrency": "Валюта за замовчуванням",
+        "currencyList": "Список валют",
+        "language": "Мова",
+        "exportDelimiter": "Розділювач при експорті даних",
+        "receiveAssignmentEmailNotifications": "Отримувати електронні сповіщення при призначенні",
+        "receiveMentionEmailNotifications": "Сповіщення по електронній пошті про згадки в повідомленнях",
+        "receiveStreamEmailNotifications": "Сповіщення по електронній пошті про повідомлення та оновлення статусу",
+        "assignmentNotificationsIgnoreEntityTypeList": "Сповіщення про призначення через додаток",
+        "assignmentEmailNotificationsIgnoreEntityTypeList": "Сповіщення про призначення по електронній пошті",
+        "reactionNotifications": "Сповіщення в додатку про реакції",
+        "reactionNotificationsNotFollowed": "Сповіщення про реакції для записів, які не відстежуються",
+        "autoFollowEntityTypeList": "Глобальна автопідписка",
+        "signature": "Підпис у електронному листі",
+        "dashboardTabList": "Список вкладок",
+        "defaultReminders": "Нагадування за замовчуванням",
+        "defaultRemindersTask": "Нагадування за замовчуванням для завдань",
+        "theme": "Тема",
+        "pageContentWidth": "Ширина вмісту",
+        "useCustomTabList": "Власний список вкладок",
+        "addCustomTabs": "Додавати власні вкладки",
+        "tabList": "Список вкладок",
+        "emailReplyToAllByDefault": "Надсилати відповідь усім за замовчуванням",
+        "dashboardLayout": "Макет панелі дашлетів",
+        "dashboardLocked": "Заблокувати панель дашлетів",
+        "emailReplyForceHtml": "Надсилати відповідь у HTML",
+        "doNotFillAssignedUserIfNotRequired": "Не заповнювати відповідального користувача при створенні запису",
+        "followEntityOnStreamPost": "Автоматично підписатись після публікації в потоці",
+        "followCreatedEntities": "Автоматично підписатись на створені записи",
+        "followCreatedEntityTypeList": "Автоматично підписатись на створені записи певних типів сутностей",
+        "followAsCollaborator": "Автоматично підписуватись при додаванні як співавтора",
+        "emailUseExternalClient": "Використовувати зовнішній поштовий клієнт",
+        "textSearchStoringDisabled": "Вимкнути збереження текстового фільтра",
+        "calendarSlotDuration": "Тривалість слотів календаря",
+        "calendarScrollHour": "Прокрутка календаря до години"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "Неділя",
+            "1": "Понеділок"
+        },
+        "pageContentWidth": {
+            "": "Звичайна",
+            "Wide": "Широка"
+        }
+    },
+    "labels": {
+        "Notifications": "Сповіщення",
+        "User Interface": "Інтерфейс користувача",
+        "Misc": "Різне",
+        "Locale": "Локаль",
+        "Reset Dashboard to Default": "Скинути панель дашлетів до значень за замовчуванням"
+    },
+    "tooltips": {
+        "addCustomTabs": "Якщо позначено, власні вкладки буде додано до стандартних. Інакше власні вкладки використовуватимуться замість стандартних.",
+        "autoFollowEntityTypeList": "Автоматично підписуватись на ВСІ нові записи (створені будь-яким користувачем) вибраних типів сутностей. Це дає змогу бачити інформацію у потоці та отримувати сповіщення про всі записи в системі.",
+        "doNotFillAssignedUserIfNotRequired": "Під час створення нового запису поле відповідального користувача не буде автоматично заповнене поточним користувачем. Якщо поле відповідального користувача є обов'язковим, цей параметр не матиме ефекту.",
+        "followCreatedEntities": "Створені записи будуть автоматично відстежуватися незалежно від того, кому вони призначені.",
+        "followCreatedEntityTypeList": "Записи вибраних типів сутностей будуть автоматично відстежуватися незалежно від того, кому вони призначені. Використовуйте цей параметр, щоб відстежувати лише певні типи сутностей."
+    },
+    "tabFields": {
+        "label": "Мітка",
+        "iconClass": "Значок",
+        "color": "Колір"
     }
-  },
-  "labels": {
-    "Notifications": "Сповіщення",
-    "User Interface": "Інтерфейс користувача",
-    "Misc": "Різне",
-    "Locale": "Місце дії",
-    "Reset Dashboard to Default": "Скинути налаштування панелі дашлетів за замовчуванням"
-  },
-  "tooltips": {
-    "autoFollowEntityTypeList": "Користувач буде автоматично підписаний на всі нові записи із вибраних типів сутностей, бачитиме інформацію у потоці й отримувати сповіщення.",
-    "doNotFillAssignedUserIfNotRequired": "При створенні запису поле відповідального користувача не буде заповнено користувачем, що створив запис, якщо це поле не обов'язкове.",
-    "followCreatedEntities": "Новостворені записи автоматично відстежуватимуться, навіть якщо вони призначені іншому користувачеві.",
-    "followCreatedEntityTypeList": "Новостворені записи певного тупу сутності автоматично відстежуватимуться, навіть якщо вони призначені іншому користувачеві."
-  }
 }

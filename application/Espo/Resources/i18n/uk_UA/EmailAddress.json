@@ -1,14 +1,15 @@
 {
-  "labels": {
-    "Primary": "Первинне",
-    "Opted Out": "Відмовлено",
-    "Invalid": "Недійсна"
-  },
-  "fields": {
-    "optOut": "Відмовлено",
-    "invalid": "Недійсна"
-  },
-  "presetFilters": {
-    "orphan": "Сироти"
-  }
+    "labels": {
+        "Primary": "Первинне",
+        "Opted Out": "Відмовлено",
+        "Invalid": "Недійсна"
+    },
+    "fields": {
+        "optOut": "Відмовлено",
+        "invalid": "Недійсна",
+        "lower": "Назва в нижньому регістрі"
+    },
+    "presetFilters": {
+        "orphan": "Сироти"
+    }
 }

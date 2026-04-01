@@ -1,31 +1,31 @@
 {
-  "options": {
-    "operators": {
-      "equals": "Дорівнює",
-      "notEquals": "Не дорівнює",
-      "greaterThan": "Більше ніж",
-      "lessThan": "Менше ніж",
-      "greaterThanOrEquals": "Більше ніж або дорівнює",
-      "lessThanOrEquals": "Менше ніж або дорівнює",
-      "in": "В",
-      "notIn": "Не в\n",
-      "inPast": "В минулому",
-      "inFuture": "В майбутньому",
-      "isToday": "Сьогодні",
-      "isTrue": "Правда",
-      "isFalse": "Хибно",
-      "isEmpty": "Пусто",
-      "isNotEmpty": "Не пусто",
-      "contains": "Містить",
-      "has": "Містить",
-      "notContains": "Не містить",
-      "notHas": "Не містить",
-      "startsWith": "Починається з",
-      "endsWith": "Закінчується на",
-      "matches": "Співпадає (регулярний вираз)"
+    "labels": {
+        "Field": "Поле"
+    },
+    "options": {
+        "operators": {
+            "equals": "Дорівнює",
+            "notEquals": "Не дорівнює",
+            "greaterThan": "Більше ніж",
+            "lessThan": "Менше ніж",
+            "greaterThanOrEquals": "Більше ніж або дорівнює",
+            "lessThanOrEquals": "Менше ніж або дорівнює",
+            "in": "В",
+            "notIn": "Не в",
+            "inPast": "В минулому",
+            "inFuture": "В майбутньому",
+            "isToday": "Сьогодні",
+            "isTrue": "Правда",
+            "isFalse": "Хибно",
+            "isEmpty": "Порожньо",
+            "isNotEmpty": "Не порожньо",
+            "contains": "Містить",
+            "notContains": "Не містить",
+            "has": "Містить",
+            "notHas": "Не містить",
+            "startsWith": "Починається з",
+            "endsWith": "Закінчується на",
+            "matches": "Співпадає (регулярний вираз)"
+        }
     }
-  },
-  "labels": {
-    "Field": "Поле"
-  }
 }

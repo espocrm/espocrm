@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "message": "Повідомлення",
+        "code": "Код",
+        "level": "Рівень",
+        "exceptionClass": "Клас винятку",
+        "file": "Файл",
+        "line": "Рядок",
+        "requestMethod": "Метод запиту",
+        "requestResourcePath": "Шлях ресурсу запиту"
+    },
+    "presetFilters": {
+        "errors": "Помилки"
+    }
+}

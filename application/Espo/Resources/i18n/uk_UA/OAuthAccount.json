@@ -1,0 +1,16 @@
+{
+    "labels": {
+        "Create OAuthAccount": "Створити обліковий запис OAuth",
+        "Connection": "Підключення"
+    },
+    "fields": {
+        "provider": "Провайдер",
+        "hasAccessToken": "Має токен доступу",
+        "user": "Користувач",
+        "providerIsActive": "Провайдер активний",
+        "data": "Дані"
+    },
+    "links": {
+        "provider": "Провайдер"
+    }
+}

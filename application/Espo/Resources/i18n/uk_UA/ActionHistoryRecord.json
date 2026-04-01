@@ -1,30 +1,30 @@
 {
-  "fields": {
-    "user": "Користувач",
-    "action": "Дія",
-    "createdAt": "Дата",
-    "target": "Ціль",
-    "targetType": "Тип цілі",
-    "authToken": "Токен аутентифікації",
-    "ipAddress": "IP адреса",
-    "authLogRecord": "Запис журналу аутентифікації",
-    "userType": "Тип користувача"
-  },
-  "links": {
-    "authToken": "Токен аутентифікації",
-    "user": "Користувач",
-    "target": "Ціль",
-    "authLogRecord": "Запис журналу аутентифікації"
-  },
-  "presetFilters": {
-    "onlyMy": "Тільки моє"
-  },
-  "options": {
-    "action": {
-      "read": "Читати",
-      "update": "Оновити",
-      "delete": "Видалити",
-      "create": "Створити"
+    "fields": {
+        "user": "Користувач",
+        "action": "Дія",
+        "createdAt": "Дата",
+        "userType": "Тип користувача",
+        "target": "Ціль",
+        "targetType": "Тип цілі",
+        "authToken": "Токен аутентифікації",
+        "ipAddress": "IP адреса",
+        "authLogRecord": "Запис журналу аутентифікації"
+    },
+    "links": {
+        "authToken": "Токен аутентифікації",
+        "authLogRecord": "Запис журналу аутентифікації",
+        "user": "Користувач",
+        "target": "Ціль"
+    },
+    "presetFilters": {
+        "onlyMy": "Тільки моє"
+    },
+    "options": {
+        "action": {
+            "read": "Читати",
+            "update": "Оновити",
+            "delete": "Видалити",
+            "create": "Створити"
+        }
     }
-  }
 }

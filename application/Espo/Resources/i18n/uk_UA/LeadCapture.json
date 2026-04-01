@@ -1,47 +1,65 @@
 {
-  "fields": {
-    "name": "Ім'я",
-    "campaign": "Кампанія",
-    "isActive": "Активний",
-    "subscribeToTargetList": "Підписатися на цільовий список",
-    "subscribeContactToTargetList": "Підписатись на контакт, якщо існує",
-    "targetList": "Цільовий список",
-    "fieldList": "Список полів, щоб передавати",
-    "optInConfirmation": "Подвійне підтвердження підписки",
-    "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
-    "optInConfirmationLifetime": "Час підтвердження підписки (години)",
-    "optInConfirmationSuccessMessage": "Текст для показу після підтвердження підписки",
-    "leadSource": "Джерело ліда",
-    "apiKey": "Ключ API",
-    "targetTeam": "Команда",
-    "exampleRequestMethod": "Метод",
-    "createLeadBeforeOptInConfirmation": "Створити лід до підтвердження",
-    "duplicateCheck": "Перевірка на дублікати",
-    "skipOptInConfirmationIfSubscribed": "Пропустити підтвердження, якщо лід вже є у цільовому списку",
-    "smtpAccount": "SMTP Акаунт",
-    "inboundEmail": "Групова поштова скринька",
-    "exampleRequestHeaders": "Заголовки"
-  },
-  "links": {
-    "targetList": "Цільовий список",
-    "campaign": "Кампанія",
-    "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
-    "targetTeam": "Команда",
-    "logRecords": "Журнал",
-    "inboundEmail": "Групова поштова скринька"
-  },
-  "labels": {
-    "Create LeadCapture": "Створити точку входу",
-    "Generate New API Key": "Згенерувати новий ключ API",
-    "Request": "Запит",
-    "Confirm Opt-In": "Підтвердити підписку"
-  },
-  "messages": {
-    "generateApiKey": "Створити новий ключ API",
-    "optInConfirmationExpired": "Термін дії посилання на підтвердження підписки закінчився.",
-    "optInIsConfirmed": "Підписку підтверджено."
-  },
-  "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown підтримується."
-  }
+    "fields": {
+        "name": "Ім'я",
+        "campaign": "Кампанія",
+        "isActive": "Активний",
+        "subscribeToTargetList": "Підписатися на цільовий список",
+        "subscribeContactToTargetList": "Підписатись на контакт, якщо існує",
+        "targetList": "Цільовий список",
+        "fieldList": "Список полів, щоб передавати",
+        "optInConfirmation": "Подвійне підтвердження підписки",
+        "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
+        "optInConfirmationLifetime": "Час підтвердження підписки (години)",
+        "optInConfirmationSuccessMessage": "Текст для показу після підтвердження підписки",
+        "leadSource": "Джерело ліда",
+        "apiKey": "Ключ API",
+        "targetTeam": "Команда",
+        "exampleRequestMethod": "Метод",
+        "exampleRequestUrl": "URL",
+        "exampleRequestPayload": "Тіло запиту",
+        "exampleRequestHeaders": "Заголовки",
+        "createLeadBeforeOptInConfirmation": "Створити лід до підтвердження",
+        "skipOptInConfirmationIfSubscribed": "Пропустити підтвердження, якщо лід вже є у цільовому списку",
+        "smtpAccount": "Обліковий запис SMTP",
+        "inboundEmail": "Групова поштова скринька",
+        "duplicateCheck": "Перевірка на дублікати",
+        "phoneNumberCountry": "Код країни телефону",
+        "fieldParams": "Параметри поля",
+        "formId": "ID форми",
+        "formEnabled": "Вебформа",
+        "formUrl": "URL форми",
+        "formTitle": "Заголовок форми",
+        "formTheme": "Тема форми",
+        "formSuccessText": "Текст після надсилання форми",
+        "formText": "Текст на формі",
+        "formSuccessRedirectUrl": "URL перенаправлення після надсилання форми",
+        "formLanguage": "Мова форми",
+        "formFrameAncestors": "Дозволені хости для вбудовування форми",
+        "formCaptcha": "Використовувати капчу"
+    },
+    "links": {
+        "targetList": "Цільовий список",
+        "campaign": "Кампанія",
+        "optInConfirmationEmailTemplate": "Шаблон листа для підтвердження підписки",
+        "targetTeam": "Команда",
+        "inboundEmail": "Групова поштова скринька",
+        "logRecords": "Журнал"
+    },
+    "labels": {
+        "Create LeadCapture": "Створити точку входу",
+        "Generate New API Key": "Згенерувати новий ключ API",
+        "Request": "Запит",
+        "Confirm Opt-In": "Підтвердити підписку",
+        "Generate New Form ID": "Згенерувати новий ID форми",
+        "Web Form": "Вебформа"
+    },
+    "messages": {
+        "generateApiKey": "Створити новий ключ API",
+        "optInConfirmationExpired": "Термін дії посилання на підтвердження підписки закінчився.",
+        "optInIsConfirmed": "Підписку підтверджено."
+    },
+    "tooltips": {
+        "formCaptcha": "Щоб використовувати капчу, потрібно налаштувати її в **Адміністрування** > **Інтеграції**.",
+        "optInConfirmationSuccessMessage": "Markdown підтримується."
+    }
 }

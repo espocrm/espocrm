@@ -1,20 +1,26 @@
 {
-  "fields": {
-    "enabled": "Увімкнено",
-    "clientId": "Клієнтський ID",
-    "clientSecret": "Секрет Клієнта",
-    "redirectUri": "URI перенаправлення",
-    "apiKey": "Ключ API"
-  },
-  "messages": {
-    "selectIntegration": "Виберіть інтеграцію з меню.",
-    "noIntegrations": "Жодних інтеграцій не доступно."
-  },
-  "titles": {
-    "GoogleMaps": "Google Карти"
-  },
-  "help": {
-    "Google": "**Отримайте облікові дані OAuth 2.0 Google Developers Console.**\n\nВідвідайте [Google Developers Console](https://console.developers.google.com/project), щоб отримати облікові дані OAuth 2.0, такі як Client ID і Client Secret, відомі як Google, так і EspoCRM.",
-    "GoogleMaps": "Отримайте ключ API [тут](https://developers.google.com/maps/documentation/javascript/get-api-key)."
-  }
+    "fields": {
+        "enabled": "Увімкнено",
+        "clientId": "Клієнтський ID",
+        "clientSecret": "Секрет клієнта",
+        "redirectUri": "URI перенаправлення",
+        "apiKey": "Ключ API",
+        "siteKey": "Ключ сайту",
+        "secretKey": "Секретний ключ",
+        "scoreThreshold": "Поріг оцінки",
+        "mapId": "ID карти"
+    },
+    "titles": {
+        "GoogleMaps": "Карти Google",
+        "GoogleReCaptcha": "Google reCAPTCHA"
+    },
+    "messages": {
+        "selectIntegration": "Виберіть інтеграцію з меню.",
+        "noIntegrations": "Жодних інтеграцій не доступно."
+    },
+    "help": {
+        "GoogleReCaptcha": "Отримайте ключ сайту та секретний ключ у [Google](https://www.google.com/recaptcha/).",
+        "Google": "**Отримайте облікові дані OAuth 2.0 у Google Developers Console.**\n\nВідвідайте [Google Developers Console](https://console.developers.google.com/project), щоб отримати облікові дані OAuth 2.0, такі як ID клієнта та секрет клієнта, необхідні як Google, так і EspoCRM.",
+        "GoogleMaps": "Отримайте ключ API [тут](https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    }
 }

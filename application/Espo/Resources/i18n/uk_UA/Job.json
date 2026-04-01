@@ -1,32 +1,32 @@
 {
-  "fields": {
-    "status": "Статус",
-    "executeTime": "Виконати в",
-    "attempts": "Залишилось спроб",
-    "failedAttempts": "Невдалі спроби",
-    "serviceName": "Обслуговування",
-    "methodName": "Метод",
-    "scheduledJob": "Заплановані завдання",
-    "data": "Дата",
-    "method": "Метод (deprecated)",
-    "scheduledJobJob": "Назва запланованого завдання",
-    "executedAt": "Виконано о",
-    "startedAt": "Почалося в",
-    "targetType": "Тип цільового об'єкту",
-    "targetId": "ID цільового об'єкту",
-    "number": "Номер",
-    "queue": "Черга",
-    "job": "Завдання",
-    "group": "Група",
-    "className": "Назва класу",
-    "targetGroup": "Цільова група"
-  },
-  "options": {
-    "status": {
-      "Pending": "Очікується",
-      "Success": "Успішно",
-      "Running": "Виконується",
-      "Failed": "Невдало"
+    "fields": {
+        "status": "Статус",
+        "executeTime": "Виконати в",
+        "executedAt": "Виконано о",
+        "startedAt": "Почалося в",
+        "attempts": "Залишилось спроб",
+        "failedAttempts": "Невдалі спроби",
+        "serviceName": "Обслуговування",
+        "method": "Метод (deprecated)",
+        "methodName": "Метод",
+        "scheduledJob": "Заплановані завдання",
+        "scheduledJobJob": "Назва запланованого завдання",
+        "data": "Дата",
+        "targetType": "Тип цільового об'єкту",
+        "targetId": "ID цільового об'єкту",
+        "number": "Номер",
+        "queue": "Черга",
+        "group": "Група",
+        "className": "Назва класу",
+        "targetGroup": "Цільова група",
+        "job": "Завдання"
+    },
+    "options": {
+        "status": {
+            "Pending": "Очікується",
+            "Success": "Успішно",
+            "Running": "Виконується",
+            "Failed": "Невдало"
+        }
     }
-  }
 }

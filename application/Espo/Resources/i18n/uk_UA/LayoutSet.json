@@ -1,9 +1,9 @@
 {
-  "fields": {
-    "layoutList": "Макети"
-  },
-  "labels": {
-    "Create LayoutSet": "Створити набір макетів",
-    "Edit Layouts": "Редагувати макети"
-  }
+    "fields": {
+        "layoutList": "Макети"
+    },
+    "labels": {
+        "Create LayoutSet": "Створити набір макетів",
+        "Edit Layouts": "Редагувати макети"
+    }
 }

@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "Create CurrencyRecordRate": "Створити курс валюти"
+    },
+    "fields": {
+        "record": "Валюта",
+        "baseCode": "Базова валюта",
+        "date": "Дата",
+        "rate": "Курс",
+        "number": "Номер"
+    },
+    "links": {
+        "record": "Валюта"
+    }
+}

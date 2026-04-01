@@ -1,16 +1,17 @@
 {
-  "fields": {
-    "name": "Ім'я",
-    "version": "Версія",
-    "description": "Опис",
-    "isInstalled": "Встановлено",
-    "checkVersionUrl": "URL для перевірки наявності нових версій"
-  },
-  "labels": {
-    "Uninstall": "Видалити",
-    "Install": "Встановити"
-  },
-  "messages": {
-    "uninstalled": "Розширення {name} видалено"
-  }
+    "fields": {
+        "name": "Ім'я",
+        "version": "Версія",
+        "description": "Опис",
+        "isInstalled": "Встановлено",
+        "checkVersionUrl": "URL для перевірки наявності нових версій"
+    },
+    "labels": {
+        "Uninstall": "Видалити",
+        "Install": "Встановити"
+    },
+    "messages": {
+        "uninstalled": "Розширення {name} видалено",
+        "fileExceedsMaxUploadSize": "Розмір файлу перевищує максимальний дозволений розмір завантаження {maxSize}. Спробуйте збільшити `post_max_size` або встановіть розширення через CLI."
+    }
 }

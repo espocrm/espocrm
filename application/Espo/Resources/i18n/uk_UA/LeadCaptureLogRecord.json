@@ -1,14 +1,14 @@
 {
-  "fields": {
-    "number": "Номер",
-    "data": "Дані",
-    "target": "Ціль",
-    "leadCapture": "Захоплення ліда",
-    "createdAt": "Введено",
-    "isCreated": "Створено лід"
-  },
-  "links": {
-    "leadCapture": "Захоплення ліда",
-    "target": "Ціль"
-  }
+    "fields": {
+        "number": "Номер",
+        "data": "Дані",
+        "target": "Ціль",
+        "leadCapture": "Захоплення ліда",
+        "createdAt": "Введено",
+        "isCreated": "Створено лід"
+    },
+    "links": {
+        "leadCapture": "Захоплення ліда",
+        "target": "Ціль"
+    }
 }

@@ -1,5 +1,6 @@
 {
-  "labels": {
-    "Create ApiUser": "Створити API користувача"
-  }
+    "labels": {
+        "Create ApiUser": "Створити API користувача",
+        "OpenAPI spec": "Специфікація OpenAPI"
+    }
 }

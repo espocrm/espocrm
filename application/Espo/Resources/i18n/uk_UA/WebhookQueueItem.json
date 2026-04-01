@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "event": "Подія",
+        "webhook": "Вебхук",
+        "target": "Ціль",
+        "data": "Дані",
+        "status": "Статус",
+        "processedAt": "Оброблено о",
+        "attempts": "Спроби",
+        "processAt": "Обробити о"
+    },
+    "links": {
+        "webhook": "Вебхук"
+    },
+    "options": {
+        "status": {
+            "Pending": "Очікується",
+            "Success": "Успішно",
+            "Failed": "Невдало"
+        }
+    }
+}

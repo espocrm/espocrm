@@ -1,37 +1,49 @@
 {
-  "fields": {
-    "title": "Посада",
-    "dateFrom": "Дата від",
-    "dateTo": "Дата до",
-    "autorefreshInterval": "Інтервал автооновлення",
-    "displayRecords": "Відобразити записи",
-    "isDoubleHeight": "Висота 2x",
-    "mode": "Режим",
-    "enabledScopeList": "Що відображати",
-    "users": "Користувачі",
-    "entityType": "Тип сутності",
-    "primaryFilter": "Первинний фільтр",
-    "boolFilterList": "Додаткові фільтри",
-    "sortBy": "Сортування (поле)",
-    "sortDirection": "Сортування (напрямок)",
-    "expandedLayout": "Макет",
-    "dateFilter": "Фільтр дати",
-    "skipOwn": "Не показувати власні записи"
-  },
-  "options": {
-    "mode": {
-      "agendaWeek": "Тиждень (порядок денний)",
-      "basicWeek": "Тиждень",
-      "month": "Місяць",
-      "basicDay": "День",
-      "agendaDay": "День (порядок денний)",
-      "timeline": "Часова шкала"
+    "fields": {
+        "title": "Посада",
+        "dateFrom": "Дата від",
+        "dateTo": "Дата до",
+        "autorefreshInterval": "Інтервал автооновлення",
+        "displayRecords": "Відобразити записи",
+        "isDoubleHeight": "Висота 2x",
+        "mode": "Режим",
+        "enabledScopeList": "Що відображати",
+        "users": "Користувачі",
+        "entityType": "Тип сутності",
+        "primaryFilter": "Первинний фільтр",
+        "boolFilterList": "Додаткові фільтри",
+        "sortBy": "Сортування (поле)",
+        "sortDirection": "Сортування (напрямок)",
+        "expandedLayout": "Макет",
+        "skipOwn": "Не показувати власні записи",
+        "url": "URL",
+        "dateFilter": "Фільтр дати",
+        "text": "Текст",
+        "folder": "Папка",
+        "includeShared": "Включати спільні"
+    },
+    "options": {
+        "mode": {
+            "agendaWeek": "Тиждень (порядок денний)",
+            "basicWeek": "Тиждень",
+            "month": "Місяць",
+            "basicDay": "День",
+            "agendaDay": "День (порядок денний)",
+            "timeline": "Часова шкала"
+        },
+        "sortDirection": {
+            "asc": "За зростанням",
+            "desc": "За спаданням"
+        }
+    },
+    "messages": {
+        "selectEntityType": "Виберіть тип сутності в опціях дашлету."
+    },
+    "tooltips": {
+        "skipOwn": "Дії, виконані вашим обліковим записом користувача, відображатися не будуть."
+    },
+    "otherFields": {
+        "soft": "М'який колір",
+        "small": "Маленький шрифт"
     }
-  },
-  "messages": {
-    "selectEntityType": "Виберіть тип сутності в опціях дашлету."
-  },
-  "tooltips": {
-    "skipOwn": "Дії, виконані вашим обліковим записом користувача, відображатися не будуть."
-  }
 }
