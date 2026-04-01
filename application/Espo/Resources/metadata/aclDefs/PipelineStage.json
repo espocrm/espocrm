@@ -1,0 +1,4 @@
+{
+    "accessCheckerClassName": "Espo\\Classes\\Acl\\PipelineStage\\AccessChecker",
+    "portalAccessCheckerClassName": "Espo\\Classes\\AclPortal\\PipelineStage\\AccessChecker"
+}

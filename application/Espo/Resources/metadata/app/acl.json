@@ -65,7 +65,9 @@
             "WorkingTimeRange": "WorkingTimeCalendar",
             "Stream": true,
             "CurrencyRecord": "boolean:Currency",
-            "CurrencyRecordRate": "Currency"
+            "CurrencyRecordRate": "Currency",
+            "Pipeline": true,
+            "PipelineStage": true
         },
         "fieldLevel": {
         },
@@ -161,7 +163,9 @@
             "CurrencyRecordRate": {
                 "read": "yes",
                 "edit": "yes"
-            }
+            },
+            "Pipeline": true,
+            "PipelineStage": true
         }
     },
     "valuePermissionList": [

@@ -43,7 +43,9 @@
                 "edit": "own",
                 "delete": "no",
                 "create": "no"
-            }
+            },
+            "Pipeline": true,
+            "PipelineStage": true
         },
         "fieldLevel": {
         },
