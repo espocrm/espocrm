@@ -126,6 +126,8 @@ export default class PipelineViewSetupHandler {
             pipelineStageId: stage.id,
             pipelineStageName: stage.name,
         });
+
+        this.model.trigger('pipeline-changed');
     }
 
     /**
@@ -136,5 +138,7 @@ export default class PipelineViewSetupHandler {
             pipelineStageId: null,
             pipelineStageName: null,
         });
+
+        this.model.trigger('pipeline-changed');
     }
 }

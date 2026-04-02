@@ -31,12 +31,12 @@ namespace Espo\Hooks\Common;
 
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Core\Name\Field;
-use Espo\Core\Utils\Metadata;
 use Espo\Entities\PipelineStage;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Exceptions\ValidationException;
 use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Tools\Pipeline\MetadataProvider;
 
 /**
  * @noinspection PhpUnused
@@ -44,13 +44,13 @@ use Espo\ORM\Repository\Option\SaveOptions;
 class PipelineStageValidation implements BeforeSave
 {
     public function __construct(
-        private Metadata $metadata,
+        private MetadataProvider $metadataProvider,
         private EntityManager $entityManager,
     ) {}
 
     public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$this->metadata->get("scopes.{$entity->getEntityType()}.pipelines")) {
+        if (!$this->metadataProvider->isEnabled($entity->getEntityType())) {
             return;
         }
 

@@ -124,7 +124,7 @@ export default class PipelineFieldView extends LinkFieldView {
 
         this.listenTo(this.subModel, 'change', (m, o) => o.ui ? this.trigger('change') : null);
 
-        this.listenTo(this.model, 'change:pipelineId', async () => {
+        this.listenTo(this.model, 'change:pipelineId pipeline-changed', async () => {
             await this.onEditModeSet()
             await this.reRender();
         });

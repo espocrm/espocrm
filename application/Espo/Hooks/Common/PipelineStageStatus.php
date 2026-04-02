@@ -27,32 +27,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\FieldValidators\Pipeline\EntityType;
+namespace Espo\Hooks\Common;
 
-use Espo\Core\FieldValidation\Validator;
-use Espo\Core\FieldValidation\Validator\Data;
-use Espo\Core\FieldValidation\Validator\Failure;
-use Espo\Entities\Pipeline;
+use Espo\Entities\PipelineStage;
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Name\Field;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Tools\Pipeline\MetadataProvider;
 
 /**
- * @implements Validator<Pipeline>
+ * @noinspection PhpUnused
  */
-class Valid implements Validator
+class PipelineStageStatus implements BeforeSave
 {
+    public static int $order = 1;
+
     public function __construct(
         private MetadataProvider $metadataProvider,
+        private EntityManager $entityManager,
     ) {}
 
-    public function validate(Entity $entity, string $field, Data $data): ?Failure
+    public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        $entityType = $entity->getTargetEntityType();
-
-        if (!$this->metadataProvider->isEnabled($entityType)) {
-            return Failure::create();
+        if (!$this->metadataProvider->isEnabled($entity->getEntityType())) {
+            return;
         }
 
-        return null;
+        $statusField = $this->metadataProvider->getStatusField($entity->getEntityType());
+
+        if (!$statusField) {
+            return;
+        }
+
+        if (
+            !$entity->isAttributeChanged(Field::PIPELINE . 'Id') &&
+            !$entity->isAttributeChanged(Field::PIPELINE_STAGE . 'Id')
+        ) {
+            return;
+        }
+
+        $status = null;
+
+        $stageId = $entity->get(Field::PIPELINE_STAGE . 'Id');
+
+        if ($stageId) {
+            $stage = $this->entityManager->getRDBRepositoryByClass(PipelineStage::class)->getById($stageId);
+
+            $status = $stage?->getMappedStatus() ?? null;
+        }
+
+        $entity->set($statusField, $status);
     }
 }

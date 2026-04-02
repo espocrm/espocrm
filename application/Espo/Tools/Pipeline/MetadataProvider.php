@@ -27,32 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\FieldValidators\Pipeline\EntityType;
+namespace Espo\Tools\Pipeline;
 
-use Espo\Core\FieldValidation\Validator;
-use Espo\Core\FieldValidation\Validator\Data;
-use Espo\Core\FieldValidation\Validator\Failure;
-use Espo\Entities\Pipeline;
-use Espo\ORM\Entity;
-use Espo\Tools\Pipeline\MetadataProvider;
+use Espo\Core\Utils\Metadata;
 
-/**
- * @implements Validator<Pipeline>
- */
-class Valid implements Validator
+class MetadataProvider
 {
     public function __construct(
-        private MetadataProvider $metadataProvider,
+        private Metadata $metadata,
     ) {}
 
-    public function validate(Entity $entity, string $field, Data $data): ?Failure
+    public function isEnabled(string $entityType): bool
     {
-        $entityType = $entity->getTargetEntityType();
+        return $this->metadata->get("scopes.$entityType.pipelines") === true;
+    }
 
-        if (!$this->metadataProvider->isEnabled($entityType)) {
-            return Failure::create();
-        }
-
-        return null;
+    public function getStatusField(string $entityType): ?string
+    {
+        return $this->metadata->get("scopes.$entityType.statusField");
     }
 }
