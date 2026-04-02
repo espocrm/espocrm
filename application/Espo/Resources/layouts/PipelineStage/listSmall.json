@@ -5,10 +5,10 @@
     },
     {
         "name": "pipeline",
-        "width": 35
+        "width": 33
     },
     {
         "name": "mappedStatus",
-        "width": 30
+        "width": 25
     }
 ]

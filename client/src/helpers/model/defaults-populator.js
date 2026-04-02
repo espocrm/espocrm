@@ -183,7 +183,7 @@ class DefaultsPopulator {
 
         if (this.metadata.get(`scopes.${model.entityType}.pipelines`)) {
             const firstPipeline = new PipelinesHelper().get(model.entityType)[0] ?? null;
-            
+
             if (firstPipeline) {
                 defaultHash.pipelineId = firstPipeline.id;
                 defaultHash.pipelineName = firstPipeline.name;

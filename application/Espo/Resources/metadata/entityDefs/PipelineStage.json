@@ -71,7 +71,7 @@
         }
     },
     "collection": {
-        "orderBy": "createdAt",
-        "order": "desc"
+        "orderBy": "listOrder",
+        "order": "asc"
     }
 }
