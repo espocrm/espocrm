@@ -31,6 +31,7 @@ namespace Espo\Tools\EntityManager\Hook\Hooks;
 
 use Espo\Classes\Acl\Common\Pipeline\PipelineLinkChecker;
 use Espo\Classes\Acl\Common\Pipeline\PipelineStageLinkChecker;
+use Espo\Classes\FieldValidators\Common\PipelineStage\Valid;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Name\Field;
@@ -85,9 +86,7 @@ class PipelinesUpdateHook implements UpdateHook
                 Field::PIPELINE => [
                     FieldParam::TYPE => FieldType::LINK,
                     FieldParam::REQUIRED => true,
-                    'validatorClassNameList' => [
-
-                    ],
+                    'inlineEditDisabled' => true,
                     'fieldManagerParamList' => [
                         'audited',
                         'tooltipText',
@@ -100,11 +99,13 @@ class PipelinesUpdateHook implements UpdateHook
                     'validationDependsOnFieldList' => [
                         Field::PIPELINE,
                     ],
-
-
+                    'validatorClassNameList' => [
+                        Valid::class,
+                    ],
                     'fieldManagerParamList' => [
                         'audited',
                         'tooltipText',
+                        'inlineEditDisabled',
                     ],
                     'view' => 'views/fields/extra/pipeline-stage',
                 ],

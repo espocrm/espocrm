@@ -30,21 +30,30 @@
 namespace Espo\Tools\Kanban;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Metadata;
+use Espo\Tools\Pipeline\Data\PipelineData;
+use Espo\Tools\Pipeline\MetadataProvider as PipelineMetadataProvider;
+use Espo\Tools\Pipeline\PipelineDataProvider;
 
 class MetadataProvider
 {
     public function __construct(
         private Metadata $metadata,
+        private PipelineMetadataProvider $pipelineMetadata,
+        private PipelineDataProvider $pipelineDataProvider,
     ) {}
-
 
     /**
      * @return string[]
      * @throws Error
      */
-    public function getStatusList(string $entityType): array
+    public function getStatusList(string $entityType, ?string $pipelineId = null): array
     {
+        if ($this->pipelineMetadata->isEnabled($entityType) && $pipelineId) {
+            return $this->getPipelineStatusList($entityType, $pipelineId);
+        }
+
         $field = $this->getStatusField($entityType);
 
         $statusList = $this->metadata->get("entityDefs.$entityType.fields.$field.options");
@@ -60,7 +69,10 @@ class MetadataProvider
             throw new Error("No options for status field for entity type '$entityType'.");
         }
 
-        return $statusList;
+        $statusList = array_diff($statusList, $this->getStatusIgnoreList($entityType));
+        $statusList = array_filter($statusList, fn ($it) => $it !== '');
+
+        return array_values($statusList);
     }
 
     /**
@@ -68,6 +80,10 @@ class MetadataProvider
      */
     public function getStatusField(string $entityType): string
     {
+        if ($this->pipelineMetadata->isEnabled($entityType)) {
+            return Field::PIPELINE_STAGE . 'Id';
+        }
+
         $statusField = $this->metadata->get("scopes.$entityType.statusField");
 
         if (!$statusField) {
@@ -83,5 +99,47 @@ class MetadataProvider
     public function getStatusIgnoreList(string $entityType): array
     {
         return $this->metadata->get("scopes.$entityType.kanbanStatusIgnoreList") ?? [];
+    }
+
+    private function getPipelineData(string $entityType, string $pipelineId): ?PipelineData
+    {
+        $pipeline = null;
+
+        $pipelines = $this->pipelineDataProvider->get()[$entityType] ?? [];
+
+        foreach ($pipelines as $it) {
+            if ($it->id === $pipelineId) {
+                $pipeline = $it;
+
+                break;
+            }
+        }
+
+        return $pipeline;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getPipelineStatusList(string $entityType, string $pipelineId): array
+    {
+        $pipeline = $this->getPipelineData($entityType, $pipelineId);
+
+        if (!$pipeline) {
+            return [];
+        }
+
+        $ignoreStatusList = $this->getStatusIgnoreList($entityType);
+        $output = [];
+
+        foreach ($pipeline->stages as $stage) {
+            if (in_array($stage->mappedStatus, $ignoreStatusList)) {
+                continue;
+            }
+
+            $output[] = $stage->id;
+        }
+
+        return $output;
     }
 }

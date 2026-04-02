@@ -46,6 +46,7 @@ class OrdererProcessor
     private ?string $entityType = null;
     private ?string $group = null;
     private ?string $userId = null;
+    private bool $isPipeline = false;
 
     private int $maxNumber = self::DEFAULT_MAX_NUMBER;
 
@@ -55,6 +56,16 @@ class OrdererProcessor
         private RecordIdGenerator $idGenerator,
         private MetadataProvider $metadataProvider,
     ) {}
+
+    /**
+     * @since 9.4.0
+     */
+    public function setIsPipeline(bool $isPipeline): self
+    {
+        $this->isPipeline = $isPipeline;
+
+        return $this;
+    }
 
     public function setEntityType(string $entityType): self
     {
@@ -226,6 +237,10 @@ class OrdererProcessor
 
         if ($orderDisabled) {
             throw new LogicException("Order is disabled.");
+        }
+
+        if ($this->isPipeline) {
+            return;
         }
 
         $statusField = $this->metadataProvider->getStatusField($this->entityType);

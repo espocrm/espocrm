@@ -51,6 +51,7 @@ class MoveService
     public function __construct(
         private EntityManager $entityManager,
         private SelectBuilderFactory $selectBuilderFactory,
+        private CacheClearer $cacheClearer,
     ) {}
 
     /**
@@ -77,6 +78,8 @@ class MoveService
         }
 
         $this->reOrder($entity::class);
+
+        $this->cacheClearer->clear();
     }
 
     /**

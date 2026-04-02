@@ -41,6 +41,9 @@ use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\Tools\Pipeline\Data\PipelineData;
+use Espo\Tools\Pipeline\Data\StageData;
+use Espo\Tools\Pipeline\PipelineDataProvider;
 
 class Kanban
 {
@@ -53,6 +56,7 @@ class Kanban
     private ?SearchParams $searchParams = null;
     private ?string $userId = null;
     private int $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
+    private ?string $pipelineId = null;
 
     public function __construct(
         private SelectBuilderFactory $selectBuilderFactory,
@@ -61,6 +65,7 @@ class Kanban
         private RecordServiceContainer $recordServiceContainer,
         private ApplierClassNameListProvider $applierClassNameListProvider,
         private MetadataProvider $metadataProvider,
+        private PipelineDataProvider $pipelineDataProvider,
     ) {}
 
     public function setEntityType(string $entityType): self
@@ -73,6 +78,16 @@ class Kanban
     public function setSearchParams(SearchParams $searchParams): self
     {
         $this->searchParams = $searchParams;
+
+        return $this;
+    }
+
+    /**
+     * @since 9.4.0
+     */
+    public function setPipelineId(?string $pipelineId): self
+    {
+        $this->pipelineId = $pipelineId;
 
         return $this;
     }
@@ -149,24 +164,16 @@ class Kanban
             ->build();
 
         $statusField = $this->metadataProvider->getStatusField($this->entityType);
-        $statusList = $this->metadataProvider->getStatusList($this->entityType);
-        $statusIgnoreList = $this->metadataProvider->getStatusIgnoreList($this->entityType);
-
+        $statusList = $this->metadataProvider->getStatusList($this->entityType, $this->pipelineId);
         $groupList = [];
 
         $repository = $this->entityManager->getRDBRepository($this->entityType);
 
         $hasMore = false;
 
+        $pipeline = $this->getPipelineData($this->entityType);
+
         foreach ($statusList as $status) {
-            if (in_array($status, $statusIgnoreList)) {
-                continue;
-            }
-
-            if (!$status) {
-                continue;
-            }
-
             $itemSelectBuilder = $this->entityManager
                 ->getQueryBuilder()
                 ->select()
@@ -236,7 +243,14 @@ class Kanban
             /** @var Collection<Entity> $itemRecordCollection */
             $itemRecordCollection = new Collection($collectionSub, $totalSub);
 
-            $groupList[] = new GroupItem($status, $itemRecordCollection);
+            $stage = $this->getPipelineStageData($pipeline, $status);
+
+            $groupList[] = new GroupItem(
+                name: $status,
+                collection: $itemRecordCollection,
+                label: $stage?->name,
+                style: $stage?->style,
+            );
         }
 
         $total = !$this->countDisabled ?
@@ -244,5 +258,39 @@ class Kanban
             ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
         return new Result($groupList, $total);
+    }
+
+    private function getPipelineData(string $entityType): ?PipelineData
+    {
+        if (!$this->pipelineId) {
+            return null;
+        }
+
+        $pipeline = null;
+
+        $pipelines = $this->pipelineDataProvider->get()[$entityType] ?? [];
+
+        foreach ($pipelines as $it) {
+            if ($it->id === $this->pipelineId) {
+                $pipeline = $it;
+
+                break;
+            }
+        }
+
+        return $pipeline;
+    }
+
+    private function getPipelineStageData(?PipelineData $pipeline, string $id): ?StageData
+    {
+        if ($pipeline) {
+            foreach ($pipeline->stages as $it) {
+                if ($it->id === $id) {
+                    return $it;
+                }
+            }
+        }
+
+        return null;
     }
 }

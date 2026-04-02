@@ -1,4 +1,13 @@
 {
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\PipelineStage\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\PipelineStage\\AfterSave"
+    ],
+    "afterDeleteHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\PipelineStage\\AfterDelete"
+    ],
     "massActions": {
         "delete": {
             "disabled": true

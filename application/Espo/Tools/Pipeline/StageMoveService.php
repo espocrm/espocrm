@@ -38,6 +38,7 @@ class StageMoveService
 {
     public function __construct(
         private EntityManager $entityManager,
+        private CacheClearer $cacheClearer,
     ) {}
 
     /**
@@ -55,6 +56,8 @@ class StageMoveService
         }
 
         $this->swapStages($anotherColumn, $stage);
+
+        $this->cacheClearer->clear();
     }
 
     /**
