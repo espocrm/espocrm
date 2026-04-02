@@ -554,6 +554,7 @@ class KanbanRecordView extends ListRecordView {
             throw new Error(`No status field for entity type '${this.scope}'.`);
         }
 
+        // @todo Use options-provider.
         this.styleMap = /** @type {Record.<string, string>} */
             this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.style`) ?? {};
 
