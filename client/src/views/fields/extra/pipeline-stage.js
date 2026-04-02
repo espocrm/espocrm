@@ -29,6 +29,8 @@
 import LinkFieldView from 'views/fields/link';
 import Model from 'model';
 import EnumFieldView from 'views/fields/enum';
+import {inject} from 'di';
+import AppParams from 'app-params';
 
 export default class PipelineFieldView extends LinkFieldView {
 
@@ -64,7 +66,14 @@ export default class PipelineFieldView extends LinkFieldView {
 
     /**
      * @private
-     * @type {{id: string,stages: {id: string, name: string, style: string|null}[]}[]}
+     * @type {AppParams}
+     */
+    @inject(AppParams)
+    appParams
+
+    /**
+     * @private
+     * @type {{id: string, stages: {id: string, name: string, style: string|null}[]}[]}
      */
     pipelines
 
@@ -72,6 +81,14 @@ export default class PipelineFieldView extends LinkFieldView {
         const data = super.data();
 
         data.stringValue = data.nameValue;
+
+        const pipeline = this.getPipeline();
+
+        if (pipeline && this.model.attributes[this.idName]) {
+            const stage = pipeline.stages.find(it => it.id === this.model.attributes[this.idName]);
+
+            data.style = stage?.style ?? 'default';
+        }
 
         // noinspection JSValidateTypes
         return data;
@@ -134,7 +151,7 @@ export default class PipelineFieldView extends LinkFieldView {
 
         const currentId = this.model.attributes[this.idName];
 
-        if (!currentId) {
+        if (!currentId || !pipeline) {
             options.unshift('');
         }
 
@@ -143,10 +160,12 @@ export default class PipelineFieldView extends LinkFieldView {
         }
 
         const translatedOptions = {};
+        const style = {};
 
         if (pipeline) {
             pipeline.stages.forEach(it => {
                 translatedOptions[it.id] = it.name;
+                style[it.id] = it.style;
             });
         }
 
@@ -155,12 +174,13 @@ export default class PipelineFieldView extends LinkFieldView {
         }
 
         this.enumView = new EnumFieldView({
-            name: 'pipeline',
+            name: 'stage',
             model: this.subModel,
             mode: 'edit',
             params: {
                 options,
                 translatedOptions,
+                style,
             },
         });
 
@@ -168,7 +188,7 @@ export default class PipelineFieldView extends LinkFieldView {
     }
 
     fetch() {
-        const id = this.subModel.attributes.pipeline;
+        const id = this.subModel.attributes.stage;
         let name = null;
 
         const pipeline = this.getPipeline();

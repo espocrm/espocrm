@@ -66,16 +66,16 @@ export default class PipelineFieldView extends LinkFieldView {
 
     /**
      * @private
-     * @type {Model}
-     */
-    subModel
-
-    /**
-     * @private
      * @type {AppParams}
      */
     @inject(AppParams)
     appParams
+
+    /**
+     * @private
+     * @type {Model}
+     */
+    subModel
 
     /**
      * @private

@@ -4,5 +4,6 @@
     },
     "accessControlFilterClassNameMap": {
         "mandatory": "Espo\\Classes\\Select\\Pipeline\\AccessControlFilters\\Mandatory"
-    }
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\Boolean"
 }
