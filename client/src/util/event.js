@@ -38,6 +38,7 @@
  *     callback: function({
  *         ui: boolean|null,
  *         action: string|'ui'|'save'|'fetch'|'cancel-edit'|null,
+ *         fromView: import('views/fields/base').default,
  *     }),
  * }} params
  * @return {{stop: function()}}
@@ -63,6 +64,7 @@ export function onModelChange(params) {
         callback({
             ui: o.ui ?? null,
             action: o.action ?? null,
+            fromView: o.fromView ?? null,
         });
     }
 

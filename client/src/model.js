@@ -1090,6 +1090,7 @@ class Model {
      *     callback: function({
      *         ui: boolean|null,
      *         action: string|'ui'|'save'|'fetch'|'cancel-edit'|null,
+     *         fromView: import('views/fields/base').default,
      *     }),
      * }} params
      * @return {{stop: function()}}
