@@ -186,7 +186,7 @@ class KanbanRecordView extends ListRecordView {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
 
-            this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
+            this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
             this.getRouter().dispatch(scope, 'view', options);
         },
         /** @this KanbanRecordView */
@@ -372,6 +372,7 @@ class KanbanRecordView extends ListRecordView {
                 this.orderDisabled = true;
             }
         }
+
         this.setupStatusField();
 
         this.seedCollection = this.collection.clone();
@@ -385,18 +386,18 @@ class KanbanRecordView extends ListRecordView {
         this.setupRowActionDefs();
         this.setupSettings();
 
-        this.listenTo(this.collection, 'sync', () => {
-            this._renderEmpty = false;
+        this.collection.onSync({
+            owner: this,
+            callback: () => {
+                this._renderEmpty = false;
 
-            this.buildRowsAndRender();
+                this.buildRowsAndRender();
+            },
         });
 
-        this.collection.listenTo(
-            this.collection,
-            'change:' + this.statusField,
-            this.onChangeGroup.bind(this),
-            this
-        );
+        this.listenTo(this.collection, `change:${this.statusField}`, (m, v, o) => {
+            this.onChangeGroup(m, v, o);
+        });
 
         this.buildRows();
 
@@ -411,9 +412,9 @@ class KanbanRecordView extends ListRecordView {
         } else {
             this.statusFieldIsEditable =
                 this.getAcl().checkScope(this.entityType, 'edit') &&
-                !this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').includes(this.statusField) &&
-                !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) &&
-                !this.getMetadata().get(['entityDefs', this.entityType, 'fields', this.statusField, 'readOnly']);
+                this.getAcl().checkField(this.entityType, this.statusField, 'edit') &&
+                !this.getMetadata().get(`clientDefs.${this.scope}.editDisabled`) &&
+                !this.getMetadata().get(`entityDefs.${this.entityType}.fields.${this.statusField}.readOnly`);
         }
 
         if ('canCreate' in this.options) {
