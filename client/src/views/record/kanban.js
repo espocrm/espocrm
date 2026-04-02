@@ -32,6 +32,7 @@ import ListRecordView from 'views/record/list';
 import RecordModal from 'helpers/record-modal';
 import {inject} from 'di';
 import AppParams from 'app-params';
+import KanbanPipelineDropdownView from 'views/record/kanban/pipeline-dropdown';
 
 /**
  * A kanban record view.
@@ -112,7 +113,7 @@ class KanbanRecordView extends ListRecordView {
 
     /**
      * @private
-     * @type {{id: string, stages: {id: string, name: string, style: string|null}[]}[]}
+     * @type {{id: string, name: string, stages: {id: string, name: string, style: string|null}[]}[]}
      */
     pipelines
 
@@ -301,7 +302,8 @@ class KanbanRecordView extends ListRecordView {
             this.displayTotalCount ||
             this.buttonList.length &&
             !this.buttonsDisabled ||
-            !!this._listSettingsHelper
+            !!this._listSettingsHelper ||
+            this.usePipeline
         );
 
         // noinspection JSValidateTypes
@@ -318,6 +320,7 @@ class KanbanRecordView extends ListRecordView {
             isEmptyList: this.collection.models.length === 0,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             noDataDisabled: this._renderEmpty,
+            usePipeline: this.usePipeline,
         };
     }
 
@@ -491,7 +494,15 @@ class KanbanRecordView extends ListRecordView {
         if (!this.currentPipelineId) {
             this.currentPipelineId = this.pipelines[0]?.id ?? null;
         }
+        this.setPipelineWhere();
 
+        this.setupPipelineDropdown();
+    }
+
+    /**
+     * @private
+     */
+    setPipelineWhere() {
         this.collection.whereFunction = () => {
             return [
                 {
@@ -501,6 +512,38 @@ class KanbanRecordView extends ListRecordView {
                 }
             ];
         };
+    }
+
+    /**
+     * @private
+     */
+    setupPipelineDropdown() {
+        const state = {
+            pipelineId: this.currentPipelineId,
+            pipelines: this.pipelines,
+        };
+
+        const view = new KanbanPipelineDropdownView({
+            state: state,
+            onChange: async id => {
+                this.currentPipelineId = id;
+                state.pipelineId = id;
+
+                this.setPipelineWhere();
+
+                this.getStorage().set('state', this.buildPipelineIdStorageKey(), id);
+
+                await view.reRender();
+
+                Espo.Ui.notifyWait();
+
+                await this.collection.fetch({maxSize: this.collection.maxSize});
+
+                Espo.Ui.notify();
+            },
+        });
+
+        this.assignView('pipelineDropdown', view);
     }
 
     /**
