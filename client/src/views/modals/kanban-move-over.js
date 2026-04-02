@@ -81,11 +81,11 @@ class KanbanMoveOverModalView extends ModalView {
 
         this.optionDataList = [];
 
-        (
-            this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) || []
-        )
-            .forEach((item) => {
+        const statusList = this.getMetadata()
+            .get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) ?? [];
+
+        (statusList)
+            .forEach(item => {
                 this.optionDataList.push({
                     value: item,
                     label: this.getLanguage().translateOption(item, this.statusField, this.scope),

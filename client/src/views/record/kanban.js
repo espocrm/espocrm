@@ -1354,6 +1354,7 @@ class KanbanRecordView extends ListRecordView {
         this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
             model: model,
             statusField: this.statusField,
+            pipelineId: this.currentPipelineId,
         }, view => {
             view.render();
         });
