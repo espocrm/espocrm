@@ -31,6 +31,7 @@ import Model from 'model';
 import EnumFieldView from 'views/fields/enum';
 import {inject} from 'di';
 import AppParams from 'app-params';
+import PipelinesHelper from 'helpers/misc/pipelines';
 
 export default class PipelineFieldView extends LinkFieldView {
 
@@ -66,13 +67,6 @@ export default class PipelineFieldView extends LinkFieldView {
 
     /**
      * @private
-     * @type {AppParams}
-     */
-    @inject(AppParams)
-    appParams
-
-    /**
-     * @private
      * @type {{id: string, stages: {id: string, name: string, style: string|null}[]}[]}
      */
     pipelines
@@ -97,7 +91,7 @@ export default class PipelineFieldView extends LinkFieldView {
     setup() {
         super.setup();
 
-        this.pipelines = (this.appParams.get('pipelines') ?? {})[this.entityType] ?? [];
+        this.pipelines = new PipelinesHelper().get(this.entityType);
 
         this.setupSub();
     }

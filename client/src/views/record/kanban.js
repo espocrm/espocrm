@@ -33,6 +33,7 @@ import RecordModal from 'helpers/record-modal';
 import {inject} from 'di';
 import AppParams from 'app-params';
 import KanbanPipelineDropdownView from 'views/record/kanban/pipeline-dropdown';
+import PipelinesHelper from 'helpers/misc/pipelines';
 
 /**
  * A kanban record view.
@@ -116,13 +117,6 @@ class KanbanRecordView extends ListRecordView {
      * @type {{id: string, name: string, stages: {id: string, name: string, style: string|null}[]}[]}
      */
     pipelines
-
-    /**
-     * @private
-     * @type {AppParams}
-     */
-    @inject(AppParams)
-    appParams
 
     /**
      * Layout item definitions.
@@ -487,7 +481,7 @@ class KanbanRecordView extends ListRecordView {
      * @private
      */
     setupPipeline() {
-        this.pipelines = (this.appParams.get('pipelines') ?? {})[this.entityType] ?? [];
+        this.pipelines = new PipelinesHelper().get(this.entityType);
 
         this.currentPipelineId = this.getStorage().get('state', this.buildPipelineIdStorageKey());
 

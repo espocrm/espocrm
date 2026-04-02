@@ -28,6 +28,7 @@
 import {inject} from 'di';
 import Metadata from 'metadata';
 import AppParams from 'app-params';
+import PipelinesHelper from 'helpers/misc/pipelines';
 
 // noinspection JSUnusedGlobalSymbols
 export default class PipelineViewSetupHandler {
@@ -79,7 +80,7 @@ export default class PipelineViewSetupHandler {
             return;
         }
 
-        this.pipelines = (this.appParams.get('pipelines') ?? {})[entityType] ?? [];
+        this.pipelines = new PipelinesHelper().get(entityType);
 
         this.model.onChange({
             owner: this.view,
