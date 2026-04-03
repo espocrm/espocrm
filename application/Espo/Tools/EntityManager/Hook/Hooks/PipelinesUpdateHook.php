@@ -86,6 +86,7 @@ class PipelinesUpdateHook implements UpdateHook
                 Field::PIPELINE => [
                     FieldParam::TYPE => FieldType::LINK,
                     FieldParam::REQUIRED => true,
+                    'audited' => true,
                     'inlineEditDisabled' => true,
                     'fieldManagerParamList' => [
                         'audited',
@@ -96,6 +97,7 @@ class PipelinesUpdateHook implements UpdateHook
                 Field::PIPELINE_STAGE => [
                     FieldParam::TYPE => FieldType::LINK,
                     FieldParam::REQUIRED => true,
+                    'audited' => true,
                     'validationDependsOnFieldList' => [
                         Field::PIPELINE,
                     ],

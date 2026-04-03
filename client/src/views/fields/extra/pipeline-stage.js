@@ -29,8 +29,6 @@
 import LinkFieldView from 'views/fields/link';
 import Model from 'model';
 import EnumFieldView from 'views/fields/enum';
-import {inject} from 'di';
-import AppParams from 'app-params';
 import PipelinesHelper from 'helpers/misc/pipelines';
 
 export default class PipelineFieldView extends LinkFieldView {
@@ -77,6 +75,8 @@ export default class PipelineFieldView extends LinkFieldView {
         data.stringValue = data.nameValue;
 
         const pipeline = this.getPipeline();
+
+        data.style = 'default';
 
         if (pipeline && this.model.attributes[this.idName]) {
             const stage = pipeline.stages.find(it => it.id === this.model.attributes[this.idName]);
