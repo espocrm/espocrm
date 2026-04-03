@@ -39,12 +39,8 @@ use Espo\Tools\EntityManager\Params;
  */
 class CategoriesBeforeUpdateHook implements UpdateHook
 {
-
     private const string PARAM = 'categories';
 
-    /**
-     * @inheritDoc
-     */
     public function process(Params $params, Params $previousParams): void
     {
         if ($params->get(self::PARAM) && $params->get('kanbanViewMode')) {
