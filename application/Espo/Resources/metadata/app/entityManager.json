@@ -10,6 +10,7 @@
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesDeleteHook"
     ],
     "beforeUpdateHookClassNameList": [
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesBeforeUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\PipelinesBeforeUpdateHook"
     ],
     "updateHookClassNameList": [
