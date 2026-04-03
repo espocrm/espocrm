@@ -417,6 +417,8 @@ class EntityManager
         $entityTypeParams = new Params($name, $type, array_merge($this->getCurrentParams($name), $params));
         $previousEntityTypeParams = new Params($name, $type, $this->getCurrentParams($name));
 
+        $this->processBeforeUpdateHook($entityTypeParams, $previousEntityTypeParams);
+
         if (array_key_exists('stream', $params)) {
             $this->metadata->set('scopes', $name, ['stream' => (bool) $params['stream']]);
         }
@@ -673,6 +675,18 @@ class EntityManager
         $this->metadata->save();
 
         $this->dataManager->clearCache();
+    }
+
+    private function processBeforeUpdateHook(Params $params, Params $previousParams): void
+    {
+        /** @var class-string<UpdateHook>[] $classNameList */
+        $classNameList = $this->metadata->get(['app', 'entityManager', 'beforeUpdateHookClassNameList']) ?? [];
+
+        foreach ($classNameList as $className) {
+            $hook = $this->injectableFactory->create($className);
+
+            $hook->process($params, $previousParams);
+        }
     }
 
     private function processUpdateHook(Params $params, Params $previousParams): void

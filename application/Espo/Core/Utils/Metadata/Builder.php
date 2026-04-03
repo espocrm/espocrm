@@ -51,6 +51,7 @@ class Builder
         ['app', 'api', 'controllerActionMiddlewareClassNameListMap', self::ANY_KEY],
         ['app', 'entityManager', 'createHookClassNameList'],
         ['app', 'entityManager', 'deleteHookClassNameList'],
+        ['app', 'entityManager', 'beforeUpdateHookClassNameList'],
         ['app', 'entityManager', 'updateHookClassNameList'],
         ['app', 'linkManager', 'createHookClassNameList'],
         ['app', 'linkManager', 'deleteHookClassNameList'],

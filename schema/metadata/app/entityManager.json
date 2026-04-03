@@ -29,6 +29,18 @@
                 ]
             }
         },
+        "beforeUpdateHookClassNameList": {
+            "type": "array",
+            "description": "Hooks called before updating an entity (in the Entity Manager tool). Can be used for validation purpose. Use __APPEND__ for extending. Should implement Espo\\Tools\\EntityManager\\Hook\\UpdateHook. As of v9.4.0.",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        },
         "updateHookClassNameList": {
             "type": "array",
             "description": "Hooks called when updating an entity (in the Entity Manager tool). Use __APPEND__ for extending. Should implement Espo\\Tools\\EntityManager\\Hook\\UpdateHook.",
