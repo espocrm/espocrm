@@ -37,7 +37,12 @@ export default class PipelineFieldView extends LinkFieldView {
 
     // language=Handlebars
     listTemplateContent = `
-        {{#if stringValue}}
+        {{~#if stringValue~}}
+            <span
+                class="color-icon fas fa-square text-soft"
+                style=" {{#if color}} color: {{color}}; {{/if}} "
+            ></span><span style="user-select: none">&nbsp;</span>
+            {{~#if 1}}{{/if~}}
             <span
                 class=""
                 title="{{stringValue}}"
@@ -47,7 +52,12 @@ export default class PipelineFieldView extends LinkFieldView {
 
     // language=Handlebars
     detailTemplateContent = `
-        {{#if stringValue}}
+        {{~#if stringValue~}}
+            <span
+                class="color-icon fas fa-square text-soft"
+                style=" {{#if color}} color: {{color}}; {{/if}} "
+            ></span><span style="user-select: none">&nbsp;</span>
+            {{~#if 1}}{{/if~}}
             <span
                 class=""
             >{{stringValue}}</span>
@@ -89,6 +99,11 @@ export default class PipelineFieldView extends LinkFieldView {
      */
     translatedOptions
 
+    /**
+     * @private
+     * @type {Record<string, number|null>}
+     */
+    colorMap
 
     /**
      * @private
@@ -102,6 +117,10 @@ export default class PipelineFieldView extends LinkFieldView {
 
         data.stringValue = data.nameValue;
 
+        if (this.model.attributes[this.idName]) {
+            data.color = this.colorMap[this.model.attributes[this.idName]] ?? null;
+        }
+
         // noinspection JSValidateTypes
         return data;
     }
@@ -109,7 +128,7 @@ export default class PipelineFieldView extends LinkFieldView {
     setup() {
         super.setup();
 
-        this.pipelines = new PipelinesHelper().get(this.entityType);
+        this.setupPipelines();
 
         const translatedOptions = {};
 
@@ -120,6 +139,28 @@ export default class PipelineFieldView extends LinkFieldView {
         this.translatedOptions = translatedOptions;
 
         this.setupSub();
+    }
+
+    /**
+     * @private
+     */
+    setupPipelines() {
+        this.pipelines = new PipelinesHelper().get(this.entityType);
+
+        /** @type {string[]} */
+        const colors = this.themeManager.getParam('chartColorList') || [];
+
+        this.colorMap = this.pipelines.reduce((o, it) => {
+            let color = null;
+
+            if (it.color != null) {
+                color = colors[it.color] ?? null;
+            }
+
+            o[it.id] = color;
+
+            return o;
+        }, {});
     }
 
     /**
@@ -164,23 +205,6 @@ export default class PipelineFieldView extends LinkFieldView {
             translatedOptions[currentId] = this.model.attributes[this.idName] ?? currentId;
         }
 
-        /** @type {string[]} */
-        const colors = this.themeManager.getParam('chartColorList') || [];
-
-        const colorMap = this.pipelines.reduce((o, it) => {
-            let color = null;
-
-            if (it.color != null) {
-                color = colors[it.color] ?? null;
-            }
-
-            o[it.id] = color;
-
-            return o;
-        }, {});
-
-        console.log(colorMap);
-
         this.enumView = new EnumFieldView({
             name: 'pipeline',
             model: this.subModel,
@@ -191,7 +215,7 @@ export default class PipelineFieldView extends LinkFieldView {
             },
             optionItemHandler: it => {
                 return {
-                    color: colorMap[it.value],
+                    color: this.colorMap[it.value],
                 };
             },
         });

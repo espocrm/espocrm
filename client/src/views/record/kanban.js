@@ -114,7 +114,12 @@ class KanbanRecordView extends ListRecordView {
 
     /**
      * @private
-     * @type {{id: string, name: string, stages: {id: string, name: string, style: string|null}[]}[]}
+     * @type {{
+     *     id: string,
+     *     name: string,
+     *     stages: {id: string, name: string, style: string|null}[],
+     *     color: number|null,
+     * }[]}
      */
     pipelines
 

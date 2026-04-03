@@ -27,6 +27,8 @@
  ************************************************************************/
 
 import View from 'view';
+import {inject} from 'di';
+import ThemeManager from 'theme-manager';
 
 export default class KanbanPipelineDropdownView extends View {
 
@@ -62,7 +64,7 @@ export default class KanbanPipelineDropdownView extends View {
                             <span
                                 class="color-icon fas fa-square text-soft"
                                 style="
-                                    {{#if itemColor}} color: {{itemColor}}; {{/if}}
+                                    {{#if color}} color: {{color}}; {{/if}}
                                     padding-right: var(--4px);
                                 "
                             ></span>
@@ -75,11 +77,28 @@ export default class KanbanPipelineDropdownView extends View {
     `
 
     /**
+     * @private
+     * @type {ThemeManager}
+     */
+    @inject(ThemeManager)
+    themeManager
+
+    /**
+     * @private
+     * @type {Record<string, number|null>}
+     */
+    colorMap
+
+    /**
      *
      * @param {{
      *     state: {
      *         pipelineId: string,
-     *         pipelines: {id: string, name: string}[],
+     *         pipelines: {
+     *             id: string,
+     *             name: string,
+     *             color: number|null,
+     *         }[],
      *     },
      *     onChange: function(string),
      * }} options
@@ -94,19 +113,41 @@ export default class KanbanPipelineDropdownView extends View {
     }
 
     data() {
-        const name = this.state.pipelines.find(it => it.id === this.state.pipelineId)?.name;
+        const id = this.state.pipelineId;
+
+        const name = this.state.pipelines.find(it => it.id === id)?.name;
+        const color = id ? this.colorMap[id] : null;
+
+        const pipelines = this.state.pipelines.map(it => ({
+            ...it,
+            selected: id === it.id,
+            color: this.colorMap[it.id] ?? null,
+        }));
 
         return {
-            name: name ?? this.state.pipelineId,
-            pipelines: this.state.pipelines.map(it => ({
-                ...it,
-                selected: this.state.pipelineId === it.id,
-            })),
+            name: name ?? id,
+            pipelines: pipelines,
+            color: color ?? null,
         };
     }
 
     setup() {
         this.addActionHandler('selectPipeline', (e, target) => this.selectPipeline(target.dataset.id));
+
+        /** @type {string[]} */
+        const colors = this.themeManager.getParam('chartColorList') || [];
+
+        this.colorMap = this.state.pipelines.reduce((o, it) => {
+            let color = null;
+
+            if (it.color != null) {
+                color = colors[it.color] ?? null;
+            }
+
+            o[it.id] = color;
+
+            return o;
+        }, {});
     }
 
     /**
