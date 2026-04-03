@@ -46,6 +46,8 @@ class EnumFieldView extends BaseFieldView {
      *     module:views/fields/base~params &
      *     Object.<string, *>
      * } [params] Parameters.
+     * @property {module:views/fields/enumeration~optionItemHandler} [optionItemHandler]
+     *     Handles an option item to override the label or add a style. As of v9.4.0.
      */
 
     /**
@@ -61,6 +63,16 @@ class EnumFieldView extends BaseFieldView {
      * @property {boolean} [isSorted] To sort options.
      * @property {Object.<string, 'warning'|'danger'|'success'|'info'|'primary'>} [style] A style map.
      * @property {Object.<string, string>} [translatedOptions] Option translations.
+     */
+
+    /**
+     * @typedef {
+     *     function({value: string}): {
+     *         text?: string,
+     *         style?: 'default'|'danger'|'success'|'warning'|'info'|null,
+     *         color?: string|null,
+     *     }
+     * } module:views/fields/enumeration~optionItemHandler
      */
 
     /**
@@ -102,6 +114,12 @@ class EnumFieldView extends BaseFieldView {
      * @type {boolean}
      */
     nativeSelect = false;
+
+    /**
+     * @protected
+     * @type {module:views/fields/enumeration~optionItemHandler|null}
+     */
+    optionItemHandler = null
 
     // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
@@ -159,6 +177,15 @@ class EnumFieldView extends BaseFieldView {
             data.nativeSelect = this.nativeSelect;
         }
 
+        if (this.isReadMode() && this.optionItemHandler && this.model.attributes[this.name]) {
+            const item = this.optionItemHandler({value: this.model.attributes[this.name]});
+
+            if (item.color != null) {
+                data.color = item.color;
+                data.hasColor = true;
+            }
+        }
+
         // noinspection JSValidateTypes
         return data;
     }
@@ -170,6 +197,10 @@ class EnumFieldView extends BaseFieldView {
             if (typeof this.model[methodName] === 'function') {
                 this.params.options = this.model[methodName].call(this.model);
             }
+        }
+
+        if (this.options.optionItemHandler) {
+            this.optionItemHandler = this.options.optionItemHandler;
         }
 
         this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
@@ -435,6 +466,7 @@ class EnumFieldView extends BaseFieldView {
         if ((this.isEditMode() || this.isSearchMode()) && !this.nativeSelect) {
             Select.init(this.$element, {
                 matchAnyWord: true,
+                itemHandler: this.optionItemHandler,
             });
         }
     }

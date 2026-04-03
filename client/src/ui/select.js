@@ -42,6 +42,13 @@ import Selectize from 'lib!selectize';
  * @property {'value'|'text'|'$order'|'$score'} [sortBy='$order'] Item sorting.
  * @property {'asc'|'desc'} [sortDirection='asc'] Sort direction.
  * @property {function()} [onFocus] On-focus callback.
+ * @property {
+ *     function({value: string}): {
+ *         text?: string,
+ *         style?: 'default'|'danger'|'success'|'warning'|'info'|null,
+ *         color?: string|null,
+ *     }
+ * } [itemHandler] Handles an item to override the label or add a style. As of v9.4.0.
  */
 
 /**
@@ -107,6 +114,44 @@ const Select = {
             $relativeParent = $modalBody;
         }
 
+        /**
+         *
+         * @param {{value: string, text: string}} item
+         * @return {{
+         *     className: string,
+         *     text: string,
+         *     prefixElement?: HTMLElement,
+         * }}
+         */
+        const prepareItem = item => {
+            let className = itemClasses[item.value] ?? '';
+            let text = item.text;
+            let prefixElement;
+
+            if (options.itemHandler) {
+                const result = options.itemHandler({value: item.value});
+
+                if (result.style) {
+                    className = 'text-' + result.style;
+                }
+
+                if (result.text != null) {
+                    text = result.text;
+                }
+
+                if (result.color !== undefined) {
+                    prefixElement = document.createElement('span');
+                    prefixElement.className = 'color-icon fas fa-square text-soft';
+
+                    if (result.color) {
+                        prefixElement.style.color = result.color;
+                    }
+                }
+            }
+
+            return {className, text, prefixElement};
+        };
+
         // noinspection JSUnusedGlobalSymbols
         const selectizeOptions = {
             sortField: [{field: options.sortBy, direction: options.sortDirection}],
@@ -121,25 +166,42 @@ const Select = {
             $relativeParent: $relativeParent,
             render: {
                 item: function (data) {
-                    return $('<div>')
-                        .addClass('item')
-                        .addClass(itemClasses[data.value] || '')
-                        .text(data.text)
-                        .get(0).outerHTML;
-                },
-                option: function (data) {
-                    const $div = $('<div>')
-                        .addClass('option')
-                        .addClass(data.value === '' ? 'selectize-dropdown-emptyoptionlabel' : '')
-                        .addClass(itemClasses[data.value] || '')
-                        .val(data.value)
-                        .text(data.text);
+                    const item = prepareItem(data);
 
-                    if (data.text === '') {
-                        $div.html('&nbsp;');
+                    const div = document.createElement('div');
+                        div.className = item.className;
+                        div.classList.add('item');
+                        div.textContent = item.text;
+
+                    if (item.prefixElement && data.text !== '') {
+                        div.prepend(item.prefixElement);
                     }
 
-                    return $div.get(0).outerHTML;
+                    return div.outerHTML;
+                },
+                option: function (data) {
+                    const item = prepareItem(data);
+
+                    const div = document.createElement('div');
+                    div.className = item.className;
+                    div.classList.add('option');
+
+                    div.textContent = item.text;
+                    div.setAttribute('data-value', data.value);
+
+                    if (data.value === '') {
+                        div.classList.add('selectize-dropdown-emptyoptionlabel')
+                    }
+
+                    if (data.text === '') {
+                        div.innerHTML = '&nbsp;';
+                    }
+
+                    if (item.prefixElement && data.text !== '') {
+                        div.prepend(item.prefixElement);
+                    }
+
+                    return div.outerHTML;
                 },
             },
             onDelete: function (values) {

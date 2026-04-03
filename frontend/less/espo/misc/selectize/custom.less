@@ -63,6 +63,10 @@
                 vertical-align: top;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+
+                .color-icon {
+                    padding-right: var(--5px);
+                }
             }
 
             cursor: default;
@@ -71,6 +75,14 @@
 
     .selectize-dropdown {
         z-index: 1031;
+
+        .selectize-dropdown-content {
+            .option {
+                .color-icon {
+                    padding-right: var(--5px);
+                }
+            }
+        }
     }
 }
 
