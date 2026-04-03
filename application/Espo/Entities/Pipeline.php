@@ -40,6 +40,7 @@ class Pipeline extends Entity
     public const string FIELD_STATUS = 'status';
     public const string FIELD_ENTITY_TYPE = 'entityType';
     public const string FIELD_FIELD = 'field';
+    public const string FIELD_COLOR = 'color';
     public const string FIELD_IS_AVAILABLE_FOR_ALL = 'isAvailableForAll';
     public const string FIELD_ORDER = 'order';
 
@@ -60,6 +61,11 @@ class Pipeline extends Entity
     public function getTargetField(): string
     {
         return $this->get(self::FIELD_FIELD);
+    }
+
+    public function getColor(): ?int
+    {
+        return $this->get(self::FIELD_COLOR);
     }
 
     public function isAvailableForAll(): bool

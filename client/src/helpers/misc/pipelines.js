@@ -50,6 +50,7 @@ export default class PipelinesHelper {
      *         id: string,
      *         name: string,
      *         style: string|null,
+     *         color: number|null,
      *     }[]
      * }[]}
      */

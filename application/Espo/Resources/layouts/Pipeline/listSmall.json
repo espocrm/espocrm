@@ -5,6 +5,12 @@
         "notSortable": true
     },
     {
+        "name": "color",
+        "widthPx": 40,
+        "noLabel": true,
+        "notSortable": true
+    },
+    {
         "name": "status",
         "width": 50,
         "notSortable": true

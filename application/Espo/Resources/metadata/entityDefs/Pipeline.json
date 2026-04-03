@@ -43,6 +43,12 @@
             ],
             "view": "views/pipeline/fields/field"
         },
+        "color": {
+            "type": "int",
+            "min": 0,
+            "max": 8,
+            "view": "views/fields/color"
+        },
         "isAvailableForAll": {
             "type": "bool",
             "default": true

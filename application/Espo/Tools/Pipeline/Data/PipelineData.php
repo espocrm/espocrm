@@ -43,5 +43,6 @@ readonly class PipelineData
         public array $stages,
         public bool $isAvailableForAll,
         public array $teamIds,
+        public ?int $color,
     ) {}
 }

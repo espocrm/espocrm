@@ -28,10 +28,10 @@
 
 import LinkFieldView from 'views/fields/link';
 import {inject} from 'di';
-import AppParams from 'app-params';
 import EnumFieldView from 'views/fields/enum';
 import Model from 'model';
 import PipelinesHelper from 'helpers/misc/pipelines';
+import ThemeManager from 'theme-manager';
 
 export default class PipelineFieldView extends LinkFieldView {
 
@@ -79,7 +79,7 @@ export default class PipelineFieldView extends LinkFieldView {
 
     /**
      * @private
-     * @type {{id: string, name: string}[]}
+     * @type {{id: string, name: string, color: number|null}[]}
      */
     pipelines
 
@@ -88,6 +88,14 @@ export default class PipelineFieldView extends LinkFieldView {
      * @type {Record<string, string>}
      */
     translatedOptions
+
+
+    /**
+     * @private
+     * @type {ThemeManager}
+     */
+    @inject(ThemeManager)
+    themeManager
 
     data() {
         const data = super.data();
@@ -156,6 +164,23 @@ export default class PipelineFieldView extends LinkFieldView {
             translatedOptions[currentId] = this.model.attributes[this.idName] ?? currentId;
         }
 
+        /** @type {string[]} */
+        const colors = this.themeManager.getParam('chartColorList') || [];
+
+        const colorMap = this.pipelines.reduce((o, it) => {
+            let color = null;
+
+            if (it.color != null) {
+                color = colors[it.color] ?? null;
+            }
+
+            o[it.id] = color;
+
+            return o;
+        }, {});
+
+        console.log(colorMap);
+
         this.enumView = new EnumFieldView({
             name: 'pipeline',
             model: this.subModel,
@@ -163,6 +188,11 @@ export default class PipelineFieldView extends LinkFieldView {
             params: {
                 options,
                 translatedOptions,
+            },
+            optionItemHandler: it => {
+                return {
+                    color: colorMap[it.value],
+                };
             },
         });
 

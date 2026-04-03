@@ -163,6 +163,7 @@ class PipelineDataProvider
                 stages: $this->getStages($pipeline),
                 isAvailableForAll: $pipeline->isAvailableForAll(),
                 teamIds: $pipeline->getTeams()->getIdList(),
+                color: $pipeline->getColor(),
             );
         }
 

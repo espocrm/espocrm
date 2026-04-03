@@ -49,8 +49,6 @@ export default class PipelineMoveRowActionHandler extends RowActionHandler
             }
         }
 
-        console.log(collection.orderBy);
-
         return collection.orderBy === 'order' && collection.order === 'asc';
     }
 

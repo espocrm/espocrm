@@ -16,6 +16,12 @@
                 {
                     "name": "field"
                 }
+            ],
+            [
+                {
+                    "name": "color"
+                },
+                false
             ]
         ]
     },
