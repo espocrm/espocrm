@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Kanban;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Metadata;
@@ -47,10 +48,18 @@ class MetadataProvider
     /**
      * @return string[]
      * @throws Error
+     * @throws BadRequest
      */
     public function getStatusList(string $entityType, ?string $pipelineId = null): array
     {
-        if ($this->pipelineMetadata->isEnabled($entityType) && $pipelineId) {
+        if ($this->pipelineMetadata->isEnabled($entityType)) {
+            if (!$pipelineId) {
+                throw BadRequest::createWithBody(
+                    'noPipeline',
+                    Error\Body::create()->withMessageTranslation('noPipeline')
+                );
+            }
+
             return $this->getPipelineStatusList($entityType, $pipelineId);
         }
 

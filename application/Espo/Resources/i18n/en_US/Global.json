@@ -470,7 +470,8 @@
         "massLockDone": "{count} locked",
         "massUnlockDone": "{count} unlocked",
         "cannotModifyLockedRecord": "Cannot modify the field *{field}*. The record is locked.",
-        "cannotRemoveLockedRecord": "Cannot remove a locked record."
+        "cannotRemoveLockedRecord": "Cannot remove a locked record.",
+        "noPipeline": "No pipeline."
     },
     "boolFilters": {
         "onlyMy": "Only My",

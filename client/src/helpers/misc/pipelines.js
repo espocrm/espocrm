@@ -28,6 +28,7 @@
 
 import {inject} from 'di';
 import AppParams from 'app-params';
+import Metadata from 'metadata';
 
 /**
  * @since 9.4.0
@@ -40,6 +41,13 @@ export default class PipelinesHelper {
      */
     @inject(AppParams)
     appParams
+
+    /**
+     * @private
+     * @type {Metadata}
+     */
+    @inject(Metadata)
+    metadata
 
     /**
      * @param {string} entityType
@@ -56,5 +64,13 @@ export default class PipelinesHelper {
      */
     get(entityType) {
         return (this.appParams.get('pipelines') ?? {})[entityType] ?? [];
+    }
+
+    /**
+     * @param {string} entityType
+     * @return {boolean}
+     */
+    isEnabled(entityType) {
+        return this.metadata.get(`scopes.${entityType}.pipelines`) === true;
     }
 }

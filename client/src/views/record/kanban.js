@@ -493,8 +493,12 @@ class KanbanRecordView extends ListRecordView {
         if (!this.currentPipelineId) {
             this.currentPipelineId = this.pipelines[0]?.id ?? null;
         }
-        this.setPipelineWhere();
 
+        if (this.currentPipelineId && !this.pipelines.find(it => it.id === this.currentPipelineId)) {
+            this.currentPipelineId = null;
+        }
+
+        this.setPipelineWhere();
         this.setupPipelineDropdown();
     }
 
@@ -502,6 +506,12 @@ class KanbanRecordView extends ListRecordView {
      * @private
      */
     setPipelineWhere() {
+        if (!this.currentPipelineId) {
+            this.collection.whereFunction = null;
+
+            return;
+        }
+
         this.collection.whereFunction = () => {
             return [
                 {
