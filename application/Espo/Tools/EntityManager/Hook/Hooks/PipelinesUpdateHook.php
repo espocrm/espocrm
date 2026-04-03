@@ -86,6 +86,7 @@ class PipelinesUpdateHook implements UpdateHook
                 Field::PIPELINE => [
                     FieldParam::TYPE => FieldType::LINK,
                     FieldParam::REQUIRED => true,
+                    FieldParam::READ_ONLY_AFTER_CREATE => true,
                     'audited' => true,
                     'inlineEditDisabled' => true,
                     'fieldManagerParamList' => [
