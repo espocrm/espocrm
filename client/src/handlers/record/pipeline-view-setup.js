@@ -109,7 +109,7 @@ export default class PipelineViewSetupHandler {
 
         const pipeline = this.pipelines.find(it => it.id === pipelineId);
 
-        if (!pipelineId) {
+        if (!pipeline) {
             this.setStageNull();
 
             return;
