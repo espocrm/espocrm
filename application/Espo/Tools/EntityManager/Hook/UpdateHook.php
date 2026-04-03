@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager\Hook;
 
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Tools\EntityManager\Params;
 
@@ -36,6 +37,7 @@ interface UpdateHook
 {
     /**
      * @throws Error
+     * @throws Conflict
      */
     public function process(Params $params, Params $previousParams): void;
 }
