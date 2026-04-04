@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\Opportunity\Report;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
@@ -67,6 +68,7 @@ class ByStage
 
     /**
      * @throws Forbidden
+     * @throws BadRequest
      */
     public function run(DateRange $range): stdClass
     {
@@ -144,6 +146,14 @@ class ByStage
 
         $result = [];
 
+        foreach ($options as $stage) {
+            if (in_array($stage, $stageIgnoreList)) {
+                continue;
+            }
+
+            $result[$stage] = 0.0;
+        }
+
         foreach ($rowList as $row) {
             $stage = $row['stage'];
 
@@ -152,18 +162,6 @@ class ByStage
             }
 
             $result[$stage] = floatval($row['amount']);
-        }
-
-        foreach ($options as $stage) {
-            if (in_array($stage, $stageIgnoreList)) {
-                continue;
-            }
-
-            if (array_key_exists($stage, $result)) {
-                continue;
-            }
-
-            $result[$stage] = 0.0;
         }
 
         return (object) $result;

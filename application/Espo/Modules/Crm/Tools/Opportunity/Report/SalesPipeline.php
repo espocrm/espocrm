@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\Opportunity\Report;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -49,11 +50,12 @@ class SalesPipeline
         private Metadata $metadata,
         private EntityManager $entityManager,
         private SelectBuilderFactory $selectBuilderFactory,
-        private Util $util
+        private Util $util,
     ) {}
 
     /**
      * @throws Forbidden
+     * @throws BadRequest
      */
     public function run(DateRange $range, bool $useLastStage = false, ?string $teamId = null): stdClass
     {
