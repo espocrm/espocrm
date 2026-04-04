@@ -32,6 +32,7 @@ namespace Espo\Entities;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 class Pipeline extends Entity
 {
@@ -87,5 +88,14 @@ class Pipeline extends Entity
     public function getOrder(): int
     {
         return (int) $this->get(self::FIELD_ORDER);
+    }
+
+    /**
+     * @return EntityCollection<PipelineStage>
+     */
+    public function getStages(): EntityCollection
+    {
+        /** @var EntityCollection<PipelineStage> */
+        return $this->relations->getMany(self::LINK_STAGES);
     }
 }
