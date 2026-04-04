@@ -19,7 +19,10 @@
             "maxLength": 100,
             "readOnlyAfterCreate": true,
             "required": true,
-            "view": "views/pipeline-stage/fields/mapped-status"
+            "view": "views/pipeline-stage/fields/mapped-status",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\PipelineStatus\\MappedStatus\\Valid"
+            ]
         },
         "entityType": {
             "type": "foreign",

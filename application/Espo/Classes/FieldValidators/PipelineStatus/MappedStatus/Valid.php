@@ -27,32 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Acl\Common\Pipeline;
+namespace Espo\Classes\FieldValidators\PipelineStatus\MappedStatus;
 
-use Espo\Core\Acl\LinkChecker;
-use Espo\Entities\Pipeline;
-use Espo\Entities\User;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\PipelineStage;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
+use Espo\Tools\OpenApi\Util\EnumOptionsProvider;
 
 /**
- * @implements LinkChecker<Entity, Pipeline>
+ * @implements Validator<PipelineStage>
  */
-class PipelineLinkChecker implements LinkChecker
+class Valid implements Validator
 {
-    public function check(User $user, Entity $entity, Entity $foreignEntity): bool
+    public function __construct(
+        private Metadata $metadata,
+        private EnumOptionsProvider $enumOptionsProvider,
+        private Defs $defs,
+    ) {}
+
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        if ($user->isAdmin()) {
-            return true;
+        $status = $entity->getMappedStatus();
+
+        $entityType = $entity->getPipeline()->getTargetEntityType();
+
+        $field = $this->metadata->get("scopes.$entityType.statusField");
+
+        if (!$field) {
+            return null;
         }
 
-        if ($foreignEntity->isAvailableForAll()) {
-            return true;
+        $fieldDefs = $this->defs
+            ->getEntity($entityType)
+            ->getField($field);
+
+        $options = $this->enumOptionsProvider->get($fieldDefs);
+
+        if (!$options) {
+            return Failure::create();
         }
 
-        if (!$user->isPortal()) {
-            return false;
+        if (!in_array($status, $options)) {
+            return Failure::create();
         }
 
-        return array_intersect($user->getTeamIdList(), $foreignEntity->getTeams()->getIdList()) !== [];
+        return null;
     }
 }
