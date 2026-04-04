@@ -38,7 +38,9 @@
                         {
                             "name": "name",
                             "link": true
-                        }
+                        },                        {
+                        "name": "accountName"
+                    }
                     ],
                     [
                         {

@@ -50,6 +50,9 @@
                         {
                             "name": "closeDate",
                             "soft": true
+                        },
+                        {
+                            "name": "account"
                         }
                     ]
                 ]
