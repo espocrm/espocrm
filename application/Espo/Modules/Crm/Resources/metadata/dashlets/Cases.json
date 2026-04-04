@@ -24,6 +24,16 @@
             },
             "includeShared": {
                 "type": "bool"
+            },
+            "orderBy": {
+                "type": "enum",
+                "view": "views/dashlets/fields/records/sort-by"
+            },
+            "order": {
+                "type": "enum",
+                "view": "views/dashlets/fields/records/sort-direction",
+                "options": ["asc", "desc"],
+                "translation": "DashletOptions.options.sortDirection"
             }
         },
         "defaults": {
@@ -77,6 +87,16 @@
                     [
                         {"name": "displayRecords"},
                         {"name": "includeShared"}
+                    ],
+                    [
+                        {
+                            "name": "orderBy",
+                            "labelTranslation": "DashletOptions.fields.sortBy"
+                        },
+                        {
+                            "name": "order",
+                            "labelTranslation": "DashletOptions.fields.sortDirection"
+                        }
                     ],
                     [
                         {"name": "expandedLayout"},

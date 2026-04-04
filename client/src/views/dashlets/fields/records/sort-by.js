@@ -40,7 +40,9 @@ export default class extends EnumFieldView {
     }
 
     setupOptions() {
-        const entityType = this.model.get('entityType');
+        const entityType = this.model.attributes.entityType ??
+            this.getMetadata().get(['dashlets', this.dataObject.dashletName, 'entityType']);
+
         const scope = entityType;
 
         if (!entityType) {
