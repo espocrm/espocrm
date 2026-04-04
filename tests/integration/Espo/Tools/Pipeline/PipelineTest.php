@@ -31,7 +31,6 @@ namespace tests\integration\Espo\Tools\Pipeline;
 
 use Espo\Classes\AppParams\Pipelines;
 use Espo\Core\Acl\Table;
-use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\Date;
 use Espo\Core\Name\Field;
