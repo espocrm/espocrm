@@ -74,6 +74,10 @@
                                 "type": "string",
                                 "description": "A label text (not-translatable)."
                             },
+                            "labelTranslation": {
+                                "type": "string",
+                                "description": "A translatable label path. As of v9.4.0."
+                            },
                             "noLabel": {
                                 "type": "boolean",
                                 "description": "Do not show a label."

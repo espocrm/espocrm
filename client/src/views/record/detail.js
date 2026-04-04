@@ -141,6 +141,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [labelText] A label text (not-translatable).
      * @property {boolean} [noLabel] No label.
      * @property {string} [label] A translatable label (using the `fields` category).
+     * @property {string|null} [labelTranslation] A label translation path. As of v9.4.
      * @property {1|2|3|4} [span] A width.
      */
 
@@ -3292,6 +3293,9 @@ class DetailRecordView extends BaseRecordView {
                     if ('labelText' in cellDefs) {
                         o.labelText = cellDefs.labelText;
                         cell.customLabel = cellDefs.labelText;
+                    } else if (cellDefs.labelTranslation) {
+                        o.labelText = this.getLanguage().translatePath(cellDefs.labelTranslation);
+                        cell.customLabel = o.labelText;
                     }
 
                     if ('customLabel' in cellDefs) {
