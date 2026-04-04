@@ -1,6 +1,7 @@
 [
-    {"name":"name", "link":true},
-    {"name":"account","width":25},
-    {"name":"emailAddress", "notSortable": true, "width": 20},
-    {"name":"phoneNumber", "notSortable": true, "width": 18}
+    {"name": "name", "link":true},
+    {"name": "account","width":25},
+    {"name": "emailAddress", "notSortable": true, "width": 20},
+    {"name": "phoneNumber", "notSortable": true, "width": 18},
+    {"name": "assignedUser", "width": 18, "hidden": true}
 ]

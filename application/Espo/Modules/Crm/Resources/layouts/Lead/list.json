@@ -1,7 +1,9 @@
 [
-    {"name":"name", "link": "true"},
-    {"name":"status", "width": 15},
-    {"name":"emailAddress", "notSortable": true, "width": 20},
-    {"name":"assignedUser", "width": 18},
-    {"name":"createdAt", "width": 13}
+    {"name": "name", "link": true},
+    {"name": "status", "width": 15},
+    {"name": "emailAddress", "notSortable": true, "width": 20},
+    {"name": "phoneNumber", "notSortable": true, "width": 20, "hidden": true},
+    {"name": "source", "notSortable": true, "width": 15, "hidden": true},
+    {"name": "assignedUser", "width": 18},
+    {"name": "createdAt", "width": 13}
 ]
