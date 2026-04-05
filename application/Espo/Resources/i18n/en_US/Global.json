@@ -551,7 +551,8 @@
         "teams": "Teams",
         "users": "Users",
         "parent": "Parent",
-        "children": "Children"
+        "children": "Children",
+        "category": "Category"
     },
     "dashlets": {
         "Stream": "Stream",
