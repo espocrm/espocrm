@@ -694,5 +694,15 @@
             "id": ":id",
             "link": ":link"
         }
+    },
+    {
+        "route": "Pipeline/:id/move/:type",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Pipeline\\Api\\PostMove"
+    },
+    {
+        "route": "PipelineStage/:id/move/:type",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Pipeline\\Api\\PostStageMove"
     }
 ]

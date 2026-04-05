@@ -360,6 +360,12 @@
                 "description": "oAuthProviders"
             },
             {
+                "url": "#Admin/pipelines",
+                "label": "Pipelines",
+                "iconClass": "fas fa-timeline",
+                "description": "pipelines"
+            },
+            {
                 "url": "#Admin/appLog",
                 "label": "App Log",
                 "iconClass": "fas fa-list",

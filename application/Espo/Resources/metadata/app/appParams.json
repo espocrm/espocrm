@@ -10,5 +10,8 @@
     },
     "currencyRates": {
         "className": "Espo\\Classes\\AppParams\\CurrencyRates"
+    },
+    "pipelines": {
+        "className": "Espo\\Classes\\AppParams\\Pipelines"
     }
 }

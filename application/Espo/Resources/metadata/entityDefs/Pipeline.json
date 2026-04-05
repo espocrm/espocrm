@@ -1,0 +1,119 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100,
+            "duplicateIgnore": true
+        },
+        "order": {
+            "type": "int",
+            "readOnly": true,
+            "duplicateIgnore": true
+        },
+        "status": {
+            "type": "enum",
+            "maxLength": 8,
+            "options": [
+                "Active",
+                "Inactive"
+            ],
+            "default": "Active",
+            "style": {
+                "Inactive": "info"
+            },
+            "duplicateIgnore": true
+        },
+        "entityType": {
+            "type": "enum",
+            "maxLength": 100,
+            "required": true,
+            "readOnlyAfterCreate": true,
+            "view": "views/pipeline/fields/entity-type",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Pipeline\\EntityType\\Valid"
+            ]
+        },
+        "field": {
+            "type": "enum",
+            "maxLength": 100,
+            "readOnly": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Pipeline\\Field\\Valid"
+            ],
+            "view": "views/pipeline/fields/field"
+        },
+        "color": {
+            "type": "int",
+            "min": 0,
+            "max": 8,
+            "view": "views/fields/color"
+        },
+        "isAvailableForAll": {
+            "type": "bool",
+            "default": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        }
+    },
+    "links": {
+        "stages": {
+            "type": "hasMany",
+            "entity": "PipelineStage",
+            "foreign": "pipeline",
+            "readOnly": true,
+            "cascadeRemoval": true,
+            "orderBy": "order",
+            "order": "asc"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "order",
+        "order": "asc"
+    },
+    "indexes": {
+        "entityTypeStatus": {
+            "columns": [
+                "entityType",
+                "status"
+            ]
+        }
+    }
+}

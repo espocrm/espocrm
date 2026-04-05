@@ -9,11 +9,16 @@
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\DeleteHasChildrenLinks",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesDeleteHook"
     ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesBeforeUpdateHook",
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\PipelinesBeforeUpdateHook"
+    ],
     "updateHookClassNameList": [
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\AssignedUsersUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CollaboratorsUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\StreamUpdateHook",
         "Espo\\Tools\\EntityManager\\Hook\\Hooks\\CategoriesUpdateHook",
-        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\LockableUpdateHook"
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\LockableUpdateHook",
+        "Espo\\Tools\\EntityManager\\Hook\\Hooks\\PipelinesUpdateHook"
     ]
 }

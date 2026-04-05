@@ -27,6 +27,8 @@
  ************************************************************************/
 
 import ModalView from 'views/modal';
+import OptionsProvider from 'helpers/field/options-provider';
+import PipelinesHelper from 'helpers/misc/pipelines';
 
 class KanbanMoveOverModalView extends ModalView {
 
@@ -75,22 +77,42 @@ class KanbanMoveOverModalView extends ModalView {
         this.buttonList = [
             {
                 name: 'cancel',
-                label: 'Cancel'
-            }
+                label: 'Cancel',
+            },
         ];
+        this.setupGroupDataList();
+    }
 
-        this.optionDataList = [];
+    /**
+     * @private
+     */
+    setupGroupDataList() {
+        if (this.options.pipelineId) {
+            const pipeline = new PipelinesHelper().get(this.scope)
+                .find(it => it.id === this.options.pipelineId);
 
-        (
-            this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) || []
-        )
-            .forEach((item) => {
-                this.optionDataList.push({
-                    value: item,
-                    label: this.getLanguage().translateOption(item, this.statusField, this.scope),
-                });
+            const stages = pipeline?.stages
+
+
+            this.optionDataList = stages.map(it => {
+                return {
+                    value: it.id,
+                    label: it.name,
+                };
             });
+
+            return;
+        }
+
+        const options = new OptionsProvider().get(this.scope, this.statusField)
+            .filter(it => it.name);
+
+        this.optionDataList = options.map(it => {
+            return {
+                value: it.name,
+                label: it.label,
+            };
+        });
     }
 
     /**

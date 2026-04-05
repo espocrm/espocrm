@@ -61,10 +61,12 @@
     },
     "viewSetupHandlers": {
         "record/detail": [
-            "handlers/record/lock-view-setup"
+            "handlers/record/lock-view-setup",
+            "handlers/record/pipeline-view-setup"
         ],
         "record/edit": [
-            "handlers/record/lock-view-setup"
+            "handlers/record/lock-view-setup",
+            "handlers/record/pipeline-view-setup"
         ]
     }
 }

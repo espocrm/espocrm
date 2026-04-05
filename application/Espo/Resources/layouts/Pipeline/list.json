@@ -1,0 +1,28 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "notSortable": true
+    },
+    {
+        "name": "color",
+        "widthPx": 40,
+        "noLabel": true,
+        "notSortable": true
+    },
+    {
+        "name": "status",
+        "width": 18,
+        "notSortable": true
+    },
+    {
+        "name": "entityType",
+        "width": 18,
+        "notSortable": true
+    },
+    {
+        "name": "field",
+        "width": 18,
+        "notSortable": true
+    }
+]

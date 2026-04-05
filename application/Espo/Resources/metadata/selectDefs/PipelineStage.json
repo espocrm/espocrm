@@ -1,0 +1,9 @@
+{
+    "accessControlFilterClassNameMap": {
+        "mandatory": "Espo\\Classes\\Select\\PipelineStage\\AccessControlFilters\\Mandatory"
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\FilterResolvers\\Boolean",
+    "ordererClassNameMap": {
+        "listOrder": "Espo\\Classes\\Select\\PipelineStage\\ListOrderOrderer"
+    }
+}

@@ -1,0 +1,37 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "status"
+                }
+            ],
+            [
+                {
+                    "name": "entityType"
+                },
+                {
+                    "name": "field"
+                }
+            ],
+            [
+                {
+                    "name": "color"
+                },
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ]
+    }
+]

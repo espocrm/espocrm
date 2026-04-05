@@ -35,11 +35,18 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Name\Field;
+use Espo\Core\Record\EntityProvider;
 use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Pipeline;
+use Espo\Entities\PipelineStage;
 use Espo\Entities\User;
+use Espo\Tools\Pipeline\MetadataProvider as PipelineMetadataProvider;
 
 class KanbanService
 {
@@ -49,13 +56,16 @@ class KanbanService
         private InjectableFactory $injectableFactory,
         private Config $config,
         private Metadata $metadata,
-        private Orderer $orderer
+        private Orderer $orderer,
+        private EntityProvider $entityProvider,
+        private PipelineMetadataProvider $pipelineMetadata,
     ) {}
 
     /**
      * @throws Error
      * @throws Forbidden
      * @throws BadRequest
+     * @throws NotFound
      */
     public function getData(string $entityType, SearchParams $searchParams): Result
     {
@@ -69,9 +79,12 @@ class KanbanService
 
         $maxOrderNumber = $this->config->get('kanbanMaxOrderNumber');
 
+        $pipeline = $this->getPipeline($entityType, $searchParams);
+
         return $this->createKanban()
             ->setEntityType($entityType)
             ->setSearchParams($searchParams)
+            ->setPipelineId($pipeline?->getId() ?? null)
             ->setCountDisabled($disableCount)
             ->setOrderDisabled($orderDisabled)
             ->setUserId($this->user->getId())
@@ -83,6 +96,7 @@ class KanbanService
      * @param string[] $ids
      * @throws Forbidden
      * @throws Error
+     * @throws NotFound
      */
     public function order(string $entityType, string $group, array $ids): void
     {
@@ -92,11 +106,19 @@ class KanbanService
             throw new ForbiddenSilent("Kanban order is not allowed for portal users.");
         }
 
+        $isPipeline = $this->pipelineMetadata->isEnabled($entityType);
+
+
+        if ($isPipeline) {
+            $this->entityProvider->getByClass(PipelineStage::class, $group);
+        }
+
         $maxOrderNumber = $this->config->get('kanbanMaxOrderNumber');
 
         $this->orderer
             ->setEntityType($entityType)
             ->setGroup($group)
+            ->setIsPipeline($isPipeline)
             ->setUserId($this->user->getId())
             ->setMaxNumber($maxOrderNumber)
             ->order($ids);
@@ -123,5 +145,50 @@ class KanbanService
         if (!$this->aclManager->check($this->user, $entityType, Table::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
+    }
+
+
+    private function getPipelineId(SearchParams $searchParams): ?string
+    {
+        $pipelineId = null;
+
+        if ($searchParams->getWhere()?->getType() === Type::AND) {
+            foreach ($searchParams->getWhere()->getItemList() as $item) {
+                if (
+                    $item->getType() === Type::EQUALS &&
+                    $item->getAttribute() === Field::PIPELINE . 'Id'
+                ) {
+                    $pipelineId = $item->getValue();
+
+                    break;
+                }
+            }
+        }
+
+        if ($pipelineId !== null && !is_string($pipelineId)) {
+            return null;
+        }
+
+        return $pipelineId;
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    private function getPipeline(string $entityType, SearchParams $searchParams): ?Pipeline
+    {
+        if (!$this->pipelineMetadata->isEnabled($entityType)) {
+            return null;
+        }
+
+        $pipeline = null;
+        $pipelineId = $this->getPipelineId($searchParams);
+
+        if ($pipelineId) {
+            $pipeline = $this->entityProvider->getByClass(Pipeline::class, $pipelineId);
+        }
+
+        return $pipeline;
     }
 }

@@ -1,0 +1,13 @@
+{
+    "labels": {
+        "Create PipelineStage": "Create Stage"
+    },
+    "fields": {
+        "order": "Order",
+        "pipeline": "Pipeline",
+        "mappedStatus": "Mapped Status"
+    },
+    "links": {
+        "pipeline": "Pipeline"
+    }
+}

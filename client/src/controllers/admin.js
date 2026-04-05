@@ -32,6 +32,7 @@ import AdminIndexView from 'views/admin/index';
 import {inject} from 'di';
 import Language from 'language';
 import EditView from 'views/edit';
+import AdminPipelinesListForEntityType from 'views/admin/pipelines/list-for-entity-type';
 
 class AdminController extends Controller {
 
@@ -382,6 +383,37 @@ class AdminController extends Controller {
                 searchManager: searchManager
             });
         });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     *
+     * @param {Record} options
+     */
+    async actionPipelines(options = {}) {
+        if (options?.scope) {
+            const collection = await this.collectionFactory.create('Pipeline');
+
+            collection.maxSize = this.getConfig().get('recordsPerPage');
+
+            collection.where = [{
+                type: 'equals',
+                attribute: 'entityType',
+                value: options.scope,
+            }];
+
+            const view = new AdminPipelinesListForEntityType({
+                scope: 'Pipeline',
+                collection,
+                targetEntityType: options.scope,
+            });
+
+            this.main(view);
+
+            return;
+        }
+
+        this.main('views/admin/pipelines/main');
     }
 
     // noinspection JSUnusedGlobalSymbols

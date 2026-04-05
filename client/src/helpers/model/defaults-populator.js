@@ -33,6 +33,7 @@ import Settings from 'models/settings';
 import User from 'models/user';
 import AclManager from 'acl-manager';
 import Preferences from 'models/preferences';
+import PipelinesHelper from 'helpers/misc/pipelines';
 
 /**
  * Defaults populator.
@@ -178,6 +179,18 @@ class DefaultsPopulator {
         if (hasCollaborators) {
             defaultHash.collaboratorsIds = [this.user.id];
             defaultHash.collaboratorsNames = {[this.user.id]: this.user.attributes.name};
+        }
+
+        if (this.metadata.get(`scopes.${model.entityType}.pipelines`)) {
+            const firstPipeline = new PipelinesHelper().get(model.entityType)[0] ?? null;
+
+            if (firstPipeline) {
+                defaultHash.pipelineId = firstPipeline.id;
+                defaultHash.pipelineName = firstPipeline.name;
+
+                defaultHash.pipelineStageId = firstPipeline.stages[0]?.id ?? null;
+                defaultHash.pipelineStageName = firstPipeline.stages[0]?.name ?? null;
+            }
         }
     }
 

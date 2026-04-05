@@ -58,7 +58,8 @@
         "aclAccountLink": "ACL Account Link",
         "categories": "Categories",
         "lockable": "Lockable",
-        "transactionalSave": "Transactional Save"
+        "transactionalSave": "Transactional Save",
+        "pipelines": "Pipelines"
     },
     "options": {
         "type": {
@@ -98,9 +99,12 @@
         "linkAlreadyExists": "Link name conflict.",
         "linkConflict": "Name conflict: link or field with the same name already exists.",
         "beforeSaveCustomScript": "A script called every time before an entity is saved. Use for setting calculated fields.",
-        "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
+        "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking.",
+        "cannotEnablePipelinesWithNoStatusField": "Pipelines cannot be enabled as the entity type does not have a status field. Create an Enum field for status if needed, then select it in the Status Field parameter.",
+        "cannotEnableCategoriesWithKanbanViewMode": "Categories is not compatible with the Kanban view. Disable either one or another."
     },
     "tooltips": {
+        "pipelines": "Enables multiple pipelines. Pipelines can be configured at Administration > Pipelines.",
         "transactionalSave": "Record saves and removals will be wrapped into DB transactions.",
         "lockable": "Enables the ability to lock records.",
         "categories": "Enable the category tree feature. Records can be placed into categories.",

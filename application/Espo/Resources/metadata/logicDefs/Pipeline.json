@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "teams": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isFalse",
+                        "attribute": "isAvailableForAll"
+                    }
+                ]
+            }
+        }
+    }
+}

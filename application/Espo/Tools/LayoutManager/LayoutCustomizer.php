@@ -106,10 +106,12 @@ class LayoutCustomizer
                 continue;
             }
 
-            foreach ($rowItems as &$rowItem) {
+            foreach ($rowItems as $rowIndex => &$rowItem) {
                 if (!is_array($rowItem)) {
                     continue;
                 }
+
+                $found = false;
 
                 foreach ($rowItem as $i => $cellItem) {
                     if (!$cellItem instanceof stdClass) {
@@ -118,7 +120,29 @@ class LayoutCustomizer
 
                     if (($cellItem->name ?? null) === $field) {
                         $rowItem[$i] = false;
+
+                        $found = true;
                     }
+                }
+
+                if (!$found) {
+                    continue;
+                }
+
+                $notEmptyRow = false;
+
+                foreach ($rowItem as $cellItem) {
+                    if ($cellItem !== false) {
+                        $notEmptyRow = true;
+
+                        break;
+                    }
+                }
+
+                if (!$notEmptyRow) {
+                    unset($rowItems[$rowIndex]);
+
+                    $rowItems = array_values($rowItems);
                 }
             }
         }

@@ -135,6 +135,14 @@
             },
             "groupIndex": 1
         },
+        "pipelines": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            },
+            "groupIndex": 1
+        },
         "lockable": {
             "location": "scopes",
             "fieldDefs": {
@@ -162,6 +170,14 @@
             "groupIndex": 1
         },
         "assignedUsers": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            },
+            "groupIndex": 1
+        },
+        "pipelines": {
             "location": "scopes",
             "fieldDefs": {
                 "type": "bool",

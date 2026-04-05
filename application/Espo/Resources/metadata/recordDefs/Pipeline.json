@@ -1,0 +1,28 @@
+{
+    "beforeDeleteHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\Pipeline\\BeforeDelete"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\Pipeline\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\Pipeline\\AfterSave"
+    ],
+    "afterDeleteHookClassNameList": [
+        "Espo\\Classes\\Record\\Hooks\\Pipeline\\AfterDelete"
+    ],
+    "massActions": {
+        "delete": {
+            "disabled": true
+        },
+        "update": {
+            "disabled": true
+        }
+    },
+    "actions": {
+        "merge": {
+            "disabled": true
+        }
+    },
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General"
+}
