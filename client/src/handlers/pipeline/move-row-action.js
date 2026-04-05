@@ -28,8 +28,8 @@
 
 import RowActionHandler from 'handlers/row-action';
 
-export default class PipelineMoveRowActionHandler extends RowActionHandler
-{
+export default class PipelineMoveRowActionHandler extends RowActionHandler {
+
     isAvailable(model, action) {
         const collection = model.collection;
 
