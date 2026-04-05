@@ -63,12 +63,20 @@ class ForeignEnumFieldView extends EnumFieldView {
         let optionsPath = this.params.optionsPath;
         const optionsReference = this.params.optionsReference;
         let options = this.params.options;
-        const style = this.params.style;
+        let style = this.params.style;
+
+        let sourceEntityType = this.foreignEntityType;
+        let sourceField = field;
 
         if (!optionsPath && optionsReference) {
             const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
+
+            sourceEntityType = refEntityType;
+            sourceField = field;
+
+            style = this.getMetadata().get(`entityDefs.${sourceEntityType}.fields.${sourceField}.style`) ?? {};
         }
 
         if (optionsPath) {
@@ -79,7 +87,7 @@ class ForeignEnumFieldView extends EnumFieldView {
         this.styleMap = style ?? {};
 
         const pairs = this.params.options
-            .map(item => [item, this.getLanguage().translateOption(item, field, this.foreignEntityType)])
+            .map(item => [item, this.getLanguage().translateOption(item, sourceField, sourceEntityType)])
 
         this.translatedOptions = Object.fromEntries(pairs);
     }
