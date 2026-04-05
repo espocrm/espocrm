@@ -216,6 +216,7 @@ class PipelineDataProvider
                     'stages' => $this->serializeStages($pipeline->stages),
                     'isAvailableForAll' => $pipeline->isAvailableForAll,
                     'teamIds' => $pipeline->teamIds,
+                    'color' => $pipeline->color,
                 ];
             }
 
@@ -267,6 +268,7 @@ class PipelineDataProvider
                 'id' => $stage->id,
                 'name' => $stage->name,
                 'mappedStatus' => $stage->mappedStatus,
+                'style' => $stage->style,
             ];
         }
 
