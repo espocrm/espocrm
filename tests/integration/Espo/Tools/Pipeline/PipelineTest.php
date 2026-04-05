@@ -180,6 +180,17 @@ class PipelineTest extends BaseTestCase
 
         //
 
+        $opp = $oppService->create((object) [
+            Field::NAME => 'Opp 3',
+            Opportunity::FIELD_CLOSED_DATE => Date::fromString('2026-01-01')->toString(),
+            Opportunity::FIELD_AMOUNT => 1000,
+        ], CreateParams::create());
+
+        $this->assertEquals($pipeline1->getId(), $opp->get(Field::PIPELINE . 'Id'));
+        $this->assertEquals($pipeline1->getStages()[0]->getId(), $opp->get(Field::PIPELINE_STAGE . 'Id'));
+
+        //
+
         $pipelinesParam = $this->getInjectableFactory()->create(Pipelines::class);
 
         $pipelines = $pipelinesParam->get();

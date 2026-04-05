@@ -47,6 +47,10 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\Tools\Pipeline\Data\PipelineData;
+use Espo\Tools\Pipeline\MetadataProvider as PipelineMetadata;
+use Espo\Tools\Pipeline\UserPipelineDataProvider;
+use LogicException;
 use RuntimeException;
 
 /**
@@ -61,6 +65,8 @@ class DefaultPopulator implements Populator
         private EntityManager $entityManager,
         private CurrencyConfigDataProvider $currencyConfig,
         private Metadata $metadata,
+        private PipelineMetadata $pipelineMetadata,
+        private UserPipelineDataProvider $userPipelineDataProvider,
     ) {}
 
     public function populate(Entity $entity): void
@@ -69,6 +75,7 @@ class DefaultPopulator implements Populator
         $this->processDefaultTeam($entity);
         $this->processCurrency($entity);
         $this->processPortal($entity);
+        $this->processPipeline($entity);
     }
 
     /**
@@ -274,5 +281,75 @@ class DefaultPopulator implements Populator
 
             $entity->setValueObject($link, $linkMultiple);
         }
+    }
+
+    private function processPipeline(Entity $entity): void
+    {
+        $entityType = $entity->getEntityType();
+
+        if (!$this->pipelineMetadata->isEnabled($entityType)) {
+            return;
+        }
+
+        $pipelineIdAttr = Field::PIPELINE . 'Id';
+        $stageIdAttr = Field::PIPELINE_STAGE . 'Id';
+
+        if (
+            $entity->get($pipelineIdAttr) &&
+            $entity->get($stageIdAttr)
+        ) {
+            return;
+        }
+
+        if (!$entity->get($pipelineIdAttr)) {
+            $pipeline = $this->userPipelineDataProvider->getForEntityType($entityType)[0] ?? null;
+
+            if (!$pipeline) {
+                return;
+            }
+
+            $entity->setMultiple([
+                $pipelineIdAttr => $pipeline->id,
+                Field::PIPELINE . 'Name' => $pipeline->name,
+            ]);
+        }
+
+        $id = $entity->get($pipelineIdAttr);
+
+        if (!$id) {
+            throw new LogicException();
+        }
+
+        if ($entity->get($stageIdAttr)) {
+            return;
+        }
+
+        $pipeline = $this->getPipeline($entityType, $id);
+
+        if (!$pipeline) {
+            return;
+        }
+
+        $stage = $pipeline->stages[0] ?? null;
+
+        if (!$stage) {
+            return;
+        }
+
+        $entity->setMultiple([
+            $stageIdAttr => $stage->id,
+            Field::PIPELINE_STAGE . 'Name' => $stage->name,
+        ]);
+    }
+
+    private function getPipeline(string $entityType, mixed $id): ?PipelineData
+    {
+        foreach ($this->userPipelineDataProvider->getForEntityType($entityType) as $it) {
+            if ($id === $it->id) {
+                return $it;
+            }
+        }
+
+        return null;
     }
 }
