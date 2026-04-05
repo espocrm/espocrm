@@ -1674,6 +1674,9 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @noinspection PhpDocSignatureInspection
+     * @throws Conflict
+     * @throws BadRequest
+     * @throws Forbidden
      */
     private function processApiBeforeCreateApiScript(Entity $entity, CreateParams $params): void
     {
@@ -1685,6 +1688,9 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @noinspection PhpDocSignatureInspection
+     * @throws Conflict
+     * @throws BadRequest
+     * @throws Forbidden
      */
     private function processApiBeforeUpdateApiScript(Entity $entity, UpdateParams $params): void
     {

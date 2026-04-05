@@ -29,7 +29,11 @@
 
 namespace Espo\Core\Record\Formula;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\Exceptions\Error as FormulaError;
+use Espo\Core\Formula\Exceptions\WrapperException;
 use Espo\Core\Formula\Manager as FormulaManager;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\UpdateParams;
@@ -45,11 +49,15 @@ class Processor
 {
     public function __construct(
         private FormulaManager $formulaManager,
-        private Metadata $metadata
+        private Metadata $metadata,
     ) {}
 
     /**
      * Process a before-create formula script.
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
      */
     public function processBeforeCreate(Entity $entity, CreateParams $params): void
     {
@@ -69,6 +77,10 @@ class Processor
 
     /**
      * Process a before-update formula script.
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
      */
     public function processBeforeUpdate(Entity $entity, UpdateParams $params): void
     {
@@ -86,12 +98,19 @@ class Processor
         $this->run($script, $entity, $variables);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     private function run(string $script, Entity $entity, stdClass $variables): void
     {
         try {
             $this->formulaManager->run($script, $entity, $variables);
+        } catch (WrapperException $e) {
+            throw $e->getWrappedException();
         } catch (FormulaError $e) {
-            throw new RuntimeException('Formula script error.', 500, $e);
+            throw new RuntimeException('Before save API script error.', previous: $e);
         }
     }
 

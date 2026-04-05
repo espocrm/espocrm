@@ -27,37 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\RecordServiceGroup;
+namespace Espo\Core\Formula\Exceptions;
 
-use Espo\Core\Exceptions\ConflictSilent;
-use Espo\Core\Exceptions\Error\Body;
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Exceptions\WrapperException;
-use Espo\Core\Formula\Functions\BaseFunction;
-use Espo\Core\Utils\Json;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 
 /**
- * @noinspection PhpUnused
+ * @internal
  */
-class ThrowConflictType extends BaseFunction
+class WrapperException extends Error
 {
-    public function process(ArgumentList $args)
+    private Conflict|BadRequest|Forbidden $wrappedException;
+
+    private function __construct()
     {
-        if (empty($this->getVariables()->__isRecordService)) {
-            $this->throwError("Can be called only from API script.");
-        }
+        parent::__construct();
+    }
 
-        $message = isset($args[0]) ? $this->evaluate($args[0]) : '';
-        $body = isset($args[1]) ? $this->evaluate($args[1]) : null;
+    public static function create(Conflict|BadRequest|Forbidden $wrappedException): self
+    {
+        $created = new self();
+        $created->wrappedException = $wrappedException;
 
-        if ($body !== null) {
-            throw WrapperException::create(
-                ConflictSilent::createWithBody($message, Json::encode($body))
-            );
-        }
+        return $created;
+    }
 
-        throw WrapperException::create(
-            ConflictSilent::createWithBody($message, Body::create()->withMessage($message))
-        );
+    public function getWrappedException(): Conflict|BadRequest|Forbidden
+    {
+        return $this->wrappedException;
     }
 }
