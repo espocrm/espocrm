@@ -48,6 +48,8 @@ class EntityManagerEditFormulaRecordView extends BaseRecordView {
 
         if (this.options.type === 'beforeSaveApiScript') {
             additionalFunctionDataList = this.getRecordServiceFunctionDataList();
+        } else if (this.options.type === 'beforeSaveCustomScript') {
+            additionalFunctionDataList = this.getBeforeSaveFunctionDataList();
         }
 
         this.createField(
@@ -85,6 +87,19 @@ class EntityManagerEditFormulaRecordView extends BaseRecordView {
             {
                 name: 'recordService\\throwConflict',
                 insertText: 'recordService\\throwConflict(MESSAGE)',
+            },
+        ];
+    }
+
+    /**
+     * @private
+     * @return {Record[]}
+     */
+    getBeforeSaveFunctionDataList() {
+        return [
+            {
+                name: 'exception\\validation',
+                insertText: 'exception\\validation()',
             },
         ];
     }
