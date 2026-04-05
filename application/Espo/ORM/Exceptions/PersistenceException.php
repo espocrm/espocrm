@@ -29,10 +29,12 @@
 
 namespace Espo\ORM\Exceptions;
 
+use RuntimeException;
+
 /**
- * A low level validation error.
+ * For errors within save, remove, link, unlink processes.
  *
  * @since 9.4.0
  */
-class ValidationException extends PersistenceException
+class PersistenceException extends RuntimeException
 {}

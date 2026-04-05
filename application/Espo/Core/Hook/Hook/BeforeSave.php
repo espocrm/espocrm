@@ -30,6 +30,7 @@
 namespace Espo\Core\Hook\Hook;
 
 use Espo\ORM\Entity;
+use Espo\ORM\Exceptions\PersistenceException;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
@@ -44,6 +45,7 @@ interface BeforeSave
      *
      * @param TEntity $entity An entity.
      * @param SaveOptions $options Save options.
+     * @throws PersistenceException
      */
     public function beforeSave(Entity $entity, SaveOptions $options): void;
 }
