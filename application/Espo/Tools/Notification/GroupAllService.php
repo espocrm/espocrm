@@ -64,6 +64,22 @@ class GroupAllService
      */
     public function get(string $type, string $groupId, SearchParams $searchParams): RecordCollection
     {
+        $searchParams = $this->amendMaxSize($type, $groupId, $searchParams);
+
+        $collection = $this->getInternal($type, $groupId, $searchParams);
+
+        $this->markAsRead($collection);
+
+        return $collection;
+    }
+
+    /**
+     * @return RecordCollection<Notification>
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function getInternal(string $type, string $groupId, SearchParams $searchParams): RecordCollection
+    {
         $collection = null;
 
         if ($type == Notification::GROUP_TYPE_NOTE) {
@@ -75,8 +91,6 @@ class GroupAllService
         if (!$collection) {
             throw new BadRequest("Bad group.");
         }
-
-        $this->markAsRead($collection);
 
         return $collection;
     }
@@ -353,5 +367,53 @@ class GroupAllService
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($query);
+    }
+
+    private function hasBeforeNumber(SearchParams $searchParams): bool
+    {
+        foreach ($searchParams->getWhere()?->getItemList() ?? [] as $item) {
+            if ($item->getAttribute() === Notification::ATTR_NUMBER) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function amendMaxSize(string $type, string $groupId, SearchParams $searchParams): SearchParams
+    {
+        if ($this->hasBeforeNumber($searchParams)) {
+            return $searchParams;
+        }
+
+        $collection = $this->getInternal($type, $groupId, $searchParams);
+
+        $firstReadIndex = -1;
+        $hasNotRead = false;
+        $hasNotReadAfterRead = false;
+
+        foreach ($collection->getCollection() as $i => $entity) {
+            if ($entity->isRead() && $firstReadIndex === -1) {
+                $firstReadIndex = $i;
+            }
+
+            if (!$entity->isRead()) {
+                $hasNotRead = true;
+            }
+
+            if ($firstReadIndex !== -1 && !$entity->isRead()) {
+                $hasNotReadAfterRead = true;
+            }
+        }
+
+        if ($firstReadIndex !== -1 && $hasNotRead && !$hasNotReadAfterRead) {
+            $searchParams = $searchParams->withMaxSize($firstReadIndex);
+        }
+
+        return $searchParams;
     }
 }
