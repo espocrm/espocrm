@@ -84,7 +84,7 @@ class GroupAllService
     {
         $collection = null;
 
-        if ($type == Notification::GROUP_TYPE_NOTE) {
+        if ($type == Notification::GROUP_TYPE_RECORD) {
             $collection = $this->getNote($groupId, $searchParams);
         } else if ($type == Notification::GROUP_TYPE_EMAIL_RECEIVED) {
             $collection = $this->getEmailReceived($searchParams);
@@ -121,7 +121,7 @@ class GroupAllService
 
         $query = $builder
             ->where([
-                Notification::FIELD_TYPE => Notification::TYPE_NOTE,
+                Notification::FIELD_TYPE => $this->recordService->getRecordGroupNoteTypes(),
                 Notification::ATTR_RELATED_PARENT_TYPE => $entityType,
                 Notification::ATTR_RELATED_PARENT_ID => $id,
             ])
@@ -181,7 +181,7 @@ class GroupAllService
 
         [$type,] = explode('_', $groupId, 2);
 
-        if ($type == Notification::GROUP_TYPE_NOTE) {
+        if ($type == Notification::GROUP_TYPE_RECORD) {
             $this->markReadNote($groupId);
 
             return;
@@ -262,7 +262,7 @@ class GroupAllService
 
         [$type,] = explode('_', $groupId, 2);
 
-        if ($type == Notification::GROUP_TYPE_NOTE) {
+        if ($type == Notification::GROUP_TYPE_RECORD) {
             $this->removeNote($groupId);
 
             return;
@@ -294,7 +294,7 @@ class GroupAllService
                 Notification::ATTR_USER_ID => $this->user->getId(),
             ])
             ->where([
-                Notification::FIELD_TYPE => Notification::TYPE_NOTE,
+                Notification::FIELD_TYPE => $this->recordService->getRecordGroupNoteTypes(),
                 Notification::ATTR_RELATED_PARENT_TYPE => $entityType,
                 Notification::ATTR_RELATED_PARENT_ID => $id,
             ])
@@ -335,7 +335,7 @@ class GroupAllService
                 Notification::ATTR_USER_ID => $this->user->getId(),
             ])
             ->where([
-                Notification::FIELD_TYPE => Notification::TYPE_NOTE,
+                Notification::FIELD_TYPE => $this->recordService->getRecordGroupNoteTypes(),
                 Notification::ATTR_RELATED_PARENT_TYPE => $entityType,
                 Notification::ATTR_RELATED_PARENT_ID => $id,
                 Notification::ATTR_READ => false,

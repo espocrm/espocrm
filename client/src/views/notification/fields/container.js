@@ -136,7 +136,7 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         let viewName;
 
-        if (groupType === 'Note') {
+        if (groupType === 'Record') {
             viewName = 'views/notification/items/group-note';
         } else if (groupType === 'EmailReceived') {
             viewName = 'views/notification/items/group-email-received';

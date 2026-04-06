@@ -658,12 +658,12 @@ class RecordService
             ->buildQueryBuilder()
             ->select([
                 Selection::create(
-                    Expr::value(Notification::GROUP_TYPE_NOTE),
+                    Expr::value(Notification::GROUP_TYPE_RECORD),
                     self::COLUMN_GROUP_TYPE
                 ),
                 Selection::create(
                     Expr::concat(
-                        Expr::value(Notification::GROUP_TYPE_NOTE),
+                        Expr::value(Notification::GROUP_TYPE_RECORD),
                         Expr::value('_'),
                         Expr::column(Notification::ATTR_RELATED_PARENT_TYPE),
                         Expr::value('_'),
@@ -719,7 +719,7 @@ class RecordService
             ])
             ->where([
                 Notification::ATTR_RELATED_PARENT_ID . '!=' => null,
-                Notification::FIELD_TYPE => Notification::TYPE_NOTE,
+                Notification::FIELD_TYPE => $this->getRecordGroupNoteTypes(),
             ])
             ->where([Notification::ATTR_USER_ID => $user->getId()])
             ->group(Notification::ATTR_RELATED_PARENT_ID)
@@ -889,7 +889,7 @@ class RecordService
             ->where([
                 [
                     'OR' => [
-                        Notification::FIELD_TYPE . '!=' => Notification::TYPE_NOTE,
+                        Notification::FIELD_TYPE . '!=' => $this->getRecordGroupNoteTypes(),
                         Notification::ATTR_RELATED_PARENT_ID => null,
                     ],
                 ],
@@ -913,5 +913,18 @@ class RecordService
     private function getMaxNumberExpr(): Expr
     {
         return Expr::max(Expr::column(Notification::ATTR_NUMBER));
+    }
+
+    /**
+     * @internal
+     * @return string[]
+     */
+    public function getRecordGroupNoteTypes(): array
+    {
+        return [
+            Notification::TYPE_NOTE,
+            Notification::TYPE_USER_REACTION,
+            'EventAttendee',
+        ];
     }
 }

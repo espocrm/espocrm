@@ -65,7 +65,7 @@ class Notification extends Entity
     public const string FIELD_RELATED_PARENT = 'relatedParent';
     public const string FIELD_IS_FEATURED = 'isFeatured';
 
-    public const string GROUP_TYPE_NOTE = Notification::TYPE_NOTE;
+    public const string GROUP_TYPE_RECORD = 'Record';
     public const string GROUP_TYPE_EMAIL_RECEIVED = Notification::TYPE_EMAIL_RECEIVED;
 
     public const string DATE_ATTR_NOTE_ID = 'noteId';
