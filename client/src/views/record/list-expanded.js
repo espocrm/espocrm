@@ -155,6 +155,7 @@ class ListExpandedRecordView extends ListRecordView {
                     name: name,
                     view: listLayout.right.view,
                     options: {
+                        name: name,
                         defs: {
                             params: {
                                 width: listLayout.right.width || '7%',

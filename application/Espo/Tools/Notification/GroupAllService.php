@@ -45,6 +45,7 @@ use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\UpdateBuilder;
 
 class GroupAllService
 {
@@ -155,6 +156,32 @@ class GroupAllService
             ->count();
 
         return [$collection, $total];
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    public function markRead(string $groupId): void
+    {
+        if (substr_count($groupId, '_') < 1) {
+            throw new BadRequest("Bad ID.");
+        }
+
+        [$type,] = explode('_', $groupId, 2);
+
+        if ($type == Notification::GROUP_TYPE_NOTE) {
+            $this->markReadNote($groupId);
+
+            return;
+        }
+
+        if ($type == Notification::GROUP_TYPE_EMAIL_RECEIVED) {
+            $this->markReadEmailReceived();
+
+            return;
+        }
+
+        throw new BadRequest("Bad group type.");
     }
 
     /**
@@ -273,6 +300,55 @@ class GroupAllService
             ])
             ->where([
                 Notification::FIELD_TYPE => Notification::TYPE_EMAIL_RECEIVED,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function markReadNote(string $groupId): void
+    {
+        if (substr_count($groupId, '_') < 2) {
+            throw new BadRequest("Bad ID.");
+        }
+
+        [, $entityType, $id] = explode('_', $groupId, 3);
+
+        $query = UpdateBuilder::create()
+            ->in(Notification::ENTITY_TYPE)
+            ->where([
+                Notification::ATTR_USER_ID => $this->user->getId(),
+            ])
+            ->where([
+                Notification::FIELD_TYPE => Notification::TYPE_NOTE,
+                Notification::ATTR_RELATED_PARENT_TYPE => $entityType,
+                Notification::ATTR_RELATED_PARENT_ID => $id,
+                Notification::ATTR_READ => false,
+            ])
+            ->set([
+                Notification::ATTR_READ => true,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
+    }
+
+    private function markReadEmailReceived(): void
+    {
+        $query = UpdateBuilder::create()
+            ->in(Notification::ENTITY_TYPE)
+            ->where([
+                Notification::ATTR_USER_ID => $this->user->getId(),
+            ])
+            ->where([
+                Notification::FIELD_TYPE => Notification::TYPE_EMAIL_RECEIVED,
+                Notification::ATTR_READ => false,
+            ])
+            ->set([
+                Notification::ATTR_READ => true,
             ])
             ->build();
 

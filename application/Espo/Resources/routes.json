@@ -366,6 +366,11 @@
         "actionClassName": "Espo\\Tools\\Notification\\Api\\DeleteGroup"
     },
     {
+        "route": "/Notification/group/:id/markRead",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Notification\\Api\\MarkGroupRead"
+    },
+    {
         "route": "/EmailTemplate/:id/prepare",
         "method": "post",
         "actionClassName": "Espo\\Tools\\EmailTemplate\\Api\\PostPrepare"

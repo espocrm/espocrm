@@ -29,6 +29,7 @@
 import BaseFieldView from 'views/fields/base';
 import NotificationListRecordView from 'views/notification/record/list';
 import NotificationPanelView from 'views/notification/panel';
+import Ajax from 'ajax';
 
 class NotificationContainerFieldView extends BaseFieldView {
 
@@ -59,16 +60,25 @@ class NotificationContainerFieldView extends BaseFieldView {
      */
     isGroupExpanded = false
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    groupingEnabled
+
     data() {
         const count = this.model.attributes.groupedCount ?? 0;
 
         return {
             hasGrouped: count > 1 || count < 0,
             isGroupExpanded: this.isGroupExpanded,
+            hasMarkGroupRead: this.groupingEnabled && !this.model.attributes.read,
         };
     }
 
     setup() {
+        this.groupingEnabled = this.options.groupingEnabled ?? false;
+
         if (this.model.attributes.groupType) {
             this.wait(this.processGroup());
         } else {
@@ -89,6 +99,7 @@ class NotificationContainerFieldView extends BaseFieldView {
         }
 
         this.addActionHandler('showGrouped', () => this.showGrouped());
+        this.addActionHandler('markGroupRead', () => this.markGroupRead());
     }
 
     process() {
@@ -280,6 +291,27 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         await this.reRender();
 
+        this.triggerUpdateRead();
+    }
+
+
+    /**
+     * @private
+     */
+    async markGroupRead() {
+        //await Ajax.postRequest(`Notification/group/${this.model.id}/markRead`);
+
+        this.model.set('read', true, {sync: true});
+
+        await this.reRender();
+
+        this.triggerUpdateRead();
+    }
+
+    /**
+     * @private
+     */
+    triggerUpdateRead() {
         let viewPointer = this;
 
         while (true) {

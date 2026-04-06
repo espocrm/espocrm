@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,29 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import BaseFieldView from 'views/fields/base';
+namespace Espo\Tools\Notification\Api;
 
-class NotificationReadFieldView extends BaseFieldView {
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Tools\Notification\GroupAllService;
 
-    type = 'read'
-    listTemplate = 'notification/fields/read'
-    detailTemplate = 'notification/fields/read'
+/**
+ * @noinspection PhpUnused
+ */
+class MarkGroupRead implements Action
+{
+    public function __construct(
+        private GroupAllService $service,
+    ) {}
 
-    inlineEditDisabled = true
+    public function process(Request $request): Response
+    {
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
 
-    getAttributeList() {
-        return ['read'];
-    }
+        $this->service->markRead($id);
 
-    data() {
-        return {
-            isRead: this.model.get('read'),
-        };
-    }
-
-    afterRender() {
-        //console.log(this.element);
+        return ResponseComposer::json(true);
     }
 }
-
-export default NotificationReadFieldView;

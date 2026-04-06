@@ -32,6 +32,12 @@ class NotificationPanelView extends View {
 
     template = 'notification/panel'
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    groupingEnabled
+
     setup() {
         this.addActionHandler('markAllNotificationsRead', () => this.actionMarkAllRead());
         this.addActionHandler('openNotifications', () => this.actionOpenNotifications());
@@ -42,6 +48,8 @@ class NotificationPanelView extends View {
                 this.close();
             }
         })
+
+        this.groupingEnabled = this.getPreferences().get('notificationGrouping') === true;
 
         const promise =
             this.getCollectionFactory().create('Notification', collection => {
@@ -95,6 +103,7 @@ class NotificationPanelView extends View {
                             view: 'views/notification/fields/container',
                             options: {
                                 containerSelector: this.getSelector(),
+                                groupingEnabled: this.groupingEnabled,
                             },
                         }
                     ]

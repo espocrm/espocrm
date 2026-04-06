@@ -28,7 +28,8 @@
 
 import BaseFieldView from 'views/fields/base';
 
-class NotificationReadWithMenuFieldView extends BaseFieldView {
+// noinspection JSUnusedGlobalSymbols
+export default class NotificationReadWithMenuFieldView extends BaseFieldView {
 
     type = 'read'
     listTemplate = 'notification/fields/read-with-menu'
@@ -36,11 +37,13 @@ class NotificationReadWithMenuFieldView extends BaseFieldView {
 
     inlineEditDisabled = true
 
+    getAttributeList() {
+        return ['read'];
+    }
+
     data() {
         return {
             isRead: this.model.get('read'),
         };
     }
 }
-
-export default NotificationReadWithMenuFieldView;

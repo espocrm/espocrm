@@ -1412,10 +1412,25 @@ section {
         &:has(.notification-grouped a[data-action="showGrouped"]) {
             padding-bottom: 0;
 
-            a[data-action="showGrouped"] {
-                margin: 0 auto;
-                display: block;
-                width: 36px;
+            .notification-grouped {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                align-items: center;
+
+
+                a[data-action="showGrouped"] {
+                    grid-column: 2;
+                    justify-self: center;
+                    display: block;
+                    width: var(--36px);
+                }
+
+                a[data-action="markGroupRead"] {
+                    grid-column: 3;
+                    justify-self: end;
+                    display: block;
+                    width: var(--36px);
+                }
             }
         }
 
