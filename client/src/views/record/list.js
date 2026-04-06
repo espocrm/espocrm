@@ -657,12 +657,6 @@ class ListRecordView extends View {
 
             this.actionQuickView({id: id});
         },
-        /** @this ListRecordView */
-        'click [data-action="showMore"]': async function () {
-            this.showMoreRecords();
-
-            this.focusOnList();
-        },
         'mousedown a.sort': function (e) {
             e.preventDefault();
         },
@@ -2026,6 +2020,15 @@ class ListRecordView extends View {
             this.processLinkClick(target.dataset.id);
         });
 
+        this.addHandler('click', '[data-action="showMore"]', (e, target) => {
+            if (target.dataset.ownerCid && target.dataset.ownerCid  !== this.cid) {
+                return;
+            }
+
+            this.showMoreRecords();
+            this.focusOnList();
+        })
+
         if (typeof this.collection === 'undefined') {
             throw new Error('Collection has not been injected into views/record/list view.');
         }
@@ -3254,7 +3257,7 @@ class ListRecordView extends View {
      */
     showMoreRecords(options, collection, $list, $showMore, callback) {
         collection = collection || this.collection;
-        $showMore =  $showMore || this.$el.find('.show-more');
+        $showMore =  $showMore || this.$el.find(`.show-more[data-owner-cid="${this.cid}"]`);
         $list = $list || this.$el.find(this.listContainerEl);
         options = options || {};
 

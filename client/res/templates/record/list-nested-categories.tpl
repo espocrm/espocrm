@@ -106,16 +106,20 @@
 
             {{#if showMoreIsActive}}
                 <div class="category-cell">
-                    <div class="category-item show-more">
-                <span class="category-item-name">
-                    <a
-                        role="button"
-                        tabindex="0"
-                        class="action"
-                        data-action="showMore"
-                        title="{{translate 'Show more'}}"
-                    >...</a>
-                </span>
+                    <div
+                        class="category-item show-more"
+                        data-owner-cid="{{viewObject.cid}}"
+                    >
+                        <span class="category-item-name">
+                            <a
+                                role="button"
+                                tabindex="0"
+                                class="action"
+                                data-action="showMore"
+                                data-owner-cid="{{viewObject.cid}}"
+                                title="{{translate 'Show more'}}"
+                            >...</a>
+                    </span>
                     </div>
                 </div>
             {{/if}}
