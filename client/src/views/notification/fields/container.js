@@ -298,7 +298,7 @@ class NotificationContainerFieldView extends BaseFieldView {
      * @private
      */
     async markGroupRead() {
-        //await Ajax.postRequest(`Notification/group/${this.model.id}/markRead`);
+        await Ajax.postRequest(`Notification/group/${this.model.id}/markRead`);
 
         this.model.set('read', true, {sync: true});
 
