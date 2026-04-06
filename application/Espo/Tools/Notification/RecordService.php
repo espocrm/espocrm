@@ -149,7 +149,7 @@ class RecordService
                 $entity->loadParentNameField(Notification::FIELD_RELATED_PARENT);
             }
 
-            if ($entity->getActionId() && $this->isActionGroupingEnabled()) {
+            if ($entity->getActionId() && $this->isActionGroupingEnabled() && !$this->isGroupingEnabled($user)) {
                 $actionIds[] = $entity->getActionId();
 
                 $groupedCount = $groupedCountMap[$entity->getActionId()] ?? 0;
