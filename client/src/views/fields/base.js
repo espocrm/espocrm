@@ -903,7 +903,6 @@ class BaseFieldView extends View {
             this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
             this.listenTo(this.model, 'change', (model, options) => {
-                console.log(this.name, this, options);
                 if (options.ui && (!options.fromField || options.fromField === this.name)) {
                     return;
                 }

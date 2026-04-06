@@ -45,10 +45,6 @@ class NotificationReadFieldView extends BaseFieldView {
             isRead: this.model.get('read'),
         };
     }
-
-    afterRender() {
-        //console.log(this.element);
-    }
 }
 
 export default NotificationReadFieldView;
