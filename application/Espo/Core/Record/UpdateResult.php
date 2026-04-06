@@ -29,13 +29,47 @@
 
 namespace Espo\Core\Record;
 
+use Espo\ORM\Entity;
+use stdClass;
+
 /**
- * @internal
- * @todo Remove in v10.0. Use UpdateResult.
+ * @template TEntity of Entity = Entity
+ * @since 9.4.0
  */
-class UpdateContext
+class UpdateResult
 {
+    /**
+     * @param TEntity $entity An entity.
+     * @param bool $linkUpdated Whether the update caused link updates.
+     */
     public function __construct(
-        public bool $linkUpdated = false,
+        private Entity $entity,
+        private bool $linkUpdated = false,
     ) {}
+
+    /**
+     * @return TEntity
+     */
+    public function getEntity(): Entity
+    {
+        return $this->entity;
+    }
+
+    public function getValueMap(): stdClass
+    {
+        return $this->entity->getValueMap();
+    }
+
+    /**
+     * @deprecated Since 9.4.0. For bc. Use entity->get(...).
+     */
+    public function get(string $name): mixed
+    {
+        return $this->entity->get($name);
+    }
+
+    public function isLinkUpdated(): bool
+    {
+        return $this->linkUpdated;
+    }
 }

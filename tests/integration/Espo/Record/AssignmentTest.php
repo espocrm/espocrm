@@ -70,7 +70,7 @@ class AssignmentTest extends BaseTestCase
             ->getByClass(Lead::class)
             ->create((object) [
                 'lastName' => 'Test 1',
-            ], CreateParams::create());
+            ], CreateParams::create())->getEntity();
 
         $this->assertEquals($user1->getId(), $lead1->getAssignedUser()?->getId());
         $this->assertEquals([$team1->getId()], $lead1->getLinkMultipleIdList('teams'));

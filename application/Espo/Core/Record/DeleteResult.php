@@ -29,38 +29,13 @@
 
 namespace Espo\Core\Record;
 
-use Espo\ORM\Entity;
-
-use stdClass;
-
 /**
- * @template TEntity of Entity
+ * For potential future use.
+ *
+ * @since 9.4.0
  */
-interface Crud
+class DeleteResult
 {
-    /**
-     * Create a record.
-     *
-     * @return CreateResult<TEntity>
-     */
-    public function create(stdClass $data, CreateParams $params): CreateResult;
-
-    /**
-     * Read a record.
-     *
-     * @return ReadResult<TEntity>
-     */
-    public function read(string $id, ReadParams $params): ReadResult;
-
-    /**
-     * Update a record.
-     *
-     * @return UpdateResult<TEntity>
-     */
-    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult;
-
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id, DeleteParams $params): DeleteResult;
+    public function __construct(
+    ) {}
 }

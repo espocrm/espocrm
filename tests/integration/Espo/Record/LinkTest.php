@@ -169,7 +169,7 @@ class LinkTest extends BaseTestCase
             'accountId' => $account1->getId(),
             'parentType' => $account1->getEntityType(),
             'assignedUserId' => $user->getId(),
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $isThrown = false;
 
@@ -197,7 +197,7 @@ class LinkTest extends BaseTestCase
             $taskService->update($task1->getId(), (object) [
                 'parentId' => $account2->getId(),
                 'parentType' => $account2->getEntityType(),
-            ], UpdateParams::create());
+            ], UpdateParams::create())->getEntity();
         }
         catch (Forbidden) {
             $isThrown = true;
@@ -441,7 +441,7 @@ class LinkTest extends BaseTestCase
             'name' => '1',
             'contactId' => $contact->getId(),
             'contactsIds' => [$contact->getId()],
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertEquals(
             (object) [
@@ -453,7 +453,7 @@ class LinkTest extends BaseTestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $case = $caseService->update($case->getId(), (object) [
             'contactsIds' => [$contact->getId(), $contact1->getId()],
-        ], UpdateParams::create());
+        ], UpdateParams::create())->getEntity();
 
         $this->assertEquals(
             (object) [

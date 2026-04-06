@@ -32,6 +32,8 @@ namespace Espo\Services;
 use Espo\Core\Di\LogAware;
 use Espo\Core\Di\LogSetter;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Record\CreateResult;
+use Espo\Core\Record\UpdateResult;
 use Espo\Entities\User as UserEntity;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
@@ -79,7 +81,7 @@ class User extends Record implements LogAware
         return $password;
     }
 
-    public function create(stdClass $data, CreateParams $params): Entity
+    public function create(stdClass $data, CreateParams $params): CreateResult
     {
         $newPassword = $this->fetchPassword($data);
 
@@ -100,20 +102,22 @@ class User extends Record implements LogAware
 
         $data->password = $this->hashPassword($newPassword);
 
-        /** @var UserEntity $user */
-        $user = parent::create($data, $params);
+        $result = parent::create($data, $params);
+
+        $user = $result->getEntity();
+
 
         $sendAccessInfo = !empty($data->sendAccessInfo);
 
         if (!$sendAccessInfo || !$user->isActive() || $user->isApi()) {
-            return $user;
+            return $result;
         }
 
         try {
             if ($passwordSpecified) {
                 $this->sendPassword($user, $newPassword);
 
-                return $user;
+                return $result;
             }
 
             $this->getPasswordService()->sendAccessInfoForNewUser($user);
@@ -121,10 +125,10 @@ class User extends Record implements LogAware
             $this->log->error("Could not send user access info. " . $e->getMessage());
         }
 
-        return $user;
+        return $result;
     }
 
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity
+    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult
     {
         $newPassword = null;
 
@@ -144,8 +148,9 @@ class User extends Record implements LogAware
             unset($data->type);
         }
 
-        /** @var UserEntity $user */
-        $user = parent::update($id, $data, $params);
+        $result = parent::update($id, $data, $params);
+
+        $user = $result->getEntity();
 
         if (!is_null($newPassword)) {
             try {
@@ -155,7 +160,7 @@ class User extends Record implements LogAware
             } catch (Exception) {}
         }
 
-        return $user;
+        return $result;
     }
 
     private function getPasswordService(): PasswordService

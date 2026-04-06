@@ -284,7 +284,7 @@ class ConvertService
 
         $service = $this->recordServiceContainer->getByClass(Account::class);
 
-        $account = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
+        $account = $service->create($values, CreateParams::create()->withSkipDuplicateCheck())->getEntity();
 
         $lead->setCreatedAccount($account);
 
@@ -326,7 +326,7 @@ class ConvertService
 
         $service = $this->recordServiceContainer->getByClass(Contact::class);
 
-        $contact = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
+        $contact = $service->create($values, CreateParams::create()->withSkipDuplicateCheck())->getEntity();
 
         $lead->set('createdContactId', $contact->getId());
 
@@ -373,7 +373,7 @@ class ConvertService
 
         $service = $this->recordServiceContainer->getByClass(Opportunity::class);
 
-        $opportunity = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
+        $opportunity = $service->create($values, CreateParams::create()->withSkipDuplicateCheck())->getEntity();
 
         if ($contact) {
             $this->entityManager

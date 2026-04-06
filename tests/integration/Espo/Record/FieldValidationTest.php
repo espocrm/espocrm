@@ -95,7 +95,8 @@ class FieldValidationTest extends BaseTestCase
                     'name' => 'test'
                 ],
                 CreateParams::create()
-            );
+            )
+            ->getEntity();
 
         $this->expectException(BadRequest::class);
 
@@ -549,7 +550,7 @@ class FieldValidationTest extends BaseTestCase
 
         $account = $service->create((object) [
             'name' => 'Test',
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $isThrown = false;
 

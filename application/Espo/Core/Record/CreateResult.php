@@ -30,37 +30,47 @@
 namespace Espo\Core\Record;
 
 use Espo\ORM\Entity;
-
 use stdClass;
 
 /**
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
+ * @since 9.4.0
  */
-interface Crud
+class CreateResult
 {
     /**
-     * Create a record.
-     *
-     * @return CreateResult<TEntity>
+     * @param TEntity $entity
      */
-    public function create(stdClass $data, CreateParams $params): CreateResult;
+    public function __construct(
+        private Entity $entity,
+    ) {}
+
+    public function getValueMap(): stdClass
+    {
+        return $this->entity->getValueMap();
+    }
 
     /**
-     * Read a record.
-     *
-     * @return ReadResult<TEntity>
+     * @return TEntity
      */
-    public function read(string $id, ReadParams $params): ReadResult;
+    public function getEntity(): Entity
+    {
+        return $this->entity;
+    }
 
     /**
-     * Update a record.
-     *
-     * @return UpdateResult<TEntity>
+     * @deprecated Since 9.4.0. For bc. Use entity->get(...).
      */
-    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult;
+    public function getId(): string
+    {
+        return $this->entity->getId();
+    }
 
     /**
-     * Delete a record.
+     * @deprecated Since 9.4.0. For bc. Use entity->get(...).
      */
-    public function delete(string $id, DeleteParams $params): DeleteResult;
+    public function get(string $name): mixed
+    {
+        return $this->entity->get($name);
+    }
 }

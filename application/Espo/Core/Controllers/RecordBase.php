@@ -40,7 +40,6 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Core\Record\CreateParamsFetcher;
 use Espo\Core\Record\ReadParamsFetcher;
-use Espo\Core\Record\UpdateContext;
 use Espo\Core\Record\UpdateParamsFetcher;
 use Espo\Core\Record\DeleteParamsFetcher;
 use Espo\Core\Record\FindParamsFetcher;
@@ -159,9 +158,9 @@ class RecordBase extends Base implements
             throw new BadRequest("No ID.");
         }
 
-        $entity = $this->getRecordService()->read($id, $params);
+        $result = $this->getRecordService()->read($id, $params);
 
-        return $entity->getValueMap();
+        return $result->getValueMap();
     }
 
     /**
@@ -181,9 +180,9 @@ class RecordBase extends Base implements
         $data = $request->getParsedBody();
         $params = $this->createParamsFetcher->fetch($request);
 
-        $entity = $this->getRecordService()->create($data, $params);
+        $result = $this->getRecordService()->create($data, $params);
 
-        return $entity->getValueMap();
+        return $result->getValueMap();
     }
 
     /**
@@ -223,17 +222,13 @@ class RecordBase extends Base implements
 
         $params = $this->updateParamsFetcher->fetch($request);
 
-        $context = new UpdateContext();
+        $result = $this->getRecordService()->update($id, $data, $params);
 
-        $params = $params->withContext($context);
-
-        $entity = $this->getRecordService()->update($id, $data, $params);
-
-        if ($context->linkUpdated) {
+        if ($result->isLinkUpdated()) {
             $response->setHeader('X-Record-Link-Updated', 'true');
         }
 
-        return $entity->getValueMap();
+        return $result->getValueMap();
     }
 
     /**

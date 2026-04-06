@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Record\ReadResult;
 use Espo\ORM\Entity;
 use Espo\Core\ExternalAccount\Clients\OAuth2Abstract;
 use Espo\Core\ExternalAccount\ClientManager;
@@ -149,7 +150,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
         return true;
     }
 
-    public function read(string $id, ReadParams $params): Entity
+    public function read(string $id, ReadParams $params): ReadResult
     {
         [, $userId] = explode('__', $id);
 
@@ -157,7 +158,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
             throw new Forbidden();
         }
 
-        $entity = $this->entityManager->getEntityById(ExternalAccountEntity::ENTITY_TYPE, $id);
+        $entity = $this->entityManager->getRDBRepositoryByClass(ExternalAccountEntity::class)->getById($id);
 
         if (!$entity) {
             throw new NotFoundSilent();
@@ -172,6 +173,6 @@ class ExternalAccount extends Record implements Di\HookManagerAware
             $entity->clear($a);
         }
 
-        return $entity;
+        return new ReadResult($entity);
     }
 }

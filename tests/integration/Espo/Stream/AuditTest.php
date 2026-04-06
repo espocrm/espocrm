@@ -93,7 +93,7 @@ class AuditTest extends BaseTestCase
         $article = $service->create((object) [
             'name' => 'Test 1',
             'publishDate' => '2025-01-01',
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $service->update($article->getId(), (object) [

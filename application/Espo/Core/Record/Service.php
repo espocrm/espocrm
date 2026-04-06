@@ -210,13 +210,13 @@ class Service implements Crud,
      * Is not supposed to be directly used in customizations.
      *
      * @param non-empty-string $id
-     * @return TEntity
+     * @return ReadResult<TEntity>
      * @throws NotFoundSilent If not found.
      * @throws Forbidden If no read access.
      * @noinspection PhpDocSignatureInspection
      * @todo In v10.0, return ReadResult instead of Entity.
      */
-    public function read(string $id, ReadParams $params): Entity
+    public function read(string $id, ReadParams $params): ReadResult
     {
         if ($id === '') {
             throw new InvalidArgumentException();
@@ -235,7 +235,7 @@ class Service implements Crud,
         $this->getRecordHookManager()->processBeforeRead($entity, $params);
         $this->processActionHistoryRecord(Action::READ, $entity);
 
-        return $entity;
+        return new ReadResult($entity);
     }
 
     /**
@@ -665,14 +665,12 @@ class Service implements Crud,
      *
      * Is not supposed to be directly used in customizations.
      *
-     * @return TEntity
+     * @return CreateResult<TEntity>
      * @throws BadRequest
      * @throws Forbidden If no create access.
      * @throws Conflict
-     * @noinspection PhpDocSignatureInspection
-     * @todo In v10.0, return CreateResult instead of Entity.
      */
-    public function create(stdClass $data, CreateParams $params): Entity
+    public function create(stdClass $data, CreateParams $params): CreateResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent("No create access.");
@@ -683,7 +681,7 @@ class Service implements Crud,
         $this->filterCreateInput($data);
         $this->sanitizeInput($data);
 
-        $entity->set($data);
+        $entity->setMultiple($data);
         $this->populateDefaults($entity, $data);
 
         $this->getRecordHookManager()->processEarlyBeforeCreate($entity, $params);
@@ -724,7 +722,7 @@ class Service implements Crud,
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::CREATE, $entity);
 
-        return $entity;
+        return new CreateResult($entity);
     }
 
     /**
@@ -732,15 +730,13 @@ class Service implements Crud,
      *
      * Is not supposed to be directly used in customizations.
      *
-     * @return TEntity
+     * @return UpdateResult<TEntity>
      * @throws NotFound If record not found.
      * @throws Forbidden If no access.
      * @throws Conflict
      * @throws BadRequest
-     * @noinspection PhpDocSignatureInspection
-     * @todo In v10.0, return UpdateResult instead of Entity.
      */
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity
+    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No edit access.");
@@ -771,7 +767,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No edit access.");
         }
 
-        $entity->set($data);
+        $entity->setMultiple($data);
 
         if ($params->getVersionNumber() !== null) {
             $this->processConcurrencyControl($entity, $params->getVersionNumber());
@@ -817,11 +813,10 @@ class Service implements Crud,
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);
 
-        if ($context->isLinkUpdated() && $params->getContext()) {
-            $params->getContext()->linkUpdated = true;
-        }
-
-        return $entity;
+        return new UpdateResult(
+            entity: $entity,
+            linkUpdated: $context->isLinkUpdated(),
+        );
     }
 
     /**
@@ -834,7 +829,7 @@ class Service implements Crud,
      * @throws NotFound
      * @throws Conflict
      */
-    public function delete(string $id, DeleteParams $params): void
+    public function delete(string $id, DeleteParams $params): DeleteResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
             throw new ForbiddenSilent("No delete access.");
@@ -864,6 +859,8 @@ class Service implements Crud,
         $this->afterDeleteEntity($entity);
         $this->getRecordHookManager()->processAfterDelete($entity, $params);
         $this->processActionHistoryRecord(Action::DELETE, $entity);
+
+        return new DeleteResult();
     }
 
     /**

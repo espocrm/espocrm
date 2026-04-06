@@ -78,7 +78,7 @@ class SanitizeTest extends BaseTestCase
                 ' test ',
                 'hello',
             ],
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $numbers = $account->getPhoneNumberGroup()->getNumberList();
         $this->assertCount(1, $numbers);
@@ -103,7 +103,7 @@ class SanitizeTest extends BaseTestCase
             ],
             'description' => 'Test',
             'cArray' => null,
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertEquals('Test', $account->get('description'));
         $this->assertEquals([], $account->get('cArray'));
@@ -141,7 +141,7 @@ class SanitizeTest extends BaseTestCase
                     'phoneNumber' => '+380904443366 # 1000',
                 ],
             ],
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $numbers = $account->getPhoneNumberGroup()->getNumberList();
         $this->assertCount(5, $numbers);
@@ -165,7 +165,7 @@ class SanitizeTest extends BaseTestCase
                 'dateStart' => '2030-12-10 10:11:12',
                 'dateEnd' => '2030-12-10T10:11:12-01:00',
                 'assignedUserId' => $user->getId(),
-            ], CreateParams::create());
+            ], CreateParams::create())->getEntity();
 
         $this->assertEquals('2030-12-10 10:11:12', $meeting->get('dateStart'));
         $this->assertEquals('2030-12-10 11:11:12', $meeting->get('dateEnd'));
@@ -181,7 +181,7 @@ class SanitizeTest extends BaseTestCase
                 'dateStartDate' => '2030-12-10T10:11:12-01:00',
                 'dateEnd' => '2030-12-10T10:11:12-01:00',
                 'assignedUserId' => $user->getId(),
-            ], CreateParams::create());
+            ], CreateParams::create())->getEntity();
 
         $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
         $this->assertEquals('2030-12-10 11:11:12', $task->get('dateEnd'));
@@ -194,7 +194,7 @@ class SanitizeTest extends BaseTestCase
                 'name' => 'Test',
                 'dateStartDate' => '2030-12-10',
                 'assignedUserId' => $user->getId(),
-            ], CreateParams::create());
+            ], CreateParams::create())->getEntity();
 
         $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
 
@@ -210,7 +210,7 @@ class SanitizeTest extends BaseTestCase
                 'assignedUserId' => $user->getId(),
                 'probability' => 10,
                 'amount' => 1.0,
-            ], CreateParams::create());
+            ], CreateParams::create())->getEntity();
 
         $this->assertEquals('2030-12-10', $meeting->get('closeDate'));
 
@@ -224,7 +224,7 @@ class SanitizeTest extends BaseTestCase
                 'assignedUserId' => $user->getId(),
                 'probability' => 10,
                 'amount' => 1.0,
-            ], CreateParams::create());
+            ], CreateParams::create())->getEntity();
 
         $this->assertEquals('2030-12-10', $meeting->get('closeDate'));
     }

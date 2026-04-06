@@ -73,7 +73,7 @@ class ServiceTest extends BaseTestCase
             'name' => 'Test',
             'data' => $data,
             'fieldData' => $fieldData,
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertEquals($data, $role->get('data'));
         $this->assertEquals($fieldData, $role->get('fieldData'));
@@ -82,7 +82,7 @@ class ServiceTest extends BaseTestCase
         $role = $service->update($role->getId(), (object) [
             'data' => (object) [],
             'fieldData' => (object) [],
-        ], UpdateParams::create());
+        ], UpdateParams::create())->getEntity();
 
         $this->assertEquals((object) [], $role->get('data'));
         $this->assertEquals((object) [], $role->get('fieldData'));
@@ -91,7 +91,7 @@ class ServiceTest extends BaseTestCase
         $role = $service->update($role->getId(), (object) [
             'data' => $data,
             'fieldData' => $fieldData,
-        ], UpdateParams::create());
+        ], UpdateParams::create())->getEntity();
 
         $this->assertEquals($data, $role->get('data'));
         $this->assertEquals($fieldData, $role->get('fieldData'));
@@ -129,7 +129,7 @@ class ServiceTest extends BaseTestCase
             'name' => 'Test',
             'data' => $data,
             'fieldData' => $fieldData,
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertEquals($data, $role->get('data'));
         $this->assertEquals($fieldData, $role->get('fieldData'));
@@ -138,7 +138,7 @@ class ServiceTest extends BaseTestCase
         $role = $service->update($role->getId(), (object) [
             'data' => (object) [],
             'fieldData' => (object) [],
-        ], UpdateParams::create());
+        ], UpdateParams::create())->getEntity();
 
         $this->assertEquals((object) [], $role->get('data'));
         $this->assertEquals((object) [], $role->get('fieldData'));
@@ -147,7 +147,7 @@ class ServiceTest extends BaseTestCase
         $role = $service->update($role->getId(), (object) [
             'data' => $data,
             'fieldData' => $fieldData,
-        ], UpdateParams::create());
+        ], UpdateParams::create())->getEntity();
 
         $this->assertEquals($data, $role->get('data'));
         $this->assertEquals($fieldData, $role->get('fieldData'));

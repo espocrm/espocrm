@@ -32,6 +32,7 @@ namespace Espo\Services;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Name\Field;
+use Espo\Core\Record\UpdateResult;
 use Espo\Core\Templates\Entities\CategoryTree;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
@@ -365,7 +366,7 @@ class RecordTree extends Record
         }
     }
 
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity
+    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult
     {
         if (!empty($data->parentId) && $data->parentId === $id) {
             throw new Forbidden();

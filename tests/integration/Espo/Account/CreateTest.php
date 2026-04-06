@@ -51,7 +51,7 @@ class CreateTest extends \tests\integration\Core\BaseTestCase
             'phoneNumber' => '+14333633333',
         ], CreateParams::create());
 
-        $this->assertInstanceOf('Espo\\ORM\\Entity', $entity);
+        $this->assertInstanceOf('Espo\\ORM\\Entity', $entity->getEntity());
         $this->assertTrue(!empty($entity->getId()));
     }
 }

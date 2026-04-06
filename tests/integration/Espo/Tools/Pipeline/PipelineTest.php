@@ -95,7 +95,7 @@ class PipelineTest extends BaseTestCase
             Field::NAME => 'Test 1',
             Pipeline::FIELD_ENTITY_TYPE => Opportunity::ENTITY_TYPE,
             Pipeline::FIELD_IS_AVAILABLE_FOR_ALL => false,
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertCount(6, $pipeline1->getStages());
 
@@ -106,7 +106,7 @@ class PipelineTest extends BaseTestCase
             Pipeline::FIELD_ENTITY_TYPE => Opportunity::ENTITY_TYPE,
             Pipeline::FIELD_IS_AVAILABLE_FOR_ALL => false,
             Field::TEAMS . 'Ids' => [$team->getId()],
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         foreach ($pipeline2->getStages() as $stage) {
             $pipelineStageService->delete($stage->getId(), DeleteParams::create());
@@ -157,12 +157,12 @@ class PipelineTest extends BaseTestCase
             Field::PIPELINE_STAGE . 'Id' => $pipeline1->getStages()[0]->getId(),
             Opportunity::FIELD_CLOSED_DATE => Date::fromString('2026-01-01')->toString(),
             Opportunity::FIELD_AMOUNT => 1000,
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $opp = $oppService->update($opp->getId(), (object) [
             Field::PIPELINE . 'Id' => $pipeline2->getId(),
             Field::PIPELINE_STAGE . 'Id' => $pipeline2->getStages()[0]->getId(),
-        ], UpdateParams::create());
+        ], UpdateParams::create())->getEntity();
 
         $this->assertEquals('Prospecting', $opp->getStage());
 
@@ -174,7 +174,7 @@ class PipelineTest extends BaseTestCase
             Field::PIPELINE_STAGE . 'Id' => $pipeline1->getStages()[4]->getId(),
             Opportunity::FIELD_CLOSED_DATE => Date::fromString('2026-01-01')->toString(),
             Opportunity::FIELD_AMOUNT => 1000,
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertEquals(Opportunity::STAGE_CLOSED_WON, $opp->getStage());
 

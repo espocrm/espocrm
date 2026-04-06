@@ -74,7 +74,7 @@ class EntityDuplicatorTest extends BaseTestCase
             'parentId' => $account->getId(),
             'parentType' => $account->getEntityType(),
             'assignedUserId' => $user->getId(),
-        ], CreateParams::create());
+        ], CreateParams::create())->getEntity();
 
         $this->assertEquals($email->getId(), $task->get('emailId'));
 
