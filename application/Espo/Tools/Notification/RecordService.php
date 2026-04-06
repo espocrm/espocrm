@@ -110,6 +110,8 @@ class RecordService
             $queryBuilder->limit($offset, $limit + 1);
         }
 
+        //echo $this->entityManager->getQueryComposer()->compose($queryBuilder->build());die;
+
         $query = $queryBuilder->build();
 
         if ($query instanceof Union) {
@@ -647,6 +649,10 @@ class RecordService
         ?string $beforeNumber,
     ): SelectBuilder {
 
+        if ($searchParams->getMaxSize() !== null) {
+            $searchParams = $searchParams->withMaxSize($searchParams->getMaxSize() + 1);
+        }
+
         $builder = $this->selectBuilderFactory
             ->create()
             ->from(Notification::ENTITY_TYPE)
@@ -668,7 +674,7 @@ class RecordService
                     Attribute::ID
                 ),
                 Selection::create(
-                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    $this->getMaxNumberExpr(),
                     Notification::ATTR_NUMBER
                 ),
                 Notification::ATTR_RELATED_PARENT_ID,
@@ -720,12 +726,13 @@ class RecordService
             ->where([Notification::ATTR_USER_ID => $user->getId()])
             ->group(Notification::ATTR_RELATED_PARENT_ID)
             ->group(Notification::ATTR_RELATED_PARENT_TYPE)
-            ->order(Notification::ATTR_NUMBER, Order::DESC);
+            ->order([])
+            ->order($this->getMaxNumberExpr(), Order::DESC);
 
         if ($beforeNumber) {
             $builder->having(
                 Cond::less(
-                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    $this->getMaxNumberExpr(),
                     Expr::value($beforeNumber)
                 )
             );
@@ -751,6 +758,10 @@ class RecordService
         ?string $beforeNumber,
     ): SelectBuilder {
 
+        if ($searchParams->getMaxSize() !== null) {
+            $searchParams = $searchParams->withMaxSize($searchParams->getMaxSize() + 1);
+        }
+
         $builder = $this->selectBuilderFactory
             ->create()
             ->from(Notification::ENTITY_TYPE)
@@ -769,7 +780,7 @@ class RecordService
                     Attribute::ID
                 ),
                 Selection::create(
-                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    $this->getMaxNumberExpr(),
                     Notification::ATTR_NUMBER
                 ),
                 Selection::create(
@@ -813,12 +824,13 @@ class RecordService
             ])
             ->where([Notification::ATTR_USER_ID => $user->getId()])
             ->group(Notification::FIELD_TYPE)
-            ->order(Notification::ATTR_NUMBER, Order::DESC);
+            ->order([])
+            ->order($this->getMaxNumberExpr(), Order::DESC);
 
         if ($beforeNumber) {
             $builder->having(
                 Cond::less(
-                    Expr::max(Expr::column(Notification::ATTR_NUMBER)),
+                    $this->getMaxNumberExpr(),
                     Expr::value($beforeNumber)
                 )
             );
@@ -841,6 +853,10 @@ class RecordService
         bool $notRead,
         ?string $beforeNumber,
     ): SelectBuilder {
+
+        if ($searchParams->getMaxSize() !== null) {
+            $searchParams = $searchParams->withMaxSize($searchParams->getMaxSize() + 1);
+        }
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -882,7 +898,8 @@ class RecordService
                 Notification::FIELD_TYPE . '!=' => Notification::TYPE_EMAIL_RECEIVED,
             ])
             ->where([Notification::ATTR_USER_ID => $user->getId()])
-            ->order(Notification::ATTR_NUMBER, Order::DESC);
+            ->order([])
+            ->order($this->getMaxNumberExpr(), Order::DESC);
 
         if ($notRead) {
             $builder->where([Notification::ATTR_READ => false]);
@@ -893,5 +910,10 @@ class RecordService
         }
 
         return $builder;
+    }
+
+    private function getMaxNumberExpr(): Expr
+    {
+        return Expr::max(Expr::column(Notification::ATTR_NUMBER));
     }
 }
