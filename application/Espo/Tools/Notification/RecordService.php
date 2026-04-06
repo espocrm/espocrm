@@ -897,7 +897,7 @@ class RecordService
             ])
             ->where([Notification::ATTR_USER_ID => $user->getId()])
             ->order([])
-            ->order($this->getMaxNumberExpr(), Order::DESC);
+            ->order(Notification::ATTR_NUMBER, Order::DESC);
 
         if ($notRead) {
             $builder->where([Notification::ATTR_READ => false]);
