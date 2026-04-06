@@ -117,6 +117,12 @@ class GroupAllService
             return RecordCollection::create($collection, 0);
         }
 
+        $maxSize = $searchParams->getMaxSize();
+
+        if ($maxSize) {
+            $searchParams = $searchParams->withMaxSize($maxSize + 1);
+        }
+
         $builder = $this->prepareBuilder($searchParams);
 
         $query = $builder
@@ -127,9 +133,9 @@ class GroupAllService
             ])
             ->build();
 
-        [$collection, $total] = $this->runQuery($query);
+        $collection = $this->runQuery($query);
 
-        return RecordCollection::create($collection, $total);
+        return RecordCollection::createNoCount($collection, $maxSize);
     }
 
     /**
@@ -139,6 +145,12 @@ class GroupAllService
      */
     private function getEmailReceived(SearchParams $searchParams): RecordCollection
     {
+        $maxSize = $searchParams->getMaxSize();
+
+        if ($maxSize) {
+            $searchParams = $searchParams->withMaxSize($maxSize + 1);
+        }
+
         $builder = $this->prepareBuilder($searchParams);
 
         $query = $builder
@@ -147,27 +159,20 @@ class GroupAllService
             ])
             ->build();
 
-        [$collection, $total] = $this->runQuery($query);
+        $collection = $this->runQuery($query);
 
-        return RecordCollection::create($collection, $total);
+        return RecordCollection::createNoCount($collection, $maxSize);
     }
 
     /**
-     * @return array{0: Collection<Notification>, 1: int}
+     * @return Collection<Notification>
      */
-    private function runQuery(Select $query): array
+    private function runQuery(Select $query): Collection
     {
-        $collection = $this->entityManager
+        return$this->entityManager
             ->getRDBRepositoryByClass(Notification::class)
             ->clone($query)
             ->find();
-
-        $total = $this->entityManager
-            ->getRDBRepositoryByClass(Notification::class)
-            ->clone($query)
-            ->count();
-
-        return [$collection, $total];
     }
 
     /**
