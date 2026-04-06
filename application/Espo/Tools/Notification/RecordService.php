@@ -110,8 +110,6 @@ class RecordService
             $queryBuilder->limit($offset, $limit + 1);
         }
 
-        //echo $this->entityManager->getQueryComposer()->compose($queryBuilder->build());die;
-
         $query = $queryBuilder->build();
 
         if ($query instanceof Union) {
