@@ -98,8 +98,8 @@ class EntityManagerEditFormulaRecordView extends BaseRecordView {
     getBeforeSaveFunctionDataList() {
         return [
             {
-                name: 'exception\\validation',
-                insertText: 'exception\\validation()',
+                name: 'exception\\throwInvalid',
+                insertText: 'exception\\throwInvalid()',
             },
         ];
     }

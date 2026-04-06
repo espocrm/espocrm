@@ -37,7 +37,7 @@ use Espo\Core\Formula\Func;
 /**
  * @noinspection PhpUnused
  */
-class ValidationType implements Func
+class ThrowInvalidType implements Func
 {
     public function process(EvaluatedArgumentList $arguments): never
     {
