@@ -66,11 +66,13 @@ class GroupAllService
     {
         $searchParams = $this->amendMaxSize($type, $groupId, $searchParams);
 
-        $collection = $this->getInternal($type, $groupId, $searchParams);
+        $recordCollection = $this->getInternal($type, $groupId, $searchParams);
 
-        $this->markAsRead($collection);
+        $recordCollection = $this->prepareRecordCollection($recordCollection);
 
-        return $collection;
+        $this->markAsRead($recordCollection);
+
+        return $recordCollection;
     }
 
     /**
@@ -127,8 +129,6 @@ class GroupAllService
 
         [$collection, $total] = $this->runQuery($query);
 
-        $collection = $this->recordService->prepareCollection($collection, $this->user);
-
         return RecordCollection::create($collection, $total);
     }
 
@@ -148,8 +148,6 @@ class GroupAllService
             ->build();
 
         [$collection, $total] = $this->runQuery($query);
-
-        $collection = $this->recordService->prepareCollection($collection, $this->user);
 
         return RecordCollection::create($collection, $total);
     }
@@ -415,5 +413,17 @@ class GroupAllService
         }
 
         return $searchParams;
+    }
+
+    /**
+     * @param RecordCollection<Notification> $recordCollection
+     * @return RecordCollection<Notification>
+     */
+    private function prepareRecordCollection(RecordCollection $recordCollection): RecordCollection
+    {
+        $collection = $recordCollection->getCollection();
+        $collection = $this->recordService->prepareCollection($collection, $this->user);
+
+        return new RecordCollection($collection, $recordCollection->getTotal());
     }
 }
