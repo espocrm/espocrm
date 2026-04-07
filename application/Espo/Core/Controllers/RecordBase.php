@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\InjectableFactory;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Core\Record\CreateParamsFetcher;
@@ -44,78 +45,67 @@ use Espo\Core\Record\UpdateParamsFetcher;
 use Espo\Core\Record\DeleteParamsFetcher;
 use Espo\Core\Record\FindParamsFetcher;
 use Espo\Core\Record\Service as RecordService;
-use Espo\Core\Container;
 use Espo\Core\Acl;
-use Espo\Core\AclManager;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\ServiceFactory;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Select\SearchParams;
-use Espo\Core\Di;
 use Espo\Entities\User;
-use Espo\Entities\Preferences;
 use Espo\ORM\Entity;
-use Espo\ORM\EntityManager;
-
 use stdClass;
 
-class RecordBase extends Base implements
-
-    Di\EntityManagerAware,
-    Di\InjectableFactoryAware
+class RecordBase
 {
-    use Di\EntityManagerSetter;
-    use Di\InjectableFactorySetter;
+
+    /**
+     * @internal
+     */
+    protected string $name;
+
 
     /** @var string */
     public static $defaultAction = 'list';
 
-    /** @var RecordServiceContainer */
-    protected $recordServiceContainer;
-    /** @var Config */
-    protected $config;
-    /** @var User */
-    protected $user;
-    /** @var Acl */
-    protected $acl;
-
     /**
-     * @deprecated
-     * @var EntityManager
+     * @throws Forbidden
      */
-    protected $entityManager;
-
     public function __construct(
         protected SearchParamsFetcher $searchParamsFetcher,
         protected CreateParamsFetcher $createParamsFetcher,
         protected ReadParamsFetcher $readParamsFetcher,
         protected UpdateParamsFetcher $updateParamsFetcher,
         protected DeleteParamsFetcher $deleteParamsFetcher,
-        RecordServiceContainer $recordServiceContainer,
+        protected RecordServiceContainer $recordServiceContainer,
         protected FindParamsFetcher $findParamsFetcher,
-        Config $config,
-        User $user,
-        Acl $acl,
-        // Parameters below are for backward compatibility.
-        AclManager $aclManager,
-        Preferences $preferences,
-        Metadata $metadata,
+        protected Config $config,
+        protected User $user,
+        protected Acl $acl,
+        protected InjectableFactory $injectableFactory,
     ) {
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->config = $config;
-        $this->user = $user;
-        $this->acl = $acl;
 
-        parent::__construct(
-            $user,
-            $acl,
-            $aclManager,
-            $config,
-            $preferences,
-            $metadata,
-        );
+        if (empty($this->name)) {
+            $name = get_class($this);
+
+            $matches = null;
+
+            if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
+                $name = $matches[1];
+            }
+
+            $this->name = $name;
+        }
+
+        if (!$this->checkAccess()) {
+            throw new Forbidden("No access to '$this->name'.");
+        }
+    }
+
+    /**
+     * Check access to controller.
+     */
+    protected function checkAccess(): bool
+    {
+        return true;
     }
 
     protected function getEntityType(): string
