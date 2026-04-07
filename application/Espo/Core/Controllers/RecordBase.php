@@ -62,9 +62,7 @@ class RecordBase
      */
     protected string $name;
 
-
-    /** @var string */
-    public static $defaultAction = 'list';
+    public static string $defaultAction = 'list';
 
     /**
      * @throws Forbidden

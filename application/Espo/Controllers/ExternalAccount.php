@@ -43,8 +43,6 @@ use stdClass;
 
 class ExternalAccount extends RecordBase
 {
-    public static $defaultAction = 'list';
-
     protected function checkAccess(): bool
     {
         return $this->acl->checkScope(ExternalAccountEntity::ENTITY_TYPE);

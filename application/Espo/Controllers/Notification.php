@@ -46,8 +46,6 @@ use stdClass;
 
 class Notification extends RecordBase
 {
-    public static $defaultAction = 'list';
-
     /**
      * @throws BadRequest
      * @throws Forbidden
