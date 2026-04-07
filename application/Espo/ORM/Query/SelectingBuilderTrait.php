@@ -235,7 +235,7 @@ trait SelectingBuilderTrait
         $this->params['joins'] ??= [];
 
         // For bc.
-        // @todo Remove in v10.0.
+        // @todo Remove in v11.0.
         if (is_array($target)) {
             // @todo Log deprecation.
 

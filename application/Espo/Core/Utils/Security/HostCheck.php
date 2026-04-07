@@ -137,15 +137,6 @@ class HostCheck
         );
     }
 
-    /**
-     * @deprecated Since 9.3.4. Use `isHostAndNotInternal`.
-     * @todo Remove in v10.0.0.
-     */
-    public function isNotInternalHost(string $host): bool
-    {
-        return $this->isHostAndNotInternal($host);
-    }
-
     private function normalizeIpAddress(string $ip): string|false
     {
         if (!str_contains($ip, '.')) {

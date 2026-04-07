@@ -460,7 +460,7 @@ class EntityManager
      * @deprecated As of v7.0. Use `getCollectionFactory`.
      * @param array<string, mixed> $data
      * @return EntityCollection<Entity>
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     public function createCollection(?string $entityType = null, array $data = []): EntityCollection
     {

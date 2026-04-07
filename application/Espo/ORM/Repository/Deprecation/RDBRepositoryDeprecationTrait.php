@@ -41,7 +41,7 @@ trait RDBRepositoryDeprecationTrait
      * Get an entity. If ID is NULL, a new entity is returned.
      *
      * @deprecated Use `getById` and `getNew`.
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     public function get(?string $id = null): ?Entity
     {

@@ -499,13 +499,13 @@ class BaseEntity implements Entity
             case self::TEXT:
                 if (is_object($value)) {
                     // Prevents an error.
-                    // @todo Remove in v10.0.
+                    // @todo Remove in v11.0.
                     return 'Object';
                 }
 
                 if (is_array($value)) {
                     // Prevents an error.
-                    // @todo Remove in v10.0.
+                    // @todo Remove in v11.0.
                     return 'Array';
                 }
 

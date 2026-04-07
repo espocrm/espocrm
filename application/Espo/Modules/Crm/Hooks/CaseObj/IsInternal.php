@@ -34,7 +34,7 @@ use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\SaveOptions;
-use Espo\Services\Stream;
+use Espo\Tools\Stream\Service;
 
 
 /**
@@ -43,7 +43,7 @@ use Espo\Services\Stream;
 class IsInternal implements AfterSave
 {
     public function __construct(
-        private Stream $streamService,
+        private Service $streamService,
         private FollowersLoader $followersLoader,
     ) {}
 

@@ -115,7 +115,7 @@ class Preferences implements Repository,
 
     /**
      * @deprecated Use `getById`.
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     public function get(?string $id = null): ?Entity
     {

@@ -2991,20 +2991,16 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize a string.
-     * @todo Make protected in v10.0.
-     * @deprecated As of v6.0. Not to be used outside.
      */
-    public function sanitize(string $string): string
+    protected function sanitize(string $string): string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string) ?? '';
     }
 
     /**
      * Sanitize an alias for a SELECT statement.
-     * @todo Make protected in v10.0.
-     * @deprecated As of v6.0. Not to be used outside.
      */
-    public function sanitizeSelectAlias(string $string): string
+    protected function sanitizeSelectAlias(string $string): string
     {
         $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-()]+/', '', $string) ?? '';
 

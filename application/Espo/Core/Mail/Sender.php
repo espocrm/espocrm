@@ -140,8 +140,6 @@ class Sender
         } else if (!is_array($params)) {
             throw new InvalidArgumentException();
         }
-
-        /** @noinspection PhpDeprecationInspection */
         return $this->useSmtp($params);
     }
 
@@ -165,19 +163,6 @@ class Sender
     public function withEnvelopeFromAddress(string $fromAddress): void
     {
         $this->envelopeFromAddress = $fromAddress;
-    }
-
-    /**
-     * With envelope options.
-     *
-     * @param array{from: string} $options
-     * @deprecated As of v9.1.
-     * @todo Remove in v10.0. Use `withEnvelopeFromAddress`.
-     */
-    public function withEnvelopeOptions(array $options): self
-    {
-        /** @noinspection PhpDeprecationInspection */
-        return $this->setEnvelopeOptions($options);
     }
 
     /**
@@ -206,23 +191,9 @@ class Sender
     }
 
     /**
-     * @deprecated As of v6.0. Use withParams.
      * @param array<string, mixed> $params
-     * @todo Remove in v10.0.
      */
-    public function setParams(array $params = []): self
-    {
-        $this->params = array_merge($this->params, $params);
-
-        return $this;
-    }
-
-    /**
-     * @deprecated As of 6.0. Use withSmtpParams.
-     * @param array<string, mixed> $params
-     * @todo Make private in v10.0.
-     */
-    public function useSmtp(array $params = []): self
+    private function useSmtp(array $params = []): self
     {
         $this->isGlobal = false;
 
@@ -408,29 +379,6 @@ class Sender
         }
 
         throw new SendingError($e->getMessage());
-    }
-
-    /**
-     * @deprecated Since v9.1.0. Use EmailSender::generateMessageId.
-     * @noinspection PhpUnused
-     * @todo Remove in v10.0.
-     */
-    static public function generateMessageId(Email $email): string
-    {
-        return EmailSender::generateMessageId($email);
-    }
-
-    /**
-     * @deprecated As of v6.0.
-     *
-     * @param array{from: string} $options
-     * @todo Make private in v10.0. Use `withEnvelopeFromAddress`.
-     */
-    public function setEnvelopeOptions(array $options): self
-    {
-        $this->envelopeFromAddress = $options['from'];
-
-        return $this;
     }
 
     private function addRecipientAddresses(Email $email, Message $message): void

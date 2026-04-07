@@ -561,19 +561,6 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Create a select builder.
-     *
-     * @return RDBSelectBuilder<TEntity>
-     *
-     * @deprecated Since v9.2.5. Use `createBuilder` instead.
-     * @todo Remove in v10.0.
-     */
-    protected function createSelectBuilder(): RDBSelectBuilder
-    {
-        return $this->createBuilder();
-    }
-
-    /**
      * Use hooks instead.
      *
      * @param array<string, mixed> $options

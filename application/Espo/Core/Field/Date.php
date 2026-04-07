@@ -283,7 +283,7 @@ class Date implements DateTimeable
 
     /**
      * @deprecated As of v8.1. Use `toString` instead.
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     public function getString(): string
     {
@@ -292,7 +292,7 @@ class Date implements DateTimeable
 
     /**
      * @deprecated As of v8.1. Use `toDateTime` instead.
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     public function getDateTime(): DateTimeImmutable
     {
@@ -301,7 +301,7 @@ class Date implements DateTimeable
 
     /**
      * @deprecated As of v8.1. Use `toTimestamp` instead.
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     public function getTimestamp(): int
     {

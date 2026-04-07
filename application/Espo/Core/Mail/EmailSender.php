@@ -111,18 +111,6 @@ class EmailSender
     }
 
     /**
-     * With envelope options.
-     *
-     * @param array{from: string} $options
-     * @deprecated As of v9.1.
-     * @todo Remove in v10.0. Use `withEnvelopeFromAddress`.
-     */
-    public function withEnvelopeOptions(array $options): Sender
-    {
-        return $this->createSender()->withEnvelopeOptions($options);
-    }
-
-    /**
      * Add a header.
      *
      * @param string $name A header name.
