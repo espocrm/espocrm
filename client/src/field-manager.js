@@ -413,38 +413,6 @@ class FieldManager {
     }
 
     /**
-     * @deprecated Use `getParamList`.
-     * @todo Remove in v10.0.
-     */
-    getParams(fieldType) {
-        return this.getParamList(fieldType);
-    }
-
-    /**
-     * @deprecated Use `getAttributeList`.
-     * @todo Remove in v10.0.
-     */
-    getAttributes(fieldType, fieldName) {
-        return this.getAttributeList(fieldType, fieldName);
-    }
-
-    /**
-     * @deprecated Use `getActualAttributeList`.
-     * @todo Remove in v10.0.
-     */
-    getActualAttributes(fieldType, fieldName) {
-        return this.getActualAttributeList(fieldType, fieldName);
-    }
-
-    /**
-     * @deprecated Use `getNotActualAttributeList`.
-     * @todo Remove in v10.0.
-     */
-    getNotActualAttributes(fieldType, fieldName) {
-        return this.getNotActualAttributeList(fieldType, fieldName);
-    }
-
-    /**
      * Check whether a field is not disabled, not utility, not only-admin, not forbidden and not internal.
      *
      * @param {string} entityType An entity type.
@@ -474,14 +442,6 @@ class FieldManager {
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated Use `isEntityTypeFieldAvailable`.
-     * @todo Remove in v10.0.
-     */
-    isScopeFieldAvailable(entityType, field) {
-        return this.isEntityTypeFieldAvailable(entityType, field);
     }
 
     /**

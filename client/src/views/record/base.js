@@ -1306,7 +1306,7 @@ class BaseRecordView extends View {
      * @return {Promise|undefined}
      *
      * @deprecated As of v9.3.0.
-     * @todo Remove in v10.0.
+     * @todo Remove in v11.0.
      */
     populateDefaults() {}
 

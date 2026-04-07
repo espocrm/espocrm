@@ -197,6 +197,7 @@ class BottomPanelView extends View {
         return this.actionList || [];
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Get field views.
      *
@@ -212,14 +213,6 @@ class BottomPanelView extends View {
         });
 
         return fields;
-    }
-
-    /**
-     * @deprecated Use `getFieldViews`.
-     * @todo Remove in v10.0.
-     */
-    getFields() {
-        return this.getFieldViews();
     }
 
     /**
