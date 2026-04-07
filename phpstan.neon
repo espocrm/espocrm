@@ -7,7 +7,6 @@ parameters:
 	reportUnmatchedIgnoredErrors: false
 	excludePaths:
 		analyse:
-			- application/Espo/Core/Select/SelectManager.php
 			- custom/Espo/Modules/*/vendor/*
 services:
 	-
