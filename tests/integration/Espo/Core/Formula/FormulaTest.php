@@ -840,7 +840,7 @@ class FormulaTest extends BaseTestCase
         $script = "ext\\email\\applyTemplate('{$email->getId()}', '{$emailTemplate->getId()}')";
         $fm->run($script);
 
-        $email = $em->getEntity('Email', $email->getId());
+        $email = $em->getEntityById('Email', $email->getId());
 
         $this->assertEquals('Test', $email->get('name'));
         $this->assertEquals('Test Contact 1 Hello, Case 1', $email->get('body'));
@@ -865,7 +865,7 @@ class FormulaTest extends BaseTestCase
 
         $this->assertIsString($id);
 
-        $attachment = $em->getEntity('Attachment', $id);
+        $attachment = $em->getEntityById('Attachment', $id);
 
         $this->assertNotNull($attachment);
         $this->assertEquals('test.pdf', $attachment->get('name'));
@@ -875,7 +875,7 @@ class FormulaTest extends BaseTestCase
         $script = "ext\\pdf\\generate('Account', '{$a->getId()}', '{$template->getId()}', 'test.pdf')";
         $id = $fm->run($script);
 
-        $attachment = $em->getEntity('Attachment', $id);
+        $attachment = $em->getEntityById('Attachment', $id);
 
         $this->assertEquals('test.pdf', $attachment->get('name'));
 
@@ -883,7 +883,7 @@ class FormulaTest extends BaseTestCase
         $script = "ext\\pdf\\generate('Account', '{$a->getId()}', '{$template->getId()}')";
         $id = $fm->run($script);
 
-        $attachment = $em->getEntity('Attachment', $id);
+        $attachment = $em->getEntityById('Attachment', $id);
 
         $this->assertEquals('1.pdf', $attachment->get('name'));
     }

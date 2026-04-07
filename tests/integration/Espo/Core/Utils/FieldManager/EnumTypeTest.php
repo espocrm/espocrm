@@ -87,7 +87,7 @@ class EnumTypeTest extends BaseTestCase
 
         $entityManager = $app->getContainer()->getByClass(EntityManager::class);
 
-        $account = $entityManager->getEntity('Account');
+        $account = $entityManager->getNewEntity('Account');
         $account->set([
             'name' => 'Test',
             'cTestEnum' => 'option1',
@@ -95,7 +95,7 @@ class EnumTypeTest extends BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->getId());
+        $account = $entityManager->getEntityById('Account', $account->getId());
         $this->assertEquals('option1', $account->get('cTestEnum'));
     }
 
@@ -127,14 +127,14 @@ class EnumTypeTest extends BaseTestCase
 
         $entityManager = $app->getContainer()->getByClass(EntityManager::class);
 
-        $account = $entityManager->getEntity('Account');
+        $account = $entityManager->getNewEntity('Account');
         $account->set([
             'name' => 'New Test',
         ]);
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->getId());
+        $account = $entityManager->getEntityById('Account', $account->getId());
         $this->assertEquals('option3', $account->get('cTestEnum'));
     }
 }

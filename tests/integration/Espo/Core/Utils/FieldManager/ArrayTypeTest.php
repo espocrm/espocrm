@@ -88,7 +88,7 @@ class ArrayTypeTest extends BaseTestCase
 
         $entityManager = $app->getContainer()->getByClass(EntityManager::class);
 
-        $account = $entityManager->getEntity('Account');
+        $account = $entityManager->getNewEntity('Account');
         $account->set([
             'name' => 'Test',
             'cTestArray' => ['option1', 'option3']
@@ -96,7 +96,7 @@ class ArrayTypeTest extends BaseTestCase
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->getId());
+        $account = $entityManager->getEntityById('Account', $account->getId());
         $this->assertEquals(['option1', 'option3'], $account->get('cTestArray'));
     }
 
@@ -123,7 +123,7 @@ class ArrayTypeTest extends BaseTestCase
         $this->assertTrue($savedFieldDefs['required']);
 
         $entityManager = $app->getContainer()->getByClass(EntityManager::class);
-        $account = $entityManager->getEntity('Account');
+        $account = $entityManager->getNewEntity('Account');
         $account->set([
             'name' => 'Test',
         ]);
