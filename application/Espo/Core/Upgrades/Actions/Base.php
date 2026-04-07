@@ -819,10 +819,18 @@ abstract class Base
         $packageArchivePath = $this->getPackagePath(true);
 
         if (!file_exists($packageArchivePath)) {
-            $this->throwErrorAndRemovePackage('Package Archive does not exist.', false, false);
+            $this->throwErrorAndRemovePackage('Package archive does not exist.', false, false);
         }
 
-        $res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
+        try {
+            $res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
+        } catch (Throwable $e) {
+            $message = $e->getMessage();
+
+            $this->throwErrorAndRemovePackage("Unzip error. $packagePath. $message", false, false);
+
+            return;
+        }
 
         if ($res === false) {
             $this->throwErrorAndRemovePackage("Unable to unzip the file $packagePath.", false, false);
