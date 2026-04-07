@@ -38,7 +38,7 @@ class Util
 {
     /**
      * @param resource|string|int|float|bool|StreamInterface $resource
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function streamFor($resource): StreamInterface
     {

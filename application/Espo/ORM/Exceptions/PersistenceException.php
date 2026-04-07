@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * For errors within save, remove, link, unlink processes.
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 class PersistenceException extends RuntimeException
 {}

@@ -41,11 +41,11 @@ class Opportunity extends Entity
 {
     public const ENTITY_TYPE = 'Opportunity';
 
-    /** @since 9.4.0 */
+    /** @since 10.0.0 */
     public const string FIELD_CLOSED_DATE = 'closeDate';
-    /** @since 9.4.0 */
+    /** @since 10.0.0 */
     public const string FIELD_STAGE = 'stage';
-    /** @since 9.4.0 */
+    /** @since 10.0.0 */
     public const string FIELD_AMOUNT = 'amount';
 
     public const STAGE_CLOSED_WON = 'Closed Won';

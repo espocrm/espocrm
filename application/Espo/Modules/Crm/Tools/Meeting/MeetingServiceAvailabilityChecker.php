@@ -34,7 +34,7 @@ use Espo\Entities\User;
 /**
  * Checks whether an online meeting can be created.
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 interface MeetingServiceAvailabilityChecker
 {

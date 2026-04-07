@@ -32,7 +32,7 @@ namespace Espo\ORM\Exceptions;
 /**
  * A low level validation error.
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 class ValidationException extends PersistenceException
 {}

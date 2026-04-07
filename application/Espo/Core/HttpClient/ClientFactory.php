@@ -35,7 +35,7 @@ use Espo\Core\InjectableFactory;
 /**
  * An HTTP client factory.
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 class ClientFactory
 {

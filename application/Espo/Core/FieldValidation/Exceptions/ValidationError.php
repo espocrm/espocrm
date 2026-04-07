@@ -77,7 +77,7 @@ final class ValidationError extends BadRequest implements HasLogMessage
     }
 
     /**
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function hasFailure(): bool
     {

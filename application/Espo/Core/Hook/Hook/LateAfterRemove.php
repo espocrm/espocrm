@@ -37,7 +37,7 @@ use Espo\ORM\Repository\Option\RemoveOptions;
  *
  * @template TEntity of Entity = Entity
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 interface LateAfterRemove
 {

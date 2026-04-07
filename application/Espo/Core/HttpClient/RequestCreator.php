@@ -37,7 +37,7 @@ class RequestCreator
     /**
      * Create a request.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function create(string $method, string $url): RequestInterface
     {

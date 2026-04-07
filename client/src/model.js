@@ -1094,7 +1094,7 @@ class Model {
      *     }),
      * }} params
      * @return {{stop: function()}}
-     * @since 9.4.0
+     * @since 10.0.0
      */
     onChange(params) {
         return onModelChange({
@@ -1121,7 +1121,7 @@ class Model {
      *     }),
      * }} params
      * @return {{stop: function()}}
-     * @since 9.4.0
+     * @since 10.0.0
      */
     onSync(params) {
         return onSync({

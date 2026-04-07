@@ -102,7 +102,7 @@ class LinkMultipleItem
     /**
      * Clone with a name.
      *
-     * @param ?string $name Is nullable since 9.4.0.
+     * @param ?string $name Is nullable since 10.0.0.
      */
     public function withName(?string $name): self
     {
@@ -143,7 +143,7 @@ class LinkMultipleItem
      *
      * @throws InvalidArgumentException
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function fromLink(Link $link): self
     {
@@ -155,7 +155,7 @@ class LinkMultipleItem
      *
      * @throws InvalidArgumentException
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function fromEntity(Entity $entity): self
     {

@@ -52,12 +52,12 @@ class Field
     public const string IS_LOCKED = 'isLocked';
 
     /**
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public const string PIPELINE = 'pipeline';
 
     /**
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public const string PIPELINE_STAGE = 'pipelineStage';
 }

@@ -115,7 +115,7 @@ class LinkParent
     /**
      * Create from an entity.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function fromEntity(Entity $entity): self
     {

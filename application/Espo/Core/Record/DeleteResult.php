@@ -32,7 +32,7 @@ namespace Espo\Core\Record;
 /**
  * For potential future use.
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 class DeleteResult
 {

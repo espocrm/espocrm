@@ -34,7 +34,7 @@ use stdClass;
 
 /**
  * @template TEntity of Entity = Entity
- * @since 9.4.0
+ * @since 10.0.0
  */
 readonly class ReadResult
 {

@@ -34,7 +34,7 @@ use Espo\Core\HttpClient\Exceptions\TooManyRedirectsException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * @since 9.4.0
+ * @since 10.0.0
  * @noinspection PhpUnused
  */
 class PromiseUtil

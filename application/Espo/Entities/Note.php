@@ -361,7 +361,7 @@ class Note extends Entity
     }
 
     /**
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function setIsInternal(bool $isInternal): self
     {

@@ -42,7 +42,7 @@
  *     }),
  * }} params
  * @return {{stop: function()}}
- * @since 9.4.0
+ * @since 10.0.0
  */
 export function onModelChange(params) {
     const owner = params.owner;
@@ -103,7 +103,7 @@ export function onModelChange(params) {
  *     }),
  * }} params
  * @return {{stop: function()}}
- * @since 9.4.0
+ * @since 10.0.0
  */
 export function onSync(params) {
     const owner = params.owner;

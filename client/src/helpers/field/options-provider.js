@@ -31,7 +31,7 @@ import Metadata from 'metadata';
 import Language from 'language';
 
 /**
- * @since 9.4.0
+ * @since 10.0.0
  */
 export default class OptionsProvider {
 

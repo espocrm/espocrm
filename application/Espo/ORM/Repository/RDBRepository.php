@@ -71,7 +71,7 @@ class RDBRepository implements Repository
     /**
      * To save and remove in a DB transaction.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     protected bool $transactionalSave = false;
 

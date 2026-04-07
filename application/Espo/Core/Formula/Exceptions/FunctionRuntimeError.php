@@ -32,7 +32,7 @@ namespace Espo\Core\Formula\Exceptions;
 /**
  * For various errors happened inside a function in runtime.
  *.
- * @since 9.4.0
+ * @since 10.0.0
  */
 class FunctionRuntimeError extends Error
 {}

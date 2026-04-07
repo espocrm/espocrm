@@ -29,7 +29,7 @@
 import BaseFieldView from 'views/fields/base';
 
 /**
- * @since 9.4.0
+ * @since 10.0.0
  */
 class ColorFieldView extends BaseFieldView {
     // language=Handlebars

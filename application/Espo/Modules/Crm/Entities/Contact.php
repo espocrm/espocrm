@@ -74,7 +74,7 @@ class Contact extends Person
     /**
      * Get accounts as link-multiple.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function getAccountsLinkMultiple(): LinkMultiple
     {
@@ -85,7 +85,7 @@ class Contact extends Person
     /**
      * Set accounts.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function setAccounts(LinkMultiple $accounts): self
     {

@@ -36,7 +36,7 @@ use RuntimeException;
 use stdClass;
 
 /**
- * @since 9.4.0
+ * @since 10.0.0
  */
 class LayoutCustomizer
 {

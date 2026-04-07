@@ -37,7 +37,7 @@ use Espo\ORM\Repository\Option\SaveOptions;
  *
  * @template TEntity of Entity = Entity
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 interface LateAfterSave
 {

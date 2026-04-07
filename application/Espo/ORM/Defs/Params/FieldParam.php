@@ -77,7 +77,7 @@ class FieldParam
     /**
      * Read-only after create.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public const READ_ONLY_AFTER_CREATE = 'readOnlyAfterCreate';
 

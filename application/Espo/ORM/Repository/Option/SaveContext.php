@@ -39,7 +39,7 @@ use LogicException;
  * If a save invokes another save, the context instance should not be re-used.
  * If a save invokes a relate action, the context can be passed to that action.
  *
- * @since 9.4.0
+ * @since 10.0.0
  *
  * Before 9.4.0, since 9.1.0 it was located in the `Core` namespace.
  */
@@ -165,7 +165,7 @@ class SaveContext
 
     /**
      * @internal
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function setIsNew(bool $isNew): void
     {
@@ -180,7 +180,7 @@ class SaveContext
      * Was the entity new before save. Can be accessed only after save is started.
      * To be used for late hooks, when then entity is already not new, to check.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function isNew(): bool
     {

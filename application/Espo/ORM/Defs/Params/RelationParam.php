@@ -109,21 +109,21 @@ class RelationParam
     public const ORDER = 'order';
 
     /**
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public const READ_ONLY = 'readOnly';
 
     /**
      * Disabled.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public const DISABLED = 'disabled';
 
     /**
      * Cascade removal Only for one-to-many, one-to-one, and parent-to-children.
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public const string CASCADE_REMOVAL = 'cascadeRemoval';
 }

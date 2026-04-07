@@ -32,7 +32,7 @@ namespace Espo\Core\Session;
 /**
  * A session wrapper.
  *
- * @since 9.4.0
+ * @since 10.0.0
  */
 interface Session
 {

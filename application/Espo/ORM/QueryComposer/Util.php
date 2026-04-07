@@ -62,7 +62,7 @@ class Util
     /**
      * @return array{0: string, 1: string}
      * @internal
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function splitWhereKey(string $whereKey): array
     {
@@ -76,7 +76,7 @@ class Util
     /**
      * @return array{0: string, 1: string}
      * @internal
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public static function splitWhereKeyThrowing(string $whereKey): array
     {

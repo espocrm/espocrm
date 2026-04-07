@@ -587,7 +587,7 @@ class AclManager
      * @param Table::ACTION_READ|Table::ACTION_EDIT $action An action.
      * @noinspection PhpDocSignatureInspection
      *
-     * @since 9.4.0
+     * @since 10.0.0
      */
     public function checkLink(User $user, string $scope, string $link, string $action = Table::ACTION_READ): bool
     {

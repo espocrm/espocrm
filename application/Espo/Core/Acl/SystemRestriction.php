@@ -42,7 +42,7 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 /**
- * @since 9.4.0
+ * @since 10.0.0
  */
 class SystemRestriction
 {
