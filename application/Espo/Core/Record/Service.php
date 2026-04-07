@@ -214,9 +214,8 @@ class Service implements Crud,
      * @throws NotFoundSilent If not found.
      * @throws Forbidden If no read access.
      * @noinspection PhpDocSignatureInspection
-     * @todo In v10.0, return ReadResult instead of Entity.
      */
-    public function read(string $id, ReadParams $params): ReadResult
+    public function read(string $id, ReadParams $params = new ReadParams()): ReadResult
     {
         if ($id === '') {
             throw new InvalidArgumentException();
@@ -670,7 +669,7 @@ class Service implements Crud,
      * @throws Forbidden If no create access.
      * @throws Conflict
      */
-    public function create(stdClass $data, CreateParams $params): CreateResult
+    public function create(stdClass $data, CreateParams $params = new CreateParams()): CreateResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent("No create access.");
@@ -736,7 +735,7 @@ class Service implements Crud,
      * @throws Conflict
      * @throws BadRequest
      */
-    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult
+    public function update(string $id, stdClass $data, UpdateParams $params = new UpdateParams()): UpdateResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No edit access.");
@@ -829,7 +828,7 @@ class Service implements Crud,
      * @throws NotFound
      * @throws Conflict
      */
-    public function delete(string $id, DeleteParams $params): DeleteResult
+    public function delete(string $id, DeleteParams $params = new DeleteParams()): DeleteResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
             throw new ForbiddenSilent("No delete access.");
@@ -1122,7 +1121,7 @@ class Service implements Crud,
      * @throws Forbidden
      * @throws NotFound
      */
-    public function link(string $id, string $link, string $foreignId): void
+    public function link(string $id, string $link, string $foreignId): LinkResult
     {
         if (!$this->acl->check($this->entityType)) {
             throw new Forbidden();
@@ -1167,6 +1166,8 @@ class Service implements Crud,
             ->relate($foreignEntity, null, [SaveOption::API => true]);
 
         $this->getRecordHookManager()->processAfterLink($entity, $link, $foreignEntity);
+
+        return new LinkResult();
     }
 
     /**
@@ -1176,7 +1177,7 @@ class Service implements Crud,
      * @throws Forbidden
      * @throws NotFound
       */
-    public function unlink(string $id, string $link, string $foreignId): void
+    public function unlink(string $id, string $link, string $foreignId): UnlinkResult
     {
         if (!$this->acl->check($this->entityType)) {
             throw new Forbidden();
@@ -1221,6 +1222,8 @@ class Service implements Crud,
             ->unrelate($foreignEntity, [SaveOption::API => true]);
 
         $this->getRecordHookManager()->processAfterUnlink($entity, $link, $foreignEntity);
+
+        return new UnlinkResult();
     }
 
 
@@ -1229,7 +1232,7 @@ class Service implements Crud,
      * @throws Forbidden
      * @throws NotFound
      */
-    public function massLink(string $id, string $link, SearchParams $searchParams): bool
+    public function massLink(string $id, string $link, SearchParams $searchParams): MassLinkResult
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
@@ -1283,7 +1286,9 @@ class Service implements Crud,
                 ->getRelation($entity, $link)
                 ->massRelate($query, [SaveOption::API => true]);
 
-            return true;
+            return new MassLinkResult(
+                affectedCount: null,
+            );
         }
 
         // @todo Apply access control filter if $accessActionRequired === 'read'. For better performance.
@@ -1308,11 +1313,9 @@ class Service implements Crud,
             $countRelated++;
         }
 
-        if ($countRelated) {
-            return true;
-        }
-
-        return false;
+        return new MassLinkResult(
+            affectedCount: $countRelated,
+        );
     }
 
     /**
@@ -1684,7 +1687,6 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      * @throws Conflict
      * @throws BadRequest
      * @throws Forbidden
@@ -1697,67 +1699,57 @@ class Service implements Crud,
     }
 
     /**
+     * Use a recordDefs hook instead.
+     *
      * @param TEntity $entity
-     * @param stdClass $data
-     * @return void
-     * @noinspection PhpDocSignatureInspection
-     * @deprecated As of v8.2.
-     * @todo Remove (or add types) in v10.0.
+     * @internal
      */
-    protected function beforeCreateEntity(Entity $entity, $data)
+    protected function beforeCreateEntity(Entity $entity, stdClass $data): void
     {}
 
     /**
+     * Use a recordDefs hook instead.
+     *
      * @param TEntity $entity
-     * @param stdClass $data
-     * @return void
-     * @noinspection PhpDocSignatureInspection
-     * @deprecated As of v8.2.
-     * @todo Remove (or add types) in v10.0.
+     * @internal
      */
-    protected function afterCreateEntity(Entity $entity, $data)
+    protected function afterCreateEntity(Entity $entity, stdClass $data): void
     {}
 
     /**
+     * Use a recordDefs hook instead.
+     *
      * @param TEntity $entity
-     * @param stdClass $data
-     * @return void
-     * @noinspection PhpDocSignatureInspection
-     * @deprecated As of v8.2.
-     * @todo Remove (or add types) in v10.0.
+     * @internal
      */
-    protected function beforeUpdateEntity(Entity $entity, $data)
+    protected function beforeUpdateEntity(Entity $entity, stdClass $data): void
     {}
 
     /**
+     * Use a recordDefs hook instead.
+     *
      * @param TEntity $entity
-     * @param stdClass $data
-     * @return void
-     * @noinspection PhpDocSignatureInspection
-     * @deprecated As of v8.2.
-     * @todo Remove (or add types) in v10.0.
+     * @internal
      */
-    protected function afterUpdateEntity(Entity $entity, $data)
+    protected function afterUpdateEntity(Entity $entity, stdClass $data): void
     {}
 
     /**
+     * Use a recordDefs hook instead.
+     *
      * @param TEntity $entity
-     * @return void
-     * @noinspection PhpDocSignatureInspection
-     * @deprecated As of v8.2.
-     * @todo Remove (or add types) in v10.0.
+     * @internal
      */
-    protected function beforeDeleteEntity(Entity $entity)
+    protected function beforeDeleteEntity(Entity $entity): void
     {}
 
     /**
+     * Use a recordDefs hook instead.
+     *
      * @param TEntity $entity
-     * @return void
-     * @noinspection PhpDocSignatureInspection
-     * @deprecated As of v8.2.
-     * @todo Remove (or add types) in v10.0.
+     * @internal
      */
-    protected function afterDeleteEntity(Entity $entity)
+    protected function afterDeleteEntity(Entity $entity): void
     {}
 
     private function createBinding(): BindingContainer

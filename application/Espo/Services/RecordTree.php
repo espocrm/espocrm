@@ -32,6 +32,7 @@ namespace Espo\Services;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Name\Field;
+use Espo\Core\Record\LinkResult;
 use Espo\Core\Record\UpdateResult;
 use Espo\Core\Templates\Entities\CategoryTree;
 use Espo\ORM\Collection;
@@ -298,7 +299,7 @@ class RecordTree extends Record
      * @throws Error
      * @todo Refactor.
      */
-    protected function beforeCreateEntity(Entity $entity, $data)
+    protected function beforeCreateEntity(Entity $entity, stdClass $data): void
     {
         parent::beforeCreateEntity($entity, $data);
 
@@ -319,7 +320,7 @@ class RecordTree extends Record
      * @throws Forbidden
      * @throws BadRequest
      */
-    protected function beforeDeleteEntity(Entity $entity)
+    protected function beforeDeleteEntity(Entity $entity): void
     {
         parent::beforeDeleteEntity($entity);
 
@@ -345,7 +346,7 @@ class RecordTree extends Record
     /**
      * @throws Forbidden
      */
-    protected function beforeUpdateEntity(Entity $entity, $data)
+    protected function beforeUpdateEntity(Entity $entity, stdClass $data): void
     {
         parent::beforeUpdateEntity($entity, $data);
 
@@ -366,7 +367,7 @@ class RecordTree extends Record
         }
     }
 
-    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult
+    public function update(string $id, stdClass $data, UpdateParams $params = new UpdateParams()): UpdateResult
     {
         if (!empty($data->parentId) && $data->parentId === $id) {
             throw new Forbidden();
@@ -375,13 +376,13 @@ class RecordTree extends Record
         return parent::update($id, $data, $params);
     }
 
-    public function link(string $id, string $link, string $foreignId): void
+    public function link(string $id, string $link, string $foreignId): LinkResult
     {
         if ($id == $foreignId) {
             throw new Forbidden();
         }
 
-        parent::link($id, $link, $foreignId);
+        return parent::link($id, $link, $foreignId);
     }
 
     /**

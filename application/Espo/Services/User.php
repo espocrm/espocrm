@@ -81,7 +81,7 @@ class User extends Record implements LogAware
         return $password;
     }
 
-    public function create(stdClass $data, CreateParams $params): CreateResult
+    public function create(stdClass $data, CreateParams $params = new CreateParams()): CreateResult
     {
         $newPassword = $this->fetchPassword($data);
 
@@ -128,7 +128,7 @@ class User extends Record implements LogAware
         return $result;
     }
 
-    public function update(string $id, stdClass $data, UpdateParams $params): UpdateResult
+    public function update(string $id, stdClass $data, UpdateParams $params = new UpdateParams()): UpdateResult
     {
         $newPassword = null;
 

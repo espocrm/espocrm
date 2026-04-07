@@ -27,56 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
-
-use Espo\Core\Record\CreateResult;
-use Espo\Tools\Email\SendService;
-use Espo\ORM\Entity;
-use Espo\Entities\Email as EmailEntity;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\Record\CreateParams;
-use stdClass;
+namespace Espo\Core\Record;
 
 /**
- * @extends Record<EmailEntity>
+ * @since 9.4.0
  */
-class Email extends Record
-{
-    protected bool $getEntityBeforeUpdate = true;
-
-    private ?SendService $sendService = null;
-
-    private function getSendService(): SendService
-    {
-        if (!$this->sendService) {
-            $this->sendService = $this->injectableFactory->create(SendService::class);
-        }
-
-        return $this->sendService;
-    }
-
-    /**
-     * @todo Move to hook? Make sure needed data is loaded before sending.
-     *
-     * @throws BadRequest
-     * @throws Error
-     * @throws Forbidden
-     * @throws Conflict
-     * @throws BadRequest
-     * @throws SendingError
-     */
-    public function create(stdClass $data, CreateParams $params = new CreateParams()): CreateResult
-    {
-        $result = parent::create($data, $params);
-
-        if ($result->getEntity()->getStatus() === EmailEntity::STATUS_SENDING) {
-            $this->getSendService()->send($result->getEntity(), $this->user);
-        }
-
-        return $result;
-    }
-}
+class UnlinkResult
+{}

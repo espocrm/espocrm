@@ -150,7 +150,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
         return true;
     }
 
-    public function read(string $id, ReadParams $params): ReadResult
+    public function read(string $id, ReadParams $params = new ReadParams()): ReadResult
     {
         [, $userId] = explode('__', $id);
 
