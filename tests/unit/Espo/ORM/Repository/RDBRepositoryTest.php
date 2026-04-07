@@ -255,29 +255,6 @@ class RDBRepositoryTest extends TestCase
             ->findOne();
     }
 
-    public function testFindOneWithDeletedLegacy(): void
-    {
-        $paramsExpected = Select::fromRaw([
-            'from' => 'Test',
-            'whereClause' => [
-                'name' => 'test',
-            ],
-            'withDeleted' => true,
-            'offset' => 0,
-            'limit' => 1,
-        ]);
-
-        $this->mapper
-            ->expects($this->once())
-            ->method('select')
-            ->willReturn($this->collection)
-            ->with($paramsExpected);
-
-        $this->repository
-            ->where(['name' => 'test'])
-            ->findOne(['withDeleted' => true]);
-    }
-
     /**
      * @deprecated
      */

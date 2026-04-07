@@ -99,11 +99,9 @@ class RecordBase extends Base implements
         User $user,
         Acl $acl,
         // Parameters below are for backward compatibility.
-        Container $container,
         AclManager $aclManager,
         Preferences $preferences,
         Metadata $metadata,
-        ServiceFactory $serviceFactory
     ) {
         $this->recordServiceContainer = $recordServiceContainer;
         $this->config = $config;
@@ -111,14 +109,12 @@ class RecordBase extends Base implements
         $this->acl = $acl;
 
         parent::__construct(
-            $container,
             $user,
             $acl,
             $aclManager,
             $config,
             $preferences,
             $metadata,
-            $serviceFactory
         );
     }
 
@@ -330,14 +326,5 @@ class RecordBase extends Base implements
         $this->getRecordService()->restoreDeleted($id);
 
         return true;
-    }
-
-    /**
-     * @deprecated
-     * @return EntityManager
-     */
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
     }
 }

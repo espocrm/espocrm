@@ -32,7 +32,6 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Controllers\RecordBase;
@@ -68,7 +67,7 @@ class Extension extends RecordBase
             throw new BadRequest();
         }
 
-        $manager = new ExtensionManager($this->getContainer());
+        $manager = $this->createManager();
 
         $id = $manager->upload($body);
 
@@ -94,7 +93,7 @@ class Extension extends RecordBase
             throw new Forbidden();
         }
 
-        $manager = new ExtensionManager($this->getContainer());
+        $manager = $this->createManager();
 
         $manager->install(get_object_vars($data));
 
@@ -113,7 +112,7 @@ class Extension extends RecordBase
             throw new Forbidden();
         }
 
-        $manager = new ExtensionManager($this->getContainer());
+        $manager = $this->createManager();
 
         $manager->uninstall(get_object_vars($data));
 
@@ -132,7 +131,7 @@ class Extension extends RecordBase
             throw new Forbidden();
         }
 
-        $manager = new ExtensionManager($this->getContainer());
+        $manager = $this->createManager();
 
         $manager->delete($params);
 
@@ -147,5 +146,10 @@ class Extension extends RecordBase
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
         throw new Forbidden();
+    }
+
+    private function createManager(): ExtensionManager
+    {
+        return $this->injectableFactory->create(ExtensionManager::class);
     }
 }

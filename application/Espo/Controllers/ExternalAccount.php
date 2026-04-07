@@ -66,7 +66,6 @@ class ExternalAccount extends RecordBase
                 $entity->get('enabled') &&
                 $this->metadata->get('integrations.' . $entity->getId() .'.allowUserAccounts')
             ) {
-                /** @var string $id */
                 $id = $entity->getId();
 
                 $userAccountAclScope = $this->metadata
@@ -137,7 +136,7 @@ class ExternalAccount extends RecordBase
 
         $data = $request->getParsedBody();
 
-        list($integration, $userId) = explode('__', $id);
+        [, $userId] = explode('__', $id);
 
         if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
             throw new Forbidden();

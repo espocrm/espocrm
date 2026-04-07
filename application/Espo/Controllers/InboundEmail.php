@@ -42,7 +42,7 @@ class InboundEmail extends Record
 {
     protected function checkAccess(): bool
     {
-        return $this->getUser()->isAdmin();
+        return $this->user->isAdmin();
     }
 
     /**

@@ -31,9 +31,7 @@ namespace Espo\Core\Controllers;
 
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
-use Espo\Core\Container;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
@@ -56,11 +54,6 @@ abstract class Base
      */
     public static $defaultAction = 'index';
 
-    /**
-     * @deprecated
-     * @var Container
-     */
-    private $container;
 
     /**
      * @var User
@@ -96,33 +89,23 @@ abstract class Base
     protected $metadata;
 
     /**
-     * @deprecated
-     * @var ServiceFactory
-     */
-    protected $serviceFactory;
-
-    /**
      * @throws Forbidden
      * @internal Most dependencies are for backward compatibility.
      */
     public function __construct(
-        Container $container,
         User $user,
         Acl $acl,
         AclManager $aclManager,
         Config $config,
         Preferences $preferences,
         Metadata $metadata,
-        ServiceFactory $serviceFactory
     ) {
-        $this->container = $container;
         $this->user = $user;
         $this->acl = $acl;
         $this->aclManager = $aclManager;
         $this->config = $config;
         $this->preferences = $preferences;
         $this->metadata = $metadata;
-        $this->serviceFactory = $serviceFactory;
 
         if (empty($this->name)) {
             $name = get_class($this);
@@ -166,100 +149,5 @@ abstract class Base
      */
     protected function checkControllerAccess()
     {
-    }
-
-    /**
-     * @deprecated
-     * @param string $name
-     */
-    protected function getService($name): object
-    {
-        return $this->serviceFactory->create($name);
-    }
-
-    /**
-     * @deprecated Use Aware interfaces to inject dependencies.
-     *
-     * @return Container
-     */
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return User
-     */
-    protected function getUser()
-    {
-        /** @var User */
-        return $this->container->get('user');
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return Acl
-     */
-    protected function getAcl()
-    {
-        /** @var Acl */
-        return $this->container->get('acl');
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return AclManager
-     */
-    protected function getAclManager()
-    {
-        /** @var AclManager */
-        return $this->container->get('aclManager');
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        /** @var Config */
-        return $this->container->get('config');
-    }
-
-    /**
-     * @deprecated
-     * @return Preferences
-     */
-    protected function getPreferences()
-    {
-        /** @var Preferences */
-        return $this->container->get('preferences');
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return Metadata
-     */
-    protected function getMetadata()
-    {
-        /** @var Metadata */
-        return $this->container->get('metadata');
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return ServiceFactory
-     */
-    protected function getServiceFactory()
-    {
-        /** @var ServiceFactory */
-        return $this->container->get('serviceFactory');
     }
 }
