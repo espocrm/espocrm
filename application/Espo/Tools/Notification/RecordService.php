@@ -924,6 +924,7 @@ class RecordService
         return [
             Notification::TYPE_NOTE,
             Notification::TYPE_USER_REACTION,
+            Notification::TYPE_COLLABORATING,
             'EventAttendee',
         ];
     }
