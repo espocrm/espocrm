@@ -214,7 +214,6 @@ abstract class OAuth2Abstract implements IClient
      *   expiresAt: ?string,
      *   refreshToken: ?string,
      * }
-     * @throws Exception
      */
     public function getAccessTokenFromAuthorizationCode(string $code)
     {

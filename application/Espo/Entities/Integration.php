@@ -81,6 +81,11 @@ class Integration extends Entity
         $this->set(self::ATTR_DATA, $data);
     }
 
+    public function setMultiple(array|stdClass $valueMap): static
+    {
+        return $this->set($valueMap);
+    }
+
     public function set($attribute, $value = null): static
     {
         if (is_object($attribute)) {

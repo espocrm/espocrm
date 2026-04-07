@@ -31,6 +31,9 @@ namespace Espo\Core\Di;
 
 use Espo\Core\HookManager;
 
+/**
+ * @phpstan-ignore-next-line method.unused
+ */
 trait HookManagerSetter
 {
     /**

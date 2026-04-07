@@ -29,19 +29,16 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
-
 use Espo\Entities\ExternalAccount as ExternalAccountEntity;
-use Espo\Entities\Integration as IntegrationEntity;
-use Espo\Services\ExternalAccount as Service;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Controllers\RecordBase;
 use Espo\Core\Record\ReadParams;
-
+use Espo\Tools\ExternalAccount\Service;
 use stdClass;
 
 class ExternalAccount extends RecordBase
@@ -55,74 +52,23 @@ class ExternalAccount extends RecordBase
 
     public function getActionList(Request $request, Response $response): stdClass
     {
-        $integrations = $this->entityManager
-            ->getRDBRepository(IntegrationEntity::ENTITY_TYPE)
-            ->find();
-
-        $list = [];
-
-        foreach ($integrations as $entity) {
-            if (
-                $entity->get('enabled') &&
-                $this->metadata->get('integrations.' . $entity->getId() .'.allowUserAccounts')
-            ) {
-                $id = $entity->getId();
-
-                $userAccountAclScope = $this->metadata
-                    ->get(['integrations', $id, 'userAccountAclScope']);
-
-                if ($userAccountAclScope) {
-                    if (!$this->acl->checkScope($userAccountAclScope)) {
-                        continue;
-                    }
-                }
-
-                $list[] = [
-                    'id' => $id,
-                ];
-            }
-        }
-
-        return (object) [
-            'list' => $list
-        ];
+       return  $this->createService()->getList();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function getActionGetOAuth2Info(Request $request): ?stdClass
     {
-        $id = $request->getQueryParam('id');
+        $id = $request->getQueryParam('id') ?? throw new BadRequest();
 
-        if ($id === null) {
-            throw new BadRequest();
-        }
-
-        list($integration, $userId) = explode('__', $id);
-
-        if ($this->user->getId() != $userId && !$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $entity = $this->entityManager->getEntityById(IntegrationEntity::ENTITY_TYPE, $integration);
-
-        if ($entity) {
-            return (object) [
-                'clientId' => $entity->get('clientId'),
-                'redirectUri' => $this->config->get('siteUrl') . '?entryPoint=oauthCallback',
-                'isConnected' => $this->getExternalAccount()->ping($integration, $userId)
-            ];
-        }
-
-        return null;
+        return $this->createService()->getActionGetOAuth2Info($id);
     }
 
     public function getActionRead(Request $request, Response $response): stdClass
     {
-        /** @var string $id */
-        $id = $request->getRouteParam('id');
-
-        if ($id === '') {
-            throw new BadRequest();
-        }
+        $id = $request->getRouteParam('id') ?: throw new BadRequest();
 
         return $this->getRecordService()
             ->read($id, ReadParams::create())
@@ -131,55 +77,33 @@ class ExternalAccount extends RecordBase
 
     public function putActionUpdate(Request $request, Response $response): stdClass
     {
-        /** @var string $id */
-        $id = $request->getRouteParam('id');
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
 
         $data = $request->getParsedBody();
 
-        [, $userId] = explode('__', $id);
-
-        if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (isset($data->enabled) && !$data->enabled) {
-            $data->data = null;
-        }
-
-        $entity = $this->entityManager->getEntityById(ExternalAccountEntity::ENTITY_TYPE, $id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        $entity->set($data);
-
-        $this->entityManager->saveEntity($entity);
-
-        return $entity->getValueMap();
+        return $this->createService()->update($id, $data);
     }
 
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     * @throws BadRequest
+     */
     public function postActionAuthorizationCode(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        $id = $data->id;
-        $code = $data->code;
+        $id = $data->id ?? throw new BadRequest("No ID.");
+        $code = $data->code ?? throw new BadRequest("No code.");
 
-        list ($integration, $userId) = explode('__', $id);
-
-        if ($this->user->getId() != $userId && !$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $this->getExternalAccount()->authorizationCode($integration, $userId, $code);
+        $this->createService()->authorizationCode($id, $code);
 
         return true;
     }
 
-    private function getExternalAccount(): Service
+    private function createService(): Service
     {
-        /** @var Service */
-        return $this->getRecordService();
+        return $this->injectableFactory->create(Service::class);
     }
 }

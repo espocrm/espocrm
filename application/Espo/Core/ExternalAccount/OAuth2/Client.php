@@ -418,7 +418,6 @@ class Client
      *   contentType: string|false,
      *   header: string,
      * }
-     * @throws Exception
      */
     public function getAccessToken($url, $grantType, array $params)
     {
@@ -445,6 +444,10 @@ class Client
                 throw new LogicException("Bad auth type.");
         }
 
-        return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders, self::REFRESH_TOKEN_TIMEOUT);
+        try {
+            return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders, self::REFRESH_TOKEN_TIMEOUT);
+        } catch (Exception $e) {
+            throw new RuntimeException(previous: $e);
+        }
     }
 }
