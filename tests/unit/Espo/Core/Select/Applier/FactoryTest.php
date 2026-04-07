@@ -43,8 +43,6 @@ use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
 use Espo\Core\Select\Order\Applier as OrderApplier;
 use Espo\Core\Select\Primary\Applier as PrimaryFilterApplier;
 use Espo\Core\Select\Select\Applier as SelectApplier;
-use Espo\Core\Select\SelectManager;
-use Espo\Core\Select\SelectManagerFactory;
 use Espo\Core\Select\Text\Applier as TextFilterApplier;
 use Espo\Core\Select\Where\Applier as WhereApplier;
 
@@ -57,18 +55,13 @@ class FactoryTest extends TestCase
     private $aclManager;
     private $acl;
     private $injectableFactory;
-    private $selectManagerFactory;
     private $user;
-    private $selectManager;
     private $factory;
 
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->selectManagerFactory = $this->createMock(SelectManagerFactory::class);
         $this->user = $this->createMock(User::class);
-
-        $this->selectManager = $this->createMock(SelectManager::class);
 
         $userAclManagerProvider = $this->createMock(UserAclManagerProvider::class);
 
@@ -82,7 +75,6 @@ class FactoryTest extends TestCase
         $this->factory = new ApplierFactory(
             $this->injectableFactory,
             $userAclManagerProvider,
-            $this->selectManagerFactory
         );
 
         $this->acl = $this->createMock(Acl::class);
@@ -145,12 +137,6 @@ class FactoryTest extends TestCase
     {
         $entityType = 'Test';
 
-        $this->selectManagerFactory
-            ->expects($this->once())
-            ->method('create')
-            ->with('Test', $this->user)
-            ->willReturn($this->selectManager);
-
         $applierClassName = $className ?? $defaultClassName;
 
         $applier = $this->createMock($defaultClassName);
@@ -161,12 +147,10 @@ class FactoryTest extends TestCase
 
         $binder
             ->bindInstance(User::class, $this->user)
-            ->bindInstance(SelectManager::class, $this->selectManager)
             ->bindInstance(AclManager::class, $this->aclManager)
             ->bindInstance(Acl::class, $this->acl)
             ->for($applierClassName)
-            ->bindValue('$entityType', $entityType)
-            ->bindValue('$selectManager', $this->selectManager);
+            ->bindValue('$entityType', $entityType);
 
         $bindingContainer = new BindingContainer($bindingData);
 

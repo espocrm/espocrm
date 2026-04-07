@@ -44,8 +44,6 @@ use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Select\SelectManager;
-use Espo\Core\Select\SelectManagerFactory;
 
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Entities\User;
@@ -81,15 +79,11 @@ class Factory
     public function __construct(
         private InjectableFactory $injectableFactory,
         private UserAclManagerProvider $userAclManagerProvider,
-        private SelectManagerFactory $selectManagerFactory,
     ) {}
 
     private function create(string $entityType, User $user, string $type): object
     {
         $className = $this->getDefaultClassName($type);
-
-        // SelectManager is used for backward compatibility.
-        $selectManager = $this->selectManagerFactory->create($entityType, $user);
 
         $aclManager = $this->userAclManagerProvider->get($user);
         $acl = $aclManager->createUserAcl($user);
@@ -101,13 +95,11 @@ class Factory
         $binder
             ->bindInstance(User::class, $user)
             ->bindInstance(AclManager::class, $aclManager)
-            ->bindInstance(Acl::class, $acl)
-            ->bindInstance(SelectManager::class, $selectManager);
+            ->bindInstance(Acl::class, $acl);
 
         $binder
             ->for($className)
-            ->bindValue('$entityType', $entityType)
-            ->bindValue('$selectManager', $selectManager);
+            ->bindValue('$entityType', $entityType);
 
         $bindingContainer = new BindingContainer($bindingData);
 

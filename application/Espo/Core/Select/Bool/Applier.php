@@ -30,13 +30,10 @@
 namespace Espo\Core\Select\Bool;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Select\OrmSelectBuilder;
-use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
-use Espo\ORM\Query\Part\WhereClause;
 
 use Espo\Entities\User;
 
@@ -46,7 +43,6 @@ class Applier
         private string $entityType,
         private User $user,
         private BoolFilterFactory $boolFilterFactory,
-        private SelectManager $selectManager
     ) {}
 
     /**
@@ -89,20 +85,6 @@ class Applier
             $filter = $this->boolFilterFactory->create($this->entityType, $this->user, $filterName);
 
             $filter->apply($queryBuilder, $orGroupBuilder);
-
-            return;
-        }
-
-        // For backward compatibility.
-        if (
-            $this->selectManager->hasBoolFilter($filterName) &&
-            $queryBuilder instanceof OrmSelectBuilder
-        ) {
-            $rawWhereClause = $this->selectManager->applyBoolFilterToQueryBuilder($queryBuilder, $filterName);
-
-            $whereItem = WhereClause::fromRaw($rawWhereClause);
-
-            $orGroupBuilder->add($whereItem);
 
             return;
         }

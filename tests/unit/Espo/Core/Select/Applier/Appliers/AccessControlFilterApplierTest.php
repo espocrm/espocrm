@@ -34,7 +34,6 @@ use Espo\Core\Select\AccessControl\Filter as AccessControlFilter;
 use Espo\Core\Select\AccessControl\FilterFactory as AccessControlFilterFactory;
 use Espo\Core\Select\AccessControl\FilterResolver;
 use Espo\Core\Select\AccessControl\FilterResolverFactory as AccessControlFilterResolverFactory;
-use Espo\Core\Select\SelectManager;
 
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -45,7 +44,6 @@ class AccessControlFilterApplierTest extends TestCase
     private $filterFactory;
     private $filterResolverFactory;
     private $user;
-    private $selectManager;
     private $queryBuilder;
     private $filterResolver;
     private $filter;
@@ -58,7 +56,6 @@ class AccessControlFilterApplierTest extends TestCase
         $this->filterFactory = $this->createMock(AccessControlFilterFactory::class);
         $this->filterResolverFactory = $this->createMock(AccessControlFilterResolverFactory::class);
         $this->user = $this->createMock(User::class);
-        $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->filterResolver = $this->createMock(FilterResolver::class);
         $this->filter = $this->createMock(AccessControlFilter::class);
@@ -67,11 +64,10 @@ class AccessControlFilterApplierTest extends TestCase
         $this->entityType = 'Test';
 
         $this->applier = new AccessControlFilterApplier(
-            $this->entityType,
-            $this->user,
-            $this->filterFactory,
-            $this->filterResolverFactory,
-            $this->selectManager
+            entityType: $this->entityType,
+            user: $this->user,
+            accessControlFilterFactory: $this->filterFactory,
+            accessControlFilterResolverFactory: $this->filterResolverFactory,
         );
     }
 
@@ -98,11 +94,6 @@ class AccessControlFilterApplierTest extends TestCase
 
     protected function initApplierTest(bool $resolve, bool $hasFilter)
     {
-        $this->selectManager
-            ->expects($this->once())
-            ->method('hasInheritedAccessMethod')
-            ->willReturn(false);
-
         $this->filterResolverFactory
             ->expects($this->once())
             ->method('create')
@@ -127,12 +118,6 @@ class AccessControlFilterApplierTest extends TestCase
 
             return;
         }
-
-        $this->selectManager
-            ->expects($this->once())
-            ->method('hasInheritedAccessFilterMethod')
-            ->with('test')
-            ->willReturn(false);
 
         $this->filterFactory
             ->expects($this->once())

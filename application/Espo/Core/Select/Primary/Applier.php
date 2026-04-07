@@ -30,8 +30,6 @@
 namespace Espo\Core\Select\Primary;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Select\SelectManager;
-use Espo\Core\Select\OrmSelectBuilder;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Entities\User;
 
@@ -41,7 +39,6 @@ class Applier
         private string $entityType,
         private User $user,
         private FilterFactory $primaryFilterFactory,
-        private SelectManager $selectManager
     ) {}
 
     /**
@@ -53,16 +50,6 @@ class Applier
             $filter = $this->primaryFilterFactory->create($this->entityType, $this->user, $filterName);
 
             $filter->apply($queryBuilder);
-
-            return;
-        }
-
-        // For backward compatibility.
-        if (
-            $this->selectManager->hasPrimaryFilter($filterName) &&
-            $queryBuilder instanceof OrmSelectBuilder
-        ) {
-            $this->selectManager->applyPrimaryFilterToQueryBuilder($queryBuilder, $filterName);
 
             return;
         }

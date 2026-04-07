@@ -33,7 +33,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Primary\Applier as PrimaryFilterApplier;
 use Espo\Core\Select\Primary\Filter as PrimaryFilter;
 use Espo\Core\Select\Primary\FilterFactory as PrimaryFilterFactory;
-use Espo\Core\Select\SelectManager;
 
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
@@ -43,7 +42,6 @@ class PrimaryFilterApplierTest extends TestCase
 {
     private $filterFactory;
     private $user;
-    private $selectManager;
     private $queryBuilder;
     private $entityType;
     private $applier;
@@ -52,16 +50,14 @@ class PrimaryFilterApplierTest extends TestCase
     {
         $this->filterFactory = $this->createMock(PrimaryFilterFactory::class);
         $this->user = $this->createMock(User::class);
-        $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
 
         $this->entityType = 'Test';
 
         $this->applier = new PrimaryFilterApplier(
-            $this->entityType,
-            $this->user,
-            $this->filterFactory,
-            $this->selectManager
+            entityType: $this->entityType,
+            user: $this->user,
+            primaryFilterFactory: $this->filterFactory,
         );
     }
 
@@ -95,8 +91,6 @@ class PrimaryFilterApplierTest extends TestCase
     {
         $filterName = 'test';
 
-        $filter = $this->createMock(PrimaryFilter::class);
-
         $this->filterFactory
             ->expects($this->once())
             ->method('has')
@@ -106,12 +100,6 @@ class PrimaryFilterApplierTest extends TestCase
         $this->filterFactory
             ->expects($this->never())
             ->method('create');
-
-        $this->selectManager
-            ->expects($this->once())
-            ->method('hasPrimaryFilter')
-            ->with($filterName)
-            ->willReturn(false);
 
         $this->expectException(BadRequest::class);
 

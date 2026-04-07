@@ -33,7 +33,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
 use Espo\Core\Select\Bool\Filter as BoolFilter;
 use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
-use Espo\Core\Select\SelectManager;
 
 use Espo\Entities\User;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
@@ -45,7 +44,6 @@ class BoolFilterListApplierTest extends TestCase
 {
     private $boolFilterFactory;
     private $user;
-    private $selectManager;
     private $queryBuilder;
     private $entityType;
     private $applier;
@@ -54,16 +52,14 @@ class BoolFilterListApplierTest extends TestCase
     {
         $this->boolFilterFactory = $this->createMock(BoolFilterFactory::class);
         $this->user = $this->createMock(User::class);
-        $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
 
         $this->entityType = 'Test';
 
         $this->applier = new BoolFilterListApplier(
-            $this->entityType,
-            $this->user,
-            $this->boolFilterFactory,
-            $this->selectManager
+            entityType: $this->entityType,
+            user: $this->user,
+            boolFilterFactory: $this->boolFilterFactory,
         );
     }
 
@@ -103,12 +99,6 @@ class BoolFilterListApplierTest extends TestCase
         $boolFilterList = ['test1'];
 
         $this->initApplierTest($boolFilterList, [null], [false]);
-
-        $this->selectManager
-            ->expects($this->once())
-            ->method('hasBoolFilter')
-            ->with('test1')
-            ->willReturn(false);
 
         $this->expectException(BadRequest::class);
 
