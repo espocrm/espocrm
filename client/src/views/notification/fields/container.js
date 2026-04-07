@@ -29,6 +29,7 @@
 import BaseFieldView from 'views/fields/base';
 import NotificationListRecordView from 'views/notification/record/list';
 import NotificationPanelView from 'views/notification/panel';
+import Ajax from 'ajax';
 
 class NotificationContainerFieldView extends BaseFieldView {
 
