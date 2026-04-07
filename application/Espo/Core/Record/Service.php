@@ -145,7 +145,7 @@ class Service implements Crud,
     /** @var ?Output\Filter<Entity>[] */
     private ?array $outputFilterList = null;
 
-    protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
+    protected const int MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
     public function __construct(
         protected SelectBuilderFactory $selectBuilderFactory,
@@ -206,7 +206,6 @@ class Service implements Crud,
      * @return ReadResult<TEntity>
      * @throws NotFoundSilent If not found.
      * @throws Forbidden If no read access.
-     * @noinspection PhpDocSignatureInspection
      */
     public function read(string $id, ReadParams $params = new ReadParams()): ReadResult
     {
@@ -235,7 +234,6 @@ class Service implements Crud,
      *
      * @throws Forbidden If no read access.
      * @return ?TEntity
-     * @noinspection PhpDocSignatureInspection
      */
     public function getEntity(string $id): ?Entity
     {
@@ -280,7 +278,6 @@ class Service implements Crud,
             throw new ForbiddenSilent("No 'read' access.");
         }
 
-        /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
 
         return $entity;
@@ -312,7 +309,6 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      */
     public function loadAdditionalFields(Entity $entity): void
     {
@@ -343,7 +339,6 @@ class Service implements Crud,
      * @param TEntity $entity An entity.
      * @param stdClass $data Raw input data.
      * @throws BadRequest
-     * @noinspection PhpDocSignatureInspection
      */
     public function processValidation(Entity $entity, stdClass $data): void
     {
@@ -355,7 +350,6 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Forbidden
-     * @noinspection PhpDocSignatureInspection
      */
     protected function processAssignmentCheck(Entity $entity): void
     {
@@ -368,7 +362,6 @@ class Service implements Crud,
      * Check whether assignment can be applied for an entity.
      *
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      */
     public function checkAssignment(Entity $entity): bool
     {
@@ -586,7 +579,6 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Conflict
-     * @noinspection PhpDocSignatureInspection
      */
     private function processConcurrencyControl(Entity $entity, int $versionNumber): void
     {
@@ -610,7 +602,6 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Conflict
-     * @noinspection PhpDocSignatureInspection
      */
     protected function processDuplicateCheck(Entity $entity): void
     {
@@ -621,7 +612,6 @@ class Service implements Crud,
         }
 
         foreach ($duplicates as $e) {
-            /** @noinspection PhpDeprecationInspection */
             $this->prepareEntityForOutput($e);
         }
 
@@ -630,7 +620,6 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      * @noinspection PhpUnusedParameterInspection
      */
     public function populateDefaults(Entity $entity, stdClass $data): void
@@ -689,7 +678,6 @@ class Service implements Crud,
 
         $this->processApiBeforeCreateApiScript($entity, $params);
         $this->getRecordHookManager()->processBeforeCreate($entity, $params);
-        /** @noinspection PhpDeprecationInspection */
         $this->beforeCreateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity, [
@@ -703,14 +691,11 @@ class Service implements Crud,
         $entity->setAsNotNew();
         $entity->updateFetchedValues();
 
-        /** @noinspection PhpDeprecationInspection */
         $this->afterCreateEntity($entity, $data);
-        /** @noinspection PhpDeprecationInspection */
         $this->afterCreateProcessDuplicating($entity, $params);
 
         $this->loadAdditionalFields($entity);
 
-        /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::CREATE, $entity);
 
@@ -780,7 +765,6 @@ class Service implements Crud,
 
         $this->processApiBeforeUpdateApiScript($entity, $params);
         $this->getRecordHookManager()->processBeforeUpdate($entity, $params);
-        /** @noinspection PhpDeprecationInspection */
         $this->beforeUpdateEntity($entity, $data);
 
         $context = new SaveContext();
@@ -793,15 +777,12 @@ class Service implements Crud,
 
         $this->getRecordHookManager()->processAfterUpdate($entity, $params);
         $entity->updateFetchedValues();
-
-        /** @noinspection PhpDeprecationInspection */
         $this->afterUpdateEntity($entity, $data);
 
         if ($this->metadata->get(['recordDefs', $this->entityType, 'loadAdditionalFieldsAfterUpdate'])) {
             $this->loadAdditionalFields($entity);
         }
 
-        /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);
 
@@ -842,12 +823,10 @@ class Service implements Crud,
         }
 
         $this->getRecordHookManager()->processBeforeDelete($entity, $params);
-        /** @noinspection PhpDeprecationInspection */
         $this->beforeDeleteEntity($entity);
 
         $this->getRepository()->remove($entity, [RemoveOption::API => true]);
 
-        /** @noinspection PhpDeprecationInspection */
         $this->afterDeleteEntity($entity);
         $this->getRecordHookManager()->processAfterDelete($entity, $params);
         $this->processActionHistoryRecord(Action::DELETE, $entity);
@@ -901,10 +880,7 @@ class Service implements Crud,
             ->find();
 
         foreach ($collection as $entity) {
-            /** @noinspection PhpDeprecationInspection */
             $this->loadListAdditionalFields($entity, $preparedSearchParams);
-
-            /** @noinspection PhpDeprecationInspection */
             $this->prepareEntityForOutput($entity);
         }
 
@@ -925,8 +901,7 @@ class Service implements Crud,
     }
 
     /**
-     * @return TEntity|null
-     * @noinspection PhpDocSignatureInspection
+     * @return ?TEntity
      */
     private function getEntityEvenDeleted(string $id): ?Entity
     {
@@ -1087,10 +1062,8 @@ class Service implements Crud,
             ->find();
 
         foreach ($collection as $itemEntity) {
-            /** @noinspection PhpDeprecationInspection */
             $this->loadListAdditionalFields($itemEntity, $preparedSearchParams);
 
-            /** @noinspection PhpDeprecationInspection */
             $recordService->prepareEntityForOutput($itemEntity);
         }
 
@@ -1421,7 +1394,6 @@ class Service implements Crud,
      * Check whether an entity has a duplicate.
      *
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      */
     public function checkIsDuplicate(Entity $entity): bool
     {
@@ -1472,7 +1444,6 @@ class Service implements Crud,
      * Do not extend. Prefer metadata recordDefs > outputFilterClassNameList.
      *
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      */
     public function prepareEntityForOutput(Entity $entity): void
     {
@@ -1544,7 +1515,6 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      */
     private function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
     {
@@ -1565,14 +1535,12 @@ class Service implements Crud,
             return;
         }
 
-        /** @noinspection PhpDeprecationInspection */
         $this->duplicateLinks($entity, $duplicatingEntity);
     }
 
     /**
      * @param TEntity $entity
      * @param TEntity $duplicatingEntity
-     * @noinspection PhpDocSignatureInspection
      */
     private function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
@@ -1634,6 +1602,7 @@ class Service implements Crud,
 
     /**
      * Do not extend.
+     *
      * @internal
      */
     protected function prepareLinkSearchParams(SearchParams $searchParams, string $link): SearchParams
@@ -1642,28 +1611,19 @@ class Service implements Crud,
             return $searchParams;
         }
 
-        /** @noinspection PhpDeprecationInspection */
-        $list1 = $this->linkMandatorySelectAttributeList[$link] ?? [];
-        $list2 = $this->metadata->get("recordDefs.$this->entityType.relationships.$link.mandatoryAttributeList") ?? [];
+        $list = $this->metadata->get("recordDefs.$this->entityType.relationships.$link.mandatoryAttributeList") ?? [];
 
-        if ($list1 === [] && $list2 === []) {
+        if ($list === []) {
             return $searchParams;
         }
 
-        $select = array_unique(
-            array_merge(
-                $searchParams->getSelect(),
-                $list1,
-                $list2
-            )
-        );
+        $select = array_unique(array_merge($searchParams->getSelect(), $list));
 
         return $searchParams->withSelect($select);
     }
 
     /**
      * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
      * @throws Conflict
      * @throws BadRequest
      * @throws Forbidden
