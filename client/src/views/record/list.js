@@ -101,7 +101,7 @@ class ListRecordView extends View {
      * @property {boolean} [forceSettings] Force settings. As of v9.2.0.
      * @property {boolean} [forceAllResultSelectable] Force select all result. As of v9.2.0.
      * @property {module:search-manager~whereItem} [allResultWhereItem] Where item for select all result. As of v9.2.0.
-     * @property {boolean} [storeSettings=true] To store settings. As of v9.4.0.
+     * @property {boolean} [storeSettings=true] To store settings. As of v10.0.0.
      */
 
     /**

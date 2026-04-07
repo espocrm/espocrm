@@ -41,7 +41,7 @@ use LogicException;
  *
  * @since 10.0.0
  *
- * Before 9.4.0, since 9.1.0 it was located in the `Core` namespace.
+ * Before v10.0.0, since 9.1.0 it was located in the `Core` namespace.
  */
 class SaveContext
 {

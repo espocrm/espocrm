@@ -76,7 +76,7 @@
                             },
                             "labelTranslation": {
                                 "type": "string",
-                                "description": "A translatable label path. As of v9.4.0."
+                                "description": "A translatable label path. As of v10.0.0."
                             },
                             "noLabel": {
                                 "type": "boolean",

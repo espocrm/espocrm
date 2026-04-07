@@ -48,7 +48,7 @@ import Selectize from 'lib!selectize';
  *         style?: 'default'|'danger'|'success'|'warning'|'info'|null,
  *         color?: string|null,
  *     }
- * } [itemHandler] Handles an item to override the label or add a style. As of v9.4.0.
+ * } [itemHandler] Handles an item to override the label or add a style. As of v10.0.0.
  */
 
 /**

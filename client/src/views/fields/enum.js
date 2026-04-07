@@ -47,7 +47,7 @@ class EnumFieldView extends BaseFieldView {
      *     Object.<string, *>
      * } [params] Parameters.
      * @property {module:views/fields/enumeration~optionItemHandler} [optionItemHandler]
-     *     Handles an option item to override the label or add a style. As of v9.4.0.
+     *     Handles an option item to override the label or add a style. As of v10.0.0.
      */
 
     /**

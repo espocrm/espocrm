@@ -109,7 +109,7 @@ class SettingsService
     /**
      * Get metadata to be used in config.
      *
-     * @todo Make private in v9.4.0.
+     * @todo Make private in v10.0.0.
      * @todo Move away from settings. Use some different approach.
      * @deprecated Since v9.3.2.
      */

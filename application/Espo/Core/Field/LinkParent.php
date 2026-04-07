@@ -104,7 +104,7 @@ class LinkParent
     /**
      * Create from an entity.
      *
-     * @deprecated Since 9.4.0. Use `fromEntity`.
+     * @deprecated Since v10.0.0. Use `fromEntity`.
      * @todo Remove in v12.0.
      */
     public static function createFromEntity(Entity $entity): self

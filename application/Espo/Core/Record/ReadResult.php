@@ -59,7 +59,7 @@ readonly class ReadResult
     }
 
     /**
-     * @deprecated Since 9.4.0. For bc. Use entity->get(...).
+     * @deprecated Since v10.0.0. For bc. Use entity->get(...).
      */
     public function get(string $name): mixed
     {

@@ -139,7 +139,7 @@ class HostCheck
 
     /**
      * @deprecated Since 9.3.4. Use `isHostAndNotInternal`.
-     * @todo Remove in 9.4.0.
+     * @todo Remove in v10.0.0.
      */
     public function isNotInternalHost(string $host): bool
     {
