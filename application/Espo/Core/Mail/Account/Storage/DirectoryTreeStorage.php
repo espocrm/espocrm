@@ -238,7 +238,7 @@ class DirectoryTreeStorage implements Storage
 
         return [
             'header' => $message->head(),
-            'flags' => $folder->flags(),
+            'flags' => $message->flags(),
         ];
     }
 
