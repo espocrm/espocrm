@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades\Migrations\V9_4;
+namespace Espo\Core\Upgrades\Migrations\V10_0;
 
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Config\ConfigWriter;
