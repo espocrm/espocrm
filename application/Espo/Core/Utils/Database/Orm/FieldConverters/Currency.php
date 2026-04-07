@@ -98,7 +98,7 @@ class Currency implements FieldConverter
         }
 
         if (!$fieldDefs->isNotStorable()) {
-            [$amountDefs, $convertedDefs] = $this->config->get('currencyNoJoinMode') ?
+            [$amountDefs, $convertedDefs] = ($this->config->get('currencyNoJoinMode') !== false) ?
                 $this->applyNoJoinMode($fieldDefs, $amountDefs) :
                 $this->applyJoinMode($fieldDefs, $amountDefs, $entityType);
         }

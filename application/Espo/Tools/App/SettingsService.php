@@ -253,7 +253,12 @@ class SettingsService
         $this->configWriter->setMultiple(get_object_vars($data));
         $this->configWriter->save();
 
-        if (isset($data->personNameFormat)) {
+        if (
+            isset($data->personNameFormat) ||
+            isset($data->baseCurrency) ||
+            isset($data->currencyList) ||
+            isset($data->defaultCurrency)
+        ) {
             $this->dataManager->clearCache();
         }
 
