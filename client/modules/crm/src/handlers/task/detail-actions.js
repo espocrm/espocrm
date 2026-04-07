@@ -38,6 +38,10 @@ class DetailActions extends ActionHandler {
             .then(() => {
                 Espo.Ui.success(this.view.getLanguage().translateOption('Completed', 'status', 'Task'));
             });
+
+
+        // Needed for calendar update.
+        this.view.trigger('after:save', model);
     }
 
     // noinspection JSUnusedGlobalSymbols

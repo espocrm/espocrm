@@ -303,12 +303,14 @@ class MeetingModalDetailView extends DetailModalView {
     actionSetHeld() {
         this.model.save({status: 'Held'});
 
+        // Needed for calendar update.
         this.trigger('after:save', this.model);
     }
 
     actionSetNotHeld() {
         this.model.save({status: 'Not Held'});
 
+        // Needed for calendar update.
         this.trigger('after:save', this.model);
     }
 
