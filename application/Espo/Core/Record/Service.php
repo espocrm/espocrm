@@ -131,13 +131,6 @@ class Service implements Crud,
 
     private ?StreamService $streamService = null;
 
-    /**
-     * @var string[]
-     * @deprecated As of v8.2. Use recordDefs > mandatoryAttributeList.
-     * @todo Remove in v10.0. Fix usages.
-     */
-    protected $mandatorySelectAttributeList = [];
-
     private ?ListLoadProcessor $listLoadProcessor = null;
     private ?DuplicateFinder $duplicateFinder = null;
     private ?LinkCheck $linkCheck = null;
@@ -1624,14 +1617,11 @@ class Service implements Crud,
 
         /** @var string[] $mandatoryAttributeList */
         $mandatoryAttributeList = $this->metadata->get("recordDefs.$this->entityType.mandatoryAttributeList") ?? [];
-        /** @noinspection PhpDeprecationInspection */
-        $mandatoryAttributeList = array_merge($this->mandatorySelectAttributeList, $mandatoryAttributeList);
 
         if ($mandatoryAttributeList === []) {
             return $searchParams;
         }
 
-        /** @noinspection PhpDeprecationInspection */
         $select = array_unique(
             array_merge(
                 $searchParams->getSelect(),
