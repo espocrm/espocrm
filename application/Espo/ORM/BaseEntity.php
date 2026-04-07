@@ -252,25 +252,6 @@ class BaseEntity implements Entity
             return $this->getFromContainer($attribute);
         }
 
-        // @todo Remove support in v10.0.
-        if ($this->hasRelation($attribute) && $this->id) {
-            trigger_error(
-                "Accessing related records with Entity::get is deprecated. " .
-                "Use `\$entityManager->getRelation(...)->find()`.",
-                E_USER_DEPRECATED
-            );
-
-            $isMany = in_array($this->getRelationType($attribute), [
-                RelationType::MANY_MANY,
-                RelationType::HAS_MANY,
-                RelationType::HAS_CHILDREN,
-            ]);
-
-            return $isMany ?
-                $this->relations->getMany($attribute) :
-                $this->relations->getOne($attribute);
-        }
-
         return null;
     }
 
