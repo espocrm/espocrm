@@ -30,9 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Name\Field;
-use Espo\Entities\Notification as NotificationEntity;
 use Espo\Tools\Notification\RecordService as Service;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Controllers\RecordBase;
