@@ -39,6 +39,7 @@ use Espo\ORM\QueryComposer\Util;
 use Espo\ORM\QueryComposer\Util as QueryUtil;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
+use Espo\ORM\Type\RelationType;
 
 /**
  * Checks Where parameters. Throws an exception if anything not allowed is met.
@@ -242,18 +243,34 @@ class Checker
 
         $foreignEntityType = $this->getRelationEntityType($this->getSeed(), $link);
 
-        if (!$foreignEntityType) {
-            throw new Forbidden("Bad relation '$link' in where.");
-        }
-
         if (!$aclCheck) {
             $this->assertLinkSystemRead($entityType, $link);
 
-            if (!$this->systemRestriction->checkAttributeRead($foreignEntityType, $attribute)) {
-                throw new Forbidden("System restricted attribute '$link.$attribute' in where.");
+            if ($this->getSeed()->getRelationType($link) === RelationType::BELONGS_TO_PARENT) {
+                $entityTypeList = $this->entityManager
+                    ->getDefs()
+                    ->getEntity($entityType)
+                    ->tryGetField($link)
+                    ?->getParam('entityList') ?? [];
+
+                foreach ($entityTypeList as $foreignEntityType) {
+                    $this->assertAttributeRead($foreignEntityType, $attribute, $link);
+                }
+
+                return;
             }
 
+            if (!$foreignEntityType) {
+                throw new Forbidden("Bad relation '$link' in where.");
+            }
+
+            $this->assertAttributeRead($foreignEntityType, $attribute, $link);
+
             return;
+        }
+
+        if (!$foreignEntityType) {
+            throw new Forbidden("Bad relation '$link' in where.");
         }
 
         if (
@@ -379,6 +396,16 @@ class Checker
     {
         if (!$this->systemRestriction->checkAttributeRead($entityType, $attribute)) {
             throw new Forbidden("System restricted attribute '$attribute' in where.");
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertAttributeRead(string $entityType, string $attribute, string $link): void
+    {
+        if (!$this->systemRestriction->checkAttributeRead($entityType, $attribute)) {
+            throw new Forbidden("System restricted attribute '$link.$attribute' in where.");
         }
     }
 }
