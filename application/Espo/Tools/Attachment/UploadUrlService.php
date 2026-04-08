@@ -81,16 +81,15 @@ class UploadUrlService
             throw new ErrorSilent("Bad image data.");
         }
 
-        $attachment->set([
-            'name' => $url,
-            'type' => $type,
-            'contents' => $contents,
-            'role' => Attachment::ROLE_ATTACHMENT,
-        ]);
+        $attachment
+            ->setName($url)
+            ->setType($type)
+            ->setContents($contents)
+            ->setRole(Attachment::ROLE_ATTACHMENT)
+            ->setTargetField($data->getField());
 
         $attachment->set('parentType', $data->getParentType());
         $attachment->set('relatedType', $data->getRelatedType());
-        $attachment->set('field', $data->getField());
 
         $size = mb_strlen($contents, '8bit');
         $maxSize = $this->detailsObtainer->getUploadMaxSize($attachment);
