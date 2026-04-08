@@ -862,6 +862,10 @@ class Converter
         // @todo Add deprecation warning in v10.0. If 'fields' is set.
         foreach ($additionalDefs as &$entityDefs) {
             if (!isset($entityDefs['attributes'])) {
+                $message = "Parameter name 'fields' in 'additionalTables' is deprecated. Use 'attributes'.";
+
+                trigger_error($message, E_USER_DEPRECATED);
+
                 $entityDefs['attributes'] = $entityDefs['fields'] ?? [];
 
                 unset($entityDefs['fields']);
