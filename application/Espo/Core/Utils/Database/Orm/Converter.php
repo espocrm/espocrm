@@ -857,6 +857,17 @@ class Converter
             $this->applyIndexes($additionalDefs, $itemEntityType);
         }
 
+        // For backward compatibility. Actual as of v8.0.
+        // @todo Remove in v11.0.
+        // @todo Add deprecation warning in v10.0. If 'fields' is set.
+        foreach ($additionalDefs as &$entityDefs) {
+            if (!isset($entityDefs['attributes'])) {
+                $entityDefs['attributes'] = $entityDefs['fields'] ?? [];
+
+                unset($entityDefs['fields']);
+            }
+        }
+
         return $additionalDefs;
     }
 
