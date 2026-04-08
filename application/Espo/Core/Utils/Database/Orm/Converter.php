@@ -252,9 +252,6 @@ class Converter
     private function afterFieldsProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as /*$entityType =>*/ &$entityParams) {
-            if (empty($entityParams[EntityParam::ATTRIBUTES])) {
-                print_r($entityParams);
-            }
             foreach ($entityParams[EntityParam::ATTRIBUTES] as $attribute => &$attributeParams) {
 
                 // Remove fields without type.
