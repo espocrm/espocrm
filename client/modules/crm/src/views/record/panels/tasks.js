@@ -93,6 +93,7 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
 
         this.url = this.model.entityType + '/' + this.model.id + '/' + this.link;
 
+        this.setupListLayout();
         this.setupSorting();
 
         if (this.filterList && this.filterList.length) {
@@ -130,6 +131,31 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
         }
 
         this.listenTo(this.model, events, () => this.collection.fetch());
+    }
+
+    /**
+     * @private
+     */
+    setupListLayout() {
+        if (!this.getMetadata().get(`scopes.Task.assignedUsers`)) {
+            return;
+        }
+
+        this.listLayout = Espo.Utils.cloneDeep(this.listLayout);
+
+        for (const row of this.listLayout.rows) {
+            const index = row.findIndex(row => row.name === 'assignedUser');
+
+            if (index !== -1) {
+                row.splice(index, 1);
+            }
+        }
+
+        this.listLayout.rows.push([
+            {
+                name: 'assignedUsers',
+            }
+        ]);
     }
 
     afterRender() {

@@ -1,3 +1,3 @@
-{{#if value}}
+{{~#if value~}}
     {{{value}}}
-{{/if}}
+{{~/if~}}
