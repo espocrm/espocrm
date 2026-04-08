@@ -120,15 +120,6 @@ class UrlCheck
     }
 
     /**
-     * @deprecated Since 9.3.4. Use `isUrlAndNotIternal`.
-     * @todo Remove in 9.5.0.
-     */
-    public function isNotInternalUrl(string $url): bool
-    {
-        return $this->isUrlAndNotIternal($url);
-    }
-
-    /**
      * @param string[] $resolve
      * @param string[] $allowed An allowed address list in the `{host}:{port}` format.
      * @internal

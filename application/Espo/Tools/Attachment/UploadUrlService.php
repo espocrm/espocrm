@@ -33,35 +33,30 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\ErrorSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\HttpClient\ClientFactory;
+use Espo\Core\HttpClient\Options;
 use Espo\Core\Utils\File\MimeType;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Security\UrlCheck;
 use Espo\Entities\Attachment as Attachment;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
+use Espo\Core\HttpClient;
+
+use const PATHINFO_EXTENSION;
 
 class UploadUrlService
 {
-    private AccessChecker $accessChecker;
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-    private MimeType $mimeType;
-    private DetailsObtainer $detailsObtainer;
 
     public function __construct(
-        AccessChecker $accessChecker,
-        Metadata $metadata,
-        EntityManager $entityManager,
-        MimeType $mimeType,
-        DetailsObtainer $detailsObtainer,
-        private UrlCheck $urlCheck
-    ) {
-        $this->accessChecker = $accessChecker;
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->mimeType = $mimeType;
-        $this->detailsObtainer = $detailsObtainer;
-    }
+        private AccessChecker $accessChecker,
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private MimeType $mimeType,
+        private DetailsObtainer $detailsObtainer,
+        private UrlCheck $urlCheck,
+        private ClientFactory $clientFactory,
+    ) {}
 
     /**
      * Upload an image from and URL and store as attachment.
@@ -114,86 +109,40 @@ class UploadUrlService
     /**
      * @param non-empty-string $url
      * @return ?array{string, string} A type and contents.
-     * @throws ForbiddenSilent
+     * @throws Error
      */
     private function getImageDataByUrl(string $url): ?array
     {
-        $resolve = $this->urlCheck->getCurlResolve($url);
+        $client = $this->clientFactory->create(
+            new Options(
+                protocols: [HttpClient\Protocol::https, HttpClient\Protocol::http],
+                redirect: new HttpClient\Options\Redirect(
+                    allow: false,
+                ),
+                internalHostRestriction: new HttpClient\Options\InternalHostRestriction(
+                    restrict: true,
+                ),
+            )
+        );
 
-        if ($resolve === []) {
-            throw new ForbiddenSilent("Could not resolve the host.");
+        $request = HttpClient\RequestCreator::create('GET', $url);
+
+        try {
+            $response = $client->send($request);
+        } catch (HttpClient\Exceptions\SendException $e) {
+            throw new Error(previous: $e);
         }
 
-        if ($resolve !== null && !$this->urlCheck->validateCurlResolveNotInternal($resolve)) {
-            throw new ForbiddenSilent("Forbidden host.");
+        $type = $response->getHeader('Content-Type')[0] ?? null;
+
+        if ($type) {
+            $type = trim(explode(';', $type)[0]);
         }
 
-        $type = null;
-
-        if (!function_exists('curl_init')) {
-            return null;
-        }
-
-        $opts = [];
-
-        $httpHeaders = [];
-        $httpHeaders[] = 'Expect:';
-
-        $opts[\CURLOPT_URL] = $url;
-        $opts[\CURLOPT_HTTPHEADER] = $httpHeaders;
-        $opts[\CURLOPT_CONNECTTIMEOUT] = 10;
-        $opts[\CURLOPT_TIMEOUT] = 10;
-        $opts[\CURLOPT_HEADER] = true;
-        $opts[\CURLOPT_VERBOSE] = true;
-        $opts[\CURLOPT_SSL_VERIFYPEER] = true;
-        $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
-        $opts[\CURLOPT_RETURNTRANSFER] = true;
-        // Prevents Server Side Request Forgery by redirecting to an internal host.
-        $opts[\CURLOPT_FOLLOWLOCATION] = false;
-        $opts[\CURLOPT_MAXREDIRS] = 2;
-        $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
-        $opts[\CURLOPT_PROTOCOLS] = \CURLPROTO_HTTPS | \CURLPROTO_HTTP;
-        $opts[\CURLOPT_REDIR_PROTOCOLS] = \CURLPROTO_HTTPS;
-
-        if ($resolve) {
-            $opts[CURLOPT_RESOLVE] = $resolve;
-        }
-
-        $ch = curl_init();
-
-        curl_setopt_array($ch, $opts);
-
-        /** @var string|false $response */
-        $response = curl_exec($ch);
-
-        if ($response === false) {
-            return null;
-        }
-
-        $headerSize = curl_getinfo($ch, \CURLINFO_HEADER_SIZE);
-
-        $header = substr($response, 0, $headerSize);
-        $body = substr($response, $headerSize);
-
-        $headLineList = explode("\n", $header);
-
-        foreach ($headLineList as $i => $line) {
-            if ($i === 0) {
-                continue;
-            }
-
-            if (strpos(strtolower($line), strtolower('Content-Type:')) === 0) {
-                $part = trim(substr($line, 13));
-
-                if ($part) {
-                    $type = trim(explode(";", $part)[0]);
-                }
-            }
-        }
 
         if (!$type) {
             /** @var string $extension */
-            $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
+            $extension = preg_replace('#\?.*#', '', pathinfo($url, PATHINFO_EXTENSION));
 
             $type = $this->mimeType->getMimeTypeByExtension($extension);
         }
@@ -203,13 +152,13 @@ class UploadUrlService
         }
 
         /** @var string[] $imageTypeList */
-        $imageTypeList = $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
+        $imageTypeList = $this->metadata->get('app.image.allowedFileTypeList') ?? [];
 
         if (!in_array($type, $imageTypeList)) {
             return null;
         }
 
-        return [$type, $body];
+        return [$type, (string) $response->getBody()];
     }
 
     private function getAttachmentRepository(): AttachmentRepository

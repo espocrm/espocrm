@@ -103,7 +103,7 @@ class HostCheck
      */
     public function getHostIpAddresses(string $host): array
     {
-        $records = dns_get_record($host, DNS_A);
+        $records = dns_get_record($host, DNS_A + DNS_AAAA);
 
         if (!$records) {
             return [];
@@ -112,8 +112,15 @@ class HostCheck
         $output = [];
 
         foreach ($records as $record) {
-            /** @var ?string $idAddress */
-            $idAddress = $record['ip'] ?? null;
+            $type = $record['type'] ?? null;
+
+            if ($type === 'AAAA') {
+                /** @var ?string $idAddress */
+                $idAddress = $record['ipv6'] ?? null;
+            } else {
+                /** @var ?string $idAddress */
+                $idAddress = $record['ip'] ?? null;
+            }
 
             if (!$idAddress) {
                 continue;
@@ -127,9 +134,14 @@ class HostCheck
 
     /**
      * @internal
+     * @noinspection SpellCheckingInspection
      */
     public function ipAddressIsNotInternal(string $ipAddress): bool
     {
+        if (str_starts_with($ipAddress, '::ffff:')) {
+            $ipAddress = substr($ipAddress, 7);
+        }
+
         return (bool) filter_var(
             $ipAddress,
             FILTER_VALIDATE_IP,

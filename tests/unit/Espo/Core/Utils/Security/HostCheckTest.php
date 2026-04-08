@@ -70,4 +70,24 @@ class HostCheckTest extends TestCase
             $hostCheck->isHostAndNotInternal('0x7f.1')
         );
     }
+
+    /**
+     * @noinspection SpellCheckingInspection
+     */
+    public function testIpAddress()
+    {
+        $hostCheck = new HostCheck();
+
+        $this->assertFalse(
+            $hostCheck->ipAddressIsNotInternal('172.20.0.1')
+        );
+
+        $this->assertTrue(
+            $hostCheck->ipAddressIsNotInternal('2606:2800:220:1:248:1893:25c8:1946')
+        );
+
+        $this->assertFalse(
+            $hostCheck->ipAddressIsNotInternal('::ffff:127.0.0.1')
+        );
+    }
 }
