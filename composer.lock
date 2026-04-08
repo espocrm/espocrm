@@ -636,26 +636,26 @@
         },
         {
             "name": "devtheorem/php-handlebars",
-            "version": "v1.0.0",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/devtheorem/php-handlebars.git",
-                "reference": "59f5bc256bdca286f90917a80d038cb7f000f207"
+                "reference": "fc143fc26600f37a5bb42864b3ca1999c1c5dbb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/devtheorem/php-handlebars/zipball/59f5bc256bdca286f90917a80d038cb7f000f207",
-                "reference": "59f5bc256bdca286f90917a80d038cb7f000f207",
+                "url": "https://api.github.com/repos/devtheorem/php-handlebars/zipball/fc143fc26600f37a5bb42864b3ca1999c1c5dbb4",
+                "reference": "fc143fc26600f37a5bb42864b3ca1999c1c5dbb4",
                 "shasum": ""
             },
             "require": {
-                "devtheorem/php-handlebars-parser": "^1.1.0",
+                "devtheorem/php-handlebars-parser": "^2.0",
                 "php": ">=8.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.94",
                 "jbboehr/handlebars-spec": "dev-master",
-                "phpstan/phpstan": "^2.1.42",
+                "phpstan/phpstan": "^2.1.46",
                 "phpunit/phpunit": "^11.5"
             },
             "type": "library",
@@ -685,22 +685,22 @@
             ],
             "support": {
                 "issues": "https://github.com/devtheorem/php-handlebars/issues",
-                "source": "https://github.com/devtheorem/php-handlebars/tree/v1.0.0"
+                "source": "https://github.com/devtheorem/php-handlebars/tree/v1.2.2"
             },
-            "time": "2026-03-23T04:09:08+00:00"
+            "time": "2026-04-06T03:49:30+00:00"
         },
         {
             "name": "devtheorem/php-handlebars-parser",
-            "version": "v1.1.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/devtheorem/php-handlebars-parser.git",
-                "reference": "cd9fcd2a2ea8869378a999ff420625b2c25b9571"
+                "reference": "18181b672d6345e3406f57b53ba7cae13bb6ae9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/devtheorem/php-handlebars-parser/zipball/cd9fcd2a2ea8869378a999ff420625b2c25b9571",
-                "reference": "cd9fcd2a2ea8869378a999ff420625b2c25b9571",
+                "url": "https://api.github.com/repos/devtheorem/php-handlebars-parser/zipball/18181b672d6345e3406f57b53ba7cae13bb6ae9f",
+                "reference": "18181b672d6345e3406f57b53ba7cae13bb6ae9f",
                 "shasum": ""
             },
             "require": {
@@ -710,7 +710,7 @@
                 "friendsofphp/php-cs-fixer": "^3.94",
                 "ircmaxell/php-yacc": "dev-master",
                 "jbboehr/handlebars-spec": "dev-master",
-                "phpstan/phpstan": "^2.1.40",
+                "phpstan/phpstan": "^2.1.46",
                 "phpunit/phpunit": "^11.5"
             },
             "type": "library",
@@ -739,9 +739,9 @@
             ],
             "support": {
                 "issues": "https://github.com/devtheorem/php-handlebars-parser/issues",
-                "source": "https://github.com/devtheorem/php-handlebars-parser/tree/v1.1.0"
+                "source": "https://github.com/devtheorem/php-handlebars-parser/tree/v2.0.0"
             },
-            "time": "2026-02-25T01:18:54+00:00"
+            "time": "2026-04-02T16:25:47+00:00"
         },
         {
             "name": "directorytree/imapengine",
