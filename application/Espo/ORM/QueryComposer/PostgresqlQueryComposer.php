@@ -328,27 +328,31 @@ class PostgresqlQueryComposer extends BaseQueryComposer
             $from = $argumentPartList[0] ?? $this->quote(0);
             $to = $argumentPartList[1] ?? $this->quote(0);
 
+            $toEpoch = "EXTRACT(EPOCH FROM $to::timestamp)";
+            $fromEpoch = "EXTRACT(EPOCH FROM $from::timestamp)";
+
             switch ($function) {
                 case 'TIMESTAMPDIFF_YEAR':
-                    return "EXTRACT(YEAR FROM $to - $from)";
+                    return "EXTRACT(YEAR FROM AGE($to::timestamp, $from::timestamp))";
 
                 case 'TIMESTAMPDIFF_MONTH':
-                    return "EXTRACT(MONTH FROM $to - $from)";
+                    return "EXTRACT(YEAR FROM AGE($to::timestamp, $from::timestamp)) * 12 + " .
+                        "EXTRACT(MONTH FROM AGE($to::timestamp, $from::timestamp))";
 
                 case 'TIMESTAMPDIFF_WEEK':
-                    return "FLOOR(EXTRACT(DAY FROM $to - $from) / 7)";
+                    return "FLOOR(($toEpoch - $fromEpoch) / (3600 * 24) / 7)";
 
                 case 'TIMESTAMPDIFF_DAY':
-                    return "EXTRACT(DAY FROM ($to) - $from)";
+                    return "FLOOR(($toEpoch - $fromEpoch) / (3600 * 24))";
 
                 case 'TIMESTAMPDIFF_HOUR':
-                    return "EXTRACT(HOUR FROM $to - $from)";
+                    return "($toEpoch - $fromEpoch) / 3600";
 
                 case 'TIMESTAMPDIFF_MINUTE':
-                    return "EXTRACT(MINUTE FROM $to - $from)";
+                    return "($toEpoch - $fromEpoch) / 60";
 
                 case 'TIMESTAMPDIFF_SECOND':
-                    return "FLOOR(EXTRACT(SECOND FROM $to - $from))";
+                    return "$toEpoch - $fromEpoch";
             }
         }
 
