@@ -312,10 +312,12 @@ class Fetcher
                 $storage->unmarkSeen($id);
             }
         } catch (Throwable $e) {
-            $message = "{$account->getEntityType()} {$account->getId()}, get message; " .
-                "{$e->getCode()} {$e->getMessage()}";
+            $message = "{$account->getEntityType()} {id}, get message.";
 
-            $this->log->error($message, ['exception' => $e]);
+            $this->log->error($message, [
+                'exception' => $e,
+                'id' => $account->getId(),
+            ]);
 
             return null;
         }
