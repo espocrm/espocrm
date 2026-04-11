@@ -105,7 +105,8 @@
   },
   "overrides": {
     "grunt": {
-      "minimatch": "~3.1.3"
+      "minimatch": "~3.1.3",
+      "lodash": "~4.18.0"
     }
   }
 }
