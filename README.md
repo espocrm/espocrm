@@ -46,9 +46,9 @@ See the [documentation](https://docs.espocrm.com) for administrators, users and 
 
 ### Who is EspoCRM for?
 
-* Startups, small & medium-sized businesses. It's an affordable solution that is flexible and fully customizable.
+* From startups, small & medium-sized businesses to larger organizations. A flexible, fully customizable solution that scales with your needs.
 * Developers & tech enthusiasts. You can extend functionalities, build extensions, and create custom integrations.
-* Anyone seeking a free CRM. If you're looking for a user-friendly and secure CRM platform, it can be a good option.
+* Anyone seeking a free or on-premise CRM. If you're looking for a user-friendly and secure CRM platform, it can be a good option.
 
 ### Installing stable version
 
