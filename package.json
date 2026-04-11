@@ -81,7 +81,7 @@
     "handlebars": "^4.7.7",
     "intl-tel-input": "^18.2.1",
     "jquery": "^3.7.1",
-    "jquery-ui-espo": "github:yurikuzn/jquery-ui-espo#0.2.2",
+    "jquery-ui-espo": "github:yurikuzn/jquery-ui-espo#0.2.3",
     "jquery-ui-touch-punch": "^0.2.3",
     "js-base64": "^3.7.2",
     "jsbarcode": "^3.11.4",
