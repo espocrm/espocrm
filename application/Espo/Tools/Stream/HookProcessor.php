@@ -364,6 +364,9 @@ class HookProcessor
     {
         $entityType = $entity->getEntityType();
 
+        $followAssignedUser = $this->metadata->get(['streamDefs', $entityType,
+            'followAssignedUser']) ?? true;
+
         $multipleField = $this->metadata->get(['streamDefs', $entityType, 'followingUsersField']) ??
             Field::ASSIGNED_USERS;
 
@@ -397,7 +400,7 @@ class HookProcessor
             );
         }
 
-        if ($assignedUserId && !in_array($assignedUserId, $userIdList)) {
+        if ($assignedUserId && !in_array($assignedUserId, $userIdList) && $followAssignedUser) {
             $userIdList[] = $assignedUserId;
         }
 
@@ -490,7 +493,10 @@ class HookProcessor
     {
         $assignedUserId = $entity->get('assignedUserId');
 
-        if (!$assignedUserId) {
+        $followAssignedUser = $this->metadata->get(['streamDefs', $entity->getEntityType(),
+            'followAssignedUser']) ?? true;
+
+        if (!$assignedUserId || !$followAssignedUser) {
             $this->service->noteAssign($entity, $options);
 
             return;
