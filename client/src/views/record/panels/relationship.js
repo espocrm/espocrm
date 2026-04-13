@@ -551,7 +551,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     getStoredFilter() {
-        const key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
+        const key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.link);
 
         return this.getStorage().get('state', key) || null;
     }
@@ -560,7 +560,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @private
      */
     storeFilter(filter) {
-        const key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
+        const key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.link);
 
         if (filter) {
             this.getStorage().set('state', key, filter);
@@ -668,7 +668,7 @@ class RelationshipPanelView extends BottomPanelView {
 
         const viewName =
             this.getMetadata()
-                .get(`clientDefs.${this.model.entityType}.relationshipPanels.${this.name}.viewModalView`) ||
+                .get(`clientDefs.${this.model.entityType}.relationshipPanels.${this.link}.viewModalView`) ||
             this.getMetadata().get(`clientDefs.${entityType}.modalViews.relatedList`) ||
             this.viewModalView ||
             'views/modals/related-list';
