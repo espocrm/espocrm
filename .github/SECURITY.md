@@ -4,7 +4,7 @@
 
 If you believe you have discovered a vulnerability in EspoCRM, please contact us via [this](https://www.espocrm.com/contacts/) or [this](https://www.espocrm.com/support/) forms. Or create a private vulnerability report on GitHub.
 
-What reports we do accept:
+What reports we do not accept:
 
 - Executing PHP code by an extension or during the installation or upgrade process.
 
