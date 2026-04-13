@@ -32,7 +32,7 @@
         },
         "bypassAssignedUserFollow": {
             "type": "boolean",
-            "description": "Assigned users won't follow the record when they get assigned to it. If enabling, consider also enabling `forceAssignmentNotificator` in notificationDefs – otherwise, the assignee won't receive any notification.. As of v10.0."
+            "description": "Assigned users won't follow the record when they get assigned to it. If enabling, consider also enabling `forceAssignmentNotificator` in notificationDefs – otherwise, the assignee won't receive any notification. As of v10.0."
         }
     }
 }
