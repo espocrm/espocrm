@@ -362,44 +362,46 @@ class HookProcessor
      */
     private function afterSaveStreamNew(CoreEntity $entity, array $options): void
     {
-        $entityType = $entity->getEntityType();
+        $multipleField = $this->getFollowingUsersField($entity->getEntityType());
 
-        $multipleField = $this->metadata->get(['streamDefs', $entityType, 'followingUsersField']) ??
-            Field::ASSIGNED_USERS;
-
-        $hasAssignedUsersField = $entity->hasLinkMultipleField($multipleField);
+        $createdById = $entity->get(Field::CREATED_BY . 'Id');
 
         $userIdList = [];
 
-        $assignedUserId = $entity->get('assignedUserId');
-        $createdById = $entity->get('createdById');
-
-        /** @var string[] $assignedUserIdList */
-        $assignedUserIdList = $hasAssignedUsersField ? $entity->getLinkMultipleIdList($multipleField) : [];
-
-        if (
-            !$this->user->isSystem() &&
-            !$this->user->isApi() &&
-            $createdById &&
-            $createdById === $this->user->getId() &&
-            (
-                $this->user->isPortal() ||
-                $this->preferences->get('followCreatedEntities') ||
-                in_array($entityType, $this->preferences->get('followCreatedEntityTypeList') ?? [])
-            )
-        ) {
+        if ($this->toMakeCreatorFollow($createdById, $entity->getEntityType())) {
             $userIdList[] = $createdById;
         }
 
-        if ($hasAssignedUsersField) {
-            $userIdList = array_unique(
-                array_merge($userIdList, $assignedUserIdList)
+
+        if (
+            !$this->helper->hasAssignedUsersField($entity->getEntityType()) &&
+            !$this->bypassAssignedUserFollow($entity->getEntityType())
+        ) {
+            $assignedUserId = $entity->get(Field::ASSIGNED_USER . 'Id');
+
+            if ($assignedUserId) {
+                $userIdList[] = $assignedUserId;
+            }
+        }
+
+        if (
+            $this->helper->hasAssignedUsersField($entity->getEntityType()) &&
+            !$this->bypassAssignedUserFollow($entity->getEntityType())
+        ) {
+            $userIdList = array_merge(
+                $userIdList,
+                $entity->getLinkMultipleIdList(Field::ASSIGNED_USERS)
             );
         }
 
-        if ($assignedUserId && !in_array($assignedUserId, $userIdList)) {
-            $userIdList[] = $assignedUserId;
+        if ($multipleField && $entity->hasLinkMultipleField($multipleField)) {
+            $userIdList = array_merge(
+                $userIdList,
+                $entity->getLinkMultipleIdList($multipleField)
+            );
         }
+
+        $userIdList = array_unique($userIdList);
 
         if (count($userIdList)) {
             $this->service->followEntityMass($entity, $userIdList);
@@ -413,20 +415,7 @@ class HookProcessor
             $entity->set(Field::IS_FOLLOWED, true);
         }
 
-        $autofollowUserIdList = $this->getAutofollowUserIdList($entity->getEntityType(), $userIdList);
-
-        if (count($autofollowUserIdList)) {
-            $this->jobSchedulerFactory
-                ->create()
-                ->setClassName(AutoFollowJob::class)
-                ->setQueue(QueueName::Q1)
-                ->setData([
-                    'userIdList' => $autofollowUserIdList,
-                    'entityType' => $entity->getEntityType(),
-                    'entityId' => $entity->getId(),
-                ])
-                ->schedule();
-        }
+        $this->createAutoFollowJob($entity, $userIdList);
     }
 
     /**
@@ -447,39 +436,28 @@ class HookProcessor
             return;
         }
 
-        if ($entity->isAttributeChanged('assignedUserId')) {
+        $hasAssignedUsersField = $this->helper->hasAssignedUsersField($entity->getEntityType());
+
+        if (!$hasAssignedUsersField && $entity->isAttributeChanged(Field::ASSIGNED_USER . 'Id')) {
             $this->afterSaveStreamNotNewAssignedUserIdChanged($entity, $options);
-        } else if (
+        }
+
+        if (
+            $hasAssignedUsersField &&
             $entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS) &&
             $entity->isAttributeChanged(self::FIELD_ASSIGNED_USERS . 'Ids')
         ) {
             $this->afterSaveStreamNotNewAssignedUsersIdsChanged($entity, $options);
         }
 
+        $multipleField = $this->getFollowingUsersField($entity->getEntityType());
+
+        if ($multipleField && $entity->hasLinkMultipleField($multipleField)) {
+            $this->afterSaveStreamFollowingUsers($entity, $multipleField);
+        }
+
         if (empty($options[SaveOption::SKIP_AUDITED])) {
             $this->service->handleAudited($entity, $options);
-        }
-
-        $multipleField = $this->metadata->get(['streamDefs', $entity->getEntityType(), 'followingUsersField']) ??
-            Field::ASSIGNED_USERS;
-
-        if (!$entity->hasLinkMultipleField($multipleField)) {
-            return;
-        }
-
-        $assignedUserIdList = $entity->getLinkMultipleIdList($multipleField);
-        $fetchedAssignedUserIdList = $entity->getFetched($multipleField . 'Ids') ?? [];
-
-        foreach ($assignedUserIdList as $userId) {
-            if (in_array($userId, $fetchedAssignedUserIdList)) {
-                continue;
-            }
-
-            $this->service->followEntity($entity, $userId);
-
-            if ($this->user->getId() === $userId) {
-                $entity->set(Field::IS_FOLLOWED, true);
-            }
         }
     }
 
@@ -488,7 +466,7 @@ class HookProcessor
      */
     private function afterSaveStreamNotNewAssignedUserIdChanged(Entity $entity, array $options): void
     {
-        $assignedUserId = $entity->get('assignedUserId');
+        $assignedUserId = $entity->get(Field::ASSIGNED_USER . 'Id');
 
         if (!$assignedUserId) {
             $this->service->noteAssign($entity, $options);
@@ -496,12 +474,15 @@ class HookProcessor
             return;
         }
 
-        $this->service->followEntity($entity, $assignedUserId);
-        $this->service->noteAssign($entity, $options);
+        if (!$this->bypassAssignedUserFollow($entity->getEntityType())) {
+            $this->service->followEntity($entity, $assignedUserId);
 
-        if ($this->user->getId() === $assignedUserId) {
-            $entity->set(Field::IS_FOLLOWED, true);
+            if ($this->user->getId() === $assignedUserId) {
+                $entity->set(Field::IS_FOLLOWED, true);
+            }
         }
+
+        $this->service->noteAssign($entity, $options);
     }
 
     /**
@@ -509,20 +490,26 @@ class HookProcessor
      */
     private function afterSaveStreamNotNewAssignedUsersIdsChanged(CoreEntity $entity, array $options): void
     {
-        $userIds = $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS);
+        if ($this->bypassAssignedUserFollow($entity->getEntityType())) {
+            $this->service->noteAssign($entity, $options);
 
-        /** @var string[] $prevUserIds */
-        $prevUserIds = $entity->getFetched(self::FIELD_ASSIGNED_USERS . 'Ids') ?? [];
+            return;
+        }
 
-        foreach (array_diff($userIds, $prevUserIds) as $userId) {
+        $userIdsList = array_diff(
+            $entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS),
+            $entity->getFetchedLinkMultipleIdList(self::FIELD_ASSIGNED_USERS),
+        );
+
+        foreach ($userIdsList as $userId) {
             $this->service->followEntity($entity, $userId);
         }
 
-        $this->service->noteAssign($entity, $options);
-
-        if (in_array($this->user->getId(), $userIds)) {
+        if (in_array($this->user->getId(), $userIdsList)) {
             $entity->set(Field::IS_FOLLOWED, true);
         }
+
+        $this->service->noteAssign($entity, $options);
     }
 
     private function afterSaveStreamNotNew2(CoreEntity $entity): void
@@ -710,5 +697,68 @@ class HookProcessor
         $preferences = $this->preferencesProvider->tryGet($userId);
 
         return $preferences?->get('followAsCollaborator') === true;
+    }
+
+
+    private function afterSaveStreamFollowingUsers(CoreEntity $entity, string $multipleField): void
+    {
+        $userIdsList = array_diff(
+            $entity->getLinkMultipleIdList($multipleField),
+            $entity->getFetchedLinkMultipleIdList($multipleField),
+        );
+
+        foreach ($userIdsList as $userId) {
+            $this->service->followEntity($entity, $userId);
+
+            if ($this->user->getId() === $userId) {
+                $entity->set(Field::IS_FOLLOWED, true);
+            }
+        }
+    }
+
+    private function bypassAssignedUserFollow(string $entityType): bool
+    {
+        return (bool) $this->metadata->get("streamDefs.$entityType.bypassAssignedUserFollow");
+    }
+
+    private function getFollowingUsersField(string $entityType): ?string
+    {
+        return $this->metadata->get("streamDefs.$entityType.followingUsersField");
+    }
+
+    private function toMakeCreatorFollow(?string $createdById, string $entityType): bool
+    {
+        return !$this->user->isSystem() &&
+            !$this->user->isApi() &&
+            $createdById &&
+            $createdById === $this->user->getId() &&
+            (
+                $this->user->isPortal() ||
+                $this->preferences->get('followCreatedEntities') ||
+                in_array($entityType, $this->preferences->get('followCreatedEntityTypeList') ?? [])
+            );
+    }
+
+    /**
+     * @param string[] $userIdList
+     */
+    private function createAutoFollowJob(CoreEntity $entity, array $userIdList): void
+    {
+        $autoFollowUserIdList = $this->getAutofollowUserIdList($entity->getEntityType(), $userIdList);
+
+        if (!count($autoFollowUserIdList)) {
+            return;
+        }
+
+        $this->jobSchedulerFactory
+            ->create()
+            ->setClassName(AutoFollowJob::class)
+            ->setQueue(QueueName::Q1)
+            ->setData([
+                'userIdList' => $autoFollowUserIdList,
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->getId(),
+            ])
+            ->schedule();
     }
 }
