@@ -72,6 +72,9 @@ class PostNotePin implements Action
         $this->checkParent($note);
         $this->checkPinnedCount($note);
 
+        $note->setIsPinned(true);
+        $this->entityManager->saveEntity($note);
+
         return ResponseComposer::json(true);
     }
 
@@ -90,9 +93,6 @@ class PostNotePin implements Action
         if (!$this->acl->checkEntityRead($note)) {
             throw new Forbidden("No read access.");
         }
-
-        $note->setIsPinned(true);
-        $this->entityManager->saveEntity($note);
 
         return $note;
     }
