@@ -120,15 +120,17 @@ class ErrorOutput
     ): void {
 
         $message = $exception->getMessage();
+        $logMessage = $message;
 
         if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
-            $message .= " " . $exception->getPrevious()->getMessage();
+            $logMessage .= " " . $exception->getPrevious()->getMessage();
         }
 
         $statusCode = $exception->getCode();
 
         if ($exception instanceof HasLogMessage) {
             $message = $exception->getLogMessage();
+            $logMessage = $message;
         }
 
         if ($route) {
@@ -137,7 +139,7 @@ class ErrorOutput
 
         $level = $this->getLevel($exception);
 
-        $this->log->log($level, $message, [
+        $this->log->log($level, $logMessage, [
             'exception' => $exception,
             'request' => $request,
         ]);
