@@ -190,7 +190,7 @@ class OptOutService
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $itemEntity = $this->entityManager->getNewEntity($row['entityType']);
 
-            $itemEntity->set($row);
+            $itemEntity->setMultiple($row);
             $itemEntity->setAsFetched();
 
             $collection[] = $itemEntity;
