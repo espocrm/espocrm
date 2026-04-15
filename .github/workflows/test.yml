@@ -38,6 +38,13 @@ jobs:
         tools: composer:v2
         ini-values: memory_limit=1024M
 
+    - name: Cache Vendor
+      id: cache-vendor
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
+
     - name: Composer install
       run: composer install
 
