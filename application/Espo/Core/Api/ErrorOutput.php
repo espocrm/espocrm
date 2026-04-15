@@ -119,19 +119,7 @@ class ErrorOutput
         bool $toPrintBody = false
     ): void {
 
-        $message = $exception->getMessage();
-        $logMessage = $message;
-
-        if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
-            $logMessage .= " " . $exception->getPrevious()->getMessage();
-        }
-
-        $statusCode = $exception->getCode();
-
-        if ($exception instanceof HasLogMessage) {
-            $message = $exception->getLogMessage();
-            $logMessage = $message;
-        }
+        [$message, $logMessage] = $this->prepareMessages($exception);
 
         if ($route) {
             $this->processRoute($route, $request, $exception);
@@ -144,11 +132,7 @@ class ErrorOutput
             'request' => $request,
         ]);
 
-        $statusCode = $this->statusCodeMap[$exception::class] ?? $statusCode;
-
-        if (!in_array($statusCode, $this->allowedStatusCodeList)) {
-            $statusCode = 500;
-        }
+        $statusCode = $this->getStatusCode($exception);
 
         $response->setStatus($statusCode);
 
@@ -156,25 +140,13 @@ class ErrorOutput
             $response->setHeader('X-Status-Reason', $this->stripInvalidCharactersFromHeaderValue($message));
         }
 
-        if ($exception instanceof HasBody && $this->exceptionHasBody($exception)) {
-            $response->writeBody($exception->getBody() ?? '');
-
-            $toPrintBody = false;
-        }
-
-        if ($toPrintBody) {
-            $codeDescription = $this->getCodeDescription($statusCode);
-
-            $statusText = isset($codeDescription) ?
-                $statusCode . ' '. $codeDescription :
-                'HTTP ' . $statusCode;
-
-            if ($message) {
-                $message = htmlspecialchars($message);
-            }
-
-            $response->writeBody(self::generateErrorBody($statusText, $message));
-        }
+        $this->printBody(
+            exception: $exception,
+            response: $response,
+            toPrintBody: $toPrintBody,
+            statusCode: $statusCode,
+            message: $message,
+        );
     }
 
     private function exceptionHasBody(Throwable $exception): bool
@@ -284,5 +256,70 @@ class ErrorOutput
         }
 
         return LogLevel::ERROR;
+    }
+
+    private function printBody(
+        Throwable $exception,
+        Response $response,
+        bool $toPrintBody,
+        int $statusCode,
+        string $message,
+    ): void {
+
+        if ($exception instanceof HasBody && $this->exceptionHasBody($exception)) {
+            $response->writeBody($exception->getBody() ?? '');
+
+            $toPrintBody = false;
+        }
+
+        if (!$toPrintBody) {
+            return;
+        }
+
+        $codeDescription = $this->getCodeDescription($statusCode);
+
+        $statusText = isset($codeDescription) ?
+            $statusCode . ' ' . $codeDescription :
+            'HTTP ' . $statusCode;
+
+        if ($message) {
+            $message = htmlspecialchars($message);
+        }
+
+        $response->writeBody(self::generateErrorBody($statusText, $message));
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function prepareMessages(Throwable $exception): array
+    {
+        $message = $exception->getMessage();
+        $logMessage = $message;
+
+        if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
+            $logMessage .= " " . $exception->getPrevious()->getMessage();
+        }
+
+        if ($exception instanceof HasLogMessage) {
+            $message = $exception->getLogMessage();
+            $logMessage = $message;
+        }
+
+        return [$message, $logMessage];
+    }
+
+    /**
+     * @return int
+     */
+    private function getStatusCode(Throwable $exception): int
+    {
+        $statusCode = $this->statusCodeMap[$exception::class] ?? $exception->getCode();
+
+        if (!in_array($statusCode, $this->allowedStatusCodeList)) {
+            $statusCode = 500;
+        }
+
+        return $statusCode;
     }
 }
