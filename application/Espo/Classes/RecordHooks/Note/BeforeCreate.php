@@ -71,6 +71,10 @@ class BeforeCreate implements SaveHook
             !$entity->getParentType() ||
             !$this->metadata->get("streamDefs.{$entity->getParentType()}.allowInternalNotes")
         ) {
+            if ($entity->isInternal()) {
+                throw new Forbidden("Internal note is not allowed.");
+            }
+
             $entity->setIsInternal(false);
         }
 
