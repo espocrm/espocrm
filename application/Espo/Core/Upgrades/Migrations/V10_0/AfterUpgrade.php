@@ -63,9 +63,7 @@ class AfterUpgrade implements Script
                     'allowInternalNotes' => true,
                 ]);
 
-                $this->metadata->delete('clientDefs', $name, [
-                    ['allowInternalNotes']
-                ]);
+                $this->metadata->delete('clientDefs', $name, ['allowInternalNotes']);
             }
         }
 
