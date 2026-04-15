@@ -61,7 +61,7 @@ class BeforeCreate implements SaveHook
         }
 
         if ($this->user->isPortal()) {
-            $entity->set('isInternal', false);
+            $entity->setIsInternal(false);
         }
 
         if ($entity->isPost()) {
@@ -70,7 +70,7 @@ class BeforeCreate implements SaveHook
 
         $targetType = $entity->getTargetType();
 
-        $entity->clear('isPinned');
+        $entity->clear(Note::FIELD_IS_PINNED);
         $entity->clear('isGlobal');
 
         switch ($targetType) {

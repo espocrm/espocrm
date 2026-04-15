@@ -83,6 +83,7 @@ class Note extends Entity
     public const string FIELD_NUMBER = 'number';
     public const string FIELD_POST = 'post';
     public const string FIELD_IS_INTERNAL = 'isInternal';
+    public const string FIELD_IS_PINNED = 'isPinned';
 
     private bool $aclIsProcessed = false;
 
