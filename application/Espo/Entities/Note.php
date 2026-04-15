@@ -82,6 +82,7 @@ class Note extends Entity
     public const string FIELD_TYPE = 'type';
     public const string FIELD_NUMBER = 'number';
     public const string FIELD_POST = 'post';
+    public const string FIELD_IS_INTERNAL = 'isInternal';
 
     private bool $aclIsProcessed = false;
 
@@ -142,7 +143,7 @@ class Note extends Entity
 
     public function isInternal(): bool
     {
-        return (bool) $this->get('isInternal');
+        return (bool) $this->get(self::FIELD_IS_INTERNAL);
     }
 
     public function getPost(): ?string
@@ -365,9 +366,7 @@ class Note extends Entity
      */
     public function setIsInternal(bool $isInternal): self
     {
-        $this->set('isInternal', $isInternal);
-
-        return $this;
+        return $this->set(self::FIELD_IS_INTERNAL, $isInternal);
     }
 
     public function getParent(): ?OrmEntity
