@@ -2117,4 +2117,25 @@ class EvaluatorTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->evaluator->process($expression);
     }
+
+    public function testFunctionArguments(): void
+    {
+        $expression = "
+            \$a = list(0, 1);
+            \$b = list(0, 1,);
+            \$c = list(
+                0,
+                1,
+            );
+        ";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals([0, 1], $vars->a);
+        $this->assertEquals([0, 1], $vars->b);
+        $this->assertEquals([0, 1], $vars->c);
+    }
 }

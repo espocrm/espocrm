@@ -1282,6 +1282,10 @@ class Parser
                 )
             );
 
+            if ($argument === '' && $i === count($commaIndexList) - 1) {
+                continue;
+            }
+
             $argumentList[] = $argument;
         }
 
