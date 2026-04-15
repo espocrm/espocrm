@@ -53,6 +53,7 @@ class SidePanelView extends View {
      *
      * @property {string} name
      * @property {string} [labelText] A translated label text.
+     * @property {string} [labelTranslation] A label translation. As of v10.0.
      * @property {string} [view] A view name.
      * @property {boolean} [isAdditional]
      * @property {boolean} [readOnly]
@@ -159,8 +160,7 @@ class SidePanelView extends View {
         this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
 
         this.recordViewObject = /** @type {import('views/record/base').default} */
-
-        this.options.recordViewObject;
+            this.options.recordViewObject;
     }
 
     setup() {
@@ -180,6 +180,10 @@ class SidePanelView extends View {
 
             item.viewKey = item.name + 'Field';
             item.label = item.label || item.name;
+
+            if (item.labelTranslation) {
+                item.labelText = this.getLanguage().translatePath(item.labelTranslation);
+            }
 
             if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                 item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
