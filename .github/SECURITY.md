@@ -7,7 +7,7 @@ If you believe you have discovered a vulnerability in EspoCRM, please contact us
 What reports we do not accept:
 
 - Executing PHP code by an extension or during the installation or upgrade process.
-- Exposing contact data though a target list, campaign or mass email, considering a user has access to them.
+- Exposing contact data though a target list, campaign or mass email, considering the user has access to them.
 
 ## Supported versions
 
