@@ -31,8 +31,10 @@ namespace Espo\Core\Upgrades\Migrations\V10_0;
 
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\EntityManager;
 
 class AfterUpgrade implements Script
@@ -40,12 +42,30 @@ class AfterUpgrade implements Script
     public function __construct(
         private EntityManager $entityManager,
         private ConfigWriter $configWriter,
+        private Metadata $metadata,
     ) {}
 
     public function run(): void
     {
         $this->updatePreferences();
         $this->updateConfig();
+
+        /** @var array<string, array<string, mixed>> $clientDefs */
+        $clientDefs = $this->metadata->get('clientDefs') ?? [];
+
+        foreach ($clientDefs as $name => $defs) {
+            if ($name === CaseObj::ENTITY_TYPE) {
+                continue;
+            }
+
+            if ($defs['allowInternalNotes'] ?? false) {
+                $this->metadata->set('streamDefs', $name, [
+                    'allowInternalNotes' => true,
+                ]);
+            }
+        }
+
+        $this->metadata->save();
     }
 
     private function updatePreferences(): void

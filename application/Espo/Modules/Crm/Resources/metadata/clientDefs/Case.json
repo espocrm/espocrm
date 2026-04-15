@@ -103,7 +103,6 @@
     "selectDefaultFilters": {
         "filter": "open"
     },
-    "allowInternalNotes": true,
     "additionalLayouts": {
         "detailPortal": {
             "type": "detail"

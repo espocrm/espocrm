@@ -208,7 +208,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.allowInternalNotes = false;
 
         if (!this.getUser().isPortal()) {
-            this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.entityType, 'allowInternalNotes']);
+            this.allowInternalNotes = this.getMetadata().get(['streamDefs', this.entityType, 'allowInternalNotes']);
         }
 
         this.hasPinned = this.model.entityType !== 'User';

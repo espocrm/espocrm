@@ -754,10 +754,6 @@
             "description": "Whether the scope has the kanban view mode on the list view.",
             "type": "boolean"
         },
-        "allowInternalNotes": {
-            "description": "If true, it will be possible to post internal posts in the stream. Internal posts are not visible in portals.",
-            "type": "boolean"
-        },
         "isExpandedByDefault": {
             "description": "Actual for category scopes (e.g. DocumentFolder). If true, then by default it will be in expanded mode.",
             "type": "boolean"
