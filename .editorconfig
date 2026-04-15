@@ -11,3 +11,6 @@ insert_final_newline = true
 
 [{package.json,package-lock.json}]
 indent_size = 2
+
+[.github/**/*.yml]
+indent_size = 2
