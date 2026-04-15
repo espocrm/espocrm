@@ -46,6 +46,7 @@ jobs:
         key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
     - name: Composer install
+      if: steps.cache-vendor.outputs.cache-hit != 'true'
       run: composer install
 
     - name: Static analysis
