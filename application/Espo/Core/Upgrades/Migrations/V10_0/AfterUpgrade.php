@@ -62,6 +62,10 @@ class AfterUpgrade implements Script
                 $this->metadata->set('streamDefs', $name, [
                     'allowInternalNotes' => true,
                 ]);
+
+                $this->metadata->delete('clientDefs', $name, [
+                    ['allowInternalNotes']
+                ]);
             }
         }
 
