@@ -38,14 +38,50 @@ class PopupNotificationView extends View {
 
     type = 'default'
     style = 'default'
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
     closeButton = true
+
+
+    /**
+     * @protected
+     * @type {boolean}
+     * @since 10.0
+     */
+    collapseButton = true
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    isCollapsed = false
+
     soundPath = 'client/sounds/pop_cork'
+
+    /**
+     * @param {{
+     *     id: string,
+     *     notificationData: Record,
+     *     notificationId: string,
+     *     isFirstCheck: boolean,
+     *     onCollapse: function(),
+     *     onExpand: function(),
+     * }} options
+     */
+    constructor(options) {
+        super(options);
+
+        this.options = options;
+    }
 
     init() {
         super.init();
 
         const id = this.options.id;
-        const containerSelector = this.containerSelector = '#' + id;
+        const containerSelector = this.containerSelector = `#${id}`;
 
         this.setSelector(containerSelector);
 
@@ -55,9 +91,13 @@ class PopupNotificationView extends View {
             (this.getConfig().get('popupNotificationSound') || this.soundPath);
 
         this.on('render', () => {
-            this.element = undefined;
+            this.hide();
 
-            $(containerSelector).remove();
+            console.log(containerSelector);
+
+            if (this.isCollapsed) {
+                return;
+            }
 
             const className = 'popup-notification-' + Espo.Utils.toDom(this.type);
 
@@ -88,6 +128,8 @@ class PopupNotificationView extends View {
         this.notificationData = this.options.notificationData;
         this.notificationId = this.options.notificationId;
         this.id = this.options.id;
+
+        this.addActionHandler('collapse', () => this.collapse());
     }
 
     data() {
@@ -95,7 +137,17 @@ class PopupNotificationView extends View {
             closeButton: this.closeButton,
             notificationData: this.notificationData,
             notificationId: this.notificationId,
+            collapseButton: true,
         };
+    }
+
+    /**
+     * @private
+     */
+    hide() {
+        this.element = undefined;
+
+        $(this.containerSelector).remove();
     }
 
     playSound() {
@@ -169,6 +221,44 @@ class PopupNotificationView extends View {
         console.warn(`Method 'cancel' in views/popup-notification is deprecated. Use 'resolveCancel' instead.`);
 
         this.resolveCancel();
+    }
+
+    /**
+     * Collapse.
+     *
+     * @since 10.0
+     */
+    collapse() {
+        this.isCollapsed = true;
+
+        this.options.onCollapse();
+
+        //this.reRender();
+
+        this.hide();
+    }
+
+    /**
+     * Expand.
+     *
+     * @since 10.0
+     */
+    expand() {
+        this.isCollapsed = false;
+
+        this.options.onExpand();
+
+        this.reRender();
+    }
+
+    /**
+     * Get title.
+     *
+     * @return string|null
+     * @since 10.0
+     */
+    getTitle() {
+        return null;
     }
 }
 
