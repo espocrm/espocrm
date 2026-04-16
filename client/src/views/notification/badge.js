@@ -187,14 +187,7 @@ class NotificationBadgeView extends View {
         if (e.key === 'messageClosePopupNotificationId') {
             const id = localStorage.getItem(e.key);
 
-            if (id) {
-                const key = `popup-${id}`;
-
-                if (this.hasView(key)) {
-                    this.markPopupRemoved(id);
-                    this.clearView(key);
-                }
-            }
+            this.closePopupNotification(id);
 
             delete localStorage[e.key];
         }
@@ -223,6 +216,27 @@ class NotificationBadgeView extends View {
                 this.checkUpdates();
             }
         }
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    closePopupNotification(id) {
+        if (!id) {
+            return;
+        }
+
+        const key = `popup-${id}`;
+        const view = this.getPopupNotificationView(id);
+
+        if (!view) {
+            return;
+        }
+
+        this.modalBarProvider?.get().removeModalView(view);
+        this.markPopupRemoved(id);
+        this.clearView(key);
     }
 
     playSound() {
@@ -560,8 +574,6 @@ class NotificationBadgeView extends View {
                 },
                 onExpand: () => {
                     this.expandPopupNotification(id);
-                    // @todo
-                    localStorage.setItem('messageExpandPopupNotificationId', id);
                 },
             });
 

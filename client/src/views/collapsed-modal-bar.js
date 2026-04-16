@@ -181,7 +181,13 @@ class CollapsedModalBarView extends View {
             modalView: modalView,
             title: options.title,
             duplicateNumber: this.calculateDuplicateNumber(options.title),
-            onClose: () => this.removeModalViewByNumber(number),
+            onClose: () => {
+                this.removeModalViewByNumber(number);
+
+                if (modalView instanceof PopupNotificationView) {
+                    modalView.resolveCancel();
+                }
+            },
             onExpand: () => {
                 this.removeModalViewByNumber(number, true);
 
