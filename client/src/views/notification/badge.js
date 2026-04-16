@@ -142,30 +142,14 @@ class NotificationBadgeView extends View {
         delete localStorage['messageBlockPlayNotificationSound'];
         delete localStorage['messageClosePopupNotificationId'];
         delete localStorage['messageNotificationRead'];
+        delete localStorage['messageCollapsePopupNotificationId'];
+        delete localStorage['messageExpandPopupNotificationId'];
 
-        window.addEventListener('storage', e => {
-            if (e.key === 'messageClosePopupNotificationId') {
-                const id = localStorage.getItem('messageClosePopupNotificationId');
+        const onWindowStorageBind = this.onWindowStorage.bind(this);
 
-                if (id) {
-                    const key = `popup-${id}`;
+        window.addEventListener('storage', onWindowStorageBind, false);
 
-                    if (this.hasView(key)) {
-                        this.markPopupRemoved(id);
-                        this.clearView(key);
-                    }
-                }
-            }
-
-            if (e.key === 'messageNotificationRead') {
-                if (
-                    !this.isBroadcastingNotificationRead &&
-                    localStorage.getItem('messageNotificationRead')
-                ) {
-                    this.checkUpdates();
-                }
-            }
-        }, false);
+        this.on('remove', () => window.removeEventListener('storage', onWindowStorageBind))
     }
 
     afterRender() {
@@ -192,6 +176,52 @@ class NotificationBadgeView extends View {
 
         if (this.hasGroupedPopupNotifications()) {
             this.checkGroupedPopupNotifications();
+        }
+    }
+
+    /**
+     * @private
+     * @param {StorageEvent} e
+     */
+    onWindowStorage(e) {
+        if (e.key === 'messageClosePopupNotificationId') {
+            const id = localStorage.getItem(e.key);
+
+            if (id) {
+                const key = `popup-${id}`;
+
+                if (this.hasView(key)) {
+                    this.markPopupRemoved(id);
+                    this.clearView(key);
+                }
+            }
+
+            delete localStorage[e.key];
+        }
+
+        if (e.key === 'messageCollapsePopupNotificationId') {
+            const id = localStorage.getItem(e.key);
+
+            this.collapsePopupNotification(id, true);
+
+            delete localStorage[e.key];
+        }
+
+        if (e.key === 'messageExpandPopupNotificationId') {
+            const id = localStorage.getItem(e.key);
+
+            this.expandPopupNotification(id, true);
+
+            delete localStorage[e.key];
+        }
+
+        if (e.key === 'messageNotificationRead') {
+            if (
+                !this.isBroadcastingNotificationRead &&
+                localStorage.getItem('messageNotificationRead')
+            ) {
+                this.checkUpdates();
+            }
         }
     }
 
@@ -526,16 +556,10 @@ class NotificationBadgeView extends View {
                 id: id,
                 isFirstCheck: !isNotFirstCheck,
                 onCollapse: () => {
-                    this.modalBarProvider.get()?.addModalView(view, {
-                        // @todo
-                        title: view.getTitle() ?? this.translate('Notification'),
-                    });
-
-                    // @todo
-                    localStorage.setItem('messageCollapsePopupNotificationId', id);
+                    this.collapsePopupNotification(id);
                 },
                 onExpand: () => {
-
+                    this.expandPopupNotification(id);
                     // @todo
                     localStorage.setItem('messageExpandPopupNotificationId', id);
                 },
@@ -549,7 +573,78 @@ class NotificationBadgeView extends View {
             localStorage.setItem('messageClosePopupNotificationId', id);
         });
 
+        if (data.id && this.getStorage().get('state', this.getCollapsedStorageKey(id))) {
+            this.collapsePopupNotification(id, true);
+
+            return;
+        }
+
         await view.render();
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     * @param {boolean} silent
+     */
+    collapsePopupNotification(id, silent = false) {
+        const view = this.getPopupNotificationView(id);
+
+        if (!view) {
+            return;
+        }
+
+        if (!silent || !view.isCollapsed) {
+            this.modalBarProvider.get()?.addModalView(view, {
+                title: view.getTitle() ?? this.translate('Notification'),
+            });
+        }
+
+        if (silent) {
+            view.makeCollapsed();
+
+            return;
+        }
+
+        localStorage.setItem('messageCollapsePopupNotificationId', id);
+
+        this.getStorage().set('state', this.getCollapsedStorageKey(id), true);
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     * @param {boolean} silent
+     */
+    expandPopupNotification(id, silent = false) {
+        const view = this.getPopupNotificationView(id);
+
+        if (!view) {
+            return;
+        }
+
+        if (!silent || view.isCollapsed) {
+            this.modalBarProvider.get()?.removeModalView(view);
+        }
+
+        if (silent) {
+            view.makeExpanded();
+
+            return;
+        }
+
+        localStorage.setItem('messageExpandPopupNotificationId', id);
+
+        this.getStorage().clear('state', this.getCollapsedStorageKey(id));
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     * @return {string}
+     */
+    getCollapsedStorageKey(id) {
+        return `popupNotificationCollapsed-${id}`;
     }
 
     /**

@@ -54,8 +54,8 @@ class PopupNotificationView extends View {
     collapseButton = true
 
     /**
-     * @protected
      * @type {boolean}
+     * @internal
      */
     isCollapsed = false
 
@@ -65,7 +65,7 @@ class PopupNotificationView extends View {
      * @param {{
      *     id: string,
      *     notificationData: Record,
-     *     notificationId: string,
+     *     notificationId: string|null,
      *     isFirstCheck: boolean,
      *     onCollapse: function(),
      *     onExpand: function(),
@@ -92,8 +92,6 @@ class PopupNotificationView extends View {
 
         this.on('render', () => {
             this.hide();
-
-            console.log(containerSelector);
 
             if (this.isCollapsed) {
                 return;
@@ -129,6 +127,10 @@ class PopupNotificationView extends View {
         this.notificationId = this.options.notificationId;
         this.id = this.options.id;
 
+        if (!this.notificationId) {
+            this.collapseButton = false;
+        }
+
         this.addActionHandler('collapse', () => this.collapse());
     }
 
@@ -142,7 +144,8 @@ class PopupNotificationView extends View {
     }
 
     /**
-     * @private
+     * @internal
+     * @since 10.0
      */
     hide() {
         this.element = undefined;
@@ -227,13 +230,12 @@ class PopupNotificationView extends View {
      * Collapse.
      *
      * @since 10.0
+     * @private
      */
     collapse() {
         this.isCollapsed = true;
 
         this.options.onCollapse();
-
-        //this.reRender();
 
         this.hide();
     }
@@ -248,7 +250,29 @@ class PopupNotificationView extends View {
 
         this.options.onExpand();
 
-        this.reRender();
+        this.reRender(true);
+    }
+
+    /**
+     * Collapse silently.
+     *
+     * @since 10.0
+     */
+    makeCollapsed() {
+        this.isCollapsed = true;
+
+        this.hide();
+    }
+
+    /**
+     * Expand silently.
+     *
+     * @since 10.0
+     */
+    makeExpanded() {
+        this.isCollapsed = false;
+
+        this.reRender(true);
     }
 
     /**
