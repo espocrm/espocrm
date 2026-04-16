@@ -57,7 +57,7 @@ class CollapsedModalView extends View {
 
     /**
      * @param {{
-     *     modalView: import('views/modal').default,
+     *     modalView: import('views/modal').default|import('views/popup-notification').default,
      *     onClose: function(),
      *     onExpand: function(),
      *     duplicateNumber?: number|null,

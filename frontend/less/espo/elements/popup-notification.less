@@ -3,7 +3,7 @@
     overflow-x: hidden;
     // Some space to fix the scrollbar gutter issue https://github.com/w3c/csswg-drafts/issues/9904.
     right: var(--12px);
-    bottom: 0;
+    bottom: var(--24px);
     position: fixed;
     height: auto;
     z-index: 1000;
@@ -37,6 +37,11 @@
     a.close {
         margin-top: var(--minus-8px);
         margin-right: var(--minus-3px);
+    }
+
+    a[data-action="collapse"] {
+        margin-top: var(--minus-6px);
+        margin-right: var(--12px);
     }
 }
 

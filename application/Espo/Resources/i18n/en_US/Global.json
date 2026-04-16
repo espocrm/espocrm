@@ -344,7 +344,8 @@
         "Reactions": "Reactions",
         "Lock": "Lock",
         "Unlock": "Unlock",
-        "Assigned": "Assigned"
+        "Assigned": "Assigned",
+        "Notification": "Notification"
     },
     "messages": {
         "cannotRemoveUsed": "Cannot remove the record as it is used.",

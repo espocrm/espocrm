@@ -28,6 +28,7 @@
 
 import View from 'view';
 import CollapsedModalView from 'views/collapsed-modal';
+import PopupNotificationView from 'views/popup-notification';
 
 class CollapsedModalBarView extends View {
 
@@ -56,6 +57,12 @@ class CollapsedModalBarView extends View {
      */
     lastNumber
 
+    /**
+     * @private
+     * @type {WeakMap<import('view').default, number>}
+     */
+    map
+
     data() {
         return {
             dataList: this.getDataList(),
@@ -78,6 +85,8 @@ class CollapsedModalBarView extends View {
     setup() {
         this.lastNumber = 0;
         this.numberList = [];
+
+        this.map = new WeakMap();
     }
 
     /**
@@ -154,7 +163,7 @@ class CollapsedModalBarView extends View {
     }
 
     /**
-     * @param {import('views/modal').default} modalView
+     * @param {import('views/modal').default|import('views/popup-notification').default} modalView
      * @param {{title: string}} options
      */
     async addModalView(modalView, options) {
@@ -166,16 +175,30 @@ class CollapsedModalBarView extends View {
 
         this.lastNumber++;
 
+        this.map.set(modalView, number);
+
         const view = new CollapsedModalView({
             modalView: modalView,
             title: options.title,
             duplicateNumber: this.calculateDuplicateNumber(options.title),
-            onClose: () => this.removeModalView(number),
+            onClose: () => {
+                this.removeModalViewByNumber(number);
+
+                if (modalView instanceof PopupNotificationView) {
+                    modalView.resolveCancel();
+                }
+            },
             onExpand: () => {
-                this.removeModalView(number, true);
+                this.removeModalViewByNumber(number, true);
 
                 // Use timeout to prevent DOM being updated after modal is re-rendered.
                 setTimeout(async () => {
+                    if (modalView instanceof PopupNotificationView) {
+                        this.expandPopupNotification(modalView);
+
+                        return;
+                    }
+
                     const key = `dialog-${number}`;
 
                     this.setView(key, modalView);
@@ -194,10 +217,24 @@ class CollapsedModalBarView extends View {
     }
 
     /**
+     * @param {import('views/modal').default|import('views/popup-notification').default} modalView
+     * @since 10.0
+     */
+    removeModalView(modalView) {
+        const number = this.map.get(modalView);
+
+        if (number === undefined) {
+            return;
+        }
+
+        this.removeModalViewByNumber(number);
+    }
+
+    /**
      * @param {number} number
      * @param {boolean} [noReRender]
      */
-    removeModalView(number, noReRender = false) {
+    removeModalViewByNumber(number, noReRender = false) {
         const key = this.composeKey(number);
 
         const index = this.numberList.indexOf(number);
@@ -228,6 +265,14 @@ class CollapsedModalBarView extends View {
      */
     composeKey(number) {
         return `key-${number}`;
+    }
+
+    /**
+     * @private
+     * @param {PopupNotificationView} view
+     */
+    expandPopupNotification(view) {
+        view.expand();
     }
 }
 

@@ -35,6 +35,7 @@ class MeetingPopupNotificationView extends PopupNotificationView {
     type = 'event'
     style = 'primary'
     closeButton = true
+    collapseButton = true
 
     setup() {
         if (!this.notificationData.entityType) {
@@ -70,6 +71,11 @@ class MeetingPopupNotificationView extends PopupNotificationView {
 
     onCancel() {
         Espo.Ajax.postRequest('Activities/action/removePopupNotification', {id: this.notificationId});
+    }
+
+    getTitle() {
+        return this.notificationData.name ??
+            this.translate(this.notificationData.entityType, 'scopeNames');
     }
 }
 

@@ -30,6 +30,7 @@ import View from 'view';
 import {inject} from 'di';
 import WebSocketManager from 'web-socket-manager';
 import WindowPanelHelper from 'helpers/site/window-panel-helper';
+import ModalBarProvider from 'helpers/site/modal-bar-provider';
 
 class NotificationBadgeView extends View {
 
@@ -96,6 +97,13 @@ class NotificationBadgeView extends View {
     @inject(WebSocketManager)
     webSocketManager
 
+    /**
+     * @private
+     * @type {ModalBarProvider}
+     */
+    @inject(ModalBarProvider)
+    modalBarProvider
+
     setup() {
         this.addActionHandler('showNotifications', () => this.showNotifications());
 
@@ -134,30 +142,14 @@ class NotificationBadgeView extends View {
         delete localStorage['messageBlockPlayNotificationSound'];
         delete localStorage['messageClosePopupNotificationId'];
         delete localStorage['messageNotificationRead'];
+        delete localStorage['messageCollapsePopupNotificationId'];
+        delete localStorage['messageExpandPopupNotificationId'];
 
-        window.addEventListener('storage', e => {
-            if (e.key === 'messageClosePopupNotificationId') {
-                const id = localStorage.getItem('messageClosePopupNotificationId');
+        const onWindowStorageBind = this.onWindowStorage.bind(this);
 
-                if (id) {
-                    const key = 'popup-' + id;
+        window.addEventListener('storage', onWindowStorageBind, false);
 
-                    if (this.hasView(key)) {
-                        this.markPopupRemoved(id);
-                        this.clearView(key);
-                    }
-                }
-            }
-
-            if (e.key === 'messageNotificationRead') {
-                if (
-                    !this.isBroadcastingNotificationRead &&
-                    localStorage.getItem('messageNotificationRead')
-                ) {
-                    this.checkUpdates();
-                }
-            }
-        }, false);
+        this.on('remove', () => window.removeEventListener('storage', onWindowStorageBind))
     }
 
     afterRender() {
@@ -185,6 +177,66 @@ class NotificationBadgeView extends View {
         if (this.hasGroupedPopupNotifications()) {
             this.checkGroupedPopupNotifications();
         }
+    }
+
+    /**
+     * @private
+     * @param {StorageEvent} e
+     */
+    onWindowStorage(e) {
+        if (e.key === 'messageClosePopupNotificationId') {
+            const id = localStorage.getItem(e.key);
+
+            this.closePopupNotification(id);
+
+            delete localStorage[e.key];
+        }
+
+        if (e.key === 'messageCollapsePopupNotificationId') {
+            const id = localStorage.getItem(e.key);
+
+            this.collapsePopupNotification(id, true);
+
+            delete localStorage[e.key];
+        }
+
+        if (e.key === 'messageExpandPopupNotificationId') {
+            const id = localStorage.getItem(e.key);
+
+            this.expandPopupNotification(id, true);
+
+            delete localStorage[e.key];
+        }
+
+        if (e.key === 'messageNotificationRead') {
+            if (
+                !this.isBroadcastingNotificationRead &&
+                localStorage.getItem('messageNotificationRead')
+            ) {
+                this.checkUpdates();
+            }
+        }
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    closePopupNotification(id) {
+        if (!id) {
+            return;
+        }
+
+        const key = `popup-${id}`;
+        const view = this.getPopupNotificationView(id);
+
+        if (!view) {
+            return;
+        }
+
+        this.modalBarProvider?.get().removeModalView(view);
+        this.markPopupRemoved(id);
+        this.clearView(key);
     }
 
     playSound() {
@@ -469,20 +521,28 @@ class NotificationBadgeView extends View {
         });
     }
 
-    showPopupNotification(name, data, isNotFirstCheck) {
-        const view = this.popupNotificationsData[name].view;
+    /**
+     * @private
+     * @param {string} name
+     * @param {Record} data
+     * @param {boolean} isNotFirstCheck
+     */
+    async showPopupNotification(name, data, isNotFirstCheck = false) {
+        const viewName = this.popupNotificationsData[name].view;
 
-        if (!view) {
+        if (!viewName) {
             return;
         }
 
-        let id = data.id || null;
+        let id;
 
-        if (id) {
-            id = name + '_' + id;
+        const notificationId = data.id || null;
 
-            if (~this.shownNotificationIds.indexOf(id)) {
-                const notificationView = this.getView('popup-' + id);
+        if (notificationId) {
+            id = name + '_' + notificationId;
+
+            if (this.shownNotificationIds.includes(id)) {
+                const notificationView = this.getPopupNotificationView(id);
 
                 if (notificationView) {
                     notificationView.trigger('update-data', data.data);
@@ -491,34 +551,127 @@ class NotificationBadgeView extends View {
                 return;
             }
 
-            if (~this.closedNotificationIds.indexOf(id)) {
+            if (this.closedNotificationIds.includes(notificationId)) {
                 return;
             }
-        }
-        else {
+        } else {
             id = this.lastId++;
         }
 
         this.shownNotificationIds.push(id);
 
-        this.createView('popup-' + id, view, {
-            notificationData: data.data || {},
-            notificationId: data.id,
-            id: id,
-            isFirstCheck: !isNotFirstCheck,
-        }, view => {
-            view.render();
+        /** @type {import('views/popup-notification').default} */
+        let view;
 
-            this.$popupContainer.removeClass('hidden');
-
-            this.listenTo(view, 'remove', () => {
-                this.markPopupRemoved(id);
-
-                localStorage.setItem('messageClosePopupNotificationId', id);
+        view = /** @type {import('views/popup-notification').default} */
+            await this.createView(`popup-${id}`, viewName, {
+                notificationData: data.data ?? {},
+                notificationId: data.id,
+                id: id,
+                isFirstCheck: !isNotFirstCheck,
+                onCollapse: () => {
+                    this.collapsePopupNotification(id);
+                },
+                onExpand: () => {
+                    this.expandPopupNotification(id);
+                },
             });
+
+        this.$popupContainer.removeClass('hidden');
+
+        this.listenTo(view, 'remove', () => {
+            this.markPopupRemoved(id);
+
+            localStorage.setItem('messageClosePopupNotificationId', id);
         });
+
+        if (data.id && this.getStorage().get('state', this.getCollapsedStorageKey(id))) {
+            this.collapsePopupNotification(id, true);
+
+            return;
+        }
+
+        await view.render();
     }
 
+    /**
+     * @private
+     * @param {string} id
+     * @param {boolean} silent
+     */
+    collapsePopupNotification(id, silent = false) {
+        const view = this.getPopupNotificationView(id);
+
+        if (!view) {
+            return;
+        }
+
+        if (!silent || !view.isCollapsed) {
+            this.modalBarProvider.get()?.addModalView(view, {
+                title: view.getTitle() ?? this.translate('Notification'),
+            });
+        }
+
+        if (silent) {
+            view.makeCollapsed();
+
+            return;
+        }
+
+        localStorage.setItem('messageCollapsePopupNotificationId', id);
+
+        this.getStorage().set('state', this.getCollapsedStorageKey(id), true);
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     * @param {boolean} silent
+     */
+    expandPopupNotification(id, silent = false) {
+        const view = this.getPopupNotificationView(id);
+
+        if (!view) {
+            return;
+        }
+
+        if (!silent || view.isCollapsed) {
+            this.modalBarProvider.get()?.removeModalView(view);
+        }
+
+        if (silent) {
+            view.makeExpanded();
+
+            return;
+        }
+
+        localStorage.setItem('messageExpandPopupNotificationId', id);
+
+        this.getStorage().clear('state', this.getCollapsedStorageKey(id));
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     * @return {string}
+     */
+    getCollapsedStorageKey(id) {
+        return `popupNotificationCollapsed-${id}`;
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     * @return {import('views/popup-notification').default}
+     */
+    getPopupNotificationView(id) {
+        return this.getView(`popup-${id}`);
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
     markPopupRemoved(id) {
         const index = this.shownNotificationIds.indexOf(id);
 
