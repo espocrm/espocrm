@@ -3971,10 +3971,21 @@ body:has(.modal-backdrop) {
             float: left;
             height: var(--20px);
             white-space: nowrap;
+
+            > a {
+                display: inline-block;
+                width: 100%;
+            }
         }
 
         .close-container {
             float: right;
+
+            > a {
+                &:hover {
+                    color: var(--gray-lighter);
+                }
+            }
         }
 
         a, a:hover, a:active {
