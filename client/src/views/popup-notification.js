@@ -244,6 +244,7 @@ class PopupNotificationView extends View {
      * Expand.
      *
      * @since 10.0
+     * @internal
      */
     expand() {
         this.isCollapsed = false;
@@ -257,6 +258,7 @@ class PopupNotificationView extends View {
      * Collapse silently.
      *
      * @since 10.0
+     * @internal
      */
     makeCollapsed() {
         this.isCollapsed = true;
@@ -268,6 +270,7 @@ class PopupNotificationView extends View {
      * Expand silently.
      *
      * @since 10.0
+     * @internal
      */
     makeExpanded() {
         this.isCollapsed = false;
