@@ -8,6 +8,7 @@ What reports we do not accept:
 
 - Executing PHP code by an extension or during the installation or upgrade process.
 - Exposing contacts though a target list, campaign or mass email, considering the user has access to them.
+- SSRF in IMAP/SMTP with TOCTOU.
 
 ## Supported versions
 
