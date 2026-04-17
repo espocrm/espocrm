@@ -589,10 +589,6 @@ class EntityManager
         $this->fileManager->removeFile("custom/Espo/Custom/Controllers/$normalizedName.php");
         $this->fileManager->removeFile("custom/Espo/Custom/Repositories/$normalizedName.php");
 
-        if (file_exists("custom/Espo/Custom/SelectManagers/$normalizedName.php")) {
-            $this->fileManager->removeFile("custom/Espo/Custom/SelectManagers/$normalizedName.php");
-        }
-
         $this->fileManager->removeInDir("custom/Espo/Custom/Resources/layouts/$normalizedName");
         $this->fileManager->removeDir("custom/Espo/Custom/Resources/layouts/$normalizedName");
 
