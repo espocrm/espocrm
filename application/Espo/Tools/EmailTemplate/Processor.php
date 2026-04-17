@@ -370,6 +370,14 @@ class Processor
                     User::ENTITY_TYPE,
                 ]
             );
+
+            if (
+                $foundByAddressEntity &&
+                $params->applyAcl() &&
+                !$this->aclManager->checkEntityRead($this->user, $foundByAddressEntity)
+            ) {
+                $foundByAddressEntity = null;
+            }
         }
 
         if ($foundByAddressEntity) {
