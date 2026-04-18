@@ -1050,7 +1050,7 @@ export default class Model {
      * @param {string} field A field name.
      */
     hasField(field: string): boolean {
-        return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
+        return ('fields' in this.defs) && (field in this.defs.fields);
     }
 
     /**
@@ -1059,7 +1059,7 @@ export default class Model {
      * @param {string} link A link name.
      */
     hasLink(link: string): boolean {
-        return ('defs' in this) && ('links' in this.defs) && (link in this.defs.links);
+        return ('links' in this.defs) && (link in this.defs.links);
     }
 
     /**

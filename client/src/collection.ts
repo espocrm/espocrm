@@ -32,6 +32,7 @@ import Model from 'model';
 import {Events, View as BullView} from 'bullbone';
 import _ from 'underscore';
 import {onSync} from 'util/event';
+import {AjaxPromise} from 'util/ajax';
 
 /**
  * On sync with backend.
@@ -68,117 +69,150 @@ import {onSync} from 'util/event';
  */
 
 /**
- * @typedef {Object} module:collection~Data
- * @property {string|null} [primaryFilter]
- * @property {string[]} [boolFilterList]
- * @property {string} [textFilter]
- * @property {string} [select]
- * @property {string} [q]
+ * A where item. Sent to the backend.
  */
+export interface WhereItem {
+    type: string;
+    attribute?: string;
+    value?: WhereItem[] | string | number | boolean | string[] | null;
+    dateTime?: boolean;
+    timeZone?: string;
+}
 
 /**
- * A collection.
- *
- * @copyright Credits to Backbone.js.
+ * Search data.
  */
-class Collection {
+export interface Data {
+    primaryFilter?: string | null,
+    boolFilterList?: string[],
+    textFilter?: string,
+    select?: string,
+    q?: string,
+}
+
+export default class Collection<TModel extends Model = Model> {
 
     /**
      * An entity type.
-     *
-     * @type {string|null}
      */
-    entityType = null
+    entityType: string | null = null
 
     /**
      * A total number of records.
-     *
-     * @type {number}
      */
-    total = 0
+    total: number = 0
 
     /**
      * A current offset (for pagination).
-     *
-     * @type {number}
      */
-    offset = 0
+    offset: number = 0
 
     /**
      * A max size (for pagination).
-     *
-     * @type {number}
      */
-    maxSize = 20
+    maxSize: number = 20
+
+    /**
+     * A number of records.
+     */
+    length: number
 
     /**
      * An order.
-     *
-     * @type {boolean|'asc'|'desc'|null}
      */
-    order = null
+    order: boolean | 'asc' | 'desc' | null = null
 
     /**
      * An order-by field.
-     *
-     * @type {string|null}
      */
-    orderBy = null
+    orderBy: string | null = null
+
+    /**
+     * A default order.
+     */
+    defaultOrder: boolean | 'asc' | 'desc' | null = null
+
+    /**
+     * A default order-by field.
+     */
+    defaultOrderBy: string | null = null
 
     /**
      * A where clause.
-     *
-     * @type {module:search-manager~whereItem[]|null}
      */
-    where = null
+    where: WhereItem[] | null = null
 
     /**
      * @deprecated
-     * @type {module:search-manager~whereItem[]|null}
      */
-    whereAdditional = null
+    whereAdditional: WhereItem[] | null = null
 
     /**
      * A length correction.
-     *
-     * @type {number}
      */
-    lengthCorrection = 0
+    lengthCorrection: number = 0
 
     /**
      * A max max-size.
-     *
-     * @type {number}
      */
-    maxMaxSize = 0
+    maxMaxSize: number = 0
 
     /**
      * A where function.
-     *
-     * @type {function(): module:search-manager~whereItem[]}
      */
-    whereFunction
+    whereFunction: () => WhereItem[] | null = null
 
     /**
      * A last sync request promise.
-     *
-     * @type {module:ajax.AjaxPromise|null}
      */
-    lastSyncPromise = null
+    lastSyncPromise: AjaxPromise | null = null
 
     /**
      * A parent model. To be used for own purposes. E.g. to have access to a parent from related models.
-     *
-     * @type {import('model').default}
      */
-    parentModel
+    parentModel: Model | undefined
+
+    /**
+     * A root URL.
+     */
+    urlRoot: string | null
+
+    /**
+     * A URL.
+     */
+    url: string | null
+
+    /**
+     * Model definitions.
+     */
+    protected defs: import('model').Defs | null
+
+    /**
+     * A model type.
+     */
+    protected model: typeof Model
+
+    /**
+     * Search data.
+     */
+    data: Data & Record<string, any>
+
+    /**
+     * Models. Do not write, do not mutate.
+     */
+    models: TModel[];
+
+    private _byId: Record<string, TModel>
+
+
+    private readonly _onModelEventBind: () => void;
 
     /**
      * @param {Model[]|Record<string, *>[]|null} [models] Models.
      * @param {{
      *     entityType?: string,
      *     model?: Model.prototype,
-     *     defs?: module:model~defs,
+     *     defs?: import('model').Defs,
      *     order?: 'asc'|'desc'|boolean|null,
      *     orderBy?: string|null,
      *     urlRoot?: string,
@@ -186,7 +220,19 @@ class Collection {
      *     maxSize?: number,
      * }} [options] Options.
      */
-    constructor(models, options) {
+    constructor(
+        models: TModel[] | Record<string, any>[] | null,
+        options: {
+            model?: typeof Model,
+            defs: import('model').Defs,
+            maxSize?: number,
+            entityType?: string,
+            urlRoot?: string,
+            url?: string,
+            orderBy: string | null,
+            order: 'asc' | 'desc' | boolean,
+        }
+    ) {
         options = {...options};
 
         if (options.model) {
@@ -201,23 +247,11 @@ class Collection {
 
         if (options.entityType) {
             this.entityType = options.entityType;
-            /** @deprecated */
+            // @ts-ignore
             this.name = this.entityType;
         }
 
-        /**
-         * A root URL.
-         *
-         * @public
-         * @type {string|null}
-         */
-        this.urlRoot = options.urlRoot || this.urlRoot || this.entityType;
-
-        /**
-         * An URL.
-         *
-         * @type {string|null}
-         */
+        this.urlRoot = options.urlRoot || this.urlRoot || this.entityType || null;
         this.url = options.url || this.url || this.urlRoot;
 
         this.orderBy = options.orderBy || this.orderBy;
@@ -226,59 +260,59 @@ class Collection {
         this.defaultOrder = this.order;
         this.defaultOrderBy = this.orderBy;
 
-        /** @type {module:model~defs} */
-        this.defs = options.defs || {};
-
-        /**
-         * @type {module:collection~Data | Record<string, *>}
-         */
+        this.defs = options.defs ?? {};
         this.data = {};
 
-        /**
-         * @private
-         * @type {Model#}
-         */
         this.model = options.model || Model;
 
         if (models) {
             this.reset(models, {silent: true, ...options});
         }
+
+        this._onModelEventBind = this._onModelEvent.bind(this);
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Add models or a model.
      *
-     * @param {Model[]|Model|Record[]|Record} models Models ar a model.
-     * @param {{
-     *     merge?: boolean,
-     *     at?: number,
-     *     silent?: boolean,
-     * }} [options] Options. `at` – position; `merge` – merge existing models, otherwise, they are ignored.
-     * @return {this}
+     * @param models Models ar a model.
+     * @param [options] Options. `at` – position; `merge` – merge existing models, otherwise, they are ignored.
      * @fires Collection#update
      */
-    add(models, options) {
+    add(
+        models: TModel[] | TModel | Record<string, any>[] | Record<string, any>,
+        options?: {
+            merge?: boolean,
+            at?: number,
+            silent?: boolean,
+        },
+    ): this {
+
         this.set(models, {merge: false, ...options, ...addOptions});
 
         return this;
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Remove models or a model.
      *
-     * @param {Model[]|Model|string} models Models, a model or a model ID.
-     * @param {{
-     *     silent?: boolean,
-     * } & Object.<string, *>} [options] Options.
-     * @return {this}
+     * @param models Models, a model or a model ID.
+     * @param [options] Options.
      * @fires Collection#update
      */
-    remove(models, options) {
+    remove(
+        models: (TModel | string)[] | TModel | string,
+        options?: {
+            silent?: boolean,
+            [s: string]: any,
+        },
+    ): this {
+
         options = {...options};
 
-        const singular = !_.isArray(models);
-
-        models = singular ? [models] : models.slice();
+        models = Array.isArray(models) ? models.slice() : [models];
 
         const removed = this._removeModels(models, options);
 
@@ -297,7 +331,7 @@ class Collection {
 
     /**
      * @protected
-     * @param {Model[]|Model|Record[]} models Models ar a model.
+     * @param {Model[]|Model|Record[]} models Models or a model.
      * @param {{
      *     silent?: boolean,
      *     at?: number,
@@ -309,7 +343,20 @@ class Collection {
      * } & Object.<string, *>} [options]
      * @return {Model[]}
      */
-    set(models, options) {
+    protected set(
+        models: TModel[] | TModel | Record<string, any>[] | Record<string, any>,
+        options: {
+            silent?: boolean;
+            at?: number;
+            prepare?: boolean;
+            add?: boolean;
+            merge?: boolean;
+            remove?: boolean;
+            index?: number,
+            [s: string]: any,
+        },
+    ): TModel[] {
+
         if (models == null) {
             return [];
         }
@@ -320,8 +367,7 @@ class Collection {
             models = this.prepareAttributes(models, options) || [];
         }
 
-        const singular = !_.isArray(models);
-        models = singular ? [models] : models.slice();
+        models = Array.isArray(models) ? models.slice() : [models];
 
         let at = options.at;
 
@@ -347,9 +393,9 @@ class Collection {
         const merge = options.merge;
         const remove = options.remove;
 
-        let model, i;
+        let model: TModel | Record<string, any>;
 
-        for (i = 0; i < models.length; i++) {
+        for (let i = 0; i < models.length; i++) {
             model = models[i];
 
             const existing = this._get(model);
@@ -357,14 +403,13 @@ class Collection {
             if (existing) {
                 if (merge && model !== existing) {
                     let attributes = this._isModel(model) ?
-                        model.attributes :
-                        model;
+                        model.attributes : model;
 
                     if (options.prepare) {
                         attributes = existing.prepareAttributes(attributes, options);
                     }
 
-                    existing.set(attributes, options);
+                    existing.setMultiple(attributes, options);
                     toMerge.push(existing);
                 }
 
@@ -374,14 +419,13 @@ class Collection {
                 }
 
                 models[i] = existing;
-            }
-            else if (add) {
+            } else if (add) {
                 model = models[i] = this._prepareModel(model);
 
-                if (model) {
+                if (model && model instanceof Model) {
                     toAdd.push(model);
 
-                    this._addReference(model, options);
+                    this._addReference(model);
 
                     modelMap[model.cid] = true;
                     set.push(model);
@@ -391,7 +435,7 @@ class Collection {
 
         // Remove stale models.
         if (remove) {
-            for (i = 0; i < this.length; i++) {
+            for (let i = 0; i < this.length; i++) {
                 model = this.models[i];
 
                 if (!modelMap[model.cid]) {
@@ -418,15 +462,14 @@ class Collection {
             splice(this.models, set, 0);
 
             this.length = this.models.length;
-        }
-        else if (toAdd.length) {
+        } else if (toAdd.length) {
             splice(this.models, toAdd, at == null ? this.length : at);
 
             this.length = this.models.length;
         }
 
         if (!options.silent) {
-            for (i = 0; i < toAdd.length; i++) {
+            for (let i = 0; i < toAdd.length; i++) {
                 if (at != null) {
                     options.index = at + i;
                 }
@@ -451,26 +494,32 @@ class Collection {
             }
         }
 
-        return models;
+        return (models) as TModel[];
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Reset.
      *
-     * @param {Model[]|null} [models] Models to replace the collection with.
-     * @param {{
-     *     silent?: boolean,
-     * } & Object.<string, *>} [options]
+     * @param [models] Models to replace the collection with.
+     * @param [options]
      * @return {this}
      * @fires Collection#reset
      */
-    reset(models, options) {
+    reset(
+        models?: TModel[] | Record<string, any>,
+        options?: {
+            silent?: boolean,
+            [s: string]: any,
+        },
+    ): this {
+
         this.lengthCorrection = 0;
 
         options = options ? _.clone(options) : {};
 
         for (let i = 0; i < this.models.length; i++) {
-            this._removeReference(this.models[i], options);
+            this._removeReference(this.models[i]);
         }
 
         options.previousModels = this.models;
@@ -491,13 +540,16 @@ class Collection {
     /**
      * Add a model at the end.
      *
-     * @param {Model} model A model.
-     * @param {{
-     *     silent?: boolean,
-     * }} [options] Options
+     * @param model A model.
+     * @param [options] Options
      * @return {this}
      */
-    push(model, options) {
+    push(
+        model: TModel,
+        options?: {
+            silent?: boolean,
+        },
+    ): this {
         this.add(model, {at: this.length, ...options});
 
         return this;
@@ -506,12 +558,14 @@ class Collection {
     /**
      * Remove and return the last model.
      *
-     * @param {{
-     *     silent?: boolean,
-     * }} [options] Options
-     * @return {Model|null}
+     * @param [options] Options
      */
-    pop(options) {
+    pop(
+        options?: {
+            silent?: boolean,
+        },
+    ): TModel | null {
+
         const model = this.at(this.length - 1);
 
         if (!model) {
@@ -532,7 +586,13 @@ class Collection {
      * }} [options] Options
      * @return {this}
      */
-    unshift(model, options) {
+    unshift(
+        model: TModel,
+        options?: {
+            silent?: boolean,
+        },
+    ): this {
+
         this.add(model, {at: 0, ...options});
 
         return this;
@@ -541,12 +601,15 @@ class Collection {
     /**
      * Remove and return the first model.
      *
-     * @param {{
-     *     silent?: boolean,
-     * }} [options] Options
+     * @param [options] Options
      * @return {Model|null}
      */
-    shift(options) {
+    shift(
+        options?: {
+            silent?: boolean,
+        },
+    ): TModel | null {
+
         const model = this.at(0);
 
         if (!model) {
@@ -562,10 +625,9 @@ class Collection {
      * Get a model by an ID.
      *
      * @todo Usage to _get.
-     * @param {string} id An ID.
-     * @return {Model|undefined}
+     * @param id An ID.
      */
-    get(id) {
+    get(id: string): TModel | undefined {
         return this._get(id);
     }
 
@@ -573,20 +635,18 @@ class Collection {
      * Whether a model in the collection.
      *
      * @todo Usage to _has.
-     * @param {string} id An ID.
-     * @return {boolean}
+     * @param id An ID.
      */
-    has(id) {
+    has(id: string): boolean {
         return this._has(id);
     }
 
     /**
      * Get a model by index.
      *
-     * @param {number} index An index. Can be negative, then counted from the end.
-     * @return {Model|undefined}
+     * @param index An index. Can be negative, then counted from the end.
      */
-    at(index) {
+    at(index: number): TModel | undefined {
         if (index < 0) {
             index += this.length;
         }
@@ -598,85 +658,59 @@ class Collection {
      * Iterates through a collection.
      *
      * @param {function(Model)} callback A function.
-     * @param {Object} [context] A context.
      */
-    forEach(callback, context) {
-        return this.models.forEach(callback, context);
+    forEach(callback: (model: TModel) => void): this {
+        this.models.forEach(callback, arguments[1]);
+
+        return this;
     }
 
     /**
      * Get an index of a model. Returns -1 if not found.
      *
-     * @param {Model} model A model
-     * @return {number}
+     * @param model A model
      */
-    indexOf(model) {
+    indexOf(model: TModel): number {
         return this.models.indexOf(model);
     }
 
-    /**
-     * @private
-     * @param {string|Object.<string, *>|Model} obj
-     * @return {boolean}
-     */
-    _has(obj) {
+    private _has(obj: string | Record<string, any> | TModel): boolean {
         return !!this._get(obj)
     }
 
-    /**
-     * @private
-     * @param {string|Object.<string, *>|Model} obj
-     * @return {Model|undefined}
-     */
-    _get(obj) {
+    private _get(obj: string | Record<string, any> | TModel): TModel | undefined {
         if (obj == null) {
             return void 0;
         }
 
-        return this._byId[obj] ||
-            this._byId[this.modelId(obj.attributes || obj)] ||
-            obj.cid && this._byId[obj.cid];
+        // @ts-ignore
+        return this._byId[obj] || this._byId[this.modelId(obj.attributes || obj)] || obj.cid && this._byId[obj.cid];
     }
 
-    /**
-     * @protected
-     * @param {Object.<string, *>} attributes
-     * @return {*}
-     */
-    modelId(attributes) {
+    private modelId(attributes: Record<string, any>): any {
         return attributes['id'];
     }
 
-    /** @private */
-    _reset() {
-        /**
-         * A number of records.
-         */
+    private _reset(): void {
         this.length = 0;
-
-        /**
-         * Models.
-         *
-         * @type {Model[]}
-         */
         this.models = [];
-
-        /** @private */
-        this._byId  = {};
+        this._byId = {};
     }
 
     /**
-     * @param {string} orderBy An order field.
-     * @param {bool|null|'desc'|'asc'} [order] True for desc.
-     * @returns {Promise}
+     * @param orderBy An order field.
+     * @param [order] True for desc.
      */
-    sort(orderBy, order) {
+    sort(
+        orderBy: string | null,
+        order: 'asc' | 'desc' | boolean | null,
+    ): AjaxPromise {
+
         this.orderBy = orderBy;
 
         if (order === true) {
             order = 'desc';
-        }
-        else if (order === false) {
+        } else if (order === false) {
             order = 'asc';
         }
 
@@ -687,55 +721,43 @@ class Collection {
 
     /**
      * Has previous page.
-     *
-     * @return {boolean}
      */
-    hasPreviousPage() {
+    hasPreviousPage(): boolean {
         return this.offset > 0;
     }
 
     /**
      * Has next page.
-     *
-     * @return {boolean}
      */
-    hasNextPage() {
+    hasNextPage(): boolean {
         return this.total - this.offset > this.length || this.total === -1;
     }
 
     /**
      * Next page.
-     *
-     * @returns {Promise}
      */
-    nextPage() {
+    nextPage(): AjaxPromise {
         return this.setOffset(this.offset + this.length);
     }
 
     /**
      * Previous page.
-     *
-     * @returns {Promise}
      */
-    previousPage() {
+    previousPage(): AjaxPromise {
         return this.setOffset(Math.max(0, this.offset - this.maxSize));
     }
 
     /**
      * First page.
-     *
-     * @returns {Promise}
      */
-    firstPage() {
+    firstPage(): AjaxPromise {
         return this.setOffset(0);
     }
 
     /**
      * Last page.
-     *
-     * @returns {Promise}
      */
-    lastPage() {
+    lastPage(): AjaxPromise {
         let offset = this.total - this.total % this.maxSize;
 
         if (offset === this.total) {
@@ -748,10 +770,9 @@ class Collection {
     /**
      * Set an offset.
      *
-     * @param {number} offset Offset.
-     * @returns {Promise}
+     * @param offset Offset.
      */
-    setOffset(offset) {
+    setOffset(offset: number): AjaxPromise {
         if (offset < 0) {
             throw new RangeError('offset can not be less than 0');
         }
@@ -772,33 +793,35 @@ class Collection {
 
     /**
      * Has more.
-     *
-     * @return {boolean}
      */
-    hasMore() {
+    hasMore(): boolean {
         return this.total > (this.length + this.offset + this.lengthCorrection) || this.total === -1;
     }
 
     /**
      * Prepare attributes.
      *
-     * @protected
-     * @param {Object.<string, *>|Record[]} response A response from the backend.
-     * @param {Object.<string, *>} options Options.
-     * @returns {Object.<string, *>[]}
+     * @param response A response from the backend.
+     * @param options Options.
      */
-    prepareAttributes(response, options) {
+    protected prepareAttributes(
+        response: Record<string, any>[] | Record<string, any>,
+        options: Record<string, any>,
+    ): Record<string, any>[] {
+
+        if (Array.isArray(response)) {
+            return [];
+        }
+
+        // noinspection BadExpressionStatementJS
+        options;
+
         this.total = response.total;
 
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * @deprecated As of v8.4. Use 'sync' event to obtain any additional data from a response.
-         */
-        this.dataAdditional = response.additionalData || null;
-
-        return response.list;
+        return response.list ?? [];
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Fetch from the backend.
      *
@@ -813,7 +836,18 @@ class Collection {
      * @returns {Promise}
      * @fires Collection#sync Unless `{silent: true}`.
      */
-    fetch(options) {
+    fetch(
+        options?: {
+            remove?: boolean;
+            more?: boolean;
+            offset?: number;
+            maxSize?: number;
+            orderBy?: string | null;
+            order?: 'asc' | 'desc';
+            [s: string]: any,
+        },
+    ): AjaxPromise {
+
         options = {...options};
 
         options.data = {...options.data, ...this.data};
@@ -850,7 +884,7 @@ class Collection {
 
         const success = options.success;
 
-        options.success = response => {
+        options.success = (response: TModel[]) => {
             options.reset ?
                 this.reset(response, options) :
                 this.set(response, options);
@@ -864,7 +898,7 @@ class Collection {
 
         const error = options.error;
 
-        options.error = response => {
+        options.error = (response: any) => {
             if (error) {
                 error.call(options.context, this, response, options);
             }
@@ -872,6 +906,7 @@ class Collection {
             this.trigger('error', this, response, options);
         };
 
+        // @ts-ignore
         this.lastSyncPromise = Model.prototype.sync.call(this, 'read', this, options);
 
         return this.lastSyncPromise;
@@ -882,7 +917,7 @@ class Collection {
      *
      * @return {boolean}
      */
-    isBeingFetched() {
+    isBeingFetched(): boolean {
         return this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4;
     }
 
@@ -897,10 +932,8 @@ class Collection {
 
     /**
      * Get a where clause.
-     *
-     * @returns {module:search-manager~whereItem[]}
      */
-    getWhere() {
+    getWhere(): WhereItem[] {
         let where = (this.where ?? []).concat(this.whereAdditional || []);
 
         if (this.whereFunction) {
@@ -915,14 +948,15 @@ class Collection {
      *
      * @returns {string}
      */
-    getEntityType() {
+    getEntityType(): string {
+        // @ts-ignore
         return this.entityType || this.name;
     }
 
     /**
      * Reset the order to default.
      */
-    resetOrderToDefault() {
+    resetOrderToDefault(): void {
         this.orderBy = this.defaultOrderBy;
         this.order = this.defaultOrder;
     }
@@ -930,11 +964,16 @@ class Collection {
     /**
      * Set an order.
      *
-     * @param {string|null} orderBy
-     * @param {boolean|'asc'|'desc'|null} [order]
-     * @param {boolean} [setDefault]
+     * @param orderBy
+     * @param [order]
+     * @param [setDefault]
      */
-    setOrder(orderBy, order, setDefault) {
+    setOrder(
+        orderBy: string | null,
+        order: boolean | 'asc' | 'desc' | null,
+        setDefault?: boolean,
+    ): void {
+
         this.orderBy = orderBy;
         this.order = order;
 
@@ -948,15 +987,15 @@ class Collection {
      * Clone.
      *
      * @param {{withModels?: boolean}} [options]
-     * @return {Collection}
      */
-    clone(options = {}) {
+    clone(options: { withModels?: boolean } = {}): Collection<TModel> {
         let models = this.models;
 
         if (options.withModels) {
             models = this.models.map(m => m.clone());
         }
 
+        // @ts-ignore
         const collection = new this.constructor(models, {
             model: this.model,
             entityType: this.entityType,
@@ -965,6 +1004,7 @@ class Collection {
             order: this.order,
         });
 
+        // @ts-ignore
         collection.name = this.name;
         collection.urlRoot = this.urlRoot;
         collection.url = this.url;
@@ -972,6 +1012,8 @@ class Collection {
         collection.defaultOrderBy = this.defaultOrderBy;
         collection.data = Espo.Utils.cloneDeep(this.data);
         collection.where = Espo.Utils.cloneDeep(this.where);
+        // noinspection JSDeprecatedSymbols
+        // @ts-ignore
         collection.whereAdditional = Espo.Utils.cloneDeep(this.whereAdditional);
         collection.total = this.total;
         collection.offset = this.offset;
@@ -988,18 +1030,15 @@ class Collection {
      *
      * @return {Model}
      */
-    prepareModel() {
+    prepareModel(): TModel {
         return this._prepareModel({});
     }
 
     // noinspection JSUnusedGlobalSymbols
     /**
      * Compose a URL for syncing. Called from Model.sync.
-     *
-     * @protected
-     * @return {string}
      */
-    composeSyncUrl() {
+    protected composeSyncUrl(): string {
         return this.url;
     }
 
@@ -1019,7 +1058,17 @@ class Collection {
      * @return {{stop: function()}}
      * @since 10.0.0
      */
-    onSync(params) {
+    onSync(
+        params: {
+            owner: import('view').default | import('model').default | import('collection').default;
+            once?: boolean;
+            callback: (arg0: {
+                action: 'fetch' | 'save' | 'destroy' | null;
+                response: any;
+            }) => void;
+        }
+    ): { stop: () => any} {
+
         return onSync({
             owner: params.owner,
             once: params.once,
@@ -1028,13 +1077,11 @@ class Collection {
         });
     }
 
-    /** @private */
-    _isModel(object) {
+    private _isModel(object: any): object is Model {
         return object instanceof Model;
     }
 
-    /** @private */
-    _removeModels(models, options) {
+    private _removeModels(models: any, options: Record<string, any>): any[] {
         const removed = [];
 
         for (let i = 0; i < models.length; i++) {
@@ -1064,14 +1111,13 @@ class Collection {
 
             removed.push(model);
 
-            this._removeReference(model, options);
+            this._removeReference(model);
         }
 
         return removed;
     }
 
-    /** @private */
-    _addReference(model) {
+    private _addReference(model: TModel) {
         this._byId[model.cid] = model;
 
         const id = this.modelId(model.attributes);
@@ -1080,11 +1126,10 @@ class Collection {
             this._byId[id] = model;
         }
 
-        model.on('all', this._onModelEvent, this);
+        model.on('all', this._onModelEventBind);
     }
 
-    /** @private */
-    _removeReference(model) {
+    private _removeReference(model: TModel) {
         delete this._byId[model.cid];
 
         const id = this.modelId(model.attributes);
@@ -1097,11 +1142,16 @@ class Collection {
             delete model.collection;
         }
 
-        model.off('all', this._onModelEvent, this);
+        model.off('all', this._onModelEventBind);
     }
 
-    /** @private */
-    _onModelEvent(event, model, collection, options) {
+    private _onModelEvent(
+        event: string,
+        model: TModel,
+        collection: Collection,
+        options?: Record<string, any>,
+    ): void {
+
         // @todo Revise. Never triggerred? Remove?
         if (event === 'sync' && collection !== this) {
             return;
@@ -1140,21 +1190,21 @@ class Collection {
     }
 
     // noinspection JSDeprecatedSymbols
-    /** @private*/
-    _prepareModel(attributes) {
+    private _prepareModel(attributes: any): TModel {
         if (this._isModel(attributes)) {
             if (!attributes.collection) {
                 attributes.collection = this;
             }
 
-            return attributes;
+            return attributes as TModel;
         }
 
         const ModelClass = this.model;
 
-        // noinspection JSValidateTypes
+        // @ts-ignore
         return new ModelClass(attributes, {
             collection: this,
+            // @ts-ignore
             entityType: this.entityType || this.name,
             defs: this.defs,
         });
@@ -1164,19 +1214,21 @@ class Collection {
      * Subscribe to an event.
      *
      * @param {string} name An event.
-     * @param {function(...*)} callback A callback.
+     * @param {function(...any)} callback A callback.
      */
-    on(name, callback) {
-        return Events.on.call(this, name, callback, arguments[2]);
+    on(name: string, callback: (...args: unknown[]) => any): this {
+        Events.on.call(this, name, callback, arguments[2]);
+
+        return this;
     }
 
     /**
      * Subscribe to an event. Fired once.
      *
      * @param {string} name An event.
-     * @param {function(...*)} callback A callback.
+     * @param {function(...any)} callback A callback.
      */
-    once(name, callback) {
+    once(name: string, callback: (...args: unknown[]) => void): this {
         Events.once.call(this, name, callback, arguments[2]);
 
         return this;
@@ -1186,9 +1238,9 @@ class Collection {
      * Unsubscribe from an event or all events.
      *
      * @param {string} [name] From a specific event.
-     * @param {function(...*)} [callback] From a specific callback.
+     * @param {function()} [callback] From a specific callback.
      */
-    off(name, callback) {
+    off(name?: string, callback?: (...args: unknown[]) => void): this {
         Events.off.call(this, name, callback);
 
         return this;
@@ -1199,9 +1251,9 @@ class Collection {
      *
      * @param {Object} other What to listen.
      * @param {string} name An event.
-     * @param {function(...any)} callback A callback.
+     * @param callback A callback.
      */
-    listenTo(other, name, callback) {
+    listenTo(other: object, name: string, callback: (...args: unknown[]) => void): this {
         Events.listenTo.call(this, other, name, callback);
 
         return this;
@@ -1212,9 +1264,9 @@ class Collection {
      *
      * @param {Object} other What to listen.
      * @param {string} name An event.
-     * @param {function(...any)} callback A callback.
+     * @param {function()} callback A callback.
      */
-    listenToOnce(other, name, callback) {
+    listenToOnce(other: object, name: string, callback: (...args: unknown[]) => void): this {
         Events.listenToOnce.call(this, other, name, callback);
 
         return this;
@@ -1225,9 +1277,9 @@ class Collection {
      *
      * @param {Object} [other] To remove listeners to a specific object.
      * @param {string} [name] To remove listeners to a specific event.
-     * @param {function()} [callback] A callback.
+     * @param {function()} [callback] To remove listeners to a specific callback.
      */
-    stopListening(other, name, callback) {
+    stopListening(other?: object, name?: string, callback?: (...args: unknown[]) => any): this {
         Events.stopListening.call(this, other, name, callback);
 
         return this;
@@ -1239,13 +1291,14 @@ class Collection {
      * @param {string} name An event.
      * @param {...*} parameters Arguments.
      */
-    trigger(name, ...parameters) {
+    trigger(name: string, ...parameters: any[]): this {
         Events.trigger.call(this, name, ...parameters);
 
         return this;
     }
 }
 
+// @ts-ignore
 Collection.extend = BullView.extend;
 
 const setOptions = {
@@ -1259,24 +1312,21 @@ const addOptions = {
     remove: false,
 };
 
-const splice = (array, insert, at) => {
+const splice = (array: any[], insert: string | any[], at: number): void => {
     at = Math.min(Math.max(at, 0), array.length);
 
     const tail = Array(array.length - at);
     const length = insert.length;
-    let i;
 
-    for (i = 0; i < tail.length; i++) {
+    for (let i = 0; i < tail.length; i++) {
         tail[i] = array[i + at];
     }
 
-    for (i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
         array[i + at] = insert[i];
     }
 
-    for (i = 0; i < tail.length; i++) {
+    for (let i = 0; i < tail.length; i++) {
         array[i + length + at] = tail[i];
     }
 };
-
-export default Collection;
