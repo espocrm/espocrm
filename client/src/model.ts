@@ -81,7 +81,7 @@ type User = import('models/user').default;
 /**
  * A model.
  */
-export default class Model {
+export default class Model<T extends Record<string, any> = Record<string, any>> {
 
     /**
      * A root URL. An ID will be appended. Used for syncing with backend.
@@ -129,23 +129,24 @@ export default class Model {
     /**
      * Attribute values.
      */
-    public attributes: Record<string, any>
+    public attributes: Partial<T>
 
     /**
-     * @todo Use template.
+     * A parent collection the model belongs to.
      */
     public collection: Collection | undefined
 
-    private changed: Record<string, any>
-    private _previousAttributes: null | Record<string, any>
+    private changed: Partial<T>
+    private _previousAttributes: null | Partial<T>
 
     /**
+     * Definitions.
      * @internal
      */
     protected defs: Defs
 
     constructor(
-        attributes: Record<string, any> | Model,
+        attributes: Partial<T> | Model<T>,
         options: {
             collection?: Collection;
             entityType?: string;
@@ -167,11 +168,10 @@ export default class Model {
             this.collection = options.collection;
         }
 
-        this.setMultiple(attributes || {});
+        attributes = (attributes ?? {}) as Partial<T>;
 
-        /**
-         * Definitions.
-         */
+        this.setMultiple(attributes);
+
         this.defs = options.defs || {};
 
         if (!this.defs.fields) {
@@ -271,7 +271,7 @@ export default class Model {
      * @fires Model#change Unless `{silent: true}`.
      */
     set(
-        attribute: string,
+        attribute: keyof T,
         value: any,
         options: {silent: boolean} & Record<string, any> = undefined
     ): this {
@@ -304,7 +304,7 @@ export default class Model {
      * @copyright Credits to Backbone.js.
      */
     setMultiple(
-        attributes: Record<string, any>,
+        attributes: Partial<T>,
         options: {
             silent?: boolean,
             unset?: boolean,
@@ -404,13 +404,13 @@ export default class Model {
      * @return {Model}
      */
     unset(
-        attribute: string,
+        attribute: keyof T,
         options: {silent?: boolean} & Record<string, any>,
     ): Model {
 
         options = {...options, unset: true};
 
-        const attributes = {};
+        const attributes = {} as Partial<T>;
         attributes[attribute] = null;
 
         return this.setMultiple(attributes, options);
@@ -422,7 +422,7 @@ export default class Model {
      * @param attribute An attribute name.
      * @returns {*}
      */
-    get(attribute: string): any {
+    get(attribute: keyof T): any {
         if (attribute === this.idAttribute && this.id) {
             return this.id;
         }
@@ -436,7 +436,7 @@ export default class Model {
      * @param {string} attribute An attribute name.
      * @returns {boolean}
      */
-    has(attribute: string): boolean {
+    has(attribute: keyof T): boolean {
         const value = this.get(attribute);
 
         return typeof value !== 'undefined';
@@ -452,7 +452,7 @@ export default class Model {
         options: {silent?: boolean} & Record<string, any>,
     ): this {
 
-        const attributes = {};
+        const attributes = {} as Partial<T>;
 
         for (const key in this.attributes) {
             attributes[key] = void 0;
@@ -475,25 +475,25 @@ export default class Model {
      *
      * @param [attribute]
      */
-    hasChanged(attribute: string = undefined): boolean {
+    hasChanged(attribute?: keyof T): boolean {
         if (!attribute) {
             return !_.isEmpty(this.changed);
         }
 
-        return _.has(this.changed, attribute);
+        return _.has(this.changed, attribute as string);
     }
 
     /**
      * Get changed attribute values. To be called only within a 'change' event handler.
      */
-    changedAttributes(): Record<string, any> {
+    changedAttributes(): Partial<T> {
         return this.hasChanged() ? _.clone(this.changed) : {};
     }
 
     /**
      * Get previous attributes. To be called only within a 'change' event handler.
      */
-    previousAttributes(): Record<string, any> {
+    previousAttributes(): Partial<T> {
         return _.clone(this._previousAttributes);
     }
 
@@ -503,7 +503,7 @@ export default class Model {
      * @param attribute
      * @return {*}
      */
-    previous(attribute: string): any {
+    previous(attribute: keyof T): any {
         if (!this._previousAttributes) {
             return null;
         }
@@ -511,6 +511,7 @@ export default class Model {
         return this._previousAttributes[attribute];
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Fetch values from the backend.
      *
@@ -546,6 +547,7 @@ export default class Model {
         return this.lastSyncPromise;
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Save values to the backend.
      *
@@ -556,7 +558,7 @@ export default class Model {
      * @copyright Credits to Backbone.js.
      */
     save(
-        attributes?: Record<string, any>,
+        attributes?: Partial<T>,
         options?: {
             patch?: boolean,
             wait?: boolean,
@@ -630,6 +632,7 @@ export default class Model {
         return result;
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Delete the record in the backend.
      *
