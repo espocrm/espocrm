@@ -30,40 +30,29 @@
 
 import $ from 'jquery';
 import Utils from 'utils';
+import {AjaxPromise} from 'util/ajax';
 
-let isConfigured = false;
-/** @type {number} */
-let defaultTimeout;
-/** @type {string} */
-let apiUrl;
-/** @type {Espo.Ajax~Handler} */
-let beforeSend;
-/** @type {Espo.Ajax~Handler} */
-let onSuccess;
-/** @type {Espo.Ajax~Handler} */
-let onError;
-/** @type {Espo.Ajax~Handler} */
-let onTimeout;
-/** @type {function()} */
-let onOffline;
+let isConfigured: boolean = false;
+let defaultTimeout: number;
+let apiUrl: string;
+let beforeSend: Handler;
+let onSuccess: Handler;
+let onError: Handler;
+let onTimeout: Handler;
+let onOffline: () => void;
 
-/**
- * @callback Espo.Ajax~Handler
- * @param {XMLHttpRequest} [xhr]
- * @param {Object.<string, *>} [options]
- */
+type Handler = (xhr?: XMLHttpRequest, options?: Record<string, any>) => void;
 
 /**
  * Options.
- *
- * @typedef {Object} Espo.Ajax~Options
- *
- * @property {Number} [timeout] A timeout.
- * @property {Object.<string, string>} [headers] A request headers.
- * @property {'json'|'text'} [dataType] A data type.
- * @property {string} [contentType] A content type.
- * @property {boolean} [resolveWithXhr] To resolve with `XMLHttpRequest`.
  */
+interface Options {
+    timeout?: number,
+    headers?: Record<string, string>,
+    dataType?: 'json' | 'text',
+    contentType?: string,
+    resolveWithXhr?: boolean,
+}
 
 const baseUrl = Utils.obtainBaseUrl();
 
@@ -76,18 +65,23 @@ const Ajax = Espo.Ajax = {
     /**
      * Request.
      *
-     * @param {string} url An URL.
-     * @param {'GET'|'POST'|'PUT'|'DELETE'|'PATCH'|'OPTIONS'} method An HTTP method.
+     * @param url An URL.
+     * @param method An HTTP method.
      * @param {*} [data] Data.
-     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @param [options] Options.
      * @returns {AjaxPromise<any>}
      */
-    request: function (url, method, data, options) {
-        options = options || {};
+    request: function (
+        url: string,
+        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS',
+        data: any = undefined,
+        options: Options & Record<string, any> = {}
+    ): AjaxPromise {
 
         const timeout = 'timeout' in options ? options.timeout : defaultTimeout;
         const contentType = options.contentType || 'application/json';
-        let body;
+
+        let body: any;
 
         if (options.data && !data) {
             data = options.data;
@@ -132,14 +126,18 @@ const Ajax = Espo.Ajax = {
             beforeSend(xhr, options);
         }
 
-        const promiseWrapper = {};
+        const promiseWrapper: {
+            promise?: AjaxPromise,
+            xhr?: Xhr,
+        } = {};
 
-        const promise = new AjaxPromise((resolve, reject) => {
-            const onErrorGeneral = (isTimeout) => {
+        const promise = new AjaxPromise<any>((resolve, reject) => {
+            const onErrorGeneral = (isTimeout: boolean = false) => {
                 if (options.error) {
                     options.error(xhr, options);
                 }
 
+                // @ts-ignore
                 reject(xhr, options);
 
                 if (isTimeout) {
@@ -171,13 +169,12 @@ const Ajax = Espo.Ajax = {
                     return;
                 }
 
-                let response = xhr.responseText;
+                let response: string | Xhr = xhr.responseText;
 
                 if ((options.dataType || 'json') === 'json') {
                     try {
                         response = JSON.parse(xhr.responseText);
-                    }
-                    catch (e) {
+                    } catch (e) {
                         console.error('Could not parse API response.');
 
                         onErrorGeneral();
@@ -218,11 +215,15 @@ const Ajax = Espo.Ajax = {
      * POST request.
      *
      * @param {string} url An URL.
-     * @param {*} [data] Data.
-     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any> & AjaxPromise}
+     * @param [data] Data.
+     * @param [options] Options.
      */
-    postRequest: function (url, data, options) {
+    postRequest: function (
+        url: string,
+        data: any = undefined,
+        options: Options & Record<string, any> = undefined,
+    ): Promise<any> & AjaxPromise {
+
         if (data) {
             data = JSON.stringify(data);
         }
@@ -233,12 +234,16 @@ const Ajax = Espo.Ajax = {
     /**
      * PATCH request.
      *
-     * @param {string} url An URL.
-     * @param {*} [data] Data.
-     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any> & AjaxPromise}
+     * @param url An URL.
+     * @param [data] Data.
+     * @param [options] Options.
      */
-    patchRequest: function (url, data, options) {
+    patchRequest: function (
+        url: string,
+        data: any = undefined,
+        options: Options & Record<string, any>,
+    ): Promise<any> & AjaxPromise {
+
         if (data) {
             data = JSON.stringify(data);
         }
@@ -249,12 +254,16 @@ const Ajax = Espo.Ajax = {
     /**
      * PUT request.
      *
-     * @param {string} url An URL.
-     * @param {*} [data] Data.
-     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any> & AjaxPromise}
+     * @param url An URL.
+     * @param [data] Data.
+     * @param [options] Options.
      */
-    putRequest: function (url, data, options) {
+    putRequest: function (
+        url: string,
+        data: any = undefined,
+        options: Options & Record<string, any> = undefined,
+    ): Promise<any> & AjaxPromise {
+
         if (data) {
             data = JSON.stringify(data);
         }
@@ -265,12 +274,16 @@ const Ajax = Espo.Ajax = {
     /**
      * DELETE request.
      *
-     * @param {string} url An URL.
-     * @param {*} [data] Data.
-     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any> & AjaxPromise}
+     * @param url An URL.
+     * @param [data] Data.
+     * @param [options] Options.
      */
-    deleteRequest: function (url, data, options) {
+    deleteRequest: function (
+        url: string,
+        data: any,
+        options: Options & Record<string, any>,
+    ): Promise<any> & AjaxPromise {
+
         if (data) {
             data = JSON.stringify(data);
         }
@@ -281,28 +294,35 @@ const Ajax = Espo.Ajax = {
     /**
      * GET request.
      *
-     * @param {string} url An URL.
-     * @param {*} [data] Data.
-     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any> & AjaxPromise}
+     * @param url An URL.
+     * @param [data] Data.
+     * @param [options] Options.
      */
-    getRequest: function (url, data, options) {
+    getRequest: function (
+        url: string,
+        data: any = undefined,
+        options: Options & Record<string, any> = undefined,
+    ): Promise<any> & AjaxPromise {
+
         return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'GET', data, options);
     },
 
     /**
      * @internal
-     * @param {{
-     *     apiUrl: string,
-     *     timeout: number,
-     *     beforeSend: Espo.Ajax~Handler,
-     *     onSuccess: Espo.Ajax~Handler,
-     *     onError: Espo.Ajax~Handler,
-     *     onTimeout: Espo.Ajax~Handler,
-     *     onOffline?: function(),
-     * }} options Options.
+     * @param options Options.
      */
-    configure: function (options) {
+    configure: function (
+        options: {
+            apiUrl: string,
+            timeout: number,
+            beforeSend: Handler,
+            onSuccess: Handler,
+            onError: Handler,
+            onTimeout: Handler,
+            onOffline?: () => void,
+        }
+    ) {
+
         if (isConfigured) {
             throw new Error("Ajax is already configured.");
         }
@@ -319,56 +339,6 @@ const Ajax = Espo.Ajax = {
     },
 };
 
-/**
- * @memberOf module:ajax
- */
-class AjaxPromise extends Promise {
-
-    /**
-     * @type {XMLHttpRequest|null}
-     * @internal
-     */
-    xhr = null
-
-    isAborted = false
-
-    /**
-     * Abort the request.
-     */
-    abort() {
-        this.isAborted = true;
-
-        if (this.xhr) {
-            this.xhr.abort();
-        }
-    }
-
-    /**
-     * Get a ready state.
-     *
-     * @return {Number}
-     */
-    getReadyState() {
-        if (!this.xhr) {
-            return 0;
-        }
-
-        return this.xhr.readyState || 0;
-    }
-
-    /**
-     * Get a status code
-     *
-     * @return {Number}
-     */
-    getStatus() {
-        if (!this.xhr) {
-            return 0;
-        }
-
-        return this.xhr.status;
-    }
-}
 
 /**
  * @name module:ajax.Xhr

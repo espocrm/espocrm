@@ -8,7 +8,9 @@
         },
         "module": "ES6",
         "target": "ES2018",
-        "moduleResolution": "bundler"
+        "moduleResolution": "bundler",
+        "allowJs": true,
+        "checkJs": false
     },
     "include": [
         "client/src",

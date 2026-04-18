@@ -527,6 +527,7 @@ class EditModalView extends ModalView {
     async beforeCollapse() {
         if (this.wasModified) {
             this.getRecordView().setConfirmLeaveOut(false);
+
             this.getRouter().addWindowLeaveOutObject(this);
         }
     }

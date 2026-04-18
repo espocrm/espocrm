@@ -32,6 +32,7 @@ import {Events, View as BullView} from 'bullbone';
 import _ from 'underscore';
 import DefaultValueProvider from 'helpers/model/default-value-provider';
 import {onModelChange, onSync} from 'util/event';
+import {AjaxPromise} from 'util/ajax';
 
 /**
  * When attributes have changed.
@@ -52,113 +53,114 @@ import {onModelChange, onSync} from 'util/event';
 
 /**
  * Definitions.
- *
- * @typedef module:model~defs
- * @type {Object}
- * @property {Object.<string, module:model~fieldDefs & Record>} [fields] Fields.
- * @property {Object.<string, Object.<string, *>>} [links] Links.
  */
+export interface Defs {
+    fields?: Record<string, FieldDefs & Record<string, any>>
+    links?: Record<string, Record<string, any>>
+}
 
 /**
  * Field definitions.
- *
- * @typedef module:model~fieldDefs
- * @type {Object}
- * @property {string} type A type.
  */
+interface FieldDefs {
+    type: string,
+}
 
-/** @typedef {import('bullbone')} Bull */
+type Collection = import('collection').default;
+type User = import('models/user').default;
 
 /**
  * A model.
  *
- * @mixes Bull.Events
+ * @mixes Events
  */
-class Model {
+export default class Model {
 
     /**
      * A root URL. An ID will be appended. Used for syncing with backend.
-     *
-     * @type {string|null}
      */
-    urlRoot = null
+    urlRoot: string | null = null
 
     /**
      * A URL. If not empty, then will be used for syncing instead of `urlRoot`.
-     *
-     * @type {string|null}
      */
-    url = null
+    url: string | null = null
 
     /**
      * A name.
-     *
-     * @type {string|null}
      */
-    name = null
+    name: string | null = null
 
     /**
      * An entity type.
-     *
-     * @type {string|null}
      */
-    entityType = null
+    entityType: string | null = null
 
     /**
      * A last request promise.
-     *
-     * @type {module:ajax.AjaxPromise|null}
      */
-    lastSyncPromise = null
+    lastSyncPromise: AjaxPromise | null = null
 
-    /** @private */
-    _pending
-    /** @private */
-    _changing
+    private _pending: any
+    private _changing: boolean
 
     /**
-     * @param {Object.<string, *>|Model} [attributes]
-     * @param {{
-     *     collection?: module:collection,
-     *     entityType?: string,
-     *     urlRoot?: string,
-     *     url?: string,
-     *     defs?: module:model~defs,
-     *     user?: module:models/user,
-     * }} [options]
+     * An ID attribute.
      */
-    constructor(attributes, options) {
+    private readonly idAttribute: string
+
+    /**
+     * A record ID.
+     */
+    public id: string | null
+
+    /**
+     * An instance ID.
+     */
+    public readonly cid: string
+
+    /**
+     * Attribute values.
+     */
+    public attributes: Record<string, any>
+
+    /**
+     * @todo Use template.
+     */
+    public collection: Collection | undefined
+
+    private changed: Record<string, any>
+    private _previousAttributes: null | Record<string, any>
+
+    /**
+     * @internal
+     */
+    protected defs: Defs
+
+    constructor(
+        attributes: Record<string, any> | Model,
+        options: {
+            collection?: Collection;
+            entityType?: string;
+            urlRoot?: string;
+            url?: string;
+            defs?: Defs;
+            user?: User;
+        },
+    ) {
         options = options || {};
 
-        /**
-         * An ID attribute.
-         * @type {string}
-         */
         this.idAttribute = 'id';
-
-        /**
-         * A record ID.
-         * @type {string|null}
-         */
         this.id = null;
-
-        /**
-         * An instance ID.
-         * @type {string}
-         */
         this.cid = _.uniqueId('c');
 
-        /**
-         * Attribute values.
-         * @type {Object.<string, *>}
-         */
         this.attributes = {};
 
         if (options.collection) {
             this.collection = options.collection;
         }
 
-        this.set(attributes || {});
+        this.setMultiple(attributes || {});
 
         /**
          * Definitions.
@@ -178,20 +180,30 @@ class Model {
         this.urlRoot = options.urlRoot || this.urlRoot;
         this.url = options.url || this.url;
 
-        /** @private */
         this.changed = {};
-        /** @private */
         this._previousAttributes = null;
     }
 
     /**
-     * @protected
-     * @param {string} [method] HTTP method.
+     * @param [method] HTTP method.
      * @param {Model} model
-     * @param {Object.<string, *>} [options]
-     * @returns {module:ajax.AjaxPromise|Promise}
+     * @param [options] Options.
      */
-    sync(method, model, options) {
+    protected sync(
+        method: string,
+        model: this,
+        options?: {
+            attributes?: any,
+            error?: any,
+            textStatus?: any,
+            errorThrown?: any,
+            context?: any,
+            bypassRequest?: any,
+            xhr?: any,
+            [s: string]: any,
+        },
+    ): AjaxPromise {
+
         const methodMap = {
             'create': 'POST',
             'update': 'PUT',
@@ -219,7 +231,7 @@ class Model {
 
         const error = options.error;
 
-        options.error = (xhr, textStatus, errorThrown) => {
+        options.error = (xhr: XMLHttpRequest, textStatus: string, errorThrown: any) => {
             options.textStatus = textStatus;
             options.errorThrown = errorThrown;
 
@@ -244,18 +256,23 @@ class Model {
     /**
      * Set an attribute value.
      *
-     * @param {(string|Object)} attribute An attribute name or a {key => value} object.
+     * @param attribute An attribute name or a {key => value} object.
      * @param {*} [value] A value or options if the first argument is an object.
-     * @param {{silent?: boolean} & Object.<string, *>} [options] Options. `silent` won't trigger a `change` event.
+     * @param [options] Options. `silent` won't trigger a `change` event.
      * @returns {this}
      * @fires Model#change Unless `{silent: true}`.
      */
-    set(attribute, value, options) {
+    set(
+        attribute: string,
+        value: any,
+        options: {silent: boolean} & Record<string, any> = undefined
+    ): this {
+
         if (attribute == null) {
             return this;
         }
 
-        let attributes;
+        let attributes: any;
 
         if (typeof attribute === 'object') {
             return this.setMultiple(attribute, value);
@@ -270,18 +287,22 @@ class Model {
     /**
      * Set attributes values.
      *
-     * @param {Object.<string, *>} attributes
-     * @param {{
-     *     silent?: boolean,
-     *     unset?: boolean,
-     *     sync?: boolean,
-     * } & Object.<string, *>} [options] Options. `silent` won't trigger a `change` event.
+     * @param attributes
+     * @param [options] Options. `silent` won't trigger a `change` event.
      *     `sync` can be used to emulate syncing.
      * @return {this}
      * @fires Model#change Unless `{silent: true}`.
      * @copyright Credits to Backbone.js.
      */
-    setMultiple(attributes, options) {
+    setMultiple(
+        attributes: Record<string, any>,
+        options: {
+            silent?: boolean,
+            unset?: boolean,
+            sync?: boolean,
+        } & Record<string, any> = undefined,
+    ): this {
+
         if (this.idAttribute in attributes) {
             this.id = attributes[this.idAttribute];
         }
@@ -369,11 +390,15 @@ class Model {
     /**
      * Unset an attribute.
      *
-     * @param {string} attribute An attribute.
-     * @param {{silent?: boolean} & Object.<string, *>} [options] Options.
+     * @param attribute An attribute.
+     * @param [options] Options.
      * @return {Model}
      */
-    unset(attribute, options) {
+    unset(
+        attribute: string,
+        options: {silent?: boolean} & Record<string, any>,
+    ): Model {
+
         options = {...options, unset: true};
 
         const attributes = {};
@@ -385,10 +410,10 @@ class Model {
     /**
      * Get an attribute value.
      *
-     * @param {string} attribute An attribute name.
+     * @param attribute An attribute name.
      * @returns {*}
      */
-    get(attribute) {
+    get(attribute: string): any {
         if (attribute === this.idAttribute && this.id) {
             return this.id;
         }
@@ -402,7 +427,7 @@ class Model {
      * @param {string} attribute An attribute name.
      * @returns {boolean}
      */
-    has(attribute) {
+    has(attribute: string): boolean {
         const value = this.get(attribute);
 
         return typeof value !== 'undefined';
@@ -414,7 +439,10 @@ class Model {
      *
      * @param {{silent?: boolean} & Object.<string, *>} [options] Options.
      */
-    clear(options) {
+    clear(
+        options: {silent?: boolean} & Record<string, any>,
+    ): this {
+
         const attributes = {};
 
         for (const key in this.attributes) {
@@ -423,25 +451,22 @@ class Model {
 
         options = {...options, unset: true};
 
-        return this.set(attributes, options);
+        return this.setMultiple(attributes, options);
     }
 
     /**
      * Whether is new.
-     *
-     * @returns {boolean}
      */
-    isNew() {
+    isNew(): boolean {
         return !this.id;
     }
 
     /**
      * Whether an attribute changed. To be called only within a 'change' event handler.
      *
-     * @param {string} [attribute]
-     * @return {boolean}
+     * @param [attribute]
      */
-    hasChanged(attribute) {
+    hasChanged(attribute: string = undefined): boolean {
         if (!attribute) {
             return !_.isEmpty(this.changed);
         }
@@ -451,19 +476,15 @@ class Model {
 
     /**
      * Get changed attribute values. To be called only within a 'change' event handler.
-     *
-     * @return {Object.<string, *>}
      */
-    changedAttributes() {
+    changedAttributes(): Record<string, any> {
         return this.hasChanged() ? _.clone(this.changed) : {};
     }
 
     /**
      * Get previous attributes. To be called only within a 'change' event handler.
-     *
-     * @return {Object.<string, *>}
      */
-    previousAttributes() {
+    previousAttributes(): Record<string, any> {
         return _.clone(this._previousAttributes);
     }
 
@@ -473,7 +494,7 @@ class Model {
      * @param attribute
      * @return {*}
      */
-    previous(attribute) {
+    previous(attribute: string): any {
         if (!this._previousAttributes) {
             return null;
         }
@@ -484,11 +505,10 @@ class Model {
     /**
      * Fetch values from the backend.
      *
-     * @param {Object.<string, *>} [options] Options.
-     * @returns {Promise}
+     * @param [options] Options.
      * @fires Model#sync
      */
-    fetch(options) {
+    fetch(options: Record<string, any>): AjaxPromise {
         options = {...options};
 
         options.action = 'fetch';
@@ -496,10 +516,10 @@ class Model {
         // For bc.
         const success = options.success;
 
-        options.success = response => {
+        options.success = (response: any) => {
             const serverAttributes = this.prepareAttributes(response, options);
 
-            this.set(serverAttributes, options);
+            this.setMultiple(serverAttributes, options);
 
             if (success) {
                 success.call(options.context, this, response, options);
@@ -520,17 +540,21 @@ class Model {
     /**
      * Save values to the backend.
      *
-     * @param {Object.<string, *>} [attributes] Attribute values.
-     * @param {{
-     *     patch?: boolean,
-     *     wait?: boolean,
-     * } & Object.<string, *>} [options] Options. Use `patch` to send a PATCH request. If `wait`, attributes will be
+     * @param [attributes] Attribute values.
+     * @param [options] Options. Use `patch` to send a PATCH request. If `wait`, attributes will be
      *     set only after the request is completed.
-     * @returns {Promise<Object.<string, *>> & module:ajax.AjaxPromise}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.
      */
-    save(attributes, options) {
+    save(
+        attributes?: Record<string, any>,
+        options?: {
+            patch?: boolean,
+            wait?: boolean,
+            [s: string]: any;
+        },
+    ): AjaxPromise {
+
         options = {...options};
 
         if (attributes && !options.wait) {
@@ -541,7 +565,7 @@ class Model {
 
         const setAttributes = this.attributes;
 
-        options.success = response => {
+        options.success = (response: any) => {
             this.attributes = setAttributes;
 
             let responseAttributes = this.prepareAttributes(response, options);
@@ -569,7 +593,7 @@ class Model {
 
         const error = options.error;
 
-        options.error = response => {
+        options.error = (response: any) => {
             if (error) {
                 error.call(options.context, this, response, options);
             }
@@ -600,13 +624,15 @@ class Model {
     /**
      * Delete the record in the backend.
      *
-     * @param {{wait?: boolean} & Object.<string, *>} [options] Options. If `wait`, unsubscribing and
+     * @param [options] Options. If `wait`, unsubscribing and
      *     removal from the collection will wait for a successful response.
-     * @returns {Promise}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.
      */
-    destroy(options = {}) {
+    destroy(
+        options: {wait?: boolean} & Record<string, any> = {},
+    ): AjaxPromise | Promise<void> {
+
         options = {...options}
 
         const success = options.success;
@@ -618,7 +644,7 @@ class Model {
             this.trigger('destroy', this, collection, options);
         };
 
-        options.success = response => {
+        options.success = (response: any) => {
             if (options.wait) {
                 destroy();
             }
@@ -785,7 +811,7 @@ class Model {
             }
         }
 
-        this.set(defaultHash, {silent: true});
+        this.setMultiple(defaultHash, {silent: true});
     }
 
     /**
@@ -949,12 +975,11 @@ class Model {
     }
 
     /**
-     * Get a link type.
+     * Get the link type.
      *
-     * @param {string} link
-     * @returns {string|null}
+     * @param link A link name.
      */
-    getLinkType(link) {
+    getLinkType(link: string): string | null {
         if (!this.defs || !this.defs.links) {
             return null;
         }
@@ -967,13 +992,12 @@ class Model {
     }
 
     /**
-     * Get a link param.
+     * Get the link parameter value.
      *
-     * @param {string} link A link.
-     * @param {string} param A param.
-     * @returns {*}
+     * @param link A link name.
+     * @param param A parameter.
      */
-    getLinkParam(link, param) {
+    getLinkParam(link: string, param: string): any {
         if (!this.defs || !this.defs.links) {
             return null;
         }
@@ -988,91 +1012,82 @@ class Model {
     }
 
     /**
-     * Is a field read-only.
+     * Is the field read-only.
      *
-     * @param {string} field A field.
-     * @returns {bool}
+     * @param field A field name.
      */
-    isFieldReadOnly(field) {
+    isFieldReadOnly(field: string): boolean {
         return this.getFieldParam(field, 'readOnly') || false;
     }
 
     /**
-     * If a field required.
+     * If the field required.
      *
-     * @param {string} field A field.
-     * @returns {bool}
+     * @param field A field name.
      */
-    isRequired(field) {
+    isRequired(field: string): boolean {
         return this.getFieldParam(field, 'required') || false;
     }
 
     /**
      * Get IDs of a link-multiple field.
      *
-     * @param {string} field A link-multiple field name.
-     * @returns {string[]}
+     * @param field A link-multiple field name.
      */
-    getLinkMultipleIdList(field) {
+    getLinkMultipleIdList(field: string): string[] {
         return this.get(field + 'Ids') || [];
     }
 
     /**
      * Get team IDs.
-     *
-     * @returns {string[]}
      */
-    getTeamIdList() {
+    getTeamIdList(): string[] {
         return this.get('teamsIds') || [];
     }
 
     /**
      * Whether it has a field.
      *
-     * @param {string} field A field.
-     * @returns {boolean}
+     * @param {string} field A field name.
      */
-    hasField(field) {
+    hasField(field: string): boolean {
         return ('defs' in this) && ('fields' in this.defs) && (field in this.defs.fields);
     }
 
     /**
      * Has a link.
      *
-     * @param {string} link A link.
-     * @returns {boolean}
+     * @param {string} link A link name.
      */
-    hasLink(link) {
+    hasLink(link: string): boolean {
         return ('defs' in this) && ('links' in this.defs) && (link in this.defs.links);
     }
 
     /**
-     * @returns {boolean}
+     * Is editable.
      */
-    isEditable() {
+    isEditable(): boolean {
         return true;
     }
 
     /**
-     * @returns {boolean}
+     * Is removable.
      */
-    isRemovable() {
+    isRemovable(): boolean {
         return true;
     }
 
     /**
      * Get an entity type.
-     *
-     * @returns {string}
      */
-    getEntityType() {
+    getEntityType(): string {
         return this.name;
     }
 
     /**
      * Abort the last fetch.
      */
-    abortLastFetch() {
+    abortLastFetch(): void {
         if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
             this.lastSyncPromise.abort();
         }
@@ -1096,7 +1111,21 @@ class Model {
      * @return {{stop: function()}}
      * @since 10.0.0
      */
-    onChange(params) {
+    onChange(
+        params: {
+            owner: import('view').default | import('model').default | import('collection').default,
+            attributes?: string[],
+            once?: boolean,
+            callback: (item: {
+                ui: boolean | null,
+                action: string | 'ui' | 'save' | 'fetch' | 'cancel-edit' | null,
+                // @todo Remove ignore.
+                // @ts-ignore
+                fromView: import('views/fields/base').default,
+            }) => any,
+        }
+    ): {stop: () => any} {
+
         return onModelChange({
             owner: params.owner,
             once: params.once,
@@ -1135,6 +1164,5 @@ class Model {
 
 Object.assign(Model.prototype, Events);
 
+// @ts-ignore
 Model.extend = BullView.extend;
-
-export default Model;

@@ -21,73 +21,73 @@
                 "src/loader.js"
             ],
             "patterns": [
-                "src/**/*.js"
+                "src/**/*.{js,ts}"
             ],
             "ignorePatterns": [
-                "src/views/admin/**/*.js",
-                "src/views/settings/**/*.js",
-                "src/views/authentication-provider/**/*.js",
-                "src/views/webhooks/**/*.js",
-                "src/views/templates/**/*.js",
-                "src/views/layout-set/**/*.js",
-                "src/views/role/**/*.js",
-                "src/views/portal-role/**/*.js",
-                "src/views/scheduled-job/**/*.js",
-                "src/views/lead-capture-log-record/**/*.js",
-                "src/views/inbound-email/**/*.js",
-                "src/views/extension/**/*.js",
-                "src/views/api-user/**/*.js",
+                "src/views/admin/**/*.{js,ts}",
+                "src/views/settings/**/*.{js,ts}",
+                "src/views/authentication-provider/**/*.{js,ts}",
+                "src/views/webhooks/**/*.{js,ts}",
+                "src/views/templates/**/*.{js,ts}",
+                "src/views/layout-set/**/*.{js,ts}",
+                "src/views/role/**/*.{js,ts}",
+                "src/views/portal-role/**/*.{js,ts}",
+                "src/views/scheduled-job/**/*.{js,ts}",
+                "src/views/lead-capture-log-record/**/*.{js,ts}",
+                "src/views/inbound-email/**/*.{js,ts}",
+                "src/views/extension/**/*.{js,ts}",
+                "src/views/api-user/**/*.{js,ts}",
 
-                "src/controllers/admin.js",
-                "src/controllers/role.js",
-                "src/controllers/portal-role.js",
+                "src/controllers/admin.{js,ts}",
+                "src/controllers/role.{js,ts}",
+                "src/controllers/portal-role.{js,ts}",
 
-                "src/views/outbound-email/**/*.js",
-                "src/views/personal-data/**/*.js",
-                "src/views/portal/**/*.js",
-                "src/views/import/**/*.js",
-                "src/views/import-error/**/*.js",
-                "src/views/group-email-folder/**/*.js",
-                "src/views/external-account/**/*.js",
-                "src/views/email-account/**/*.js"
+                "src/views/outbound-email/**/*.{js,ts}",
+                "src/views/personal-data/**/*.{js,ts}",
+                "src/views/portal/**/*.{js,ts}",
+                "src/views/import/**/*.{js,ts}",
+                "src/views/import-error/**/*.{js,ts}",
+                "src/views/group-email-folder/**/*.{js,ts}",
+                "src/views/external-account/**/*.{js,ts}",
+                "src/views/email-account/**/*.{js,ts}"
             ]
         },
         "admin": {
             "patterns": [
-                "src/views/admin/**/*.js",
-                "src/views/settings/**/*.js",
-                "src/views/api-user/**/*.js",
-                "src/views/extension/**/*.js",
-                "src/views/authentication-provider/**/*.js",
-                "src/views/inbound-email/**/*.js",
-                "src/views/templates/**/*.js",
-                "src/views/role/**/*.js",
-                "src/views/portal-role/**/*.js",
-                "src/views/portal/**/*.js",
-                "src/views/scheduled-job/**/*.js",
-                "src/views/lead-capture-log-record/**/*.js",
-                "src/views/webhooks/**/*.js",
-                "src/views/layout-set/**/*.js",
-                "src/controllers/admin.js",
-                "src/controllers/inbound-email.js",
-                "src/controllers/layout-set.js",
-                "src/controllers/api-user.js",
-                "src/controllers/role.js",
-                "src/controllers/portal-role.js"
+                "src/views/admin/**/*.{js,ts}",
+                "src/views/settings/**/*.{js,ts}",
+                "src/views/api-user/**/*.{js,ts}",
+                "src/views/extension/**/*.{js,ts}",
+                "src/views/authentication-provider/**/*.{js,ts}",
+                "src/views/inbound-email/**/*.{js,ts}",
+                "src/views/templates/**/*.{js,ts}",
+                "src/views/role/**/*.{js,ts}",
+                "src/views/portal-role/**/*.{js,ts}",
+                "src/views/portal/**/*.{js,ts}",
+                "src/views/scheduled-job/**/*.{js,ts}",
+                "src/views/lead-capture-log-record/**/*.{js,ts}",
+                "src/views/webhooks/**/*.{js,ts}",
+                "src/views/layout-set/**/*.{js,ts}",
+                "src/controllers/admin.{js,ts}",
+                "src/controllers/inbound-email.{js,ts}",
+                "src/controllers/layout-set.{js,ts}",
+                "src/controllers/api-user.{js,ts}",
+                "src/controllers/role.{js,ts}",
+                "src/controllers/portal-role.{js,ts}"
             ]
         },
         "crm": {
             "patterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ],
             "lookupPatterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ],
             "noDuplicates": true
         },
         "chart": {
             "patterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ],
             "dependentOn": [
                 "flotr2",
@@ -98,12 +98,12 @@
                 "espo-funnel-chart"
             ],
             "lookupPatterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ]
         },
         "calendar": {
             "patterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ],
             "dependentOn": [
                 "fullcalendar"
@@ -112,12 +112,12 @@
                 "fullcalendar"
             ],
             "lookupPatterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ]
         },
         "timeline": {
             "patterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ],
             "dependentOn": [
                 "vis-data",
@@ -128,12 +128,12 @@
                 "vis-timeline"
             ],
             "lookupPatterns": [
-                "modules/crm/src/**/*.js"
+                "modules/crm/src/**/*.{js,ts}"
             ]
         },
         "extra": {
             "patterns": [
-                "src/**/*.js"
+                "src/**/*.{js,ts}"
             ],
             "ignoreFiles": [
                 "src/namespace.js",
@@ -146,6 +146,6 @@
         "crm": "modules/crm"
     },
     "lookupPatterns": [
-        "src/**/*.js"
+        "src/**/*.{js,ts}"
     ]
 }

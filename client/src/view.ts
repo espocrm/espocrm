@@ -29,48 +29,53 @@
 /** @module view */
 
 import {View as BullView} from 'bullbone';
+import Model from 'model';
+import Collection from 'collection';
+import Ui from 'ui';
+
+interface ConfirmOptions {
+    message: string,
+    confirmText?: string,
+    cancelText?: string,
+    confirmStyle?: 'danger' | 'success' | 'warning' | 'default',
+    backdrop?: 'static' | boolean,
+    cancelCallback?: () => void,
+}
+
+/**
+ * @param {MouseEvent} event DOM event.
+ * @param {HTMLElement} includeInactive A target element.
+ */
+type ActionHandlerCallback = (event: MouseEvent, element: HTMLElement) => void;
 
 /**
  * A base view. All views should extend this class.
  *
  * @see https://docs.espocrm.com/development/view/
- * @mixes Bull.Events
+ *
  */
-class View extends BullView {
-
-    /**
-     * @callback module:view~actionHandlerCallback
-     * @param {MouseEvent} event A DOM event.
-     * @param {HTMLElement} element A target element.
-     */
-
-    /**
-     * A helper.
-     *
-     * @name _helper
-     * @type {module:view-helper}
-     * @memberOf View.prototype
-     * @private
-     */
+class View<
+    TModel extends Model | undefined = Model|undefined,
+    TCollection extends Collection | undefined = Collection|undefined
+>
+    extends BullView<Model | undefined, Collection | undefined> {
 
     /**
      * A model.
-     *
-     * @type {import('model').default}
      */
-    model
+    model: TModel
 
     /**
      * A collection.
-     *
-     * @type {import('collection').default}
      */
-    collection
+    collection: TCollection
 
     /**
-     * @param {Record<string, *>} options
+     * @param options
      */
-    constructor(options = {}) {
+    constructor(
+        options: Record<string, any> = {}
+    ) {
         super(options);
 
         if (options.model) {
@@ -88,7 +93,7 @@ class View extends BullView {
      * When the view is ready. Can be useful to prevent race condition when re-initialization is needed
      * in-between initialization and render.
      *
-     * @return Promise
+     * @return Promise<void>
      * @todo Move to Bull.View.
      */
     whenReady() {
@@ -96,7 +101,7 @@ class View extends BullView {
             return Promise.resolve();
         }
 
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             this.once('ready', () => resolve());
         });
     }
@@ -104,10 +109,10 @@ class View extends BullView {
     /**
      * Add a DOM click event handler for a target defined by `data-action="{name}"` attribute.
      *
-     * @param {string} action An action name.
-     * @param {module:view~actionHandlerCallback} handler A handler.
+     * @param action An action name.
+     * @param handler A handler.
      */
-    addActionHandler(action, handler) {
+    addActionHandler(action: string, handler: ActionHandlerCallback) {
         // The key should be in sync with one in Utils.handleAction.
         const fullAction = `click [data-action="${action}"]`;
 
@@ -123,7 +128,7 @@ class View extends BullView {
      * @param {string} string
      * @returns {string}
      */
-    escapeString(string) {
+    escapeString(string: string): string {
         return Handlebars.Utils.escapeExpression(string);
     }
 
@@ -136,9 +141,10 @@ class View extends BullView {
      * @param {number} [timeout]
      * @param {string} [scope]
      */
-    notify(label, type, timeout, scope) {
+    notify(label: string | false, type: string, timeout: number, scope: string) {
         if (!label) {
-            Espo.Ui.notify(false);
+            // @ts-ignore
+            Ui.notify(false);
 
             return;
         }
@@ -152,168 +158,153 @@ class View extends BullView {
 
         const text = this.getLanguage().translate(label, 'labels', scope);
 
-        Espo.Ui.notify(text, type, timeout);
+        // @ts-ignore
+        Ui.notify(text, type, timeout);
     }
 
     /**
      * Get a view-helper.
-     *
-     * @returns {module:view-helper}
      */
-    getHelper() {
+    getHelper(): import('view-helper').default {
         return this._helper;
     }
 
     /**
      * Get a current user.
-     *
-     * @returns {module:models/user}
      */
-    getUser() {
+    getUser(): import('models/user').default {
+        // @ts-ignore
         return this._helper.user;
     }
 
     /**
      * Get the preferences.
-     *
-     * @returns {module:models/preferences}
      */
-    getPreferences() {
+    getPreferences(): import('models/preferences').default {
+        // @ts-ignore
         return this._helper.preferences;
     }
 
     /**
      * Get the config.
-     *
-     * @returns {module:models/settings}
      */
-    getConfig() {
+    getConfig(): import('models/settings').default {
+        // @ts-ignore
         return this._helper.settings;
     }
 
     /**
      * Get the ACL.
-     *
-     * @returns {module:acl-manager}
      */
-    getAcl() {
+    getAcl(): import('acl-manager').default {
+        // @ts-ignore
         return this._helper.acl;
     }
 
     /**
      * Get the model factory.
-     *
-     * @returns {module:model-factory}
      */
-    getModelFactory() {
+    getModelFactory(): import('model-factory').default {
+        // @ts-ignore
         return this._helper.modelFactory;
     }
 
     /**
      * Get the collection factory.
-     *
-     * @returns {module:collection-factory}
      */
-    getCollectionFactory() {
+    getCollectionFactory(): import('collection-factory').default {
+        // @ts-ignore
         return this._helper.collectionFactory;
     }
 
     /**
      * Get the router.
-     *
-     * @returns {module:router}
      */
-    getRouter() {
+    getRouter(): import('router').default {
+        // @ts-ignore
         return this._helper.router;
     }
 
     /**
      * Get the storage-util.
-     *
-     * @returns {module:storage}
      */
-    getStorage() {
+    getStorage(): import('storage').default {
+        // @ts-ignore
         return this._helper.storage;
     }
 
     /**
      * Get the session-storage-util.
-     *
-     * @returns {module:session-storage}
      */
-    getSessionStorage() {
+    getSessionStorage(): import('session-storage').default {
+        // @ts-ignore
         return this._helper.sessionStorage;
     }
 
     /**
      * Get the language-util.
-     *
-     * @returns {module:language}
      */
-    getLanguage() {
+    getLanguage(): import('language').default {
+        // @ts-ignore
         return this._helper.language;
     }
 
     /**
      * Get metadata.
-     *
-     * @returns {module:metadata}
      */
-    getMetadata() {
+    getMetadata(): import('metadata').default {
+        // @ts-ignore
         return this._helper.metadata;
     }
 
     /**
      * Get the cache-util.
-     *
-     * @returns {module:cache}
      */
-    getCache() {
+    getCache(): import('cache').default {
+        // @ts-ignore
         return this._helper.cache;
     }
 
     /**
      * Get the date-time util.
-     *
-     * @returns {module:date-time}
      */
-    getDateTime() {
+    getDateTime(): import('date-time').default {
+        // @ts-ignore
         return this._helper.dateTime;
     }
 
     /**
      * Get the number-util.
-     *
-     * @returns {module:num-util}
      */
-    getNumberUtil() {
+    getNumberUtil(): import('number-util').default {
+        // @ts-ignore
         return this._helper.numberUtil;
     }
 
     /**
      * Get the field manager.
-     *
-     * @returns {module:field-manager}
      */
-    getFieldManager() {
+    getFieldManager(): import('field-manager').default {
+        // @ts-ignore
         return this._helper.fieldManager;
     }
 
     /**
      * Get the base-controller.
      *
-     * @returns {module:controllers/base}
+     * @internal
+     * @return {import('controllers/base').default}
      */
-    getBaseController() {
+    getBaseController(): import('controllers/base').default {
+        // @ts-ignore
         return this._helper.baseController;
     }
 
     /**
      * Get the theme manager.
-     *
-     * @returns {module:theme-manager}
      */
-    getThemeManager() {
+    getThemeManager(): import('theme-manager').default {
+        // @ts-ignore
         return this._helper.themeManager;
     }
 
@@ -329,64 +320,58 @@ class View extends BullView {
     /**
      * Set a page title.
      *
-     * @param {string} title A title.
+     * @param title A title.
      */
-    setPageTitle(title) {
+    setPageTitle(title: string) {
         this.getHelper().pageTitle.setTitle(title);
     }
 
     /**
      * Translate a label.
      *
-     * @param {string} label Label.
-     * @param {string|'messages'|'labels'|'fields'|'links'|'scopeNames'|'scopeNamesPlural'} [category='labels'] Category.
-     * @param {string} [scope='Global'] Scope.
+     * @param label Label.
+     * @param [category='labels'] Category.
+     * @param [scope='Global'] Scope.
      * @returns {string}
      */
-    translate(label, category, scope) {
+    translate(
+        label: string,
+        category?: string | 'messages' | 'labels' | 'fields' | 'links' | 'scopeNames' | 'scopeNamesPlural',
+        scope?: string,
+    ): string {
+
         return this.getLanguage().translate(label, category, scope);
     }
 
     /**
      * Get a base path.
-     *
-     * @returns {string}
      */
-    getBasePath() {
+    getBasePath(): string {
+        // @ts-ignore
         return this._helper.basePath || '';
     }
 
     /**
-     * @typedef {Object} module:view~ConfirmOptions
-     *
-     * @property {string} message A message.
-     * @property {string} [confirmText] A confirm-button text.
-     * @property {string} [cancelText] A cancel-button text.
-     * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger'] A confirm-button style.
-     * @property {'static'|boolean} [backdrop=false] A backdrop.
-     * @property {function():void} [cancelCallback] A cancel-callback.
-     */
-
-    /**
      * Show a confirmation dialog.
      *
-     * @param {string|module:view~ConfirmOptions} o A message or options.
+     * @param options A message or options.
      * @param [callback] A callback. Deprecated, use a promise.
      * @param [context] A context. Deprecated.
      * @returns {Promise} To be resolved if confirmed.
      */
-    confirm(o, callback, context) {
-        let message;
+    confirm(options: ConfirmOptions, callback = undefined, context= undefined): Promise<any> {
+        let message: string;
 
-        if (typeof o === 'string' || o instanceof String) {
-            message = o;
+        let o: ConfirmOptions | Record<string, any>;
 
-            o = /** @type {module:view~ConfirmOptions} */{};
-        }
-        else {
-            o = o || {};
+        if (typeof options === 'string' || options instanceof String) {
+            message = options.toString();
 
-            message = o.message;
+            o = {};
+        } else {
+            o = options ?? {};
+
+            message = options.message;
         }
 
         if (message) {
@@ -395,17 +380,17 @@ class View extends BullView {
                 .toString();
         }
 
-        const confirmText = o.confirmText || this.translate('Yes');
-        const confirmStyle = o.confirmStyle || null;
-        const cancelText = o.cancelText || this.translate('Cancel');
+        const confirmText = options.confirmText || this.translate('Yes');
+        const confirmStyle = options.confirmStyle || null;
+        const cancelText = options.cancelText || this.translate('Cancel');
 
         return Espo.Ui.confirm(message, {
             confirmText: confirmText,
             cancelText: cancelText,
             confirmStyle: confirmStyle,
-            backdrop: ('backdrop' in o) ? o.backdrop : true,
+            backdrop: ('backdrop' in options) ? o.backdrop : true,
             isHtml: true,
-            cancelCallback: o.cancelCallback,
+            cancelCallback: options.cancelCallback,
         }, callback, context);
     }
 }
