@@ -9,8 +9,10 @@
         "module": "ES6",
         "target": "ES2018",
         "moduleResolution": "bundler",
+        "skipLibCheck": true,
         "allowJs": true,
-        "checkJs": false
+        "checkJs": false,
+        "noEmit": true
     },
     "include": [
         "client/src",
