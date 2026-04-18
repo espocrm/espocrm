@@ -79,7 +79,6 @@ import {onSync} from 'util/event';
 /**
  * A collection.
  *
- * @mixes Bull.Events
  * @copyright Credits to Backbone.js.
  */
 class Collection {
@@ -1160,9 +1159,92 @@ class Collection {
             defs: this.defs,
         });
     }
-}
 
-Object.assign(Collection.prototype, Events);
+    /**
+     * Subscribe to an event.
+     *
+     * @param {string} name An event.
+     * @param {function(...*)} callback A callback.
+     */
+    on(name, callback) {
+        return Events.on.call(this, name, callback, arguments[2]);
+    }
+
+    /**
+     * Subscribe to an event. Fired once.
+     *
+     * @param {string} name An event.
+     * @param {function(...*)} callback A callback.
+     */
+    once(name, callback) {
+        Events.once.call(this, name, callback, arguments[2]);
+
+        return this;
+    }
+
+    /**
+     * Unsubscribe from an event or all events.
+     *
+     * @param {string} [name] From a specific event.
+     * @param {function(...*)} [callback] From a specific callback.
+     */
+    off(name, callback) {
+        Events.off.call(this, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Subscribe to an event of other object.
+     *
+     * @param {Object} other What to listen.
+     * @param {string} name An event.
+     * @param {function(...any)} callback A callback.
+     */
+    listenTo(other, name, callback) {
+        Events.listenTo.call(this, other, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Subscribe to an event of other object. Fired once. Will be automatically unsubscribed on view removal.
+     *
+     * @param {Object} other What to listen.
+     * @param {string} name An event.
+     * @param {function(...any)} callback A callback.
+     */
+    listenToOnce(other, name, callback) {
+        Events.listenToOnce.call(this, other, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Stop listening to other object. No arguments will remove all listeners.
+     *
+     * @param {Object} [other] To remove listeners to a specific object.
+     * @param {string} [name] To remove listeners to a specific event.
+     * @param {function()} [callback] A callback.
+     */
+    stopListening(other, name, callback) {
+        Events.stopListening.call(this, other, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Trigger an event.
+     *
+     * @param {string} name An event.
+     * @param {...*} parameters Arguments.
+     */
+    trigger(name, ...parameters) {
+        Events.trigger.call(this, name, ...parameters);
+
+        return this;
+    }
+}
 
 Collection.extend = BullView.extend;
 

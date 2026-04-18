@@ -52,6 +52,15 @@ import {AjaxPromise} from 'util/ajax';
  */
 
 /**
+ * @property link A link.
+ * @property model A model.
+ */
+interface SetRelateItem {
+    link: string,
+    model: Model,
+}
+
+/**
  * Definitions.
  */
 export interface Defs {
@@ -71,8 +80,6 @@ type User = import('models/user').default;
 
 /**
  * A model.
- *
- * @mixes Events
  */
 export default class Model {
 
@@ -253,6 +260,7 @@ export default class Model {
         return ajaxPromise;
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Set an attribute value.
      *
@@ -284,6 +292,7 @@ export default class Model {
         return this.setMultiple(attributes, options);
     }
 
+    // noinspection JSValidateJSDoc
     /**
      * Set attributes values.
      *
@@ -678,7 +687,7 @@ export default class Model {
 
         const error = options.error;
 
-        options.error = response => {
+        options.error = (response: any) => {
             if (error) {
                 error.call(options.context, this, response, options);
             }
@@ -697,11 +706,8 @@ export default class Model {
 
     /**
      * Compose a URL for syncing.
-     *
-     * @protected
-     * @return {string}
      */
-    composeSyncUrl() {
+    protected composeSyncUrl(): string {
         if (this.url) {
             return this.url;
         }
@@ -734,7 +740,10 @@ export default class Model {
      * @return {*} Attributes.
      * @internal
      */
-    prepareAttributes(response, options) {
+    prepareAttributes(response: any, options: Record<string, any>): any {
+        // noinspection BadExpressionStatementJS
+        options;
+
         return response;
     }
 
@@ -743,7 +752,10 @@ export default class Model {
      *
      * @return {Model}
      */
-    clone() {
+    clone(): this {
+
+        // @todo Revise.
+        // @ts-ignore
         return new this.constructor(
             Espo.Utils.cloneDeep(this.attributes),
             {
@@ -758,9 +770,9 @@ export default class Model {
     /**
      * Set defs.
      *
-     * @param {module:model~defs} defs
+     * @param defs Definitions.
      */
-    setDefs(defs) {
+    setDefs(defs: Defs): void {
         this.defs = defs || {};
 
         if (!this.defs.fields) {
@@ -770,10 +782,8 @@ export default class Model {
 
     /**
      * Get cloned attribute values.
-     *
-     * @returns {Object.<string, *>}
      */
-    getClonedAttributes() {
+    getClonedAttributes(): {[s: string]: any} {
         return Espo.Utils.cloneDeep(this.attributes);
     }
 
@@ -819,7 +829,7 @@ export default class Model {
      * @param {*} defaultValue
      * @returns {*}
      */
-    parseDefaultValue(defaultValue) {
+    parseDefaultValue(defaultValue: any): any {
         if (
             typeof defaultValue === 'string' &&
             defaultValue.indexOf('javascript:') === 0
@@ -842,25 +852,18 @@ export default class Model {
      * @param {string} id
      * @returns {*}
      */
-    getLinkMultipleColumn(field, column, id) {
+    getLinkMultipleColumn(field: string, column: string, id: string): any {
         return ((this.get(field + 'Columns') || {})[id] || {})[column];
     }
 
     /**
-     * @typedef {Object} model:model~setRelateItem
-     * @property {string} link A link.
-     * @property {import('model').default} model A model.
-     */
-
-    /**
      * Set relate data (when creating a related record).
-     *
-     * @param {model:model~setRelateItem | model:model~setRelateItem[]} data
      */
-    setRelate(data) {
-        const setRelate = options => {
+    setRelate(data: SetRelateItem | SetRelateItem[]): void {
+
+        const setRelate = (options: SetRelateItem): void => {
             const link = options.link;
-            const model = /** @type {module:model} */options.model;
+            const model = /** @type {Model} */options.model;
 
             if (!link || !model) {
                 throw new Error('Bad related options');
@@ -897,10 +900,8 @@ export default class Model {
             }
         };
 
-        if (Object.prototype.toString.call(data) === '[object Array]') {
-            data.forEach(options => {
-                setRelate(options);
-            });
+        if (Array.isArray(data)) {
+            data.forEach((options: any): void => setRelate(options));
 
             return;
         }
@@ -910,10 +911,8 @@ export default class Model {
 
     /**
      * Get a field list.
-     *
-     * @return {string[]}
      */
-    getFieldList() {
+    getFieldList(): string[] {
         if (!this.defs || !this.defs.fields) {
             return [];
         }
@@ -927,7 +926,7 @@ export default class Model {
      * @param {string} field
      * @returns {string|null}
      */
-    getFieldType(field) {
+    getFieldType(field: string): string | null {
         if (!this.defs || !this.defs.fields) {
             return null;
         }
@@ -946,7 +945,7 @@ export default class Model {
      * @param {string} param
      * @returns {*}
      */
-    getFieldParam(field, param) {
+    getFieldParam(field: string, param: string): any {
         if (!this.defs || !this.defs.fields) {
             return null;
         }
@@ -960,7 +959,7 @@ export default class Model {
         return null;
     }
 
-    hasFieldParam(field, param) {
+    hasFieldParam(field: string, param: string): boolean {
         if (!this.defs || !this.defs.fields) {
             return false;
         }
@@ -1116,7 +1115,7 @@ export default class Model {
             owner: import('view').default | import('model').default | import('collection').default,
             attributes?: string[],
             once?: boolean,
-            callback: (item: {
+            callback: (event: {
                 ui: boolean | null,
                 action: string | 'ui' | 'save' | 'fetch' | 'cancel-edit' | null,
                 // @todo Remove ignore.
@@ -1152,7 +1151,17 @@ export default class Model {
      * @return {{stop: function()}}
      * @since 10.0.0
      */
-    onSync(params) {
+    onSync(
+        params: {
+            owner: import('view').default | import('model').default | import('collection').default,
+            once?: boolean,
+            callback: (event: {
+                action: 'fetch' | 'save' | 'destroy' | null,
+                response: any;
+            }) => any,
+        }
+    ): {stop: () => any} {
+
         return onSync({
             owner: params.owner,
             once: params.once,
@@ -1160,9 +1169,94 @@ export default class Model {
             callback: params.callback,
         });
     }
-}
 
-Object.assign(Model.prototype, Events);
+    /**
+     * Subscribe to an event.
+     *
+     * @param {string} name An event.
+     * @param {function(...any)} callback A callback.
+     */
+    on(name: string, callback: (...args: unknown[]) => any): this {
+        Events.on.call(this, name, callback, arguments[2]);
+
+        return this;
+    }
+
+    /**
+     * Subscribe to an event. Fired once.
+     *
+     * @param {string} name An event.
+     * @param {function(...any)} callback A callback.
+     */
+    once(name: string, callback: (...args: unknown[]) => void): this {
+        Events.once.call(this, name, callback, arguments[2]);
+
+        return this;
+    }
+
+    /**
+     * Unsubscribe from an event or all events.
+     *
+     * @param {string} [name] From a specific event.
+     * @param {function()} [callback] From a specific callback.
+     */
+    off(name?: string, callback?: (...args: unknown[]) => void): this {
+        Events.off.call(this, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Subscribe to an event of other object.
+     *
+     * @param {Object} other What to listen.
+     * @param {string} name An event.
+     * @param callback A callback.
+     */
+    listenTo(other: object, name: string, callback: (...args: unknown[]) => void): this {
+        Events.listenTo.call(this, other, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Subscribe to an event of other object. Fired once. Will be automatically unsubscribed on view removal.
+     *
+     * @param {Object} other What to listen.
+     * @param {string} name An event.
+     * @param {function()} callback A callback.
+     */
+    listenToOnce(other: object, name: string,  callback: (...args: unknown[]) => void): this {
+        Events.listenToOnce.call(this, other, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Stop listening to other object. No arguments will remove all listeners.
+     *
+     * @param {Object} [other] To remove listeners to a specific object.
+     * @param {string} [name] To remove listeners to a specific event.
+     * @param {function()} [callback] To remove listeners to a specific callback.
+     */
+    stopListening(other?: object, name?: string, callback?: (...args: unknown[]) => any): this {
+        Events.stopListening.call(this, other, name, callback);
+
+        return this;
+    }
+
+    /**
+     * Trigger an event.
+     *
+     * @param {string} name An event.
+     * @param {...*} parameters Arguments.
+     */
+    trigger(name: string, ...parameters: any[]): this {
+        Events.trigger.call(this, name, ...parameters);
+
+        return this;
+    }
+}
 
 // @ts-ignore
 Model.extend = BullView.extend;
