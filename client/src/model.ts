@@ -146,8 +146,8 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
     protected defs: Defs
 
     constructor(
-        attributes: Partial<T> | Model<T>,
-        options: {
+        attributes?: Partial<T> | Model<T>,
+        options?: {
             collection?: Collection;
             entityType?: string;
             urlRoot?: string;
@@ -420,7 +420,6 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * Get an attribute value.
      *
      * @param attribute An attribute name.
-     * @returns {*}
      */
     get<K extends keyof T>(attribute: K): T[K] {
         if (attribute === this.idAttribute && this.id) {
