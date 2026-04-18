@@ -81,7 +81,7 @@ type User = import('models/user').default;
 /**
  * A model.
  */
-export default class Model<T extends Record<string, any> = Record<string, any>> {
+export default class Model<T extends Record<string, unknown> = Record<string, unknown>> {
 
     /**
      * A root URL. An ID will be appended. Used for syncing with backend.
@@ -313,7 +313,7 @@ export default class Model<T extends Record<string, any> = Record<string, any>> 
     ): this {
 
         if (this.idAttribute in attributes) {
-            this.id = attributes[this.idAttribute];
+            this.id = (attributes[this.idAttribute]) as string;
         }
 
         options = options || {};
@@ -422,9 +422,9 @@ export default class Model<T extends Record<string, any> = Record<string, any>> 
      * @param attribute An attribute name.
      * @returns {*}
      */
-    get(attribute: keyof T): any {
+    get<K extends keyof T>(attribute: K): T[K] {
         if (attribute === this.idAttribute && this.id) {
-            return this.id;
+            return this.id as T[K];
         }
 
         return this.attributes[attribute];
@@ -729,7 +729,7 @@ export default class Model<T extends Record<string, any> = Record<string, any>> 
             return urlRoot;
         }
 
-        const id = this.get(this.idAttribute);
+        const id = this.get(this.idAttribute) as string;
 
         return urlRoot.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
     }
@@ -1037,14 +1037,14 @@ export default class Model<T extends Record<string, any> = Record<string, any>> 
      * @param field A link-multiple field name.
      */
     getLinkMultipleIdList(field: string): string[] {
-        return this.get(field + 'Ids') || [];
+        return (this.get(field + 'Ids') ?? []) as string[]
     }
 
     /**
      * Get team IDs.
      */
     getTeamIdList(): string[] {
-        return this.get('teamsIds') || [];
+        return (this.get('teamsIds') ?? []) as string[];
     }
 
     /**
