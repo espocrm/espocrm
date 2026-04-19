@@ -48,27 +48,28 @@ interface ConfirmOptions {
  */
 type ActionHandlerCallback = (event: MouseEvent, element: HTMLElement) => void;
 
+interface ViewSchema {
+    model?: Model
+    collection?: Collection
+}
+
 /**
  * A base view. All views should extend this class.
  *
  * @see https://docs.espocrm.com/development/view/
  *
  */
-class View<
-    TModel extends Model | undefined = Model|undefined,
-    TCollection extends Collection | undefined = Collection|undefined
->
-    extends BullView<Model | undefined, Collection | undefined> {
+class View<S extends ViewSchema = ViewSchema> extends BullView<S['model'], S['collection']> {
 
     /**
      * A model.
      */
-    model: TModel
+    model: S['model']
 
     /**
      * A collection.
      */
-    collection: TCollection
+    collection: S['collection']
 
     /**
      * @param options
