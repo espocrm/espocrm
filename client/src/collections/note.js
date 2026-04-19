@@ -53,8 +53,11 @@ class NoteCollection extends Collection {
      */
     reactionsCheckMaxSize = 0;
 
-    /** @inheritDoc */
     prepareAttributes(response, params) {
+        if (Array.isArray(response)) {
+            throw new Error("Bad response.");
+        }
+
         const total = this.total;
 
         const list = super.prepareAttributes(response, params);

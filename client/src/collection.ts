@@ -810,7 +810,7 @@ export default class Collection<TModel extends Model = Model> {
     ): Record<string, any>[] {
 
         if (Array.isArray(response)) {
-            return [];
+            return response;
         }
 
         // noinspection BadExpressionStatementJS

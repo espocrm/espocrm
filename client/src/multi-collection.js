@@ -29,6 +29,7 @@
 /** @module multi-collection */
 
 import Collection from 'collection';
+import _ from 'underscore';
 
 /**
  * A collection that can contain entities of different entity types.
@@ -45,6 +46,10 @@ class MultiCollection extends Collection {
 
     /** @inheritDoc */
     prepareAttributes(response, options) {
+        if (Array.isArray(response)) {
+            throw new Error("Bad response.");
+        }
+
         this.total = response.total;
 
         if (!('list' in response)) {

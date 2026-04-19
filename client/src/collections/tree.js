@@ -68,6 +68,10 @@ class TreeCollection extends Collection {
     }
 
     prepareAttributes(response, options) {
+        if (Array.isArray(response)) {
+            throw new Error("Bad response.");
+        }
+
         const list = super.prepareAttributes(response, options);
 
         const seed = this.clone();
