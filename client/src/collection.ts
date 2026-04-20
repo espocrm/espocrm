@@ -90,6 +90,20 @@ export interface Data {
     q?: string,
 }
 
+/**
+ * @property model A class.
+ */
+interface Options {
+    model?: typeof Model
+    defs: import('model').Defs
+    maxSize?: number
+    entityType?: string
+    urlRoot?: string
+    url?: string
+    orderBy: string | null
+    order: 'asc' | 'desc' | boolean
+}
+
 export default class Collection<TModel extends Model = Model> {
 
     /**
@@ -222,16 +236,7 @@ export default class Collection<TModel extends Model = Model> {
      */
     constructor(
         models: TModel[] | Record<string, any>[] | null,
-        options: {
-            model?: typeof Model,
-            defs: import('model').Defs,
-            maxSize?: number,
-            entityType?: string,
-            urlRoot?: string,
-            url?: string,
-            orderBy: string | null,
-            order: 'asc' | 'desc' | boolean,
-        }
+        options: Options,
     ) {
         options = {...options};
 

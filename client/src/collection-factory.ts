@@ -28,57 +28,58 @@
 
 /** @module collection-factory */
 
+import ModelFactory from 'model-factory';
+import Settings from 'models/settings';
+import Metadata from 'metadata';
+import Collection from 'collection';
+
 /**
  * A collection factory.
  */
-class CollectionFactory {
+export default class CollectionFactory {
+
+    private readonly recordListMaxSizeLimit: number
+
     /**
      * @param {module:model-factory} modelFactory
      * @param {module:models/settings} config
      * @param {module:metadata} metadata
      */
-    constructor(modelFactory, config, metadata) {
-        /** @private */
-        this.modelFactory = modelFactory;
-        /** @private */
-        this.metadata = metadata;
-        /** @private */
+    constructor(
+        private modelFactory: ModelFactory,
+        config: Settings,
+        private metadata: Metadata,
+    ) {
         this.recordListMaxSizeLimit = config.get('recordListMaxSizeLimit') || 200;
     }
 
     /**
      * Create a collection.
      *
-     * @param {string} entityType An entity type.
-     * @param {Function} [callback] Deprecated.
-     * @param {Object} [context] Deprecated.
-     * @returns {Promise<module:collection>}
+     * @param entityType An entity type.
+     * @param [callback] Deprecated.
+     * @param [context] Deprecated.
+     * @returns A created collection.
      */
-    create(entityType, callback, context) {
+    create(entityType: string, callback?: Function, context?: object): Promise<Collection> {
         return new Promise(resolve => {
             context = context || this;
 
             this.modelFactory.getSeed(entityType, Model => {
-                const orderBy = this.modelFactory.metadata
-                    .get(['entityDefs', entityType, 'collection', 'orderBy']);
-
-                const order = this.modelFactory.metadata
-                    .get(['entityDefs', entityType, 'collection', 'order']);
-
-                const className = this.modelFactory.metadata
-                    .get(['clientDefs', entityType, 'collection']) || 'collection';
-
+                const orderBy = this.metadata.get(['entityDefs', entityType, 'collection', 'orderBy']);
+                const order = this.metadata.get(['entityDefs', entityType, 'collection', 'order']);
+                const className = this.metadata .get(['clientDefs', entityType, 'collection']) || 'collection';
                 const defs = this.metadata.get(['entityDefs', entityType]) || {};
 
-                Espo.loader.require(className, Collection => {
-                    const collection = new Collection(null, {
+                Espo.loader.require(className, (collectionClass: typeof Collection) => {
+                    const collection = new collectionClass(null, {
                         entityType: entityType,
                         orderBy: orderBy,
                         order: order,
                         defs: defs,
+                        model: Model,
                     });
 
-                    collection.model = Model;
                     collection.entityType = entityType;
                     collection.maxMaxSize = this.recordListMaxSizeLimit;
 
@@ -92,5 +93,3 @@ class CollectionFactory {
         });
     }
 }
-
-export default CollectionFactory;

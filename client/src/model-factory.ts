@@ -28,26 +28,25 @@
 
 /** @module model-factory */
 
+import Metadata from 'metadata';
+import Model from 'model';
+
 /**
  * A model factory.
  */
-class ModelFactory {
-    /**
-     * @param {module:metadata} metadata
-     */
-    constructor (metadata) {
-        this.metadata = metadata;
-    }
+export default class ModelFactory {
+
+    constructor(private metadata: Metadata) {}
 
     /**
      * Create a model.
      *
-     * @param {string} entityType An entity type.
-     * @param {Function} [callback] Deprecated.
-     * @param {Object} [context] Deprecated.
-     * @returns {Promise<module:model>}
+     * @param entityType An entity type.
+     * @param [callback] Deprecated.
+     * @param [context] Deprecated.
+     * @returns A created model.
      */
-    create(entityType, callback, context) {
+    create(entityType: string, callback?: Function, context?: object): Promise<Model> {
         return new Promise(resolve => {
             context = context || this;
 
@@ -70,14 +69,13 @@ class ModelFactory {
      * Get a class.
      *
      * @param {string} entityType An entity type.
-     * @param {function(module:model): void} callback A callback.
+     * @param callback A callback.
      * @public
+     * @internal
      */
-    getSeed(entityType, callback) {
-        const className = this.metadata.get(['clientDefs', entityType, 'model']) || 'model';
+    getSeed(entityType: string, callback: (modelClass: typeof Model) => void) {
+        const className = (this.metadata.get(['clientDefs', entityType, 'model']) ?? 'model') as string;
 
-        Espo.loader.require(className, modelClass => callback(modelClass));
+        Espo.loader.require(className, (modelClass: typeof Model) => callback(modelClass));
     }
 }
-
-export default ModelFactory;

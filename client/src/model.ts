@@ -75,6 +75,15 @@ interface FieldDefs {
     type: string,
 }
 
+interface Options {
+    collection?: Collection
+    entityType?: string
+    urlRoot?: string
+    url?: string
+    defs?: Defs
+    user?: User
+}
+
 type Collection = import('collection').default;
 type User = import('models/user').default;
 
@@ -147,14 +156,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
 
     constructor(
         attributes?: Partial<T> | Model<T>,
-        options?: {
-            collection?: Collection;
-            entityType?: string;
-            urlRoot?: string;
-            url?: string;
-            defs?: Defs;
-            user?: User;
-        },
+        options?: Options,
     ) {
         options = options || {};
 
