@@ -34,12 +34,12 @@ import Collection from 'collection';
 import Ui from 'ui';
 
 interface ConfirmOptions {
-    message: string,
-    confirmText?: string,
-    cancelText?: string,
-    confirmStyle?: 'danger' | 'success' | 'warning' | 'default',
-    backdrop?: 'static' | boolean,
-    cancelCallback?: () => void,
+    message: string
+    confirmText?: string
+    cancelText?: string
+    confirmStyle?: 'danger' | 'success' | 'warning' | 'default'
+    backdrop?: 'static' | boolean
+    cancelCallback?: () => void
 }
 
 /**
@@ -57,9 +57,8 @@ interface ViewSchema {
  * A base view. All views should extend this class.
  *
  * @see https://docs.espocrm.com/development/view/
- *
  */
-class View<S extends ViewSchema = ViewSchema> extends BullView<S['model'], S['collection']> {
+export default class View<S extends ViewSchema = ViewSchema> extends BullView<S['model'], S['collection']> {
 
     /**
      * A model.
@@ -72,10 +71,13 @@ class View<S extends ViewSchema = ViewSchema> extends BullView<S['model'], S['co
     collection: S['collection']
 
     /**
-     * @param options
+     * @param options Options.
      */
     constructor(
-        options: Record<string, any> = {}
+        options: Record<string, any> & {
+            model?: S['model'],
+            collection?: S['collection'],
+        } = {}
     ) {
         super(options);
 
@@ -88,16 +90,14 @@ class View<S extends ViewSchema = ViewSchema> extends BullView<S['model'], S['co
         }
     }
 
-
     // noinspection JSUnusedGlobalSymbols
     /**
      * When the view is ready. Can be useful to prevent race condition when re-initialization is needed
      * in-between initialization and render.
      *
-     * @return Promise<void>
      * @todo Move to Bull.View.
      */
-    whenReady() {
+    whenReady(): Promise<void> {
         if (this.isReady) {
             return Promise.resolve();
         }
@@ -395,5 +395,3 @@ class View<S extends ViewSchema = ViewSchema> extends BullView<S['model'], S['co
         }, callback, context);
     }
 }
-
-export default View;
