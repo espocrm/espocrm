@@ -131,6 +131,10 @@ class EmailFolderStringFieldView extends BaseFieldView {
             return this.translate('drafts', 'presetFilters', 'Email');
         }
 
+        if (string) {
+            return string;
+        }
+
         if (this.model.attributes.isUsers) {
             return this.translate('inbox', 'presetFilters', 'Email');
         }
