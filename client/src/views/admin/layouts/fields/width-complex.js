@@ -45,7 +45,17 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
     }
 
     setup() {
-        this.auxModel = new Model();
+        this.auxModel =
+            /**
+             * @type {
+             *     Model<{
+             *         width: number|null,
+             *         unit: string|null,
+             *         value: number|null,
+             *     }>
+             * }
+             */
+            new Model();
 
         this.syncAuxModel();
 
@@ -127,7 +137,7 @@ class LayoutWidthComplexFieldView extends BaseFieldView {
 
         const unit = width || !widthPx ? '%' : 'px';
 
-        this.auxModel.set({
+        this.auxModel.setMultiple({
             unit: unit,
             value: unit === 'px' ? widthPx : width,
         });

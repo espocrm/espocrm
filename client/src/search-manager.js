@@ -44,13 +44,7 @@
 /**
  * A where item. Sent to the backend.
  *
- * @typedef {Object} module:search-manager~whereItem
- *
- * @property {string} type A type.
- * @property {string} [attribute] An attribute (field).
- * @property {module:search-manager~whereItem[]|string|number|boolean|string[]|null} [value] A value.
- * @property {boolean} [dateTime] Is a date-time item.
- * @property {string} [timeZone] A time-zone.
+ * @typedef {import('collection').WhereItem} module:search-manager~whereItem
  */
 
 /**

@@ -26,65 +26,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module multi-collection */
-
-import Collection from 'collection';
-import _ from 'underscore';
-
-/**
- * A collection that can contain entities of different entity types.
- */
-class MultiCollection extends Collection {
+export class AjaxPromise<T = any> extends Promise<T> {
 
     /**
-     * A model seed map.
-     *
-     * @public
-     * @type {Object.<string, module:model>}
+     * @type {XMLHttpRequest|null}
+     * @internal
      */
-    seeds = null
+    xhr: XMLHttpRequest | null = null
 
-    /** @inheritDoc */
-    prepareAttributes(response, options) {
-        if (Array.isArray(response)) {
-            throw new Error("Bad response.");
+    isAborted = false
+
+    /**
+     * Abort the request.
+     */
+    abort() {
+        this.isAborted = true;
+
+        if (this.xhr) {
+            this.xhr.abort();
         }
-
-        this.total = response.total;
-
-        if (!('list' in response)) {
-            throw new Error("No 'list' in response.");
-        }
-
-        /** @type {({_scope?: string} & Object.<string, *>)[]} */
-        const list = response.list;
-
-        return list.map(attributes => {
-            const entityType = attributes._scope;
-
-            if (!entityType) {
-                throw new Error("No '_scope' attribute.");
-            }
-
-            attributes = _.clone(attributes);
-            delete attributes['_scope'];
-
-            const model = this.seeds[entityType].clone();
-
-            model.set(attributes);
-
-            return model;
-        });
     }
 
-    /** @inheritDoc */
-    clone(options) {
-        const collection = super.clone(options);
-        collection.seeds = this.seeds;
+    /**
+     * Get a ready state.
+     *
+     */
+    getReadyState(): number {
+        if (!this.xhr) {
+            return 0;
+        }
 
-        return collection;
+        return this.xhr.readyState || 0;
+    }
+
+    /**
+     * Get a status code
+     *
+     * @return {Number}
+     */
+    getStatus(): number {
+        if (!this.xhr) {
+            return 0;
+        }
+
+        return this.xhr.status;
     }
 }
-
-// noinspection JSUnusedGlobalSymbols
-export default MultiCollection;
