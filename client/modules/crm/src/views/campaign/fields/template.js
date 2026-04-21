@@ -36,6 +36,7 @@ define('crm:views/campaign/fields/template', ['views/fields/link'], function (De
             return {
                 entityType: {
                     type: 'in',
+                    attribute: 'entityType',
                     value: [
                         this.getMetadata().get(['entityDefs', 'Campaign', 'fields', this.name, 'targetEntityType'])
                     ],
