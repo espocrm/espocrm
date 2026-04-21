@@ -150,14 +150,13 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
             return;
         }
 
-        scope = scope || null;
         timeout = timeout || 2000;
 
         if (!type) {
             timeout = void 0;
         }
 
-        const text = this.getLanguage().translate(label, 'labels', scope);
+        const text = this.getLanguage().translate(label, 'labels', scope || undefined);
 
         // @ts-ignore
         Ui.notify(text, type, timeout);

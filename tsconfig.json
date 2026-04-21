@@ -11,7 +11,8 @@
         "skipLibCheck": true,
         "allowJs": true,
         "checkJs": false,
-        "noEmit": true
+        "noEmit": true,
+        "strictPropertyInitialization": false
     },
     "include": [
         "client/src",

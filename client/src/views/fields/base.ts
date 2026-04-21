@@ -201,7 +201,7 @@ export default class BaseFieldView<
     /**
      * A mode.
      */
-    mode: Mode = 'detail'
+    mode: Mode | undefined = 'detail'
 
     /**
      * Search params.
@@ -1602,9 +1602,9 @@ export default class BaseFieldView<
             return {};
         }
 
-        const data = {};
+        const data = {} as Record<string, any>;
 
-        data[this.name] = (this.$element.val() as string).trim();
+        data[this.name] = (this.$element?.val() as string).trim();
 
         return data;
     }
@@ -1613,7 +1613,7 @@ export default class BaseFieldView<
      * Fetch search data from DOM.
      */
     fetchSearch(): Record<string, any> | null {
-        const value = this.$element.val().toString().trim();
+        const value = this.$element?.val()?.toString()?.trim();
 
         if (value) {
             return {
