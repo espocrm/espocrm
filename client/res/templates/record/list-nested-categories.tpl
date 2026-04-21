@@ -81,6 +81,7 @@
                 class="action folder-icon btn-text"
                 data-action="openCategory"
                 data-id="{{categoryData.upperId}}"
+                data-name="{{categoryData.upperName}}"
                 title="{{translate 'Up'}}"
             ><span class="fas fa-arrow-up text-soft transform-flip-x"></span></a>
         </div>
