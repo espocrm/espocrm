@@ -66,6 +66,26 @@ class MeetingDetailRecordView extends DetailRecordView {
             'name': 'setNotHeld',
             onClick: () => this.actionSetNotHeld(),
         });
+
+        const control = () => {
+            if (
+                historyStatusList.includes(this.model.attributes.status) ||
+                !this.getAcl().checkModel(this.model, 'edit')
+            ) {
+                this.hideActionItem('setHeld');
+                this.hideActionItem('setNotHeld');
+            } else {
+                this.showActionItem('setHeld');
+                this.showActionItem('setNotHeld');
+            }
+        };
+
+        control();
+
+        this.model.onSync({
+            owner: this,
+            callback: () => control(),
+        });
     }
 
     manageAccessEdit(second) {
@@ -81,9 +101,6 @@ class MeetingDetailRecordView extends DetailRecordView {
         this.model.save({status: 'Held'}, {patch: true})
             .then(() => {
                 Espo.Ui.success(this.translate('Saved'));
-
-                this.removeActionItem('setHeld');
-                this.removeActionItem('setNotHeld');
             });
     }
 
@@ -91,9 +108,6 @@ class MeetingDetailRecordView extends DetailRecordView {
         this.model.save({status: 'Not Held'}, {patch: true})
             .then(() => {
                 Espo.Ui.success(this.translate('Saved'));
-
-                this.removeActionItem('setHeld');
-                this.removeActionItem('setNotHeld');
             });
     }
 }
