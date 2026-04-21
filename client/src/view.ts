@@ -389,7 +389,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
             confirmText: confirmText,
             cancelText: cancelText,
             confirmStyle: confirmStyle,
-            backdrop: ('backdrop' in options) ? o.backdrop : true,
+            backdrop: ('backdrop' in options) ? options.backdrop : true,
             isHtml: true,
             cancelCallback: options.cancelCallback,
         }, callback, context);
