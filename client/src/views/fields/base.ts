@@ -69,7 +69,7 @@ export interface Params {
 }
 
 export interface ViewSchema {
-    model?: Model;
+    model: Model;
 }
 
 type Mode = 'list' | 'listLink' | 'detail' | 'edit' | 'search';

@@ -71,7 +71,7 @@ export default class BoolFieldView<
     afterRender() {
         super.afterRender();
 
-        if (this.mode === this.MODE_SEARCH) {
+        if (this.mode === this.MODE_SEARCH && this.$element) {
             this.$element.on('change', () => {
                 this.trigger('change');
             });
@@ -85,7 +85,7 @@ export default class BoolFieldView<
 
         const value = element?.checked
 
-        const data = {};
+        const data = {} as Record<string, any>;
 
         data[this.name] = value;
 
@@ -93,7 +93,7 @@ export default class BoolFieldView<
     }
 
     fetchSearch() {
-        const type = this.$element.val();
+        const type = this.$element?.val();
 
         if (!type) {
             return null;
@@ -128,8 +128,6 @@ export default class BoolFieldView<
     }
 
     getSearchType() {
-        return this.getSearchParamsData().type ||
-            this.searchParams.type ||
-            'isTrue';
+        return this.getSearchParamsData().type ?? this.searchParams?.type ?? 'isTrue';
     }
 }
