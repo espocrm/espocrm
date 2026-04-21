@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
-        "baseUrl": "client",
         "paths": {
-            "*": ["src/*"],
-            "modules/crm/*": ["modules/crm/src/*"],
-            "crm:*": ["modules/crm/src/*"]
+            "*": ["./client/src/*"],
+            "modules/crm/*": ["./client/modules/crm/src/*"],
+            "crm:*": ["./client/modules/crm/src/*"]
         },
         "module": "ES6",
         "target": "ES2018",
