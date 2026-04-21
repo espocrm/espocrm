@@ -83,25 +83,25 @@ export interface WhereItem {
  * Search data.
  */
 export interface Data {
-    primaryFilter?: string | null,
-    boolFilterList?: string[],
-    textFilter?: string,
-    select?: string,
-    q?: string,
+    primaryFilter?: string | null;
+    boolFilterList?: string[];
+    textFilter?: string;
+    select?: string;
+    q?: string;
 }
 
 /**
  * @property model A class.
  */
-interface Options {
-    model?: typeof Model
-    defs: import('model').Defs
-    maxSize?: number
-    entityType?: string
-    urlRoot?: string
-    url?: string
-    orderBy: string | null
-    order: 'asc' | 'desc' | boolean
+export interface Options {
+    model?: typeof Model;
+    defs: import('model').Defs;
+    maxSize?: number;
+    entityType?: string;
+    urlRoot?: string;
+    url?: string;
+    orderBy: string | null;
+    order: 'asc' | 'desc' | boolean;
 }
 
 export default class Collection<TModel extends Model = Model> {

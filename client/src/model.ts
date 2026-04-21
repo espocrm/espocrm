@@ -55,33 +55,33 @@ import {AjaxPromise} from 'util/ajax';
  * @property link A link.
  * @property model A model.
  */
-interface SetRelateItem {
-    link: string,
-    model: Model,
+export interface SetRelateItem {
+    link: string;
+    model: Model;
 }
 
 /**
  * Definitions.
  */
 export interface Defs {
-    fields?: Record<string, FieldDefs & Record<string, any>>
-    links?: Record<string, Record<string, any>>
+    fields?: Record<string, FieldDefs & Record<string, any>>;
+    links?: Record<string, Record<string, any>>;
 }
 
 /**
  * Field definitions.
  */
 interface FieldDefs {
-    type: string,
+    type: string;
 }
 
-interface Options {
-    collection?: Collection
-    entityType?: string
-    urlRoot?: string
-    url?: string
-    defs?: Defs
-    user?: User
+export interface Options {
+    collection?: Collection;
+    entityType?: string;
+    urlRoot?: string;
+    url?: string;
+    defs?: Defs;
+    user?: User;
 }
 
 type Collection = import('collection').default;

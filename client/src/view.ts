@@ -33,13 +33,13 @@ import Model from 'model';
 import Collection from 'collection';
 import Ui from 'ui';
 
-interface ConfirmOptions {
-    message: string
-    confirmText?: string
-    cancelText?: string
-    confirmStyle?: 'danger' | 'success' | 'warning' | 'default'
-    backdrop?: 'static' | boolean
-    cancelCallback?: () => void
+export interface ConfirmOptions {
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    confirmStyle?: 'danger' | 'success' | 'warning' | 'default';
+    backdrop?: 'static' | boolean;
+    cancelCallback?: () => void;
 }
 
 /**
@@ -49,8 +49,8 @@ interface ConfirmOptions {
 type ActionHandlerCallback = (event: MouseEvent, element: HTMLElement) => void;
 
 interface ViewSchema {
-    model?: Model
-    collection?: Collection
+    model?: Model;
+    collection?: Collection;
 }
 
 /**

@@ -30,34 +30,23 @@
 
 import BaseFieldView from 'views/fields/base';
 import Select from 'ui/select';
+import {Options as BaseOptions} from 'views/fields/base';
+import {Params as BaseParams} from 'views/fields/base';
+import {ViewSchema} from 'views/fields/base';
+
+interface Params extends BaseParams {}
+
+interface Options extends BaseOptions {}
 
 /**
  * A boolean field (checkbox).
- *
- * @extends BaseFieldView<module:views/fields/bool~params>
  */
-class BoolFieldView extends BaseFieldView {
+export default class BoolFieldView<
+    S extends ViewSchema = ViewSchema,
+    P extends Params = Params,
+> extends BaseFieldView<S, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/bool~options
-     * @property {
-     *     module:views/fields/bool~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
-
-    /**
-     * @typedef {Object} module:views/fields/bool~params
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/bool~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
+    constructor(options: {[s: string]: any} & Options & P) {
         super(options);
     }
 
@@ -71,14 +60,11 @@ class BoolFieldView extends BaseFieldView {
     validations = []
     initialSearchIsNotIdle = true
 
-    // noinspection JSCheckFunctionSignatures
-    /** @inheritDoc */
     data() {
         const data = super.data();
 
         data.valueIsSet = this.model.has(this.name);
 
-        // noinspection JSValidateTypes
         return data;
     }
 
@@ -95,8 +81,7 @@ class BoolFieldView extends BaseFieldView {
     }
 
     fetch() {
-        const element = /** @type {HTMLInputElement|null} */
-            this.mainInputElement;
+        const element = this.mainInputElement as HTMLInputElement | null
 
         const value = element?.checked
 
@@ -148,5 +133,3 @@ class BoolFieldView extends BaseFieldView {
             'isTrue';
     }
 }
-
-export default BoolFieldView;
