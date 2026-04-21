@@ -13,5 +13,11 @@
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\LeadCapture\\BeforeCreate"
     ],
+    "createInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\LeadCapture\\InputFilter"
+    ],
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\LeadCapture\\InputFilter"
+    ],
     "loadAdditionalFieldsAfterUpdate": true
 }

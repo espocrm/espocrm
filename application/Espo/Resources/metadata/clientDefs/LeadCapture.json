@@ -5,6 +5,14 @@
         "detail": "views/lead-capture/record/detail",
         "list": "views/lead-capture/record/list"
     },
+    "viewSetupHandlers": {
+        "record/detail": [
+            "handlers/lead-capture/record-detail-view-setup"
+        ],
+        "record/edit": [
+            "handlers/lead-capture/record-detail-view-setup"
+        ]
+    },
     "sidePanels": {
         "detail": [
             {
@@ -29,6 +37,9 @@
             "layout": "listForLeadCapture",
             "select": false,
             "create": false
+        },
+        "pipeline": {
+            "selectHandler": "handlers/lead-capture/pipeline-select-handler"
         }
     }
 }

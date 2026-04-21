@@ -61,6 +61,7 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\LeadCapture\Jobs\OptInConfirmation;
 use Espo\Tools\Captcha\Checker as CaptchaChecker;
+use Espo\Tools\Pipeline\MetadataProvider as PipelineMetadataProvider;
 use stdClass;
 use DateTime;
 
@@ -78,6 +79,7 @@ class CaptureService
         private PhoneNumberSanitizer $phoneNumberSanitizer,
         private ServiceContainer $serviceContainer,
         private CaptchaChecker $captchaChecker,
+        private PipelineMetadataProvider $pipelineMetadataProvider,
     ) {}
 
     /**
@@ -504,6 +506,8 @@ class CaptureService
             $lead->setSource($leadCapture->getLeadSource());
         }
 
+        $this->setPipeline($leadCapture, $lead);
+
         if ($leadCapture->getCampaignId()) {
             $lead->setCampaign(Link::create($leadCapture->getCampaignId()));
         }
@@ -769,5 +773,29 @@ class CaptureService
         }
 
         return $leadCapture;
+    }
+
+    private function setPipeline(LeadCapture $leadCapture, Lead $lead): void
+    {
+        if (
+            !$this->pipelineMetadataProvider->isEnabled(Lead::ENTITY_TYPE) ||
+            !$leadCapture->getPipeline()
+        ) {
+            return;
+        }
+
+        $pipeline = $leadCapture->getPipeline();
+
+        $lead->set(Field::PIPELINE . 'Id', $pipeline->getId());
+        $lead->set(Field::PIPELINE . 'Name', $pipeline->getName());
+
+        $firstStage = $pipeline->getStages()[0] ?? null;
+
+        if (!$firstStage) {
+            return;
+        }
+
+        $lead->set(Field::PIPELINE_STAGE . 'Id', $firstStage->getId());
+        $lead->set(Field::PIPELINE_STAGE . 'Name', $firstStage->getName());
     }
 }

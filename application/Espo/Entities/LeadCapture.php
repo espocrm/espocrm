@@ -236,4 +236,10 @@ class LeadCapture extends Entity
     {
         return $this->get('formTheme');
     }
+
+    public function getPipeline(): ?Pipeline
+    {
+        /** @var ?Pipeline */
+        return $this->relations->getOne(Field::PIPELINE);
+    }
 }
