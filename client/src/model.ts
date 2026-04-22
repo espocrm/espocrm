@@ -33,6 +33,7 @@ import _ from 'underscore';
 import DefaultValueProvider from 'helpers/model/default-value-provider';
 import {onModelChange, onSync} from 'util/event';
 import {AjaxPromise} from 'util/ajax';
+import Ajax from 'ajax';
 
 /**
  * When attributes have changed.
@@ -145,7 +146,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      */
     public collection: Collection | undefined
 
-    private changed: Partial<T>
+    private changed: Partial<T> | Record<string, null>
     private _previousAttributes: null | Partial<T>
 
     /**
@@ -221,11 +222,12 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
             'read': 'GET',
         };
 
-        const httpMethod = methodMap[method];
-
-        if (!httpMethod) {
+        if (!(method in methodMap)) {
             throw new Error(`Bad request method '${method}'.`);
         }
+
+        const httpMethod = methodMap[method as keyof typeof methodMap] as
+            'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS';
 
         options = options || {};
 
@@ -252,14 +254,16 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
         const stringData = data ? JSON.stringify(data) : null;
 
         const ajaxPromise = !options.bypassRequest ?
-            Espo.Ajax.request(url, httpMethod, stringData, options) :
+            Ajax.request(url, httpMethod, stringData, options) :
             Promise.resolve();
 
-        options.xhr = ajaxPromise.xhr;
+        if (ajaxPromise instanceof AjaxPromise) {
+            options.xhr = ajaxPromise.xhr;
+        }
 
         model.trigger('request', url, httpMethod, data, ajaxPromise, options);
 
-        return ajaxPromise;
+        return ajaxPromise as AjaxPromise;
     }
 
     // noinspection JSValidateJSDoc
@@ -275,7 +279,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
     set(
         attribute: keyof T,
         value: any,
-        options: {silent: boolean} & Record<string, any> = undefined
+        options?: {silent: boolean} & Record<string, any>,
     ): this {
 
         if (attribute == null) {
@@ -301,17 +305,35 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * @param attributes
      * @param [options] Options. `silent` won't trigger a `change` event.
      *     `sync` can be used to emulate syncing.
-     * @return {this}
      * @fires Model#change Unless `{silent: true}`.
-     * @copyright Credits to Backbone.js.
      */
     setMultiple(
         attributes: Partial<T>,
-        options: {
+        options?: {
+            silent?: boolean,
+            sync?: boolean,
+        } & Record<string, any>,
+    ): this {
+
+        return this._setMultipleInternal(attributes, options);
+    }
+
+    // noinspection JSValidateJSDoc
+    /**
+     * Set attributes values.
+     *
+     * @param attributes
+     * @param [options]
+     * @fires Model#change Unless `{silent: true}`.
+     * @copyright Credits to Backbone.js.
+     */
+    private _setMultipleInternal(
+        attributes: Partial<T> | Record<string, null>,
+        options?: {
             silent?: boolean,
             unset?: boolean,
             sync?: boolean,
-        } & Record<string, any> = undefined,
+        } & Record<string, any>,
     ): this {
 
         if (this.idAttribute in attributes) {
@@ -338,9 +360,9 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
             this.changed = {};
         }
 
-        const current = this.attributes;
-        const changed = this.changed;
-        const previous = this._previousAttributes;
+        const current = this.attributes as Record<string, any>;
+        const changed = this.changed as Record<string, any>;
+        const previous = this._previousAttributes as Record<string, any>;
 
         for (const attribute in attributes) {
             const value = attributes[attribute];
@@ -412,10 +434,10 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
 
         options = {...options, unset: true};
 
-        const attributes = {} as Partial<T>;
-        attributes[attribute] = null;
+        const attributes = {} as Record<string, any>;
+        attributes[attribute as string] = null;
 
-        return this.setMultiple(attributes, options);
+        return this._setMultipleInternal(attributes, options);
     }
 
     /**
@@ -423,7 +445,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      *
      * @param attribute An attribute name.
      */
-    get<K extends keyof T>(attribute: K): T[K] {
+    get<K extends keyof T>(attribute: K): T[K] | undefined {
         if (attribute === this.idAttribute && this.id) {
             return this.id as T[K];
         }
@@ -488,14 +510,14 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * Get changed attribute values. To be called only within a 'change' event handler.
      */
     changedAttributes(): Partial<T> {
-        return this.hasChanged() ? _.clone(this.changed) : {};
+        return this.hasChanged() ? _.clone(this.changed as Partial<T>) : {};
     }
 
     /**
      * Get previous attributes. To be called only within a 'change' event handler.
      */
     previousAttributes(): Partial<T> {
-        return _.clone(this._previousAttributes);
+        return _.clone(this._previousAttributes ?? {});
     }
 
     /**
@@ -795,7 +817,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * Populate default values.
      */
     populateDefaults() {
-        let defaultHash = {};
+        let defaultHash = {} as Record<string, unknown>;
 
         const fieldDefs = this.defs.fields;
 
@@ -825,7 +847,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
             }
         }
 
-        this.setMultiple(defaultHash, {silent: true});
+        this.setMultiple(defaultHash as Partial<T>, {silent: true});
     }
 
     /**
@@ -873,7 +895,11 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
                 throw new Error('Bad related options');
             }
 
-            const type = this.defs.links[link].type;
+            if (!model.id) {
+                throw new Error('Bad related model. No ID.');
+            }
+
+            const type = this.defs.links?.[link]?.type;
 
             switch (type) {
                 case 'belongsToParent':
@@ -893,7 +919,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
                     const ids = [];
                     ids.push(model.id);
 
-                    const names = {};
+                    const names = {} as Record<string, any>;
 
                     names[model.id] = model.get('name');
 
@@ -1054,7 +1080,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * @param {string} field A field name.
      */
     hasField(field: string): boolean {
-        return ('fields' in this.defs) && (field in this.defs.fields);
+        return ('fields' in this.defs) && (field in (this.defs as any).fields);
     }
 
     /**
@@ -1063,7 +1089,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * @param {string} link A link name.
      */
     hasLink(link: string): boolean {
-        return ('links' in this.defs) && (link in this.defs.links);
+        return ('links' in this.defs) && (link in (this.defs as any).links);
     }
 
     /**
@@ -1083,8 +1109,8 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
     /**
      * Get an entity type.
      */
-    getEntityType(): string {
-        return this.name;
+    getEntityType(): string | null {
+        return this.entityType;
     }
 
     /**

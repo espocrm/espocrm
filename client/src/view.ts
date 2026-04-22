@@ -119,7 +119,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
 
         this.events[fullAction] = e => {
             // noinspection JSUnresolvedReference
-            handler.call(this, e.originalEvent, e.currentTarget);
+            handler.call(this, e.originalEvent as MouseEvent, e.currentTarget as HTMLElement);
         };
     }
 
@@ -150,23 +150,23 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
             return;
         }
 
-        timeout = timeout || 2000;
+        let timeoutInternal : number | undefined = timeout || 2000;
 
         if (!type) {
-            timeout = void 0;
+            timeoutInternal = undefined;
         }
 
         const text = this.getLanguage().translate(label, 'labels', scope || undefined);
 
         // @ts-ignore
-        Ui.notify(text, type, timeout);
+        Ui.notify(text, type, timeoutInternal);
     }
 
     /**
      * Get a view-helper.
      */
     getHelper(): import('view-helper').default {
-        return this._helper;
+        return this._helper as import('view-helper').default;
     }
 
     /**

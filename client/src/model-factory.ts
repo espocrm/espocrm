@@ -30,6 +30,7 @@
 
 import Metadata from 'metadata';
 import Model from 'model';
+import loader
 
 /**
  * A model factory.
