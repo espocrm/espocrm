@@ -39,7 +39,7 @@ let beforeSend: Handler;
 let onSuccess: Handler;
 let onError: Handler;
 let onTimeout: Handler;
-let onOffline: () => void;
+let onOffline: (() => void) | undefined;
 
 type Handler = (xhr?: XMLHttpRequest, options?: Record<string, any>) => void;
 
@@ -60,7 +60,7 @@ const baseUrl = Utils.obtainBaseUrl();
 /**
  * Functions for API HTTP requests.
  */
-const Ajax = Espo.Ajax = {
+const Ajax = {
 
     /**
      * Request.
@@ -112,7 +112,11 @@ const Ajax = Espo.Ajax = {
         const urlObj = new URL(baseUrl + url);
 
         const xhr = new Xhr();
-        xhr.timeout = timeout;
+
+        if (timeout != null) {
+            xhr.timeout = timeout;
+        }
+
         xhr.open(method, urlObj);
         xhr.setRequestHeader('Content-Type', contentType);
 
@@ -206,7 +210,7 @@ const Ajax = Espo.Ajax = {
         });
 
         promiseWrapper.promise = promise;
-        promise.xhr = promise.xhr || promiseWrapper.xhr;
+        promise.xhr = promise.xhr ?? promiseWrapper.xhr ?? null;
 
         return promise;
     },
@@ -220,8 +224,8 @@ const Ajax = Espo.Ajax = {
      */
     postRequest: function (
         url: string,
-        data: any = undefined,
-        options: Options & Record<string, any> = undefined,
+        data?: any,
+        options?: Options & Record<string, any>,
     ): Promise<any> & AjaxPromise {
 
         if (data) {
@@ -241,7 +245,7 @@ const Ajax = Espo.Ajax = {
     patchRequest: function (
         url: string,
         data: any = undefined,
-        options: Options & Record<string, any>,
+        options?: Options & Record<string, any>,
     ): Promise<any> & AjaxPromise {
 
         if (data) {
@@ -261,7 +265,7 @@ const Ajax = Espo.Ajax = {
     putRequest: function (
         url: string,
         data: any = undefined,
-        options: Options & Record<string, any> = undefined,
+        options?: Options & Record<string, any>,
     ): Promise<any> & AjaxPromise {
 
         if (data) {
@@ -281,7 +285,7 @@ const Ajax = Espo.Ajax = {
     deleteRequest: function (
         url: string,
         data: any,
-        options: Options & Record<string, any>,
+        options?: Options & Record<string, any>,
     ): Promise<any> & AjaxPromise {
 
         if (data) {
@@ -301,7 +305,7 @@ const Ajax = Espo.Ajax = {
     getRequest: function (
         url: string,
         data: any = undefined,
-        options: Options & Record<string, any> = undefined,
+        options?: Options & Record<string, any>,
     ): Promise<any> & AjaxPromise {
 
         return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'GET', data, options);
@@ -349,5 +353,8 @@ class Xhr extends XMLHttpRequest {
      */
     errorIsHandled = false
 }
+
+// @ts-ignore
+Espo.Ajax = Ajax;
 
 export default Ajax;
