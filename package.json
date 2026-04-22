@@ -37,7 +37,7 @@
     "@types/underscore": "^1.13.0",
     "archiver": "^7",
     "chromedriver": "^127.0.1",
-    "espo-frontend-build-tools": "github:espocrm/frontend-build-tools#0.3.0",
+    "espo-frontend-build-tools": "github:espocrm/frontend-build-tools#0.3.1",
     "fstream": ">=1.0.12",
     "glob": "^13.0.6",
     "grunt": "^1.5.3",
