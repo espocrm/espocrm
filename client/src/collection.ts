@@ -377,11 +377,11 @@ export default class Collection<TModel extends Model = Model> {
         // Should not undefined if not set.
         let at = options.at;
 
-        if (at > this.length) {
+        if (at != null && at > this.length) {
             at = this.length;
         }
 
-        if (at < 0) {
+        if (at != null && at < 0) {
             at += this.length + 1;
         }
 
