@@ -30,146 +30,133 @@
 
 import {marked} from 'marked';
 import DOMPurify from 'dompurify';
-import $ from 'jquery';
+import JQuery from 'jquery';
+
+const $ = JQuery;
 
 /**
  * Dialog parameters.
- *
- * @typedef {Object} module:ui.Dialog~Params
- *
- * @property {string} [className='dialog'] A class-name or multiple space separated.
- * @property {'static'|true|false} [backdrop='static'] A backdrop.
- * @property {boolean} [closeButton=true] A close button.
- * @property {boolean} [collapseButton=false] A collapse button.
- * @property {string|null} [header] A header HTML.
- * @property {string} [body] A body HTML.
- * @property {number|null} [width] A width.
- * @property {boolean} [removeOnClose=true] To remove on close.
- * @property {boolean} [draggable=false] Is draggable.
- * @property {function(): void} [onRemove] An on-remove callback.
- * @property {function(): void} [onClose] An on-close callback.
- * @property {function(): void} [onBackdropClick] An on-backdrop-click callback.
- * @property {string} [container='body'] A container selector.
- * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
- * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
- * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
- * @property {Array<module:ui.Dialog~Button|false>} [dropdownItemList] Dropdown action items.
- * @property {boolean} [fullHeight] Deprecated.
- * @property {Number} [bodyDiffHeight]
- * @property {Number} [screenWidthXs]
- * @property {boolean} [maximizeButton] Is maximizable.
- * @property {function()} [onMaximize] On maximize handler.
- * @property {function()} [onMinimize] On minimize handler.
- * @property {string} [backdropClassName] A backdrop class name. As of v9.1.0.
  */
+interface DialogParams {
+    className?: string;
+    backdrop?: 'static' | true | false;
+    closeButton?: boolean;
+    collapseButton?: boolean;
+    header?: string | null;
+    body?: string;
+    width?: number | null;
+    removeOnClose?: boolean;
+    draggable?: boolean;
+    onRemove?: () => void;
+    onClose?: () => void;
+    onBackdropClick?: () => void;
+    container?: string;
+    keyboard?: boolean;
+    footerAtTheTop?: boolean;
+    buttonList?: DialogButton[];
+    fullHeight?: boolean;
+    bodyDiffHeight?: number;
+    screenWidthXs?: number;
+    maximizeButton?: boolean;
+    onMaximize?: () => void;
+    onMinimize?: () => void;
+    backdropClassName?: string;
+    fixedHeaderHeight?: boolean;
+}
 
 /**
  * A button or dropdown action item.
- *
- * @typedef {Object} module:ui.Dialog~Button
- *
- * @property {string} name A name.
- * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
- * @property {'left'|'right'} [position='left'] A position.
- * @property {string} [html] HTML.
- * @property {string} [text] A text.
- * @property {boolean} [disabled=false] Disabled.
- * @property {boolean} [hidden=false] Hidden.
- * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
- * @property {function(Espo.Ui.Dialog, JQueryEventObject): void} [onClick] An on-click callback.
- * @property {string} [className] An additional class name.
- * @property {string} [title] A title.
  */
+interface DialogButton {
+    name: string;
+    pullLeft?: boolean;
+    position?: 'left' | 'right';
+    html?: string;
+    text?: string;
+    disabled?: boolean;
+    hidden?: boolean;
+    style?: 'default' | 'danger' | 'success' | 'warning';
+    onClick?: (dialog: Dialog, event: MouseEvent, target: HTMLElement) => void;
+    className?: string;
+    title?: string;
+}
 
 /**
- * @type {Espo.Ui.Dialog[]}
+ * Popover options.
  */
-const shownDialogList = [];
+interface PopoverOptions {
+    placement?: 'bottom' | 'top' | 'left' | 'right';
+    container?: string | JQuery;
+    content?: string;
+    text?: string;
+    trigger?: 'manual' | 'click' | 'hover' | 'focus';
+    noToggleInit?: boolean;
+    preventDestroyOnRender?: boolean;
+    noHideOnOutsideClick?: boolean;
+    onShow?: () => void;
+    onHide?: () => void;
+    title?: string | (() => string);
+    keepElementTitle?: boolean;
+}
+
+/**
+ * Notify options.
+ */
+interface NotifyOptions {
+    closeButton?: boolean;
+    suppress?: boolean;
+}
+
+const shownDialogList: Dialog[] = [];
 
 /**
  * @alias Espo.Ui.Dialog
  */
 class Dialog {
 
-    height
-    fitHeight
-    onRemove
-    onClose
-    onBackdropClick
-    buttons
-    screenWidthXs
-    backdropClassName
+    private fitHeight: boolean
+    private onRemove: () => void
+    private onClose: () => void
+    private onBackdropClick: () => void
+    private buttonList: DialogButton[]
+    private dropdownItemList: (DialogButton | false)[]
+    private backdropClassName: string
+    private readonly removeOnClose = true
+    private className: string = 'dialog-confirm'
+    private readonly backdrop: string = 'static'
+    private maximizeButton: boolean = false
+    private maximizeButtonElement: HTMLAnchorElement
+    private minimizeButtonElement: HTMLAnchorElement
+    private readonly onMaximize: () => void
+    private readonly onMinimize: () => void
+    private closeButton: boolean = true
+    private collapseButton: boolean = false
+    private readonly header: string | null = null
+    private readonly body: string = ''
+    private readonly width: string | null = null
+    private onCloseIsCalled: boolean = false
+    private readonly id: string
+    private readonly activeElement: Element
+    private readonly draggable: boolean = false
+    private readonly container: string = 'body';
+    private options: DialogParams
+    private readonly keyboard: boolean = true
+    private skipRemove: boolean = false
+
+    private _backdropElement: HTMLElement
+    private $el: JQuery
+    private readonly el: Element
+    private $mouseDownTarget: JQuery | undefined
 
     /**
-     * @private
-     * @type {boolean}
+     * @param options Options.
      */
-    maximizeButton = false
+    constructor(options: DialogParams) {
+        options = options ?? {};
 
-    /**
-     * @private
-     * @type {HTMLAnchorElement}
-     */
-    maximizeButtonElement
-
-    /**
-     * @private
-     * @type {HTMLAnchorElement}
-     */
-    minimizeButtonElement
-
-    /**
-     * @private
-     * @type {function()}
-     */
-    onMaximize
-
-    /**
-     * @private
-     * @type {function()}
-     */
-    onMinimize
-
-    /**
-     * @param {module:ui.Dialog~Params} options Options.
-     */
-    constructor(options) {
-        options = options || {};
-
-        /** @private */
-        this.className = 'dialog-confirm';
-        /** @private */
-        this.backdrop = 'static';
-        /** @private */
-        this.closeButton = true;
-        /** @private */
-        this.collapseButton = false;
-        /** @private */
-        this.header = null;
-        /** @private */
-        this.body = '';
-        /** @private */
-        this.width = null;
-        /**
-         * @private
-         * @type {module:ui.Dialog~Button[]}
-         */
         this.buttonList = [];
-        /**
-         * @private
-         * @type {Array<module:ui.Dialog~Button|false>}
-         */
         this.dropdownItemList = [];
-        /** @private */
-        this.removeOnClose = true;
-        /** @private */
-        this.draggable = false;
-        /** @private */
-        this.container = 'body';
-        /** @private */
         this.options = options;
-        /** @private */
-        this.keyboard = true;
 
         this.activeElement = document.activeElement;
 
@@ -198,9 +185,11 @@ class Dialog {
         ];
 
         params.forEach(param => {
-            if (param in options) {
-                this[param] = options[param];
+            if (!(param in options)) {
+                return;
             }
+
+            (this as Record<string, any>)[param] = (options as Record<string, any>)[param];
         });
 
         if (options.onMaximize) {
@@ -211,21 +200,13 @@ class Dialog {
             this.onMinimize = options.onMinimize;
         }
 
-        /** @private */
-        this.onCloseIsCalled = false;
-
-        if (this.buttons && this.buttons.length) {
-            /**
-             * @private
-             * @type {module:ui.Dialog~Button[]}
-             */
-            this.buttonList = this.buttons;
+        if ((options as Record<string, any>).buttons) {
+            this.buttonList = ((options as any).buttons) as DialogButton[];
         }
 
         this.id = 'dialog-' + Math.floor((Math.random() * 100000));
 
         if (typeof this.backdrop === 'undefined') {
-            /** @private */
             this.backdrop = 'static';
         }
 
@@ -266,22 +247,12 @@ class Dialog {
             .append($dialog)
             .appendTo($container);
 
-        /**
-         * An element.
-         *
-         * @type {JQuery}
-         */
         this.$el = $('#' + this.id);
-
-        /**
-         * @private
-         * @type {Element}
-         */
         this.el = this.$el.get(0);
 
-        this.$el.find('header a.close').on('click', () => {
+        /*this.$el.find('header a.close').on('click', () => {
             //this.close();
-        });
+        });*/
 
         this.initButtonEvents();
 
@@ -289,9 +260,8 @@ class Dialog {
             this.$el.find('header').css('cursor', 'pointer');
 
             // noinspection JSUnresolvedReference
-            this.$el.draggable({
-                handle: 'header',
-            });
+            // @ts-ignore
+            this.$el.draggable({handle: 'header'});
         }
 
         const modalContentEl = this.$el.find('.modal-content');
@@ -348,14 +318,13 @@ class Dialog {
 
                     const cssParams = {
                         overflow: 'auto',
-                    };
+                    } as Record<string, any>;
 
                     if (options.fullHeight) {
                         cssParams.height = (windowHeight - diffHeight) + 'px';
 
                         this.$el.css('paddingRight', 0);
-                    }
-                    else {
+                    } else {
                         if (windowWidth <= options.screenWidthXs) {
                             cssParams.maxHeight = 'none';
                         } else {
@@ -384,21 +353,20 @@ class Dialog {
 
     /**
      * Get a general container element.
-     *
-     * @return {HTMLDivElement}
      * @since 9.1.0
      */
-    getElement() {
-        return this.el;
+    getElement(): HTMLDivElement {
+        return this.el as HTMLDivElement;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Update the header text.
      *
      * @param {string} text
      * @since 9.1.0
      */
-    setHeaderText(text) {
+    setHeaderText(text: string) {
         const element = this.el.querySelector('.modal-header .modal-title');
 
         if (!element) {
@@ -407,35 +375,32 @@ class Dialog {
 
         element.textContent = text;
     }
-
-    /** @private */
-    callOnClose() {
+    private callOnClose() {
         if (this.onClose) {
             this.onClose()
         }
     }
 
-    /** @private */
-    callOnBackdropClick() {
+    private callOnBackdropClick() {
         if (this.onBackdropClick) {
             this.onBackdropClick()
         }
     }
 
-    /** @private */
-    callOnRemove() {
+    private callOnRemove() {
         if (this.onRemove) {
             this.onRemove()
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Set action items.
      *
-     * @param {module:ui.Dialog~Button[]} buttonList
-     * @param {Array<module:ui.Dialog~Button|false>} dropdownItemList
+     * @param buttonList Buttons
+     * @param dropdownItemList Dropdown items.
      */
-    setActionItems(buttonList, dropdownItemList) {
+    setActionItems(buttonList: DialogButton[], dropdownItemList: (DialogButton | false)[]) {
         this.buttonList = buttonList;
         this.dropdownItemList = dropdownItemList;
     }
@@ -445,11 +410,13 @@ class Dialog {
      */
     initButtonEvents() {
         this.buttonList.forEach(o => {
-            if (typeof o.onClick === 'function') {
-                const $button = $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]');
-
-                $button.on('click', e => o.onClick(this, e));
+            if (typeof o.onClick !== 'function') {
+                return;
             }
+
+            const $button = $(`#${this.id} .modal-footer button[data-name="${o.name}"]`);
+
+            $button.on('click', e => o.onClick(this, e.originalEvent, e.currentTarget));
         });
 
         this.dropdownItemList.forEach(o => {
@@ -457,19 +424,17 @@ class Dialog {
                 return;
             }
 
-            if (typeof o.onClick === 'function') {
-                const $button = $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]');
-
-                $button.on('click', e => o.onClick(this, e));
+            if (typeof o.onClick !== 'function') {
+                return;
             }
+
+            const $button = $(`#${this.id} .modal-footer a[data-name="${o.name}"]`);
+
+            $button.on('click', e => o.onClick(this, e.originalEvent, e.currentTarget));
         });
     }
 
-    /**
-     * @private
-     * @return {JQuery|null}
-     */
-    getHeader() {
+    private getHeader(): JQuery | null {
         if (!this.header) {
             return null;
         }
@@ -582,10 +547,8 @@ class Dialog {
 
     /**
      * Get a footer.
-     *
-     * @return {JQuery|null}
      */
-    getFooter() {
+    private getFooter(): JQuery | null {
         if (!this.buttonList.length && !this.dropdownItemList.length) {
             return null;
         }
@@ -710,22 +673,18 @@ class Dialog {
     }
 
     /**
-     * @internal
-     * @type {HTMLElement}
-     */
-    _backdropElement
-
-    /**
      * Show.
      */
     show() {
         shownDialogList.push(this);
 
         // noinspection JSUnresolvedReference,JSUnusedGlobalSymbols
+        // @ts-ignore
+        // noinspection JSUnusedGlobalSymbols
         this.$el.modal({
             backdrop: this.backdrop,
             keyboard: this.keyboard,
-            onBackdropCreate: element => {
+            onBackdropCreate: (element: HTMLElement) => {
                 this._backdropElement = element;
 
                 if (this.backdropClassName) {
@@ -810,6 +769,7 @@ class Dialog {
         setTimeout(() => this.skipRemove = false, 50);
 
         // noinspection JSUnresolvedReference
+        // @ts-ignore
         this.$el.modal('hide');
         this.$el.find('.modal-content').addClass('hidden');
     }
@@ -842,20 +802,15 @@ class Dialog {
         this._hideInternal();
     }
 
-    /**
-     * @private
-     * @param {Element} element
-     * @return {Element|null}
-     */
-    _findClosestFocusableElement(element) {
+    private _findClosestFocusableElement(element: Element): Element | null {
         // noinspection JSUnresolvedReference
         const isVisible = !!(
-            element.offsetWidth ||
-            element.offsetHeight ||
+            element instanceof HTMLElement && element.offsetWidth ||
+            element instanceof HTMLElement && element.offsetHeight ||
             element.getClientRects().length
         );
 
-        if (isVisible) {
+        if (isVisible &&  element instanceof HTMLElement) {
             // noinspection JSUnresolvedReference
             element.focus({preventScroll: true});
 
@@ -890,7 +845,7 @@ class Dialog {
                 setTimeout(() => {
                     const element = this._findClosestFocusableElement(this.activeElement);
 
-                    if (element) {
+                    if (element && element instanceof HTMLElement) {
                         // noinspection JSUnresolvedReference
                         element.focus({preventScroll: true});
                     }
@@ -900,6 +855,7 @@ class Dialog {
 
         this._close();
         // noinspection JSUnresolvedReference
+        // @ts-ignore
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
     }
@@ -920,42 +876,44 @@ class Dialog {
     }
 }
 
+interface ConfirmOptions {
+    confirmText: string;
+    cancelText: string;
+    confirmStyle?: 'danger' | 'success' | 'warning' | 'default';
+    backdrop?: 'static' | boolean;
+    cancelCallback?: () => void;
+    isHtml?: boolean;
+}
 
 /**
  * UI utils.
  */
-Espo.Ui = {
+const Ui = {
 
     Dialog: Dialog,
 
     /**
-     * @typedef {Object} Espo.Ui~ConfirmOptions
-     *
-     * @property {string} confirmText A confirm-button text.
-     * @property {string} cancelText A cancel-button text.
-     * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger']
-     *   A confirm-button style.
-     * @property {'static'|boolean} [backdrop=false] A backdrop.
-     * @property {function():void} [cancelCallback] A cancel-callback.
-     * @property {boolean} [isHtml=false] Whether the message is HTML.
-     */
-
-    /**
      * Show a confirmation dialog.
      *
-     * @param {string} message A message.
-     * @param {Espo.Ui~ConfirmOptions|{}} o Options.
-     * @param {function} [callback] Deprecated. Use a promise.
-     * @param {Object} [context] Deprecated.
-     * @returns {Promise} Resolves if confirmed.
+     * @param message A message.
+     * @param options Options.
+     * @param [callback] Deprecated. Use a promise.
+     * @param [context] Deprecated.
+     * @returns Resolves if confirmed.
      */
-    confirm: function (message, o, callback, context) {
-        o = o || {};
+    confirm: function (
+        message: string,
+        options: ConfirmOptions,
+        callback?: () => void,
+        context?: object,
+    ): Promise<void> {
 
-        const confirmText = o.confirmText;
-        const cancelText = o.cancelText;
-        const confirmStyle = o.confirmStyle || 'danger';
-        let backdrop = o.backdrop;
+        options = {...options};
+
+        const confirmText = options.confirmText;
+        const cancelText = options.cancelText;
+        const confirmStyle = options.confirmStyle || 'danger';
+        let backdrop = options.backdrop;
 
         if (typeof backdrop === 'undefined') {
             backdrop = false;
@@ -964,20 +922,20 @@ Espo.Ui = {
         let isResolved = false;
 
         const processCancel = () => {
-            if (!o.cancelCallback) {
+            if (!options.cancelCallback) {
                 return;
             }
 
             if (context) {
-                o.cancelCallback.call(context);
+                options.cancelCallback.call(context);
 
                 return;
             }
 
-            o.cancelCallback();
+            options.cancelCallback();
         };
 
-        if (!o.isHtml) {
+        if (!options.isHtml) {
             message = Handlebars.Utils.escapeExpression(message);
         }
 
@@ -989,10 +947,10 @@ Espo.Ui = {
                 header: null,
                 className: 'dialog-confirm',
                 backdropClassName: 'backdrop-confirm',
-                body: '<span class="confirm-message">' + message + '</a>',
+                body: `<span class="confirm-message">${message}</a>`,
                 buttonList: [
                     {
-                        text: ' ' + confirmText + ' ',
+                        text: ` ${confirmText} `,
                         name: 'confirm',
                         className: 'btn-s-wide',
                         onClick: () => {
@@ -1038,60 +996,45 @@ Espo.Ui = {
             });
 
             dialog.show();
-            dialog.$el.find('button[data-name="confirm"]').focus();
+            $(dialog.getElement()).find('button[data-name="confirm"]').trigger('focus');
         });
     },
 
     /**
      * Create a dialog.
      *
-     * @param {module:ui.Dialog~Params} options Options.
-     * @returns {Dialog}
+     * @param options Options.
+     * @returns A dialog instance.
      */
-    dialog: function (options) {
+    dialog: function (options: DialogParams): Dialog {
         return new Dialog(options);
     },
-
-
-    /**
-     * Popover options.
-     *
-     * @typedef {Object} Espo.Ui~PopoverOptions
-     *
-     * @property {'bottom'|'top'|'left'|'right'} [placement='bottom'] A placement.
-     * @property {string|JQuery} [container] A container selector.
-     * @property {string} [content] An HTML content.
-     * @property {string} [text] A text.
-     * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
-     * @property {boolean} [noToggleInit=false] Skip init toggle on click.
-     * @property {boolean} [preventDestroyOnRender=false] Don't destroy on re-render.
-     * @property {boolean} [noHideOnOutsideClick=false] Don't hide on clicking outside.
-     * @property {function(): void} [onShow] On-show callback.
-     * @property {function(): void} [onHide] On-hide callback.
-     * @property {string|function(): string} [title] A title text.
-     * @property {boolean} [keepElementTitle] Keep an original element's title.
-     */
 
     /**
      * Init a popover.
      *
-     * @param {Element|JQuery} element An element.
-     * @param {Espo.Ui~PopoverOptions} o Options.
-     * @param {module:view} [view] A view.
-     * @return {{
-     *     hide: function(),
-     *     destroy: function(),
-     *     show: function(): string,
-     *     detach: function(),
-     * }}
+     * @param element An element.
+     * @param options Options.
+     * @param [view] A view.
+     * @return Manipulator object.
      */
-    popover: function (element, o, view) {
+    popover: function (
+        element: Element,
+        options: PopoverOptions,
+        view?: import('view').default
+    ): {
+        hide: () => void;
+        destroy: () => void;
+        show: () => string;
+        detach: () => void;
+    } {
+
         const $el = $(element);
         const $body = $('body');
-        const content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
+        const content = options.content || Handlebars.Utils.escapeExpression(options.text || '');
         let isShown = false;
 
-        let container = o.container;
+        let container = options.container;
 
         if (!container) {
             const $modalBody = $el.closest('.modal-body');
@@ -1100,17 +1043,17 @@ Espo.Ui = {
         }
 
         // noinspection JSUnresolvedReference
-        $el
-            .popover({
-                placement: o.placement || 'bottom',
-                container: container,
-                viewport: container,
-                html: true,
-                content: content,
-                trigger: o.trigger || 'manual',
-                title: o.title,
-                keepElementTitle: o.keepElementTitle,
-            })
+        // @ts-ignore
+        $el.popover({
+            placement: options.placement || 'bottom',
+            container: container,
+            viewport: container,
+            html: true,
+            content: content,
+            trigger: options.trigger || 'manual',
+            title: options.title,
+            keepElementTitle: options.keepElementTitle,
+        })
             .on('shown.bs.popover', () => {
                 isShown = true;
 
@@ -1118,7 +1061,7 @@ Espo.Ui = {
                     return;
                 }
 
-                if (view && !o.noHideOnOutsideClick) {
+                if (view && !options.noHideOnOutsideClick) {
                     $body.off(`click.popover-${view.cid}`);
 
                     $body.on(`click.popover-${view.cid}`, e => {
@@ -1136,25 +1079,27 @@ Espo.Ui = {
 
                         $body.off(`click.popover-${view.cid}`);
                         // noinspection JSUnresolvedReference
+                        // @ts-ignore
                         $el.popover('hide');
                     });
                 }
 
-                if (o.onShow) {
-                    o.onShow();
+                if (options.onShow) {
+                    options.onShow();
                 }
             })
             .on('hidden.bs.popover', () => {
                 isShown = false;
 
-                if (o.onHide) {
-                    o.onHide();
+                if (options.onHide) {
+                    options.onHide();
                 }
             });
 
-        if (!o.noToggleInit) {
+        if (!options.noToggleInit) {
             $el.on('click', () => {
                 // noinspection JSUnresolvedReference
+                // @ts-ignore
                 $el.popover('toggle');
             });
         }
@@ -1179,6 +1124,7 @@ Espo.Ui = {
             }
 
             // noinspection JSUnresolvedReference
+            // @ts-ignore
             $el.popover('destroy');
 
             detach();
@@ -1190,11 +1136,13 @@ Espo.Ui = {
             }
 
             // noinspection JSUnresolvedReference
+            // @ts-ignore
             $el.popover('hide');
         };
 
         const show = () => {
             // noinspection JSUnresolvedReference
+            // @ts-ignore
             $el.popover('show');
 
             return $el.attr('aria-describedby');
@@ -1203,11 +1151,11 @@ Espo.Ui = {
         if (view) {
             view.once('remove', destroy);
 
-            if (!o.preventDestroyOnRender) {
+            if (!options.preventDestroyOnRender) {
                 view.once('render', destroy);
             }
 
-            if (o.preventDestroyOnRender) {
+            if (options.preventDestroyOnRender) {
                 view.on('render', hide);
             }
         }
@@ -1221,33 +1169,31 @@ Espo.Ui = {
     },
 
     /**
-     * Notify options.
-     *
-     * @typedef {Object} Espo.Ui~NotifyOptions
-     * @property {boolean} [closeButton] A close button.
-     * @property {boolean} [suppress] Suppress other warning alerts while this is displayed.
-     */
-
-    /**
      * Show the spinner.
      *
      * @since 9.1.0
      */
     notifyWait: function () {
-        Espo.Ui.notify(' ... ');
+        Ui.notify(' ... ');
     },
 
     /**
      * Show a notify-message.
      *
-     * @param {string|false} [message=false] A message. False removes an already displayed message.
-     * @param {'warning'|'danger'|'success'|'info'} [type='warning'] A type.
-     * @param {number} [timeout] Microseconds. If empty, then won't be hidden.
+     * @param [message] A message. False removes an already displayed message.
+     * @param [type='warning'] A type.
+     * @param [timeout] Microseconds. If empty, then won't be hidden.
      *   Should be hidden manually or by displaying another message.
-     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     * @param [options] Options.
      */
-    notify: function (message, type, timeout, options) {
-        type = type || 'warning';
+    notify: function (
+        message: string | false = false,
+        type?: 'warning' | 'danger' | 'success' | 'info',
+        timeout?: number,
+        options?: NotifyOptions,
+    ) {
+
+        type = type ?? 'warning';
         options = {...options};
 
         if (type === 'warning' && notifySuppressed) {
@@ -1274,6 +1220,7 @@ Espo.Ui = {
 
         const closeButton = options.closeButton || false;
 
+        // @ts-ignore
         if (type === 'error') {
             // For bc.
             type = 'danger';
@@ -1315,11 +1262,14 @@ Espo.Ui = {
                     .append($close)
             );
 
+            // @ts-ignore
             $close.on('click', () => $el.alert('close'));
         }
 
         if (timeout) {
-            setTimeout(() => $el.alert('close'), timeout);
+            // @ts-ignore
+            setTimeout(() => $el.alert('close'),
+                timeout);
         }
 
         $el.appendTo('body')
@@ -1328,56 +1278,54 @@ Espo.Ui = {
     /**
      * Show a warning message.
      *
-     * @param {string} message A message.
-     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     * @param message message.
+     * @param [options] Options.
      */
-    warning: function (message, options) {
-        Espo.Ui.notify(message, 'warning', 2000, options);
+    warning: function (message: string, options?: NotifyOptions) {
+        Ui.notify(message, 'warning', 2000, options);
     },
 
     /**
      * Show a success message.
      *
-     * @param {string} message A message.
-     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     * @param message A message.
+     * @param [options] Options.
      */
-    success: function (message, options) {
-        Espo.Ui.notify(message, 'success', 2000, options);
+    success: function (message: string, options?: NotifyOptions) {
+        Ui.notify(message, 'success', 2000, options);
     },
 
     /**
      * Show an error message.
      *
-     * @param {string} message A message.
-     * @param {Espo.Ui~NotifyOptions|true} [options] Options. If true, then only closeButton option will be applied.
+     * @param message A message.
+     * @param [options] Options. If true, then only closeButton option will be applied.
      */
-    error: function (message, options) {
+    error: function (message: string, options?: NotifyOptions | true) {
         options = typeof options === 'boolean' ?
             {closeButton: options} :
             {...options};
 
         const timeout = options.closeButton ? 0 : 4000;
 
-        Espo.Ui.notify(message, 'danger', timeout, options);
+        Ui.notify(message, 'danger', timeout, options);
     },
 
     /**
      * Show an info message.
      *
-     * @param {string} message A message.
-     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     * @param message A message.
+     * @param [options] Options.
      */
-    info: function (message, options) {
-        Espo.Ui.notify(message, 'info', 2000, options);
+    info: function (message: string, options?: NotifyOptions) {
+        Ui.notify(message, 'info', 2000, options);
     },
 
     /**
      * Get the number of opened confirmation dialogues.
-     *
-     * @return {number}
      * @internal
      */
-    getConfirmCount() {
+    getConfirmCount(): number {
         return confirmCount;
     }
 };
@@ -1385,9 +1333,11 @@ Espo.Ui = {
 let confirmCount = 0;
 let notifySuppressed = false;
 
+Espo.Ui = Ui;
+
 /**
  * @deprecated Use `Espo.Ui`.
  */
-Espo.ui = Espo.Ui;
+Espo.ui = Ui;
 
-export default Espo.Ui;
+export default Ui;

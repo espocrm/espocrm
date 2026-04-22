@@ -139,7 +139,7 @@ class ModalView extends View {
      * A dialog instance.
      *
      * @protected
-     * @type {Espo.Ui.Dialog}
+     * @type {import('ui').default.Dialog}
      */
     dialog
 
@@ -520,10 +520,10 @@ class ModalView extends View {
                     '<span>' + this.getHelper().escapeString(o.text) + '</span>';
             }
 
-            o.onClick = o.onClick || ((d, e) => {
+            o.onClick = o.onClick || ((d, event, target) => {
                 const handler = o.handler || (o.data || {}).handler;
 
-                Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                Espo.Utils.handleAction(this, event, target, {
                     action: o.name,
                     handler: handler,
                     actionFunction: o.actionFunction,

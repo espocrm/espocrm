@@ -1237,7 +1237,6 @@ export default class BaseFieldView<
         const isInvalid = this.validateCallback ? this.validateCallback() : this.validate();
 
         if (isInvalid) {
-            // @ts-ignore
             Espo.Ui.error(this.translate('Not valid'));
 
             // @todo Revise.
@@ -1246,7 +1245,6 @@ export default class BaseFieldView<
             return;
         }
 
-        // @ts-ignore
         Espo.Ui.notify(this.translate('saving', 'messages'));
 
         model
@@ -1257,11 +1255,9 @@ export default class BaseFieldView<
 
                 model.trigger('after:save');
 
-                // @ts-ignore
                 Espo.Ui.success(this.translate('Saved'));
             })
             .catch(() => {
-                // @ts-ignore
                 Espo.Ui.error(this.translate('Error occurred'));
 
                 // @todo Revise.

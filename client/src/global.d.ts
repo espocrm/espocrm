@@ -1,5 +1,7 @@
 export {};
 
+import Ui from 'ui';
+
 /**
  * A callback with resolved dependencies passed as parameters.
  * Should return a value to define a module.
@@ -17,5 +19,8 @@ declare global {
             require: (id: string, callback: RequireCallback, errorCallback?: RequireErrorCallback) => void;
             requirePromise: (id: string) => Promise<unknown>;
         }
+
+        // noinspection ES6ConvertVarToLetConst
+        var Ui: Ui
     }
 }
