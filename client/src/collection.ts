@@ -374,7 +374,8 @@ export default class Collection<TModel extends Model = Model> {
 
         models = Array.isArray(models) ? models.slice() : [models];
 
-        let at = options.at ?? 0;
+        // Should not undefined if not set.
+        let at = options.at;
 
         if (at > this.length) {
             at = this.length;
