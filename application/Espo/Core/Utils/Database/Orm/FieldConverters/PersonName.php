@@ -101,6 +101,12 @@ class PersonName implements FieldConverter
             $whereItems[] = "CONCAT:($lastName, ' ', $firstName, ' ', $middleName)";
         }
 
+        $nameColumns = [
+            $firstName . 'A',
+            $middleName,
+            $lastName,
+        ];
+
         $selectExpression = $this->getSelect($fullList);
         $selectForeignExpression = $this->getSelect($fullList, '{alias}');
 
@@ -143,6 +149,43 @@ class PersonName implements FieldConverter
                         'whereClause' => [
                             'OR' => array_fill_keys($whereItems, '{value}'),
                         ],
+                    ],
+                    '<>' => [
+                        'whereClause' => [
+                            'AND' => array_fill_keys(
+                                array_map(fn ($item) => $item . '!=', $whereItems),
+                                '{value}'
+                            ),
+                        ],
+                    ],
+                    'IN' => [
+                        // Not supported.
+                        'whereClause' => [
+                            'false:' => null,
+                        ]
+                    ],
+                    'NOT IN' => [
+                        // Not supported.
+                        'whereClause' => [
+                            'false:' => null,
+                        ]
+                    ],
+                    'IS NULL' => [
+                        'whereClause' => [
+                            'AND' => array_fill_keys(
+                                array_map(fn ($item) => $item . '=', $nameColumns),
+                                null
+                            ),
+                        ]
+
+                    ],
+                    'IS NOT NULL' => [
+                        'whereClause' => [
+                            'OR' => array_fill_keys(
+                                array_map(fn ($item) => $item . '!=', $nameColumns),
+                                null
+                            ),
+                        ]
                     ],
                 ],
                 'order' => [
