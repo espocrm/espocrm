@@ -266,7 +266,7 @@ class VarcharFieldView<
         }
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         if (this.isSearchMode()) {

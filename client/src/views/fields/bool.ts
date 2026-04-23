@@ -64,7 +64,7 @@ export default class BoolFieldView<
         return data;
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         if (this.mode === this.MODE_SEARCH && this.$element) {
