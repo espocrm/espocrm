@@ -1,0 +1,36 @@
+name: TypeScript static analysis
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'fix'
+    paths:
+      - '**.ts'
+      - 'tsconfig.json'
+
+  pull_request:
+    paths:
+      - '**.ts'
+      - 'tsconfig.json'
+
+jobs:
+  typescript-check:
+    name: TypeScript check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript check
+        run: npx tsc --noEmit
