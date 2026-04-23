@@ -7,7 +7,7 @@ on:
 jobs:
   test:
     name: Test on PHP ${{ matrix.php-versions }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     env:
       TEST_DATABASE_HOST: '127.0.0.1'
       TEST_DATABASE_PLATFORM: 'Postgresql'
@@ -18,7 +18,7 @@ jobs:
       TEST_DATABASE_PASSWORD: password
     services:
       postgres:
-        image: postgres:15.2
+        image: postgres:17.9
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password

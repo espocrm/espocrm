@@ -23,7 +23,7 @@ on:
 jobs:
   test:
     name: Test on PHP ${{ matrix.php-versions }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         php-versions: ['8.3', '8.4', '8.5']
