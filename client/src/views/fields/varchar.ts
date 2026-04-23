@@ -28,45 +28,37 @@
 
 /** @module views/fields/varchar */
 
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import Autocomplete from 'ui/autocomplete';
 import MultiSelect from 'ui/multi-select';
+import Ajax from 'ajax';
+
+interface Params extends BaseParams {
+    maxLength?: number;
+    options?: string[];
+    required?: boolean;
+    optionsPath?: string;
+    noSpellCheck?: boolean;
+    pattern?: string;
+    copyToClipboard?: boolean;
+}
+
+interface Options extends BaseOptions {
+    customOptionList?: string[];
+}
+
+type AutocompleteReturn = Promise<import('ui/autocomplete').AutocompleteItem & Record<string, unknown>>;
 
 /**
  * A varchar field.
- *
- * @extends BaseFieldView<module:views/fields/varchar~params>
  */
-class VarcharFieldView extends BaseFieldView {
+class VarcharFieldView<S extends ViewSchema = ViewSchema> extends BaseFieldView<S, Params, Options> {
 
     /**
-     * @typedef {Object} module:views/fields/varchar~options
-     * @property {
-     *     module:views/fields/varchar~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
+     * @param options Options.
      */
-
-    /**
-     * @typedef {Object} module:views/fields/varchar~params
-     * @property {number} [maxLength] A max length.
-     * @property {string[]} [options] Select options.
-     * @property {boolean} [required] Required.
-     * @property {string} [optionsPath] An options metadata path.
-     * @property {boolean} [noSpellCheck] Disable spell check.
-     * @property {string} [pattern] A validation pattern. If starts with `$`, then a predefined pattern is used.
-     * @property {boolean} [copyToClipboard] To display a Copy-to-clipboard button.
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/varchar~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
+    constructor(options: {[s: string]: unknown} & Options & {params: Params}) {
         super(options);
     }
 
@@ -91,10 +83,6 @@ class VarcharFieldView extends BaseFieldView {
         'isNotEmpty',
     ]
 
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
     validations = [
         'required',
         'pattern',
@@ -102,30 +90,22 @@ class VarcharFieldView extends BaseFieldView {
 
     /**
      * Use an autocomplete requesting data from the backend.
-     *
-     * @protected
-     * @type {boolean}
      */
-    useAutocompleteUrl = false
+    protected useAutocompleteUrl: boolean = false
 
     /**
      * No spell-check.
-     *
-     * @protected
-     * @type {boolean}
      */
-    noSpellCheck = false
+    protected noSpellCheck: boolean = false
 
-    /**
-     * @private
-     * @type {HTMLInputElement}
-     */
-    searchMultiSelectInputElement
+    private searchMultiSelectInputElement: HTMLInputElement | undefined
+
+    private originalOptionList: string[] | null = null
 
     setup() {
         this.setupOptions();
 
-        this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck;
+        this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck || false;
 
         if (this.params.optionsPath) {
             this.params.options = Espo.Utils.clone(
@@ -155,9 +135,9 @@ class VarcharFieldView extends BaseFieldView {
     /**
      * Set options.
      *
-     * @param {string[]} optionList Options.
+     * @param optionList Options.
      */
-    setOptionList(optionList) {
+    setOptionList(optionList: string[]) {
         if (!this.originalOptionList) {
             this.originalOptionList = this.params.options || [];
         }
@@ -201,24 +181,27 @@ class VarcharFieldView extends BaseFieldView {
     /**
      * Compose an autocomplete URL.
      *
-     * @param {string} q A query.
-     * @return {string}
+     * @param query A query.
+     * @return {string} A URL.
      */
-    getAutocompleteUrl(q) {
+    getAutocompleteUrl(query: string): string {
+        // noinspection BadExpressionStatementJS
+        query;
+
         return '';
     }
 
-    /**
-     * @return {module:ui/autocomplete~item[]}
-     */
-    transformAutocompleteResult(response) {
+    protected transformAutocompleteResult(
+        response: any,
+    ): (import('ui/autocomplete').AutocompleteItem & Record<string, any>)[] {
+
         const responseParsed = typeof response === 'string' ?
             JSON.parse(response) :
             response;
 
-        const list = [];
+        const list = [] as (import('ui/autocomplete').AutocompleteItem & Record<string, any>)[];
 
-        responseParsed.list.forEach(item => {
+        responseParsed.list.forEach((item: {id: string, name?: string}) => {
             list.push({
                 value: item.name || item.id,
                 attributes: item,
@@ -229,8 +212,8 @@ class VarcharFieldView extends BaseFieldView {
     }
 
     setupSearch() {
-        this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
-            this.handleSearchType(target.value);
+        this.addHandler('change', 'select.search-type', (_e, target: HTMLElement) => {
+            this.handleSearchType((target as HTMLInputElement).value);
         });
     }
 
@@ -248,15 +231,15 @@ class VarcharFieldView extends BaseFieldView {
         data.valueIsSet = this.model.has(this.name);
 
         if (this.isSearchMode()) {
-            if (typeof this.searchParams.value === 'string') {
-                this.searchData.value = this.searchParams.value;
+            if (typeof this.searchParams?.value === 'string') {
+                this.searchData.value = this.searchParams?.value;
             }
 
-            if (this.searchParams.data && typeof this.searchParams.data.value === 'string') {
-                this.searchData.value = this.searchParams.data.value;
+            if (this.searchParams?.data && typeof this.searchParams?.data.value === 'string') {
+                this.searchData.value = this.searchParams?.data.value;
             }
 
-            if (!this.searchParams.value && !this.searchParams.data) {
+            if (!this.searchParams?.value && !this.searchParams?.data) {
                 this.searchData.value = null;
             }
         }
@@ -268,18 +251,14 @@ class VarcharFieldView extends BaseFieldView {
         return data;
     }
 
-    /**
-     * @protected
-     * @param {string} type
-     */
-    handleSearchType(type) {
+    protected handleSearchType(type: string) {
         const mainElement = this.element.querySelector('input.main-element');
         const multiSelectContainer = this.element.querySelector('div[data-role="multi-select-container"]');
 
         if (['isEmpty', 'isNotEmpty', 'anyOf', 'noneOf'].includes(type)) {
-            mainElement.classList.add('hidden');
+            mainElement?.classList.add('hidden');
         } else {
-            mainElement.classList.remove('hidden');
+            mainElement?.classList.remove('hidden');
         }
 
         if (multiSelectContainer) {
@@ -308,16 +287,17 @@ class VarcharFieldView extends BaseFieldView {
                 this.useAutocompleteUrl
             )
         ) {
-            let lookupFunction = this.getAutocompleteLookupFunction();
+            let lookupFunction = this.getAutocompleteLookupFunction() as any ;
 
             if (this.useAutocompleteUrl) {
-                lookupFunction = query => {
-                    return Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
-                        .then(response => this.transformAutocompleteResult(response));
+                lookupFunction = async (query: string) => {
+                    const response = await Ajax.getRequest(this.getAutocompleteUrl(query));
+
+                    return this.transformAutocompleteResult(response);
                 };
             }
 
-            const autocomplete = new Autocomplete(this.$element.get(0), {
+            const autocomplete = new Autocomplete(this.$element?.get(0) as HTMLInputElement, {
                 name: this.name,
                 triggerSelectOnValidInput: true,
                 autoSelectFirst: true,
@@ -336,9 +316,7 @@ class VarcharFieldView extends BaseFieldView {
                 this.trigger('change');
             });
 
-            this.$element.on('input', () => {
-                this.trigger('change');
-            });
+            this.$element?.on('input', () => this.trigger('change'));
         }
     }
 
@@ -352,10 +330,9 @@ class VarcharFieldView extends BaseFieldView {
     /**
      * Used by other field views.
      *
-     * @param {string} name
-     * @param {string} [pattern]
+     * @internal
      */
-    fieldValidatePattern(name, pattern) {
+    fieldValidatePattern(name: string, pattern?: string) {
         pattern = pattern || this.model.getFieldParam(name, 'pattern');
         /** @var {string|null} value */
         const value = this.model.get(name);
@@ -365,7 +342,7 @@ class VarcharFieldView extends BaseFieldView {
         }
 
         const helper = new RegExpPattern();
-        const result = helper.validate(pattern, value, name, this.entityType);
+        const result = helper.validate(pattern, value, name, this.entityType ?? undefined);
 
         if (!result) {
             return false;
@@ -378,18 +355,16 @@ class VarcharFieldView extends BaseFieldView {
         return true;
     }
 
-    /** @inheritDoc */
     fetch() {
-        const data = {};
+        const data = {} as Record<string, any>;
 
-        const value = this.$element.val().trim();
+        const value = (this.$element?.val() as string)?.trim();
 
         data[this.name] = value || null;
 
         return data;
     }
 
-    /** @inheritDoc */
     fetchSearch() {
         const type = this.fetchSearchType() || 'startsWith';
 
@@ -413,14 +388,12 @@ class VarcharFieldView extends BaseFieldView {
                     },
                 };
             }
-
-            /** @type {Record[]} */
             const value = [
                 {
                     type: 'isNotNull',
                     attribute: this.name,
                     value: null,
-                },
+                } as Record<string, any>,
             ];
 
             if (!this.model.getFieldParam(this.name, 'notStorable')) {
@@ -500,7 +473,7 @@ class VarcharFieldView extends BaseFieldView {
             };
         }
 
-        const value = this.$element.val().toString().trim();
+        const value = this.$element?.val()?.toString()?.trim();
 
         if (!value) {
             return null;
@@ -516,30 +489,29 @@ class VarcharFieldView extends BaseFieldView {
     }
 
     getSearchType() {
-        return this.getSearchParamsData().type || this.searchParams.typeFront ||
-            this.searchParams.type;
+        return this.getSearchParamsData()?.type || this.searchParams?.typeFront ||
+            this.searchParams?.type;
     }
 
     /**
      * Get an autocomplete lookup function.
-     *
-     * @protected
-     * @return {function (string): Promise<Array<module:ui/autocomplete~item & Record>>|undefined}
      */
-    getAutocompleteLookupFunction() {
+    protected getAutocompleteLookupFunction(): ((query: string) => AutocompleteReturn) | undefined {
         return undefined;
     }
 
-    /**
-     * @private
-     */
-    initSearchMultiSelect() {
-        this.searchMultiSelectInputElement = this.element.querySelector('input[data-role="multi-select-input"]');
+    private initSearchMultiSelect() {
+        this.searchMultiSelectInputElement =
+            this.element?.querySelector('input[data-role="multi-select-input"]') as HTMLInputElement;
+
+        if (!this.searchMultiSelectInputElement) {
+            throw new Error("No element.");
+        }
 
         MultiSelect.init(this.searchMultiSelectInputElement, {
             items: (this.params.options || []).map(it => ({value: it, text: it})),
             allowCustomOptions: true,
-            create: input => {
+            create: (input: any) => {
                 return {
                     value: input,
                     text: input,
@@ -549,7 +521,7 @@ class VarcharFieldView extends BaseFieldView {
         });
 
         this.element.querySelector('.selectize-dropdown-content')
-            .classList.add('small');
+            ?.classList.add('small');
     }
 }
 

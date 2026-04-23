@@ -41,12 +41,12 @@ interface Options extends BaseOptions {}
 /**
  * A boolean field (checkbox).
  */
-export default class BoolFieldView<
-    S extends ViewSchema = ViewSchema,
-    P extends Params = Params,
-> extends BaseFieldView<S, P> {
+export default class BoolFieldView<S extends ViewSchema = ViewSchema> extends BaseFieldView<S, Params, Options> {
 
-    constructor(options: {[s: string]: any} & Options & P) {
+    /**
+     * @param options Options.
+     */
+    constructor(options: {[s: string]: unknown} & Options & {params: Params}) {
         super(options);
     }
 
@@ -106,7 +106,6 @@ export default class BoolFieldView<
                     {
                         type: 'isTrue',
                         attribute: this.name,
-
                     },
                     {
                         type: 'isFalse',

@@ -29,27 +29,27 @@
 import $ from 'jquery';
 import Handlebars from 'handlebars';
 
+/** @module ui/autocomplete */
+
+/**
+ * @typedef {Object} AutocompleteItem
+ * @property {string} value
+ */
+
 /**
  * An autocomplete.
  */
 class Autocomplete {
-
-    /** @module ui/autocomplete */
-
-    /**
-     * @typedef {Object} module:ui/autocomplete~item
-     * @property {string} value
-     */
 
     /**
      * @typedef {{
      *     name?: string,
      *     forceHide?: boolean,
      *     lookup?: string[],
-     *     lookupFunction?: function (string): Promise<Array<module:ui/autocomplete~item & Record>>,
+     *     lookupFunction?: function (string): Promise<Array<AutocompleteItem & Record>>,
      *     minChars?: Number,
-     *     formatResult?: function (module:ui/autocomplete~item & Record): string,
-     *     onSelect?: function (module:ui/autocomplete~item & Record): void,
+     *     formatResult?: function (AutocompleteItem & Record): string,
+     *     onSelect?: function (AutocompleteItem & Record): void,
      *     beforeRender?: function (HTMLElement): void,
      *     triggerSelectOnValidInput?: boolean,
      *     autoSelectFirst?: boolean,
@@ -106,7 +106,7 @@ class Autocomplete {
             options.lookup;
 
         const lookupFilter = !options.lookupFunction ?
-            (/** (module:ui/autocomplete~item */suggestion, /** string */query, /** string */queryLowerCase) => {
+            (/** AutocompleteItem */suggestion, /** string */query, /** string */queryLowerCase) => {
                 if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
                     return suggestion.value.length !== queryLowerCase.length;
                 }

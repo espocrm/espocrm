@@ -55,6 +55,16 @@ export interface Options {
     labelText?: string;
     mode?: 'detail' | 'edit' | 'list' | 'search';
     recordHelper?: import('view-record-helper').default;
+    disabledLocked?: boolean;
+    disabled?: boolean;
+    readOnlyLocked?: boolean;
+    readOnlyDisabled?: boolean;
+    tooltipText?: string;
+    tooltip?: string;
+    defs?: Record<string, any>;
+    validateCallback?: () => boolean;
+    dataObject?: Record<string, any>;
+    searchParams?: Record<string, any>;
 }
 
 /**
@@ -82,12 +92,17 @@ type Mode = 'list' | 'listLink' | 'detail' | 'edit' | 'search';
 export default class BaseFieldView<
     S extends ViewSchema = ViewSchema,
     P extends Params = Params,
+    O extends Options = Options,
 > extends View<{model: S['model']}> {
+
+    options: O & {
+        params: P,
+    }
 
     /**
      * @param options Options.
      */
-    constructor(options: {[s: string]: any} & Options & P) {
+    constructor(options: {[s: string]: unknown} & O & {params: P}) {
         super(options);
 
         this.name = options.name;
@@ -199,7 +214,7 @@ export default class BaseFieldView<
     /**
      * Field parameters.
      */
-    params: {required: boolean} & P & Record<string, unknown>
+    params: {required?: boolean} & Partial<P> & Record<string, any>
 
     /**
      * A mode.
@@ -255,7 +270,7 @@ export default class BaseFieldView<
     /**
      * @internal
      */
-    private validateCallback: () => boolean
+    private validateCallback: (() => boolean) | undefined
 
     /**
      * An element selector to point validation popovers to.
@@ -686,7 +701,7 @@ export default class BaseFieldView<
 
         this.defs = this.options.defs || {};
         this.name = this.options.name || this.defs.name;
-        this.params = this.options.params || this.defs.params || {};
+        this.params = this.options.params ?? this.defs.params ?? {};
         this.validateCallback = this.options.validateCallback;
 
         this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
