@@ -47,7 +47,7 @@ import ModalBarProvider from 'helpers/site/modal-bar-provider';
 /**
  * A controller. To be extended.
  *
- * @mixes Bull.Events
+ * @mixes Events
  */
 class Controller {
 
@@ -61,11 +61,10 @@ class Controller {
 
         /** @type {module:controllers/base} */
         this.baseController = injections.baseController;
-        /** @type {Bull.Factory} */
         this.viewFactory = injections.viewFactory;
-        /** @type {module:model} */
+        /** @type {import('model-factory').default} */
         this.modelFactory = injections.modelFactory;
-        /** @type {module:collection-factory} */
+        /** @type {import('collection-factory').default} */
         this.collectionFactory = injections.collectionFactory;
 
         this._settings = injections.settings || null;
@@ -107,7 +106,7 @@ class Controller {
     /**
      * A view factory.
      *
-     * @type {Bull.Factory}
+     * @type {import('bullbone').Factory}
      * @protected
      */
     viewFactory = null
@@ -139,7 +138,7 @@ class Controller {
      * Set the router.
      *
      * @internal
-     * @param {module:router} router
+     * @param {import(router).default} router
      */
     setRouter(router) {
         this._router = router;
@@ -189,7 +188,7 @@ class Controller {
 
     /**
      * @protected
-     * @returns {module:router}
+     * @returns {import('router').default}
      */
     getRouter() {
         return this._router;
@@ -478,7 +477,7 @@ class Controller {
 
     /**
      * @private
-     * @return {import('view').default|null}
+     * @return {import('views/site/master').default|null}
      */
     getMasterView() {
         return this.get('master');
@@ -486,7 +485,7 @@ class Controller {
 
     /**
      * @private
-     * @param {import('view').default|null} view
+     * @param {import('views/site/master').default|null} view
      */
     setMasterView(view) {
         if (!view) {
