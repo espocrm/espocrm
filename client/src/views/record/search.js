@@ -63,7 +63,7 @@ class SearchView extends View {
      */
     primary = null
     presetFilterList = null
-    /** @type {{string: module:search-manager~advancedFilter}} */
+    /** @type {{string: import('search-manager').AdvancedFilter}} */
     advanced
     bool = null
     filtersLayoutName = 'filters'

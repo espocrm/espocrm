@@ -29,34 +29,39 @@
 /** @module search-manager */
 
 /**
- * Search data.
- *
- * @typedef {Object} module:search-manager~data
- *
- * @property {string} [presetName] A preset.
- * @property {string} [textFilter] A text filter.
- * @property {string} [primary] A primary filter.
- * @property {Object.<string, boolean>} [bool] Bool filters.
- * @property {Record<module:search-manager~advancedFilter>} [advanced] Advanced filters (field filters).
- *     Contains data needed for both the backend and frontend. Keys are field names.
+ * A where item. Sent to the backend.
  */
+import Collection, {WhereItem} from 'collection';
 
 /**
- * A where item. Sent to the backend.
- *
- * @typedef {import('collection').WhereItem} module:search-manager~whereItem
+ * Search data.
  */
+interface Data {
+    presetName?: string;
+    textFilter?: string;
+    primary?: string | null;
+    bool?: Record<string, boolean>;
+}
+
+interface InternalData extends Data {
+    advanced?: Record<string, AdvancedFilter>;
+}
 
 /**
  * An advanced filter
- *
- * @typedef {Object} module:search-manager~advancedFilter
- *
- * @property {string} type A type. E.g. `equals`.
- * @property {string} [attribute] An attribute.
- * @property {*} [value] A value.
- * @property {Object.<string, *>} [data] Additional data for UI.
  */
+export interface AdvancedFilter {
+    type: string;
+    attribute?: string;
+    value?: WhereItem[] | string | number | boolean | string[] | null;
+    data?: Record<string, unknown>;
+}
+
+interface Options {
+    storageKey?: string;
+    defaultData?: Data;
+    emptyOnReset?: boolean;
+}
 
 import {inject} from 'di';
 import DateTime from 'date-time';
@@ -67,80 +72,31 @@ import Storage from 'storage';
  */
 class SearchManager {
 
-    /**
-     * @type {string|null}
-     * @private
-     */
-    timeZone = null
-
-    /**
-     * @private
-     * @type {module:search-manager~data}
-     */
-    defaultData
-
-    /**
-     * @private
-     * @type {DateTime}
-     */
     @inject(DateTime)
-    dateTime
+    private dateTime: DateTime
 
-    /**
-     * @private
-     * @type {Storage}
-     */
     @inject(Storage)
-    storage
+    private storage: Storage
+
+    private timeZone: string | null = null
+    private readonly defaultData: InternalData
+    private readonly scope: string | null
+    private readonly storageKey: string | null
+    private readonly useStorage: boolean
+    private readonly emptyOnReset: boolean
+    private readonly emptyData: InternalData
+    private data: InternalData
 
     /**
-     * @typedef {Object} module:search-manager~Options
-     * @property {string} [storageKey] A storage key. If not specified, the storage won't be used.
-     * @property {module:search-manager~data} [defaultData] Default data.
-     * @property {boolean} [emptyOnReset] To empty on reset.
+     * @param collection A collection.
+     * @param [options] Options. As of 9.1.
      */
-
-    /**
-     * @param {module:collection} collection A collection.
-     * @param {module:search-manager~Options} [options] Options. As of 9.1.
-     */
-    constructor(collection, options = {}) {
-        /**
-         * @private
-         * @type {module:collection}
-         */
-        this.collection = collection;
-
-        /**
-         * An entity type.
-         *
-         * @private
-         * @type {string}
-         */
-        this.scope = collection.entityType;
-
-        /**
-         * @private
-         * @type {string}
-         */
-        this.storageKey = options.storageKey;
-
-        /**
-         * @private
-         * @type {boolean}
-         */
+    constructor(collection: Collection, options: Options = {}) {
+        this.scope = collection.entityType ?? null;
+        this.storageKey = options.storageKey ?? null;
         this.useStorage = !!this.storageKey;
+        this.emptyOnReset = options.emptyOnReset ?? false;
 
-        /**
-         * @private
-         * @type {boolean}
-         */
-        this.emptyOnReset = options.emptyOnReset || false;
-
-        /**
-         * @private
-         * @type {Object}
-         */
         this.emptyData = {
             textFilter: '',
             bool: {},
@@ -160,24 +116,17 @@ class SearchManager {
 
             for (const key in this.emptyData) {
                 if (!(key in defaultData)) {
-                    defaultData[key] = Espo.Utils.clone(this.emptyData[key]);
+                    (defaultData as any)[key] = Espo.Utils.clone((this.emptyData as any)[key]);
                 }
             }
         }
 
-        /**
-         * @type {module:search-manager~data}
-         * @private
-         */
-        this.data = Espo.Utils.clone(defaultData) || this.emptyData;
+        this.data = Espo.Utils.clone(defaultData) ?? this.emptyData;
 
         this.sanitizeData();
     }
 
-    /**
-     * @private
-     */
-    sanitizeData() {
+    private sanitizeData() {
         if (!('advanced' in this.data)) {
             this.data.advanced = {};
         }
@@ -193,10 +142,8 @@ class SearchManager {
 
     /**
      * Get a where clause. The where clause to be sent to the backend.
-     *
-     * @returns {module:search-manager~whereItem[]}
      */
-    getWhere() {
+    getWhere(): WhereItem[] {
         const where = [];
 
         if (this.data.textFilter && this.data.textFilter !== '') {
@@ -209,7 +156,7 @@ class SearchManager {
         if (this.data.bool) {
             const o = {
                 type: 'bool',
-                value: [],
+                value: [] as string[],
             };
 
             for (const name in this.data.bool) {
@@ -244,6 +191,10 @@ class SearchManager {
 
                 const part = this.getWherePart(name, defs);
 
+                if (part === null) {
+                    continue;
+                }
+
                 where.push(part);
             }
         }
@@ -251,49 +202,52 @@ class SearchManager {
         return where;
     }
 
-    /**
-     * @private
-     */
-    getWherePart(name, defs) {
+    private getWherePart(name: string, defs: WhereItem): AdvancedFilter | null {
         let attribute = name;
 
         if (typeof defs !== 'object') {
             console.error('Bad where clause');
 
-            return {};
+            return null;
         }
 
         if ('where' in defs) {
-            return defs.where;
+            return defs.where as AdvancedFilter;
         }
 
         const type = defs.type;
-        let value;
+        let value: unknown;
 
         if (type === 'or' || type === 'and') {
-            const a = [];
+            const items = [];
 
-            value = defs.value || {};
+            const value = (defs.value || {}) as Record<string, WhereItem>;
 
-            for (const n in value) {
-                a.push(this.getWherePart(n, value[n]));
+            for (const field in value) {
+                const part = this.getWherePart(field, value[field]);
+
+                if (part === null) {
+                    continue;
+                }
+
+                items.push(part);
             }
 
             return {
                 type: type,
-                value: a
+                value: items,
             };
         }
 
         if ('field' in defs) { // for backward compatibility
-            attribute = defs.field;
+            attribute = defs.field as string;
         }
 
         if ('attribute' in defs) {
-            attribute = defs.attribute;
+            attribute = defs.attribute as string;
         }
 
-        if (defs.dateTime || defs.date) {
+        if (defs.dateTime || (defs as any).date) {
             const timeZone = this.timeZone !== undefined ?
                 this.timeZone :
                 this.dateTime.getTimeZone();
@@ -302,13 +256,16 @@ class SearchManager {
                 type: type,
                 attribute: attribute,
                 value: defs.value,
-            };
+            } as WhereItem;
 
             if (defs.dateTime) {
                 data.dateTime = true;
             }
 
+            // @todo Revise.
+            // @ts-ignore
             if (defs.date) {
+                // @ts-ignore
                 data.date = true;
             }
 
@@ -324,16 +281,14 @@ class SearchManager {
         return {
             type: type,
             attribute: attribute,
-            value: value
+            value: value as WhereItem['value'],
         };
     }
 
     /**
      * Load stored data.
-     *
-     * @returns {module:search-manager}
      */
-    loadStored() {
+    loadStored(): this {
         this.data = this.getFromStorageIfEnabled() ||
             Espo.Utils.clone(this.defaultData) ||
             Espo.Utils.clone(this.emptyData);
@@ -343,12 +298,8 @@ class SearchManager {
         return this;
     }
 
-    /**
-     * @private
-     * @return {module:search-manager~data|null}
-     */
-    getFromStorageIfEnabled() {
-        if (!this.useStorage) {
+    private getFromStorageIfEnabled(): Data | null {
+        if (!this.useStorage || !this.scope) {
             return null;
         }
 
@@ -357,20 +308,18 @@ class SearchManager {
 
     /**
      * Get data.
-     *
-     * @returns {module:search-manager~data}
      */
-    get() {
+    get(): Data {
         return this.data;
     }
 
     /**
      * Set advanced filters.
      *
-     * @param {Object.<string, module:search-manager~advancedFilter>} advanced Advanced filters.
+     * @param advanced Advanced filters.
      *   Pairs of field => advancedFilter.
      */
-    setAdvanced(advanced) {
+    setAdvanced(advanced: Record<string, AdvancedFilter>) {
         this.data = Espo.Utils.clone(this.data);
 
         this.data.advanced = advanced;
@@ -379,11 +328,12 @@ class SearchManager {
     /**
      * Set bool filters.
      *
-     * @param {Record.<string, boolean>|string[]} bool Bool filters.
+     * @param bool Bool filters.
      */
-    setBool(bool) {
+    setBool(bool: Record<string, boolean> | string[]) {
         if (Array.isArray(bool)) {
-            const data = {};
+            const data = {} as Record<string, boolean>;
+
             bool.forEach(it => data[it] = true);
 
             bool = data;
@@ -397,9 +347,9 @@ class SearchManager {
     /**
      * Set a primary filter.
      *
-     * @param {string} primary A filter.
+     * primary A filter.
      */
-    setPrimary(primary) {
+    setPrimary(primary: string) {
         this.data = Espo.Utils.clone(this.data);
 
         this.data.primary = primary;
@@ -408,12 +358,12 @@ class SearchManager {
     /**
      * Set data.
      *
-     * @param {module:search-manager~data} data Data.
+     * @param data Data.
      */
-    set(data) {
+    set(data: Data) {
         this.data = data;
 
-        if (this.useStorage) {
+        if (this.useStorage && this.scope) {
             data = Espo.Utils.clone(data);
             delete data['textFilter'];
 
@@ -431,7 +381,7 @@ class SearchManager {
     empty() {
         this.data = Espo.Utils.clone(this.emptyData);
 
-        if (this.useStorage) {
+        if (this.useStorage && this.scope) {
             this.storage.clear(this.storageKey + 'Search', this.scope);
         }
     }
@@ -448,7 +398,7 @@ class SearchManager {
 
         this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
 
-        if (this.useStorage) {
+        if (this.useStorage && this.scope) {
             this.storage.clear(this.storageKey + 'Search', this.scope);
         }
     }
@@ -457,10 +407,9 @@ class SearchManager {
     /**
      * Set a time zone. Null will not add a time zone.
      *
-     * @type {string|null}
      * @internal Is used. Do not remove.
      */
-    setTimeZone(timeZone) {
+    setTimeZone(timeZone: string | null) {
         this.timeZone = timeZone;
     }
 }

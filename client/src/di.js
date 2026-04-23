@@ -49,7 +49,7 @@ export function register(argumentList = []) {
 /**
  * An 'inject' decorator.
  *
- * @param {typeof Object} classObject A class.
+ * @param {any} classObject A class.
  * @return {(function(*, Object): void)}
  */
 export function inject(classObject) {
