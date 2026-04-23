@@ -55,13 +55,6 @@ type AutocompleteReturn = Promise<import('ui/autocomplete').AutocompleteItem & R
  */
 class VarcharFieldView<S extends ViewSchema = ViewSchema> extends BaseFieldView<S, Params, Options> {
 
-    /**
-     * @param options Options.
-     */
-    constructor(options: {[s: string]: unknown} & Options & {params: Params}) {
-        super(options);
-    }
-
     type = 'varchar'
 
     listTemplate = 'fields/varchar/list'

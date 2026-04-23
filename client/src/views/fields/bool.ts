@@ -43,13 +43,6 @@ interface Options extends BaseOptions {}
  */
 export default class BoolFieldView<S extends ViewSchema = ViewSchema> extends BaseFieldView<S, Params, Options> {
 
-    /**
-     * @param options Options.
-     */
-    constructor(options: {[s: string]: unknown} & Options & {params: Params}) {
-        super(options);
-    }
-
     type = 'bool'
 
     listTemplate = 'fields/bool/list'

@@ -224,12 +224,12 @@ export default class BaseFieldView<
     /**
      * Search params.
      */
-    searchParams: {[s: string]: any} | null = null
+    protected searchParams: {[s: string]: any} | null = null
 
     /**
      * Inline edit disabled.
      */
-    inlineEditDisabled: boolean = false
+    private inlineEditDisabled: boolean = false
 
     /**
      * Field is disabled.
@@ -243,7 +243,6 @@ export default class BaseFieldView<
 
     /**
      * Read-only locked.
-     *
      */
     readOnlyLocked: boolean = false
 
@@ -259,6 +258,8 @@ export default class BaseFieldView<
 
     /**
      * Attribute values before edit.
+     *
+     * @internal
      */
     initialAttributes: {[s: string]: any} | null = null
 
@@ -280,7 +281,7 @@ export default class BaseFieldView<
     /**
      * A view-record helper.
      */
-    recordHelper: import('view-record-helper').default | null = null
+    protected recordHelper: import('view-record-helper').default | null = null
 
     /**
      * @internal
@@ -301,6 +302,8 @@ export default class BaseFieldView<
     /**
      * Is searchable once a search filter is added (no need to type or selecting anything).
      * Actual for search mode.
+     *
+     * @internal
      */
     initialSearchIsNotIdle: boolean = false
 
@@ -310,7 +313,9 @@ export default class BaseFieldView<
     protected entityType: string | null = null
 
     /**
-     * A last validation message;
+     * A last validation message.
+     *
+     * @internal
      */
     lastValidationMessage: string | null = null
 
@@ -692,8 +697,10 @@ export default class BaseFieldView<
 
     private _initCalled: boolean = false
 
-    /** @inheritDoc */
-    init() {
+    /**
+     * @internal
+     */
+    protected init() {
         this.validations = Espo.Utils.clone(this.validations);
         this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
 
