@@ -7,12 +7,16 @@ on:
       - 'fix'
     paths:
       - '**.ts'
+      - 'package-lock.json'
       - 'tsconfig.json'
+      - '.github/workflows/ts-check.yml'
 
   pull_request:
     paths:
       - '**.ts'
+      - 'package-lock.json'
       - 'tsconfig.json'
+      - '.github/workflows/ts-check.yml'
 
 jobs:
   typescript-check:

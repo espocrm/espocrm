@@ -19,6 +19,7 @@ on:
       - '**.yml'
       - 'composer.lock'
       - 'phpstan.neon'
+      - '.github/workflows/test.yml'
 
 jobs:
   test:
