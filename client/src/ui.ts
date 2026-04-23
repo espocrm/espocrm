@@ -136,7 +136,7 @@ class Dialog {
     private readonly width: string | null = null
     private onCloseIsCalled: boolean = false
     private readonly id: string
-    private readonly activeElement: Element
+    private readonly activeElement: Element | null
     private readonly draggable: boolean = false
     private readonly container: string = 'body';
     private options: DialogParams
@@ -145,7 +145,7 @@ class Dialog {
 
     private _backdropElement: HTMLElement
     private $el: JQuery
-    private readonly el: Element
+    private readonly el: HTMLElement
     private $mouseDownTarget: JQuery | undefined
 
     /**
@@ -248,7 +248,7 @@ class Dialog {
             .appendTo($container);
 
         this.$el = $('#' + this.id);
-        this.el = this.$el.get(0);
+        this.el = this.$el.get(0) as HTMLElement;
 
         /*this.$el.find('header a.close').on('click', () => {
             //this.close();
@@ -297,14 +297,14 @@ class Dialog {
 
             let diffHeight = headerHeight + footerHeight;
 
-            if (!options.fullHeight) {
+            if (!options.fullHeight && options.bodyDiffHeight != null) {
                 diffHeight = diffHeight + options.bodyDiffHeight;
             }
 
             if (this.fitHeight || options.fullHeight) {
                 const processResize = () => {
                     const windowHeight = window.innerHeight;
-                    const windowWidth = $window.width();
+                    const windowWidth = $window.width() as number;
 
                     if (!options.fullHeight && windowHeight < 512) {
                         this.$el.find('div.modal-body').css({
@@ -325,7 +325,10 @@ class Dialog {
 
                         this.$el.css('paddingRight', 0);
                     } else {
-                        if (windowWidth <= options.screenWidthXs) {
+                        if (
+                            options.screenWidthXs != null &&
+                            windowWidth <= options.screenWidthXs
+                        ) {
                             cssParams.maxHeight = 'none';
                         } else {
                             cssParams.maxHeight = (windowHeight - diffHeight) + 'px';
@@ -409,28 +412,28 @@ class Dialog {
      * Init button events.
      */
     initButtonEvents() {
-        this.buttonList.forEach(o => {
-            if (typeof o.onClick !== 'function') {
+        this.buttonList.forEach(item => {
+            if (typeof item.onClick !== 'function') {
                 return;
             }
 
-            const $button = $(`#${this.id} .modal-footer button[data-name="${o.name}"]`);
+            const $button = $(`#${this.id} .modal-footer button[data-name="${item.name}"]`);
 
-            $button.on('click', e => o.onClick(this, e.originalEvent, e.currentTarget));
+            $button.on('click', e => item.onClick?.(this, e.originalEvent as MouseEvent, e.currentTarget));
         });
 
-        this.dropdownItemList.forEach(o => {
-            if (o === false) {
+        this.dropdownItemList.forEach(item => {
+            if (item === false) {
                 return;
             }
 
-            if (typeof o.onClick !== 'function') {
+            if (!item.onClick) {
                 return;
             }
 
-            const $button = $(`#${this.id} .modal-footer a[data-name="${o.name}"]`);
+            const $button = $(`#${this.id} .modal-footer a[data-name="${item.name}"]`);
 
-            $button.on('click', e => o.onClick(this, e.originalEvent, e.currentTarget));
+            $button.on('click', e => item.onClick?.(this, e.originalEvent as MouseEvent, e.currentTarget));
         });
     }
 
@@ -487,7 +490,7 @@ class Dialog {
                     this.maximizeButtonElement.classList.add('hidden');
                     this.minimizeButtonElement.classList.remove('hidden');
 
-                    this.el.querySelector('.modal-dialog').classList.add('maximized');
+                    this.el.querySelector('.modal-dialog')?.classList.add('maximized');
 
                     if (this.onMaximize) {
                         this.onMaximize();
@@ -516,7 +519,7 @@ class Dialog {
                     this.minimizeButtonElement.classList.add('hidden');
                     this.maximizeButtonElement.classList.remove('hidden');
 
-                    this.el.querySelector('.modal-dialog').classList.remove('maximized');
+                    this.el.querySelector('.modal-dialog')?.classList.remove('maximized');
 
                     if (this.onMinimize) {
                         this.onMinimize();
@@ -705,7 +708,7 @@ class Dialog {
                     dialog._backdropElement.classList.add('hidden');
                 }
 
-                dialog.getElement().parentElement.classList.add('overlaid');
+                dialog.getElement().parentElement?.classList.add('overlaid');
             }
         }
 
@@ -791,7 +794,7 @@ class Dialog {
         }
 
         if (last && last.getElement() && last.getElement().parentElement) {
-            last.getElement().parentElement.classList.remove('overlaid')
+            last.getElement().parentElement?.classList.remove('overlaid')
         }
     }
 
@@ -824,9 +827,9 @@ class Dialog {
 
             if ($button.length) {
                 // noinspection JSUnresolvedReference
-                $button.get(0).focus({preventScroll: true});
+                ($button.get(0) as HTMLElement).focus({preventScroll: true});
 
-                return $button.get(0);
+                return $button.get(0) as Element;
             }
         }
 
@@ -843,7 +846,13 @@ class Dialog {
 
             if (this.activeElement) {
                 setTimeout(() => {
-                    const element = this._findClosestFocusableElement(this.activeElement);
+                    const activeElement = this.activeElement;
+
+                    if (!(activeElement instanceof HTMLElement)) {
+                        return;
+                    }
+
+                    const element = this._findClosestFocusableElement(activeElement);
 
                     if (element && element instanceof HTMLElement) {
                         // noinspection JSUnresolvedReference
@@ -1069,7 +1078,7 @@ const Ui = {
                             return;
                         }
 
-                        if ($.contains($el.get(0), e.target)) {
+                        if ($.contains($el.get(0) as Element, e.target)) {
                             return;
                         }
 
@@ -1145,7 +1154,7 @@ const Ui = {
             // @ts-ignore
             $el.popover('show');
 
-            return $el.attr('aria-describedby');
+            return $el.attr('aria-describedby') as string;
         };
 
         if (view) {
@@ -1334,10 +1343,5 @@ let confirmCount = 0;
 let notifySuppressed = false;
 
 Espo.Ui = Ui;
-
-/**
- * @deprecated Use `Espo.Ui`.
- */
-Espo.ui = Ui;
 
 export default Ui;
