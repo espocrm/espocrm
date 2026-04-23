@@ -95,9 +95,7 @@ export default class BaseFieldView<
     O extends Options = Options,
 > extends View<{model: S['model']}> {
 
-    options: O & {
-        params: P,
-    }
+    options: O & {params: P}
 
     /**
      * @param options Options.

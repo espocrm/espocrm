@@ -41,7 +41,10 @@ interface Options extends BaseOptions {}
 /**
  * A boolean field (checkbox).
  */
-export default class BoolFieldView<S extends ViewSchema = ViewSchema> extends BaseFieldView<S, Params, Options> {
+export default class BoolFieldView<
+    S extends ViewSchema = ViewSchema,
+    O extends Options = Options,
+> extends BaseFieldView<S, Params, O> {
 
     type = 'bool'
 
