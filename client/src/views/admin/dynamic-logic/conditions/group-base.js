@@ -294,7 +294,12 @@ export default class DynamicLogicConditionGroupBaseView extends View {
             throw new Error();
         }
 
-        const type = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'typeList'])[0];
+        // Warning. The same data is retrieved in conditions/base.
+        const typeList =
+            this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.dynamicLogicConditionTypeList`) ??
+            this.getMetadata().get(`clientDefs.DynamicLogic.fieldTypes.${fieldType}.typeList`);
+
+        const type = typeList[0];
 
         const i = this.getIndexForNewItem();
         const key = this.getKey(i);

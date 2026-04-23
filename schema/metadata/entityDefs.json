@@ -1095,6 +1095,11 @@
                     "type": "boolean",
                     "description": "Dynamic logic cannot be customized."
                 },
+                "dynamicLogicConditionTypeList": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Overrides Dynamic Logic condition types. As of 10.0."
+                },
                 "fieldManagerParamList": {
                     "type": "array",
                     "items": {

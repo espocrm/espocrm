@@ -111,6 +111,10 @@ class PipelinesUpdateHook implements UpdateHook
                         'inlineEditDisabled',
                     ],
                     'view' => 'views/fields/extra/pipeline-stage',
+                    'dynamicLogicConditionTypeList' => [
+                        'isEmpty',
+                        'isNotEmpty',
+                    ]
                 ],
             ],
             'links' => [

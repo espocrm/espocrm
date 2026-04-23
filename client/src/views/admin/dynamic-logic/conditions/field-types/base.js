@@ -102,7 +102,10 @@ export default class DynamicLogicConditionFieldTypeBaseView extends View {
         this.itemData = this.options.itemData;
         this.additionalData = (this.itemData.data || {});
 
-        this.typeList = this.getMetadata().get(`clientDefs.DynamicLogic.fieldTypes.${this.fieldType}.typeList`);
+        // Warning. The same data is retrieved in group-base.
+        this.typeList =
+            this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.field}.dynamicLogicConditionTypeList`) ??
+            this.getMetadata().get(`clientDefs.DynamicLogic.fieldTypes.${this.fieldType}.typeList`);
 
         this.baseModel = new Model();
 
