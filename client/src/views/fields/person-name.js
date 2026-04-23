@@ -97,6 +97,9 @@ class PersonNameFieldView extends VarcharFieldView {
     setup() {
         super.setup();
 
+        this.searchTypeList =
+            this.searchTypeList.filter(it => !['anyOf', 'noneOf'].includes(it));
+
         const ucName = Espo.Utils.upperCaseFirst(this.name);
 
         this.salutationField = 'salutation' + ucName;
@@ -253,6 +256,21 @@ class PersonNameFieldView extends VarcharFieldView {
         });
 
         return data;
+    }
+
+    fetchSearch() {
+        if (this.fetchSearchType() === 'isNotEmpty') {
+            return {
+                type: 'isNotNull',
+                attribute: this.name,
+                value: null,
+                data: {
+                    type: 'isNotEmpty',
+                },
+            };
+        }
+
+        return super.fetchSearch();
     }
 
     /**
