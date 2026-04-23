@@ -307,7 +307,7 @@ class LinkFieldView extends BaseFieldView {
      * Can be extended.
      *
      * @protected
-     * @return {Object.<string,module:search-manager~advancedFilter>|null}
+     * @return {Object.<string, import('search-manager').AdvancedFilter>|null}
      */
     getSelectFilters() {
         return null;
@@ -1331,7 +1331,7 @@ class LinkFieldView extends BaseFieldView {
 
     /**
      * @private
-     * @return {Object.<string, module:search-manager~advancedFilter>}
+     * @return {Object.<string, import('search-manager').AdvancedFilter>}
      */
     _getCascadingFilters() {
         return this._createCascadeLinksHelper()?.prepareFilters() ?? {};

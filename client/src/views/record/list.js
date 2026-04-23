@@ -38,6 +38,7 @@ import ListSettingsHelper from 'helpers/list/settings';
 import StickyBarHelper from 'helpers/list/misc/sticky-bar';
 import ListColumnResizeHelper from 'helpers/record/list/column-resize';
 import ListColumnWidthControlHelper from 'helpers/record/list/column-width-control';
+import _ from 'underscore';
 
 /**
  * A record-list view. Renders and processes list items, actions.
@@ -100,7 +101,7 @@ class ListRecordView extends View {
      *     As of v9.1.0.
      * @property {boolean} [forceSettings] Force settings. As of v9.2.0.
      * @property {boolean} [forceAllResultSelectable] Force select all result. As of v9.2.0.
-     * @property {module:search-manager~whereItem} [allResultWhereItem] Where item for select all result. As of v9.2.0.
+     * @property {import('collection').WhereItem} [allResultWhereItem] Where item for select all result. As of v9.2.0.
      * @property {boolean} [storeSettings=true] To store settings. As of v10.0.0.
      */
 
@@ -1371,7 +1372,7 @@ class ListRecordView extends View {
     /**
      * Get the where clause for all result.
      *
-     * @return {module:search-manager~whereItem[]}
+     * @return {import('collection').WhereItem[]}
      * @since 9.2.0
      */
     getWhereForAllResult() {

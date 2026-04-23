@@ -121,12 +121,12 @@ export default class CascadeLinksHelper {
     }
 
     /**
-     * @return {Object.<string, module:search-manager~advancedFilter>}
+     * @return {Object.<string, import('search-manager').AdvancedFilter>}
      */
     prepareFilters() {
         /**
          * @param {{localField: string, foreignField: string, matchRequired: boolean}} item
-         * @return {Object.<string, module:search-manager~advancedFilter>|null}
+         * @return {Object.<string, import('search-manager').AdvancedFilter>|null}
          */
         const prepareItem = (item) => {
             const field = item.localField;

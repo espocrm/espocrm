@@ -30,7 +30,7 @@
 
 /**
  * @typedef {Object} module:handlers/select-related~filters
- * @property {Object.<string, module:search-manager~advancedFilter>} [advanced]
+ * @property {Object.<string, import('search-manager').AdvancedFilter>} [advanced]
  *  Advanced filters map. A field name as a key.
  * @property {string[]} [bool] Bool filters.
  * @property {string} [primary] A primary filter.

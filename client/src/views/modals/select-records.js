@@ -86,7 +86,7 @@ class SelectRecordsModalView extends ModalView {
     /**
      * @typedef {Object} module:views/modals/select-records~Options
      * @property {string} entityType An entity type.
-     * @property {Object.<string, module:search-manager~advancedFilter>} [filters] Filters.
+     * @property {Object.<string, import('search-manager').AdvancedFilter>} [filters] Filters.
      * @property {string[]} [boolFilterList] Bool filters.
      * @property {string} [primaryFilterName] A primary filter.
      * @property {string[]} [filterList] A filter list.

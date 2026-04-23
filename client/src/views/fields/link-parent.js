@@ -271,7 +271,7 @@ class LinkParentFieldView extends BaseFieldView {
      * Can be extended.
      *
      * @protected
-     * @return {Object.<string,module:search-manager~advancedFilter>|null}
+     * @return {Object.<string,import('search-manager').AdvancedFilter>|null}
      */
     getSelectFilters() {
         return null;
