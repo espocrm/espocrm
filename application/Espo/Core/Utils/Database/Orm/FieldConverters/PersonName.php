@@ -102,7 +102,7 @@ class PersonName implements FieldConverter
         }
 
         $nameColumns = [
-            $firstName . 'A',
+            $firstName,
             $middleName,
             $lastName,
         ];
