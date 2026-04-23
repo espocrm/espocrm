@@ -58,13 +58,13 @@ class VarcharFieldView<
     O extends Options = Options,
 > extends BaseFieldView<S, Params, O> {
 
-    type = 'varchar'
+    readonly type = 'varchar'
 
-    listTemplate = 'fields/varchar/list'
-    detailTemplate = 'fields/varchar/detail'
-    searchTemplate = 'fields/varchar/search'
+    protected listTemplate = 'fields/varchar/list'
+    protected detailTemplate = 'fields/varchar/detail'
+    protected searchTemplate = 'fields/varchar/search'
 
-    searchTypeList = [
+    protected searchTypeList = [
         'startsWith',
         'contains',
         'equals',
@@ -79,7 +79,7 @@ class VarcharFieldView<
         'isNotEmpty',
     ]
 
-    validations = [
+    protected validations = [
         'required',
         'pattern',
     ]

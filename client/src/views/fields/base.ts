@@ -113,7 +113,7 @@ export default class BaseFieldView<
     /**
      * A field type.
      */
-    type: string = 'base'
+    readonly type: string = 'base'
 
     /**
      * List mode template.
@@ -165,7 +165,7 @@ export default class BaseFieldView<
      *
      * Functions are supported as of v8.3.
      */
-    validations: Array<(() => boolean) | string> = ['required']
+    protected validations: Array<(() => boolean) | string> = ['required']
 
     /**
      * List mode.

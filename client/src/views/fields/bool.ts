@@ -46,14 +46,14 @@ export default class BoolFieldView<
     O extends Options = Options,
 > extends BaseFieldView<S, Params, O> {
 
-    type = 'bool'
+    readonly type = 'bool'
 
-    listTemplate = 'fields/bool/list'
-    detailTemplate = 'fields/bool/detail'
-    editTemplate = 'fields/bool/edit'
-    searchTemplate = 'fields/bool/search'
+    protected listTemplate = 'fields/bool/list'
+    protected detailTemplate = 'fields/bool/detail'
+    protected editTemplate = 'fields/bool/edit'
+    protected searchTemplate = 'fields/bool/search'
 
-    validations = []
+    protected validations = []
     initialSearchIsNotIdle = true
 
     data() {
