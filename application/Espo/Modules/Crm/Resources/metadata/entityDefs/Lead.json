@@ -38,7 +38,8 @@
             ],
             "default": "New",
             "style": {
-                "In Process": "primary",
+                "Assigned": "primary",
+                "In Process": "warning",
                 "Converted": "success",
                 "Recycled": "info",
                 "Dead": "info"
