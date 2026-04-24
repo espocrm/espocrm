@@ -9,11 +9,13 @@
             "type": "jsonArray",
             "view": "views/settings/fields/dashboard-layout",
             "inlineEditDisabled": true,
-            "required": true
+            "required": true,
+            "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\DashboardTemplate\\Layout"
         },
         "dashletsOptions": {
             "type": "jsonObject",
-            "utility": true
+            "utility": true,
+            "duplicateIgnore": true
         },
         "createdAt": {
             "type": "datetime",

@@ -29,7 +29,31 @@
 
 namespace Espo\Entities;
 
-class DashboardTemplate extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+use stdClass;
+
+class DashboardTemplate extends Entity
 {
-    public const ENTITY_TYPE = 'DashboardTemplate';
+    public const string ENTITY_TYPE = 'DashboardTemplate';
+
+    public const string FIELD_LAYOUT = 'layout';
+    public const string FIELD_DASHLETS_OPTIONS = 'dashletsOptions';
+
+    /**
+     * @return array<int, mixed>
+     * @since 10.0.0
+     */
+    public function getLayoutRaw(): array
+    {
+        /** @var array<int, mixed> */
+        return $this->get(self::FIELD_LAYOUT) ?? [];
+    }
+
+    /**
+     * @since 10.0.0
+     */
+    public function getDashletsOptionsRaw(): stdClass
+    {
+        return $this->get(self::FIELD_DASHLETS_OPTIONS) ?? (object) [];
+    }
 }
