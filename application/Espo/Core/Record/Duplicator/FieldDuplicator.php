@@ -36,8 +36,13 @@ use stdClass;
 /**
  * Duplicates attributes of a field. Some fields can require some processing
  * when an entity is being duplicated.
+ *
+ * @template TEntity of Entity = Entity
  */
 interface FieldDuplicator
 {
+    /**
+     * @param TEntity $entity
+     */
     public function duplicate(Entity $entity, string $field): stdClass;
 }

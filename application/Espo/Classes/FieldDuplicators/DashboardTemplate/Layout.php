@@ -34,19 +34,17 @@ use Espo\Core\Utils\ObjectUtil;
 use Espo\Core\Utils\Util;
 use Espo\Entities\DashboardTemplate;
 use Espo\ORM\Entity;
-use UnexpectedValueException;
 use LogicException;
 use RuntimeException;
 use stdClass;
 
+/**
+ * @implements FieldDuplicator<DashboardTemplate>
+ */
 class Layout implements FieldDuplicator
 {
     public function duplicate(Entity $entity, string $field): stdClass
     {
-        if (!$entity instanceof DashboardTemplate) {
-            throw new UnexpectedValueException();
-        }
-
         $layout = $entity->getLayoutRaw();
         $options = $entity->getDashletsOptionsRaw();
 
