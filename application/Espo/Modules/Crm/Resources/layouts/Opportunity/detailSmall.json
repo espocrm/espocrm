@@ -1,13 +1,12 @@
 [
     {
-        "label": "",
-        "rows":[
-            [{"name":"name", "fullWidth": true}],
-            [{"name":"account", "fullWidth": true}],
-            [{"name":"stage"}, {"name":"closeDate"}],
-            [{"name":"amount", "fullWidth": true}],
-            [{"name":"contacts", "fullWidth": true}],
-            [{"name":"description", "fullWidth": true}]
+        "rows": [
+            [{"name":"name"}],
+            [{"name": "account"}],
+            [{"name": "stage"}, {"name": "closeDate"}],
+            [{"name": "amount"}],
+            [{"name": "contacts"}],
+            [{"name": "description"}]
         ]
     }
 ]
