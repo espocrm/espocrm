@@ -1207,6 +1207,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * @param {function(...any)} callback A callback.
      */
     on(name: string, callback: (...args: unknown[]) => any): this {
+        // The context argument is needed.
         Events.on.call(this, name, callback, arguments[2]);
 
         return this;
@@ -1219,6 +1220,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * @param {function(...any)} callback A callback.
      */
     once(name: string, callback: (...args: unknown[]) => void): this {
+        // The context argument is needed.
         Events.once.call(this, name, callback, arguments[2]);
 
         return this;
@@ -1231,7 +1233,8 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * @param {function()} [callback] From a specific callback.
      */
     off(name?: string, callback?: (...args: unknown[]) => void): this {
-        Events.off.call(this, name, callback);
+        // The context argument is needed.
+        Events.off.call(this, name, callback, arguments[2]);
 
         return this;
     }
