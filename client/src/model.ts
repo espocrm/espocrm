@@ -153,7 +153,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * Definitions.
      * @internal
      */
-    protected defs: Defs
+    public defs: Defs
 
     constructor(
         attributes?: Partial<T> | Model<T>,

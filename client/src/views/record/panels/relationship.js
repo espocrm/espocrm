@@ -955,7 +955,6 @@ class RelationshipPanelView extends BottomPanelView {
             return;
         }
 
-        /** @type {module:model} */
         const model = this.model;
 
         const entityType = model.getLinkParam(this.link, 'entity');
