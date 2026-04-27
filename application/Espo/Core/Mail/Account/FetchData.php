@@ -66,6 +66,26 @@ class FetchData
         return (int) $id;
     }
 
+    public function getUidValidity(string $folder): ?int
+    {
+        $id = $this->data->uidValidity->$folder ?? null;
+
+        if (!is_int($id)) {
+            return null;
+        }
+
+        return $id;
+    }
+
+    public function setUidValidity(string $folder, ?int $uid): void
+    {
+        if (!property_exists($this->data, 'uidValidity')) {
+            $this->data->uidValidity = (object) [];
+        }
+
+        $this->data->uidValidity->$folder = $uid;
+    }
+
     public function getLastDate(string $folder): ?DateTime
     {
         $value = $this->data->lastDate->$folder ?? null;

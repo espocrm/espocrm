@@ -112,6 +112,8 @@ class Fetcher
 
         try {
             $storage->selectFolder($folderOriginal);
+
+            $uidValidity = $storage->getFolderStatus()->uidValidity;
         } catch (Throwable $e) {
             $message = "{$account->getEntityType()} {$account->getId()}, " .
                 "could not select folder '$folder'; {$e->getMessage()}";
@@ -121,12 +123,22 @@ class Fetcher
             return;
         }
 
+        $lastUidValidity = $fetchData->getUidValidity($folder);
         $lastId = $fetchData->getLastUid($folder);
         $lastDate = $fetchData->getLastDate($folder);
         $forceByDate = $fetchData->getForceByDate($folder);
         $portionLimit = $forceByDate ? 0 : $account->getPortionLimit();
 
         $previousLastId = $lastId;
+        $uidReset = false;
+
+        if ($lastUidValidity !== null && $uidValidity !== $lastUidValidity) {
+            $forceByDate = true;
+            $previousLastId = null;
+            $lastId = null;
+
+            $uidReset = true;
+        }
 
         $ids = $this->fetchIds(
             account: $account,
@@ -135,10 +147,6 @@ class Fetcher
             lastDate: $lastDate,
             forceByDate: $forceByDate,
         );
-
-        if (count($ids) === 1 && $ids[0] === $lastId) {
-            return;
-        }
 
         $counter = 0;
 
@@ -187,6 +195,7 @@ class Fetcher
 
         $fetchData->setLastDate($folder, $lastDate);
         $fetchData->setLastUid($folder, $lastId);
+        $fetchData->setUidValidity($folder, $uidValidity);
 
         if ($forceByDate && $previousLastId) {
             $ids = $storage->getUidsFromUid($previousLastId);
@@ -196,6 +205,10 @@ class Fetcher
             }
         }
 
+        if ($uidReset) {
+            $fetchData->setForceByDate($folder, false);
+        }
+
         if (
             !$forceByDate &&
             count($ids) &&
@@ -203,6 +216,7 @@ class Fetcher
             $previousLastId >= $lastId
         ) {
             // Handling broken numbering. Next time fetch since the last date rather than the last UID.
+            // Supposed not to happen.
             $fetchData->setForceByDate($folder, true);
         }
 
