@@ -30,6 +30,7 @@ import BaseFieldView from 'views/fields/base';
 import NotificationListRecordView from 'views/notification/record/list';
 import NotificationPanelView from 'views/notification/panel';
 import Ajax from 'ajax';
+import Ui from 'ui';
 
 class NotificationContainerFieldView extends BaseFieldView {
 
@@ -243,7 +244,7 @@ class NotificationContainerFieldView extends BaseFieldView {
             button.classList.add('disabled');
         }
 
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         try {
             await collection.fetch();
@@ -253,7 +254,7 @@ class NotificationContainerFieldView extends BaseFieldView {
             return;
         }
 
-        Espo.Ui.notify();
+        Ui.notify();
 
         this.isGroupExpanded = true;
 

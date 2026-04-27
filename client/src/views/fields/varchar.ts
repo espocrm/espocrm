@@ -33,6 +33,7 @@ import RegExpPattern from 'helpers/reg-exp-pattern';
 import Autocomplete from 'ui/autocomplete';
 import MultiSelect from 'ui/multi-select';
 import Ajax from 'ajax';
+import Ui from 'ui';
 
 interface Params extends BaseParams {
     maxLength?: number;
@@ -169,7 +170,7 @@ class VarcharFieldView<
         const value = this.model.get(this.name);
 
         navigator.clipboard.writeText(value).then(() => {
-            Espo.Ui.success(this.translate('Copied to clipboard'));
+            Ui.success(this.translate('Copied to clipboard'));
         });
     }
 

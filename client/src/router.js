@@ -29,6 +29,7 @@
 import Backbone from 'backbone';
 import {Events} from 'bullbone';
 import _ from 'underscore';
+import Ui from 'ui';
 
 /**
  * On route.
@@ -421,7 +422,7 @@ export default class Router {
             this.confirmLeaveOutDisplayed = true;
             this.confirmLeaveOutCanceled = false;
 
-            Espo.Ui.confirm(
+            Ui.confirm(
                 this.confirmLeaveOutMessage,
                 {
                     confirmText: this.confirmLeaveOutConfirmText,

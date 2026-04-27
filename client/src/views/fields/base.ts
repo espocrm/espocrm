@@ -31,6 +31,7 @@
 import View from 'view';
 import Select from 'ui/select';
 import Model from 'model';
+import Ui from 'ui';
 import _ from 'underscore';
 import JQuery from 'jquery'
 
@@ -993,11 +994,11 @@ export default class BaseFieldView<
             tooltipText = this.getHelper()
                 .transformMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
-            Espo.Ui.popover($a, {
+            Ui.popover($a.get(0) as Element, {
                 placement: 'bottom',
                 content: tooltipText,
                 preventDestroyOnRender: true,
-            }, this);
+            }, this as View);
         });
     }
 
@@ -1257,7 +1258,7 @@ export default class BaseFieldView<
         const isInvalid = this.validateCallback ? this.validateCallback() : this.validate();
 
         if (isInvalid) {
-            Espo.Ui.error(this.translate('Not valid'));
+            Ui.error(this.translate('Not valid'));
 
             // @todo Revise.
             model.setMultiple(prev, {silent: true});
@@ -1265,7 +1266,7 @@ export default class BaseFieldView<
             return;
         }
 
-        Espo.Ui.notify(this.translate('saving', 'messages'));
+        Ui.notify(this.translate('saving', 'messages'));
 
         model
             .save(attrs as Record<string, any>, {patch: true})
@@ -1275,10 +1276,10 @@ export default class BaseFieldView<
 
                 model.trigger('after:save');
 
-                Espo.Ui.success(this.translate('Saved'));
+                Ui.success(this.translate('Saved'));
             })
             .catch(() => {
-                Espo.Ui.error(this.translate('Error occurred'));
+                Ui.error(this.translate('Error occurred'));
 
                 // @todo Revise.
                 model.setMultiple(prev, {silent: true});
@@ -1526,14 +1527,14 @@ export default class BaseFieldView<
             } catch (e) {}
         }
 
-        const popover = Espo.Ui.popover($el, {
+        const popover = Ui.popover($el, {
             placement: 'bottom',
             container: 'body',
             content: this.getHelper().transformMarkdownText(message).toString(),
             trigger: 'manual',
             noToggleInit: true,
             noHideOnOutsideClick: true,
-        }, view || this);
+        }, (view ?? this) as View);
 
         popover.show();
 

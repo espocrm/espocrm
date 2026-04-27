@@ -343,10 +343,6 @@ const Ajax = {
     },
 };
 
-
-/**
- * @name module:ajax.Xhr
- */
 class Xhr extends XMLHttpRequest {
     /**
      * To be set in an error handler to bypass default handling.

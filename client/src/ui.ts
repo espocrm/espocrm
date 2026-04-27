@@ -566,7 +566,7 @@ class Dialog {
             .addClass('btn-group')
             .addClass('additional-btn-group');
 
-        this.buttonList.forEach(/** module:ui.Dialog~Button */o => {
+        this.buttonList.forEach(o => {
             const style = o.style || 'default';
 
             const $button =

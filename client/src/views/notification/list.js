@@ -27,6 +27,8 @@
  ************************************************************************/
 
 import View from 'view';
+import Ajax from 'ajax';
+import Ui from 'ui';
 
 class NotificationListView extends View {
 
@@ -48,7 +50,7 @@ class NotificationListView extends View {
     }
 
     actionRefresh() {
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         const $btn = this.$el.find('[data-action="refresh"]');
         $btn.addClass('disabled').attr('disabled', 'disabled');
@@ -57,7 +59,7 @@ class NotificationListView extends View {
 
         this.getRecordView().showNewRecords()
             .then(() => {
-                Espo.Ui.notify(false);
+                Ui.notify(false);
             })
             .finally(() => $btn.removeClass('disabled').removeAttr('disabled'));
     }
@@ -110,15 +112,15 @@ class NotificationListView extends View {
     }
 
     actionMarkAllRead() {
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         const $link = this.$el.find('[data-action="markAllNotificationsRead"]');
         $link.attr('disabled', 'disabled').addClass('disabled');
 
-        Espo.Ajax.postRequest('Notification/action/markAllRead')
+        Ajax.postRequest('Notification/action/markAllRead')
             .then(() => {
                 this.trigger('all-read');
-                Espo.Ui.notify(false);
+                Ui.notify(false);
 
                 this.$el.find('.badge-circle-warning').remove();
             })

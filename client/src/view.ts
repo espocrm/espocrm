@@ -384,10 +384,10 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
         const confirmStyle = options.confirmStyle || null;
         const cancelText = options.cancelText || this.translate('Cancel');
 
-        return Espo.Ui.confirm(message, {
+        return Ui.confirm(message, {
             confirmText: confirmText,
             cancelText: cancelText,
-            confirmStyle: confirmStyle,
+            confirmStyle: confirmStyle ?? undefined,
             backdrop: ('backdrop' in o) ? o.backdrop : true,
             isHtml: true,
             cancelCallback: options.cancelCallback,
