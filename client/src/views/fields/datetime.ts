@@ -125,13 +125,12 @@ class DatetimeFieldView<
         'hh:mma': 'h:ia',
     }
 
-    private $date: JQuery | null = null
-    private $time: JQuery | null = null
+    /** @internal */
+    protected $date: JQuery | null = null
+    /** @internal */
+    protected $time: JQuery | null = null
 
-    /**
-     * A none option value,
-     */
-    protected noneOption: string | null = null
+    protected noneOption: string
 
     protected data() {
         const data = super.data();

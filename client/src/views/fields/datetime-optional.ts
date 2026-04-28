@@ -30,53 +30,70 @@
 
 import DatetimeFieldView from 'views/fields/datetime';
 import moment from 'moment';
+import {Options as BaseOptions, ViewSchema} from 'views/fields/base';
+
+interface Params {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Use numeric format.
+     */
+    useNumericFormat?: boolean;
+    /**
+     * Display seconds.
+     */
+    hasSeconds?: boolean;
+    /**
+     * A minutes step.
+     */
+    minuteStep?: number;
+    /**
+     * Validate to be after another date field.
+     */
+    after?: string;
+    /**
+     * Validate to be before another date field.
+     */
+    before?: string;
+}
+
+interface Options extends BaseOptions {
+    /**
+     * A label text of other field. Used in before/after validations.
+     */
+    otherFieldLabelText?: string;
+}
 
 /**
  * A date-time or date.
- *
- * @extends DatetimeFieldView<module:views/fields/datetime-optional~params>
  */
-class DatetimeOptionalFieldView extends DatetimeFieldView {
+class DatetimeOptionalFieldView<
+    S extends ViewSchema = ViewSchema,
+    O extends Options = Options,
+    P extends Params = Params,
+> extends DatetimeFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/datetime-optional~options
-     * @property {
-     *     module:views/fields/varchar~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
 
-    /**
-     * @typedef {Object} module:views/fields/datetime-optional~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [useNumericFormat] Use numeric format.
-     * @property {boolean} [hasSeconds] Display seconds.
-     * @property {number} [minuteStep] A minute step.
-     * @property {string} [after] Validate to be after another date field.
-     * @property {string} [before] Validate to be before another date field.
-     */
+    readonly type: string = 'datetimeOptional'
 
-    /**
-     * @param {
-     *     module:views/fields/datetime-optional~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    protected nameDate: string;
 
-    type = 'datetimeOptional'
+    protected emptyTimeInInlineEditDisabled: boolean = false
+    protected noneOptionIsHidden: boolean = false;
+    protected validateAfterAllowSameDay: boolean = false
 
-    setup() {
+    protected isEnd: boolean = false;
+
+    protected setup() {
         super.setup();
 
         this.noneOption = this.translate('None');
         this.nameDate = this.name + 'Date';
     }
 
-    isDate() {
+    isDate(): boolean {
         const dateValue = this.model.get(this.nameDate);
 
         if (dateValue && dateValue !== '') {
@@ -86,7 +103,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         return false;
     }
 
-    data() {
+    protected data() {
         const data = super.data();
 
         if (this.isDate()) {
@@ -99,7 +116,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         return data;
     }
 
-    getDateStringValue() {
+    protected getDateStringValue(): string | -1 | null {
         if (this.isDate()) {
             const dateValue = this.model.get(this.nameDate);
 
@@ -109,11 +126,11 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         return super.getDateStringValue();
     }
 
-    setDefaultTime() {
-        this.$time.val(this.noneOption);
+    protected setDefaultTime() {
+        this.$time?.val(this.noneOption);
     }
 
-    initTimepicker() {
+    protected initTimepicker() {
         const $time = this.$time;
 
         const modalBodyElement = this.element.closest('.modal-body');
@@ -127,24 +144,26 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
                 value: this.noneOption,
             }],
             appendTo: modalBodyElement ? $(modalBodyElement) : 'body',
-        };
+        } as Record<string, any>;
 
         if (this.emptyTimeInInlineEditDisabled && this.isInlineEditMode() || this.noneOptionIsHidden) {
             delete o.noneOption;
         }
 
-        $time.timepicker(o);
+        // @ts-ignore
+        $time?.timepicker(o);
 
-        $time.parent().find('button.time-picker-btn').on('click', () => {
+        $time?.parent().find('button.time-picker-btn').on('click', () => {
+            // @ts-ignore
             $time.timepicker('show');
         });
     }
 
     fetch() {
-        const data = {};
+        const data = {} as Record<string, any>;
 
-        const date = this.$date.val();
-        const time = this.$time.val();
+        const date = this.$date?.val() as string;
+        const time = this.$time?.val();
         let value = null;
 
         if (time !== this.noneOption && time !== '') {
@@ -163,7 +182,9 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
 
             let dateTimeValue = data[this.nameDate] + ' 00:00:00';
 
+
             dateTimeValue = moment
+                // @ts-ignore
                 .tz(dateTimeValue, this.getConfig().get('timeZone') || 'UTC')
                 .add(this.isEnd ? 1 : 0, 'days')
                 .utc()
@@ -184,7 +205,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         const field = this.params.after;
 
         if (!field) {
-            return;
+            return false;
         }
 
         const fieldDate = field + 'Date';
@@ -192,7 +213,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         const otherValue = this.model.get(field) || this.model.get(fieldDate);
 
         if (!(value && otherValue)) {
-            return;
+            return false;
         }
 
         const isNotValid = this.validateAfterAllowSameDay && this.model.get(this.nameDate) ?
@@ -200,21 +221,26 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
             moment(value).unix() <= moment(otherValue).unix();
 
         if (isNotValid) {
+            const otherFieldLabelText = this.options.otherFieldLabelText ||
+                this.translate(field, 'fields', this.entityType);
+
             const msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
+                .replace('{otherField}', otherFieldLabelText);
 
             this.showValidationMessage(msg);
 
             return true;
         }
+
+        return false;
     }
 
     validateBefore() {
         const field = this.params.before;
 
         if (!field) {
-            return;
+            return false;
         }
 
         const fieldDate = field + 'Date';
@@ -238,7 +264,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
 
     validateRequired() {
         if (!this.isRequired()) {
-            return;
+            return false;
         }
 
         if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
@@ -249,19 +275,16 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
 
             return true;
         }
+
+        return false;
     }
 
-    /**
-     * @protected
-     * @return {string|undefined}
-     */
-    getStartDateForDatePicker() {
+    protected getStartDateForDatePicker(): string | undefined {
         if (!this.isEditMode() || !this.params.after) {
             return undefined;
         }
 
-        /** @type {string} */
-        const date = this.model.attributes[this.params.after + 'Date'];
+        const date = this.model.attributes[this.params.after + 'Date'] as string | undefined;
 
         if (date) {
             return this.getDateTime().toDisplayDate(date);
