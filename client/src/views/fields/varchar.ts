@@ -36,16 +36,40 @@ import Ajax from 'ajax';
 import Ui from 'ui';
 
 interface Params extends BaseParams {
+    /**
+     * Max length.
+     */
     maxLength?: number;
+    /**
+     * Autocomplete options.
+     */
     options?: string[];
+    /**
+     * Is required.
+     */
     required?: boolean;
+    /**
+     * Options path.
+     */
     optionsPath?: string;
+    /**
+     * No spell check.
+     */
     noSpellCheck?: boolean;
+    /**
+     * A pattern.
+     */
     pattern?: string;
+    /**
+     * Show 'Copy to Clipboard' button.
+     */
     copyToClipboard?: boolean;
 }
 
 interface Options extends BaseOptions {
+    /**
+     * Custom autocomplete options.
+     */
     customOptionList?: string[];
 }
 

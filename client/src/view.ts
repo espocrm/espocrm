@@ -337,7 +337,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     translate(
         label: string,
         category?: string | 'messages' | 'labels' | 'fields' | 'links' | 'scopeNames' | 'scopeNamesPlural',
-        scope?: string,
+        scope?: string | null,
     ): string {
 
         return this.getLanguage().translate(label, category, scope);

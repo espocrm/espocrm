@@ -114,7 +114,7 @@ class Language {
      *
      * @param {string} name An item name.
      * @param {string|'messages'|'labels'|'fields'|'links'|'scopeNames'|'scopeNamesPlural'} [category='labels'] A category.
-     * @param {string} [scope='Global'] A scope.
+     * @param {string|null} [scope='Global'] A scope.
      * @returns {string}
      */
     translate(name, category, scope) {

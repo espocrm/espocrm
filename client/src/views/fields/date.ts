@@ -28,70 +28,67 @@
 
 /** @module views/fields/date */
 
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
 import moment from 'moment';
 import Datepicker from 'ui/datepicker';
+import JQuery from 'jquery'
+
+const $ = JQuery;
+
+interface Params extends BaseParams {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Use numeric format.
+     */
+    useNumericFormat?: boolean;
+    /**
+     * Validate to be after another date field.
+     */
+    after?: string;
+    /**
+     * Validate to be before another date field.
+     */
+    before?: string;
+    /**
+     * Allow an equal date for 'after' validation.
+     */
+    afterOrEqual?: boolean;
+}
+
+interface Options extends BaseOptions {
+    /**
+     * A label text of other field. Used in before/after validations.
+     */
+    otherFieldLabelText?: string;
+}
 
 /**
  * A date field.
- *
- * @extends BaseFieldView<module:views/fields/date~params>
  */
-class DateFieldView extends BaseFieldView {
+class DateFieldView<
+    S extends ViewSchema = ViewSchema,
+    O extends Options = Options,
+> extends BaseFieldView<S, Params, O> {
 
-    /**
-     * @typedef {Object} module:views/fields/date~options
-     * @property {
-     *     module:views/fields/date~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     * @property {string} [otherFieldLabelText] A label text of other field. Used in before/after validations.
-     */
+    readonly type = 'date'
 
-    /**
-     * @typedef {Object} module:views/fields/date~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [useNumericFormat] Use numeric format.
-     * @property {string} [after] Validate to be after another date field.
-     * @property {string} [before] Validate to be before another date field.
-     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
-     */
+    protected listTemplate = 'fields/date/list'
+    protected listLinkTemplate = 'fields/date/list-link'
+    protected detailTemplate = 'fields/date/detail'
+    protected editTemplate = 'fields/date/edit'
+    protected searchTemplate = 'fields/date/search'
 
-    /**
-     * @param {
-     *     module:views/fields/date~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'date'
-
-    listTemplate = 'fields/date/list'
-    listLinkTemplate = 'fields/date/list-link'
-    detailTemplate = 'fields/date/detail'
-    editTemplate = 'fields/date/edit'
-    searchTemplate = 'fields/date/search'
-
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = [
+    protected validations = [
         'required',
         'date',
         'after',
         'before',
     ]
 
-    /**
-     * @protected
-     * @type {string[]}
-     */
-    searchTypeList = [
+    protected searchTypeList = [
         'lastSevenDays',
         'ever',
         'isEmpty',
@@ -115,30 +112,18 @@ class DateFieldView extends BaseFieldView {
         'between',
     ]
 
-    /**
-     * @protected
-     * @type {string[]}
-     */
-    searchWithPrimaryTypeList = [
+    protected searchWithPrimaryTypeList: string[] = [
         'on',
         'notOn',
         'after',
         'before',
     ]
 
-    /**
-     * @protected
-     * @type {string[]}
-     */
-    searchWithRangeTypeList = [
+    protected searchWithRangeTypeList: string[] = [
         'between',
     ]
 
-    /**
-     * @protected
-     * @type {string[]}
-     */
-    searchWithAdditionalNumberTypeList = [
+    protected searchWithAdditionalNumberTypeList: string[] = [
         'lastXDays',
         'nextXDays',
         'olderThanXDays',
@@ -148,21 +133,13 @@ class DateFieldView extends BaseFieldView {
     /**
      * @inheritDoc
      */
-    initialSearchIsNotIdle = true
+    initialSearchIsNotIdle: boolean = true
 
-    /**
-     * @private
-     * @type {import('ui/datepicker').default}
-     */
-    datepicker
+    private datepicker: Datepicker | null = null
 
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    useNumericFormat
+    protected useNumericFormat: boolean
 
-    setup() {
+    protected setup() {
         super.setup();
 
         if (this.getConfig().get('fiscalYearShift')) {
@@ -189,7 +166,7 @@ class DateFieldView extends BaseFieldView {
                 setTimeout(() => {
                     this.onAfterChange();
 
-                    this.datepicker.setStartDate(this.getStartDateForDatePicker());
+                    this.datepicker?.setStartDate(this.getStartDateForDatePicker());
                 }, 100);
             });
         }
@@ -197,8 +174,7 @@ class DateFieldView extends BaseFieldView {
         this.useNumericFormat = this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat;
     }
 
-    // noinspection JSCheckFunctionSignatures
-    data() {
+    protected data() {
         const data = super.data();
 
         data.dateValue = this.getDateStringValue();
@@ -211,14 +187,14 @@ class DateFieldView extends BaseFieldView {
         }
 
         if (this.isSearchMode()) {
-            const value = this.getSearchParamsData().value || this.searchParams.dateValue;
-            const valueTo = this.getSearchParamsData().valueTo || this.searchParams.dateValueTo;
+            const value = this.getSearchParamsData().value || this.searchParams?.dateValue;
+            const valueTo = this.getSearchParamsData().valueTo || this.searchParams?.dateValueTo;
 
             data.dateValue = this.getDateTime().toDisplayDate(value);
             data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
             if (this.searchWithAdditionalNumberTypeList.includes(this.getSearchType())) {
-                data.number = this.searchParams.value;
+                data.number = this.searchParams?.value;
             }
         }
 
@@ -235,8 +211,8 @@ class DateFieldView extends BaseFieldView {
     }
 
     setupSearch() {
-        this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
-            this.handleSearchType(target.value);
+        this.addHandler('change', 'select.search-type', (_e, target) => {
+            this.handleSearchType((target as HTMLSelectElement).value);
 
             this.trigger('change');
         });
@@ -244,7 +220,7 @@ class DateFieldView extends BaseFieldView {
         this.addHandler('change', 'input.number', () => this.trigger('change'));
     }
 
-    stringifyDateValue(value) {
+    protected stringifyDateValue(value: any): string | null {
         if (!value) {
             if (
                 this.mode === this.MODE_EDIT ||
@@ -269,7 +245,7 @@ class DateFieldView extends BaseFieldView {
         return this.getDateTime().toDisplayDate(value);
     }
 
-    convertDateValueForDetail(value) {
+    protected convertDateValueForDetail(value: any): string | null {
         if (this.useNumericFormat) {
             return this.getDateTime().toDisplayDate(value);
         }
@@ -279,7 +255,9 @@ class DateFieldView extends BaseFieldView {
         const readableFormat = this.getDateTime().getReadableDateFormat();
         const valueWithTime = value + ' 00:00:00';
 
+        // @ts-ignore
         const today = moment.tz(timezone).startOf('day');
+        // @ts-ignore
         let dateTime = moment.tz(valueWithTime, internalDateTimeFormat, timezone);
 
         const temp = today.clone();
@@ -312,7 +290,7 @@ class DateFieldView extends BaseFieldView {
         return dateTime.format(readableFormat + ', YYYY');
     }
 
-    getDateStringValue() {
+    protected getDateStringValue(): string | -1 | null {
         if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
             return -1;
         }
@@ -322,16 +300,11 @@ class DateFieldView extends BaseFieldView {
         return this.stringifyDateValue(value);
     }
 
-    /**
-     * @protected
-     * @return {string|undefined}
-     */
-    getStartDateForDatePicker() {
+    protected getStartDateForDatePicker(): string | undefined {
         if (!this.isEditMode() || !this.params.after) {
             return undefined;
         }
 
-        /** @type {string} */
         let date = this.model.attributes[this.params.after];
 
         if (date == null) {
@@ -352,7 +325,7 @@ class DateFieldView extends BaseFieldView {
         if (this.isEditMode() || this.isSearchMode()) {
             this.mainInputElement = this.element?.querySelector(`[data-name="${this.name}"]`);
 
-            this.$element = $(this.mainInputElement);
+            this.$element = $(this.mainInputElement as any);
 
             const options = {
                 format: this.getDateTime().dateFormat,
@@ -361,7 +334,7 @@ class DateFieldView extends BaseFieldView {
                 todayButton: this.getConfig().get('datepickerTodayButton') || false,
             };
 
-            this.datepicker = undefined;
+            this.datepicker = null;
 
             if (this.mainInputElement instanceof HTMLInputElement) {
                 this.datepicker = new Datepicker(this.mainInputElement, {
@@ -371,7 +344,7 @@ class DateFieldView extends BaseFieldView {
             }
 
             if (this.isSearchMode()) {
-                const additionalGroup = this.element?.querySelector('.input-group.additional');
+                const additionalGroup = this.element?.querySelector('.input-group.additional') as HTMLElement | null;
 
                 if (additionalGroup) {
                     new Datepicker(additionalGroup, options)
@@ -381,10 +354,10 @@ class DateFieldView extends BaseFieldView {
                 }
             }
 
-            const button = this.mainInputElement?.parentNode.querySelector('button.date-picker-btn');
+            const button = this.mainInputElement?.parentNode?.querySelector('button.date-picker-btn');
 
             if (button instanceof HTMLElement) {
-                button.addEventListener('click', () => this.datepicker.show());
+                button.addEventListener('click', () => this.datepicker?.show());
             }
 
             if (this.isSearchMode()) {
@@ -399,14 +372,14 @@ class DateFieldView extends BaseFieldView {
      * @private
      * @param {string} selector
      */
-    initDatePickerEventHandlers(selector) {
+    initDatePickerEventHandlers(selector: string) {
         const input = this.element?.querySelector(selector);
 
         if (!(input instanceof HTMLInputElement)) {
             return;
         }
 
-        $(input).on('change', /** Record */e => {
+        $(input).on('change', (e: Record<string, any>) => {
             this.trigger('change');
 
             if (e.isTrigger) {
@@ -417,11 +390,7 @@ class DateFieldView extends BaseFieldView {
         });
     }
 
-    /**
-     * @protected
-     * @param {string} type
-     */
-    handleSearchType(type) {
+    protected handleSearchType(type: string) {
         const primary = this.element?.querySelector('div.primary');
         const additional = this.element?.querySelector('div.additional');
         const additionalNumber = this.element?.querySelector('div.additional-number');
@@ -447,20 +416,11 @@ class DateFieldView extends BaseFieldView {
         }
     }
 
-    /**
-     * @protected
-     * @param {string} string
-     * @return {string|-1}
-     */
-    parseDate(string) {
+    protected parseDate(string: string): string | -1 {
         return this.getDateTime().fromDisplayDate(string);
     }
 
-    /**
-     * @param {string} string
-     * @return {string|-1|null}
-     */
-    parse(string) {
+    protected parse(string: string): string | -1 | null {
         if (!string) {
             return null;
         }
@@ -468,11 +428,8 @@ class DateFieldView extends BaseFieldView {
         return this.parseDate(string);
     }
 
-    /**
-     * @inheritDoc
-     */
-    fetch() {
-        const data = {};
+    fetch(): Record<string, any> {
+        const data = {} as Record<string, any>;
 
         data[this.name] = this.parse(this.mainInputElement?.value ?? '');
 
@@ -552,12 +509,12 @@ class DateFieldView extends BaseFieldView {
     }
 
     getSearchType() {
-        return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
+        return this.getSearchParamsData().type ?? this.searchParams?.typeFront ?? this.searchParams?.type ?? null;
     }
 
     validateRequired() {
         if (!this.isRequired()) {
-            return;
+            return false;
         }
 
         if (this.model.get(this.name) === null) {
@@ -568,6 +525,8 @@ class DateFieldView extends BaseFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -651,10 +610,10 @@ class DateFieldView extends BaseFieldView {
      * @since 9.2.0
      */
     onAfterChange() {
-        /** @type {string} */
-        const from = this.model.attributes[this.params.after];
-        /** @type {string} */
-        const currentValue = this.model.attributes[this.name];
+        const after = this.params.after as string;
+
+        const from = this.model.attributes[after] as string | undefined;
+        const currentValue = this.model.attributes[this.name] as string | undefined;
 
         if (!from || !currentValue || from.length !== currentValue.length) {
             return;

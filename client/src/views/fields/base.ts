@@ -39,22 +39,35 @@ const $ = JQuery;
 
 /**
  * Options.
- *
- * @property name A field name.
- * @property model A model.
- * @property inlineEditDisabled Disabled inline edit.
- * @property readOnly Is read-only.
- * @property labelText A label text (already translated).
- * @property mode A field mode.
- * @property recordHelper The record helper.
  */
 export interface Options {
+    /**
+     * A field name.
+     */
     name: string;
+    /**
+     * A model.
+     */
     model?: import('model').default;
+    /**
+     * Disabled inline edit.
+     */
     inlineEditDisabled?: boolean;
+    /**
+     * Is read-only.
+     */
     readOnly?: boolean;
+    /**
+     * A label text (already translated).
+     */
     labelText?: string;
+    /**
+     * A field mode.
+     */
     mode?: 'detail' | 'edit' | 'list' | 'search';
+    /**
+     * A record helper.
+     */
     recordHelper?: import('view-record-helper').default;
     disabledLocked?: boolean;
     disabled?: boolean;
@@ -525,7 +538,7 @@ export default class BaseFieldView<
     /**
      * @inheritDoc
      */
-    data(): Record<string, any> {
+    protected data(): Record<string, any> {
         const data = {
             scope: this.model.entityType || this.model.name,
             name: this.name,
