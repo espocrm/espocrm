@@ -34,9 +34,9 @@ import {Options as BaseOptions} from 'views/fields/base';
 import {Params as BaseParams} from 'views/fields/base';
 import {ViewSchema} from 'views/fields/base';
 
-interface Params extends BaseParams {}
+export interface Params extends BaseParams {}
 
-interface Options extends BaseOptions {}
+export interface Options extends BaseOptions {}
 
 /**
  * A boolean field (checkbox).

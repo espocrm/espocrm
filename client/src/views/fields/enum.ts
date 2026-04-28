@@ -41,7 +41,7 @@ type OptionItemHandler = (item: {value: string}) => {
 
 type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'primary'>;
 
-interface Params extends BaseParams {
+export interface Params extends BaseParams {
     /**
      * Select options.
      */
@@ -87,7 +87,7 @@ interface Params extends BaseParams {
 /**
  * Options.
  */
-interface Options extends BaseOptions {
+export interface Options extends BaseOptions {
     /**
      * Handles an option item to override the label or add a style.
      * @since 10.0.0

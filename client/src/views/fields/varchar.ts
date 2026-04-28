@@ -35,7 +35,7 @@ import MultiSelect from 'ui/multi-select';
 import Ajax from 'ajax';
 import Ui from 'ui';
 
-interface Params extends BaseParams {
+export interface Params extends BaseParams {
     /**
      * Max length.
      */
@@ -66,7 +66,7 @@ interface Params extends BaseParams {
     copyToClipboard?: boolean;
 }
 
-interface Options extends BaseOptions {
+export interface Options extends BaseOptions {
     /**
      * Custom autocomplete options.
      */

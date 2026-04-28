@@ -35,7 +35,7 @@ import JQuery from 'jquery'
 
 const $ = JQuery;
 
-interface Params extends BaseParams {
+export interface Params extends BaseParams {
     /**
      * Required.
      */
@@ -58,7 +58,7 @@ interface Params extends BaseParams {
     afterOrEqual?: boolean;
 }
 
-interface Options extends BaseOptions {
+export interface Options extends BaseOptions {
     /**
      * A label text of other field. Used in before/after validations.
      */
