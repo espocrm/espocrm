@@ -269,6 +269,10 @@ class Merger
 
         $columnAttributeMap = $this->getLinkColumnAttributeMap($entityType, $link);
 
+        if ($link === 'meetings') {
+            echo $sourceEntity->getId() ;
+        }
+
         $collection = $this->entityManager
             ->getRelation($sourceEntity, $link)
             ->find();

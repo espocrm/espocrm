@@ -648,6 +648,20 @@
                 "status": "acceptanceStatus"
             }
         },
+        "meetingsChildren": {
+            "type": "hasChildren",
+            "entity": "Meeting",
+            "foreign": "parent",
+            "readOnly": true,
+            "customizationDisabled": true
+        },
+        "callsChildren": {
+            "type": "hasChildren",
+            "entity": "Call",
+            "foreign": "parent",
+            "readOnly": true,
+            "customizationDisabled": true
+        },
         "tasks": {
             "type": "hasChildren",
             "entity": "Task",

@@ -112,7 +112,9 @@
         "account": "Account",
         "opportunity": "Opportunity",
         "contact": "Contact",
-        "parent": "Parent"
+        "parent": "Parent",
+        "meetingsChildren": "Meetings Children",
+        "callsChildren": "Calls Children"
     },
     "options": {
         "reminderTypes": {
