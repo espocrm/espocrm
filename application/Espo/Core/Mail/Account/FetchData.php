@@ -39,9 +39,12 @@ class FetchData
 {
     private stdClass $data;
 
-    public function __construct(stdClass $data)
+    /**
+     * @internal
+     */
+    public function __construct(?stdClass $data = null)
     {
-        $this->data = ObjectUtil::clone($data);
+        $this->data = ObjectUtil::clone($data ?? (object) []);
     }
 
     public static function fromRaw(stdClass $data): self
