@@ -510,9 +510,9 @@ class VarcharFieldView<
         };
     }
 
-    getSearchType() {
-        return this.getSearchParamsData()?.type || this.searchParams?.typeFront ||
-            this.searchParams?.type;
+    protected getSearchType(): string | null {
+        return this.getSearchParamsData()?.type ?? this.searchParams?.typeFront ??
+            this.searchParams?.type ?? null;
     }
 
     /**

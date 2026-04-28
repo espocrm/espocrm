@@ -194,7 +194,7 @@ class DateFieldView<
             data.dateValue = this.getDateTime().toDisplayDate(value);
             data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
-            if (this.searchWithAdditionalNumberTypeList.includes(this.getSearchType())) {
+            if (this.searchWithAdditionalNumberTypeList.includes(this.getSearchType() ?? '')) {
                 data.number = this.searchParams?.value;
             }
         }
@@ -506,7 +506,7 @@ class DateFieldView<
         };
     }
 
-    getSearchType() {
+    protected getSearchType(): string | null {
         return this.getSearchParamsData().type ?? this.searchParams?.typeFront ?? this.searchParams?.type ?? null;
     }
 

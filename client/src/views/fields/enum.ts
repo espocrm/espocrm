@@ -28,102 +28,124 @@
 
 /** @module views/fields/enumeration */
 
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
 import MultiSelect from 'ui/multi-select';
 import Select from 'ui/select'
+import _ from 'underscore';
+
+type OptionItemHandler = (item: {value: string}) => {
+    text?: string,
+    style?: 'default' | 'danger' | 'success' | 'warning' | 'info' | null,
+    color?: string | null,
+};
+
+type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'primary'>;
+
+interface Params extends BaseParams {
+    /**
+     * Select options.
+     */
+    options?: string[];
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * A translation string. E.g. `Global.scopeNames`.
+     */
+    translation?: string;
+    /**
+     * Display as label.
+     */
+    displayAsLabel?: boolean;
+    /**
+     * A label type.
+     */
+    labelType?: 'regular' | 'state';
+    /**
+     * A reference to options. E.g. `Account.industry`.
+     */
+    optionsReference?: string;
+    /**
+     * An options metadata path.
+     */
+    optionsPath?: string;
+    /**
+     * To sort options.
+     */
+    isSorted?: boolean;
+    /**
+     * A style map.
+     */
+    style?: StyleMap;
+    /**
+     * Option translations.
+     */
+    translatedOptions?: Record<string, string>;
+}
+
+/**
+ * Options.
+ */
+interface Options extends BaseOptions {
+    /**
+     * Handles an option item to override the label or add a style.
+     * @since 10.0.0
+     */
+    optionItemHandler?: OptionItemHandler;
+    /**
+     * Option translations.
+     */
+    translatedOptions?: Record<string, string>;
+    /**
+     * @internal
+     */
+    customOptionList?: string[];
+}
 
 /**
  * An enum field (select-box).
- *
- * @extends BaseFieldView<module:views/fields/enumeration~params>
  */
-class EnumFieldView extends BaseFieldView {
+class EnumFieldView<
+    S extends ViewSchema = ViewSchema,
+    P extends Params = Params,
+    O extends Options = Options,
+> extends BaseFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/enumeration~options
-     * @property {
-     *     module:views/fields/enumeration~params &
-     *     module:views/fields/base~params &
-     *     Object.<string, *>
-     * } [params] Parameters.
-     * @property {module:views/fields/enumeration~optionItemHandler} [optionItemHandler]
-     *     Handles an option item to override the label or add a style. As of v10.0.0.
-     */
+    readonly type = 'enum'
 
-    /**
-     * @typedef {Object} module:views/fields/enumeration~params
-     * @property {string[]} [options] Select options.
-     * @property {boolean} [required] Required.
-     * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
-     * @property {boolean} [displayAsLabel] Display as label.
-     * @property {string|'state'} [labelType] A label type.
-     * @property {'regular'|'state'} [labelType] A label type.
-     * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
-     * @property {string} [optionsPath] An options metadata path.
-     * @property {boolean} [isSorted] To sort options.
-     * @property {Object.<string, 'warning'|'danger'|'success'|'info'|'primary'>} [style] A style map.
-     * @property {Object.<string, string>} [translatedOptions] Option translations.
-     */
+    protected listTemplate = 'fields/enum/list'
+    protected listLinkTemplate = 'fields/enum/list-link'
+    protected detailTemplate = 'fields/enum/detail'
+    protected editTemplate = 'fields/enum/edit'
+    protected searchTemplate = 'fields/enum/search'
 
-    /**
-     * @typedef {
-     *     function({value: string}): {
-     *         text?: string,
-     *         style?: 'default'|'danger'|'success'|'warning'|'info'|null,
-     *         color?: string|null,
-     *     }
-     * } module:views/fields/enumeration~optionItemHandler
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/enumeration~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'enum'
-
-    listTemplate = 'fields/enum/list'
-    listLinkTemplate = 'fields/enum/list-link'
-    detailTemplate = 'fields/enum/detail'
-    editTemplate = 'fields/enum/edit'
-    searchTemplate = 'fields/enum/search'
-
-    translatedOptions = null
+    protected translatedOptions: Record<string, string> | null = null
 
     /**
      * @todo Remove? Always treat as true.
+     * @internal
      */
-    fetchEmptyValueAsNull = true
+    protected fetchEmptyValueAsNull = true
 
-    searchTypeList = [
+    protected searchTypeList = [
         'anyOf',
         'noneOf',
         'isEmpty',
         'isNotEmpty',
     ]
 
-    validationElementSelector = '.selectize-control'
+    protected validationElementSelector = '.selectize-control'
 
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    nativeSelect = false;
+    protected nativeSelect: boolean = false;
 
-    /**
-     * @protected
-     * @type {module:views/fields/enumeration~optionItemHandler|null}
-     */
-    optionItemHandler = null
+    protected optionItemHandler: OptionItemHandler | null = null
 
-    // noinspection JSCheckFunctionSignatures
-    /** @inheritDoc */
-    data() {
+    private styleMap: StyleMap | null = null
+
+    private originalOptionList: string[] | null = null
+
+    protected data() {
         const data = super.data();
 
         data.translatedOptions = this.translatedOptions;
@@ -186,16 +208,16 @@ class EnumFieldView extends BaseFieldView {
             }
         }
 
-        // noinspection JSValidateTypes
         return data;
     }
 
-    setup() {
+    protected setup() {
         if (!this.params.options) {
+            // @todo Revise.
             const methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
 
-            if (typeof this.model[methodName] === 'function') {
-                this.params.options = this.model[methodName].call(this.model);
+            if (typeof (this.model as any)[methodName] === 'function') {
+                this.params.options = (((this.model as any)[methodName] as any).call(this.model)) as string[];
             }
         }
 
@@ -203,18 +225,17 @@ class EnumFieldView extends BaseFieldView {
             this.optionItemHandler = this.options.optionItemHandler;
         }
 
-        this.styleMap = this.params.style || this.model.getFieldParam(this.name, 'style') || {};
+        this.styleMap = this.params.style ?? this.model.getFieldParam(this.name, 'style') ?? {};
 
         let optionsPath = this.params.optionsPath;
-        /** @type {string|null} */
-        const optionsReference = this.params.optionsReference;
+        const optionsReference = this.params.optionsReference ?? null;
 
         if (!optionsPath && optionsReference) {
             const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
 
-            if (Object.keys(this.styleMap).length === 0) {
+            if (!this.styleMap || Object.keys(this.styleMap).length === 0) {
                 this.styleMap = this.getMetadata().get(`entityDefs.${refEntityType}.fields.${refField}.style`) || {};
             }
         }
@@ -226,30 +247,33 @@ class EnumFieldView extends BaseFieldView {
         this.setupOptions();
 
         if ('translatedOptions' in this.options) {
-            this.translatedOptions = this.options.translatedOptions;
+            this.translatedOptions = this.options.translatedOptions ?? null;
         }
 
         if ('translatedOptions' in this.params) {
-            this.translatedOptions = this.params.translatedOptions;
+            this.translatedOptions = this.params.translatedOptions ?? null;
         }
 
         this.setupTranslation();
 
         if (this.translatedOptions === null) {
-            this.translatedOptions = this.getLanguage()
-                .translate(this.name, 'options', this.model.name) || {};
+            const translations = (this.getLanguage().translate(this.name, 'options', this.model.name) ?? {}) as any;
 
-            if (this.translatedOptions === this.name) {
+            if (translations === this.name) {
                 this.translatedOptions = null;
+            } else {
+                this.translatedOptions = translations;
             }
         }
 
         if (this.params.isSorted && this.translatedOptions) {
+            const translations = this.translatedOptions;
+
             this.params.options = Espo.Utils.clone(this.params.options) || [];
 
             this.params.options = this.params.options.sort((v1, v2) => {
-                return (this.translatedOptions[v1] || v1)
-                    .localeCompare(this.translatedOptions[v2] || v2);
+                return (translations[v1] || v1)
+                    .localeCompare(translations[v2] || v2);
             });
         }
 
@@ -258,9 +282,8 @@ class EnumFieldView extends BaseFieldView {
         }
     }
 
-    setupTranslation() {
+    protected setupTranslation() {
         let translation = this.params.translation;
-        /** @type {?string} */
         const optionsReference = this.params.optionsReference;
 
         if (!translation && optionsReference) {
@@ -279,9 +302,9 @@ class EnumFieldView extends BaseFieldView {
             return;
         }
 
-        const obj = this.getLanguage().translatePath(translation);
+        const obj = this.getLanguage().translatePath(translation) as Record<string, string>;
 
-        const map = {};
+        const map = {} as Record<string, any>;
 
         this.params.options.forEach(item => {
             if (typeof obj === 'object' && item in obj) {
@@ -295,7 +318,7 @@ class EnumFieldView extends BaseFieldView {
                 typeof item === 'number' &&
                 typeof obj[item] !== 'undefined'
             ) {
-                map[item.toString()] = obj[item];
+                map[(item as number).toString()] = obj[item];
 
                 return;
             }
@@ -322,24 +345,23 @@ class EnumFieldView extends BaseFieldView {
     /**
      * Set translated options.
      *
-     * @param {Record} translatedOptions
+     * @param translatedOptions Translations.
      * @since 8.4.0
      */
-    setTranslatedOptions(translatedOptions) {
+    setTranslatedOptions(translatedOptions: Record<string, string>) {
         this.translatedOptions = translatedOptions;
     }
 
     /**
      * Set an option list.
      *
-     * @param {string[]} optionList An option list.
-     * @return {Promise}
+     * @param optionList An option list.
      */
-    setOptionList(optionList) {
+    async setOptionList(optionList: string[]) {
         const previousOptions = this.params.options;
 
         if (!this.originalOptionList) {
-            this.originalOptionList = this.params.options;
+            this.originalOptionList = this.params.options ?? null
         }
 
         const newOptions = Espo.Utils.clone(optionList) || [];
@@ -361,20 +383,17 @@ class EnumFieldView extends BaseFieldView {
             triggerChange = true;
         }
 
-        return this.reRender()
-            .then(() => {
-                if (triggerChange) {
-                    this.trigger('change');
-                }
-            });
+        await this.reRender();
+
+        if (triggerChange) {
+            this.trigger('change');
+        }
     }
 
     /**
      * Reset a previously set option list.
-     *
-     * @return {Promise}
      */
-    resetOptionList() {
+    resetOptionList(): Promise<unknown> {
         if (!this.originalOptionList) {
             return Promise.resolve();
         }
@@ -396,25 +415,23 @@ class EnumFieldView extends BaseFieldView {
         return Promise.resolve();
     }
 
-    setupSearch() {
-        this.events = _.extend({
-            'change select.search-type': (e) => {
-                this.handleSearchType($(e.currentTarget).val());
-            },
-        }, this.events || {});
+    protected setupSearch() {
+        this.addHandler('change', 'select.search-type', (_e, target) => {
+            this.handleSearchType((target as HTMLSelectElement).value);
+        });
     }
 
-    handleSearchType(type) {
+    protected handleSearchType(type: string) {
         const $inputContainer = this.$el.find('div.input-container');
 
-        if (~['anyOf', 'noneOf'].indexOf(type)) {
+        if (['anyOf', 'noneOf'].includes(type)) {
             $inputContainer.removeClass('hidden');
         } else {
             $inputContainer.addClass('hidden');
         }
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         if (this.isSearchMode()) {
@@ -424,19 +441,17 @@ class EnumFieldView extends BaseFieldView {
 
             this.handleSearchType(type);
 
-            const valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
+            const valueList = this.getSearchParamsData().valueList ?? this.searchParams?.value ?? [];
 
-            this.$element.val(valueList.join(':,:'));
+            this.$element?.val(valueList.join(':,:'));
 
-            const items = [];
+            const items = [] as Record<string, any>[];
 
-            (this.params.options || []).forEach(value => {
-                let label = this.getLanguage().translateOption(value, this.name, this.scope);
+            (this.params.options ?? []).forEach(value => {
+                let label = this.getLanguage().translateOption(value, this.name, this.entityType);
 
-                if (this.translatedOptions) {
-                    if (value in this.translatedOptions) {
-                        label = this.translatedOptions[value];
-                    }
+                if (this.translatedOptions && value in this.translatedOptions) {
+                    label = this.translatedOptions[value];
                 }
 
                 if (label === '') {
@@ -449,22 +464,21 @@ class EnumFieldView extends BaseFieldView {
                 });
             });
 
-            /** @type {module:ui/multi-select~Options} */
             const multiSelectOptions = {
                 items: items,
                 delimiter: ':,:',
                 matchAnyWord: true,
             };
 
-            MultiSelect.init(this.$element, multiSelectOptions);
+            MultiSelect.init(this.$element as any, multiSelectOptions);
 
             this.$el.find('.selectize-dropdown-content').addClass('small');
             this.$el.find('select.search-type').on('change', () => this.trigger('change'));
-            this.$element.on('change', () => this.trigger('change'));
+            this.$element?.on('change', () => this.trigger('change'));
         }
 
         if ((this.isEditMode() || this.isSearchMode()) && !this.nativeSelect) {
-            Select.init(this.$element, {
+            Select.init(this.$element as any, {
                 matchAnyWord: true,
                 itemHandler: this.optionItemHandler,
             });
@@ -472,7 +486,7 @@ class EnumFieldView extends BaseFieldView {
     }
 
     focusOnInlineEdit() {
-        Select.focus(this.$element);
+        Select.focus(this.$element as any);
     }
 
     validateRequired() {
@@ -486,30 +500,32 @@ class EnumFieldView extends BaseFieldView {
                 return true;
             }
         }
+
+        return false;
     }
 
     fetch() {
-        let value = this.$element.val();
+        let value = this.$element?.val() as string | null;
 
         if (this.fetchEmptyValueAsNull && !value) {
             value = null;
         }
 
-        const data = {};
+        const data = {} as Record<string, any>;
 
         data[this.name] = value;
 
         return data;
     }
 
-    parseItemForSearch(item) {
+    protected parseItemForSearch(item: string): string {
         return item;
     }
 
     fetchSearch() {
         const type = this.fetchSearchType();
 
-        let list = this.$element.val().split(':,:');
+        let list = ((this.$element?.val() ?? '') as string).split(':,:');
 
         if (list.length === 1 && list[0] === '') {
             list = [];
@@ -598,7 +614,7 @@ class EnumFieldView extends BaseFieldView {
                     type: 'isNotNull',
                     attribute: this.name,
                 },
-            ];
+            ] as Record<string, any>[];
 
             if (!this.model.getFieldParam(this.name, 'notStorable')) {
                 value.push({
@@ -620,8 +636,8 @@ class EnumFieldView extends BaseFieldView {
         return null;
     }
 
-    getSearchType() {
-        return this.getSearchParamsData().type || 'anyOf';
+    protected getSearchType(): string {
+        return this.getSearchParamsData().type ?? 'anyOf';
     }
 }
 

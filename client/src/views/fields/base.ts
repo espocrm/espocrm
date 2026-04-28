@@ -1068,8 +1068,8 @@ export default class BaseFieldView<
     /**
      * Get a current search type.
      */
-    protected getSearchType(): string {
-        return this.getSearchParamsData().type || this.searchParams?.type;
+    protected getSearchType(): string | null {
+        return this.getSearchParamsData().type ?? this.searchParams?.type ?? null;
     }
 
     /**

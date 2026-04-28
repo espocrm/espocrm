@@ -135,7 +135,7 @@ class Language {
      *
      * @param {string} value An option value.
      * @param {string} field A field name.
-     * @param {string} [scope='Global'] A scope.
+     * @param {string|null} [scope='Global'] A scope.
      * @returns {string}
      */
     translateOption(value, field, scope) {
