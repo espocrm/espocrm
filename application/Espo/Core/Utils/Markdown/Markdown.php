@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Utils\Markdown;
 
-use Michelf\Markdown as MarkdownParser;
+use Michelf\MarkdownExtra as MarkdownParser;
 
 /**
  * @internal
