@@ -123,7 +123,7 @@ export default class BoolFieldView<
         };
     }
 
-    getSearchType() {
+    protected getSearchType(): string {
         return this.getSearchParamsData().type ?? this.searchParams?.type ?? 'isTrue';
     }
 }
