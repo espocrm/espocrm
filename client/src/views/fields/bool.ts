@@ -44,7 +44,8 @@ interface Options extends BaseOptions {}
 export default class BoolFieldView<
     S extends ViewSchema = ViewSchema,
     O extends Options = Options,
-> extends BaseFieldView<S, Params, O> {
+    P extends Params = Params,
+> extends BaseFieldView<S, O, P> {
 
     readonly type = 'bool'
 

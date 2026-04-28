@@ -80,8 +80,9 @@ type AutocompleteReturn = Promise<import('ui/autocomplete').AutocompleteItem & R
  */
 class VarcharFieldView<
     S extends ViewSchema = ViewSchema,
+    P extends Params = Params,
     O extends Options = Options,
-> extends BaseFieldView<S, Params, O> {
+> extends BaseFieldView<S, O, P> {
 
     readonly type = 'varchar'
 

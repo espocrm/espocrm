@@ -71,9 +71,10 @@ interface Options extends BaseOptions {
 class DateFieldView<
     S extends ViewSchema = ViewSchema,
     O extends Options = Options,
-> extends BaseFieldView<S, Params, O> {
+    P extends Params = Params,
+> extends BaseFieldView<S, O, P> {
 
-    readonly type = 'date'
+    readonly type: string = 'date'
 
     protected listTemplate = 'fields/date/list'
     protected listLinkTemplate = 'fields/date/list-link'
@@ -321,7 +322,7 @@ class DateFieldView<
         return this.getDateTime().toDisplayDate(date);
     }
 
-    afterRender() {
+    protected afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.mainInputElement = this.element?.querySelector(`[data-name="${this.name}"]`);
 
@@ -436,10 +437,7 @@ class DateFieldView<
         return data;
     }
 
-    /**
-     * @inheritDoc
-     */
-    fetchSearch() {
+    fetchSearch(): Record<string, any> | null  {
         const type = this.fetchSearchType();
 
         if (this.searchWithRangeTypeList.includes(type)) {
@@ -606,10 +604,9 @@ class DateFieldView<
     }
 
     /**
-     * @protected
      * @since 9.2.0
      */
-    onAfterChange() {
+    protected onAfterChange() {
         const after = this.params.after as string;
 
         const from = this.model.attributes[after] as string | undefined;

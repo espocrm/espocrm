@@ -30,61 +30,70 @@
 
 import DateFieldView from 'views/fields/date';
 import moment from 'moment';
+import {Options as BaseOptions, ViewSchema} from 'views/fields/base';
+import JQuery from 'jquery'
+
+const $ = JQuery;
+
+interface Params {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Use numeric format.
+     */
+    useNumericFormat?: boolean;
+    /**
+     * Display seconds.
+     */
+    hasSeconds?: boolean;
+    /**
+     * A minutes step.
+     */
+    minuteStep?: number;
+    /**
+     * Validate to be after another date field.
+     */
+    after?: string;
+    /**
+     * Validate to be before another date field.
+     */
+    before?: string;
+    /**
+     * Allow an equal date for 'after' validation.
+     */
+    afterOrEqual?: boolean;
+}
+
+interface Options extends BaseOptions {
+    /**
+     * A label text of other field. Used in before/after validations.
+     */
+    otherFieldLabelText?: string;
+}
 
 /**
  * A date-time field.
- *
- * @extends DateFieldView<module:views/fields/datetime~params>
  */
-class DatetimeFieldView extends DateFieldView {
+class DatetimeFieldView<
+    S extends ViewSchema = ViewSchema,
+    O extends Options = Options,
+    P extends Params = Params,
+> extends DateFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/datetime~options
-     * @property {
-     *     module:views/fields/varchar~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     * @property {string} [otherFieldLabelText] A label text of other field. Used in before/after validations.
-     */
+    readonly type: string = 'datetime'
 
-    /**
-     * @typedef {Object} module:views/fields/datetime~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [useNumericFormat] Use numeric format.
-     * @property {boolean} [hasSeconds] Display seconds.
-     * @property {number} [minuteStep] A minute step.
-     * @property {string} [after] Validate to be after another date field.
-     * @property {string} [before] Validate to be before another date field.
-     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
-     */
+    protected editTemplate = 'fields/datetime/edit'
 
-    /**
-     * @param {
-     *     module:views/fields/datetime~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'datetime'
-
-    editTemplate = 'fields/datetime/edit'
-
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = [
+    protected validations = [
         'required',
         'datetime',
         'after',
         'before',
     ]
 
-    searchTypeList = [
+    protected searchTypeList = [
         'lastSevenDays',
         'ever',
         'isEmpty',
@@ -108,7 +117,7 @@ class DatetimeFieldView extends DateFieldView {
         'between',
     ]
 
-    timeFormatMap = {
+    readonly timeFormatMap: Record<string, string> = {
         'HH:mm': 'H:i',
         'hh:mm A': 'h:i A',
         'hh:mm a': 'h:i a',
@@ -116,7 +125,15 @@ class DatetimeFieldView extends DateFieldView {
         'hh:mma': 'h:ia',
     }
 
-    data() {
+    private $date: JQuery | null = null
+    private $time: JQuery | null = null
+
+    /**
+     * A none option value,
+     */
+    protected noneOption: string | null = null
+
+    protected data() {
         const data = super.data();
 
         data.date = data.time = '';
@@ -133,7 +150,7 @@ class DatetimeFieldView extends DateFieldView {
         return data;
     }
 
-    getDateStringValue() {
+    protected getDateStringValue(): string | -1 | null {
         if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
             return -1;
         }
@@ -169,6 +186,7 @@ class DatetimeFieldView extends DateFieldView {
             }
 
             const d = this.getDateTime().toMoment(value);
+            // @ts-ignore
             const now = moment().tz(this.getDateTime().timeZone || 'UTC');
             const dt = now.clone().startOf('day');
 
@@ -202,11 +220,12 @@ class DatetimeFieldView extends DateFieldView {
         return this.getDateTime().toDisplay(value);
     }
 
-    initTimepicker() {
+    protected initTimepicker() {
         const $time = this.$time;
 
         const modalBodyElement = this.element.closest('.modal-body');
 
+        // @ts-ignore
         $time.timepicker({
             step: this.params.minuteStep || 30,
             scrollDefaultNow: true,
@@ -215,46 +234,48 @@ class DatetimeFieldView extends DateFieldView {
         });
 
         $time
-            .parent()
+            ?.parent()
             .find('button.time-picker-btn')
             .on('click', () => {
+                // @ts-ignore
                 $time.timepicker('show');
             });
     }
 
-    setDefaultTime() {
+    protected setDefaultTime() {
         const dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
 
         const pair = this.splitDatetime(dtString);
 
         if (pair.length === 2) {
-            this.$time.val(pair[1]);
+            this.$time?.val(pair[1]);
         }
     }
 
-    splitDatetime(value) {
+    protected splitDatetime(value: string): [string, string] {
         const m = moment(value, this.getDateTime().getDateTimeFormat());
 
         const dateValue = m.format(this.getDateTime().getDateFormat());
-        const timeValue = value.substr(dateValue.length + 1);
+        const timeValue = value.substring(dateValue.length + 1);
 
         return [dateValue, timeValue];
     }
 
-    setup() {
+    protected setup() {
         super.setup();
 
         this.on('remove', () => this.destroyTimepicker());
         this.on('mode-changed', () => this.destroyTimepicker());
     }
 
-    destroyTimepicker() {
+    protected destroyTimepicker() {
         if (this.$time && this.$time[0]) {
+            // @ts-ignore
             this.$time.timepicker('remove');
         }
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         if (this.mode !== this.MODE_EDIT) {
@@ -266,8 +287,8 @@ class DatetimeFieldView extends DateFieldView {
 
         this.initTimepicker();
 
-        this.$element.on('change.datetime', () => {
-            if (this.$element.val() && !$time.val()) {
+        this.$element?.on('change.datetime', () => {
+            if (this.$element?.val() && !$time.val()) {
                 this.setDefaultTime();
                 this.trigger('change');
             }
@@ -285,7 +306,7 @@ class DatetimeFieldView extends DateFieldView {
                     return;
                 }
 
-                if (this.noneOption && $time.val() === '' && this.$date.val() !== '') {
+                if (this.noneOption && $time.val() === '' && this.$date?.val() !== '') {
                     $time.val(this.noneOption);
 
                     return;
@@ -308,11 +329,7 @@ class DatetimeFieldView extends DateFieldView {
         });
     }
 
-    /**
-     * @param {string} string
-     * @return {string|-1|null}
-     */
-    parse(string) {
+    protected parse(string: string): string| -1| null {
         if (!string) {
             return null;
         }
@@ -321,10 +338,10 @@ class DatetimeFieldView extends DateFieldView {
     }
 
     fetch() {
-        const data = {};
+        const data = {} as Record<string, any>;
 
-        const date = this.$date.val();
-        const time = this.$time.val();
+        const date = this.$date?.val();
+        const time = this.$time?.val();
 
         let value = null;
 
@@ -347,10 +364,11 @@ class DatetimeFieldView extends DateFieldView {
 
             return true;
         }
+
+        return false;
     }
 
-    /** @inheritDoc */
-    fetchSearch() {
+    fetchSearch(): Record<string, any> | null  {
         const data = super.fetchSearch();
 
         if (data) {
@@ -365,7 +383,7 @@ class DatetimeFieldView extends DateFieldView {
      * Not implemented. For datetimeOptions too.
      * When implementing, keep in mind the duration field.
      */
-    onAfterChange() {}
+    protected onAfterChange() {}
 }
 
 export default DatetimeFieldView;

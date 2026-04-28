@@ -105,8 +105,8 @@ type Mode = 'list' | 'listLink' | 'detail' | 'edit' | 'search';
  */
 export default class BaseFieldView<
     S extends ViewSchema = ViewSchema,
-    P extends Params = Params,
     O extends Options = Options,
+    P extends Params = Params,
 > extends View<{model: S['model']}> {
 
     options: O & {params: P}
