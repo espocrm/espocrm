@@ -531,7 +531,7 @@ class VarcharFieldView<
         }
 
         MultiSelect.init(this.searchMultiSelectInputElement, {
-            items: (this.params.options || []).map(it => ({value: it, text: it})),
+            items: (this.params.options || []).map((it: string) => ({value: it, text: it})),
             allowCustomOptions: true,
             create: (input: any) => {
                 return {
