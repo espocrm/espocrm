@@ -652,15 +652,13 @@
             "type": "hasChildren",
             "entity": "Meeting",
             "foreign": "parent",
-            "readOnly": true,
-            "customizationDisabled": true
+            "readOnly": true
         },
         "callsChildren": {
             "type": "hasChildren",
             "entity": "Call",
             "foreign": "parent",
-            "readOnly": true,
-            "customizationDisabled": true
+            "readOnly": true
         },
         "tasks": {
             "type": "hasChildren",
