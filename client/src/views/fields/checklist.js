@@ -57,6 +57,11 @@ class ChecklistFieldView extends ArrayFieldView {
         this.isInversed = this.params.isInversed || this.options.isInversed || this.isInversed;
     }
 
+    /**
+     * @protected
+     */
+    setupFieldEvents() {}
+
     afterRender() {
         if (this.isSearchMode()) {
             this.renderSearch();

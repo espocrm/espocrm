@@ -39,8 +39,11 @@ type OptionItemHandler = (item: {value: string}) => {
     color?: string | null,
 };
 
-type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'primary'>;
+type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'primary' | 'default'>;
 
+/**
+ * Parameters.
+ */
 export interface Params extends BaseParams {
     /**
      * Select options.
@@ -340,7 +343,7 @@ class EnumFieldView<
     /**
      * Set up options.
      */
-    setupOptions() {}
+    protected setupOptions() {}
 
     /**
      * Set translated options.

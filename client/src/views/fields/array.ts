@@ -28,124 +28,183 @@
 
 /** @module views/fields/array */
 
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
 import ModalView from 'views/modal';
 import Model from 'model';
 import EditForModalRecordView from 'views/record/edit-for-modal';
 import VarcharFieldView from 'views/fields/varchar';
+import _ from 'underscore';
+import JQuery from 'jquery'
+
+const $ = JQuery;
+
+type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'primary' | 'default'>;
+
+/**
+ * Parameters.
+ */
+export interface Params extends BaseParams {
+    /**
+     *  A translation string. E.g. `Global.scopeNames`.
+     */
+    translation?: string;
+    /**
+     * Select options.
+     */
+    options?: string[];
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Display as list (line breaks).
+     */
+    displayAsList?: boolean;
+    /**
+     * Display as label.
+     */
+    displayAsLabel?: boolean;
+    /**
+     * A label type.
+     */
+    labelType?: string | 'state';
+    /**
+     * No empty string.
+     */
+    noEmptyString?: boolean;
+    /**
+     * A reference to options. E.g. `Account.industry`.
+     */
+    optionsReference?: string;
+    /**
+     * An options metadata path.
+     */
+    optionsPath?: string;
+    /**
+     * To sort options.
+     */
+    isSorted?: boolean;
+    /**
+     * Option translations.
+     */
+    translatedOptions?: Record<string, string>;
+    /**
+     * A style map.
+     */
+    style?: StyleMap;
+    /**
+     *  A max number of items.
+     */
+    maxCount?: number;
+    /**
+     * Allow custom options.
+     */
+    allowCustomOptions?: boolean;
+    /**
+     * A regular expression pattern.
+     */
+    pattern?: string;
+    /**
+     * Disable the ability to add or remove items. Reordering is allowed.
+     */
+    keepItems?: boolean;
+    /**
+     * Max item length. If not specified, 100 is used.
+     * @since 9.1.0
+     */
+    maxItemLength?: number;
+    /**
+     * Items are editable.
+     * @since 9.2.0
+     */
+    itemsEditable?: boolean;
+}
+
+/**
+ * Options.
+ */
+export interface Options extends BaseOptions {
+    /**
+     * Option translations.
+     */
+    translatedOptions?: Record<string, string>;
+    /**
+     * @internal
+     */
+    customOptionList?: string[];
+}
 
 /**
  * An array field.
- *
- * @extends BaseFieldView<module:views/fields/array~params>
  */
-class ArrayFieldView extends BaseFieldView {
+class ArrayFieldView<
+    S extends ViewSchema = ViewSchema,
+    P extends Params = Params,
+    O extends Options = Options,
+> extends BaseFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/array~options
-     * @property {
-     *     module:views/fields/array~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type = 'array'
 
-    /**
-     * @typedef {Object} module:views/fields/array~params
-     * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
-     * @property {string[]} [options] Select options.
-     * @property {boolean} [required] Required.
-     * @property {boolean} [displayAsList] Display as list (line breaks).
-     * @property {boolean} [displayAsLabel] Display as label.
-     * @property {string|'state'} [labelType] A label type.
-     * @property {boolean} [noEmptyString] No empty string.
-     * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
-     * @property {string} [optionsPath] An options metadata path.
-     * @property {boolean} [isSorted] To sort options.
-     * @property {Object.<string, string>} [translatedOptions] Option translations.
-     * @property {Object.<string, 'warning'|'danger'|'success'|'info'|'primary'>} [style] A style map.
-     * @property {number} [maxCount] A max number of items.
-     * @property {boolean} [allowCustomOptions] Allow custom options.
-     * @property {string} [pattern] A regular expression pattern.
-     * @property {boolean} [keepItems] Disable the ability to add or remove items. Reordering is allowed.
-     * @property {number} [maxItemLength] Max item length. If not specified, 100 is used. As of v9.1.
-     * @property {boolean} [itemsEditable] Items are editable. As of v9.2.
-     */
+    protected listTemplate = 'fields/array/list'
+    protected listLinkTemplate = 'fields/array/list-link'
+    protected detailTemplate = 'fields/array/detail'
+    protected editTemplate = 'fields/array/edit'
+    protected searchTemplate = 'fields/array/search'
 
-    /**
-     * @param {
-     *     module:views/fields/array~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    protected searchTypeList = [
+        'anyOf',
+        'noneOf',
+        'allOf',
+        'isEmpty',
+        'isNotEmpty',
+    ]
 
-    type = 'array'
+    protected maxItemLength: number | null = null
 
-    listTemplate = 'fields/array/list'
-    listLinkTemplate = 'fields/array/list-link'
-    detailTemplate = 'fields/array/detail'
-    editTemplate = 'fields/array/edit'
-    searchTemplate = 'fields/array/search'
+    protected validations = ['required', 'maxCount']
 
-    searchTypeList = ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty']
-    maxItemLength = null
-
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = ['required', 'maxCount']
-
-    MAX_ITEM_LENGTH = 100
+    protected readonly MAX_ITEM_LENGTH = 100
 
     /**
      * An add-item model view.
-     *
-     * @protected
-     * @type {string}
      */
-    addItemModalView = 'views/modals/array-field-add'
-    /**
-     * @protected
-     * @type {string}
-     */
-    itemDelimiter = ':,:'
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    matchAnyWord = true
-    /**
-     * @protected
-     * @type {Object|null}
-     */
-    translatedOptions = null
+    protected addItemModalView: string = 'views/modals/array-field-add'
+
+    protected itemDelimiter: string = ':,:'
+
+    protected matchAnyWord: boolean = true
+
+    protected translatedOptions: Record<string, string> | null = null
 
     /**
-     * @protected
-     * @type {boolean}
      * @since 9.2.0
      */
-    noDragHandle = false
+    protected noDragHandle: boolean = false
 
-    /**
-     * @protected
-     * @type {string[]}
-     */
-    selected
+    protected selected: string[]
 
+    private allowCustomOptions: boolean
 
-    // noinspection JSCheckFunctionSignatures
-    /** @inheritDoc */
-    data() {
-        const itemHtmlList = [];
+    private noEmptyString: boolean
 
-        (this.selected || []).forEach(value => {
+    protected styleMap: StyleMap
+
+    protected displayAsLabel: boolean = false
+
+    protected displayAsList: boolean = false
+
+    private originalOptionList: string[] | null = null
+
+    private $select: JQuery
+    private $addButton: JQuery;
+    private $list: JQuery;
+
+    protected data() {
+        const itemHtmlList: string[] = [];
+
+        (this.selected ?? []).forEach(value => {
             itemHtmlList.push(this.getItemHtml(value || ''));
         });
 
@@ -164,29 +223,12 @@ class ArrayFieldView extends BaseFieldView {
         };
     }
 
-    /** @inheritDoc */
-    events = {
-        /** @this ArrayFieldView */
-        'click [data-action="removeValue"]': function (e) {
-            const value = $(e.currentTarget).attr('data-value').toString();
-
-            this.removeValue(value);
-            this.focusOnElement();
-        },
-        /** @this ArrayFieldView */
-        'click [data-action="showAddModal"]': function () {
-            this.actionAddItem();
-        },
-    }
-
-    setup() {
+    protected setup() {
         super.setup();
 
-        this.addActionHandler('editItem', (e, target) => {
-            this.actionEditItem(target.dataset.value);
-        });
+        this.setupFieldEvents();
 
-        this.noEmptyString = this.params.noEmptyString;
+        this.noEmptyString = this.params.noEmptyString ?? false;
 
         if (this.params.maxItemLength != null) {
             this.maxItemLength = this.params.maxItemLength;
@@ -204,10 +246,10 @@ class ArrayFieldView extends BaseFieldView {
             this.selected = [];
         }
 
-        this.styleMap = this.params.style || {};
+        this.styleMap = this.params.style ?? {};
 
         let optionsPath = this.params.optionsPath;
-        /** @type {?string} */
+
         const optionsReference = this.params.optionsReference;
 
         if (!optionsPath && optionsReference) {
@@ -227,11 +269,11 @@ class ArrayFieldView extends BaseFieldView {
         this.setupOptions();
 
         if ('translatedOptions' in this.options) {
-            this.translatedOptions = this.options.translatedOptions;
+            this.translatedOptions = this.options.translatedOptions ?? null;
         }
 
         if ('translatedOptions' in this.params) {
-            this.translatedOptions = this.params.translatedOptions;
+            this.translatedOptions = this.params.translatedOptions ?? null;
         }
 
         if (!this.translatedOptions) {
@@ -241,10 +283,12 @@ class ArrayFieldView extends BaseFieldView {
         this.displayAsLabel = this.params.displayAsLabel || this.displayAsLabel;
         this.displayAsList = this.params.displayAsList || this.displayAsList;
 
-        if (this.params.isSorted && this.translatedOptions) {
+        const translatedOptions = this.translatedOptions;
+
+        if (this.params.isSorted && translatedOptions) {
             this.params.options = Espo.Utils.clone(this.params.options);
-            this.params.options = this.params.options.sort((v1, v2) => {
-                 return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
+            this.params.options = this.params.options?.sort((v1, v2) => {
+                 return (translatedOptions[v1] || v1).localeCompare(translatedOptions[v2] || v2);
             });
         }
 
@@ -265,7 +309,27 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
-    focusOnElement() {
+    /**
+     * @internal
+     */
+    protected setupFieldEvents() {
+        this.addActionHandler('removeValue', (_e, target) => {
+            const value = target.dataset.value as string;
+
+            this.removeValue(value);
+            this.focusOnElement();
+        });
+
+        this.addActionHandler('showAddModal', () => {
+            this.actionAddItem();
+        });
+
+        this.addActionHandler('editItem', (_e, target) => {
+            this.actionEditItem(target.dataset.value as string);
+        });
+    }
+
+    protected focusOnElement() {
         const $button = this.$el.find('button[data-action="showAddModal"]');
 
         if ($button[0]) {
@@ -283,27 +347,27 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
-    setupSearch() {
-        this.events['change select.search-type'] = e => {
-            this.handleSearchType($(e.currentTarget).val());
-        };
+    protected setupSearch() {
+        this.addHandler('change', 'select.search-type', (_e, target) => {
+            this.handleSearchType((target as HTMLSelectElement).value);
+        });
     }
 
-    handleSearchType(type) {
+    protected handleSearchType(type: string) {
         const $inputContainer = this.$el.find('div.input-container');
 
-        if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
+        if (['anyOf', 'noneOf', 'allOf'].includes(type)) {
             $inputContainer.removeClass('hidden');
         } else {
             $inputContainer.addClass('hidden');
         }
     }
 
-    setupTranslation() {
+    protected setupTranslation() {
         let obj = {};
 
         let translation = this.params.translation;
-        /** @type {?string} */
+
         const optionsReference = this.params.optionsReference;
 
         if (!translation && optionsReference) {
@@ -322,11 +386,11 @@ class ArrayFieldView extends BaseFieldView {
             this.getLanguage().translatePath(translation) :
             this.translate(this.name, 'options', this.model.name);
 
-        const map = {};
+        const map = {} as Record<string, string>;
 
         this.params.options.forEach(o => {
             if (typeof obj === 'object' && o in obj) {
-                map[o] = obj[o];
+                map[o] = (obj as any)[o] as string;
 
                 return;
             }
@@ -337,13 +401,13 @@ class ArrayFieldView extends BaseFieldView {
         this.translatedOptions = map;
     }
 
-    setupOptions() {}
+    protected setupOptions() {}
 
-    setOptionList(optionList, silent) {
+    setOptionList(optionList: string[], silent: boolean) {
         const previousOptions = this.params.options;
 
         if (!this.originalOptionList) {
-            this.originalOptionList = this.params.options;
+            this.originalOptionList = this.params.options ?? [];
         }
 
         this.params.options = Espo.Utils.clone(optionList);
@@ -351,10 +415,10 @@ class ArrayFieldView extends BaseFieldView {
         const isChanged = !_(previousOptions).isEqual(optionList);
 
         if (this.isEditMode() && !silent && isChanged) {
-            const selectedOptionList = [];
+            const selectedOptionList = [] as string[];
 
             this.selected.forEach(option => {
-                if (~optionList.indexOf(option)) {
+                if (optionList.includes(option)) {
                     selectedOptionList.push(option);
                 }
             });
@@ -374,7 +438,7 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
-    setTranslatedOptions(translatedOptions) {
+    setTranslatedOptions(translatedOptions: Record<string, string>) {
         this.translatedOptions = translatedOptions;
     }
 
@@ -398,10 +462,7 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
-    /**
-     * @private
-     */
-    controlAddItemButton() {
+    private controlAddItemButton() {
         const $select = this.$select;
 
         if (!$select) {
@@ -412,17 +473,16 @@ class ArrayFieldView extends BaseFieldView {
             return;
         }
 
-        const value = $select.val().toString().trim();
+        const value = $select.val()?.toString().trim();
 
         if (!value && this.params.noEmptyString) {
             this.$addButton.addClass('disabled').attr('disabled', 'disabled');
-        }
-        else {
+        } else {
             this.$addButton.removeClass('disabled').removeAttr('disabled');
         }
     }
 
-    afterRender() {
+    protected afterRender() {
         if (this.isEditMode()) {
             this.$list = this.$el.find('.list-group');
 
@@ -441,7 +501,7 @@ class ArrayFieldView extends BaseFieldView {
 
                 $select.on('input', () => this.controlAddItemButton());
 
-                $select.on('keydown', e => {
+                $select.on('keydown', (e: any) => {
                     const key = Espo.Utils.getKeyFromKeyEvent(e);
 
                     if (key === 'Enter') {
@@ -454,6 +514,7 @@ class ArrayFieldView extends BaseFieldView {
                 this.controlAddItemButton();
             }
 
+            // @ts-ignore
             this.$list.sortable({
                 stop: () => {
                     this.fetchFromDom();
@@ -471,11 +532,7 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
-    /**
-     * @protected
-     * @param {string} value
-     */
-    addValueFromUi(value) {
+    protected addValueFromUi(value: string) {
         value = value.trim();
 
         if (this.noEmptyString && value === '') {
@@ -501,17 +558,17 @@ class ArrayFieldView extends BaseFieldView {
         this.controlAddItemButton();
     }
 
-    renderSearch() {
+    protected renderSearch() {
         this.$element = this.$el.find('.main-element');
 
-        const valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
+        const valueList: string[] = this.getSearchParamsData().valueList ?? this.searchParams?.valueFront ?? [];
 
-        this.$element.val(valueList.join(this.itemDelimiter));
+        this.$element?.val(valueList.join(this.itemDelimiter));
 
-        const items = [];
+        const items = [] as Record<string, any>[];
 
-        (this.params.options || []).forEach(value => {
-            let label = this.getLanguage().translateOption(value, this.name, this.scope);
+        (this.params.options ?? []).forEach(value => {
+            let label = this.getLanguage().translateOption(value, this.name, this.entityType);
 
             if (this.translatedOptions) {
                 if (value in this.translatedOptions) {
@@ -530,8 +587,10 @@ class ArrayFieldView extends BaseFieldView {
             });
         });
 
+        const options = this.params.options ?? [] as string[];
+
         valueList
-            .filter(item => !(this.params.options || []).includes(item))
+            .filter(item => !options.includes(item))
             .forEach(item => {
                 items.push({
                     value: item,
@@ -539,13 +598,12 @@ class ArrayFieldView extends BaseFieldView {
                 });
             });
 
-        /** @type {module:ui/multi-select~Options} */
         const multiSelectOptions = {
             items: items,
             delimiter: this.itemDelimiter,
             matchAnyWord: this.matchAnyWord,
             allowCustomOptions: this.allowCustomOptions,
-            create: input => {
+            create: (input: string) => {
                 return {
                     value: input,
                     text: input,
@@ -553,7 +611,7 @@ class ArrayFieldView extends BaseFieldView {
             },
         };
 
-        MultiSelect.init(this.$element, multiSelectOptions);
+        MultiSelect.init(this.$element as any, multiSelectOptions);
 
         this.$el.find('.selectize-dropdown-content').addClass('small');
 
@@ -565,19 +623,16 @@ class ArrayFieldView extends BaseFieldView {
             this.trigger('change');
         });
 
-        this.$element.on('change', () => {
+        this.$element?.on('change', () => {
             this.trigger('change');
         });
     }
 
-    /**
-     * @protected
-     */
-    fetchFromDom() {
-        const selected = [];
+    protected fetchFromDom() {
+        const selected = [] as string[];
 
-        this.$el.find('.list-group .list-group-item').each((i, el) => {
-            const value = $(el).attr('data-value').toString();
+        this.$el.find('.list-group .list-group-item').each((_i: number, el: HTMLElement) => {
+            const value = ($(el)?.attr('data-value') as any).toString();
 
             selected.push(value);
         });
@@ -588,7 +643,6 @@ class ArrayFieldView extends BaseFieldView {
     getValueForDisplay() {
         // Do not use the `html` method to avoid XSS.
 
-        /** @var {string[]} */
         const list = this.selected.map(item => {
             let label = null;
 
@@ -618,20 +672,19 @@ class ArrayFieldView extends BaseFieldView {
                 return $('<span>')
                     .addClass(className)
                     .text(label)
-                    .get(0).outerHTML;
-
+                    .get(0)?.outerHTML;
             }
 
             if (style && style !== 'default') {
                 return $('<span>')
                     .addClass('text-' + style)
                     .text(label)
-                    .get(0).outerHTML;
+                    .get(0)?.outerHTML;
             }
 
             return $('<span>')
                 .text(label)
-                .get(0).outerHTML;
+                .get(0)?.outerHTML;
         });
 
         if (this.displayAsList) {
@@ -649,8 +702,8 @@ class ArrayFieldView extends BaseFieldView {
                 .map(item =>
                     $('<div>')
                         .addClass(itemClassName)
-                        .html(item)
-                        .get(0).outerHTML
+                        .html(item as string)
+                        .get(0)?.outerHTML
                 )
                 .join('');
         }
@@ -662,12 +715,7 @@ class ArrayFieldView extends BaseFieldView {
         return list.join(', ');
     }
 
-    /**
-     * @protected
-     * @param {string} value
-     * @return {string}
-     */
-    getItemHtml(value) {
+    protected getItemHtml(value: string): string {
         // Do not use the `html` method to avoid XSS.
 
         if (this.translatedOptions !== null) {
@@ -770,10 +818,7 @@ class ArrayFieldView extends BaseFieldView {
         return div.outerHTML;
     }
 
-    /**
-     * @param {string} value
-     */
-    addValue(value) {
+    protected addValue(value: string) {
         if (this.selected.indexOf(value) === -1) {
             const html = this.getItemHtml(value);
 
@@ -783,10 +828,7 @@ class ArrayFieldView extends BaseFieldView {
         }
     }
 
-    /**
-     * @param {string} value
-     */
-    removeValue(value) {
+    protected removeValue(value: string) {
         const valueInternal = CSS.escape(value);
 
         this.$list.children('[data-value="' + valueInternal + '"]').remove();
@@ -798,14 +840,16 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     fetch() {
-        const data = {};
+        const data = {} as Record<string, any>;
 
         let list = Espo.Utils.clone(this.selected || []);
 
-        if (this.params.isSorted && this.translatedOptions) {
+        const translations = this.translatedOptions;
+
+        if (this.params.isSorted && translations) {
             list = list.sort((v1, v2) => {
-                 return (this.translatedOptions[v1] || v1)
-                     .localeCompare(this.translatedOptions[v2] || v2);
+                 return (translations[v1] || v1)
+                     .localeCompare(translations[v2] || v2);
             });
         }
 
@@ -814,13 +858,13 @@ class ArrayFieldView extends BaseFieldView {
         return data;
     }
 
-    fetchSearch() {
+    fetchSearch(): Record<string, any> | null {
         const type = this.$el.find('select.search-type').val() || 'anyOf';
 
-        let valueList;
+        let valueList: string[] = [];
 
-        if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
-            valueList = this.$element.val().split(this.itemDelimiter);
+        if (['anyOf', 'noneOf', 'allOf'].includes(type)) {
+            valueList = (this.$element?.val() as string).split(this.itemDelimiter);
 
             if (valueList.length === 1 && valueList[0] === '') {
                 valueList = [];
@@ -867,7 +911,7 @@ class ArrayFieldView extends BaseFieldView {
                     type: 'anyOf',
                     valueList: valueList,
                 },
-            };
+            } as any;
 
             if (!valueList.length) {
                 data.value = null;
@@ -895,7 +939,7 @@ class ArrayFieldView extends BaseFieldView {
                     type: 'allOf',
                     valueList: valueList,
                 },
-            };
+            } as any;
 
             if (!valueList.length) {
                 data.value = null;
@@ -966,17 +1010,15 @@ class ArrayFieldView extends BaseFieldView {
         return this.getSearchParamsData().type || 'anyOf';
     }
 
-    /**
-     * @return {{
-     *    translatedOptions: Object.<string, *>|null,
-     *    options: string[],
-     * } | Object.<string, *>}
-     */
-    getAddItemModalOptions() {
-        const options = [];
+    protected getAddItemModalOptions(): {
+        translatedOptions: Record<string, any> | null,
+        options: string[],
+    } | Record<string, any> {
 
-        this.params.options.forEach(item => {
-            if (!~this.selected.indexOf(item)) {
+        const options: string[] = [];
+
+        this.params.options?.forEach(item => {
+            if (!this.selected.includes(item)) {
                 options.push(item);
             }
         });
@@ -987,36 +1029,31 @@ class ArrayFieldView extends BaseFieldView {
         };
     }
 
-    /**
-     * @protected
-     * @return {Promise<import('views/modals/array-field-add').default>}
-     */
-    actionAddItem() {
-        return this.createView('dialog', this.addItemModalView, this.getAddItemModalOptions(), view => {
-            view.render();
+    protected async actionAddItem(): Promise<import('views/modals/array-field-add').default> {
+        const view = await this.createView('dialog', this.addItemModalView, this.getAddItemModalOptions()) as
+            import('views/modals/array-field-add').default;
 
-            view.once('add', item => {
-                this.addValue(item);
-                view.close();
-            });
+        view.render().then(() => {});
 
-            view.once('add-mass', items => {
-                items.forEach(item => this.addValue(item));
-                view.close();
-            });
+        view.once('add', (item: string) => {
+            this.addValue(item);
+            view.close();
         });
+
+        view.once('add-mass', (items: string[]) => {
+            items.forEach(item => this.addValue(item));
+            view.close();
+        });
+
+        return view;
     }
 
-    /**
-     * @protected
-     * @param value
-     */
-    async actionEditItem(value) {
+    protected async actionEditItem(value: string) {
         const view = new EditItemModalView({
             value: value,
             required: this.noEmptyString,
             maxLength: this.maxItemLength,
-            onApply: async data => {
+            onApply: async (data: {value: string}) => {
                 const index = this.selected.findIndex(it => it === value);
 
                 if (index < 0) {
@@ -1038,11 +1075,7 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    /**
-     * @protected
-     * @return {boolean}
-     */
-    validateNoInputValue() {
+    protected validateNoInputValue(): boolean {
         if (!this.element) {
             return false;
         }
@@ -1067,6 +1100,13 @@ class ArrayFieldView extends BaseFieldView {
 
 export default ArrayFieldView;
 
+interface EditModalOptions {
+    value: string;
+    maxLength: number | null;
+    required: boolean;
+    onApply: (item: {value: string}) => void;
+}
+
 class EditItemModalView extends ModalView {
 
     // language=Handlebars
@@ -1074,28 +1114,17 @@ class EditItemModalView extends ModalView {
         <div class="record no-side-margin">{{{record}}}</div>
     `
 
-    /**
-     * @private
-     * @type {EditForModalRecordView}
-     */
-    recordView
+    private recordView: EditForModalRecordView
 
-    /**
-     *
-     * @param {{
-     *    value: string,
-     *    maxLength: number,
-     *    required: boolean,
-     *    onApply: function({value: string}),
-     * }} options
-     */
-    constructor(options) {
+    options: EditModalOptions
+
+    model: Model
+
+    constructor(options: EditModalOptions) {
         super(options);
-
-        this.options = options;
     }
 
-    setup() {
+    protected setup() {
         this.buttonList = [
             {
                 name: 'apply',
@@ -1146,10 +1175,7 @@ class EditItemModalView extends ModalView {
         this.assignView('record', this.recordView);
     }
 
-    /**
-     * @private
-     */
-    actionApply() {
+    private actionApply() {
         const data = this.recordView.processFetch();
 
         if (!data) {

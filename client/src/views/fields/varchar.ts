@@ -39,7 +39,7 @@ export interface Params extends BaseParams {
     /**
      * Max length.
      */
-    maxLength?: number;
+    maxLength?: number | null;
     /**
      * Autocomplete options.
      */

@@ -54,7 +54,7 @@ class RegExpPatternHelper {
      * @param {string} pattern
      * @param {string|null} value
      * @param {string} [field]
-     * @param {string} [entityType]
+     * @param {string | null} [entityType]
      * @return {{message: string}|null}
      */
     validate(pattern, value, field, entityType) {

@@ -91,8 +91,6 @@ class MultiEnumFieldView extends ArrayFieldView {
 
     validationElementSelector = '.selectize-control'
 
-    events = {}
-
     // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
@@ -138,6 +136,11 @@ class MultiEnumFieldView extends ArrayFieldView {
 
         return label;
     }
+
+    /**
+     * @protected
+     */
+    setupFieldEvents() {}
 
     afterRender() {
         if (this.isSearchMode()) {
