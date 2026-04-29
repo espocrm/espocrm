@@ -51,6 +51,7 @@ type ActionHandlerCallback = (event: MouseEvent, element: HTMLElement) => void;
 interface ViewSchema {
     model?: Model;
     collection?: Collection;
+    options?: Record<string, any>;
 }
 
 /**
@@ -71,10 +72,15 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     collection: S['collection']
 
     /**
+     * Options.
+     */
+    options: Record<string, any> & S['options']
+
+    /**
      * @param options Options.
      */
     constructor(
-        options: Record<string, any> & {
+        options: Record<string, any> & S['options'] & {
             model?: S['model'],
             collection?: S['collection'],
         } = {}
