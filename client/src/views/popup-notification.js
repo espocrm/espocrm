@@ -158,18 +158,9 @@ class PopupNotificationView extends View {
             return;
         }
 
-        const html =
-            '<audio autoplay="autoplay">' +
-            '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
-            '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
-            '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath + '.mp3" />' +
-            '</audio>';
-
-        const $audio = $(html);
-
-        $audio.get(0).volume = 0.3;
-        // noinspection JSUnresolvedReference
-        $audio.get(0).play();
+        const audio = new Audio(this.soundPath + '.mp3');
+        audio.volume = 0.3;
+        audio.play().catch(() => {});
     }
 
     /**

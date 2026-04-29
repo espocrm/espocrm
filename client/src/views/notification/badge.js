@@ -244,30 +244,9 @@ class NotificationBadgeView extends View {
             return;
         }
 
-        const audioElement =
-            /** @type {HTMLAudioElement} */$('<audio>')
-                .attr('autoplay', 'autoplay')
-                .append(
-                    $('<source>')
-                        .attr('src', this.soundPath + '.mp3')
-                        .attr('type', 'audio/mpeg')
-                )
-                .append(
-                    $('<source>')
-                        .attr('src', this.soundPath + '.ogg')
-                        .attr('type', 'audio/ogg')
-                )
-                .append(
-                    $('<embed>')
-                        .attr('src', this.soundPath + '.mp3')
-                        .attr('hidden', 'true')
-                        .attr('autostart', 'true')
-                        .attr('false', 'false')
-                )
-                .get(0);
-
-        audioElement.volume = 0.3;
-        audioElement.play();
+        const audio = new Audio(this.soundPath + '.mp3');
+        audio.volume = 0.3;
+        audio.play().catch(() => {});
     }
 
     /**
