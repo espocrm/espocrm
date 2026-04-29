@@ -32,7 +32,7 @@ import DatetimeFieldView from 'views/fields/datetime';
 import moment from 'moment';
 import {BaseOptions as BaseOptions, BaseViewSchema} from 'views/fields/base';
 
-interface Params {
+export interface DatetimeOptionalParams {
     /**
      * Required.
      */
@@ -59,7 +59,7 @@ interface Params {
     before?: string;
 }
 
-interface Options extends BaseOptions {
+export interface DatetimeOptionalOptions extends BaseOptions {
     /**
      * A label text of other field. Used in before/after validations.
      */
@@ -71,8 +71,8 @@ interface Options extends BaseOptions {
  */
 class DatetimeOptionalFieldView<
     S extends BaseViewSchema = BaseViewSchema,
-    O extends Options = Options,
-    P extends Params = Params,
+    O extends DatetimeOptionalOptions = DatetimeOptionalOptions,
+    P extends DatetimeOptionalParams = DatetimeOptionalParams,
 > extends DatetimeFieldView<S, O, P> {
 
 
