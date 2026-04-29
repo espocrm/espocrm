@@ -174,11 +174,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
     protected className: string = 'dialog'
 
     /**
-     * @deprecated Use `headerHtml`.
-     */
-    protected header: string
-
-    /**
      * A header HTML. Beware of XSS.
      */
     protected headerHtml: string | null = null
@@ -363,6 +358,10 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             }
 
             let headerHtml = this.headerHtml;
+
+            if (this.$header && this.$header.length) {
+                headerHtml = this.$header.get(0)?.outerHTML as string;
+            }
 
             if (this.headerElement) {
                 headerHtml = this.headerElement.outerHTML;
