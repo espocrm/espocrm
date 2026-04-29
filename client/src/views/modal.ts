@@ -105,6 +105,7 @@ interface ActionItem {
     groupIndex?: number;
     /**
      * @deprecated Use the `position` property.
+     * @todo Remove in 11.0.
      */
     pullLeft?: boolean;
 }
@@ -181,6 +182,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
     /**
      * A header JQuery instance.
      * @deprecated
+     * @todo Remove in 11.0.
      */
     protected $header: JQuery
 
@@ -827,6 +829,8 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
     /**
      * @deprecated Use `showActionItem`.
+     *
+     * @todo Remove in 11.0.
      */
     protected showButton(name: string) {
         for (const item of this.buttonList) {
@@ -852,6 +856,8 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
     /**
      * @deprecated Use `hideActionItem`.
+     *
+     * @todo Remove in 11.0.
      */
     protected hideButton(name: string) {
         for (const item of this.buttonList) {
