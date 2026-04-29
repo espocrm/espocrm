@@ -31,7 +31,7 @@
 import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
-import ModalView from 'views/modal';
+import ModalView, {ModalOptions} from 'views/modal';
 import Model from 'model';
 import EditForModalRecordView from 'views/record/edit-for-modal';
 import VarcharFieldView from 'views/fields/varchar';
@@ -1100,14 +1100,14 @@ class ArrayFieldView<
 
 export default ArrayFieldView;
 
-interface EditModalOptions {
+interface EditModalOptions extends ModalOptions {
     value: string;
     maxLength: number | null;
     required: boolean;
     onApply: (item: {value: string}) => void;
 }
 
-class EditItemModalView extends ModalView {
+class EditItemModalView extends ModalView<{model: Model, options: EditModalOptions}> {
 
     // language=Handlebars
     templateContent = `
@@ -1117,8 +1117,6 @@ class EditItemModalView extends ModalView {
     private recordView: EditForModalRecordView
 
     options: EditModalOptions
-
-    model: Model
 
     constructor(options: EditModalOptions) {
         super(options);

@@ -32,283 +32,300 @@ import View from 'view';
 import {inject} from 'di';
 import ModalBarProvider from 'helpers/site/modal-bar-provider';
 import ShortcutManager from 'helpers/site/shortcut-manager';
+import Model from 'model';
+import Collection from 'collection';
+import {Dialog, DialogButton} from 'ui';
+import JQuery from 'jquery';
+
+const $ = JQuery;
+
+/**
+ * A button or dropdown action item.
+ */
+interface ActionItem {
+    /**
+     * A name.
+     */
+    name: string;
+    /**
+     * A label. To be translated (with a scope defined in the `scope` class property).
+     */
+    label?: string;
+    /**
+     *  A text (not translated).
+     */
+    text?: string;
+    /**
+     * A label translation path.
+     */
+    labelTranslation?: string;
+    /**
+     * HTML.
+     */
+    html?: string;
+    /**
+     * A style.
+     */
+    position?: 'left' | 'right';
+    /**
+     * Is hidden.
+     */
+    hidden?: boolean;
+    /**
+     * Disabled.
+     */
+    disabled?: boolean;
+    /**
+     * Click handler.
+     */
+    onClick: (dialog: Dialog) => void;
+    /**
+     * An additional class name.
+     */
+    className?: string;
+    /**
+     * A title text.
+     */
+    title?: string;
+    /**
+     * A style.
+     */
+    style?: 'primary' | 'danger' | 'success' | 'warning' | 'text';
+    /**
+     * An icon HTML.
+     */
+    iconHtml?: string;
+    /**
+     * An icon class.
+     */
+    iconClass?: string;
+    /**
+     * A group index. Only for the dropdown.
+     */
+    groupIndex?: number;
+    /**
+     * @deprecated Use the `position` property.
+     */
+    pullLeft?: boolean;
+}
+
+interface Options {
+    /**
+     * A header text.
+     */
+    headerText?: string;
+    /**
+     * A header element.
+     */
+    headerElement?: HTMLElement;
+    /**
+     * A backdrop.
+     */
+    backdrop?: 'static' | boolean;
+    /**
+     * Buttons.
+     */
+    buttonList?: ActionItem[];
+    /**
+     * Dropdown items.
+     */
+    dropdownItemList?: ActionItem[];
+    /**
+     * Not collapsible.
+     *
+     * @since 9.1.0
+     */
+    collapseDisabled?: boolean;
+}
+
+interface ViewSchema {
+    model?: Model;
+    collection?: Collection;
+    options?: Record<string, any> & Options;
+}
+
+// noinspection JSUnusedGlobalSymbols
+export {
+    Options as ModalOptions,
+    ActionItem as ModalActionItem,
+};
 
 /**
  * A base modal view. Can be extended or used directly.
  *
  * @see https://docs.espocrm.com/development/modal/
  */
-class ModalView extends View {
+class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
-    /**
-     * A button or dropdown action item.
-     *
-     * @typedef {Object} module:views/modal~Button
-     *
-     * @property {string} name A name.
-     * @property {string} [label] A label. To be translated
-     *   (with a scope defined in the `scope` class property).
-     * @property {string} [text] A text (not translated).
-     * @property {string} [labelTranslation] A label translation path.
-     * @property {string} [html] HTML.
-     * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
-     * @property {'left'|'right'} [position='left'] A position.
-     * @property {'default'|'danger'|'success'|'warning'|'info'} [style='default'] A style.
-     * @property {boolean} [hidden=false] Is hidden.
-     * @property {boolean} [disabled=false] Disabled.
-     * @property {function(module:ui.Dialog): void} [onClick] Called on click. If not defined, then
-     * the `action<Name>` class method will be called.
-     * @property {string} [className] An additional class name.
-     * @property {string} [title] A title text.
-     * @property {'primary'|'danger'|'success'|'warning'|'text'} [style] A style.
-     * @property {string} [iconHtml] An icon HTML.
-     * @property {string} [iconClass] An icon class.
-     * @property {number} [groupIndex] A group index. Only for the dropdown.
-     */
+    @inject(ModalBarProvider)
+    private modalBarProvider: ModalBarProvider
 
-    /**
-     * @typedef {Object} module:views/modal~Options
-     * @property {string} [headerText] A header text.
-     * @property {HTMLElement} [headerElement] A header element.
-     * @property {'static'|boolean} [backdrop] A backdrop.
-     * @property {module:views/modal~Button} [buttonList] Buttons.
-     * @property {module:views/modal~Button} [dropdownItemList] Buttons.
-     * @property {boolean} [collapseDisabled] Not collapsible. As of v9.1.0.
-     */
-
-    /**
-     * @param {module:views/modal~Options | Record} [options] Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    @inject(ShortcutManager)
+    private shortcutManager: ShortcutManager
 
     /**
      * A CSS name.
-     *
-     * @protected
      */
-    cssName = 'modal-dialog'
+    protected cssName: string = 'modal-dialog'
 
     /**
      * A class-name. Use `'dialog dialog-record'` for modals containing a record form.
-     *
-     * @protected
      */
-    className = 'dialog'
+    protected className: string = 'dialog'
 
     /**
-     * @protected
-     * @deprecated Use `headerHtml`
+     * @deprecated Use `headerHtml`.
      */
-    header
+    protected header: string
 
     /**
      * A header HTML. Beware of XSS.
-     *
-     * @protected
-     * @type {string|null}
      */
-    headerHtml
+    protected headerHtml: string | null = null
 
     /**
      * A header JQuery instance.
-     *
-     * @protected
-     * @type {JQuery}
+     * @deprecated
      */
-    $header
+    protected $header: JQuery
 
     /**
      * A header element.
-     *
-     * @protected
-     * @type {Element}
      */
-    headerElement
+    protected headerElement: HTMLElement
 
     /**
      * A header text.
-     *
-     * @protected
-     * @type {string}
      */
-    headerText
+    protected headerText: string | null = null
 
     /**
      * A dialog instance.
-     *
-     * @protected
-     * @type {import('ui').default.Dialog}
      */
-    dialog
+    protected dialog: Dialog
 
     /**
      * A container selector.
-     *
-     * @protected
-     * @type {string}
      */
-    containerSelector = ''
+    protected containerSelector: string = ''
 
     /**
      * A scope name. Used when translating button labels.
-     *
-     * @type {string|null}
      */
-    scope = null
+    protected scope: string | null = null
 
     /**
      * A backdrop.
-     *
-     * @protected
-     * @type {'static'|boolean}
      */
-    backdrop = 'static'
+    protected backdrop: 'static' | boolean = 'static'
 
     /**
      * Buttons.
-     *
-     * @protected
-     * @type {module:views/modal~Button[]}
      */
-    buttonList = []
+    protected buttonList: ActionItem[] = []
 
     /**
      * Dropdown action items.
-     *
-     * @protected
-     * @type {Array<module:views/modal~Button|false>}
      */
-    dropdownItemList = []
+    protected dropdownItemList: (ActionItem | false)[] = []
 
     /**
      * @deprecated Use `buttonList`.
-     * @protected
      * @todo Remove.
      */
-    buttons = []
+    protected buttons = []
 
     /**
      * A width. Do not use.
-     * @todo Consider removing.
      *
-     * @protected
-     * @type {number|null}
+     * @todo Consider removing.
+     * @deprecated
      */
-    width = null
+    protected width: number | null = null
 
     /**
      * Not used.
-     *
-     * @deprecated
      */
-    fitHeight = false
+    protected fitHeight: boolean = false
 
     /**
      * To disable fitting to a window height.
-     *
-     * @protected
-     * @type {boolean}
      */
-    noFullHeight = false
+    protected noFullHeight: boolean = false
 
     /**
      * Disable the ability to close by pressing the `Esc` key.
-     *
-     * @protected
-     * @type {boolean}
      */
-    escapeDisabled = false
+    protected escapeDisabled: boolean = false
 
     /**
      * Is draggable.
-     *
-     * @protected
-     * @type {boolean}
      */
-    isDraggable = false
+    protected isDraggable: boolean = false
 
     /**
      * Is collapsable.
-     *
-     * @protected
-     * @type {boolean}
      */
-    isCollapsible = false
+    protected isCollapsible: boolean = false
 
     /**
      * Is maximizable.
      *
-     * @protected
-     * @type {boolean}
      * @since 9.1.0
      */
-    isMaximizable = false
+    protected isMaximizable: boolean = false
 
     /**
      * Is collapsed. Do not change value. Only for reading.
      *
-     * @protected
-     * @type {boolean}
+     * @since 9.1.0
      */
-    isCollapsed = false
+    protected isCollapsed: boolean = false
 
     /**
-     * @type {HTMLElement}
-     * @protected
+     * Body element.
      */
-    bodyElement
+    protected bodyElement: HTMLElement
 
     /**
-     * @inheritDoc
+     * @internal
      */
-    events = {
-        /** @this module:views/modal */
-        'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
-        },
-    }
-
-    /**
-     * @protected
-     * @type {boolean|null}
-     */
-    footerAtTheTop = null
+    protected footerAtTheTop: boolean | null = null
 
     /**
      * A shortcut-key => action map.
-     *
-     * @protected
-     * @type {?Object.<string, string|function (KeyboardEvent): void>}
      */
-    shortcutKeys = null
+    protected shortcutKeys: Record<string, string | ((event: KeyboardEvent) => void)> | null = null
 
     /**
-     * @protected
-     * @type {HTMLElement}
+     * Use a fixed header height.
+     */
+    protected fixedHeaderHeight: boolean = false
+
+    /**
+     * Disable the close button.
+     */
+    protected noCloseButton: boolean = false
+
+    /**
+     * Container element.
+     *
      * @since 9.0.0
      */
-    containerElement
+    protected containerElement: HTMLElement
 
     /**
-     * @private
-     * @type {ModalBarProvider}
+     * Use a flexible header font size.
      */
-    @inject(ModalBarProvider)
-    modalBarProvider
+    protected flexibleHeaderFontSize: boolean;
 
-    /**
-     * @private
-     * @type {ShortcutManager}
-     */
-    @inject(ShortcutManager)
-    shortcutManager
+    private fontSizePercentage: number;
 
-    /**
-     * @inheritDoc
-     */
-    init() {
+    protected init() {
+        this.addHandler('click', '.action', (e, target) => {
+            Espo.Utils.handleAction(this, e as MouseEvent, target);
+        });
+
         const id = this.cssName + '-container-' + Math.floor((Math.random() * 10000) + 1).toString();
 
         this.containerSelector = '#' + id;
@@ -343,6 +360,7 @@ class ModalView extends View {
             }
 
             // Otherwise, re-render won't work.
+            // @ts-ignore
             this.element = undefined;
 
             this.isCollapsed = false;
@@ -363,7 +381,7 @@ class ModalView extends View {
             let headerHtml = this.headerHtml || this.header;
 
             if (this.$header && this.$header.length) {
-                headerHtml = this.$header.get(0).outerHTML;
+                headerHtml = this.$header.get(0)?.outerHTML as string;
             }
 
             if (this.headerElement) {
@@ -384,6 +402,7 @@ class ModalView extends View {
                 body: '',
                 buttonList: this.getDialogButtonList(),
                 dropdownItemList: this.getDialogDropdownItemList(),
+                // @ts-ignore
                 width: this.width,
                 keyboard: !this.escapeDisabled,
                 fitHeight: this.fitHeight,
@@ -403,7 +422,7 @@ class ModalView extends View {
                 onMinimize: () => this.onMinimize(),
             });
 
-            this.containerElement = document.querySelector(this.containerSelector);
+            this.containerElement = document.querySelector(this.containerSelector) as HTMLElement;
 
             this.setElement(this.containerSelector + ' .body');
             this.bodyElement = this.element;
@@ -414,6 +433,7 @@ class ModalView extends View {
 
         this.on('after:render', () => {
             // Trick to delegate events for the whole modal.
+            // @ts-ignore
             this.element = undefined;
             this.setElement(this.containerSelector);
 
@@ -453,10 +473,7 @@ class ModalView extends View {
         this.on('after:expand', () => this.afterExpand());
     }
 
-    /**
-     * @private
-     */
-    initShortcuts() {
+    private initShortcuts() {
         // Shortcuts to be added even if there's no keys set – to suppress current shortcuts.
         this.shortcutManager.add(this, this.shortcutKeys ?? {}, {stack: true});
 
@@ -465,37 +482,34 @@ class ModalView extends View {
         });
     }
 
-    setupFinal() {
+    protected setupFinal() {
         this.initShortcuts();
     }
 
     /**
      * Get a button list for a dialog.
-     *
-     * @private
-     * @return {module:ui.Dialog~Button[]}
      */
-    getDialogButtonList() {
-        const buttonListExt = [];
+    private getDialogButtonList(): DialogButton[] {
+        const buttonListExt: DialogButton[] = [];
 
         // @todo remove it as deprecated.
         this.buttons.forEach(item => {
-            const o = Espo.Utils.clone(item);
+            const o = Espo.Utils.clone(item) as any;
 
             if (!('text' in o) && ('label' in o)) {
-                o.text = this.getLanguage().translate(o.label);
+                o.text = this.getLanguage().translate(o.label as string);
             }
 
             buttonListExt.push(o);
         });
 
         this.buttonList.forEach(item => {
-            let o = {};
+            let o = {} as DialogButton & Record<string, any>;
 
             if (typeof item === 'string') {
-                o.name = /** @type string */item;
+                o.name = item;
             } else if (typeof item === 'object') {
-                o = item;
+                o = item as DialogButton;
             } else {
                 return;
             }
@@ -503,24 +517,21 @@ class ModalView extends View {
             if (!o.text) {
                 if (o.labelTranslation) {
                     o.text = this.getLanguage().translatePath(o.labelTranslation);
-                }
-                else if ('label' in o) {
+                } else if ('label' in o) {
                     o.text = this.translate(o.label, 'labels', this.scope);
-                }
-                else {
+                } else {
                     o.text = this.translate(o.name, 'modalActions', this.scope);
                 }
             }
 
             if (o.iconHtml && !o.html) {
-                o.html = o.iconHtml + '<span>' + this.getHelper().escapeString(o.text) + '</span>';
-            }
-            else if (o.iconClass && !o.html) {
+                o.html = o.iconHtml + '<span>' + this.getHelper().escapeString(o.text as string) + '</span>';
+            } else if (o.iconClass && !o.html) {
                 o.html = `<span class="${o.iconClass}"></span>` +
-                    '<span>' + this.getHelper().escapeString(o.text) + '</span>';
+                    '<span>' + this.getHelper().escapeString(o.text as string) + '</span>';
             }
 
-            o.onClick = o.onClick || ((d, event, target) => {
+            o.onClick = o.onClick ?? ((_d, event, target) => {
                 const handler = o.handler || (o.data || {}).handler;
 
                 Espo.Utils.handleAction(this, event, target, {
@@ -538,20 +549,17 @@ class ModalView extends View {
 
     /**
      * Get a dropdown item list for a dialog.
-     *
-     * @private
-     * @return {Array<module:ui.Dialog~Button|false>}
      */
-    getDialogDropdownItemList() {
-        const dropdownItemListExt = [];
+    private getDialogDropdownItemList(): (DialogButton | false)[] {
+        const dropdownItemListExt: (DialogButton | false)[] = [];
 
         this.dropdownItemList.forEach(item => {
-            let o = {};
+            let o = {} as DialogButton & Record<string, any>;
 
             if (typeof item === 'string') {
-                o.name = /** @type string */item;
+                o.name = item;
             } else if (typeof item === 'object') {
-                o = item;
+                o = item as DialogButton;
             } else {
                 return;
             }
@@ -559,16 +567,14 @@ class ModalView extends View {
             if (!o.text) {
                 if (o.labelTranslation) {
                     o.text = this.getLanguage().translatePath(o.labelTranslation);
-                }
-                else if ('label' in o) {
+                } else if ('label' in o) {
                     o.text = this.translate(o.label, 'labels', this.scope)
-                }
-                else {
+                } else {
                     o.text = this.translate(o.name, 'modalActions', this.scope);
                 }
             }
 
-            o.onClick = o.onClick || ((d, e) => {
+            o.onClick = o.onClick ?? ((_d, e: any) => {
                 // noinspection ES6ConvertLetToConst
                 let handler = o.handler || (o.data || {}).handler;
 
@@ -582,8 +588,7 @@ class ModalView extends View {
             dropdownItemListExt.push(o);
         });
 
-        /** @type {Array<module:ui.Dialog~Button[]>} */
-        const dropdownGroups = [];
+        const dropdownGroups = [] as DialogButton[][];
 
         dropdownItemListExt.forEach(item => {
             // For bc.
@@ -600,7 +605,7 @@ class ModalView extends View {
             dropdownGroups[index].push(item);
         });
 
-        const dropdownItemList = [];
+        const dropdownItemList: (DialogButton | false)[] = [];
 
         dropdownGroups.forEach(list => {
             list.forEach(it => dropdownItemList.push(it));
@@ -611,8 +616,7 @@ class ModalView extends View {
         return dropdownItemList;
     }
 
-    /** @private */
-    updateDialog() {
+    private updateDialog() {
         if (!this.dialog) {
             return;
         }
@@ -623,8 +627,7 @@ class ModalView extends View {
         );
     }
 
-    /** @private */
-    onDialogClose() {
+    private onDialogClose() {
         if (!this.isBeingRendered() && !this.isCollapsed) {
             this.trigger('close');
             this.remove();
@@ -633,10 +636,7 @@ class ModalView extends View {
         this.shortcutManager.remove(this);
     }
 
-    /**
-     * @protected
-     */
-    onBackdropClick() {}
+    protected onBackdropClick() {}
 
     /**
      * A `cancel` action.
@@ -673,9 +673,9 @@ class ModalView extends View {
     /**
      * Disable a button.
      *
-     * @param {string} name A button name.
+     * @param name A button name.
      */
-    disableButton(name) {
+    disableButton(name: string) {
         this.buttonList.forEach((d) => {
             if (d.name !== name) {
                 return;
@@ -700,9 +700,9 @@ class ModalView extends View {
     /**
      * Enable a button.
      *
-     * @param {string} name A button name.
+     * @param name A button name.
      */
-    enableButton(name) {
+    enableButton(name: string) {
         this.buttonList.forEach((d) => {
             if (d.name !== name) {
                 return;
@@ -727,12 +727,12 @@ class ModalView extends View {
     /**
      * Add a button.
      *
-     * @param {module:views/modal~Button} o Button definitions.
-     * @param {boolean|string} [position=false] True prepends, false appends. If a string
+     * @param o Button definitions.
+     * @param [position=false] True prepends, false appends. If a string
      *   then will be added after a button with a corresponding name.
-     * @param {boolean} [doNotReRender=false] Do not re-render.
+     * @param [doNotReRender=false] Do not re-render.
      */
-    addButton(o, position, doNotReRender) {
+    addButton(o: ActionItem, position: boolean | string, doNotReRender: boolean = false) {
         let index = -1;
 
         this.buttonList.forEach((item, i) => {
@@ -762,8 +762,7 @@ class ModalView extends View {
             } else {
                 this.buttonList.push(o);
             }
-        }
-        else {
+        } else {
             this.buttonList.push(o);
         }
 
@@ -775,11 +774,11 @@ class ModalView extends View {
     /**
      * Add a dropdown item.
      *
-     * @param {module:views/modal~Button} o Button definitions.
-     * @param {boolean} [toBeginning=false] To prepend.
-     * @param {boolean} [doNotReRender=false] Do not re-render.
+     * @param o Button definitions.
+     * @param [toBeginning=false] To prepend.
+     * @param [doNotReRender=false] Do not re-render.
      */
-    addDropdownItem(o, toBeginning, doNotReRender) {
+    addDropdownItem(o: ActionItem, toBeginning: boolean, doNotReRender: boolean = false) {
         if (!o) {
             // For bc.
             return;
@@ -792,7 +791,7 @@ class ModalView extends View {
         }
 
         for (const item of this.dropdownItemList) {
-            if (item.name === name) {
+            if (item && item.name === name) {
                 return;
             }
         }
@@ -806,8 +805,7 @@ class ModalView extends View {
         }
     }
 
-    /** @private */
-    reRenderFooter() {
+    private reRenderFooter() {
         if (!this.dialog) {
             return;
         }
@@ -818,7 +816,7 @@ class ModalView extends View {
 
         $(this.containerElement).find('footer.modal-footer')
             .empty()
-            .append($footer);
+            .append($footer as JQuery);
 
         this.dialog.initButtonEvents();
     }
@@ -826,10 +824,10 @@ class ModalView extends View {
     /**
      * Remove a button or a dropdown action item.
      *
-     * @param {string} name A name.
-     * @param {boolean} [doNotReRender=false] Do not re-render.
+     * @param name A name.
+     * @param [doNotReRender=false] Do not re-render.
      */
-    removeButton(name, doNotReRender) {
+    removeButton(name: string, doNotReRender: boolean = false) {
         let index = -1;
 
         for (const [i, item] of this.buttonList.entries()) {
@@ -845,7 +843,7 @@ class ModalView extends View {
         }
 
         for (const [i, item] of this.dropdownItemList.entries()) {
-            if (item.name === name) {
+            if (item && item.name === name) {
                 this.dropdownItemList.splice(i, 1);
 
                 break;
@@ -863,11 +861,8 @@ class ModalView extends View {
 
     /**
      * @deprecated Use `showActionItem`.
-     *
-     * @protected
-     * @param {string} name
      */
-    showButton(name) {
+    protected showButton(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -891,11 +886,8 @@ class ModalView extends View {
 
     /**
      * @deprecated Use `hideActionItem`.
-     *
-     * @protected
-     * @param {string} name
      */
-    hideButton(name) {
+    protected hideButton(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -920,9 +912,9 @@ class ModalView extends View {
     /**
      * Show an action item (button or dropdown item).
      *
-     * @param {string} name A name.
+     * @param name A name.
      */
-    showActionItem(name) {
+    showActionItem(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -932,7 +924,7 @@ class ModalView extends View {
         }
 
         for (const item of this.dropdownItemList) {
-            if (item.name === name) {
+            if (item && item.name === name) {
                 item.hidden = false;
 
                 break;
@@ -965,9 +957,9 @@ class ModalView extends View {
     /**
      * Hide an action item (button or dropdown item).
      *
-     * @param {string} name A name.
+     * @param name A name.
      */
-    hideActionItem(name) {
+    hideActionItem(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -977,7 +969,7 @@ class ModalView extends View {
         }
 
         for (const item of this.dropdownItemList) {
-            if (item.name === name) {
+            if (item && item.name === name) {
                 item.hidden = true;
 
                 break;
@@ -1003,12 +995,13 @@ class ModalView extends View {
         this.adjustButtons();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Whether an action item exists (hidden, disabled or not).
      *
-     * @param {string} name An action item name.
+     * @param name An action item name.
      */
-    hasActionItem(name) {
+    hasActionItem(name: string): boolean {
         const hasButton = this.buttonList
             .findIndex(item => item.name === name) !== -1;
 
@@ -1017,15 +1010,15 @@ class ModalView extends View {
         }
 
         return this.dropdownItemList
-            .findIndex(item => item.name === name) !== -1;
+            .findIndex(item => item && item.name === name) !== -1;
     }
 
     /**
      * Whether an action item is visible and not disabled.
      *
-     * @param {string} name An action item name.
+     * @param name An action item name.
      */
-    hasAvailableActionItem(name) {
+    hasAvailableActionItem(name: string): boolean {
         const hasButton = this.buttonList
             .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
 
@@ -1034,14 +1027,10 @@ class ModalView extends View {
         }
 
         return this.dropdownItemList
-            .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+            .findIndex(item => item && item.name === name && !item.disabled && !item.hidden) !== -1;
     }
 
-    /**
-     * @private
-     * @return {boolean}
-     */
-    isDropdownItemListEmpty() {
+    private isDropdownItemListEmpty(): boolean {
         if (this.dropdownItemList.length === 0) {
             return true;
         }
@@ -1049,7 +1038,7 @@ class ModalView extends View {
         let isEmpty = true;
 
         this.dropdownItemList.forEach((item) => {
-            if (!item.hidden) {
+            if (item && !item.hidden) {
                 isEmpty = false;
             }
         });
@@ -1057,11 +1046,7 @@ class ModalView extends View {
         return isEmpty;
     }
 
-    /**
-     * @private
-     * @param {number} [step=0]
-     */
-    adjustHeaderFontSize(step) {
+    private adjustHeaderFontSize(step: number = 0) {
         step = step || 0;
 
         if (!step) {
@@ -1074,11 +1059,11 @@ class ModalView extends View {
 
         const $titleText = $(this.containerElement).find('.modal-title > .modal-title-text');
 
-        const containerWidth = $titleText.parent().width();
+        const containerWidth = $titleText.parent().width() as number;
         let textWidth = 0;
 
-        $titleText.children().each((i, el) => {
-            textWidth += $(el).outerWidth(true);
+        $titleText.children().each((_i, el) => {
+            textWidth += $(el).outerWidth(true) as number;
         });
 
         if (containerWidth < textWidth) {
@@ -1088,7 +1073,7 @@ class ModalView extends View {
                 $title.attr('title', $titleText.text());
                 $title.addClass('overlapped');
 
-                $titleText.children().each((i, el) => {
+                $titleText.children().each((_i, el) => {
                    $(el).removeAttr('title');
                 });
 
@@ -1116,9 +1101,9 @@ class ModalView extends View {
 
         this.isCollapsed = true;
 
-        data = data || {};
+        data = data ?? {};
 
-        let title;
+        let title: string | null = null;
 
         if (data.title) {
             title = data.title;
@@ -1132,10 +1117,10 @@ class ModalView extends View {
 
         this.dialog.close();
 
-        let masterView = this;
+        let masterView: View = this;
 
         while (masterView.getParentView()) {
-            masterView = masterView.getParentView();
+            masterView = masterView.getParentView() as View;
         }
 
         this.unchainFromParent();
@@ -1146,41 +1131,39 @@ class ModalView extends View {
             return;
         }
 
-        await barView.addModalView(this, {title: title});
+        await barView.addModalView(this, {title: title ?? null});
     }
 
-    unchainFromParent() {
+    private unchainFromParent() {
         const key = this.getParentView().getViewKey(this);
+
+        if (!key) {
+            return;
+        }
 
         this.getParentView().unchainView(key);
     }
 
     /**
      * Called before collapse. Can be extended to execute some logic, e.g. save form data.
-     *
-     * @protected
-     * @return {Promise}
      */
-    beforeCollapse() {
-        return new Promise(resolve => resolve());
+    protected beforeCollapse(): Promise<undefined | {title?: string}> {
+        return new Promise(resolve => resolve(undefined));
     }
 
     /**
      * Called after expanding.
      *
-     * @protected
      * @since 9.1.0
      */
-    afterExpand() {}
+    protected afterExpand() {}
 
-    /** @private */
-    adjustButtons() {
+    private adjustButtons() {
         this.adjustLeftButtons();
         this.adjustRightButtons();
     }
 
-    /** @private */
-    adjustLeftButtons() {
+    private adjustLeftButtons() {
         const $buttons = $(this.containerElement)
             .find('footer.modal-footer > .main-btn-group button.btn');
 
@@ -1194,8 +1177,7 @@ class ModalView extends View {
         $buttonsVisible.last().addClass('radius-right');
     }
 
-    /** @private */
-    adjustRightButtons() {
+    private adjustRightButtons() {
         const $buttons = $(this.containerElement)
             .find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
 
@@ -1214,10 +1196,7 @@ class ModalView extends View {
         }
     }
 
-    /**
-     * @private
-     */
-    initBodyScrollListener() {
+    private initBodyScrollListener() {
         const $body = $(this.containerElement).find('> .dialog > .modal-dialog > .modal-content > .modal-body');
         const $footer = $body.parent().find('> .modal-footer');
 
@@ -1239,16 +1218,14 @@ class ModalView extends View {
     }
 
     /**
-     * @protected
      * @since 9.1.0
      */
-    onMaximize() {}
+    protected onMaximize() {}
 
     /**
-     * @protected
      * @since 9.1.0
      */
-    onMinimize() {}
+    protected onMinimize() {}
 }
 
 export default ModalView;

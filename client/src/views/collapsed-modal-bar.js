@@ -164,7 +164,7 @@ class CollapsedModalBarView extends View {
 
     /**
      * @param {import('views/modal').default|import('views/popup-notification').default} modalView
-     * @param {{title: string}} options
+     * @param {{title: string | null}} options
      */
     async addModalView(modalView, options) {
         const number = this.lastNumber;

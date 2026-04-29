@@ -67,7 +67,7 @@ interface DialogParams {
 /**
  * A button or dropdown action item.
  */
-interface DialogButton {
+export interface DialogButton {
     name: string;
     pullLeft?: boolean;
     position?: 'left' | 'right';
@@ -79,6 +79,7 @@ interface DialogButton {
     onClick?: (dialog: Dialog, event: MouseEvent, target: HTMLElement) => void;
     className?: string;
     title?: string;
+    groupIndex?: number;
 }
 
 /**
@@ -551,7 +552,7 @@ class Dialog {
     /**
      * Get a footer.
      */
-    private getFooter(): JQuery | null {
+    getFooter(): JQuery | null {
         if (!this.buttonList.length && !this.dropdownItemList.length) {
             return null;
         }
@@ -1345,3 +1346,8 @@ let notifySuppressed = false;
 Espo.Ui = Ui;
 
 export default Ui;
+
+
+export type DialogType = InstanceType<typeof Dialog>;
+
+export {DialogType as Dialog};

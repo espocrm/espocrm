@@ -61,7 +61,7 @@ class CollapsedModalView extends View {
      *     onClose: function(),
      *     onExpand: function(),
      *     duplicateNumber?: number|null,
-     *     title?: string,
+     *     title?: string | null,
      * }} options
      */
     constructor(options) {
