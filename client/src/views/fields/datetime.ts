@@ -30,12 +30,12 @@
 
 import DateFieldView from 'views/fields/date';
 import moment from 'moment';
-import {Options as BaseOptions, ViewSchema} from 'views/fields/base';
+import {BaseOptions as BaseOptions, BaseViewSchema} from 'views/fields/base';
 import JQuery from 'jquery'
 
 const $ = JQuery;
 
-export interface Params {
+export interface DatetimeParams {
     /**
      * Required.
      */
@@ -66,7 +66,7 @@ export interface Params {
     afterOrEqual?: boolean;
 }
 
-export interface Options extends BaseOptions {
+export interface DatetimeOptions extends BaseOptions {
     /**
      * A label text of other field. Used in before/after validations.
      */
@@ -77,9 +77,9 @@ export interface Options extends BaseOptions {
  * A date-time field.
  */
 class DatetimeFieldView<
-    S extends ViewSchema = ViewSchema,
-    O extends Options = Options,
-    P extends Params = Params,
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends DatetimeOptions = DatetimeOptions,
+    P extends DatetimeParams = DatetimeParams,
 > extends DateFieldView<S, O, P> {
 
     readonly type: string = 'datetime'

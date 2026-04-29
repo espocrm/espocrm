@@ -28,14 +28,14 @@
 
 /** @module views/fields/date */
 
-import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
+import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
 import moment from 'moment';
 import Datepicker from 'ui/datepicker';
 import JQuery from 'jquery'
 
 const $ = JQuery;
 
-export interface Params extends BaseParams {
+export interface DateParams extends BaseParams {
     /**
      * Required.
      */
@@ -58,7 +58,7 @@ export interface Params extends BaseParams {
     afterOrEqual?: boolean;
 }
 
-export interface Options extends BaseOptions {
+export interface DateOptions extends BaseOptions {
     /**
      * A label text of other field. Used in before/after validations.
      */
@@ -69,9 +69,9 @@ export interface Options extends BaseOptions {
  * A date field.
  */
 class DateFieldView<
-    S extends ViewSchema = ViewSchema,
-    O extends Options = Options,
-    P extends Params = Params,
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends DateOptions = DateOptions,
+    P extends DateParams = DateParams,
 > extends BaseFieldView<S, O, P> {
 
     readonly type: string = 'date'

@@ -28,14 +28,14 @@
 
 /** @module views/fields/varchar */
 
-import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
+import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import Autocomplete from 'ui/autocomplete';
 import MultiSelect from 'ui/multi-select';
 import Ajax from 'ajax';
 import Ui from 'ui';
 
-export interface Params extends BaseParams {
+export interface VarcharParams extends BaseParams {
     /**
      * Max length.
      */
@@ -66,7 +66,7 @@ export interface Params extends BaseParams {
     copyToClipboard?: boolean;
 }
 
-export interface Options extends BaseOptions {
+export interface VarcharOptions extends BaseOptions {
     /**
      * Custom autocomplete options.
      */
@@ -79,9 +79,9 @@ type AutocompleteReturn = Promise<import('ui/autocomplete').AutocompleteItem & R
  * A varchar field.
  */
 class VarcharFieldView<
-    S extends ViewSchema = ViewSchema,
-    P extends Params = Params,
-    O extends Options = Options,
+    S extends BaseViewSchema = BaseViewSchema,
+    P extends VarcharParams = VarcharParams,
+    O extends VarcharOptions = VarcharOptions,
 > extends BaseFieldView<S, O, P> {
 
     readonly type = 'varchar'

@@ -64,7 +64,7 @@ export interface SetRelateItem {
 /**
  * Definitions.
  */
-export interface Defs {
+export interface ModelDefs {
     fields?: Record<string, FieldDefs & Record<string, any>>;
     links?: Record<string, Record<string, any>>;
 }
@@ -76,12 +76,12 @@ interface FieldDefs {
     type: string;
 }
 
-export interface Options {
+export interface ModelOptions {
     collection?: Collection;
     entityType?: string;
     urlRoot?: string;
     url?: string;
-    defs?: Defs;
+    defs?: ModelDefs;
     user?: User;
 }
 
@@ -153,11 +153,11 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      * Definitions.
      * @internal
      */
-    public defs: Defs
+    public defs: ModelDefs
 
     constructor(
         attributes?: Partial<T> | Model<T>,
-        options?: Options,
+        options?: ModelOptions,
     ) {
         options = options || {};
 
@@ -798,7 +798,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      *
      * @param defs Definitions.
      */
-    setDefs(defs: Defs): void {
+    setDefs(defs: ModelDefs): void {
         this.defs = defs || {};
 
         if (!this.defs.fields) {

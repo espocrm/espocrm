@@ -40,7 +40,7 @@ const $ = JQuery;
 /**
  * Options.
  */
-export interface Options {
+export interface BaseOptions {
     /**
      * A field name.
      */
@@ -87,12 +87,15 @@ export interface Options {
  * @property inlineEditDisabled Disable inline edit.
  * @property readOnly Is read-only.
  */
-export interface Params {
+export interface BaseParams {
     inlineEditDisabled?: boolean;
     readOnly?: boolean;
 }
 
-export interface ViewSchema {
+/**
+ * @internal
+ */
+export interface BaseViewSchema {
     model: Model;
 }
 
@@ -104,9 +107,9 @@ type Mode = 'list' | 'listLink' | 'detail' | 'edit' | 'search';
  * @todo Document events.
  */
 export default class BaseFieldView<
-    S extends ViewSchema = ViewSchema,
-    O extends Options = Options,
-    P extends Params = Params,
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends BaseOptions = BaseOptions,
+    P extends BaseParams = BaseParams,
 > extends View<{model: S['model']}> {
 
     options: O & {params: P}

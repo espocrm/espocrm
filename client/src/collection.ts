@@ -82,7 +82,7 @@ export interface WhereItem {
 /**
  * Search data.
  */
-export interface Data {
+export interface SearchData {
     primaryFilter?: string | null;
     boolFilterList?: string[];
     textFilter?: string;
@@ -90,12 +90,12 @@ export interface Data {
     q?: string;
 }
 
-/**
- * @property model A class.
- */
-export interface Options {
+export interface CollectionOptions {
+    /**
+     * A model.
+     */
     model?: typeof Model;
-    defs: import('model').Defs;
+    defs: import('model').ModelDefs;
     maxSize?: number;
     entityType?: string | null;
     urlRoot?: string;
@@ -199,7 +199,7 @@ export default class Collection<TModel extends Model = Model> {
     /**
      * Model definitions.
      */
-    protected defs: import('model').Defs | null
+    protected defs: import('model').ModelDefs | null
 
     /**
      * A model type.
@@ -209,7 +209,7 @@ export default class Collection<TModel extends Model = Model> {
     /**
      * Search data.
      */
-    data: Data & Record<string, any>
+    data: SearchData & Record<string, any>
 
     /**
      * Models. Do not write, do not mutate.
@@ -226,7 +226,7 @@ export default class Collection<TModel extends Model = Model> {
      * @param {{
      *     entityType?: string,
      *     model?: Model.prototype,
-     *     defs?: import('model').Defs,
+     *     defs?: import('model').ModelDefs,
      *     order?: 'asc'|'desc'|boolean|null,
      *     orderBy?: string|null,
      *     urlRoot?: string,
@@ -236,7 +236,7 @@ export default class Collection<TModel extends Model = Model> {
      */
     constructor(
         models: TModel[] | Record<string, any>[] | null,
-        options: Options,
+        options: CollectionOptions,
     ) {
         options = {...options};
 

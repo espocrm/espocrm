@@ -30,7 +30,7 @@
 
 import DatetimeFieldView from 'views/fields/datetime';
 import moment from 'moment';
-import {Options as BaseOptions, ViewSchema} from 'views/fields/base';
+import {BaseOptions as BaseOptions, BaseViewSchema} from 'views/fields/base';
 
 interface Params {
     /**
@@ -70,7 +70,7 @@ interface Options extends BaseOptions {
  * A date-time or date.
  */
 class DatetimeOptionalFieldView<
-    S extends ViewSchema = ViewSchema,
+    S extends BaseViewSchema = BaseViewSchema,
     O extends Options = Options,
     P extends Params = Params,
 > extends DatetimeFieldView<S, O, P> {

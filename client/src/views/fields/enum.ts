@@ -28,7 +28,7 @@
 
 /** @module views/fields/enumeration */
 
-import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
+import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
 import MultiSelect from 'ui/multi-select';
 import Select from 'ui/select'
 import _ from 'underscore';
@@ -44,7 +44,7 @@ type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'prim
 /**
  * Parameters.
  */
-export interface Params extends BaseParams {
+export interface EnumParams extends BaseParams {
     /**
      * Select options.
      */
@@ -90,7 +90,7 @@ export interface Params extends BaseParams {
 /**
  * Options.
  */
-export interface Options extends BaseOptions {
+export interface EnumOptions extends BaseOptions {
     /**
      * Handles an option item to override the label or add a style.
      * @since 10.0.0
@@ -110,9 +110,9 @@ export interface Options extends BaseOptions {
  * An enum field (select-box).
  */
 class EnumFieldView<
-    S extends ViewSchema = ViewSchema,
-    P extends Params = Params,
-    O extends Options = Options,
+    S extends BaseViewSchema = BaseViewSchema,
+    P extends EnumParams = EnumParams,
+    O extends EnumOptions = EnumOptions,
 > extends BaseFieldView<S, O, P> {
 
     readonly type = 'enum'

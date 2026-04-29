@@ -28,7 +28,7 @@
 
 /** @module views/fields/array */
 
-import BaseFieldView, {Options as BaseOptions, Params as BaseParams, ViewSchema} from 'views/fields/base';
+import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
 import ModalView, {ModalOptions} from 'views/modal';
@@ -45,7 +45,7 @@ type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'prim
 /**
  * Parameters.
  */
-export interface Params extends BaseParams {
+export interface ArrayParams extends BaseParams {
     /**
      *  A translation string. E.g. `Global.scopeNames`.
      */
@@ -125,7 +125,7 @@ export interface Params extends BaseParams {
 /**
  * Options.
  */
-export interface Options extends BaseOptions {
+export interface ArrayOptions extends BaseOptions {
     /**
      * Option translations.
      */
@@ -140,9 +140,9 @@ export interface Options extends BaseOptions {
  * An array field.
  */
 class ArrayFieldView<
-    S extends ViewSchema = ViewSchema,
-    P extends Params = Params,
-    O extends Options = Options,
+    S extends BaseViewSchema = BaseViewSchema,
+    P extends ArrayParams = ArrayParams,
+    O extends ArrayOptions = ArrayOptions,
 > extends BaseFieldView<S, O, P> {
 
     readonly type = 'array'

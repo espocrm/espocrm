@@ -30,21 +30,21 @@
 
 import BaseFieldView from 'views/fields/base';
 import Select from 'ui/select';
-import {Options as BaseOptions} from 'views/fields/base';
-import {Params as BaseParams} from 'views/fields/base';
-import {ViewSchema} from 'views/fields/base';
+import {BaseOptions as BaseOptions} from 'views/fields/base';
+import {BaseParams as BaseParams} from 'views/fields/base';
+import {BaseViewSchema} from 'views/fields/base';
 
-export interface Params extends BaseParams {}
+export interface BoolParams extends BaseParams {}
 
-export interface Options extends BaseOptions {}
+export interface BoolOptions extends BaseOptions {}
 
 /**
  * A boolean field (checkbox).
  */
 export default class BoolFieldView<
-    S extends ViewSchema = ViewSchema,
-    O extends Options = Options,
-    P extends Params = Params,
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends BoolOptions = BoolOptions,
+    P extends BoolParams = BoolParams,
 > extends BaseFieldView<S, O, P> {
 
     readonly type = 'bool'
