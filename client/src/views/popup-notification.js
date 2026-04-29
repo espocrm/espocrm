@@ -85,7 +85,7 @@ class PopupNotificationView extends View {
 
         this.setSelector(containerSelector);
 
-        this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
+        this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled') ?? true;
 
         this.soundPath = this.getBasePath() +
             (this.getConfig().get('popupNotificationSound') || this.soundPath);

@@ -108,7 +108,7 @@ class NotificationBadgeView extends View {
         this.addActionHandler('showNotifications', () => this.showNotifications());
 
         this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
-        this.notificationSoundsDisabled = true;
+        this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled') ?? true;
         this.useWebSocket = this.webSocketManager.isEnabled();
 
         const clearTimeouts = () => {
