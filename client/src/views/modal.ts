@@ -230,20 +230,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
     protected dropdownItemList: (ActionItem | false)[] = []
 
     /**
-     * @deprecated Use `buttonList`.
-     * @todo Remove.
-     */
-    protected buttons = []
-
-    /**
-     * A width. Do not use.
-     *
-     * @todo Consider removing.
-     * @deprecated
-     */
-    protected width: number | null = null
-
-    /**
      * Not used.
      */
     protected fitHeight: boolean = false
@@ -330,9 +316,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
         this.containerSelector = '#' + id;
 
-        this.header = this.options.header || this.header;
         this.headerHtml = this.options.headerHtml || this.headerHtml;
-        this.$header = this.options.$header || this.$header;
         this.headerElement = this.options.headerElement || this.headerElement;
         this.headerText = this.options.headerText || this.headerText;
 
@@ -378,11 +362,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                 modalBodyDiffHeight = this.getThemeManager().getParam('modalBodyDiffHeight');
             }
 
-            let headerHtml = this.headerHtml || this.header;
-
-            if (this.$header && this.$header.length) {
-                headerHtml = this.$header.get(0)?.outerHTML as string;
-            }
+            let headerHtml = this.headerHtml;
 
             if (this.headerElement) {
                 headerHtml = this.headerElement.outerHTML;
@@ -402,8 +382,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                 body: '',
                 buttonList: this.getDialogButtonList(),
                 dropdownItemList: this.getDialogDropdownItemList(),
-                // @ts-ignore
-                width: this.width,
                 keyboard: !this.escapeDisabled,
                 fitHeight: this.fitHeight,
                 draggable: this.isDraggable,
@@ -491,17 +469,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      */
     private getDialogButtonList(): DialogButton[] {
         const buttonListExt: DialogButton[] = [];
-
-        // @todo remove it as deprecated.
-        this.buttons.forEach(item => {
-            const o = Espo.Utils.clone(item) as any;
-
-            if (!('text' in o) && ('label' in o)) {
-                o.text = this.getLanguage().translate(o.label as string);
-            }
-
-            buttonListExt.push(o);
-        });
 
         this.buttonList.forEach(item => {
             let o = {} as DialogButton & Record<string, any>;
