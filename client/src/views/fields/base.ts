@@ -564,7 +564,7 @@ export default class BaseFieldView<
     /**
      * Get a value for display. Is available by using a `{value}` placeholder in templates.
      */
-    getValueForDisplay(): any {
+    protected getValueForDisplay(): any {
         return this.model.get(this.name);
     }
 
@@ -968,7 +968,7 @@ export default class BaseFieldView<
     }
 
     /** @inheritDoc */
-    setupFinal() {
+    protected setupFinal() {
         this.wait(
             this._onModeSet()
         );
@@ -976,9 +976,8 @@ export default class BaseFieldView<
 
     /**
      * @internal
-     * @private
      */
-    initTooltip() {
+    private initTooltip() {
         let $a : JQuery;
 
         this.once('after:render', () => {
@@ -1020,10 +1019,8 @@ export default class BaseFieldView<
 
     /**
      * Show a required-field sign.
-     *
-     * @private
      */
-    showRequiredSign() {
+    private showRequiredSign() {
         const $label = this.getLabelElement();
 
         if (!$label) {
@@ -1044,10 +1041,8 @@ export default class BaseFieldView<
 
     /**
      * Hide a required-field sign.
-     *
-     * @private
      */
-    hideRequiredSign() {
+    private hideRequiredSign() {
         const $label = this.getLabelElement();
         const $sign = $label?.find('span.required-sign');
 
@@ -1236,7 +1231,7 @@ export default class BaseFieldView<
      *
      * @param options
      */
-    inlineEditSave(options: {bypassClose?: boolean} = {}) {
+    private inlineEditSave(options: {bypassClose?: boolean} = {}) {
         options = options || {}
 
         if (this.recordHelper) {
@@ -1308,9 +1303,6 @@ export default class BaseFieldView<
         }
     }
 
-    /**
-     * @public
-     */
     removeInlineEditLinks() {
         const $cell = this.get$cell();
 
@@ -1319,10 +1311,7 @@ export default class BaseFieldView<
         $cell.find('.inline-edit-link').addClass('hidden');
     }
 
-    /**
-     * @private
-     */
-    addInlineEditLinks() {
+    private addInlineEditLinks() {
         const $cell = this.get$cell();
 
         const saveLink = document.createElement('a');
@@ -1463,10 +1452,7 @@ export default class BaseFieldView<
         setTimeout(() => this.focusOnInlineEdit(), 10);
     }
 
-    /**
-     * @protected
-     */
-    focusOnInlineEdit() {
+    protected focusOnInlineEdit() {
         const $element = this.$element && this.$element.length ?
             this.$element :
             this.$el.find('.form-control').first();
@@ -1681,7 +1667,7 @@ export default class BaseFieldView<
     /**
      * Fetch a search type from DOM.
      */
-    fetchSearchType(): string {
+    protected fetchSearchType(): string {
         return this.$el.find('select.search-type').val();
     }
 

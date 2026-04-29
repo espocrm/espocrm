@@ -28,59 +28,57 @@
 
 /** @module views/fields/int */
 
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
 import AutoNumeric from 'autonumeric';
+
+export interface IntParams extends BaseParams {
+    /**
+     * A min value.
+     */
+    min?: number;
+    /**
+     * A max value.
+     */
+    max?: number;
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Disable formatting.
+     */
+    disableFormatting?: boolean;
+}
+
+export interface IntOptions extends BaseOptions {}
 
 /**
  * An integer field.
  *
  * @extends BaseFieldView<module:views/fields/int~params>
  */
-class IntFieldView extends BaseFieldView {
+class IntFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends IntOptions = IntOptions,
+    P extends IntParams = IntParams,
+> extends BaseFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/int~options
-     * @property {
-     *     module:views/fields/int~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type = 'int'
 
-    /**
-     * @typedef {Object} module:views/fields/int~params
-     * @property {number} [min] A max value.
-     * @property {number} [max] A max value.
-     * @property {boolean} [required] Required.
-     * @property {boolean} [disableFormatting] Disable formatting.
-     */
+    protected listTemplate = 'fields/int/list'
+    protected detailTemplate = 'fields/int/detail'
+    protected editTemplate = 'fields/int/edit'
+    protected searchTemplate = 'fields/int/search'
 
-    /**
-     * @param {
-     *     module:views/fields/int~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    protected validations = [
+        'required',
+        'int',
+        'range',
+    ]
 
-    type = 'int'
+    protected thousandSeparator = ','
 
-    listTemplate = 'fields/int/list'
-    detailTemplate = 'fields/int/detail'
-    editTemplate = 'fields/int/edit'
-    searchTemplate = 'fields/int/search'
-
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = ['required', 'int', 'range']
-
-    thousandSeparator = ','
-
-    searchTypeList = [
+    protected searchTypeList = [
         'isNotEmpty',
         'isEmpty',
         'equals',
@@ -92,25 +90,18 @@ class IntFieldView extends BaseFieldView {
         'between',
     ]
 
-    /**
-     * @type {import('autonumeric').Options}
-     * @protected
-     */
-    autoNumericOptions
+    protected autoNumericOptions: import('autonumeric').Options
 
-    /**
-     * @type {?AutoNumeric}
-     * @protected
-     */
-    autoNumericInstance = null
+    protected autoNumericInstance: AutoNumeric | null = null
 
-    setup() {
+    protected disableFormatting: boolean = false
+
+    protected setup() {
         super.setup();
 
         if (this.getPreferences().has('thousandSeparator')) {
             this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-        }
-        else if (this.getConfig().has('thousandSeparator')) {
+        } else if (this.getConfig().has('thousandSeparator')) {
             this.thousandSeparator = this.getConfig().get('thousandSeparator');
         }
 
@@ -119,16 +110,13 @@ class IntFieldView extends BaseFieldView {
         }
     }
 
-    setupFinal() {
+    protected setupFinal() {
         super.setupFinal();
 
         this.setupAutoNumericOptions();
     }
 
-    /**
-     * @protected
-     */
-    setupAutoNumericOptions() {
+    protected setupAutoNumericOptions() {
         const separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
         let decimalCharacter = '.';
 
@@ -136,13 +124,13 @@ class IntFieldView extends BaseFieldView {
             decimalCharacter = ',';
         }
 
-        // noinspection JSValidateTypes
         this.autoNumericOptions = {
             digitGroupSeparator: separator,
             decimalCharacter: decimalCharacter,
             modifyValueOnWheel: false,
             decimalPlaces: 0,
             selectOnFocus: false,
+            // @ts-ignore
             formulaMode: true,
         };
 
@@ -155,15 +143,14 @@ class IntFieldView extends BaseFieldView {
         }
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
             if (this.autoNumericOptions) {
-                /** @type {HTMLInputElement} */
-                const element = this.$element.get(0);
+                const element = this.$element?.get(0) as HTMLInputElement;
 
-                this.autoNumericInstance = new AutoNumeric(element, this.autoNumericOptions);
+                this.autoNumericInstance = new AutoNumeric(element, null, this.autoNumericOptions);
             }
         }
 
@@ -176,7 +163,7 @@ class IntFieldView extends BaseFieldView {
                 this.trigger('change');
             });
 
-            this.$element.on('input', () => {
+            this.$element?.on('input', () => {
                 this.trigger('change');
             });
 
@@ -187,19 +174,16 @@ class IntFieldView extends BaseFieldView {
             });
 
             if (this.autoNumericOptions) {
-                /** @type {HTMLInputElement} */
-                const element1 = this.$element.get(0);
-                /** @type {HTMLInputElement} */
-                const element2 = $inputAdditional.get(0);
+                const element1 = this.$element?.get(0) as HTMLInputElement;
+                const element2 = $inputAdditional.get(0) as HTMLInputElement;
 
-                new AutoNumeric(element1, this.autoNumericOptions);
-                new AutoNumeric(element2, this.autoNumericOptions);
+                new AutoNumeric(element1, null, this.autoNumericOptions);
+                new AutoNumeric(element2, null, this.autoNumericOptions);
             }
         }
     }
 
-    // noinspection JSCheckFunctionSignatures
-    data() {
+    protected data() {
         const data = super.data();
 
         if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
@@ -209,11 +193,11 @@ class IntFieldView extends BaseFieldView {
         data.valueIsSet = this.model.has(this.name);
 
         if (this.isSearchMode()) {
-            data.value = this.searchParams.value;
+            data.value = this.searchParams?.value;
 
             if (this.getSearchType() === 'between') {
-                data.value = this.getSearchParamsData().value1 || this.searchParams.value1;
-                data.value2 = this.getSearchParamsData().value2 || this.searchParams.value2;
+                data.value = this.getSearchParamsData().value1 ?? this.searchParams?.value1;
+                data.value2 = this.getSearchParamsData().value2 ?? this.searchParams?.value2;
             }
         }
 
@@ -225,13 +209,13 @@ class IntFieldView extends BaseFieldView {
         return data;
     }
 
-    getValueForDisplay() {
+    protected getValueForDisplay(): string | null {
         const value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
     }
 
-    formatNumber(value) {
+    protected formatNumber(value: string | null): string | null {
         if (this.disableFormatting) {
             return value;
         }
@@ -239,7 +223,7 @@ class IntFieldView extends BaseFieldView {
         return this.formatNumberDetail(value);
     }
 
-    formatNumberDetail(value) {
+    protected formatNumberDetail(value: string | null): string {
         if (value === null) {
             return '';
         }
@@ -251,14 +235,13 @@ class IntFieldView extends BaseFieldView {
         return stringValue;
     }
 
-    setupSearch() {
-        this.events['change select.search-type'] = e => {
-            // noinspection JSUnresolvedReference
-            this.handleSearchType($(e.currentTarget).val());
-        };
+    protected setupSearch() {
+        this.addHandler('change', 'select.search-type', (_e, target) => {
+            this.handleSearchType((target as HTMLSelectElement).value);
+        });
     }
 
-    handleSearchType(type) {
+    protected handleSearchType(type: string) {
         const $additionalInput = this.$el.find('input.additional');
 
         const $input = this.$el.find('input[data-name="' + this.name + '"]');
@@ -266,21 +249,16 @@ class IntFieldView extends BaseFieldView {
         if (type === 'between') {
             $additionalInput.removeClass('hidden');
             $input.removeClass('hidden');
-        }
-        else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+        } else if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
             $additionalInput.addClass('hidden');
             $input.addClass('hidden');
-        }
-        else {
+        } else {
             $additionalInput.addClass('hidden');
             $input.removeClass('hidden');
         }
     }
 
-    /**
-     * @return {number|null}
-     */
-    getMaxValue() {
+    protected getMaxValue(): number | null {
         let maxValue = this.model.getFieldParam(this.name, 'max') ?? null;
 
         if (!maxValue && maxValue !== 0) {
@@ -294,19 +272,16 @@ class IntFieldView extends BaseFieldView {
         return maxValue;
     }
 
-    /**
-     * @return {number|null}
-     */
-    getMinValue() {
+    protected getMinValue(): number | null {
         if ('min' in this.params) {
-            return this.params.min;
+            return this.params.min ?? null;
         }
 
         return this.model.getFieldParam(this.name, 'min') ?? null;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    validateInt() {
+    validateInt(): boolean {
         const value = this.model.get(this.name);
 
         if (isNaN(value)) {
@@ -316,6 +291,8 @@ class IntFieldView extends BaseFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -333,37 +310,37 @@ class IntFieldView extends BaseFieldView {
             if (value < minValue || value > maxValue ) {
                 const msg = this.translate('fieldShouldBeBetween', 'messages')
                     .replace('{field}', this.getLabelText())
-                    .replace('{min}', minValue)
-                    .replace('{max}', maxValue);
+                    .replace('{min}', minValue.toString())
+                    .replace('{max}', maxValue.toString());
 
                 this.showValidationMessage(msg);
 
                 return true;
             }
-        }
-        else {
+        } else {
             if (minValue !== null) {
                 if (value < minValue) {
                     const msg = this.translate('fieldShouldBeGreater', 'messages')
                         .replace('{field}', this.getLabelText())
-                        .replace('{value}', minValue);
+                        .replace('{value}', minValue.toString());
 
                     this.showValidationMessage(msg);
 
                     return true;
                 }
-            }
-            else if (maxValue !== null) {
+            } else if (maxValue !== null) {
                 if (value > maxValue) {
                     const msg = this.translate('fieldShouldBeLess', 'messages')
                         .replace('{field}', this.getLabelText())
-                        .replace('{value}', maxValue);
+                        .replace('{value}', maxValue.toString());
                     this.showValidationMessage(msg);
 
                     return true;
                 }
             }
         }
+
+        return false;
     }
 
     validateRequired() {
@@ -379,10 +356,12 @@ class IntFieldView extends BaseFieldView {
                 return true;
             }
         }
+
+        return false;
     }
 
-    parse(value) {
-        value = (value !== '') ? value : null;
+    protected parse(input: string): number | null {
+        let value = (input !== '') ? input : null;
 
         if (value === null) {
             return null;
@@ -399,32 +378,34 @@ class IntFieldView extends BaseFieldView {
         return parseInt(value);
     }
 
-    fetch() {
-        let value = this.$element.val();
-        value = this.parse(value);
+    fetch(): Record<string, unknown> {
+        const valueString = (this.$element?.val() ?? '') as string;
 
-        const data = {};
+        const value = this.parse(valueString);
+
+        const data = {} as any;
 
         data[this.name] = value;
 
         return data;
     }
 
-    fetchSearch() {
-        const value = this.parse(this.$element.val());
+    fetchSearch(): Record<string, any> | null {
+        const value = this.parse((this.$element?.val() ?? '') as string);
+
         const type = this.fetchSearchType();
 
-        let data;
+        let data: any;
 
-        if (isNaN(value)) {
-            return false;
+        if (value !== null && isNaN(value)) {
+            return null;
         }
 
         if (type === 'between') {
             const valueTo = this.parse(this.$el.find('input.additional').val());
 
-            if (isNaN(valueTo)) {
-                return false;
+            if (valueTo !== null && isNaN(valueTo)) {
+                return null;
             }
 
             data = {
@@ -435,20 +416,17 @@ class IntFieldView extends BaseFieldView {
                     value2: valueTo
                 }
             };
-        }
-        else if (type === 'isEmpty') {
+        } else if (type === 'isEmpty') {
             data = {
                 type: 'isNull',
                 typeFront: 'isEmpty'
             };
-        }
-        else if (type === 'isNotEmpty') {
+        } else if (type === 'isNotEmpty') {
             data = {
                 type: 'isNotNull',
                 typeFront: 'isNotEmpty'
             };
-        }
-        else {
+        } else {
             data = {
                 type: type,
                 value: value,
@@ -461,8 +439,8 @@ class IntFieldView extends BaseFieldView {
         return data;
     }
 
-    getSearchType() {
-        return this.searchParams.typeFront || this.searchParams.type;
+    protected getSearchType(): string | null {
+        return this.searchParams?.typeFront ?? this.searchParams?.type ?? null;
     }
 }
 
