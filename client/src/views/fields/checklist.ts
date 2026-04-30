@@ -26,21 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/checklist */
+import ArrayFieldView, {ArrayOptions, ArrayParams} from 'views/fields/array';
+import {BaseViewSchema} from 'views/fields/base';
 
-import ArrayFieldView from 'views/fields/array';
+export interface ChecklistParams extends ArrayParams {}
 
-class ChecklistFieldView extends ArrayFieldView {
+export interface ChecklistOptions extends ArrayOptions {
+    /**
+     * Is inversed.
+     */
+    isInversed?: boolean
+}
 
-    type = 'checklist'
+class ChecklistFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends ChecklistOptions = ChecklistOptions,
+    P extends ChecklistParams = ChecklistParams,
+> extends ArrayFieldView<S, O, P> {
 
-    listTemplate = 'fields/array/list'
-    detailTemplate = 'fields/checklist/detail'
-    editTemplate = 'fields/checklist/edit'
+    readonly type: string = 'checklist'
 
-    isInversed = false
+    protected listTemplate = 'fields/array/list'
+    protected detailTemplate = 'fields/checklist/detail'
+    protected editTemplate = 'fields/checklist/edit'
 
-    events = {}
+    protected isInversed = false
 
     data() {
         return {
@@ -49,20 +59,17 @@ class ChecklistFieldView extends ArrayFieldView {
         };
     }
 
-    setup() {
+    protected setup() {
         super.setup();
 
-        this.params.options = this.params.options || [];
+        this.params.options = this.params.options ?? [];
 
-        this.isInversed = this.params.isInversed || this.options.isInversed || this.isInversed;
+        this.isInversed = this.options.isInversed ?? this.isInversed;
     }
 
-    /**
-     * @protected
-     */
-    setupFieldEvents() {}
+    protected setupFieldEvents() {}
 
-    afterRender() {
+    protected afterRender() {
         if (this.isSearchMode()) {
             this.renderSearch();
         }
@@ -74,14 +81,14 @@ class ChecklistFieldView extends ArrayFieldView {
         }
     }
 
-    getOptionDataList() {
-        let valueList = this.model.get(this.name) || [];
-        let list = [];
+    protected getOptionDataList(): Record<string, any> {
+        const valueList: string[] = (this.model.get(this.name) ?? []) as string[];
+        const list: Record<string, any>[] = [];
 
-        this.params.options.forEach((item) => {
-            let isChecked = ~valueList.indexOf(item);
-            let dataName = item;
-            let id = this.cid + '-' + Espo.Utils.camelCaseToHyphen(item.replace(/\s+/g, '-'));
+        (this.params.options ?? []).forEach(item => {
+            let isChecked = valueList.includes(item);
+            const dataName = item;
+            const id = this.cid + '-' + Espo.Utils.camelCaseToHyphen(item.replace(/\s+/g, '-'));
 
             if (this.isInversed) {
                 isChecked = !isChecked;
@@ -92,18 +99,18 @@ class ChecklistFieldView extends ArrayFieldView {
                 isChecked: isChecked,
                 dataName: dataName,
                 id: id,
-                label: this.translatedOptions[item] || item,
+                label: this.translatedOptions?.[item] || item,
             });
         });
 
         return list;
     }
 
-    fetch() {
-        let list = [];
+    fetch(): Record<string, any> {
+        const list: string[] = [];
 
-        this.params.options.forEach(item => {
-            let $item = this.$el.find('input[data-name="' + item + '"]');
+        (this.params.options ?? []).forEach(item => {
+            const $item = this.$el.find(`input[data-name="${item}"]`);
 
             let isChecked = $item.get(0) && $item.get(0).checked;
 
@@ -116,39 +123,37 @@ class ChecklistFieldView extends ArrayFieldView {
             }
         });
 
-        let data = {};
-
-        data[this.name] = list;
-
-        return data;
+        return {[this.name]: list};
     }
 
     validateRequired() {
         if (!this.isRequired()) {
-            return;
+            return false;
         }
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (!value || value.length === 0) {
-            let msg = this.translate('fieldIsRequired', 'messages')
+            const msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg, '.checklist-item-container:last-child input');
 
             return true;
         }
+
+        return false;
     }
 
     validateMaxCount() {
         if (!this.params.maxCount) {
-            return;
+            return false;
         }
 
-        let itemList = this.model.get(this.name) || [];
+        const itemList = this.model.get(this.name) ?? [];
 
         if (itemList.length > this.params.maxCount) {
-            let msg =
+            const msg =
                 this.translate('fieldExceedsMaxCount', 'messages')
                     .replace('{field}', this.getLabelText())
                     .replace('{maxCount}', this.params.maxCount.toString());
@@ -157,6 +162,8 @@ class ChecklistFieldView extends ArrayFieldView {
 
             return true;
         }
+
+        return false;
     }
 }
 

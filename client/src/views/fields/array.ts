@@ -26,8 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/array */
-
 import BaseFieldView, {
     BaseOptions as BaseOptions,
     BaseParams as BaseParams,
@@ -843,7 +841,7 @@ class ArrayFieldView<
         this.trigger('change');
     }
 
-    fetch() {
+    fetch(): Record<string, any> {
         const data = {} as Record<string, any>;
 
         let list = Espo.Utils.clone(this.selected || []);

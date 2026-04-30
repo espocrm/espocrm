@@ -26,8 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/multi-enumeration */
-
 import ArrayFieldView, {ArrayOptions, ArrayParams} from 'views/fields/array';
 import {StyleMap} from 'views/fields/enum';
 import RegExpPattern from 'helpers/reg-exp-pattern';
