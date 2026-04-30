@@ -158,9 +158,7 @@ class BeforeUpdate implements SaveHook
     private function processTypeChecking(User $entity): void
     {
         if (
-            $entity->isSuperAdmin() ||
-            !$entity->isAttributeChanged('type') ||
-            !$entity->getType() ||
+            !$entity->isAttributeChanged(User::ATTR_TYPE) ||
             in_array($entity->getType(), $this->util->getAllowedUserTypeList())
         ) {
             return;
