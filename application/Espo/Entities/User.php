@@ -43,6 +43,9 @@ class User extends Person
     public const ATTR_TYPE = 'type';
     public const ATTR_IS_ACTIVE = 'isActive';
 
+    /** @since 10.0.0 */
+    public const string FIELD_USER_NAME = 'userName';
+
     public const LINK_ACCOUNTS = 'accounts';
     public const LINK_CONTACT = 'contact';
     public const LINK_PORTALS = 'portals';
