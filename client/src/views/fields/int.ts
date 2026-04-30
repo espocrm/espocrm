@@ -64,7 +64,8 @@ export interface IntOptions extends BaseOptions {}
 class IntFieldView<
     S extends BaseViewSchema = BaseViewSchema,
     O extends IntOptions = IntOptions,
-    P extends IntParams = IntParams,
+    P extends Record<string, any> | IntParams = IntParams,
+    ValueType extends number | string = number,
 > extends BaseFieldView<S, O, P> {
 
     readonly type: string = 'int'
@@ -101,8 +102,6 @@ class IntFieldView<
     protected disableFormatting: boolean = false
 
     protected setup() {
-        super.setup();
-
         if (this.getPreferences().has('thousandSeparator')) {
             this.thousandSeparator = this.getPreferences().get('thousandSeparator');
         } else if (this.getConfig().has('thousandSeparator')) {
@@ -219,7 +218,7 @@ class IntFieldView<
         return this.formatNumber(value);
     }
 
-    protected formatNumber(value: number | null): string | null {
+    protected formatNumber(value: ValueType | null): string | null {
         if (this.disableFormatting) {
             return value?.toString() ?? null;
         }
@@ -227,7 +226,7 @@ class IntFieldView<
         return this.formatNumberDetail(value);
     }
 
-    protected formatNumberDetail(value: number | null): string {
+    protected formatNumberDetail(value: ValueType | null): string {
         if (value === null) {
             return '';
         }

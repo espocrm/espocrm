@@ -29,65 +29,57 @@
 /** @module views/fields/decimal */
 
 import IntFieldView from 'views/fields/int';
+import {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
+
+export interface DecimalParams extends BaseParams {
+    /**
+     * A min value.
+     */
+    min?: string;
+    /**
+     * A max value.
+     */
+    max?: string;
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Disable formatting.
+     */
+    disableFormatting?: boolean;
+    /**
+     * Decimal places.
+     */
+    decimalPlaces?: number | null;
+}
+
+export interface DecimalOptions extends BaseOptions {}
 
 /**
  * A decimal field.
- *
- * @extends IntFieldView<module:views/fields/decimal~params>
  */
-class DecimalFieldView extends IntFieldView {
+class DecimalFieldView<
+    S extends BaseViewSchema,
+    O extends DecimalOptions,
+    P extends DecimalParams,
+> extends IntFieldView<S, O, P, string> {
 
-    /**
-     * @typedef {Object} module:views/fields/decimal~options
-     * @property {
-     *     module:views/fields/decimal~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type: string = 'decimal'
 
-    /**
-     * @typedef {Object} module:views/fields/decimal~params
-     * @property {string} [min] A max value.
-     * @property {string} [max] A max value.
-     * @property {boolean} [required] Required.
-     * @property {boolean} [disableFormatting] Disable formatting.
-     * @property {number|null} [decimalPlaces] A number of decimal places.
-     */
+    protected editTemplate = 'fields/float/edit'
 
-    /**
-     * @param {
-     *     module:views/fields/float~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    protected decimalMark = '.'
+    protected decimalPlacesRawValue = 10
 
-    type = 'decimal'
+    private decimalPlaces: number | null
 
-    editTemplate = 'fields/float/edit'
-
-    decimalMark = '.'
-    decimalPlacesRawValue = 10
-
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = [
+    protected validations: (FieldValidator | string)[] = [
         'required',
         'range',
     ]
 
-    /**
-     * @private
-     * @type {number|null}
-     */
-    decimalPlaces
-
-    setup() {
+    protected setup() {
         super.setup();
 
         if (this.getPreferences().has('decimalMark')) {
@@ -107,20 +99,18 @@ class DecimalFieldView extends IntFieldView {
         this.decimalPlaces = this.params.decimalPlaces ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    setupAutoNumericOptions() {
+    protected setupAutoNumericOptions() {
         // noinspection JSValidateTypes
         this.autoNumericOptions = {
             digitGroupSeparator: this.thousandSeparator || '',
             decimalCharacter: this.decimalMark,
             modifyValueOnWheel: false,
             selectOnFocus: false,
-            decimalPlaces: this.decimalPlaces,
+            decimalPlaces: this.decimalPlaces ?? undefined,
             decimalPlacesRawValue: this.decimalPlacesRawValue,
             allowDecimalPadding: true,
             showWarnings: false,
+            // @ts-ignore
             formulaMode: true,
         };
 
@@ -131,26 +121,21 @@ class DecimalFieldView extends IntFieldView {
         }
     }
 
-    getValueForDisplay() {
+    protected getValueForDisplay(): string | null {
         const value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
     }
 
-    formatNumber(value) {
+    protected formatNumber(value: string | null): string | null {
         if (this.disableFormatting) {
-            return value;
+            return value?.toString() ?? null;
         }
 
         return this.formatNumberDetail(value);
     }
 
-    /**
-     *
-     * @param {string|null} value
-     * @return {string}
-     */
-    formatNumberDetail(value) {
+    protected formatNumberDetail(value: string | null): string {
         if (value === null) {
             return '';
         }
@@ -188,12 +173,8 @@ class DecimalFieldView extends IntFieldView {
         return parts.join(this.decimalMark);
     }
 
-    /**
-     * @param {string|null} value
-     * @return {string|null}
-     */
-    parse(value) {
-        value = (value !== '') ? value : null;
+    protected parse(input: string | null): string | null {
+        let value = (input !== '') ? input : null;
 
         if (value === null) {
             return null;
@@ -208,10 +189,7 @@ class DecimalFieldView extends IntFieldView {
         return value;
     }
 
-    /**
-     * @return {Record}
-     */
-    fetch() {
+    fetch(): Record<string, any> {
         const rawValue = this.mainInputElement?.value ?? null;
 
         const value = this.parse(rawValue);
@@ -230,37 +208,40 @@ class DecimalFieldView extends IntFieldView {
         const minValue = this.params.min;
         const maxValue = this.params.max;
 
-        if (minValue !== null && maxValue !== null) {
+        if (minValue != null && maxValue != null) {
             if (Number(value) < Number(minValue) || Number(value) > Number(maxValue)) {
                 const msg = this.translate('fieldShouldBeBetween', 'messages')
                     .replace('{field}', this.getLabelText())
-                    .replace('{min}', minValue)
-                    .replace('{max}', maxValue);
+                    .replace('{min}', minValue.toString())
+                    .replace('{max}', maxValue.toString());
 
                 this.showValidationMessage(msg);
 
                 return true;
             }
-        } else {
-            if (minValue !== null) {
-                if (Number(value) < Number(minValue)) {
-                    const msg = this.translate('fieldShouldBeGreater', 'messages')
-                        .replace('{field}', this.getLabelText())
-                        .replace('{value}', minValue);
 
-                    this.showValidationMessage(msg);
+            return false;
+        }
 
-                    return true;
-                }
-            } else if (maxValue !== null) {
-                if (Number(value) > Number(maxValue)) {
-                    const msg = this.translate('fieldShouldBeLess', 'messages')
-                        .replace('{field}', this.getLabelText())
-                        .replace('{value}', maxValue);
-                    this.showValidationMessage(msg);
+        if (minValue != null) {
+            if (Number(value) < Number(minValue)) {
+                const msg = this.translate('fieldShouldBeGreater', 'messages')
+                    .replace('{field}', this.getLabelText())
+                    .replace('{value}', minValue.toString());
 
-                    return true;
-                }
+                this.showValidationMessage(msg);
+
+                return true;
+            }
+        } else if (maxValue != null) {
+            if (Number(value) > Number(maxValue)) {
+                const msg = this.translate('fieldShouldBeLess', 'messages')
+                    .replace('{field}', this.getLabelText())
+                    .replace('{value}', maxValue.toString());
+
+                this.showValidationMessage(msg);
+
+                return true;
             }
         }
 
