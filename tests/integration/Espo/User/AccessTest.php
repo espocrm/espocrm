@@ -29,7 +29,10 @@
 
 namespace tests\integration\Espo\User;
 
+use Espo\Core\Container;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\Exceptions\NotAllowedUsage;
+use Espo\Core\Formula\Manager as FormulaManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Entities\User;
 use tests\integration\Core\BaseTestCase;
@@ -90,6 +93,31 @@ class AccessTest extends BaseTestCase
                 'type' => User::TYPE_SUPER_ADMIN,
             ]);
         } catch (Forbidden) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $fm = $this->getContainer()->getByClass(FormulaManager::class);
+
+        $script = <<<'EOT'
+            $data = object\create();
+            $data['type'] = 'super-admin';
+
+            record\update('User', '{{id}}', $data);
+        EOT;
+
+        $thrown = false;
+
+        try {
+            $script = strtr($script, [
+                '{{id}}' => $userRegular->getId(),
+            ]);
+
+            $fm->run($script);
+        } catch (NotAllowedUsage) {
             $thrown = true;
         }
 
