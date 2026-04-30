@@ -28,72 +28,97 @@
 
 /** @module views/fields/multi-enumeration */
 
-import ArrayFieldView from 'views/fields/array';
+import ArrayFieldView, {ArrayOptions, ArrayParams} from 'views/fields/array';
+import {StyleMap} from 'views/fields/enum';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
+import {BaseViewSchema} from 'views/fields/base';
+
+export interface MultiEnumParams extends ArrayParams {
+    /**
+     * A translation string. E.g. `Global.scopeNames`.
+     */
+    translation?: string;
+    /**
+     * Select options.
+     */
+    options?: string[];
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Display as label.
+     */
+    displayAsLabel?: boolean;
+    /**
+     * Display as list (line breaks).
+     */
+    displayAsList?: boolean;
+    /**
+     * A label type.
+     */
+    labelType?: string | 'state';
+    /**
+     * A reference to options. E.g. `Account.industry`.
+     */
+    optionsReference?: string;
+    /**
+     * An options metadata path.
+     */
+    optionsPath?: string;
+    /**
+     * To sort options.
+     */
+    isSorted?: boolean;
+    /**
+     * Option translations.
+     */
+    translatedOptions?: Record<string, string>;
+    /**
+     * A style map.
+     */
+    style?: StyleMap;
+    /**
+     * A max number of items.
+     */
+    maxCount?: number;
+    /**
+     * Allow custom options.
+     */
+    allowCustomOptions?: boolean;
+    /**
+     * A regular expression pattern.
+     */
+    pattern?: string;
+}
+
+export interface MultiEnumOptions extends ArrayOptions {}
 
 /**
  * A multi-enum field.
  */
-class MultiEnumFieldView extends ArrayFieldView {
+class MultiEnumFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends MultiEnumOptions = MultiEnumOptions,
+    P extends MultiEnumParams = MultiEnumParams,
+> extends ArrayFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/multi-enumeration~options
-     * @property {
-     *     module:views/fields/multi-enumeration~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type: string = 'multiEnum'
 
-    /**
-     * @typedef {Object} module:views/fields/multi-enumeration~params
-     * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
-     * @property {string[]} [options] Select options.
-     * @property {boolean} [required] Required.
-     * @property {boolean} [displayAsLabel] Display as label.
-     * @property {boolean} [displayAsList] Display as list (line breaks).
-     * @property {string|'state'} [labelType] A label type.
-     * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
-     * @property {string} [optionsPath] An options metadata path.
-     * @property {boolean} [isSorted] To sort options.
-     * @property {Object.<string, string>} [translatedOptions] Option translations.
-     * @property {Object.<string, 'warning'|'danger'|'success'|'info'|'primary'>} [style] A style map.
-     * @property {number} [maxCount] A max number of items.
-     * @property {boolean} [allowCustomOptions] Allow custom options.
-     * @property {string} [pattern] A regular expression pattern.
-     */
+    protected listTemplate = 'fields/array/list'
+    protected detailTemplate = 'fields/array/detail'
+    protected editTemplate = 'fields/multi-enum/edit'
 
-    /**
-     * @param {
-     *     module:views/fields/multi-enumeration~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    readonly MAX_ITEM_LENGTH = 100
 
-    type = 'multiEnum'
+    protected restoreOnBackspace: boolean = false
 
-    listTemplate = 'fields/array/list'
-    detailTemplate = 'fields/array/detail'
-    editTemplate = 'fields/multi-enum/edit'
+    protected validationElementSelector: string = '.selectize-control'
 
-    /** @const */
-    MAX_ITEM_LENGTH = 100
+    protected allowCustomOptions: boolean = false
 
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    restoreOnBackspace = false
-
-    validationElementSelector = '.selectize-control'
-
-    // noinspection JSCheckFunctionSignatures
-    /** @inheritDoc */
-    data() {
+    protected data() {
         // noinspection JSValidateTypes
         return {
             ...super.data(),
@@ -101,27 +126,28 @@ class MultiEnumFieldView extends ArrayFieldView {
         };
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @deprecated As of v8.3.0.
-     * @todo Remove.
+     * @todo Remove in v11.0.
      */
     getTranslatedOptions() {
-        return (this.params.options || []).map(item => {
-            if (this.translatedOptions !== null) {
-                if (item in this.translatedOptions) {
-                    return this.translatedOptions[item];
-                }
+        return (this.params.options ?? []).map((item: string) => {
+            if (this.translatedOptions !== null && item in this.translatedOptions) {
+                return this.translatedOptions[item];
             }
 
             return item;
         });
     }
 
-    translateValueToEditLabel(value) {
+    private translateValueToEditLabel(value: string): string {
         let label = value;
 
-        if (~(this.params.options || []).indexOf(value)) {
-            label = this.getLanguage().translateOption(value, this.name, this.scope);
+        const options: string[] = this.params.options ?? [];
+
+        if (options.includes(value)) {
+            label = this.getLanguage().translateOption(value, this.name, this.entityType);
         }
 
         if (this.translatedOptions) {
@@ -137,12 +163,9 @@ class MultiEnumFieldView extends ArrayFieldView {
         return label;
     }
 
-    /**
-     * @protected
-     */
-    setupFieldEvents() {}
+    protected setupFieldEvents() {}
 
-    afterRender() {
+    protected afterRender() {
         if (this.isSearchMode()) {
             this.renderSearch();
 
@@ -163,7 +186,9 @@ class MultiEnumFieldView extends ArrayFieldView {
                     value = valueList[i] = '__emptystring__';
                 }
 
-                if (!~(this.params.options || []).indexOf(value)) {
+                const options: string[] = this.params.options ?? [];
+
+                if (!~options.indexOf(value)) {
                     items.push({
                         value: value,
                         text: this.translateValueToEditLabel(originalValue),
@@ -171,9 +196,9 @@ class MultiEnumFieldView extends ArrayFieldView {
                 }
             }
 
-            this.$element.val(valueList.join(this.itemDelimiter));
+            this.$element?.val(valueList.join(this.itemDelimiter));
 
-            (this.params.options || []).forEach(value => {
+            (this.params.options ?? []).forEach(value => {
                 const originalValue = value;
 
                 if (value === '') {
@@ -187,7 +212,6 @@ class MultiEnumFieldView extends ArrayFieldView {
                 });
             });
 
-            /** @type {module:ui/multi-select~Options} */
             const multiSelectOptions = {
                 items: items,
                 delimiter: this.itemDelimiter,
@@ -195,23 +219,18 @@ class MultiEnumFieldView extends ArrayFieldView {
                 draggable: true,
                 allowCustomOptions: this.allowCustomOptions,
                 restoreOnBackspace: this.restoreOnBackspace,
-                create: input => this.createCustomOptionCallback(input),
+                create: (input: string) => this.createCustomOptionCallback(input),
             };
 
-            MultiSelect.init(this.$element, multiSelectOptions);
+            MultiSelect.init(this.$element as any, multiSelectOptions);
 
-            this.$element.on('change', () => {
+            this.$element?.on('change', () => {
                 this.trigger('change');
             });
         }
     }
 
-    /**
-     * @protected
-     * @param {string} input
-     * @return {{text: string, value: string}|null}
-     */
-    createCustomOptionCallback(input) {
+    protected createCustomOptionCallback(input: string): {text: string, value: string} | null {
         if (input.length > this.MAX_ITEM_LENGTH) {
             const message = this.translate('arrayItemMaxLength', 'messages')
                 .replace('{max}', this.MAX_ITEM_LENGTH.toString());
@@ -239,12 +258,12 @@ class MultiEnumFieldView extends ArrayFieldView {
         };
     }
 
-    focusOnInlineEdit() {
-        MultiSelect.focus(this.$element);
+    protected focusOnInlineEdit() {
+        MultiSelect.focus(this.$element as any);
     }
 
-    fetch() {
-        let list = this.$element.val().split(this.itemDelimiter);
+    fetch(): Record<string, any> {
+        let list = ((this.$element?.val() ?? '') as string).split(this.itemDelimiter);
 
         if (list.length === 1 && list[0] === '') {
             list = [];
@@ -256,23 +275,21 @@ class MultiEnumFieldView extends ArrayFieldView {
             }
         }
 
-        if (this.params.isSorted && this.translatedOptions) {
+        const translatedOptions = this.translatedOptions;
+
+        if (this.params.isSorted && translatedOptions) {
             list = list.sort((v1, v2) => {
-                 return (this.translatedOptions[v1] || v1)
-                     .localeCompare(this.translatedOptions[v2] || v2);
+                 return (translatedOptions[v1] || v1)
+                     .localeCompare(translatedOptions[v2] || v2);
             });
         }
 
-        const data = {};
-
-        data[this.name] = list;
-
-        return data;
+        return {[this.name]: list};
     }
 
     validateRequired() {
         if (!this.isRequired()) {
-            return;
+            return false;
         }
 
         const value = this.model.get(this.name);
@@ -285,11 +302,13 @@ class MultiEnumFieldView extends ArrayFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     validateMaxCount() {
         if (!this.params.maxCount) {
-            return;
+            return false;
         }
 
         const itemList = this.model.get(this.name) || [];
@@ -304,6 +323,8 @@ class MultiEnumFieldView extends ArrayFieldView {
 
             return true;
         }
+
+        return false;
     }
 }
 

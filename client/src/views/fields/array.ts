@@ -34,6 +34,7 @@ import BaseFieldView, {
     BaseViewSchema,
     FieldValidator,
 } from 'views/fields/base';
+import {StyleMap} from 'views/fields/enum';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
 import ModalView, {ModalOptions} from 'views/modal';
@@ -44,8 +45,6 @@ import _ from 'underscore';
 import JQuery from 'jquery'
 
 const $ = JQuery;
-
-type StyleMap = Record<string, 'warning' | 'danger' | 'success' | 'info' | 'primary' | 'default'>;
 
 /**
  * Parameters.
@@ -146,11 +145,11 @@ export interface ArrayOptions extends BaseOptions {
  */
 class ArrayFieldView<
     S extends BaseViewSchema = BaseViewSchema,
-    P extends ArrayParams = ArrayParams,
     O extends ArrayOptions = ArrayOptions,
+    P extends ArrayParams = ArrayParams,
 > extends BaseFieldView<S, O, P> {
 
-    readonly type = 'array'
+    readonly type: string = 'array'
 
     protected listTemplate = 'fields/array/list'
     protected listLinkTemplate = 'fields/array/list-link'
@@ -190,7 +189,7 @@ class ArrayFieldView<
 
     protected selected: string[]
 
-    private allowCustomOptions: boolean
+    protected allowCustomOptions: boolean
 
     private noEmptyString: boolean
 
