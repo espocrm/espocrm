@@ -29,7 +29,6 @@
 
 namespace tests\integration\Espo\User;
 
-use Espo\Core\Container;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Formula\Exceptions\NotAllowedUsage;
 use Espo\Core\Formula\Manager as FormulaManager;
