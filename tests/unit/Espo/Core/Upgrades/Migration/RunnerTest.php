@@ -59,7 +59,7 @@ class RunnerTest extends TestCase
         $this->configWriter = $this->createMock(ConfigWriter::class);
     }
 
-    public function testRun(): void
+    public function testRunMigration(): void
     {
         $this->versionDataProvider
             ->expects($this->once())
@@ -102,6 +102,80 @@ class RunnerTest extends TestCase
                 ['8.1', true],
                 ['8.3', true],
             ]);
+
+        $runner = new Runner(
+            $this->stepsProvider,
+            $this->versionDataProvider,
+            $this->stepsRunner,
+            $this->dataManager,
+            $this->configWriter
+        );
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $runner->run($this->io);
+    }
+
+    public function testRunNoMigration(): void
+    {
+        $this->versionDataProvider
+            ->expects($this->once())
+            ->method('getTargetVersion')
+            ->willReturn('9.3.4');
+
+        $this->versionDataProvider
+            ->expects($this->once())
+            ->method('getPreviousVersion')
+            ->willReturn('9.2.7');
+
+
+        $this->stepsRunner
+            ->expects($this->never())
+            ->method('runPrepare');
+
+        $this->stepsRunner
+            ->expects($this->never())
+            ->method('runAfterUpgrade');
+
+        $this->configWriter
+            ->expects($this->once())
+            ->method('set')
+            ->with('version', '9.3.4');
+
+        $runner = new Runner(
+            $this->stepsProvider,
+            $this->versionDataProvider,
+            $this->stepsRunner,
+            $this->dataManager,
+            $this->configWriter
+        );
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $runner->run($this->io);
+    }
+
+    public function testRunSameVersion(): void
+    {
+        $this->versionDataProvider
+            ->expects($this->once())
+            ->method('getTargetVersion')
+            ->willReturn('9.3.4');
+
+        $this->versionDataProvider
+            ->expects($this->once())
+            ->method('getPreviousVersion')
+            ->willReturn('9.3.4');
+
+        $this->stepsRunner
+            ->expects($this->never())
+            ->method('runPrepare');
+
+        $this->stepsRunner
+            ->expects($this->never())
+            ->method('runAfterUpgrade');
+
+        $this->configWriter
+            ->expects($this->never())
+            ->method('set');
 
         $runner = new Runner(
             $this->stepsProvider,

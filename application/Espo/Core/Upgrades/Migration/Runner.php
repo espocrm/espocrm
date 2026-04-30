@@ -71,6 +71,13 @@ class Runner
         if ($afterSteps === []) {
             $io->writeLine("No migrations to run.");
 
+            if ($version !== $targetVersion) {
+                $this->updateVersion($targetVersion);
+                $this->dataManager->updateAppTimestamp();
+
+                $io->writeLine("Completed.");
+            }
+
             return;
         }
 
