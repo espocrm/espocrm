@@ -26,12 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module view */
-
 import {View as BullView} from 'bullbone';
 import Model from 'model';
 import Collection from 'collection';
 import Ui from 'ui';
+import type Preferences from 'models/preferences';
+import type Settings from 'models/settings';
+import type User from 'models/user';
+import type ViewHelper from 'view-helper';
+import type AclManager from 'acl-manager';
+import type ModelFactory from 'model-factory';
+import type CollectionFactory from 'collection-factory';
+import type Router from 'router';
+import type Storage from 'storage';
+import type SessionStorage from 'session-storage';
+import type Language from 'language';
+import type Metadata from 'metadata';
+import type Cache from 'cache';
+import type DateTime from 'date-time';
+import type NumberUtil from 'number-util';
+import type FieldManager from 'field-manager';
+import type BaseController from 'controllers/base';
+import type ThemeManager from 'theme-manager';
 
 export interface ConfirmOptions {
     message: string;
@@ -131,9 +147,6 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
 
     /**
      * Escape a string.
-     *
-     * @param {string} string
-     * @returns {string}
      */
     escapeString(string: string): string {
         return Handlebars.Utils.escapeExpression(string);
@@ -171,14 +184,14 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get a view-helper.
      */
-    getHelper(): import('view-helper').default {
-        return this._helper as import('view-helper').default;
+    getHelper(): ViewHelper {
+        return this._helper as ViewHelper;
     }
 
     /**
      * Get a current user.
      */
-    getUser(): import('models/user').default {
+    getUser(): User {
         // @ts-ignore
         return this._helper.user;
     }
@@ -186,7 +199,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the preferences.
      */
-    getPreferences(): import('models/preferences').default {
+    getPreferences(): Preferences {
         // @ts-ignore
         return this._helper.preferences;
     }
@@ -194,7 +207,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the config.
      */
-    getConfig(): import('models/settings').default {
+    getConfig(): Settings {
         // @ts-ignore
         return this._helper.settings;
     }
@@ -202,7 +215,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the ACL.
      */
-    getAcl(): import('acl-manager').default {
+    getAcl(): AclManager {
         // @ts-ignore
         return this._helper.acl;
     }
@@ -210,7 +223,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the model factory.
      */
-    getModelFactory(): import('model-factory').default {
+    getModelFactory(): ModelFactory {
         // @ts-ignore
         return this._helper.modelFactory;
     }
@@ -218,7 +231,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the collection factory.
      */
-    getCollectionFactory(): import('collection-factory').default {
+    getCollectionFactory(): CollectionFactory{
         // @ts-ignore
         return this._helper.collectionFactory;
     }
@@ -226,7 +239,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the router.
      */
-    getRouter(): import('router').default {
+    getRouter(): Router {
         // @ts-ignore
         return this._helper.router;
     }
@@ -234,7 +247,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the storage-util.
      */
-    getStorage(): import('storage').default {
+    getStorage(): Storage {
         // @ts-ignore
         return this._helper.storage;
     }
@@ -242,7 +255,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the session-storage-util.
      */
-    getSessionStorage(): import('session-storage').default {
+    getSessionStorage(): SessionStorage{
         // @ts-ignore
         return this._helper.sessionStorage;
     }
@@ -250,7 +263,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the language-util.
      */
-    getLanguage(): import('language').default {
+    getLanguage(): Language {
         // @ts-ignore
         return this._helper.language;
     }
@@ -258,7 +271,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get metadata.
      */
-    getMetadata(): import('metadata').default {
+    getMetadata(): Metadata {
         // @ts-ignore
         return this._helper.metadata;
     }
@@ -266,7 +279,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the cache-util.
      */
-    getCache(): import('cache').default {
+    getCache(): Cache {
         // @ts-ignore
         return this._helper.cache;
     }
@@ -274,7 +287,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the date-time util.
      */
-    getDateTime(): import('date-time').default {
+    getDateTime(): DateTime {
         // @ts-ignore
         return this._helper.dateTime;
     }
@@ -282,7 +295,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the number-util.
      */
-    getNumberUtil(): import('number-util').default {
+    getNumberUtil(): NumberUtil{
         // @ts-ignore
         return this._helper.numberUtil;
     }
@@ -290,7 +303,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the field manager.
      */
-    getFieldManager(): import('field-manager').default {
+    getFieldManager(): FieldManager {
         // @ts-ignore
         return this._helper.fieldManager;
     }
@@ -299,9 +312,8 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
      * Get the base-controller.
      *
      * @internal
-     * @return {import('controllers/base').default}
      */
-    getBaseController(): import('controllers/base').default {
+    getBaseController(): BaseController {
         // @ts-ignore
         return this._helper.baseController;
     }
@@ -309,7 +321,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
     /**
      * Get the theme manager.
      */
-    getThemeManager(): import('theme-manager').default {
+    getThemeManager(): ThemeManager {
         // @ts-ignore
         return this._helper.themeManager;
     }
@@ -328,7 +340,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
      *
      * @param title A title.
      */
-    setPageTitle(title: string) {
+    protected setPageTitle(title: string) {
         this.getHelper().pageTitle.setTitle(title);
     }
 
