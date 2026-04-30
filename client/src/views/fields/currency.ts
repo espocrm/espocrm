@@ -56,8 +56,6 @@ export interface CurrencyParams extends BaseParams {
     disableFormatting?: boolean;
     /**
      * Decimal places.
-     *
-     * @todo ?
      */
     decimalPlaces?: number | null;
     /**
@@ -161,6 +159,10 @@ class CurrencyFieldView<
         this.defaultCurrency = this.getConfig().get('defaultCurrency');
         this.currencyList = this.getConfig().get('currencyList') || [this.defaultCurrency];
         this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+
+        if (typeof this.params.decimalPlaces === 'number') {
+            this.decimalPlaces = this.params.decimalPlaces;
+        }
 
         if (this.params.onlyDefaultCurrency) {
             this.currencyList = [this.defaultCurrency];
