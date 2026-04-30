@@ -74,6 +74,7 @@ class Runner
             if ($version !== $targetVersion) {
                 $this->updateVersion($targetVersion);
                 $this->dataManager->updateAppTimestamp();
+                $this->dataManager->rebuild();
 
                 $io->writeLine("Completed.");
             }
