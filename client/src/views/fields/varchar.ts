@@ -28,7 +28,12 @@
 
 /** @module views/fields/varchar */
 
-import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
+import BaseFieldView, {
+    BaseOptions as BaseOptions,
+    BaseParams as BaseParams,
+    BaseViewSchema,
+    FieldValidator,
+} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import Autocomplete from 'ui/autocomplete';
 import MultiSelect from 'ui/multi-select';
@@ -80,11 +85,11 @@ type AutocompleteReturn = Promise<import('ui/autocomplete').AutocompleteItem & R
  */
 class VarcharFieldView<
     S extends BaseViewSchema = BaseViewSchema,
-    P extends VarcharParams = VarcharParams,
     O extends VarcharOptions = VarcharOptions,
+    P extends VarcharParams = VarcharParams,
 > extends BaseFieldView<S, O, P> {
 
-    readonly type = 'varchar'
+    readonly type: string = 'varchar'
 
     protected listTemplate = 'fields/varchar/list'
     protected detailTemplate = 'fields/varchar/detail'
@@ -105,7 +110,7 @@ class VarcharFieldView<
         'isNotEmpty',
     ]
 
-    protected validations = [
+    protected validations: (FieldValidator | string)[] = [
         'required',
         'pattern',
     ]
@@ -124,7 +129,7 @@ class VarcharFieldView<
 
     private originalOptionList: string[] | null = null
 
-    setup() {
+    protected setup() {
         this.setupOptions();
 
         this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck || false;
@@ -239,7 +244,7 @@ class VarcharFieldView<
         });
     }
 
-    data() {
+    protected data() {
         const data = super.data();
 
         if (
