@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -30,85 +32,111 @@
 
 import FloatFieldView from 'views/fields/float';
 import Select from 'ui/select';
+import {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
+
+/**
+ * Parameters.
+ */
+export interface CurrencyParams extends BaseParams {
+    /**
+     * A min value.
+     */
+    min?: number;
+    /**
+     * A max value.
+     */
+    max?: number;
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Disable formatting.
+     */
+    disableFormatting?: boolean;
+    /**
+     * Decimal places.
+     *
+     * @todo ?
+     */
+    decimalPlaces?: number | null;
+    /**
+     * onlyDefaultCurrency
+     */
+    onlyDefaultCurrency?: boolean
+    /**
+     * Stored as decimal.
+     */
+    decimal?: boolean
+    /**
+     * Scale (for decimal).
+     */
+    scale?: number
+}
+
+/**
+ * Options.
+ */
+export interface CurrencyOptions extends BaseOptions {
+    /**
+     * Hide currency.
+     */
+    hideCurrency?: boolean;
+}
 
 /**
  * A currency field.
- *
- * @extends IntFieldView<module:views/fields/currency~params>
  */
-class CurrencyFieldView extends FloatFieldView {
+class CurrencyFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends CurrencyOptions = CurrencyOptions,
+    P extends CurrencyParams = CurrencyParams,
+> extends FloatFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/currency~options
-     * @property {
-     *     module:views/fields/currency~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type: string = 'currency'
 
-    /**
-     * @typedef {Object} module:views/fields/currency~params
-     * @property {number} [min] A max value.
-     * @property {number} [max] A max value.
-     * @property {boolean} [required] Required.
-     * @property {boolean} [disableFormatting] Disable formatting.
-     * @property {number|null} [decimalPlaces] A number of decimal places. @todo
-     * @property {boolean} [onlyDefaultCurrency] Only the default currency.
-     * @property {boolean} [decimal] Stored as decimal.
-     * @property {number} [scale] Scale (for decimal).
-     */
+    protected editTemplate = 'fields/currency/edit'
+    protected detailTemplate = 'fields/currency/detail'
+    protected listTemplate = 'fields/currency/list'
 
-    /**
-     * @param {
-     *     module:views/fields/currency~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'currency'
-
-    editTemplate = 'fields/currency/edit'
-    detailTemplate = 'fields/currency/detail'
     // noinspection JSUnusedGlobalSymbols
-    detailTemplate1 = 'fields/currency/detail-1'
+    protected detailTemplate1 = 'fields/currency/detail-1'
     // noinspection JSUnusedGlobalSymbols
-    detailTemplate2 = 'fields/currency/detail-2'
+    protected detailTemplate2 = 'fields/currency/detail-2'
     // noinspection JSUnusedGlobalSymbols
-    detailTemplate3 = 'fields/currency/detail-3'
-    listTemplate = 'fields/currency/list'
-    // noinspection JSUnusedGlobalSymbols
-    listTemplate1 = 'fields/currency/list-1'
-    // noinspection JSUnusedGlobalSymbols
-    listTemplate2 = 'fields/currency/list-2'
-    // noinspection JSUnusedGlobalSymbols
-    listTemplate3 = 'fields/currency/list-3'
-    detailTemplateNoCurrency = 'fields/currency/detail-no-currency'
+    protected detailTemplate3 = 'fields/currency/detail-3'
 
-    maxDecimalPlaces = 3
+    // noinspection JSUnusedGlobalSymbols
+    protected listTemplate1 = 'fields/currency/list-1'
+    // noinspection JSUnusedGlobalSymbols
+    protected listTemplate2 = 'fields/currency/list-2'
+    // noinspection JSUnusedGlobalSymbols
+    protected listTemplate3 = 'fields/currency/list-3'
 
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = [
+    protected detailTemplateNoCurrency = 'fields/currency/detail-no-currency'
+
+    protected maxDecimalPlaces: number = 3
+
+    protected validations: (FieldValidator | string)[] = [
         'required',
         'number',
         'range',
     ]
 
     /**
-     * @protected
-     * @type {string}
      * @since 9.2.6
      */
-    currencyAttribute
+    protected currencyAttribute: string
 
-    /** @inheritDoc */
-    data() {
+    protected currencyFieldName: string
+    protected isSingleCurrency: boolean
+    protected defaultCurrency: string
+    protected currencyList: string[]
+    protected decimalPlaces: number
+
+    private $currency: JQuery
+
+    protected data() {
         const currencyValue = this.model.get(this.currencyFieldName) ||
             this.getPreferences().get('defaultCurrency') ||
             this.getConfig().get('defaultCurrency');
@@ -126,8 +154,7 @@ class CurrencyFieldView extends FloatFieldView {
         };
     }
 
-    /** @inheritDoc */
-    setup() {
+    protected setup() {
         super.setup();
 
         this.currencyFieldName = this.currencyAttribute ?? this.name + 'Currency';
@@ -141,7 +168,7 @@ class CurrencyFieldView extends FloatFieldView {
 
         this.isSingleCurrency = this.currencyList.length <= 1;
 
-        const currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
+        const currencyValue = this.model.get(this.currencyFieldName) ||
             this.defaultCurrency;
 
         if (!this.currencyList.includes(currencyValue)) {
@@ -150,8 +177,7 @@ class CurrencyFieldView extends FloatFieldView {
         }
     }
 
-    /** @inheritDoc */
-    setupAutoNumericOptions() {
+    protected setupAutoNumericOptions() {
         this.autoNumericOptions = {
             digitGroupSeparator: this.thousandSeparator || '',
             decimalCharacter: this.decimalMark,
@@ -160,6 +186,7 @@ class CurrencyFieldView extends FloatFieldView {
             decimalPlaces: this.decimalPlaces,
             allowDecimalPadding: true,
             showWarnings: false,
+            // @ts-ignore
             formulaMode: true,
         };
 
@@ -170,18 +197,17 @@ class CurrencyFieldView extends FloatFieldView {
         }
     }
 
-    getCurrencyFormat() {
+    protected getCurrencyFormat(): number {
         return this.getConfig().get('currencyFormat') || 1;
     }
 
     _getTemplateName() {
         if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
-            let prop;
+            let prop: string;
 
             if (this.mode === this.MODE_LIST) {
                 prop = 'listTemplate' + this.getCurrencyFormat().toString();
-            }
-            else {
+            } else {
                 prop = 'detailTemplate' + this.getCurrencyFormat().toString();
             }
 
@@ -190,68 +216,66 @@ class CurrencyFieldView extends FloatFieldView {
             }
 
             if (prop in this) {
-                return this[prop];
+                return (this as any)[prop];
             }
         }
 
+        // @ts-ignore
         return super._getTemplateName();
     }
 
-    formatNumber(value) {
+    protected formatNumber(value: number | null): string | null {
         return this.formatNumberDetail(value);
     }
 
-    formatNumberDetail(value) {
-        if (value !== null) {
-            const currencyDecimalPlaces = this.decimalPlaces;
-
-            if (currencyDecimalPlaces === 0) {
-                value = Math.round(value);
-            }
-            else if (currencyDecimalPlaces) {
-                value = Math.round(
-                    value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
-                );
-            }
-            else {
-                value = Math.round(
-                    value * Math.pow(10, this.maxDecimalPlaces)) / (Math.pow(10, this.maxDecimalPlaces)
-                );
-            }
-
-            const parts = value.toString().split(".");
-
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
-
-            if (currencyDecimalPlaces === 0) {
-                return parts[0];
-            }
-            else if (currencyDecimalPlaces) {
-                let decimalPartLength = 0;
-
-                if (parts.length > 1) {
-                    decimalPartLength = parts[1].length;
-                } else {
-                    parts[1] = '';
-                }
-
-                if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
-                    const limit = currencyDecimalPlaces - decimalPartLength;
-
-                    for (let i = 0; i < limit; i++) {
-                        parts[1] += '0';
-                    }
-                }
-            }
-
-            return parts.join(this.decimalMark);
+    protected formatNumberDetail(value: number | null): string {
+        if (value === null) {
+            return '';
         }
 
-        return '';
+        const currencyDecimalPlaces = this.decimalPlaces;
+
+        if (currencyDecimalPlaces === 0) {
+            value = Math.round(value);
+        } else if (currencyDecimalPlaces) {
+            value = Math.round(
+                value * Math.pow(10, currencyDecimalPlaces)) / (Math.pow(10, currencyDecimalPlaces)
+            );
+        } else {
+            value = Math.round(
+                value * Math.pow(10, this.maxDecimalPlaces)) / (Math.pow(10, this.maxDecimalPlaces)
+            );
+        }
+
+        const parts = value.toString().split('.');
+
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
+
+        if (currencyDecimalPlaces === 0) {
+            return parts[0];
+        } else if (currencyDecimalPlaces) {
+            let decimalPartLength = 0;
+
+            if (parts.length > 1) {
+                decimalPartLength = parts[1].length;
+            } else {
+                parts[1] = '';
+            }
+
+            if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
+                const limit = currencyDecimalPlaces - decimalPartLength;
+
+                for (let i = 0; i < limit; i++) {
+                    parts[1] += '0';
+                }
+            }
+        }
+
+        return parts.join(this.decimalMark);
     }
 
-    parse(value) {
-        value = (value !== '') ? value : null;
+    protected parse(input: string): number | string | null {
+        let value = (input !== '') ? input : null;
 
         if (value === null) {
             return null;
@@ -273,14 +297,14 @@ class CurrencyFieldView extends FloatFieldView {
             }
         }
 
-        if (!this.params.decimal) {
-            value = parseFloat(value);
+        if (this.params.decimal) {
+            return value;
         }
 
-        return value;
+        return parseFloat(value);
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
@@ -312,16 +336,18 @@ class CurrencyFieldView extends FloatFieldView {
 
             return true;
         }
+
+        return false;
     }
 
-    fetch() {
-        let value = this.$element.val().trim();
+    fetch(): Record<string, any> {
+        const valueString = ((this.$element?.val() ?? '') as string).trim();
 
-        value = this.parse(value);
+        const value = this.parse(valueString);
 
-        const data = {};
+        const data = {} as Record<string, any>;
 
-        let currencyValue = this.$currency.length ?
+        let currencyValue: any = this.$currency.length ?
             this.$currency.val() :
             this.defaultCurrency;
 

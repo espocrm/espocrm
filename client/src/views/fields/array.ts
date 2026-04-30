@@ -28,7 +28,12 @@
 
 /** @module views/fields/array */
 
-import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
+import BaseFieldView, {
+    BaseOptions as BaseOptions,
+    BaseParams as BaseParams,
+    BaseViewSchema,
+    FieldValidator,
+} from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
 import ModalView, {ModalOptions} from 'views/modal';
@@ -163,7 +168,7 @@ class ArrayFieldView<
 
     protected maxItemLength: number | null = null
 
-    protected validations = ['required', 'maxCount']
+    protected validations: (FieldValidator | string)[] = ['required', 'maxCount']
 
     protected readonly MAX_ITEM_LENGTH = 100
 

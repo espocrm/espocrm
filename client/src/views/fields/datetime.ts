@@ -30,7 +30,7 @@
 
 import DateFieldView from 'views/fields/date';
 import moment from 'moment';
-import {BaseOptions as BaseOptions, BaseViewSchema} from 'views/fields/base';
+import {BaseOptions as BaseOptions, BaseViewSchema, FieldValidator} from 'views/fields/base';
 import JQuery from 'jquery'
 
 const $ = JQuery;
@@ -86,7 +86,7 @@ class DatetimeFieldView<
 
     protected editTemplate = 'fields/datetime/edit'
 
-    protected validations = [
+    protected validations: (FieldValidator | string)[] = [
         'required',
         'datetime',
         'after',

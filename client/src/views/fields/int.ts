@@ -28,7 +28,7 @@
 
 /** @module views/fields/int */
 
-import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
+import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
 import AutoNumeric from 'autonumeric';
 
 /**
@@ -74,7 +74,7 @@ class IntFieldView<
     protected editTemplate = 'fields/int/edit'
     protected searchTemplate = 'fields/int/search'
 
-    protected validations = [
+    protected validations: (FieldValidator | string)[] = [
         'required',
         'int',
         'range',
@@ -364,7 +364,7 @@ class IntFieldView<
         return false;
     }
 
-    protected parse(input: string): number | null {
+    protected parse(input: string): number | string | null {
         let value = (input !== '') ? input : null;
 
         if (value === null) {
@@ -401,14 +401,14 @@ class IntFieldView<
 
         let data: any;
 
-        if (value !== null && isNaN(value)) {
+        if (typeof value === 'number' && isNaN(value)) {
             return null;
         }
 
         if (type === 'between') {
             const valueTo = this.parse(this.$el.find('input.additional').val());
 
-            if (valueTo !== null && isNaN(valueTo)) {
+            if (typeof valueTo === 'number' && isNaN(valueTo)) {
                 return null;
             }
 

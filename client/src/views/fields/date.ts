@@ -28,7 +28,12 @@
 
 /** @module views/fields/date */
 
-import BaseFieldView, {BaseOptions as BaseOptions, BaseParams as BaseParams, BaseViewSchema} from 'views/fields/base';
+import BaseFieldView, {
+    BaseOptions as BaseOptions,
+    BaseParams as BaseParams,
+    BaseViewSchema,
+    FieldValidator,
+} from 'views/fields/base';
 import moment from 'moment';
 import Datepicker from 'ui/datepicker';
 import JQuery from 'jquery'
@@ -82,7 +87,7 @@ class DateFieldView<
     protected editTemplate = 'fields/date/edit'
     protected searchTemplate = 'fields/date/search'
 
-    protected validations = [
+    protected validations: (FieldValidator | string)[] = [
         'required',
         'date',
         'after',

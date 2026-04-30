@@ -29,7 +29,7 @@
 /** @module views/fields/float */
 
 import IntFieldView from 'views/fields/int';
-import {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
+import {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
 
 /**
  * Parameters.
@@ -73,12 +73,12 @@ class FloatFieldView<
 
     readonly type: string = 'float'
 
-    editTemplate = 'fields/float/edit'
+    protected editTemplate = 'fields/float/edit'
 
     decimalMark = '.'
     decimalPlacesRawValue = 10
 
-    protected validations = ['required', 'float', 'range']
+    protected validations: (FieldValidator | string)[] = ['required', 'float', 'range']
 
     protected setup() {
         super.setup();
@@ -177,7 +177,7 @@ class FloatFieldView<
         return false;
     }
 
-    protected parse(input: string): number | null {
+    protected parse(input: string): number | string | null {
         let value = (input !== '') ? input : null;
 
         if (value === null) {

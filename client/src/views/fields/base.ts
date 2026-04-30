@@ -99,6 +99,8 @@ export interface BaseViewSchema {
     model: Model;
 }
 
+export type FieldValidator = () => boolean;
+
 type Mode = 'list' | 'listLink' | 'detail' | 'edit' | 'search';
 
 /**
@@ -182,7 +184,7 @@ export default class BaseFieldView<
      *
      * Functions are supported as of v8.3.
      */
-    protected validations: Array<(() => boolean) | string> = ['required']
+    protected validations: (FieldValidator | string)[] = ['required']
 
     /**
      * List mode.

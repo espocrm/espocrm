@@ -279,7 +279,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
     set(
         attribute: keyof T,
         value: any,
-        options?: {silent: boolean} & Record<string, any>,
+        options?: {silent?: boolean} & Record<string, any>,
     ): this {
 
         if (attribute == null) {
