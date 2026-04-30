@@ -40,7 +40,7 @@
             "index": true,
             "inlineEditDisabled": true,
             "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "massUpdateDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
             ]
@@ -50,6 +50,7 @@
             "maxLength": 150,
             "internal": true,
             "utility": true,
+            "massUpdateDisabled": true,
             "directAccessDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
