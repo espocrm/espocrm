@@ -29,57 +29,58 @@
 /** @module views/fields/float */
 
 import IntFieldView from 'views/fields/int';
+import {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
+
+/**
+ * Parameters.
+ */
+export interface FloatParams extends BaseParams {
+    /**
+     * A min value.
+     */
+    min?: number;
+    /**
+     * A max value.
+     */
+    max?: number;
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Disable formatting.
+     */
+    disableFormatting?: boolean;
+    /**
+     * Decimal places.
+     */
+    decimalPlaces?: number | null;
+}
+
+/**
+ * Options.
+ */
+export interface FloatOptions extends BaseOptions {}
 
 /**
  * A float field.
- *
- * @extends IntFieldView<module:views/fields/float~params>
  */
-class FloatFieldView extends IntFieldView {
+class FloatFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends FloatOptions = FloatOptions,
+    P extends FloatParams = FloatParams,
+> extends IntFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/float~options
-     * @property {
-     *     module:views/fields/float~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
-
-    /**
-     * @typedef {Object} module:views/fields/float~params
-     * @property {number} [min] A max value.
-     * @property {number} [max] A max value.
-     * @property {boolean} [required] Required.
-     * @property {boolean} [disableFormatting] Disable formatting.
-     * @property {number|null} [decimalPlaces] A number of decimal places.
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/float~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'float'
+    readonly type: string = 'float'
 
     editTemplate = 'fields/float/edit'
 
     decimalMark = '.'
     decimalPlacesRawValue = 10
 
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = ['required', 'float', 'range']
+    protected validations = ['required', 'float', 'range']
 
-    /** @inheritDoc */
-    setup() {
+    protected setup() {
         super.setup();
 
         if (this.getPreferences().has('decimalMark')) {
@@ -98,9 +99,7 @@ class FloatFieldView extends IntFieldView {
         }
     }
 
-    /** @inheritDoc */
-    setupAutoNumericOptions() {
-        // noinspection JSValidateTypes
+    protected setupAutoNumericOptions() {
         this.autoNumericOptions = {
             digitGroupSeparator: this.thousandSeparator || '',
             decimalCharacter: this.decimalMark,
@@ -110,25 +109,18 @@ class FloatFieldView extends IntFieldView {
             decimalPlacesRawValue: this.decimalPlacesRawValue,
             allowDecimalPadding: false,
             showWarnings: false,
+            // @ts-ignore
             formulaMode: true,
         };
     }
 
-    getValueForDisplay() {
+    protected getValueForDisplay(): string | null  {
         const value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
     }
 
-    formatNumber(value) {
-        if (this.disableFormatting) {
-            return value;
-        }
-
-        return this.formatNumberDetail(value);
-    }
-
-    formatNumberDetail(value) {
+    protected formatNumberDetail(value: number | null): string {
         if (value === null) {
             return '';
         }
@@ -137,11 +129,8 @@ class FloatFieldView extends IntFieldView {
 
         if (decimalPlaces === 0) {
             value = Math.round(value);
-        }
-        else if (decimalPlaces) {
-            value = Math.round(
-                 value * Math.pow(10, decimalPlaces)) / (Math.pow(10, decimalPlaces)
-            );
+        } else if (decimalPlaces) {
+            value = Math.round(value * Math.pow(10, decimalPlaces)) / (Math.pow(10, decimalPlaces));
         }
 
         const parts = value.toString().split(".");
@@ -151,7 +140,8 @@ class FloatFieldView extends IntFieldView {
         if (decimalPlaces === 0) {
             return parts[0];
         }
-        else if (decimalPlaces) {
+
+        if (decimalPlaces) {
             let decimalPartLength = 0;
 
             if (parts.length > 1) {
@@ -183,10 +173,12 @@ class FloatFieldView extends IntFieldView {
 
             return true;
         }
+
+        return false;
     }
 
-    parse(value) {
-        value = (value !== '') ? value : null;
+    protected parse(input: string): number | null {
+        let value = (input !== '') ? input : null;
 
         if (value === null) {
             return null;
@@ -201,14 +193,12 @@ class FloatFieldView extends IntFieldView {
         return parseFloat(value);
     }
 
-    fetch() {
-        let value = this.$element.val();
-        value = this.parse(value);
+    fetch(): Record<string, unknown> {
+        const valueString = (this.$element?.val() ?? '') as string;
 
-        const data = {};
-        data[this.name] = value;
+        const value = this.parse(valueString);
 
-        return data;
+        return {[this.name]: value};
     }
 }
 

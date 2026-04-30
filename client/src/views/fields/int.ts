@@ -31,6 +31,9 @@
 import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
 import AutoNumeric from 'autonumeric';
 
+/**
+ * Parameters.
+ */
 export interface IntParams extends BaseParams {
     /**
      * A min value.
@@ -50,12 +53,13 @@ export interface IntParams extends BaseParams {
     disableFormatting?: boolean;
 }
 
+/**
+ * Options.
+ */
 export interface IntOptions extends BaseOptions {}
 
 /**
  * An integer field.
- *
- * @extends BaseFieldView<module:views/fields/int~params>
  */
 class IntFieldView<
     S extends BaseViewSchema = BaseViewSchema,
@@ -63,7 +67,7 @@ class IntFieldView<
     P extends IntParams = IntParams,
 > extends BaseFieldView<S, O, P> {
 
-    readonly type = 'int'
+    readonly type: string = 'int'
 
     protected listTemplate = 'fields/int/list'
     protected detailTemplate = 'fields/int/detail'
@@ -215,15 +219,15 @@ class IntFieldView<
         return this.formatNumber(value);
     }
 
-    protected formatNumber(value: string | null): string | null {
+    protected formatNumber(value: number | null): string | null {
         if (this.disableFormatting) {
-            return value;
+            return value?.toString() ?? null;
         }
 
         return this.formatNumberDetail(value);
     }
 
-    protected formatNumberDetail(value: string | null): string {
+    protected formatNumberDetail(value: number | null): string {
         if (value === null) {
             return '';
         }
