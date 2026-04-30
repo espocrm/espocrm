@@ -119,6 +119,10 @@
             "type": "bool",
             "default": true
         },
+        "notificationSound": {
+            "type": "bool",
+            "default": false
+        },
         "autoFollowEntityTypeList": {
             "type": "multiEnum",
             "view": "views/preferences/fields/auto-follow-entity-type-list",

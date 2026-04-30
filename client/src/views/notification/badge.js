@@ -88,7 +88,7 @@ class NotificationBadgeView extends View {
      * @private
      * @type {string}
      */
-    soundPath = 'client/sounds/pop_cork'
+    soundPath = 'client/sounds/cloud.ogg'
 
     /**
      * @private
@@ -108,7 +108,6 @@ class NotificationBadgeView extends View {
         this.addActionHandler('showNotifications', () => this.showNotifications());
 
         this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
-        this.notificationSoundsDisabled = true;
         this.useWebSocket = this.webSocketManager.isEnabled();
 
         const clearTimeouts = () => {
@@ -240,34 +239,14 @@ class NotificationBadgeView extends View {
     }
 
     playSound() {
-        if (this.notificationSoundsDisabled) {
+        if (!this.getPreferences().get('notificationSound')) {
             return;
         }
 
-        const audioElement =
-            /** @type {HTMLAudioElement} */$('<audio>')
-                .attr('autoplay', 'autoplay')
-                .append(
-                    $('<source>')
-                        .attr('src', this.soundPath + '.mp3')
-                        .attr('type', 'audio/mpeg')
-                )
-                .append(
-                    $('<source>')
-                        .attr('src', this.soundPath + '.ogg')
-                        .attr('type', 'audio/ogg')
-                )
-                .append(
-                    $('<embed>')
-                        .attr('src', this.soundPath + '.mp3')
-                        .attr('hidden', 'true')
-                        .attr('autostart', 'true')
-                        .attr('false', 'false')
-                )
-                .get(0);
+        const audio = new Audio(this.soundPath);
+        audio.volume = 0.3;
 
-        audioElement.volume = 0.3;
-        audioElement.play();
+        audio.play();
     }
 
     /**

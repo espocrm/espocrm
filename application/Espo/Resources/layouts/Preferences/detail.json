@@ -150,7 +150,7 @@
             ],
             [
                 {"name": "notificationGrouping"},
-                false
+                {"name": "notificationSound"}
             ]
         ]
     }

@@ -75,7 +75,8 @@
                 "assignmentEmailNotificationsIgnoreEntityTypeList": false,
                 "dashletsOptions": false,
                 "dashboardLayout": false,
-                "followAsCollaborator": false
+                "followAsCollaborator": false,
+                "notificationSound": false
             },
             "Call": {
                 "reminders": false

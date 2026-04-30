@@ -59,7 +59,7 @@ class PopupNotificationView extends View {
      */
     isCollapsed = false
 
-    soundPath = 'client/sounds/pop_cork'
+    soundPath = 'client/sounds/cloud.ogg'
 
     /**
      * @param {{
@@ -84,8 +84,6 @@ class PopupNotificationView extends View {
         const containerSelector = this.containerSelector = `#${id}`;
 
         this.setSelector(containerSelector);
-
-        this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
 
         this.soundPath = this.getBasePath() +
             (this.getConfig().get('popupNotificationSound') || this.soundPath);
@@ -154,22 +152,14 @@ class PopupNotificationView extends View {
     }
 
     playSound() {
-        if (this.notificationSoundsDisabled) {
+        if (!this.getPreferences().get('notificationSound')) {
             return;
         }
 
-        const html =
-            '<audio autoplay="autoplay">' +
-            '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
-            '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
-            '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath + '.mp3" />' +
-            '</audio>';
+        const audio = new Audio(this.soundPath);
+        audio.volume = 0.3;
 
-        const $audio = $(html);
-
-        $audio.get(0).volume = 0.3;
-        // noinspection JSUnresolvedReference
-        $audio.get(0).play();
+        audio.play();
     }
 
     /**
