@@ -111,8 +111,8 @@ export interface EnumOptions extends BaseOptions {
  */
 class EnumFieldView<
     S extends BaseViewSchema = BaseViewSchema,
-    P extends EnumParams = EnumParams,
     O extends EnumOptions = EnumOptions,
+    P extends EnumParams = EnumParams,
 > extends BaseFieldView<S, O, P> {
 
     readonly type = 'enum'
