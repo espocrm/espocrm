@@ -109,13 +109,13 @@ class AccessTest extends BaseTestCase
             record\update('User', '{{id}}', $data);
         EOT;
 
+        $script = strtr($script, [
+            '{{id}}' => $userRegular->getId(),
+        ]);
+
         $thrown = false;
 
         try {
-            $script = strtr($script, [
-                '{{id}}' => $userRegular->getId(),
-            ]);
-
             $fm->run($script);
         } catch (NotAllowedUsage) {
             $thrown = true;
