@@ -26,27 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import ArrayFieldView from 'views/fields/array';
+import ArrayFieldView, {ArrayOptions, ArrayParams} from 'views/fields/array';
+import {BaseViewSchema} from 'views/fields/base';
+
+export interface UrlMultipleParams extends ArrayParams {
+    /**
+     * Strip.
+     */
+    strip?: boolean
+}
+
+export interface UrlMultipleOptions extends ArrayOptions {}
 
 /**
- * An Url-Multiple field.
+ * A Url-Multiple field.
  */
-class UrlMultipleFieldView extends ArrayFieldView {
+class UrlMultipleFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends UrlMultipleOptions = UrlMultipleOptions,
+    P extends UrlMultipleParams = UrlMultipleParams,
+> extends ArrayFieldView<S, O, P> {
 
-    type = 'urlMultiple'
+    readonly type: string = 'urlMultiple'
 
-    maxItemLength = 255
-    displayAsList = true
-    defaultProtocol = 'https:'
+    protected maxItemLength = 255
+    protected displayAsList = true
+    protected defaultProtocol = 'https:'
 
-    setup() {
+    protected setup() {
         super.setup();
 
         this.noEmptyString = true;
         this.params.pattern = '$uriOptionalProtocol';
     }
 
-    addValueFromUi(value) {
+    protected addValueFromUi(value: string) {
         value = value.trim();
 
         if (this.params.strip) {
@@ -64,12 +78,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
         super.addValueFromUi(value);
     }
 
-    /**
-     * @private
-     * @param {string} value
-     * @return {string}
-     */
-    decodeURI(value) {
+    private decodeURI(value: string): string {
         try {
             return decodeURI(value);
         } catch (e) {
@@ -79,11 +88,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
         }
     }
 
-    /**
-     * @param {string} value
-     * @return {string}
-     */
-    strip(value) {
+    private strip(value: string): string {
         if (value.indexOf('//') !== -1) {
             value = value.substring(value.indexOf('//') + 2);
         }
@@ -93,7 +98,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
         return value;
     }
 
-    prepareUrl(url) {
+    private prepareUrl(url: string): string {
         if (url.indexOf('//') === -1) {
             url = this.defaultProtocol + '//' + url;
         }
@@ -101,8 +106,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
         return url;
     }
 
-    getValueForDisplay() {
-        /** @type {JQuery[]} */
+    protected getValueForDisplay(): string {
         const $list = this.selected.map(value => {
             return $('<a>')
                 .attr('href', this.prepareUrl(value))
@@ -115,12 +119,12 @@ class UrlMultipleFieldView extends ArrayFieldView {
                 $('<div>')
                     .addClass('multi-enum-item-container')
                     .append($item)
-                    .get(0).outerHTML
+                    .get(0)?.outerHTML as any
             )
             .join('');
     }
 
-    getItemHtml(value) {
+    protected getItemHtml(value: string): string {
         const html = super.getItemHtml(value);
 
         const $item = $(html);
@@ -130,10 +134,10 @@ class UrlMultipleFieldView extends ArrayFieldView {
                 .attr('href', this.prepareUrl(value))
                 .css('user-drag', 'none')
                 .attr('target', '_blank')
-                .text(this.decodeURI(value))
+                .text(this.decodeURI(value)) as any
         );
 
-        return $item.get(0).outerHTML;
+        return $item.get(0)?.outerHTML as string;
     }
 }
 

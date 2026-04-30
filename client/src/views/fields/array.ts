@@ -191,7 +191,7 @@ class ArrayFieldView<
 
     protected allowCustomOptions: boolean
 
-    private noEmptyString: boolean
+    protected noEmptyString: boolean
 
     protected styleMap: StyleMap
 
@@ -644,7 +644,7 @@ class ArrayFieldView<
         this.selected = selected;
     }
 
-    getValueForDisplay() {
+    protected getValueForDisplay(): string {
         // Do not use the `html` method to avoid XSS.
 
         const list = this.selected.map(item => {
