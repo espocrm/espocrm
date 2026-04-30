@@ -53,13 +53,7 @@ class Extension extends RecordBase
      */
     public function postActionUpload(Request $request): stdClass
     {
-        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
-            throw new Forbidden();
-        }
-
-        if ($this->config->get('adminUpgradeDisabled')) {
-            throw new Forbidden("Disabled with 'adminUpgradeDisabled' parameter.");
-        }
+        $this->assertUpgradeAllowed();
 
         $body = $request->getBodyContents();
 
@@ -127,9 +121,7 @@ class Extension extends RecordBase
     {
         $params = $request->getRouteParams();
 
-        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
-            throw new Forbidden();
-        }
+        $this->assertUpgradeAllowed();
 
         $manager = $this->createManager();
 
@@ -151,5 +143,19 @@ class Extension extends RecordBase
     private function createManager(): ExtensionManager
     {
         return $this->injectableFactory->create(ExtensionManager::class);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertUpgradeAllowed(): void
+    {
+        if ($this->config->get('restrictedMode')) {
+            throw new Forbidden("Not allowed in restricted mode.");
+        }
+
+        if ($this->config->get('adminUpgradeDisabled')) {
+            throw new Forbidden("Disabled with 'adminUpgradeDisabled' parameter.");
+        }
     }
 }
