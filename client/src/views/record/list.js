@@ -619,6 +619,18 @@ class ListRecordView extends View {
      */
     noAllResultMassActions
 
+    /**
+     * @protected
+     * @type {string}
+     */
+    starredAttribute = 'isStarred'
+
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    hasStars
+
     /** @inheritDoc */
     events = {
         /**
@@ -1013,7 +1025,7 @@ class ListRecordView extends View {
                 return {
                     id: id,
                     isStarred: this.hasStars && this.collection.get(id) ?
-                        this.collection.get(id).attributes.isStarred :
+                        this.collection.get(id).attributes[this.starredAttribute] :
                         false,
                 };
             }) : [];
@@ -2091,11 +2103,7 @@ class ListRecordView extends View {
             this.forceSettings = true;
         }
 
-        /**
-         * @private
-         * @type {boolean}
-         */
-        this.hasStars = this.getMetadata().get(`scopes.${this.entityType}.stars`) || false;
+        this.hasStars = this.hasStars ?? this.getMetadata().get(`scopes.${this.entityType}.stars`) ?? false;
 
         if (
             this.getUser().isPortal() &&
@@ -2188,6 +2196,22 @@ class ListRecordView extends View {
 
         if (this.columnResize && this._listSettingsHelper) {
             this._columnResizeHelper = new ListColumnResizeHelper(this, this._listSettingsHelper);
+        }
+
+        if (this.hasStars) {
+            this.listenTo(this.collection, 'change:' + this.starredAttribute, (model) => {
+                const rowView = this.getRowView(model.id);
+
+                const element = rowView?.element;
+
+                if (!element) {
+                    return;
+                }
+
+                model.attributes[this.starredAttribute] ?
+                    element.classList.add('starred') :
+                    element.classList.remove('starred');
+            });
         }
     }
 
@@ -3160,6 +3184,17 @@ class ListRecordView extends View {
                 item.options.defs.widthPx = undefined;
             }
         });
+    }
+
+    /**
+     * Get a row view.
+     *
+     * @protected
+     * @return {import('view').default | null}
+     * @since 10.0.0
+     */
+    getRowView(id) {
+        return /** @type {import('view').default | null} */this.getView(id);
     }
 
     /**

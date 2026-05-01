@@ -108,11 +108,6 @@ class NotificationPanelView extends View {
                         }
                     ]
                 ],
-                right: {
-                    name: 'read',
-                    view: 'views/notification/fields/read',
-                    width: 'var(--10px)',
-                },
             },
         });
     }

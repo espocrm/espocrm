@@ -33,11 +33,22 @@ import ListExpandedRecordView from 'views/record/list-expanded';
 class NotificationListRecordView extends ListExpandedRecordView {
 
     /**
+     * @protected
+     * @type {boolean}
+     */
+    hasStars = true
+
+    /**
+     * @protected
+     * @type {string}
+     */
+    starredAttribute = 'isNotRead'
+
+    /**
      * @name collection
      * @type module:collections/note
      * @memberOf NotificationListRecordView#
      */
-
     setup() {
         super.setup();
 

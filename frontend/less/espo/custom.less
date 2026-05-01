@@ -1390,6 +1390,26 @@ section {
     display: inline;
 }
 
+.notification-list,
+#notifications-panel {
+    .list {
+        > .list-group {
+            > .list-group-item {
+                &.starred {
+                    &::before {
+                        content: " ";
+                        position: absolute;
+                        top: var(--14px);
+                        height: var(--16px);
+                        width: var(--3px);
+                        background-color: var(--brand-primary);
+                    }
+                }
+            }
+        }
+    }
+}
+
 .notification-list .expanded-row > .cell[data-name="data"],
 #notifications-panel .expanded-row > .cell[data-name="data"] {
     padding-left: 0;

@@ -82,6 +82,7 @@ class NotificationListView extends View {
             selector: '.notification-list',
             collection: this.collection,
             showCount: false,
+            rowActionsView: 'views/record/row-actions/remove-only',
             listLayout: {
                 rows: [
                     [
@@ -94,11 +95,6 @@ class NotificationListView extends View {
                         },
                     ],
                 ],
-                right: {
-                    name: 'read',
-                    view: 'views/notification/fields/read-with-menu',
-                    width: 'var(--10px)',
-                },
             },
         };
 

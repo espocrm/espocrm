@@ -43,4 +43,14 @@ export default class Notification extends Model {
             this.urlRoot = 'Notification/group';
         }
     }
+
+    setMultiple(attributes, options) {
+        attributes = {...attributes};
+
+        if (attributes.read !== undefined) {
+            attributes.isNotRead = !attributes.read;
+        }
+
+        return super.setMultiple(attributes, options);
+    }
 }
