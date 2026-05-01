@@ -113,7 +113,6 @@ class NotificationContainerFieldView extends BaseFieldView {
      * @private
      */
     removeMarkGroupRead() {
-        console.log(1);
         if (!this.isRendered()) {
             return;
         }
