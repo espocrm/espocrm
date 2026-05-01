@@ -34,10 +34,18 @@ class NotificationListView extends View {
 
     template = 'notification/list'
 
+    /**
+     * @private
+     * @type {boolean}
+     */
+    groupingEnabled
+
     setup() {
         this.addActionHandler('refresh', () => this.actionRefresh());
 
         this.addActionHandler('markAllNotificationsRead', () => this.actionMarkAllRead());
+
+        this.groupingEnabled = this.getPreferences().get('notificationGrouping') === true;
 
         const promise =
             this.getCollectionFactory().create('Notification')
@@ -91,6 +99,7 @@ class NotificationListView extends View {
                             view: 'views/notification/fields/container',
                             options: {
                                 containerSelector: this.getSelector(),
+                                groupingEnabled: this.groupingEnabled,
                             },
                         },
                     ],
@@ -108,6 +117,8 @@ class NotificationListView extends View {
     }
 
     actionMarkAllRead() {
+        this.collection.trigger('all-read');
+
         Ui.notifyWait();
 
         const $link = this.$el.find('[data-action="markAllNotificationsRead"]');

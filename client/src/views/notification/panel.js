@@ -112,9 +112,12 @@ class NotificationPanelView extends View {
         });
     }
 
-    actionMarkAllRead() {
-        Espo.Ajax.postRequest('Notification/action/markAllRead')
-            .then(() => this.trigger('all-read'));
+    async actionMarkAllRead() {
+        this.collection.trigger('all-read');
+
+        await Espo.Ajax.postRequest('Notification/action/markAllRead');
+
+        this.trigger('all-read')
     }
 
     close() {

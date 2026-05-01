@@ -101,6 +101,26 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         this.addActionHandler('showGrouped', () => this.showGrouped());
         this.addActionHandler('markGroupRead', () => this.markGroupRead());
+
+        if (this.model.collection) {
+            this.listenTo(this.model.collection, 'all-read', () => {
+                this.removeMarkGroupRead();
+            });
+        }
+    }
+
+    /**
+     * @private
+     */
+    removeMarkGroupRead() {
+        console.log(1);
+        if (!this.isRendered()) {
+            return;
+        }
+
+        const element = this.element?.querySelector('[data-action="markGroupRead"]');
+
+        element?.remove()
     }
 
     process() {
@@ -283,7 +303,6 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         this.triggerUpdateRead();
     }
-
 
     /**
      * @private
