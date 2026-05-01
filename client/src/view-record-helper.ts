@@ -251,7 +251,7 @@ export default class ViewRecordHelper {
      * @param {function()} [callback] From a specific callback.
      */
     off(name?: string, callback?: (...args: unknown[]) => void): this {
-        Events.off.call(this, name, callback);
+        Events.off.call(this, name, callback, arguments[2]);
 
         return this;
     }
