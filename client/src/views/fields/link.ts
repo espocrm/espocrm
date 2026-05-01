@@ -26,131 +26,142 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/link */
-
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 import Autocomplete from 'ui/autocomplete';
 import CascadeLinksHelper from 'helpers/field/cascade-links';
+import Ajax from 'ajax';
+import Ui from 'ui';
+
+import {AdvancedFilter} from 'search-manager';
+import Model from 'model';
+import {AjaxPromise} from 'util/ajax';
+
+/**
+ * Parameters.
+ */
+export interface LinkParams extends BaseParams {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Autocomplete on empty input.
+     */
+    autocompleteOnEmpty?: boolean;
+    /**
+     * Show 'Create' button.
+     */
+    createButton?: boolean;
+    /**
+     * An entity type.
+     *
+     * @since 9.1.0
+     */
+    entity?: string;
+}
+
+/**
+ * Options.
+ */
+export interface LinkOptions extends BaseOptions {
+    /**
+     * Disable create button in the select modal.
+     */
+    createDisabled?: boolean;
+    /**
+     * Cascading fields logic.
+     *
+     * @since 10.0.0
+     */
+    cascadingLogic?: CascadingLogic;
+    /**
+     * A foreign entity type.
+     */
+    foreignScope?: string;
+}
+
+interface CascadingLogic {
+    items: {
+        localField: string,
+        foreignField: string,
+        matchRequired: boolean,
+    }[]
+}
+
+interface SelectFieldHandler {
+    getAttributes: (model: Model) => Promise<Record<string, unknown>>;
+    getClearAttributes: () => Promise<Record<string, unknown>>;
+}
+
+interface SelectFilters {
+    bool?: string[];
+    advanced?: Object;
+    primary?: string;
+    orderBy?: string;
+    order?: 'asc'|'desc';
+}
 
 /**
  * A link field (belongs-to relation).
- *
- * @extends BaseFieldView<module:views/fields/link~params>
  */
-class LinkFieldView extends BaseFieldView {
+class LinkFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends LinkOptions = LinkOptions,
+    P extends LinkParams = LinkParams,
+> extends BaseFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/link~options
-     * @property {
-     *     module:views/fields/link~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     * @property {boolean} [createDisabled] Disable create button in the select modal.
-     * @property {{
-     *     items: {localField: string, foreignField: string, matchRequired: boolean}[]
-     * }} [cascadingLogic] Cascading fields logic. As of v10.0.0.
-     */
+    readonly type: string = 'link'
 
-    /**
-     * @typedef {Object} module:views/fields/link~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
-     * @property {boolean} [createButton] Show 'Create' button.
-     * @property {string} [entity] An entity type. As of 9.1.0.
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/link~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    /** @inheritDoc */
-    type = 'link'
-
-    /** @inheritDoc */
-    listTemplate = 'fields/link/list'
-    /** @inheritDoc */
-    detailTemplate = 'fields/link/detail'
-    /** @inheritDoc */
-    editTemplate = 'fields/link/edit'
-    /** @inheritDoc */
-    searchTemplate = 'fields/link/search'
+    protected listTemplate = 'fields/link/list'
+    protected detailTemplate = 'fields/link/detail'
+    protected editTemplate = 'fields/link/edit'
+    protected searchTemplate = 'fields/link/search'
 
     /**
      * A name attribute name.
-     *
-     * @type {string}
      */
-    nameName
+    protected nameName: string
 
     /**
      * An ID attribute name.
-     *
-     * @type {string}
      */
-    idName
+    protected idName: string
 
     /**
      * A foreign entity type.
-     *
-     * @type {string|null}
      */
-    foreignScope = null
+    protected foreignScope: string
 
     /**
      * A select-record view.
-     *
-     * @protected
-     * @type {string}
      */
-    selectRecordsView = 'views/modals/select-records'
+    protected selectRecordsView: string = 'views/modals/select-records'
 
     /**
      * Autocomplete disabled.
-     *
-     * @protected
-     * @type {boolean}
      */
-    autocompleteDisabled = false
+    protected autocompleteDisabled: boolean = false
 
     /**
      * Create disabled.
-     *
-     * @protected
-     * @type {boolean}
      */
-    createDisabled = false
+    protected createDisabled: boolean = false
 
     /**
      * To display the create button.
-     *
-     * @protected
-     * @type {boolean}
      */
-    createButton = false
+    protected createButton: boolean = false
 
     /**
      * Force create button even is disabled in clientDefs > relationshipPanels.
-     *
-     * @protected
-     * @type {boolean}
      */
-    forceCreateButton = false
+    protected forceCreateButton: boolean = false
 
     /**
      * A search type list.
-     *
-     * @protected
-     * @type {string[]}
      */
-    searchTypeList = [
+    protected searchTypeList: string[] = [
         'is',
         'isEmpty',
         'isNotEmpty',
@@ -161,97 +172,59 @@ class LinkFieldView extends BaseFieldView {
 
     /**
      * A primary filter list that will be available when selecting a record.
-     *
-     * @protected
-     * @type {string[]|null}
      */
-    selectFilterList = null
+    protected selectFilterList: string[] | null = null
 
     /**
      * A select primary filter.
-     *
-     * @protected
-     * @type {string|null}
      */
-    selectPrimaryFilterName = null
+    protected selectPrimaryFilterName: string[] | null = null
 
     /**
      * A select bool filter list.
-     *
-     * @protected
-     * @type {string[]|null}
      */
-    selectBoolFilterList = null
+    protected selectBoolFilterList: string[] | null = null
 
     /**
      * An autocomplete max record number.
-     *
-     * @protected
-     * @type {number|null}
      */
-    autocompleteMaxCount = null
+    protected autocompleteMaxCount: number | null = null
 
     /**
      * Select all attributes.
-     *
-     * @protected
-     * @type {boolean}
      */
-    forceSelectAllAttributes = false
+    protected forceSelectAllAttributes: boolean = false
 
-    /**
-     * @protected
-     * @type {string[]|null}
-     */
-    mandatorySelectAttributeList = null
+    protected mandatorySelectAttributeList: string[] | null = null
 
     /**
      * Trigger autocomplete on empty input.
-     *
-     * @protected
-     * @type {boolean}
      */
-    autocompleteOnEmpty = false
+    protected autocompleteOnEmpty: boolean = false
 
     /**
      * A link element class name. Applicable in the detail mode.
      *
-     * @protected
      * @since 9.1.6
      */
-    linkClass
+    protected linkClass: string | null = null
 
     /**
-     * @protected
-     * @type {string}
      * @since 9.2.5
      */
-    foreignNameAttribute
+    protected foreignNameAttribute: string
 
-    /** @inheritDoc */
-    events = {
-        /** @this LinkFieldView */
-        'auxclick a[href]:not([role="button"])': function (e) {
-            if (!this.isReadMode()) {
-                return;
-            }
+    /**
+     * Panel definitions.
+     */
+    protected panelDefs: Record<string, any>;
 
-            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+    private $elementName: JQuery;
+    private $elementId: JQuery;
 
-            if (!isCombination) {
-                return;
-            }
+    private _dependantForeignMap: Record<string, string>
 
-            e.preventDefault();
-            e.stopPropagation();
-
-            this.quickView();
-        },
-    }
-
-    // noinspection JSCheckFunctionSignatures
-    /** @inheritDoc */
-    data() {
+    protected data(): Record<string, any> {
         let nameValue = this.model.has(this.nameName) ?
             this.model.get(this.nameName) :
             this.model.get(this.idName);
@@ -272,7 +245,6 @@ class LinkFieldView extends BaseFieldView {
 
         const createButton = this.createButton && (!this.createDisabled || this.forceCreateButton);
 
-        // noinspection JSValidateTypes
         return {
             ...super.data(),
             idName: this.idName,
@@ -288,76 +260,61 @@ class LinkFieldView extends BaseFieldView {
         };
     }
 
-    /**
-     * @protected
-     * @return {?string}
-     */
-    getUrl() {
+    protected getUrl(): string | null {
         const id = this.model.get(this.idName);
 
         if (!id) {
             return null;
         }
 
-        return '#' + this.foreignScope + '/view/' + id;
+        return `#${this.foreignScope}/view/${id}`;
     }
 
     /**
      * Get advanced filters (field filters) to be applied when select a record.
      * Can be extended.
-     *
-     * @protected
-     * @return {Object.<string, import('search-manager').AdvancedFilter>|null}
      */
-    getSelectFilters() {
+    protected getSelectFilters(): Record<string, AdvancedFilter> | null {
         return null;
     }
 
     /**
      * Get a select bool filter list. Applied when select a record.
      * Can be extended.
-     *
-     * @protected
-     * @return {string[]|null}
      */
-    getSelectBoolFilterList() {
+    protected getSelectBoolFilterList(): string[] | null {
         return this.selectBoolFilterList;
     }
 
     /**
      * Get a select primary filter. Applied when select a record.
      * Can be extended.
-     *
-     * @protected
-     * @return {string|null}
      */
-    getSelectPrimaryFilterName() {
+    protected getSelectPrimaryFilterName(): string[] | null {
         return this.selectPrimaryFilterName;
     }
 
     /**
      * Get a primary filter list that will be available when selecting a record.
      * Can be extended.
-     *
-     * @return {string[]|null}
      */
-    getSelectFilterList() {
+    getSelectFilterList(): string[] | null {
         return this.selectFilterList;
     }
 
     /**
      * Attributes to pass to a model when creating a new record.
      * Can be extended.
-     *
-     * @return {Object.<string,*>|null}
      */
-    getCreateAttributes() {
-        const attributeMap = this.getMetadata()
-            .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
+    protected getCreateAttributes(): Record<string, any> | null {
+        const attributeMap: Record<string, string> = this.panelDefs.createAttributeMap ?? {};
 
-        const attributes = {};
+        const attributes = {} as Record<string, string>;
 
-        Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
+        Object.keys(attributeMap)
+            .forEach(attribute => {
+                attributes[attributeMap[attribute]] = this.model.get(attribute);
+            });
 
         return {
             ...attributes,
@@ -365,17 +322,20 @@ class LinkFieldView extends BaseFieldView {
         };
     }
 
-    /** @inheritDoc */
-    setup() {
+    protected setup() {
+        this.addHandler('auxclick', 'a[href]:not([role="button"])', (e) => {
+            this.onAuxClickLink(e as MouseEvent);
+        });
+
         this.nameName = this.name + 'Name';
         this.idName = this.name + 'Id';
 
         this.foreignScope = this.options.foreignScope || this.foreignScope;
 
         this.foreignScope =
-            this.foreignScope ||
-            this.params.entity ||
-            this.model.getFieldParam(this.name, 'entity') ||
+            this.foreignScope ??
+            this.params.entity ??
+            this.model.getFieldParam(this.name, 'entity') ??
             this.model.getLinkParam(this.name, 'entity');
 
         this.foreignNameAttribute = this.model.getLinkParam(this.name, 'foreignName') ??
@@ -383,7 +343,7 @@ class LinkFieldView extends BaseFieldView {
             'name';
 
         if ('createDisabled' in this.options) {
-            this.createDisabled = this.options.createDisabled;
+            this.createDisabled = this.options.createDisabled as boolean;
         }
 
         if (!this.isListMode()) {
@@ -393,7 +353,7 @@ class LinkFieldView extends BaseFieldView {
 
         if (this.isSearchMode()) {
             this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
-            this.addActionHandler('clearLinkOneOf', (e, target) => this.deleteLinkOneOf(target.dataset.id));
+            this.addActionHandler('clearLinkOneOf', (_e, target) => this.deleteLinkOneOf(target.dataset.id as string));
         }
 
         this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
@@ -408,47 +368,67 @@ class LinkFieldView extends BaseFieldView {
             this.addActionHandler('createLink', () => this.actionCreateLink());
         }
 
-        /** @type {Object.<string, *>} */
-        this.panelDefs = this.getMetadata()
-            .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+        if (this.entityType) {
+            this.panelDefs = this.getMetadata()
+                .get(`clientDefs.${this.entityType}.relationshipPanels.${this.name}`) ?? {};
+        } else {
+            this.panelDefs = {};
+        }
 
         if (this.panelDefs.createDisabled) {
             this.createDisabled = true;
         }
     }
 
+    private onAuxClickLink(e: MouseEvent) {
+        if (!this.isReadMode()) {
+            return;
+        }
+
+        const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+        if (!isCombination) {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.quickView();
+    }
+
     /**
      * Select.
      *
-     * @param {import('model').default} model A model.
-     * @protected
-     * @return {Promise|void}
+     * @param model A model.
      */
-    select(model) {
-        this.$elementName.val(model.get(this.foreignNameAttribute) || model.id);
-        this.$elementId.val(model.id);
+    protected select(model: Model): Promise<void> {
+        this.$elementName.val(model.get(this.foreignNameAttribute) ?? model.id);
+        this.$elementId.val(model.id as string);
 
         if (this.mode === this.MODE_SEARCH) {
             this.searchData.idValue = model.id;
-            this.searchData.nameValue = model.get(this.foreignNameAttribute) || model.id;
+            this.searchData.nameValue = model.get(this.foreignNameAttribute) ?? model.id;
         }
 
         this.trigger('change');
 
         this.controlCreateButtonVisibility();
 
-        const attributes = {};
+        const attributes = {} as Record<string, any>;
 
         for (const [foreign, field] of Object.entries(this.getDependantForeignMap())) {
             attributes[field] = model.get(foreign);
         }
 
         this.getSelectFieldHandler().then(async handler => {
-            this.model.set({
+            this.model.setMultiple({
                 ...attributes,
                 ...(await handler.getAttributes(model)),
             }, {fromField: this.name});
         });
+
+        return Promise.resolve();
     }
 
     /**
@@ -469,13 +449,12 @@ class LinkFieldView extends BaseFieldView {
         this.getSelectFieldHandler().then(handler => {
             handler.getClearAttributes()
                 .then(attributes => {
-                    this.model.set(attributes, {fromField: this.name});
+                    this.model.setMultiple(attributes, {fromField: this.name});
                 });
         });
     }
 
-    /** @private */
-    controlCreateButtonVisibility() {
+    private controlCreateButtonVisibility() {
         if (!this.createButton) {
             return;
         }
@@ -487,14 +466,7 @@ class LinkFieldView extends BaseFieldView {
             $btn.removeClass('hidden');
     }
 
-    /**
-     * @private
-     * @return {Promise<{
-     *     getAttributes: function (module:model): Promise<Object.<string, *>>,
-     *     getClearAttributes: function(): Promise<Object.<string, *>>,
-     * }>}
-     */
-    getSelectFieldHandler() {
+    private getSelectFieldHandler(): Promise<SelectFieldHandler> {
         if (!this.panelDefs.selectFieldHandler) {
             return Promise.resolve({
                 getClearAttributes: () => Promise.resolve({}),
@@ -504,7 +476,7 @@ class LinkFieldView extends BaseFieldView {
 
         return new Promise(resolve => {
             Espo.loader.requirePromise(this.panelDefs.selectFieldHandler)
-                .then(Handler => {
+                .then((Handler: any) => {
                     // Model is passed as of v8.2.
                     const handler = new Handler(this.getHelper(), this.model);
 
@@ -513,70 +485,59 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
-    /** @inheritDoc */
-    setupSearch() {
+    protected setupSearch() {
         this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
-            this.searchParams.oneOfIdList || [];
+            this.searchParams?.oneOfIdList ?? [];
 
         this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash ||
-            this.searchParams.oneOfNameHash || {};
+            this.searchParams?.oneOfNameHash ?? {};
 
-        if (~['is', 'isNot', 'equals'].indexOf(this.getSearchType())) {
-            this.searchData.idValue = this.getSearchParamsData().idValue ||
-                this.searchParams.idValue || this.searchParams.value;
+        if (['is', 'isNot', 'equals'].includes(this.getSearchType())) {
+            this.searchData.idValue = this.getSearchParamsData().idValue ??
+                this.searchParams?.idValue ??
+                this.searchParams?.value;
 
-            this.searchData.nameValue = this.getSearchParamsData().nameValue ||
-                this.searchParams.nameValue || this.searchParams.valueName;
+            this.searchData.nameValue = this.getSearchParamsData().nameValue ??
+                this.searchParams?.nameValue ??
+                this.searchParams?.valueName;
         }
 
-        this.events['change select.search-type'] = e => {
-            const type = $(e.currentTarget).val();
-
-            this.handleSearchType(type);
-        };
+        this.addHandler('change', 'select.search-type', (_, target) => {
+            this.handleSearchType((target as HTMLSelectElement).value);
+        });
     }
 
     /**
      * Handle a search type.
      *
-     * @protected
      * @param {string} type A type.
      */
-    handleSearchType(type) {
-        if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
+    protected handleSearchType(type: string) {
+        if (['is', 'isNot', 'isNotAndIsNotEmpty'].includes(type)) {
             this.$el.find('div.primary').removeClass('hidden');
-        }
-        else {
+        } else {
             this.$el.find('div.primary').addClass('hidden');
         }
 
-        if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
+        if (['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].includes(type)) {
             this.$el.find('div.one-of-container').removeClass('hidden');
-        }
-        else {
+        } else {
             this.$el.find('div.one-of-container').addClass('hidden');
         }
     }
 
     /**
      * Get an autocomplete max record number. Can be extended.
-     *
-     * @protected
-     * @return {number}
      */
-    getAutocompleteMaxCount() {
+    protected getAutocompleteMaxCount(): number {
         if (this.autocompleteMaxCount) {
             return this.autocompleteMaxCount;
         }
 
-        return this.getConfig().get('recordsPerPage');
+        return this.getConfig().get('recordsPerPage') as number;
     }
 
-    /**
-     * @private
-     * @return {string[]}
-     */
-    getMandatorySelectAttributeList() {
+    private getMandatorySelectAttributeList(): string[] {
         const list = this.mandatorySelectAttributeList || this.panelDefs.selectMandatoryAttributeList || []
 
         const map = this.getDependantForeignMap();
@@ -584,16 +545,12 @@ class LinkFieldView extends BaseFieldView {
         return [...list, ...Object.keys(map)];
     }
 
-    /**
-     * @private
-     * @return {Record<string>}
-     */
-    getDependantForeignMap() {
+    private getDependantForeignMap(): Record<string, string> {
         if (this._dependantForeignMap) {
             return this._dependantForeignMap;
         }
 
-        const map = {};
+        const map = {} as Record<string, string>;
 
         this.model.getFieldList()
             .filter(it => {
@@ -615,15 +572,15 @@ class LinkFieldView extends BaseFieldView {
         return map;
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL. Can be extended.
      *
-     * @protected
      * @param {string} [q] A query.
-     * @return {string|Promise<string>}
      */
-    getAutocompleteUrl(q) {
+    protected getAutocompleteUrl(q: string): string | Promise<string> {
+        // noinspection BadExpressionStatementJS
+        q;
+
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
@@ -667,8 +624,7 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
-    /** @inheritDoc */
-    afterRender() {
+    protected afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
             this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
@@ -681,56 +637,58 @@ class LinkFieldView extends BaseFieldView {
 
             this.$elementName.on('blur', e => {
                 setTimeout(() => {
-                    if (this.mode === this.MODE_EDIT && this.model.has(this.nameName)) {
-                        e.currentTarget.value = this.model.get(this.nameName) || this.model.get(this.idName);
+                    if (!(this.mode === this.MODE_EDIT && this.model.has(this.nameName))) {
+                        return;
                     }
+
+                    (e.currentTarget as any).value =
+                        this.model.get(this.nameName) || this.model.get(this.idName);
                 }, 100);
             });
 
             const $elementName = this.$elementName;
 
             if (!this.autocompleteDisabled) {
-                /** @type {module:ajax.AjaxPromise & Promise<any>} */
-                let lastAjaxPromise;
+                let lastAjaxPromise: AjaxPromise;
 
-                const autocomplete = new Autocomplete(this.$elementName.get(0), {
+                const autocomplete = new Autocomplete(this.$elementName?.get(0) as HTMLInputElement, {
                     name: this.name,
                     handleFocusMode: 2,
                     autoSelectFirst: true,
                     forceHide: true,
                     triggerSelectOnValidInput: false,
                     catchFastEnter: true,
-                    onSelect: item => {
-                        this.getModelFactory().create(this.foreignScope, async model => {
-                            model.set(item.attributes);
+                    onSelect: async (item: any) => {
+                        const model = await this.getModelFactory().create(this.foreignScope);
 
-                            await (this.select(model) ?? await Promise.resolve());
+                        model.setMultiple(item.attributes);
 
-                            this.$elementName.focus();
-                        });
+                        await this.select(model);
+
+                        this.$elementName.trigger('focus');
                     },
-                    lookupFunction: query => {
+                    lookupFunction: async (query: string) => {
                         if (!this.autocompleteOnEmpty && query.length === 0) {
-                            const onEmptyPromise = this.getOnEmptyAutocomplete();
+                            const list = await this.getOnEmptyAutocomplete();
 
-                            if (onEmptyPromise) {
-                                return onEmptyPromise.then(list => this._transformAutocompleteResult({list: list}));
+                            if (!list) {
+                                return [];
                             }
 
-                            return Promise.resolve([]);
+                            return this._transformAutocompleteResult({list: list});
                         }
 
-                        return Promise.resolve(this.getAutocompleteUrl(query))
-                            .then(url => {
-                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
-                                    lastAjaxPromise.abort();
-                                }
+                        const url = await this.getAutocompleteUrl(query);
 
-                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+                        if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                            lastAjaxPromise.abort();
+                        }
 
-                                return lastAjaxPromise;
-                            })
-                            .then(response => this._transformAutocompleteResult(response));
+                        lastAjaxPromise = Ajax.getRequest(url, {q: query});
+
+                        const response = await lastAjaxPromise;
+
+                        return this._transformAutocompleteResult(response);
                     },
                 });
 
@@ -739,8 +697,7 @@ class LinkFieldView extends BaseFieldView {
                 if (this.isSearchMode()) {
                     const $elementOneOf = this.$el.find('input.element-one-of');
 
-                    /** @type {module:ajax.AjaxPromise & Promise<any>} */
-                    let lastAjaxPromise;
+                    let lastAjaxPromise: AjaxPromise;
 
                     const autocomplete = new Autocomplete($elementOneOf.get(0), {
                         minChars: 1,
@@ -749,33 +706,31 @@ class LinkFieldView extends BaseFieldView {
                         autoSelectFirst: true,
                         triggerSelectOnValidInput: false,
                         forceHide: true,
-                        onSelect: item => {
-                            this.getModelFactory().create(this.foreignScope, model => {
-                                model.set(item.attributes);
+                        onSelect: async (item: {attributes: Record<string, any>}) => {
+                           const model = await this.getModelFactory().create(this.foreignScope);
 
-                                this.selectOneOf([model]);
+                            model.setMultiple(item.attributes);
 
-                                $elementOneOf.val('');
-                                setTimeout(() => $elementOneOf.focus(), 50);
-                            });
+                            this.selectOneOf([model]);
+
+                            $elementOneOf.val('');
+                            setTimeout(() => $elementOneOf.focus(), 50);
                         },
-                        lookupFunction: query => {
-                            return Promise.resolve(this.getAutocompleteUrl(query))
-                                .then(url => {
-                                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
-                                        lastAjaxPromise.abort();
-                                    }
+                        lookupFunction: async (query: string) => {
+                            const url = await this.getAutocompleteUrl(query);
 
-                                    lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+                            if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                lastAjaxPromise.abort();
+                            }
 
-                                    return lastAjaxPromise;
-                                })
-                                .then(/** {list: Record[]} */response => {
-                                    return response.list.map(item => ({
-                                        value: item.name,
-                                        attributes: item,
-                                    }));
-                                });
+                            lastAjaxPromise = Ajax.getRequest(url, {q: query});
+
+                            const response: {list: any[]} = await lastAjaxPromise;
+
+                            return response.list.map(item => ({
+                                value: item.name,
+                                attributes: item,
+                            }));
                         },
                     });
 
@@ -799,19 +754,16 @@ class LinkFieldView extends BaseFieldView {
 
             this.handleSearchType(type);
 
-            if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
-                this.searchData.oneOfIdList.forEach(id => {
+            if (['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].includes(type)) {
+                this.searchData.oneOfIdList.forEach((id: string) => {
                     this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
                 });
             }
         }
     }
 
-    /**
-     * @private
-     */
-    _transformAutocompleteResult(response) {
-        const list = [];
+    private _transformAutocompleteResult(response: {list: Record<string, any>[]}): Record<string, any[]> {
+        const list: Record<string, any> = [];
 
         response.list.forEach(item => {
             const name = item[this.foreignNameAttribute] || item.name || item.id;
@@ -851,14 +803,14 @@ class LinkFieldView extends BaseFieldView {
                 return true;
             }
         }
+
+        return false;
     }
 
     /**
      * Delete a one-of item. For search mode.
-     *
-     * @param {string} id An ID.
      */
-    deleteLinkOneOf(id) {
+    private deleteLinkOneOf(id: string) {
         this.deleteLinkOneOfHtml(id);
 
         const index = this.searchData.oneOfIdList.indexOf(id);
@@ -875,34 +827,35 @@ class LinkFieldView extends BaseFieldView {
     /**
      * Add a one-of item. For search mode.
      *
-     * @param {string} id An ID.
-     * @param {string} name A name.
+     * @param id An ID.
+     * @param name A name.
      */
-    addLinkOneOf(id, name) {
-        if (!~this.searchData.oneOfIdList.indexOf(id)) {
-            this.searchData.oneOfIdList.push(id);
-            this.searchData.oneOfNameHash[id] = name;
-            this.addLinkOneOfHtml(id, name);
+    private addLinkOneOf(id: string, name: string) {
+        const ids = this.searchData.oneOfIdList as string[];
 
-            this.trigger('change');
+        if (ids.includes(id)) {
+            return;
         }
+
+        ids.push(id);
+        this.searchData.oneOfNameHash[id] = name;
+
+        this.addLinkOneOfHtml(id, name);
+        this.trigger('change');
     }
 
     /**
-     * @protected
-     * @param {string} id An ID.
+     * @param id An ID.
      */
-    deleteLinkOneOfHtml(id) {
+    private deleteLinkOneOfHtml(id: string) {
         this.$el.find('.link-one-of-container .link-' + id).remove();
     }
 
     /**
-     * @protected
-     * @param {string} id An ID.
-     * @param {string} name A name.
-     * @return {JQuery}
+     * @param id An ID.
+     * @param name A name.
      */
-    addLinkOneOfHtml(id, name) {
+    private addLinkOneOfHtml(id: string, name: string): JQuery {
         const $container = this.$el.find('.link-one-of-container');
 
         const $el = $('<div>')
@@ -927,18 +880,16 @@ class LinkFieldView extends BaseFieldView {
         return $el;
     }
 
-    /** @inheritDoc */
-    fetch() {
-        const data = {};
+    fetch(): Record<string, any>  {
+        const data = {} as any;
 
-        data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
-        data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
+        data[this.nameName] = this.$el.find(`[data-name="${this.nameName}"]`).val() || null;
+        data[this.idName] = this.$el.find(`[data-name="${this.idName}"]`).val() || null;
 
         return data;
     }
 
-    /** @inheritDoc */
-    fetchSearch() {
+    fetchSearch(): Record<string, any> | null {
         const type = this.$el.find('select.search-type').val();
         const value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
@@ -1022,7 +973,7 @@ class LinkFieldView extends BaseFieldView {
 
         if (type === 'isNot') {
             if (!value) {
-                return false;
+                return null;
             }
 
             const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
@@ -1050,7 +1001,7 @@ class LinkFieldView extends BaseFieldView {
 
         if (type === 'isNotAndIsNotEmpty') {
             if (!value) {
-                return false;
+                return null;
             }
 
             const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
@@ -1068,7 +1019,7 @@ class LinkFieldView extends BaseFieldView {
         }
 
         if (!value) {
-            return false;
+            return null;
         }
 
         const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
@@ -1087,15 +1038,12 @@ class LinkFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     getSearchType() {
-        return this.getSearchParamsData().type ||
-            this.searchParams.typeFront ||
-            this.searchParams.type;
+        return this.getSearchParamsData().type ??
+            this.searchParams?.typeFront ??
+            this.searchParams?.type;
     }
 
-    /**
-     * @protected
-     */
-    quickView() {
+    protected quickView() {
         const id = this.model.get(this.idName);
 
         if (!id) {
@@ -1112,11 +1060,7 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
-    /**
-     * @protected
-     * @return {function(): Promise<Object.<string, *>>}
-     */
-    getCreateAttributesProvider() {
+    protected getCreateAttributesProvider(): () => Promise<Record<string, any>> {
         return () => {
             const attributes = this.getCreateAttributes() ?? {};
 
@@ -1126,24 +1070,19 @@ class LinkFieldView extends BaseFieldView {
 
             return new Promise(resolve => {
                 Espo.loader.requirePromise(this.panelDefs.createHandler)
-                    .then(Handler => new Handler(this.getHelper()))
-                    .then(/** import('handlers/create-related').default */handler => {
-                        handler.getAttributes(this.model, this.name)
-                            .then(additionalAttributes => {
-                                resolve({
-                                    ...attributes,
-                                    ...additionalAttributes,
-                                });
-                            });
+                    .then((Handler: any) => new Handler(this.getHelper()))
+                    .then(async /** import('handlers/create-related').default */handler => {
+                        const additionalAttributes = await handler.getAttributes(this.model, this.name);
+
+                        resolve({
+                            ...attributes,
+                            ...additionalAttributes,
+                        });
                     });
             });
         };
     }
-
-    /**
-     * @protected
-     */
-    async actionSelect() {
+    protected async actionSelect() {
         const viewName = this.panelDefs.selectModalView ||
             this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
             this.selectRecordsView;
@@ -1155,14 +1094,13 @@ class LinkFieldView extends BaseFieldView {
         const createAttributesProvider = createButton ?
             this.getCreateAttributesProvider() : null;
 
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         const filters = await this._getSelectFilters();
 
         const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
         const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
 
-        /** @type {module:views/modals/select-records~Options} */
         const options = {
             entityType: this.foreignScope,
             createButton: createButton,
@@ -1176,7 +1114,7 @@ class LinkFieldView extends BaseFieldView {
             layoutName: this.panelDefs.selectLayout,
             orderBy: orderBy,
             orderDirection: orderDirection,
-            onSelect: models => {
+            onSelect: (models: Model[]) => {
                 this.select(models[0]);
             },
         };
@@ -1185,14 +1123,10 @@ class LinkFieldView extends BaseFieldView {
 
         await view.render();
 
-        Espo.Ui.notify();
+        Ui.notify();
     }
 
-    /**
-     * @param {Object} advanced
-     * @private
-     */
-    _applyAdditionalFilter(advanced) {
+    private _applyAdditionalFilter(advanced: Record<string, any>) {
         const foreignLink = this.model.getLinkParam(this.name, 'foreign');
 
         if (!foreignLink) {
@@ -1230,17 +1164,7 @@ class LinkFieldView extends BaseFieldView {
         };
     }
 
-    /**
-     * @private
-     * @return {Promise<{
-     *     bool?: string[],
-     *     advanced?: Object,
-     *     primary?: string,
-     *     orderBy?: string,
-     *     order?: 'asc'|'desc',
-     * }>}
-     */
-    _getSelectFilters() {
+    private _getSelectFilters(): Promise<SelectFilters> {
         const handler = this.panelDefs.selectHandler;
 
         const localBoolFilterList = this.getSelectBoolFilterList();
@@ -1269,7 +1193,7 @@ class LinkFieldView extends BaseFieldView {
 
         return new Promise(resolve => {
             Espo.loader.requirePromise(handler)
-                .then(Handler => new Handler(this.getHelper()))
+                .then((Handler: any) => new Handler(this.getHelper()))
                 .then(/** module:handlers/select-related */handler => {
                     return handler.getFilters(this.model);
                 })
@@ -1307,11 +1231,7 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
-    /**
-     * @private
-     * @return {CascadeLinksHelper|null}
-     */
-    _createCascadeLinksHelper() {
+    private _createCascadeLinksHelper(): CascadeLinksHelper | null {
         const items = this.options.cascadingLogic?.items ?? [];
 
         if (!items.length) {
@@ -1329,29 +1249,21 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
-    /**
-     * @private
-     * @return {Object.<string, import('search-manager').AdvancedFilter>}
-     */
-    _getCascadingFilters() {
+    private _getCascadingFilters(): Record<string, AdvancedFilter> {
         return this._createCascadeLinksHelper()?.prepareFilters() ?? {};
     }
 
-    /**
-     * @private
-     * @return {Object.<string, *>}
-     */
-    _getCascadingCreateAttributes() {
+    private _getCascadingCreateAttributes(): Record<string, any> {
         return this._createCascadeLinksHelper()?.prepareCreateAttributes() ?? {};
     }
 
-    actionSelectOneOf() {
+    private async actionSelectOneOf() {
         Espo.Ui.notifyWait();
 
         const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
             this.selectRecordsView;
 
-        this.createView('dialog', viewName, {
+        const view = await this.createView('dialog', viewName, {
             scope: this.foreignScope,
             createButton: false,
             filters: this.getSelectFilters(),
@@ -1359,37 +1271,31 @@ class LinkFieldView extends BaseFieldView {
             primaryFilterName: this.getSelectPrimaryFilterName(),
             multiple: true,
             layoutName: this.panelDefs.selectLayout,
-        }, view => {
-            view.render();
-
-            Espo.Ui.notify(false);
-
-            this.listenToOnce(view, 'select', models => {
-                this.clearView('dialog');
-
-                if (Object.prototype.toString.call(models) !== '[object Array]') {
-                    models = [models];
-                }
-
-                this.selectOneOf(models);
-            });
         });
+
+        this.listenToOnce(view, 'select', models => {
+            this.clearView('dialog');
+
+            if (Object.prototype.toString.call(models) !== '[object Array]') {
+                models = [models];
+            }
+
+            this.selectOneOf(models);
+        });
+
+        view.render().then(() => {});
+
+        Espo.Ui.notify(false);
     }
 
     /**
      * Get an empty autocomplete result.
-     *
-     * @protected
-     * @return {Promise<[{name: ?string, id: string} & Record]>}
      */
-    getOnEmptyAutocomplete() {
-        return undefined;
+    protected getOnEmptyAutocomplete(): Promise<[{name: string | null, id: string} & Record<string, any>]> | null{
+        return null;
     }
 
-    /**
-     * @protected
-     */
-    async actionCreateLink() {
+    protected async actionCreateLink() {
         const helper = new RecordModal();
 
         const attributes = await this.getCreateAttributesProvider()();
@@ -1398,18 +1304,16 @@ class LinkFieldView extends BaseFieldView {
             entityType: this.foreignScope,
             fullFormDisabled: true,
             attributes: attributes,
-            afterSave: model => this.select(model),
+            afterSave: (model: Model) => this.select(model),
         });
     }
 
     /**
-     * @protected
-     * @param {module:model[]} models
      * @since 8.0.4
      */
-    selectOneOf(models) {
+    private selectOneOf(models: Model[]) {
         models.forEach(model => {
-            this.addLinkOneOf(model.id, model.get(this.foreignNameAttribute));
+            this.addLinkOneOf(model.id as string, model.get(this.foreignNameAttribute));
         });
     }
 }

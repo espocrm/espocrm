@@ -77,7 +77,7 @@ class RecordModalHelper {
     /**
      * Show the 'detail' modal.
      *
-     * @param {import('view').default} view
+     * @param {import('view').default<any>} view
      * @param {{
      *   id: string,
      *   entityType: string,
@@ -283,7 +283,7 @@ class RecordModalHelper {
     /**
      * Show the 'create' modal.
      *
-     * @param {import('view').default} view
+     * @param {import('view').default<any>} view
      * @param {{
      *   entityType: string,
      *   rootUrl?: string,
