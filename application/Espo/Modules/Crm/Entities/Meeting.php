@@ -51,6 +51,19 @@ class Meeting extends Entity
     public const STATUS_HELD = 'Held';
     public const STATUS_NOT_HELD = 'Not Held';
 
+    /** @since 10.0.0 */
+    public const string FIELD_IS_ALL_DAY = 'isAllDay';
+    /** @since 10.0.0 */
+    public const string FIELD_DATE_START_DATE = 'dateStartDate';
+    /** @since 10.0.0 */
+    public const string FIELD_DATE_END_DATE = 'dateEndDate';
+    /** @since 10.0.0 */
+    public const string FIELD_DATE_START = 'dateStart';
+    /** @since 10.0.0 */
+    public const string FIELD_DATE_END = 'dateEnd';
+    /** @since 10.0.0 */
+    public const string FIELD_STATUS = 'status';
+
     public const LINK_USERS = 'users';
     public const LINK_CONTACTS = 'contacts';
     public const LINK_LEADS = 'leads';
@@ -254,5 +267,13 @@ class Meeting extends Entity
     public function getExternalService(): ?string
     {
         return $this->get('externalService');
+    }
+
+    /**
+     * @since 10.0.0
+     */
+    public function isAllDay(): bool
+    {
+        return (bool) $this->get(self::FIELD_IS_ALL_DAY);
     }
 }
