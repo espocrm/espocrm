@@ -35,6 +35,8 @@ import {onModelChange, onSync} from 'util/event';
 import {AjaxPromise} from 'util/ajax';
 import Ajax from 'ajax';
 
+import type BaseFieldView from 'views/fields/base';
+
 /**
  * When attributes have changed.
  *
@@ -1127,16 +1129,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      *
      * Important. Owner must be specified.
      *
-     * @param {{
-     *     owner: import('view').default | import('model').default | import('collection').default,
-     *     attributes?: string[],
-     *     once?: boolean,
-     *     callback: function({
-     *         ui: boolean|null,
-     *         action: string|'ui'|'save'|'fetch'|'cancel-edit'|null,
-     *         fromView: import('views/fields/base').default,
-     *     }),
-     * }} params
+     * @param params Parameters
      * @return {{stop: function()}}
      * @since 10.0.0
      */
@@ -1148,9 +1141,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
             callback: (event: {
                 ui: boolean | null,
                 action: string | 'ui' | 'save' | 'fetch' | 'cancel-edit' | null,
-                // @todo Remove ignore.
-                // @ts-ignore
-                fromView: import('views/fields/base').default,
+                fromView: BaseFieldView,
             }) => any,
         }
     ): {stop: () => any} {
