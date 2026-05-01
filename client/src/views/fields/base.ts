@@ -1482,7 +1482,7 @@ export default class BaseFieldView<
      *
      * @param {string} message A message.
      * @param {string|JQuery|Element} [target] A target element or selector.
-     * @param {module:view} [view] A child view that contains the target. The closest view should to passed.
+     * @param {View} [view] A child view that contains the target. The closest view should to passed.
      *   Should be omitted if there is no child views or the target is not rendered by a child view.
      */
     showValidationMessage(message: string, target?: string | Element, view?: View) {
@@ -1638,7 +1638,7 @@ export default class BaseFieldView<
     /**
      * Fetch field values from DOM.
      */
-    fetch(): Record<string, any> {
+    fetch(): Record<string, unknown> {
         if (!this.$element?.length) {
             return {};
         }
@@ -1653,7 +1653,7 @@ export default class BaseFieldView<
     /**
      * Fetch search data from DOM.
      */
-    fetchSearch(): Record<string, any> | null {
+    fetchSearch(): Record<string, unknown> | null {
         const value = this.$element?.val()?.toString()?.trim();
 
         if (value) {

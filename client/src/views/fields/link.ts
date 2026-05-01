@@ -32,7 +32,6 @@ import Autocomplete from 'ui/autocomplete';
 import CascadeLinksHelper from 'helpers/field/cascade-links';
 import Ajax from 'ajax';
 import Ui from 'ui';
-
 import {AdvancedFilter} from 'search-manager';
 import Model from 'model';
 import {AjaxPromise} from 'util/ajax';
@@ -217,10 +216,10 @@ class LinkFieldView<
     /**
      * Panel definitions.
      */
-    protected panelDefs: Record<string, any>;
+    protected panelDefs: Record<string, any>
 
-    private $elementName: JQuery;
-    private $elementId: JQuery;
+    private $elementName: JQuery
+    private $elementId: JQuery
 
     private _dependantForeignMap: Record<string, string>
 
@@ -298,7 +297,7 @@ class LinkFieldView<
      * Get a primary filter list that will be available when selecting a record.
      * Can be extended.
      */
-    getSelectFilterList(): string[] | null {
+    protected getSelectFilterList(): string[] | null {
         return this.selectFilterList;
     }
 
@@ -306,10 +305,10 @@ class LinkFieldView<
      * Attributes to pass to a model when creating a new record.
      * Can be extended.
      */
-    protected getCreateAttributes(): Record<string, any> | null {
+    protected getCreateAttributes(): Record<string, unknown> | null {
         const attributeMap: Record<string, string> = this.panelDefs.createAttributeMap ?? {};
 
-        const attributes = {} as Record<string, string>;
+        const attributes = {} as Record<string, unknown>;
 
         Object.keys(attributeMap)
             .forEach(attribute => {
@@ -575,7 +574,7 @@ class LinkFieldView<
     /**
      * Compose an autocomplete URL. Can be extended.
      *
-     * @param {string} [q] A query.
+     * @param q A query.
      */
     protected getAutocompleteUrl(q: string): string | Promise<string> {
         // noinspection BadExpressionStatementJS
@@ -1060,7 +1059,7 @@ class LinkFieldView<
         });
     }
 
-    protected getCreateAttributesProvider(): () => Promise<Record<string, any>> {
+    protected getCreateAttributesProvider(): () => Promise<Record<string, unknown>> {
         return () => {
             const attributes = this.getCreateAttributes() ?? {};
 
@@ -1253,7 +1252,7 @@ class LinkFieldView<
         return this._createCascadeLinksHelper()?.prepareFilters() ?? {};
     }
 
-    private _getCascadingCreateAttributes(): Record<string, any> {
+    private _getCascadingCreateAttributes(): Record<string, unknown> {
         return this._createCascadeLinksHelper()?.prepareCreateAttributes() ?? {};
     }
 
@@ -1291,7 +1290,7 @@ class LinkFieldView<
     /**
      * Get an empty autocomplete result.
      */
-    protected getOnEmptyAutocomplete(): Promise<[{name: string | null, id: string} & Record<string, any>]> | null{
+    protected getOnEmptyAutocomplete(): Promise<[{name: string | null, id: string} & Record<string, any>]> | null {
         return null;
     }
 

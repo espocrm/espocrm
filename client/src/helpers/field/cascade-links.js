@@ -260,7 +260,7 @@ export default class CascadeLinksHelper {
     }
 
     /**
-     * @return {Object.<string, *>}
+     * @return {Object.<string, unknown>}
      */
     prepareCreateAttributes() {
         const attributes = {};
