@@ -301,6 +301,14 @@ class NotificationContainerFieldView extends BaseFieldView {
         await this.reRender();
 
         this.triggerUpdateRead();
+
+        if (this.model.collection) {
+            view.listenTo(this.model.collection, 'all-read', () => {
+                collection.models.forEach(model => {
+                    model.set('read', true, {sync: true});
+                });
+            });
+        }
     }
 
     /**

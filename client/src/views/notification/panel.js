@@ -118,6 +118,10 @@ class NotificationPanelView extends View {
         await Espo.Ajax.postRequest('Notification/action/markAllRead');
 
         this.trigger('all-read')
+
+        this.collection.models.forEach(model => {
+            model.set('read', true, {sync: true});
+        });
     }
 
     close() {

@@ -132,6 +132,10 @@ class NotificationListView extends View {
                 this.$el.find('.badge-circle-warning').remove();
             })
             .finally(() => $link.removeAttr('disabled').removeClass('disabled'));
+
+        this.collection.models.forEach(model => {
+            model.set('read', true, {sync: true});
+        });
     }
 
     /**
