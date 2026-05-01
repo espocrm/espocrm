@@ -252,8 +252,8 @@ class Step2ImportView extends View {
     }
 
     resetFieldFilterQuickSearch() {
-        this.$fieldQuickSearch.val('');
-        this.$defaultFieldList.find('li.item').removeClass('hidden');
+        this.$fieldQuickSearch?.val('');
+        this.$defaultFieldList?.find('li.item')?.removeClass('hidden');
     }
 
     initQuickSearchUi() {

@@ -63,6 +63,8 @@ class Params
     private ?string $timezone = null;
     private ?string $decimalMark = null;
     private ?string $phoneNumberCountry = null;
+    /** @var string[]|null */
+    private ?array $defaultFieldList = null;
 
     private function __construct()
     {
@@ -256,6 +258,18 @@ class Params
     }
 
     /**
+     * @param string[] $fieldList
+     * @return self
+     */
+    public function withDefaultFieldList(?array $fieldList = null): self
+    {
+        $obj = clone $this;
+        $obj->defaultFieldList = $fieldList;
+
+        return $obj;
+    }
+
+    /**
      * @param int[] $updateBy
      */
     public function withUpdateBy(array $updateBy): self
@@ -348,6 +362,7 @@ class Params
             ->withDateFormat($raw->dateFormat ?? null)
             ->withDecimalMark($raw->decimalMark ?? null)
             ->withDefaultValues($raw->defaultValues ?? null)
+            ->withDefaultFieldList($raw->defaultFieldList ?? null)
             ->withDelimiter($raw->delimiter ?? null)
             ->withHeaderRow($raw->headerRow ?? false)
             ->withIdleMode($raw->idleMode ?? false)
@@ -387,6 +402,7 @@ class Params
             'timeFormat' => $this->timeFormat,
             'timezone' => $this->timezone,
             'updateBy' => $this->updateBy,
+            'defaultFieldList' => $this->defaultFieldList,
         ];
     }
 }
