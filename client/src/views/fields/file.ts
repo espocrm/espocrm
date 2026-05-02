@@ -32,9 +32,8 @@ import AttachmentInsertSourceFromHelper from 'helpers/misc/attachment-insert-fro
 import {BaseViewSchema, FieldValidator} from 'views/fields/base';
 import View from 'view';
 import Model from 'model';
-import {fa} from 'cronstrue/dist/i18n/locales/fa';
 
-interface FileParams extends LinkParams {
+export interface FileParams extends LinkParams {
     /**
      * Required.
      */
@@ -72,7 +71,7 @@ export interface FileOptions extends LinkOptions {
     previewSize?: PreviewSize
 }
 
-type PreviewSize = 'x-small' | 'small' | 'medium' | 'large';
+export type PreviewSize = 'x-small' | 'small' | 'medium' | 'large';
 
 /**
  * A file field.

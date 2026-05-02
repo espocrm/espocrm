@@ -32,6 +32,7 @@ import AttachmentInsertSourceFromHelper from 'helpers/misc/attachment-insert-fro
 import Utils from 'utils';
 import View from 'view';
 import Model from 'model';
+import {PreviewSize} from 'views/fields/file';
 
 export interface AttachmentMultipleParams extends BaseParams {
     /**
@@ -70,8 +71,6 @@ export interface AttachmentMultipleOptions extends BaseOptions {
      */
     previewSize?: PreviewSize
 }
-
-type PreviewSize = 'x-small' | 'small' | 'medium' | 'large';
 
 /**
  * An attachment-multiple field.
