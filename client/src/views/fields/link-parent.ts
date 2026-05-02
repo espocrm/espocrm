@@ -26,120 +26,110 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/link-parent */
-
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 import Select from 'ui/select';
 import Autocomplete from 'ui/autocomplete';
+import {AdvancedFilter} from 'search-manager';
+import Model from 'model';
+import Ajax from 'ajax';
+import Ui from 'ui';
+import Utils from 'utils';
+import {AjaxPromise} from 'util/ajax';
+
+/**
+ * Parameters.
+ */
+export interface LinkParentParams extends BaseParams {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Autocomplete on empty input.
+     */
+    autocompleteOnEmpty?: boolean;
+    /**
+     * A foreign entity type list.
+     */
+    entityList: string[];
+}
+
+/**
+ * Options.
+ */
+export interface LinkParentOptions extends BaseOptions {
+    /**
+     * Disable create button in the select modal.
+     */
+    createDisabled?: boolean;
+    /**
+     * A foreign entity type list.
+     */
+    foreignScopeList: string[];
+}
 
 /**
  * A link-parent field (belongs-to-parent relation).
- *
- * @extends BaseFieldView<module:views/fields/link-parent~params>
  */
-class LinkParentFieldView extends BaseFieldView {
+class LinkParentFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends LinkParentOptions = LinkParentOptions,
+    P extends LinkParentParams = LinkParentParams,
+> extends BaseFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/link-parent~options
-     * @property {
-     *     module:views/fields/link~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type: string = 'linkParent'
 
-    /**
-     * @typedef {Object} module:views/fields/link-parent~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
-     * @property {string[]} [entityList] An entity type list.
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/link-parent~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'linkParent'
-
-    listTemplate = 'fields/link-parent/list'
-    detailTemplate = 'fields/link-parent/detail'
-    editTemplate = 'fields/link-parent/edit'
-    searchTemplate = 'fields/link-parent/search'
-    listLinkTemplate = 'fields/link-parent/list-link'
+    protected listTemplate = 'fields/link-parent/list'
+    protected detailTemplate = 'fields/link-parent/detail'
+    protected editTemplate = 'fields/link-parent/edit'
+    protected searchTemplate = 'fields/link-parent/search'
+    protected listLinkTemplate = 'fields/link-parent/list-link'
 
     /**
      * A name attribute name.
-     *
-     * @type {string}
      */
-    nameName
+    protected nameName: string
 
     /**
      * An ID attribute name.
-     *
-     * @type {string}
      */
-    idName
+    protected idName: string
 
     /**
      * A type attribute name.
-     *
-     * @type {string}
      */
-    typeName
+    protected typeName: string
 
     /**
      * A current foreign entity type.
-     *
-     * @type {string|null}
      */
-    foreignScope = null
+    protected foreignScope: string | null = null
 
     /**
      * A foreign entity type list.
-     *
-     * @type {string[]}
      */
-    foreignScopeList = null
+    protected foreignScopeList: string[]
 
     /**
      * Autocomplete disabled.
-     *
-     * @protected
-     * @type {boolean}
      */
-    autocompleteDisabled = false
+    protected autocompleteDisabled: boolean = false
 
     /**
      * A select-record view.
-     *
-     * @protected
-     * @type {string}
      */
-    selectRecordsView = 'views/modals/select-records'
+    protected selectRecordsView: string = 'views/modals/select-records'
 
     /**
      * Create disabled.
-     *
-     * @protected
-     * @type {boolean}
      */
-    createDisabled = false
+    protected createDisabled: boolean = false
 
     /**
      * A search type list.
-     *
-     * @protected
-     * @type {string[]}
      */
-    searchTypeList = [
+    protected searchTypeList: string[] = [
         'is',
         'isEmpty',
         'isNotEmpty',
@@ -147,90 +137,49 @@ class LinkParentFieldView extends BaseFieldView {
 
     /**
      * A select primary filter.
-     *
-     * @protected
-     * @type {string|null}
      */
-    selectPrimaryFilterName = null
+    protected selectPrimaryFilterName: string | null = null
 
     /**
      * A select bool filter list.
-     *
-     * @protected
-     * @type {string[]|null}
      */
-    selectBoolFilterList = null
+    protected selectBoolFilterList: string[] | null = null
 
     /**
      * An autocomplete max record number.
-     *
-     * @protected
-     * @type {number|null}
      */
-    autocompleteMaxCount = null
+    protected autocompleteMaxCount: number | null = null
 
     /**
      * Select all attributes.
-     *
-     * @protected
-     * @type {boolean}
      */
-    forceSelectAllAttributes = false
+    protected forceSelectAllAttributes: boolean = false
 
     /**
      * Mandatory select attributes.
-     *
-     * @protected
-     * @type {string[]|null}
      */
-    mandatorySelectAttributeList = null
+    protected mandatorySelectAttributeList: string[] | null = null
 
-    /** @inheritDoc */
-    initialSearchIsNotIdle = true
+    /**
+     * @inheritDoc
+     * @internal
+     */
+    initialSearchIsNotIdle: boolean = true
 
     /**
      * Trigger autocomplete on empty input.
-     *
-     * @protected
-     * @type {boolean}
      */
-    autocompleteOnEmpty
+    protected autocompleteOnEmpty: boolean
 
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    displayScopeColorInListMode = true
+    protected displayScopeColorInListMode: boolean = true
 
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    displayEntityType
+    protected displayEntityType: boolean
 
-    /** @inheritDoc */
-    events = {
-        /** @this LinkParentFieldView */
-        'auxclick a[href]:not([role="button"])': function (e) {
-            if (!this.isReadMode()) {
-                return;
-            }
+    private $elementName: JQuery
+    private $elementId: JQuery
+    private $elementType: JQuery
 
-            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
-
-            if (!isCombination) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            this.quickView();
-        },
-    }
-
-    // noinspection JSCheckFunctionSignatures
-    data() {
+    protected data() {
         let nameValue = this.model.get(this.nameName);
 
         if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
@@ -249,7 +198,6 @@ class LinkParentFieldView extends BaseFieldView {
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
-        // noinspection JSValidateTypes
         return {
             ...super.data(),
             idName: this.idName,
@@ -269,48 +217,40 @@ class LinkParentFieldView extends BaseFieldView {
     /**
      * Get advanced filters (field filters) to be applied when select a record.
      * Can be extended.
-     *
-     * @protected
-     * @return {Object.<string,import('search-manager').AdvancedFilter>|null}
      */
-    getSelectFilters() {
+    protected getSelectFilters(): Record<string, AdvancedFilter> | null  {
         return null;
     }
 
     /**
      * Get a select bool filter list. Applied when select a record.
      * Can be extended.
-     *
-     * @protected
-     * @return {string[]|null}
      */
-    getSelectBoolFilterList() {
+    protected getSelectBoolFilterList(): string[] | null {
         return this.selectBoolFilterList;
     }
 
     /**
      * Get a select primary filter. Applied when select a record.
      * Can be extended.
-     *
-     * @protected
-     * @return {string|null}
      */
-    getSelectPrimaryFilterName() {
+    protected getSelectPrimaryFilterName(): string | null {
         return this.selectPrimaryFilterName;
     }
 
     /**
      * Attributes to pass to a model when creating a new record.
      * Can be extended.
-     *
-     * @return {Object.<string,*>|null}
      */
-    getCreateAttributes() {
+    protected getCreateAttributes(): Record<string, unknown> | null {
         return null;
     }
 
-    /** @inheritDoc */
-    setup() {
+    protected setup() {
+        this.addHandler('auxclick', 'a[href]:not([role="button"])', (e) => {
+            this.onAuxClickLink(e as MouseEvent);
+        });
+
         this.nameName = this.name + 'Name';
         this.typeName = this.name + 'Type';
         this.idName = this.name + 'Id';
@@ -321,7 +261,7 @@ class LinkParentFieldView extends BaseFieldView {
             this.params.entityList ||
             this.model.getLinkParam(this.name, 'entityList') || [];
 
-        this.foreignScopeList = Espo.Utils.clone(this.foreignScopeList).filter(item => {
+        this.foreignScopeList = Utils.clone(this.foreignScopeList).filter(item => {
             if (!this.getMetadata().get(['scopes', item, 'disabled'])) {
                 return true;
             }
@@ -340,26 +280,23 @@ class LinkParentFieldView extends BaseFieldView {
         this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
 
         if ('createDisabled' in this.options) {
-            this.createDisabled = this.options.createDisabled;
+            this.createDisabled = this.options.createDisabled as boolean;
         }
 
         if (!this.isListMode()) {
             this.addActionHandler('selectLink', () => this.actionSelect());
             this.addActionHandler('clearLink', () => this.actionClearLink());
 
-            this.events[`change select[data-name="${this.typeName}"]`] = e => {
-                this.foreignScope = e.currentTarget.value;
+            this.addHandler('change', `select[data-name="${this.typeName}"]`, (_, target) => {
+                this.foreignScope = (target as HTMLSelectElement).value;
 
-                this.$elementName.val('');
-                this.$elementId.val('');
-            };
+                this.$elementName?.val('');
+                this.$elementId?.val('');
+            });
         }
     }
 
-    /**
-     * @protected
-     */
-    actionClearLink() {
+    protected actionClearLink() {
         if (this.foreignScopeList.length) {
             this.foreignScope = this.foreignScopeList[0];
 
@@ -372,16 +309,12 @@ class LinkParentFieldView extends BaseFieldView {
         this.trigger('change');
     }
 
-    /**
-     * @protected
-     */
-    async actionSelect() {
+    protected async actionSelect() {
         const viewName = this.getMetadata().get(`clientDefs.${this.foreignScope}.modalViews.select`) ||
             this.selectRecordsView;
 
         const createButton = !this.createDisabled && this.isEditMode();
 
-        /** @type {module:views/modals/select-records~Options} */
         const options = {
             scope: this.foreignScope,
             createButton: createButton,
@@ -392,47 +325,43 @@ class LinkParentFieldView extends BaseFieldView {
             mandatorySelectAttributeList: this.getMandatorySelectAttributeList(),
             forceSelectAllAttributes: this.isForceSelectAllAttributes(),
             layoutName: this.getSelectLayout(),
-            onSelect: models => {
+            onSelect: (models: Model[]) => {
                 this.select(models[0]);
             },
         };
 
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         const view = await this.createView('modal', viewName, options);
 
         await view.render();
 
-        Espo.Ui.notify();
+        Ui.notify();
     }
 
-    /** @inheritDoc */
-    setupSearch() {
+    protected setupSearch() {
         const type = this.getSearchParamsData().type;
 
         if (type === 'is' || !type) {
-            this.searchData.idValue = this.getSearchParamsData().idValue ||
-                this.searchParams.valueId;
-            this.searchData.nameValue = this.getSearchParamsData().nameValue ||
-                this.searchParams.valueName;
-            this.searchData.typeValue = this.getSearchParamsData().typeValue ||
-                this.searchParams.valueType;
+            this.searchData.idValue = this.getSearchParamsData().idValue ??
+                this.searchParams?.valueId;
+            this.searchData.nameValue = this.getSearchParamsData().nameValue ??
+                this.searchParams?.valueName;
+            this.searchData.typeValue = this.getSearchParamsData().typeValue ??
+                this.searchParams?.valueType;
         }
 
-        this.events['change select.search-type'] = e => {
-            const type = $(e.currentTarget).val();
-
-            this.handleSearchType(type);
-        };
+        this.addHandler('change', 'select.search-type', (_, target) => {
+            this.handleSearchType((target as HTMLSelectElement).value);
+        });
     }
 
     /**
      * Handle a search type.
      *
-     * @protected
-     * @param {string} type A type.
+     * @param type A type.
      */
-    handleSearchType(type) {
+    protected handleSearchType(type: string) {
         if (['is'].includes(type)) {
             this.$el.find('div.primary').removeClass('hidden');
         } else {
@@ -443,12 +372,11 @@ class LinkParentFieldView extends BaseFieldView {
     /**
      * Select.
      *
-     * @param {module:model} model A model.
-     * @protected
+     * {module:model} model A model.
      */
-    select(model) {
-        this.$elementName.val(model.get('name') || model.id);
-        this.$elementId.val(model.get('id'));
+    protected select(model: Model) {
+        this.$elementName?.val(model.get('name') ?? model.id);
+        this.$elementId?.val(model.id as string);
 
         this.trigger('change');
     }
@@ -456,31 +384,22 @@ class LinkParentFieldView extends BaseFieldView {
     /**
      * Attributes to select regardless availability on a list layout.
      * Can be extended.
-     *
-     * @protected
-     * @return {string[]|null}
      */
-    getMandatorySelectAttributeList() {
+    protected getMandatorySelectAttributeList(): string[] | null {
         return this.mandatorySelectAttributeList;
     }
 
     /**
      * Select all attributes. Can be extended.
-     *
-     * @protected
-     * @return {boolean}
      */
-    isForceSelectAllAttributes() {
+    protected isForceSelectAllAttributes(): boolean {
         return this.forceSelectAllAttributes;
     }
 
     /**
      * Get an autocomplete max record number. Can be extended.
-     *
-     * @protected
-     * @return {number}
      */
-    getAutocompleteMaxCount() {
+    protected getAutocompleteMaxCount(): number {
         if (this.autocompleteMaxCount) {
             return this.autocompleteMaxCount;
         }
@@ -488,22 +407,24 @@ class LinkParentFieldView extends BaseFieldView {
         return this.getConfig().get('recordsPerPage');
     }
 
-    // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL. Can be extended.
      *
-     * @protected
-     * @type {string} [q]
-     * @return {string}
+     * @param q A query.
      */
-    getAutocompleteUrl(q) {
+    protected getAutocompleteUrl(q: string): Promise<string> | string {
+        // noinspection BadExpressionStatementJS
+        q;
+
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.isForceSelectAllAttributes()) {
             let select = ['id', 'name'];
 
-            if (this.getMandatorySelectAttributeList()) {
-                select = select.concat(this.getMandatorySelectAttributeList());
+            const mandatory = this.getMandatorySelectAttributeList();
+
+            if (mandatory) {
+                select = select.concat(mandatory);
             }
 
             url += '&select=' + select.join(',');
@@ -530,11 +451,11 @@ class LinkParentFieldView extends BaseFieldView {
         return url;
     }
 
-    afterRender() {
+    protected afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
-            this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
-            this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
-            this.$elementType = this.$el.find('select[data-name="' + this.typeName + '"]');
+            this.$elementId = this.$el.find(`input[data-name="${this.idName}"]`);
+            this.$elementName = this.$el.find(`input[data-name="${this.nameName}"]`);
+            this.$elementType = this.$el.find(`select[data-name="${this.typeName}"]`);
 
             this.$elementName.on('change', () => {
                 if (this.$elementName.val() === '') {
@@ -555,16 +476,15 @@ class LinkParentFieldView extends BaseFieldView {
             this.$elementName.on('blur', e => {
                 setTimeout(() => {
                     if (this.mode === this.MODE_EDIT) {
-                        e.currentTarget.value = this.model.get(this.nameName) || '';
+                        (e.currentTarget as HTMLInputElement).value = this.model.get(this.nameName) || '';
                     }
                 }, 100);
             });
 
             if (!this.autocompleteDisabled) {
-                /** @type {module:ajax.AjaxPromise & Promise<any>} */
-                let lastAjaxPromise;
+                let lastAjaxPromise: AjaxPromise;
 
-                const autocomplete = new Autocomplete(this.$elementName.get(0), {
+                const autocomplete = new Autocomplete(this.$elementName?.get(0) as HTMLInputElement, {
                     name: this.name,
                     focusOnSelect: true,
                     handleFocusMode: 2,
@@ -572,31 +492,34 @@ class LinkParentFieldView extends BaseFieldView {
                     triggerSelectOnValidInput: false,
                     forceHide: true,
                     minChars: this.autocompleteOnEmpty ? 0 : 1,
-                    onSelect: item => {
-                        this.getModelFactory().create(this.foreignScope, model => {
-                            model.set(item.attributes);
+                    onSelect: async (item: {attributes: any}) => {
+                        const entityType = this.foreignScope;
 
-                            this.select(model);
-                            this.$elementName.focus();
-                        });
+                        if (!entityType) {
+                            throw new Error("No entity type selected.");
+                        }
+
+                        const model = await this.getModelFactory().create(entityType);
+                        model.setMultiple(item.attributes);
+
+                        this.select(model);
+                        this.$elementName?.trigger('focus');
                     },
-                    lookupFunction: query => {
-                        return Promise.resolve(this.getAutocompleteUrl(query))
-                            .then(url => {
-                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
-                                    lastAjaxPromise.abort();
-                                }
+                    lookupFunction: async (query: string) => {
+                        const url = await this.getAutocompleteUrl(query);
 
-                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+                        if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                            lastAjaxPromise.abort();
+                        }
 
-                                return lastAjaxPromise;
-                            })
-                            .then(/** {list: Record[]} */response => {
-                                return response.list.map(item => ({
-                                    value: item.name,
-                                    attributes: item,
-                                }));
-                            });
+                        lastAjaxPromise = Ajax.getRequest(url, {q: query});
+
+                        const response: {list: any[]} = await lastAjaxPromise;
+
+                        return response.list.map(item => ({
+                            value: item.name,
+                            attributes: item,
+                        }));
                     },
                 });
 
@@ -619,12 +542,10 @@ class LinkParentFieldView extends BaseFieldView {
         }
     }
 
-    /** @inheritDoc */
-    getValueForDisplay() {
+    protected getValueForDisplay(): any {
         return this.model.get(this.nameName);
     }
 
-    /** @inheritDoc */
     validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.idName) === null || !this.model.get(this.typeName)) {
@@ -636,11 +557,12 @@ class LinkParentFieldView extends BaseFieldView {
                 return true;
             }
         }
+
+        return false;
     }
 
-    /** @inheritDoc */
-    fetch() {
-        const data = {};
+    fetch(): Record<string, unknown> {
+        const data = {} as Record<string, unknown>;
 
         data[this.typeName] = this.$elementType.val() || null;
         data[this.nameName] = this.$elementName.val() || null;
@@ -653,8 +575,7 @@ class LinkParentFieldView extends BaseFieldView {
         return data;
     }
 
-    /** @inheritDoc */
-    fetchSearch() {
+    fetchSearch(): Record<string, unknown> | null {
         const type = this.$el.find('select.search-type').val();
 
         if (type === 'isEmpty') {
@@ -731,15 +652,11 @@ class LinkParentFieldView extends BaseFieldView {
         };
     }
 
-    /** @inheritDoc */
-    getSearchType() {
-        return this.getSearchParamsData().type || this.searchParams.typeFront;
+    protected getSearchType(): string | null {
+        return this.getSearchParamsData().type ?? this.searchParams?.typeFront ?? null;
     }
 
-    /**
-     * @protected
-     */
-    quickView() {
+    protected quickView() {
         const id = this.model.get(this.idName);
         const entityType = this.model.get(this.typeName);
 
@@ -756,12 +673,27 @@ class LinkParentFieldView extends BaseFieldView {
     }
 
     /**
-     * @protected
-     * @return {string|undefined}
      * @since 9.1.0
      */
-    getSelectLayout() {
+    protected getSelectLayout(): string | undefined {
         return undefined;
+    }
+
+    private onAuxClickLink(e: MouseEvent) {
+        if (!this.isReadMode()) {
+            return;
+        }
+
+        const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+        if (!isCombination) {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.quickView();
     }
 }
 
