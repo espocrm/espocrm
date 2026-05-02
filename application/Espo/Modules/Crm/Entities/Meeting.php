@@ -276,4 +276,12 @@ class Meeting extends Entity
     {
         return (bool) $this->get(self::FIELD_IS_ALL_DAY);
     }
+
+    /**
+     * @since 10.0.0
+     */
+    public function setIsAllDay(bool $isAllDay): self
+    {
+        return $this->set(self::FIELD_IS_ALL_DAY, $isAllDay);
+    }
 }

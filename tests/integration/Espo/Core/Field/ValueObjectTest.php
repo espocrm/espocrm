@@ -42,6 +42,7 @@ use Espo\Core\Field\LinkMultipleItem;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\PhoneNumber;
 use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\EntityManager;
 use tests\integration\Core\BaseTestCase;
 
@@ -167,7 +168,7 @@ class ValueObjectTest extends BaseTestCase
     {
         $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $meeting = $entityManager->getNewEntity('Meeting');
+        $meeting = $entityManager->getRepositoryByClass(Meeting::class)->getNew();
 
         $meeting->set('name', 'meeting-1');
 
@@ -175,7 +176,7 @@ class ValueObjectTest extends BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $meeting = $entityManager->getEntityById('Meeting', $meeting->getId());
+        $entityManager->refreshEntity($meeting);
 
         $dateStart = $meeting->getDateStart();
 
@@ -187,17 +188,18 @@ class ValueObjectTest extends BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $meeting = $entityManager->getEntityById('Meeting', $meeting->getId());
+        $entityManager->refreshEntity($meeting);
 
         $dateStart = $meeting->getValueObject('dateStart');
 
         $this->assertNull($dateStart);
 
+        $meeting->setIsAllDay(true);
         $meeting->setValueObject('dateStart', DateTimeOptional::fromString('2021-05-01'));
 
         $entityManager->saveEntity($meeting);
 
-        $meeting = $entityManager->getEntityById('Meeting', $meeting->getId());
+        $entityManager->refreshEntity($meeting);
 
         $dateStart = $meeting->getValueObject('dateStart');
 
