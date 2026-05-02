@@ -304,28 +304,33 @@ class AttachmentMultipleFieldView<
     }
 
     private changeFileHandler(input: HTMLInputElement) {
-        const $file = $(input);
         const files = input.files as FileList;
 
         this.uploadFiles(files);
 
         input.value = '';
 
-        $file.replaceWith($file.clone(true));
+        // Note: Event listeners are not cloned.
+        const newInput = input.cloneNode(true);
+        input.replaceWith(newInput);
     }
 
     private removeAttachmentHandler(target: HTMLElement) {
-        const $div = $(target).parent();
+        const div = target.parentElement;
 
-        const id = $div.attr('data-id');
+        const id = div?.dataset.id as string | undefined;
 
         if (id) {
             this.deleteAttachment(id);
         }
 
-        $div.parent().remove();
+        div?.parentElement?.remove();
 
-        this.$el.find('input.file').val(null);
+        const input = this.element.querySelector<HTMLInputElement>('input.file');
+
+        if (input) {
+            input.value = '';
+        }
 
         setTimeout(() => this.focusOnUploadButton(), 10);
     }

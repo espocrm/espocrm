@@ -26,130 +26,110 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/file */
-
-import LinkFieldView from 'views/fields/link';
+import LinkFieldView, {LinkOptions, LinkParams} from 'views/fields/link';
 import FileUpload from 'helpers/file-upload';
 import AttachmentInsertSourceFromHelper from 'helpers/misc/attachment-insert-from-source';
+import {BaseViewSchema, FieldValidator} from 'views/fields/base';
+import View from 'view';
+import Model from 'model';
+import {fa} from 'cronstrue/dist/i18n/locales/fa';
+
+interface FileParams extends LinkParams {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * Show preview.
+     */
+    showPreview?: boolean;
+    /**
+     * A preview size.
+     */
+    previewSize?: PreviewSize;
+    /**
+     * A list mode preview size.
+     */
+    listPreviewSize?: PreviewSize;
+    /**
+     * A source list.
+     */
+    sourceList?: string[];
+    /**
+     * Formats to accept.
+     */
+    accept?: string[];
+    /**
+     * A max file size (in Mb).
+     */
+    maxFileSize?: number;
+}
+
+export interface FileOptions extends LinkOptions {
+    /**
+     * @internal
+     */
+    previewSize?: PreviewSize
+}
+
+type PreviewSize = 'x-small' | 'small' | 'medium' | 'large';
 
 /**
  * A file field.
- *
- * @extends LinkFieldView<module:views/fields/file~params>
  */
-class FileFieldView extends LinkFieldView {
+class FileFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends FileOptions = FileOptions,
+    P extends FileParams = FileParams,
+> extends LinkFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/file~options
-     * @property {
-     *     module:views/fields/file~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type: string = 'file'
 
-    /**
-     * @typedef {Object} module:views/fields/file~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [showPreview] Show preview.
-     * @property {'x-small'|'small'|'medium'|'large'} [previewSize] A preview size.
-     * @property {'x-small'|'small'|'medium'|'large'} [listPreviewSize] A list preview size.
-     * @property {string[]} [sourceList] A source list.
-     * @property {string[]} [accept] Formats to accept.
-     * @property {number} [maxFileSize] A max file size (in Mb).
-     */
+    protected listTemplate = 'fields/file/list'
+    protected listLinkTemplate = 'fields/file/list'
+    protected detailTemplate = 'fields/file/detail'
+    protected editTemplate = 'fields/file/edit'
 
-    /**
-     * @param {
-     *     module:views/fields/file~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+    protected showPreview: boolean = false
 
-    type = 'file'
+    protected accept: string[] | null = null
 
-    listTemplate = 'fields/file/list'
-    listLinkTemplate = 'fields/file/list'
-    detailTemplate = 'fields/file/detail'
-    editTemplate = 'fields/file/edit'
+    protected defaultType: string | null = null
 
-    showPreview = false
-    accept = false
-    defaultType = false
-    previewSize = 'small'
-    validations = ['ready', 'required']
-    searchTypeList = ['isNotEmpty', 'isEmpty']
+    protected previewSize: PreviewSize = 'small'
 
-    events = {
-        /** @this FileFieldView */
-        'click a.remove-attachment': function (e) {
-            const $div = $(e.currentTarget).parent();
+    private previewTypeList: string[]
 
-            this.deleteAttachment();
+    private imageSizes: Record<string, [number, number]>
 
-            $div.parent().remove();
+    validations: (FieldValidator | string)[] = [
+        'ready',
+        'required',
+    ]
 
-            this.$el.find('input.file').val(null);
+    searchTypeList: string[] = [
+        'isNotEmpty',
+        'isEmpty',
+    ]
 
-            setTimeout(() => this.focusOnUploadButton(), 10);
-        },
-        /** @this FileFieldView */
-        'change input.file': function (e) {
-            const $file = $(e.currentTarget);
-            const files = e.currentTarget.files;
+    private acceptAttribute: string
 
-            if (!files.length) {
-                return;
-            }
+    private resizeIsBeingListened: boolean
 
-            this.uploadFile(files[0]);
+    private isUploading: boolean = false
 
-            e.target.value = null;
+    private sourceList: string[]
 
-            $file.replaceWith($file.clone(true));
-        },
-        /** @this FileFieldView */
-        'click a[data-action="showImagePreview"]': function (e) {
-            e.preventDefault();
+    protected typeName: string
 
-            const id = this.model.get(this.idName);
+    private $attachment: JQuery
 
-            this.createView('preview', 'views/modals/image-preview', {
-                id: id,
-                model: this.model,
-                name: this.model.get(this.nameName),
-            }, view => {
-                view.render();
-            });
-        },
-        /** @this FileFieldView */
-        'click a.action[data-action="insertFromSource"]': function (e) {
-            const name = $(e.currentTarget).data('name');
-
-            this.insertFromSource(name);
-        },
-        /** @this FileFieldView */
-        'keydown label.attach-file-label': function (e) {
-            const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-            if (key === 'Enter') {
-                const el = /** @type {HTMLInputElement} */this.$el.find('input.file').get(0);
-
-                el.click();
-            }
-        },
-    }
-
-    // noinspection JSCheckFunctionSignatures
-    data() {
+    protected data(): Record<string, any> {
         const data = {
             ...super.data(),
             id: this.model.get(this.idName),
             acceptAttribute: this.acceptAttribute,
-        };
+        } as any;
 
         if (this.mode === this.MODE_EDIT) {
             data.sourceList = this.sourceList;
@@ -157,11 +137,10 @@ class FileFieldView extends LinkFieldView {
 
         data.valueIsSet = this.model.has(this.idName);
 
-        // noinspection JSValidateTypes
         return data;
     }
 
-    showValidationMessage(msg, selector, view) {
+    showValidationMessage(msg: string, selector: string, view?: View) {
         const $label = this.$el.find('label');
 
         const title = $label.attr('title');
@@ -173,16 +152,16 @@ class FileFieldView extends LinkFieldView {
         $label.attr('title', title);
     }
 
-    validateRequired() {
+    validateRequired(): boolean {
         if (!this.isRequired()) {
-            return;
+            return false;
         }
 
         if (this.model.get(this.idName) == null) {
             const msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
-            let $target;
+            let $target: any;
 
             if (this.isUploading) {
                 $target = this.$el.find('.gray-box');
@@ -194,10 +173,12 @@ class FileFieldView extends LinkFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    validateReady() {
+    validateReady(): boolean {
         if (this.isUploading) {
             const $target = this.$el.find('.gray-box');
 
@@ -208,9 +189,17 @@ class FileFieldView extends LinkFieldView {
 
             return true;
         }
+
+        return false;
     }
 
-    setup() {
+    protected setup() {
+        this.addHandler('click', 'a.remove-attachment', (_e, target) => this.removeAttachmentHandler(target));
+        this.addHandler('change', 'input.file', (_e, target) => this.handeInputChange(target as HTMLInputElement));
+        this.addActionHandler('showImagePreview', (e) => this.showPreviewHandler(e))
+        this.addActionHandler('insertFromSource', (_e, target) => this.insertFromSource(target.dataset.name as string));
+        this.addHandler('keydown', 'label.attach-file-label', (e) => this.keydownAttachFileLabelHandler(e));
+
         this.nameName = this.name + 'Name';
         this.idName = this.name + 'Id';
         this.typeName = this.name + 'Type';
@@ -257,11 +246,11 @@ class FileFieldView extends LinkFieldView {
             });
 
         if ('showPreview' in this.params) {
-            this.showPreview = this.params.showPreview;
+            this.showPreview = this.params.showPreview as boolean;
         }
 
         if ('accept' in this.params) {
-            this.accept = this.params.accept;
+            this.accept = this.params.accept as string[];
         }
 
         if (this.accept && this.accept.length) {
@@ -279,7 +268,66 @@ class FileFieldView extends LinkFieldView {
         });
     }
 
-    afterRender() {
+    private keydownAttachFileLabelHandler(e: Event) {
+        const key = Espo.Utils.getKeyFromKeyEvent(e as KeyboardEvent);
+
+        if (key === 'Enter') {
+            const input = this.element.querySelector<HTMLInputElement>('input.file');
+
+            input?.click();
+        }
+    }
+
+    private showPreviewHandler(e: MouseEvent) {
+        e.preventDefault();
+
+        const id = this.model.get(this.idName);
+
+        this.createView('preview', 'views/modals/image-preview', {
+            id: id,
+            model: this.model,
+            name: this.model.get(this.nameName),
+        }).then(view => {
+            view.render();
+        });
+    }
+
+    private handeInputChange(input: HTMLInputElement) {
+        const files = input.files;
+
+        if (!files?.length) {
+            return;
+        }
+
+        this.uploadFile(files[0]);
+
+        input.value = '';
+
+        // @todo Test.
+        // @todo The same in multiple.
+
+        // Note: Event listeners are not cloned.
+        const newInput = input.cloneNode(true);
+        input.replaceWith(newInput);
+    }
+
+    private removeAttachmentHandler(target: HTMLElement) {
+        const div = target.parentElement;
+
+        this.deleteAttachment();
+
+        div?.parentElement?.remove();
+
+        const input = this.element.querySelector<HTMLInputElement>('input.file');
+
+        if (input) {
+            input.value = '';
+        }
+
+        setTimeout(() => this.focusOnUploadButton(), 10);
+    }
+
+    protected afterRender() {
         if (this.mode === this.MODE_EDIT) {
             this.$attachment = this.$el.find('div.attachment');
 
@@ -295,11 +343,11 @@ class FileFieldView extends LinkFieldView {
             this.$el.off('dragover');
             this.$el.off('dragleave');
 
-            this.$el.on('drop', e => {
+            this.$el.on('drop', (e: any) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const event = /** @type {DragEvent} */e.originalEvent;
+                const event = e.originalEvent as DragEvent;
 
                 if (
                     event.dataTransfer &&
@@ -310,11 +358,11 @@ class FileFieldView extends LinkFieldView {
                 }
             });
 
-            this.$el.on('dragover', e => {
+            this.$el.on('dragover', (e: any) => {
                 e.preventDefault();
             });
 
-            this.$el.on('dragleave', e =>{
+            this.$el.on('dragleave', (e: any) =>{
                 e.preventDefault();
             });
         }
@@ -355,11 +403,8 @@ class FileFieldView extends LinkFieldView {
         this.$el.find('img.image-preview').css('maxWidth', width + 'px');
     }
 
-    /**
-     * @return {string}
-     */
-    getDetailPreview(name, type, id) {
-        if (!~this.previewTypeList.indexOf(type)) {
+    protected getDetailPreview(name: string, type: string, id: string): string {
+        if (!this.previewTypeList.includes(type)) {
             return name;
         }
 
@@ -371,7 +416,7 @@ class FileFieldView extends LinkFieldView {
 
         const src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
 
-        let maxHeight = (this.imageSizes[previewSize] || {})[1];
+        let maxHeight: number | string = (this.imageSizes[previewSize] || {})[1];
 
         if (this.isListMode() && !this.params.listPreviewSize) {
             maxHeight =  '';
@@ -388,13 +433,13 @@ class FileFieldView extends LinkFieldView {
             });
 
         if (this.mode === this.MODE_LIST_LINK) {
-            const link = '#' + this.model.entityType + '/view/' + this.model.id;
+            const link = `#${this.model.entityType}/view/${this.model.id}`;
 
             return $('<a>')
                 .attr('href', link)
                 .append($img)
                 .get(0)
-                .outerHTML;
+                ?.outerHTML as string;
         }
 
         return $('<a>')
@@ -404,11 +449,11 @@ class FileFieldView extends LinkFieldView {
             .attr('href', this.getImageUrl(id))
             .append($img)
             .get(0)
-            .outerHTML;
+            ?.outerHTML as string;
     }
 
-    getEditPreview(name, type, id) {
-        if (!~this.previewTypeList.indexOf(type)) {
+    protected getEditPreview(name: string, type: string, id: string): string | null {
+        if (!this.previewTypeList.includes(type)) {
             return null;
         }
 
@@ -423,10 +468,10 @@ class FileFieldView extends LinkFieldView {
                 maxHeight: (this.imageSizes[this.previewSize] || {})[1],
             })
             .get(0)
-            .outerHTML;
+            ?.outerHTML as string;
     }
 
-    getValueForDisplay() {
+    protected getValueForDisplay(): any {
         if (! (this.isDetailMode() || this.isListMode())) {
             return '';
         }
@@ -470,7 +515,7 @@ class FileFieldView extends LinkFieldView {
                         .addClass('attachment-block attachment-block-preview')
                         .append($item)
                 )
-                .get(0).outerHTML;
+                .get(0)?.outerHTML as string;
         }
 
         const container = document.createElement('div');
@@ -496,7 +541,7 @@ class FileFieldView extends LinkFieldView {
         return container.outerHTML;
     }
 
-    getImageUrl(id, size) {
+    protected getImageUrl(id: string, size?: string): string {
         let url = this.getBasePath() + '?entryPoint=image&id=' + id;
 
         if (size) {
@@ -510,8 +555,8 @@ class FileFieldView extends LinkFieldView {
         return url;
     }
 
-    getDownloadUrl(id) {
-        let url = this.getBasePath() + '?entryPoint=download&id=' + id;
+    protected getDownloadUrl(id: string): string {
+        let url = `${this.getBasePath()}?entryPoint=download&id=${id}`;
 
         if (this.getUser().get('portalId')) {
             url += '&portalId=' + this.getUser().get('portalId');
@@ -520,38 +565,38 @@ class FileFieldView extends LinkFieldView {
         return url;
     }
 
-    deleteAttachment() {
+    private deleteAttachment() {
         const id = this.model.get(this.idName);
 
-        const o = {};
+        const o = {} as any;
 
         o[this.idName] = null;
         o[this.nameName] = null;
 
-        this.model.set(o);
+        this.model.setMultiple(o);
 
         this.$attachment.empty();
 
-        if (id) {
-            if (this.model.isNew()) {
-                this.getModelFactory().create('Attachment', (attachment) => {
-                    attachment.id = id;
-                    attachment.destroy();
-                });
-            }
+        if (!id || !this.model.isNew()) {
+            return;
         }
+
+        this.getModelFactory().create('Attachment').then(attachment => {
+            attachment.id = id;
+            attachment.destroy();
+        });
     }
 
-    setAttachment(attachment, ui) {
-        const o = {};
+    protected setAttachment(attachment: Model, ui?: boolean) {
+        const attributes = {} as Record<string, any>;
 
-        o[this.idName] = attachment.id;
-        o[this.nameName] = attachment.get('name');
+        attributes[this.idName] = attachment.id;
+        attributes[this.nameName] = attachment.get('name');
 
-        this.model.set(o, {ui: ui});
+        this.model.setMultiple(attributes, {ui: ui});
     }
 
-    getMaxFileSize() {
+    protected getMaxFileSize(): number {
         let maxFileSize = this.params.maxFileSize || 0;
 
         const noChunk = !this.getConfig().get('attachmentUploadChunkSize');
@@ -569,10 +614,7 @@ class FileFieldView extends LinkFieldView {
         return maxFileSize;
     }
 
-    /**
-     * @param {File} file
-     */
-    uploadFile(file) {
+    protected uploadFile(file: File) {
         let isCanceled = false;
 
         let exceedsMaxFileSize = false;
@@ -586,7 +628,7 @@ class FileFieldView extends LinkFieldView {
         if (exceedsMaxFileSize) {
             const msg = this.translate('fieldMaxFileSizeError', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{max}', maxFileSize);
+                .replace('{max}', maxFileSize.toString());
 
             this.showValidationMessage(msg, '.attachment-button label');
 
@@ -597,14 +639,14 @@ class FileFieldView extends LinkFieldView {
 
         const uploadHelper = new FileUpload();
 
-        this.getModelFactory().create('Attachment', attachment => {
+        this.getModelFactory().create('Attachment').then(attachment => {
             const $attachmentBox = this.addAttachmentBox(file.name, file.type);
 
             const $uploadingMsg = $attachmentBox.parent().find('.uploading-message');
 
             this.$el.find('.attachment-button').addClass('hidden');
 
-            const mediator = {};
+            const mediator: {isCanceled?: boolean} = {};
 
             $attachmentBox.find('.remove-attachment').on('click.uploading', () => {
                 isCanceled = true;
@@ -623,12 +665,12 @@ class FileFieldView extends LinkFieldView {
             this.handleUploadingFile(file).then(file => {
                 uploadHelper
                     .upload(file, attachment, {
-                        afterChunkUpload: (size) => {
+                        afterChunkUpload: (size: number) => {
                             const msg = Math.floor((size / file.size) * 100) + '%';
 
                             $uploadingMsg.html(msg);
                         },
-                        afterAttachmentSave: (attachment) => {
+                        afterAttachmentSave: (attachment: Model) => {
                             $attachmentBox.attr('data-id', attachment.id);
                         },
                         mediator: mediator,
@@ -676,20 +718,15 @@ class FileFieldView extends LinkFieldView {
         });
     }
 
-    /**
-     * @protected
-     * @param {File} file
-     * @return {Promise<unknown>}
-     */
-    handleUploadingFile(file) {
+    protected handleUploadingFile(file: File): Promise<File> {
         return new Promise(resolve => resolve(file));
     }
 
-    getBoxPreviewHtml(name, type, id) {
+    private getBoxPreviewHtml(name: string, type: string, id?: string) {
         const $text = $('<span>').text(name);
 
         if (!id) {
-            return $text.get(0).outerHTML;
+            return $text.get(0)?.outerHTML as string;
         }
 
         if (this.showPreview) {
@@ -706,10 +743,10 @@ class FileFieldView extends LinkFieldView {
             .attr('href', url)
             .attr('target', '_BLANK')
             .text(name)
-            .get(0).outerHTML;
+            .get(0)?.outerHTML as string;
     }
 
-    addAttachmentBox(name, type, id) {
+    private addAttachmentBox(name: string, type: string, id?: string): JQuery {
         this.$attachment.empty();
 
         const $remove = $('<a>')
@@ -762,11 +799,7 @@ class FileFieldView extends LinkFieldView {
         return $att;
     }
 
-    /**
-     * @private
-     * @param {string} source
-     */
-    insertFromSource(source) {
+    private insertFromSource(source: string) {
         const helper = new AttachmentInsertSourceFromHelper(this);
 
         helper.insert({
@@ -777,8 +810,8 @@ class FileFieldView extends LinkFieldView {
         });
     }
 
-    fetch() {
-        const data = {};
+    fetch(): Record<string, unknown> {
+        const data = {} as any;
 
         data[this.idName] = this.model.get(this.idName);
 
