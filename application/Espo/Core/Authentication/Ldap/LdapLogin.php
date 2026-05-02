@@ -154,6 +154,8 @@ class LdapLogin implements Login
 
         $ldapClient = $this->getLdapClient();
 
+        $fallbackToLocal = (bool) $this->config->get('ldapFallbackToLocalAuth', false);
+
         /* Login LDAP system user (ldapUsername, ldapPassword) */
         try {
             $ldapClient->bind();
@@ -167,13 +169,15 @@ class LdapLogin implements Login
 
             /** @var string $username */
 
-            $adminUser = $this->adminLogin($username, $password);
+            $adminUser = $fallbackToLocal
+                ? $this->localLogin($username, $password)
+                : $this->adminLogin($username, $password);
 
             if (!isset($adminUser)) {
                 return Result::fail();
             }
 
-            $this->log->info("LDAP: Administrator '{username}' was logged in by Espo method.", [
+            $this->log->info("LDAP: User '{username}' was logged in by local Espo method (LDAP server unreachable).", [
                 'username' => $username,
             ]);
         }
@@ -197,13 +201,15 @@ class LdapLogin implements Login
                     'username' => $username,
                 ]);
 
-                $adminUser = $this->adminLogin($username, $password);
+                $adminUser = $fallbackToLocal
+                    ? $this->localLogin($username, $password)
+                    : $this->adminLogin($username, $password);
 
                 if (!isset($adminUser)) {
                     return Result::fail();
                 }
 
-                $this->log->info("LDAP: Administrator '{username}' was logged in by Espo method.", [
+                $this->log->info("LDAP: User '{username}' was logged in by local Espo method (not found in LDAP).", [
                     'username' => $username,
                 ]);
             }
@@ -221,7 +227,19 @@ class LdapLogin implements Login
                     'message' => $e->getMessage(),
                 ]);
 
-                return Result::fail();
+                if ($fallbackToLocal) {
+                    $adminUser = $this->localLogin($username, $password);
+
+                    if (!isset($adminUser)) {
+                        return Result::fail();
+                    }
+
+                    $this->log->info("LDAP: User '{username}' was logged in by local Espo method (LDAP credentials rejected).", [
+                        'username' => $username,
+                    ]);
+                } else {
+                    return Result::fail();
+                }
             }
         }
 
@@ -314,6 +332,27 @@ class LdapLogin implements Login
                 'userName' => $username,
             ])
             ->findOne();
+    }
+
+    private function localLogin(string $username, #[SensitiveParameter] string $password): ?User
+    {
+        $user = $this->entityManager
+            ->getRDBRepositoryByClass(User::class)
+            ->where([
+                'userName' => $username,
+                'type!=' => [User::TYPE_API, User::TYPE_SYSTEM, User::TYPE_SUPER_ADMIN],
+            ])
+            ->findOne();
+
+        if (!$user) {
+            return null;
+        }
+
+        if (!$this->passwordHash->verify($password, $user->getPassword())) {
+            return null;
+        }
+
+        return $user;
     }
 
     private function adminLogin(string $username, #[SensitiveParameter] string $password): ?User
