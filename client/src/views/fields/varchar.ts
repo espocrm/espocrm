@@ -392,7 +392,7 @@ class VarcharFieldView<
         return data;
     }
 
-    fetchSearch() {
+    fetchSearch(): Record<string, unknown> | null {
         const type = this.fetchSearchType() || 'startsWith';
 
         if (['isEmpty', 'isNotEmpty'].includes(type)) {
@@ -415,6 +415,7 @@ class VarcharFieldView<
                     },
                 };
             }
+
             const value = [
                 {
                     type: 'isNotNull',
