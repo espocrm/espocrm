@@ -164,7 +164,7 @@ class AttachmentMultipleFieldView<
     protected setup() {
         this.addHandler('click', 'a.remove-attachment', (_e, target) => this.removeAttachmentHandler(target));
         this.addHandler('change', 'input.file', (_e, target) => this.changeFileHandler(target as HTMLInputElement));
-        this.addActionHandler('insertFromSource', (_e, target) => this.insertFromSource(target.dataset.name as string))
+        this.addActionHandler('insertFromSource', (_e, target) => this.insertFromSource(target.dataset.name as string));
         this.addActionHandler('showImagePreview', (e, target) => this.showImagePreviewHandler(e, target));
         this.addHandler('keydown', 'label.attach-file-label', (e) => this.keydownAttachFileLabelHandler(e))
 
