@@ -785,12 +785,10 @@ class LinkFieldView<
         return list;
     }
 
-    /** @inheritDoc */
-    getValueForDisplay() {
+    protected getValueForDisplay(): any {
         return this.model.get(this.nameName);
     }
 
-    /** @inheritDoc */
     validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.idName) == null) {
