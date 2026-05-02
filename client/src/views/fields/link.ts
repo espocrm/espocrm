@@ -485,10 +485,10 @@ class LinkFieldView<
     }
 
     protected setupSearch() {
-        this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
+        this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ??
             this.searchParams?.oneOfIdList ?? [];
 
-        this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash ||
+        this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash ??
             this.searchParams?.oneOfNameHash ?? {};
 
         if (['is', 'isNot', 'equals'].includes(this.getSearchType())) {
