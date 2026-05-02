@@ -26,197 +26,92 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/phone */
-
 import VarcharFieldView from 'views/fields/varchar';
 import Select from 'ui/select';
+import {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
 import intlTelInput from 'intl-tel-input';
-// noinspection NpmUsedModulesInstalled
+
+// @ts-ignore
 import intlTelInputUtils from 'intl-tel-input-utils';
-// noinspection NpmUsedModulesInstalled
+// @ts-ignore
 import intlTelInputGlobals from 'intl-tel-input-globals';
 
 /**
- * @extends VarcharFieldView<module:views/fields/phone~params>
+ * Parameters.
  */
-class PhoneFieldView extends VarcharFieldView {
-
+export interface PhoneParams extends BaseParams {
     /**
-     * @typedef {Object} module:views/fields/phone~options
-     * @property {
-     *     module:views/fields/phone~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
+     * Required.
      */
-
+    required?: boolean;
     /**
-     * @typedef {Object} module:views/fields/phone~params
-     * @property {boolean} [required] Required.
-     * @property {boolean} [onlyPrimary] Only primary.
+     * Only primary email address.
      */
+    onlyPrimary?: boolean;
+}
 
-    /**
-     * @param {
-     *     module:views/fields/phone~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
+/**
+ * Options.
+ */
+export interface PhoneOptions extends BaseOptions {}
 
-    type = 'phone'
+/**
+ * Phone number field.
+ */
+class PhoneFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends PhoneOptions = PhoneOptions,
+    P extends PhoneParams = PhoneParams,
+> extends VarcharFieldView<S, O, P> {
 
-    editTemplate = 'fields/phone/edit'
-    detailTemplate = 'fields/phone/detail'
-    listTemplate = 'fields/phone/list'
+    readonly type: string = 'phone'
 
-    /**
-     * @inheritDoc
-     * @type {Array<(function (): boolean)|string>}
-     */
-    validations = ['required', 'phoneData']
+    protected editTemplate = 'fields/phone/edit'
+    protected detailTemplate = 'fields/phone/detail'
+    protected listTemplate = 'fields/phone/list'
 
-    maxExtensionLength = 6
+    protected validations: (FieldValidator | string)[] = [
+        'required',
+        'phoneData',
+    ]
 
-    /**
-     * @private
-     * @type {RegExp}
-     */
-    validationRegExp
+    protected maxExtensionLength: number = 6
 
-    /**
-     * @protected
-     * @type {boolean}
-     */
-    isNumeric
+    private validationRegExp: RegExp
 
-    events = {
-        /** @this PhoneFieldView */
-        'click [data-action="switchPhoneProperty"]': function (e) {
-            const $target = $(e.currentTarget);
-            const $block = $(e.currentTarget).closest('div.phone-number-block');
-            const property = $target.data('property-type');
-            const $input = $block.find('input.phone-number');
+    protected isNumeric: boolean
 
-            if (property === 'primary') {
-                if (!$target.hasClass('active')) {
-                    if ($input.val() !== '') {
-                        this.$el.find('button.phone-property[data-property-type="primary"]')
-                            .removeClass('active').children().addClass('text-muted');
+    private dataFieldName: string;
 
-                        $target.addClass('active').children().removeClass('text-muted');
-                    }
-                }
+    private maxCount: number | null = null;
 
-                this.trigger('change');
+    private useInternational: boolean
 
-                return;
-            }
+    private intlTelInputMap: Map<HTMLInputElement, intlTelInput.Plugin & any>
 
-            let active = false;
+    protected allowExtensions: boolean
 
-            if ($target.hasClass('active')) {
-                $target.removeClass('active').children().addClass('text-muted');
-            } else {
-                $target.addClass('active').children().removeClass('text-muted');
+    private phoneNumberOptedOutByDefault: boolean
 
-                active = true;
-            }
+    private isOptedOutFieldName: string
 
-            if (property === 'optOut') {
-                active ?
-                    $input.addClass('text-strikethrough') :
-                    $input.removeClass('text-strikethrough');
-            }
+    private isInvalidFieldName: string
 
-            if (property === 'invalid') {
-                active ?
-                    $input.addClass('text-danger') :
-                    $input.removeClass('text-danger');
-            }
+    private defaultType: string
 
-            this.trigger('change');
-        },
-        /** @this PhoneFieldView */
-        'click [data-action="removePhoneNumber"]': function (e) {
-            const $block = $(e.currentTarget).closest('div.phone-number-block');
+    private erasedPlaceholder: string
 
-            this.removePhoneNumber($block);
-            this.trigger('change');
+    private itemMaxLength: number
 
-            const $last = this.$el.find('.phone-number').last();
+    private preferredCountryList: string[]
 
-            if ($last.length) {
-                // noinspection JSUnresolvedReference
-                $last[0].focus({preventScroll: true});
-            }
-        },
-        /** @this PhoneFieldView */
-        'change input.phone-number': function (e) {
-            const $input = $(e.currentTarget);
-            const $block = $input.closest('div.phone-number-block');
+    private _codeNames: string[]
 
-            if (this._itemJustRemoved) {
-                return;
-            }
-
-            if ($input.val() === '' && $block.length) {
-                this.removePhoneNumber($block);
-            }
-            else {
-                this.trigger('change');
-            }
-
-            this.manageAddButton();
-        },
-        /** @this PhoneFieldView */
-        'keypress input.phone-number': function () {
-            this.manageAddButton();
-        },
-        /** @this PhoneFieldView */
-        'paste input.phone-number': function () {
-            setTimeout(() => this.manageAddButton(), 10);
-        },
-        /** @this PhoneFieldView */
-        'click [data-action="addPhoneNumber"]': function () {
-            this.addPhoneNumber();
-        },
-        /** @this PhoneFieldView */
-        'keydown input.phone-number': function (e) {
-            const key = Espo.Utils.getKeyFromKeyEvent(e);
-
-            const $target = $(e.currentTarget);
-
-            if (key === 'Enter') {
-                if (!this.$el.find('[data-action="addPhoneNumber"]').hasClass('disabled')) {
-                    this.addPhoneNumber();
-
-                    e.stopPropagation();
-                }
-
-                return;
-            }
-
-            if (key === 'Backspace' && $target.val() === '') {
-                const $block = $target.closest('div.phone-number-block');
-
-                this._itemJustRemoved = true;
-                setTimeout(() => this._itemJustRemoved = false, 100);
-
-                e.stopPropagation();
-
-                this.removePhoneNumber($block);
-
-                setTimeout(() => this.focusOnLast(true), 50);
-            }
-        },
-    }
+    private _itemJustRemoved: boolean
 
     validateRequired() {
         if (!this.isRequired()) {
-            return;
+            return false;
         }
 
         if (!this.model.get(this.name)) {
@@ -227,21 +122,23 @@ class PhoneFieldView extends VarcharFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols
     validatePhoneData() {
-        const data = this.model.get(this.dataFieldName);
+        const data = this.model.get(this.dataFieldName) as
+            (Record<string, any> & {number: string, type: string})[] | null | undefined;
 
         if (!data || !data.length) {
-            return;
+            return false;
         }
 
-        /** @var {string} */
         const pattern = '^' + this.getMetadata().get('app.regExpPatterns.phoneNumberLoose.pattern') + '$';
         this.validationRegExp = new RegExp(pattern);
 
-        const numberList = [];
+        const numberList: string[] = [];
         let notValid = false;
 
         data.forEach((row, i) => {
@@ -271,8 +168,7 @@ class PhoneFieldView extends VarcharFieldView {
         return notValid;
     }
 
-    validateMaxCount() {
-        /** @type {number|null} */
+    protected validateMaxCount(): boolean {
         const maxCount = this.maxCount;
 
         if (!maxCount) {
@@ -294,13 +190,11 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     /**
-     * @protected
-     * @param {{number: string, type: string}} item A data item.
-     * @param {number} i An index.
-     * @return {boolean}
+     * @param item A data item.
+     * @param i An index.
      * @internal Called in an extension. Do not change the signature.
      */
-    itemValidate(item, i) {
+    protected itemValidate(item: {number: string, type: string}, i: number): boolean {
         const number = item.number;
 
         const n = (i + 1).toString();
@@ -321,7 +215,7 @@ class PhoneFieldView extends VarcharFieldView {
             return notValid;
         }
 
-        const element = this.$el.find(selector).get(0);
+        const element = this.$el.find(selector).get(0) as HTMLInputElement | undefined;
 
         if (!element) {
             return notValid;
@@ -368,16 +262,16 @@ class PhoneFieldView extends VarcharFieldView {
         return notValid;
     }
 
-    data() {
+    protected data(): Record<string, unknown> {
         const number = this.model.get(this.name);
-        let phoneNumberData;
+        let phoneNumberData: any;
 
         if (this.mode === this.MODE_EDIT) {
             phoneNumberData = Espo.Utils.cloneDeep(this.model.get(this.dataFieldName));
 
             if (this.model.isNew() || !this.model.get(this.name)) {
                 if (!phoneNumberData || !phoneNumberData.length) {
-                    let optOut;
+                    let optOut: any;
 
                     if (this.model.isNew()) {
                         optOut = this.phoneNumberOptedOutByDefault && this.model.entityType !== 'User';
@@ -401,7 +295,7 @@ class PhoneFieldView extends VarcharFieldView {
         if (phoneNumberData) {
             phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
 
-            phoneNumberData.forEach(item => {
+            phoneNumberData.forEach((item: any) => {
                 const number = item.phoneNumber || '';
 
                 item.erased = number.indexOf(this.erasedPlaceholder) === 0;
@@ -423,7 +317,7 @@ class PhoneFieldView extends VarcharFieldView {
                 phoneNumber: this.formatNumber(number),
                 primary: true,
                 valueForLink: this.formatForLink(number),
-            };
+            } as any;
 
             if (this.isReadMode()) {
                 o.phoneNumber = this.formatNumber(o.phoneNumber);
@@ -441,7 +335,7 @@ class PhoneFieldView extends VarcharFieldView {
             phoneNumberData: phoneNumberData,
             doNotCall: this.model.get('doNotCall'),
             lineThrough: this.model.get('doNotCall') || this.model.get(this.isOptedOutFieldName),
-        };
+        } as any;
 
         if (this.isReadMode()) {
             data.isOptedOut = this.model.get(this.isOptedOutFieldName);
@@ -466,11 +360,7 @@ class PhoneFieldView extends VarcharFieldView {
         return data;
     }
 
-    /**
-     * @private
-     * @param {string} number
-     */
-    formatForLink(number) {
+    private formatForLink(number: string): string {
         if (this.allowExtensions && this.useInternational) {
             if (number.includes(' ext. ')) {
                 number = number.replace(' ext. ', ',');
@@ -481,7 +371,7 @@ class PhoneFieldView extends VarcharFieldView {
         return number.replace(/ /g, '');
     }
 
-    focusOnLast(cursorAtEnd) {
+    private focusOnLast(cursorAtEnd?: boolean) {
         const $item = this.$el.find('input.form-control').last();
 
         $item.focus();
@@ -492,7 +382,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
     }
 
-    removePhoneNumber($block) {
+    private removePhoneNumber($block: JQuery) {
         if ($block.parent().children().length === 1) {
             $block.find('input.phone-number').val('');
         } else {
@@ -502,12 +392,11 @@ class PhoneFieldView extends VarcharFieldView {
         this.trigger('change');
     }
 
-    formatNumber(value) {
+    protected formatNumber(value: string): string {
         if (!value || value === '' || !this.useInternational) {
             return value;
         }
 
-        // noinspection JSUnresolvedReference
         return intlTelInputUtils.formatNumber(
             value,
             null,
@@ -515,7 +404,7 @@ class PhoneFieldView extends VarcharFieldView {
         );
     }
 
-    addPhoneNumber() {
+    private addPhoneNumber() {
         const data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
 
         const o = {
@@ -534,24 +423,24 @@ class PhoneFieldView extends VarcharFieldView {
             .then(() => this.focusOnLast());
     }
 
-    afterRender() {
+    protected afterRender() {
         super.afterRender();
 
         this.manageButtonsVisibility();
         this.manageAddButton();
 
         if (this.mode === this.MODE_EDIT) {
-            this.$el.find('select').toArray().forEach(selectElement => {
-                Select.init($(selectElement));
+            this.$el.find('select').toArray().forEach((selectElement: HTMLSelectElement) => {
+                Select.init(selectElement);
             });
         }
     }
 
-    afterRenderEdit() {
+    protected afterRenderEdit() {
         super.afterRenderEdit();
 
         if (this.useInternational) {
-            const inputElements = this.element.querySelectorAll('input.phone-number');
+            const inputElements = this.element.querySelectorAll<HTMLInputElement>('input.phone-number');
 
             inputElements.forEach(inputElement => {
                 // noinspection JSUnusedGlobalSymbols
@@ -562,10 +451,10 @@ class PhoneFieldView extends VarcharFieldView {
                     showFlags: false,
                     preferredCountries: this.preferredCountryList,
                     localizedCountries: this._codeNames,
-                    customPlaceholder: /** string */placeholder => {
+                    customPlaceholder: (placeholder: string) => {
                         return placeholder.replace(/[0-9]/g, '0');
                     },
-                });
+                } as any) as intlTelInput.Plugin & any;
 
                 this.intlTelInputMap.set(inputElement, obj);
 
@@ -587,7 +476,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
     }
 
-    removePhoneNumberBlock($block) {
+    private removePhoneNumberBlock($block: JQuery) {
         let changePrimary = false;
 
         if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
@@ -608,12 +497,11 @@ class PhoneFieldView extends VarcharFieldView {
         this.manageAddButton();
     }
 
-    manageAddButton() {
+    private manageAddButton() {
         const $input = this.$el.find('input.phone-number');
         let c = 0;
 
-        $input.each((i, input) => {
-            // noinspection JSUnresolvedReference
+        $input.each((_i: number, input: HTMLInputElement) => {
             if (input.value !== '') {
                 c++;
             }
@@ -632,7 +520,7 @@ class PhoneFieldView extends VarcharFieldView {
             .attr('disabled', 'disabled');
     }
 
-    manageButtonsVisibility() {
+    private manageButtonsVisibility() {
         const $primary = this.$el.find('button[data-property-type="primary"]');
         const $remove = this.$el.find('button[data-action="removePhoneNumber"]');
         const $container = this.$el.find('.phone-number-block-container');
@@ -650,7 +538,17 @@ class PhoneFieldView extends VarcharFieldView {
         $remove.addClass('hidden');
     }
 
-    setup() {
+    protected setup() {
+        this.addActionHandler('switchPhoneProperty', (_e, target) => this.switchPhoneProperty(target));
+        this.addActionHandler('removePhoneNumber', (_e, target) => this.removePhoneNumberHandler(target))
+        this.addHandler('change', 'input.phone-number', (_e, target) => this.inputChangeHandler(target));
+        this.addHandler('keypress', 'input.phone-number', () => this.manageAddButton());
+        this.addHandler('paste', 'input.phone-number', () => setTimeout(() => this.manageAddButton(), 10));
+        this.addActionHandler('addPhoneNumber', () => this.addPhoneNumber());
+        this.addHandler('keydown', 'input.phone-number', (e, target) => {
+            this.inputKeydownHandler(e as KeyboardEvent, target as HTMLInputElement);
+        });
+
         this.dataFieldName = this.name + 'Data';
         this.defaultType = this.defaultType ||
             this.getMetadata()
@@ -667,7 +565,7 @@ class PhoneFieldView extends VarcharFieldView {
 
         if (this.useInternational && !this.isListMode() && !this.isSearchMode()) {
             this._codeNames = intlTelInputGlobals.getCountryData()
-                .reduce((map, item) => {
+                .reduce((map: any, item: any) => {
                     map[item.iso2] = item.iso2.toUpperCase();
 
                     return map;
@@ -675,7 +573,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         if (this.model.has('doNotCall')) {
-            this.listenTo(this.model, 'change:doNotCall', (model, value, o) => {
+            this.listenTo(this.model, 'change:doNotCall', (_m, _v, o) => {
                 if (this.mode !== 'detail' && this.mode !== 'list') {
                     return;
                 }
@@ -706,30 +604,32 @@ class PhoneFieldView extends VarcharFieldView {
         this.isNumeric = this.getConfig().get('phoneNumberNumericSearch');
     }
 
-    /**
-     * @return {{
-     *     phoneNumber: string,
-     *     primary: boolean,
-     *     type: string,
-     *     optOut: boolean,
-     *     invalid: boolean,
-     * }[]}
-     */
-    fetchPhoneNumberData() {
+    private fetchPhoneNumberData(): {
+        phoneNumber: string;
+        primary: boolean;
+        type: string;
+        optOut: boolean;
+        invalid: boolean;
+    }[] {
         const $list = this.$el.find('div.phone-number-block');
 
         if (!$list.length) {
             return [];
         }
 
-        const data = [];
+        const data: {
+            phoneNumber: string;
+            primary: boolean;
+            type: string;
+            optOut: boolean;
+            invalid: boolean;
+        }[] = [];
 
-        $list.each((i, d) => {
-            const row = {};
-            const $d = $(d);
+        $list.each((_i: number, itemElement: HTMLElement) => {
+            const row = {} as any;
+            const $d = $(itemElement);
 
-            /** @type {HTMLInputElement} */
-            const inputElement = $d.find('input.phone-number').get(0);
+            const inputElement = $d.find('input.phone-number').get(0) as HTMLInputElement;
 
             if (!inputElement) {
                 return;
@@ -762,8 +662,8 @@ class PhoneFieldView extends VarcharFieldView {
         return data;
     }
 
-    fetch() {
-        const data = {};
+    fetch(): Record<string, unknown> {
+        const data = {} as Record<string, unknown>;
 
         const addressData = this.fetchPhoneNumberData();
 
@@ -823,8 +723,7 @@ class PhoneFieldView extends VarcharFieldView {
         return data;
     }
 
-    /** @inheritDoc */
-    fetchSearch() {
+    fetchSearch(): Record<string, unknown> | null {
         const type = this.fetchSearchType() || 'startsWith';
 
         const name = this.isNumeric ?
@@ -851,10 +750,9 @@ class PhoneFieldView extends VarcharFieldView {
             };
         }
 
-        /** @type {string} */
-        let value = this.$element.val()
-            .toString()
-            .trim();
+        let value = this.$element?.val()
+            ?.toString()
+            ?.trim();
 
         const originalValue = value;
 
@@ -877,15 +775,119 @@ class PhoneFieldView extends VarcharFieldView {
         };
     }
 
-    focusOnInlineEdit() {
-        /** @type {HTMLElement|null} */
-        const input = this.element.querySelector('input.phone-number');
+    protected focusOnInlineEdit() {
+        const input = this.element.querySelector<HTMLInputElement>('input.phone-number');
 
         if (!input) {
             return;
         }
 
         input.focus({preventScroll: true});
+    }
+
+    private switchPhoneProperty(target: HTMLElement) {
+        const $target = $(target);
+        const $block = $(target).closest('div.phone-number-block');
+        const property = $target.data('property-type');
+        const $input = $block.find('input.phone-number');
+
+        if (property === 'primary') {
+            if (!$target.hasClass('active')) {
+                if ($input.val() !== '') {
+                    this.$el.find('button.phone-property[data-property-type="primary"]')
+                        .removeClass('active').children().addClass('text-muted');
+
+                    $target.addClass('active').children().removeClass('text-muted');
+                }
+            }
+
+            this.trigger('change');
+
+            return;
+        }
+
+        let active = false;
+
+        if ($target.hasClass('active')) {
+            $target.removeClass('active').children().addClass('text-muted');
+        } else {
+            $target.addClass('active').children().removeClass('text-muted');
+
+            active = true;
+        }
+
+        if (property === 'optOut') {
+            active ?
+                $input.addClass('text-strikethrough') :
+                $input.removeClass('text-strikethrough');
+        }
+
+        if (property === 'invalid') {
+            active ?
+                $input.addClass('text-danger') :
+                $input.removeClass('text-danger');
+        }
+
+        this.trigger('change');
+    }
+
+    private removePhoneNumberHandler(target: HTMLElement) {
+        const $block = $(target).closest('div.phone-number-block');
+
+        this.removePhoneNumber($block);
+        this.trigger('change');
+
+        const $last = this.$el.find('.phone-number').last();
+
+        if ($last.length) {
+            $last[0].focus({preventScroll: true});
+        }
+    }
+
+    private inputChangeHandler(target: HTMLElement) {
+        const input = target as HTMLInputElement;
+        const $block = $(input).closest('div.phone-number-block');
+
+        if (this._itemJustRemoved) {
+            return;
+        }
+
+        if (input.value === '' && $block.length) {
+            this.removePhoneNumber($block);
+        } else {
+            this.trigger('change');
+        }
+
+        this.manageAddButton();
+    }
+
+    private inputKeydownHandler(e: KeyboardEvent, target: HTMLInputElement) {
+        const key = Espo.Utils.getKeyFromKeyEvent(e);
+
+        const $target = $(target);
+
+        if (key === 'Enter') {
+            if (!this.$el.find('[data-action="addPhoneNumber"]').hasClass('disabled')) {
+                this.addPhoneNumber();
+
+                e.stopPropagation();
+            }
+
+            return;
+        }
+
+        if (key === 'Backspace' && $target.val() === '') {
+            const $block = $target.closest('div.phone-number-block');
+
+            this._itemJustRemoved = true;
+            setTimeout(() => this._itemJustRemoved = false, 100);
+
+            e.stopPropagation();
+
+            this.removePhoneNumber($block);
+
+            setTimeout(() => this.focusOnLast(true), 50);
+        }
     }
 }
 
