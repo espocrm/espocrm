@@ -1135,7 +1135,7 @@ export default class Model<T extends Record<string, unknown> = Record<string, an
      */
     onChange(
         params: {
-            owner: import('view').default | import('model').default | import('collection').default,
+            owner: import('view').default<any> | import('model').default | import('collection').default,
             attributes?: string[],
             once?: boolean,
             callback: (event: {
