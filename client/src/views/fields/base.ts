@@ -307,6 +307,8 @@ export default class BaseFieldView<
 
     /**
      * A main form element. Use `mainInputElement` instead.
+     *
+     * @internal
      */
     protected $element: JQuery | null = null
 

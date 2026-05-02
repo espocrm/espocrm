@@ -7,6 +7,10 @@
         },
         "module": "ES6",
         "target": "ES2018",
+        "lib": [
+            "ES2019",
+            "Decorators"
+        ],
         "moduleResolution": "bundler",
         "skipLibCheck": true,
         "allowJs": true,

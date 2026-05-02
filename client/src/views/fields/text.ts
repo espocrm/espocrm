@@ -26,75 +26,118 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/fields/text */
 
-import BaseFieldView from 'views/fields/base';
+import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
 import TextPreviewModalView from 'views/modals/text-preview';
+import Ui from 'ui';
+
+/**
+ * Parameters.
+ */
+export interface TextParams extends BaseParams {
+    /**
+     * Required.
+     */
+    required?: boolean;
+    /**
+     * A max length.
+     */
+    maxLength?: number;
+    /**
+     * A number of rows.
+     */
+    rows?: number;
+    /**
+     * A min number of rows.
+     */
+    rowsMin?: number;
+    /**
+     * No resize.
+     */
+    noResize?: boolean;
+    /**
+     * Disable 'See-more'.
+     */
+    seeMoreDisabled?: boolean;
+    /**
+     * Disable auto-height.
+     */
+    autoHeightDisabled?: boolean;
+    /**
+     * A height of cut in pixels.
+     */
+    cutHeight?: number;
+    /**
+     * Display raw text.
+     */
+    displayRawText?: boolean;
+    /**
+     * Display the preview button.
+     */
+    preview?: boolean;
+    /**
+     * An attachment-multiple field to connect with.
+     */
+    attachmentField?: string;
+}
+
+/**
+ * Options.
+ */
+export interface TextOptions extends BaseOptions {
+    /**
+     * @internal
+     */
+    noResize?: boolean;
+    /**
+     * @internal
+     */
+    rowsMin?: number;
+    /**
+     * @internal
+     */
+    autoHeightDisabled?: boolean;
+}
 
 /**
  * A text field.
- *
- * @extends BaseFieldView<module:views/fields/text~params>
  */
-class TextFieldView extends BaseFieldView {
+class TextFieldView<
+    S extends BaseViewSchema = BaseViewSchema,
+    O extends TextOptions = TextOptions,
+    P extends TextParams = TextParams,
+> extends BaseFieldView<S, O, P> {
 
-    /**
-     * @typedef {Object} module:views/fields/text~options
-     * @property {
-     *     module:views/fields/text~params &
-     *     module:views/fields/base~params &
-     *     Record
-     * } [params] Parameters.
-     */
+    readonly type: string = 'text'
 
-    /**
-     * @typedef {Object} module:views/fields/text~params
-     * @property {boolean} [required] Required.
-     * @property {number} [maxLength] A max length.
-     * @property {number} [rows] A number of rows.
-     * @property {number} [rowsMin] A min number of rows.
-     * @property {boolean} [noResize] No resize.
-     * @property {boolean} [seeMoreDisabled] Disable 'See-more'.
-     * @property {boolean} [autoHeightDisabled] Disable auto-height.
-     * @property {number} [cutHeight] A height of cut in pixels.
-     * @property {boolean} [displayRawText] Display raw text.
-     * @property {boolean} [preview] Display the preview button.
-     * @property {string} [attachmentField] An attachment-multiple field to connect with.
-     */
-
-    /**
-     * @param {
-     *     module:views/fields/text~options &
-     *     module:views/fields/base~options
-     * } options Options.
-     */
-    constructor(options) {
-        super(options);
-    }
-
-    type = 'text'
-
-    listTemplate = 'fields/text/list'
-    detailTemplate = 'fields/text/detail'
-    editTemplate = 'fields/text/edit'
-    searchTemplate = 'fields/text/search'
+    protected listTemplate = 'fields/text/list'
+    protected detailTemplate = 'fields/text/detail'
+    protected editTemplate = 'fields/text/edit'
+    protected searchTemplate = 'fields/text/search'
 
     /**
      * Show-more is applied.
-     * @type {boolean}
+     *
+     * @internal
      */
-    seeMoreText = false
+    seeMoreText: boolean = false
 
-    rowsDefault = 50000
-    rowsMin = 2
-    seeMoreDisabled = false
-    cutHeight = 200
-    noResize = false
-    changeInterval = 5
-    shrinkThreshold = 10;
+    protected readonly rowsDefault: number = 50000
 
-    searchTypeList = [
+    protected rowsMin: number = 2
+
+    protected seeMoreDisabled: boolean = false
+
+    protected cutHeight: number = 200
+
+    protected noResize: boolean = false
+
+    protected readonly changeInterval: number = 5
+
+    protected readonly shrinkThreshold: number = 10;
+
+    protected searchTypeList: string[] = [
         'contains',
         'startsWith',
         'equals',
@@ -106,33 +149,33 @@ class TextFieldView extends BaseFieldView {
         'isNotEmpty',
     ]
 
-    /** @private */
-    _lastLength
+    private _lastLength: number | undefined
 
-    /** @private */
-    maxRows
+    private maxRows: number
 
-    /**
-     * @private
-     * @type {HTMLElement}
-     */
-    previewButtonElement
+    private previewButtonElement: HTMLElement | null
 
-    /**
-     * @protected
-     * @type {HTMLTextAreaElement}
-     */
-    textAreaElement
+    protected textAreaElement: HTMLTextAreaElement | null
 
-    setup() {
+    private autoHeightDisabled: boolean
+
+    private onKeyDownMarkdownBind: any
+    private controlSeeMoreBind: any
+    private onPasteBind: any
+
+    private $text: JQuery
+    private $seeMoreContainer: JQuery
+    private $textContainer: JQuery
+
+    protected setup() {
         super.setup();
 
         this.addActionHandler('seeMoreText', () => this.seeMore());
-        this.addActionHandler('mailTo', (e, target) => this.mailTo(target.dataset.emailAddress));
+        this.addActionHandler('mailTo', (_, target) => this.mailTo(target.dataset.emailAddress as string));
 
         this.maxRows = this.params.rows || this.rowsDefault;
         this.noResize = this.options.noResize || this.params.noResize || this.noResize;
-        this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
+        this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled || false;
         this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
             this.autoHeightDisabled;
 
@@ -152,13 +195,13 @@ class TextFieldView extends BaseFieldView {
             if (this.textAreaElement) {
                 this.textAreaElement.removeEventListener('keydown', this.onKeyDownMarkdownBind);
 
-                this.textAreaElement = undefined;
+                this.textAreaElement = null;
             }
         });
 
         if (this.params.preview) {
-            this.addHandler('input', 'textarea', (e, /** HTMLTextAreaElement */target) => {
-                const text = target.value;
+            this.addHandler('input', 'textarea', (_, target) => {
+                const text = (target as HTMLInputElement).value;
 
                 if (!this.previewButtonElement) {
                     return;
@@ -174,7 +217,7 @@ class TextFieldView extends BaseFieldView {
             this.addActionHandler('previewText', () => this.preview());
         }
 
-        this.listenTo(this.model, `change:${this.name}`, (m, v, /** Record*/o) => {
+        this.listenTo(this.model, `change:${this.name}`, (_m, _v, o: Record<string, any>) => {
             if (o.ui === true && this.mode === this.MODE_EDIT) {
                 // After changing the field content it's reasonable to show all text
                 // when returning to the detail mode.
@@ -182,24 +225,18 @@ class TextFieldView extends BaseFieldView {
             }
         })
 
-        /** @private */
         this.controlSeeMoreBind = this.controlSeeMore.bind(this);
-        /** @private */
         this.onPasteBind = this.onPaste.bind(this);
-        /** @private */
         this.onKeyDownMarkdownBind = this.onKeyDownMarkdown.bind(this);
     }
 
-    setupSearch() {
-        this.events['change select.search-type'] = e => {
-            const type = $(e.currentTarget).val();
-
-            this.handleSearchType(type);
-        };
+    protected setupSearch() {
+        this.addHandler('change', 'select.search-type', (_, target) => {
+            this.handleSearchType((target as HTMLSelectElement).type);
+        });
     }
 
-    // noinspection JSCheckFunctionSignatures
-    data() {
+    protected data() {
         const data = super.data();
 
         if (
@@ -211,8 +248,8 @@ class TextFieldView extends BaseFieldView {
         }
 
         if (this.mode === this.MODE_SEARCH) {
-            if (typeof this.searchParams.value === 'string') {
-                this.searchData.value = this.searchParams.value;
+            if (typeof this.searchParams?.value === 'string') {
+                this.searchData.value = this.searchParams?.value;
             }
         }
 
@@ -238,31 +275,29 @@ class TextFieldView extends BaseFieldView {
         data.noResize = this.noResize || (!this.autoHeightDisabled && !this.params.rows);
         data.preview = this.params.preview && !this.params.displayRawText;
 
-        // noinspection JSValidateTypes
         return data;
     }
 
-    handleSearchType(type) {
-        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+    protected handleSearchType(type: string) {
+        if (['isEmpty', 'isNotEmpty'].includes(type)) {
             this.$el.find('input.main-element').addClass('hidden');
         } else {
             this.$el.find('input.main-element').removeClass('hidden');
         }
     }
 
-    getValueForDisplay() {
+    protected getValueForDisplay(): string {
         const text = this.model.get(this.name);
 
         return text || '';
     }
 
     /**
-     * @public
-     * @param {Number} [lastHeight]
+     * @internal
      */
-    controlTextareaHeight(lastHeight) {
-        const scrollHeight = this.$element.prop('scrollHeight');
-        const clientHeight = this.$element.prop('clientHeight');
+    controlTextareaHeight(lastHeight?: number) {
+        const scrollHeight = this.$element?.prop('scrollHeight');
+        const clientHeight = this.$element?.prop('clientHeight');
 
         if (typeof lastHeight === 'undefined' && clientHeight === 0) {
             setTimeout(this.controlTextareaHeight.bind(this), 10);
@@ -270,8 +305,7 @@ class TextFieldView extends BaseFieldView {
             return;
         }
 
-        /** @type {HTMLTextAreaElement} */
-        const element = this.$element.get(0);
+        const element = this.$element?.get(0) as HTMLTextAreaElement;
 
         if (!element || element.value === undefined) {
             return;
@@ -306,7 +340,7 @@ class TextFieldView extends BaseFieldView {
             return;
         }
 
-        if (this.$element.val().length === 0) {
+        if ((this.$element?.val() as string).length === 0) {
             element.rows = this.rowsMin;
 
             return;
@@ -337,16 +371,16 @@ class TextFieldView extends BaseFieldView {
         }
     }
 
-    isCut() {
+    protected isCut(): boolean {
         return !this.seeMoreText && !this.seeMoreDisabled;
     }
 
-    controlSeeMore() {
+    private controlSeeMore() {
         if (!this.isCut()) {
             return;
         }
 
-        if (this.$text.height() > this.cutHeight) {
+        if (this.$text.height() as number > this.cutHeight) {
             this.$seeMoreContainer.removeClass('hidden');
             this.$textContainer.addClass('cut');
         } else {
@@ -355,17 +389,17 @@ class TextFieldView extends BaseFieldView {
         }
     }
 
-    afterRender() {
-        this.textAreaElement = undefined;
+    protected afterRender() {
+        this.textAreaElement = null;
 
         if (this.mode === this.MODE_EDIT) {
-            this.textAreaElement = this.element ? this.element.querySelector('textarea') : undefined;
+            this.textAreaElement = this.element ? this.element.querySelector('textarea') : null;
         }
 
         super.afterRender();
 
         if (this.isReadMode()) {
-            $(window).off('resize.see-more-' + this.cid);
+            $(window).off(`resize.see-more-${this.cid}`);
 
             this.$textContainer = this.$el.find('> .complex-text-container');
             this.$text = this.$textContainer.find('> .complex-text');
@@ -380,7 +414,10 @@ class TextFieldView extends BaseFieldView {
                     setTimeout(this.controlSeeMore.bind(this), 50);
                 }
 
-                this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
+                if (this.recordHelper) {
+                    this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
+                }
+
                 this.on('panel-show-propagated', () => this.controlSeeMore());
 
                 $(window).on('resize.see-more-' + this.cid, () => {
@@ -399,11 +436,11 @@ class TextFieldView extends BaseFieldView {
             const text = this.getValueForDisplay();
 
             if (text) {
-                this.$element.val(text);
+                this.$element?.val(text);
             }
 
             this.previewButtonElement = this.element ?
-                this.element.querySelector('a[data-action="previewText"]') : undefined;
+                this.element.querySelector('a[data-action="previewText"]') : null;
 
             const textAreaElement = this.textAreaElement
 
@@ -426,7 +463,7 @@ class TextFieldView extends BaseFieldView {
                 this.trigger('change');
             });
 
-            this.$element.on('input', () => {
+            this.$element?.on('input', () => {
                 this.trigger('change');
             });
         }
@@ -435,13 +472,13 @@ class TextFieldView extends BaseFieldView {
             if (!this.autoHeightDisabled) {
                 this.controlTextareaHeight();
 
-                this.$element.on('input', () => this.controlTextareaHeight());
+                this.$element?.on('input', () => this.controlTextareaHeight());
             }
 
-            let lastChangeKeydown = new Date();
+            let lastChangeKeydown = Date.now();
             const changeKeydownInterval = this.changeInterval * 1000;
 
-            this.$element.on('keydown', () => {
+            this.$element?.on('keydown', () => {
                 if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
                     this.trigger('change');
                     lastChangeKeydown = Date.now();
@@ -450,10 +487,10 @@ class TextFieldView extends BaseFieldView {
         }
     }
 
-    fetch() {
-        const data = {};
+    fetch(): Record<string, unknown> {
+        const data: Record<string, unknown> = {};
 
-        let value = this.$element.val() || null;
+        let value = (this.$element?.val() || null) as string | null;
 
         if (value && value.trim() === '') {
             value = '';
@@ -464,7 +501,7 @@ class TextFieldView extends BaseFieldView {
         return data;
     }
 
-    fetchSearch() {
+    fetchSearch(): Record<string, unknown> | null {
         const type = this.fetchSearchType() || 'startsWith';
 
         if (type === 'isEmpty') {
@@ -508,7 +545,7 @@ class TextFieldView extends BaseFieldView {
             };
         }
 
-        const value = this.$element.val().toString().trim();
+        const value = this.$element?.val()?.toString()?.trim();
 
         if (value) {
             return {
@@ -517,15 +554,17 @@ class TextFieldView extends BaseFieldView {
             };
         }
 
-        return false;
+        return null;
     }
 
-    getSearchType() {
-        return this.getSearchParamsData().type || this.searchParams.typeFront ||
-            this.searchParams.type;
+    protected getSearchType(): string | null {
+        return this.getSearchParamsData().type ??
+            this.searchParams?.typeFront ??
+            this.searchParams?.type ??
+            null;
     }
 
-    mailTo(emailAddress) {
+    protected async mailTo(emailAddress: string) {
         const attributes = {
             status: 'Draft',
             to: emailAddress,
@@ -539,27 +578,24 @@ class TextFieldView extends BaseFieldView {
             return;
         }
 
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
-            'views/modals/compose-email';
+        const viewName =  'views/modals/compose-email';
 
-        Espo.Ui.notifyWait();
 
-        this.createView('quickCreate', viewName, {
-            attributes: attributes,
-        }, view => {
-            view.render();
+        Ui.notifyWait();
 
-            Espo.Ui.notify(false);
-        });
+        const view = await this.createView('quickCreate', viewName, {attributes: attributes});
+
+        await view.render();
+
+        Ui.notify();
     }
 
     /**
      * Show the preview modal.
      *
      * @since 9.0.0
-     * @return {Promise<void>}
      */
-    async preview() {
+    async preview(): Promise<void> {
         const text = this.model.attributes[this.name] || '';
 
         const view = new TextPreviewModalView({text: text});
@@ -568,12 +604,8 @@ class TextFieldView extends BaseFieldView {
         await view.render();
     }
 
-    /**
-     * @protected
-     * @param {ClipboardEvent} event
-     */
-    onPaste(event) {
-        const items = event.clipboardData.items;
+    protected onPaste(event: ClipboardEvent) {
+        const items = event.clipboardData?.items;
 
         if (!items) {
             return;
@@ -586,24 +618,20 @@ class TextFieldView extends BaseFieldView {
 
             const blob = items[i].getAsFile();
 
-            this.recordHelper.trigger('upload-files:' + this.params.attachmentField, [blob]);
+            this.recordHelper?.trigger('upload-files:' + this.params.attachmentField, [blob]);
         }
     }
 
     /**
-     * @return {Promise}
      * @since 9.0.0
      */
-    async seeMore() {
+    async seeMore(): Promise<void> {
         this.seeMoreText = true;
 
         await this.reRender();
     }
 
-    /**
-     * @private
-     */
-    initTextareaMarkdownHelper() {
+    private initTextareaMarkdownHelper() {
         if (!this.textAreaElement) {
             return;
         }
@@ -611,17 +639,9 @@ class TextFieldView extends BaseFieldView {
         this.textAreaElement.addEventListener('keydown', this.onKeyDownMarkdownBind);
     }
 
-    /**
-     * @type {boolean}
-     * @private
-     */
-    _lastEnteredKeyIsEnter = false
+    private _lastEnteredKeyIsEnter: boolean = false
 
-    /**
-     * @private
-     * @param {KeyboardEvent} event
-     */
-    onKeyDownMarkdown(event) {
+    private onKeyDownMarkdown(event: KeyboardEvent) {
         const key = Espo.Utils.getKeyFromKeyEvent(event);
 
         if (key !== 'Enter') {
@@ -691,22 +711,14 @@ class TextFieldView extends BaseFieldView {
         this.controlTextareaHeight();
     }
 
-    /**
-     * @private
-     * @param {KeyboardEvent} event
-     * @param {string} key
-     */
-    handleKeyDownMarkdown(event, key) {
+    private handleKeyDownMarkdown(event: KeyboardEvent, key: string) {
         const target = event.target;
 
         if (!(target instanceof HTMLTextAreaElement)) {
             return;
         }
 
-        /**
-         * @param {string} wrapper
-         */
-        const toggleWrap = (wrapper) => {
+        const toggleWrap = (wrapper: string) => {
             const {selectionStart, selectionEnd} = target;
 
             let text = target.value.substring(selectionStart, selectionEnd);
