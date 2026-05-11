@@ -28,8 +28,7 @@
 
 import View from 'view';
 import type {Button, DropdownItem} from 'views/record/detail';
-import Language from 'language';
-import {inject} from 'di';
+import {ButtonComponent, DropdownItemComponent} from 'components/controls';
 import {h, fragment, VNode} from 'bullbone';
 
 export default class DetailRecordButtonsView extends View<{
@@ -46,7 +45,7 @@ export default class DetailRecordButtonsView extends View<{
 
     readonly useVirtualDom = true
 
-    content(): any {
+    content(): VNode {
         const data = this.data();
 
         const buttons: any[] = [];
@@ -257,200 +256,5 @@ export default class DetailRecordButtonsView extends View<{
         if (a) {
             a.classList.add('disabled');
         }
-    }
-}
-
-class ButtonComponent {
-
-    @inject(Language)
-    private language: Language
-
-    constructor(
-        private options: {
-            name: string,
-            style?: 'default' | 'success' | 'danger'| 'warning' | 'info' | 'primary' | 'text' | null,
-            className?: string | null,
-            scope?: string | null,
-            title?: string | null,
-            label?: string | null,
-            labelTranslation?: string | null,
-            link?: string | null,
-            iconClass?: string | null,
-            text?: string | null,
-            disabled?: boolean,
-            hidden?: boolean,
-            html?: string | null,
-        },
-    ) {}
-
-    node(): any {
-        const classes: any = {
-            'btn': true,
-            'disabled': this.options.disabled === true,
-            'hidden': this.options.hidden === true,
-            'action': true,
-        };
-
-        const style = this.options.style ?? 'default';
-        classes['btn-' + style] = true;
-
-        if (this.options.className) {
-            this.options.className.split(' ').forEach(it => classes[it.trim()] = true);
-        }
-
-        const tag: 'button' | 'a' = this.options.link ? 'a' : 'button';
-
-        const attrs: Record<string, any> = {};
-
-        if (this.options.link) {
-            attrs.href = this.options.link;
-        } else {
-            attrs.type = 'button';
-        }
-
-        if (this.options.disabled) {
-            attrs.disabled = 'disabled';
-        }
-
-        if (this.options.title) {
-            attrs.title = this.options.title;
-        }
-
-        let content = null;
-
-        const props: any = {};
-
-        if (this.options.html) {
-            props.innerHTML = this.options.html;
-        } else {
-            const label = this.options.label ?? this.options.name;
-
-            const text = this.options.text ??
-                (
-                    this.options.labelTranslation ?
-                        this.language.translatePath(this.options.labelTranslation) :
-                        this.language.translate(label, 'labels', this.options.scope)
-                );
-
-
-            content = this.options.iconClass ?
-                fragment([
-                    h('span', {class: {[this.options.iconClass]: true}}),
-                    ' ',
-                    h('span', text),
-                ]) :
-                text;
-        }
-
-
-        return h(tag, {
-            key: this.options.name ?? null,
-            class: classes,
-            attrs: attrs,
-            dataset: {
-                name: this.options.name,
-                action: this.options.name,
-            },
-            props,
-        }, content);
-    }
-}
-
-class DropdownItemComponent {
-
-    @inject(Language)
-    private language: Language
-
-    constructor(
-        private options: {
-            name: string,
-            className?: string | null,
-            scope?: string | null,
-            title?: string | null,
-            label?: string | null,
-            labelTranslation?: string | null,
-            link?: string | null,
-            iconClass?: string | null,
-            text?: string | null,
-            disabled?: boolean,
-            hidden?: boolean,
-            html?: string | null,
-        },
-    ) {}
-
-    node(): any {
-        const classes: any = {
-            'disabled': this.options.disabled === true,
-            'hidden': this.options.hidden === true,
-            'action': true,
-        };
-
-        if (this.options.className) {
-            this.options.className.split(' ').forEach(it => classes[it.trim()] = true);
-        }
-
-        const attrs: Record<string, any> = {
-            tabindex: 0,
-        };
-
-        if (this.options.link) {
-            attrs.href = this.options.link;
-        }
-        if (this.options.disabled) {
-            attrs.disabled = 'disabled';
-        }
-
-        if (this.options.title) {
-            attrs.title = this.options.title;
-        }
-
-        let content = null;
-
-        const props: any = {};
-
-        if (this.options.html) {
-            props.innerHTML = this.options.html;
-        } else {
-            const label = this.options.label ?? this.options.name;
-
-            const text = this.options.text ??
-                (
-                    this.options.labelTranslation ?
-                        this.language.translatePath(this.options.labelTranslation) :
-                        this.language.translate(label, 'labels', this.options.scope)
-                );
-
-            content = this.options.iconClass ?
-                fragment([
-                    h('span', {class: {[this.options.iconClass]: true}}),
-                    ' ',
-                    h('span', text),
-                ]) :
-                text;
-        }
-
-        const dataset = {
-            name: this.options.name,
-            action: this.options.name,
-        } as Record<string, any>;
-
-        if (!this.options.link) {
-            attrs.role = 'button';
-        }
-
-        const a = h('a', {
-            class: classes,
-            attrs: attrs,
-            dataset: dataset,
-            props: props,
-        }, content);
-
-        return h('li', {
-            key: this.options.name ?? null,
-            class: {
-                'disabled': this.options.disabled === true,
-                'hidden': this.options.hidden === true,
-            },
-        }, a);
     }
 }
