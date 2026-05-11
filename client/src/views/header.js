@@ -200,9 +200,9 @@ class HeaderView extends View {
     /**
      * @private
      * @returns {{
-     *     buttons?: module:views/main~MenuItem[],
-     *     dropdown?: module:views/main~MenuItem[],
-     *     actions?: module:views/main~MenuItem[],
+     *     buttons?: import('views/main').MenuItem[],
+     *     dropdown?: import('views/main').MenuItem[],
+     *     actions?: import('views/main').MenuItem[],
      * }}
      */
     getItems() {
@@ -210,10 +210,10 @@ class HeaderView extends View {
     }
 
     /**
-     * @return {module:views/main}
+     * @return {import('views/main').default}
      */
     getParentMainView() {
-        return /** @type module:views/main */this.getParentView();
+        return /** @type {import('views/main').default} */this.getParentView();
     }
 }
 
