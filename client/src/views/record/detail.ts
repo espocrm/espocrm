@@ -1185,8 +1185,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.isRendered()) {
-            this.getButtonsView()?.disableItemElement(name);
-            this.getEditButtonsView()?.disableItemElement(name);
+            this.getButtonsView()?.reRender();
+            this.getEditButtonsView()?.reRender();
         }
     }
 
@@ -1230,8 +1230,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.isRendered()) {
-            this.getButtonsView()?.enableItemElement(name);
-            this.getEditButtonsView()?.enableItemElement(name);
+            this.getButtonsView()?.reRender();
+            this.getEditButtonsView()?.reRender();
         }
     }
 

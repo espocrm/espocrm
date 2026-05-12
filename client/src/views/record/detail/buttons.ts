@@ -217,6 +217,9 @@ export default class DetailRecordButtonsView extends View<{
         this.adjust();
     }
 
+    /**
+     * @todo Revise the need.
+     */
     private adjust() {
         const buttons = this.element.querySelectorAll<HTMLButtonElement>('button.btn');
 
@@ -226,35 +229,5 @@ export default class DetailRecordButtonsView extends View<{
 
         visibleButtons[0]?.classList.add('radius-left');
         visibleButtons[visibleButtons.length - 1]?.classList.add('radius-right');
-    }
-
-    enableItemElement(name: string) {
-        const button = this.element.querySelector<HTMLButtonElement>(`button.action[data-action="${name}"]`);
-
-        if (button) {
-            button.disabled = false;
-            button.classList.remove('disabled');
-        }
-
-        const a = this.element.querySelector<HTMLLIElement>(`li > .action[data-action="${name}"]`);
-
-        if (a) {
-            a.classList.remove('disabled');
-        }
-    }
-
-    disableItemElement(name: string) {
-        const button = this.element.querySelector<HTMLButtonElement>(`button.action[data-action="${name}"]`);
-
-        if (button) {
-            button.disabled = true;
-            button.classList.add('disabled');
-        }
-
-        const a = this.element.querySelector<HTMLLIElement>(`li > .action[data-action="${name}"]`);
-
-        if (a) {
-            a.classList.add('disabled');
-        }
     }
 }
