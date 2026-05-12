@@ -120,8 +120,8 @@ export class ButtonComponent {
             attrs: attrs,
             dataset: {
                 ...this.options.data,
-                name: this.options.name!,
-                action: this.options.action ?? this.options.name!,
+                name: (this.options.name ?? undefined)!,
+                action: (this.options.action ?? this.options.name ?? undefined)!,
             },
             props,
         }, content);
@@ -178,8 +178,8 @@ export class DropdownItemComponent {
             attrs: attrs,
             dataset: {
                 ...this.options.data,
-                name: this.options.name!,
-                action: this.options.action ?? this.options.name!,
+                name: (this.options.name ?? undefined)!,
+                action: (this.options.action ?? this.options.name ?? undefined)!,
             },
             props: props,
         }, content);
