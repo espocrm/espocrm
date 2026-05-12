@@ -28,7 +28,7 @@
 
 import Language from 'language';
 import {inject} from 'di';
-import {h, fragment, VNode} from 'bullbone';
+import {h, VNode} from 'bullbone';
 
 interface ButtonOptions {
     name: string;
@@ -44,6 +44,7 @@ interface ButtonOptions {
     disabled?: boolean;
     hidden?: boolean;
     html?: string | null;
+    iconHtml?: string | null;
 }
 
 interface DropdownItemOptions {
@@ -59,6 +60,7 @@ interface DropdownItemOptions {
     disabled?: boolean;
     hidden?: boolean;
     html?: string | null;
+    iconHtml?: string | null;
 }
 
 /**
@@ -106,31 +108,7 @@ export class ButtonComponent {
             attrs.title = this.options.title;
         }
 
-        let content = null;
-
-        const props: any = {};
-
-        if (this.options.html) {
-            props.innerHTML = this.options.html;
-        } else {
-            const label = this.options.label ?? this.options.name;
-
-            const text = this.options.text ??
-                (
-                    this.options.labelTranslation ?
-                        this.language.translatePath(this.options.labelTranslation) :
-                        this.language.translate(label, 'labels', this.options.scope)
-                );
-
-            content = this.options.iconClass ?
-                fragment([
-                    h('span', {class: {[this.options.iconClass]: true}}),
-                    ' ',
-                    h('span', text),
-                ]) :
-                text;
-        }
-
+        const {content, props} = prepareItemContent(this.options, this.language);
 
         return h(tag, {
             key: this.options.name ?? null,
@@ -184,30 +162,7 @@ export class DropdownItemComponent {
             attrs.title = this.options.title;
         }
 
-        let content = null;
-
-        const props: any = {};
-
-        if (this.options.html) {
-            props.innerHTML = this.options.html;
-        } else {
-            const label = this.options.label ?? this.options.name;
-
-            const text = this.options.text ??
-                (
-                    this.options.labelTranslation ?
-                        this.language.translatePath(this.options.labelTranslation) :
-                        this.language.translate(label, 'labels', this.options.scope)
-                );
-
-            content = this.options.iconClass ?
-                fragment([
-                    h('span', {class: {[this.options.iconClass]: true}}),
-                    ' ',
-                    h('span', text),
-                ]) :
-                text;
-        }
+        const {content, props} = prepareItemContent(this.options, this.language, true);
 
         const dataset = {
             name: this.options.name,
@@ -233,4 +188,54 @@ export class DropdownItemComponent {
             },
         }, a);
     }
+}
+
+function prepareItemContent(
+    options: ButtonOptions | DropdownItemOptions,
+    language: Language,
+    isDropdownItem: boolean = false,
+): {props: Record<string, unknown>, content: any} {
+
+    let content = null;
+    const props: Record<string, unknown> = {};
+
+    if (options.html) {
+        props.innerHTML = options.html;
+
+        if (options.iconHtml) {
+            props.innerHTML = options.iconHtml + props.innerHTML;
+        }
+    } else {
+        const label = options.label ?? options.name;
+
+        let text = options.text ??
+            (
+                options.labelTranslation ?
+                    language.translatePath(options.labelTranslation) :
+                    language.translate(label, 'labels', options.scope)
+            );
+
+        let icon = null;
+
+        if (options.iconHtml) {
+            icon = h('span', {props: {innerHTML: options.iconHtml}});
+        } else if (options.iconClass) {
+            icon = h('span', {props: {className: options.iconClass}});
+        }
+
+        if (isDropdownItem) {
+            text = h('span', {props: {className: 'item-text'}}, text);
+        } else if (icon) {
+            text = h('span', text);
+        }
+
+        content = icon ?
+            [
+                icon,
+                text,
+            ] :
+            text;
+    }
+
+    return {content, props};
 }
