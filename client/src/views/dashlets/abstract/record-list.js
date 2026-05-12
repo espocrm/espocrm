@@ -194,7 +194,7 @@ class RecordListDashletView extends BaseDashletView {
             this.actionList.unshift({
                 name: 'create',
                 text: this.translate('Create ' + this.scope, 'labels', this.scope),
-                iconHtml: '<span class="fas fa-plus"></span>',
+                iconClass: 'fas fa-plus',
                 url: `#${this.scope}/create`,
             });
         }

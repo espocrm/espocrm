@@ -41,7 +41,7 @@ class EmailsDashletView extends RecordListDashletView {
             this.actionList.unshift({
                 name: 'compose',
                 text: this.translate('Compose Email', 'labels', this.scope),
-                iconHtml: '<span class="fas fa-plus"></span>',
+                iconClass: 'fas fa-plus',
             });
         }
     }

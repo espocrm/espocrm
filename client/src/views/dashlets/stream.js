@@ -98,7 +98,7 @@ class StreamDashletView extends BaseDashletView {
         this.actionList.unshift({
             name: 'viewList',
             text: this.translate('View'),
-            iconHtml: '<span class="fas fa-align-justify"></span>',
+            iconClass: '<span class="fas fa-align-justify',
             url: '#Stream',
         });
 
@@ -106,7 +106,7 @@ class StreamDashletView extends BaseDashletView {
             this.actionList.unshift({
                 name: 'create',
                 text: this.translate('Create Post', 'labels'),
-                iconHtml: '<span class="fas fa-plus"></span>',
+                iconClass: 'fas fa-plus',
             });
         }
     }

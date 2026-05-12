@@ -139,7 +139,7 @@ class ActivitiesDashletView extends BaseDashletView {
                 this.actionList.unshift({
                     name: 'createActivity',
                     text: this.translate('Create ' + scope, 'labels', scope),
-                    iconHtml: '<span class="fas fa-plus"></span>',
+                    iconClass: 'fas fa-plus',
                     url: '#' + scope + '/create',
                     data: {
                         scope: scope,

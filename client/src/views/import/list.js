@@ -36,7 +36,7 @@ class ImportListView extends ListView {
         super.setup();
 
         this.menu.buttons.unshift({
-            iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+            iconClass: 'fas fa-plus fa-sm',
             text: this.translate('New Import', 'labels', 'Import'),
             link: '#Import',
             acl: 'edit',

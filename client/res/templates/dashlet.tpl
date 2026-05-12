@@ -33,7 +33,11 @@
                         >
                             {{#if iconHtml}}{{{iconHtml}}}
                             {{else}}
-                            <span class="empty-icon">&nbsp;</span>
+                                {{~#if iconClass~}}
+                                    <span class="{{iconClass}}"></span>
+                                {{~else~}}
+                                    <span class="empty-icon">&nbsp;</span>
+                                {{~/if~}}
                             {{/if}}
                             <span class="item-text">{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</span>
                         </a>

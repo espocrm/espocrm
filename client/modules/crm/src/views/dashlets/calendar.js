@@ -116,7 +116,7 @@ class CalendarDashletView extends BaseDashletView {
             name: 'viewCalendar',
             text: this.translate('View Calendar', 'labels', 'Calendar'),
             url: '#Calendar',
-            iconHtml: '<span class="far fa-calendar-alt"></span>',
+            iconClass: 'far fa-calendar-alt',
             onClick: () => this.actionViewCalendar(),
         });
     }

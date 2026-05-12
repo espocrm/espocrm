@@ -81,6 +81,7 @@ class BaseDashletView extends View {
      * @property {string} [text] A text.
      * @property {string} [title] A title (not translatable).
      * @property {string} [iconHtml] An icon HTML.
+     * @property {string} [iconClass] An icon class. As of v10.0.
      * @property {string} [url] A link URL.
      * @property {function()} [onClick] A click handler.
      * @property {number} [groupIndex] A group index.
@@ -102,19 +103,19 @@ class BaseDashletView extends View {
         {
             name: 'refresh',
             label: 'Refresh',
-            iconHtml: '<span class="fas fa-sync-alt"></span>',
+            iconClass: 'fas fa-sync-alt',
             groupIndex: 10000,
         },
         {
             name: 'options',
             label: 'Options',
-            iconHtml: '<span class="fas fa-pencil-alt"></span>',
+            iconClass: 'fas fa-pencil-alt',
             groupIndex: 10000,
         },
         {
             name: 'remove',
             label: 'Remove',
-            iconHtml: '<span class="fas fa-times"></span>',
+            iconClass: 'fas fa-times',
             groupIndex: 10000,
         },
     ]
