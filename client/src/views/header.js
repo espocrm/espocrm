@@ -71,7 +71,7 @@ class HeaderView extends View {
         if (this.model) {
             this.listenTo(this.model, 'after:save', () => {
                 if (this.isRendered()) {
-                    this.reRender();
+                    this.reRender({buffer: true});
                 }
             });
         }
@@ -95,7 +95,7 @@ class HeaderView extends View {
     hideAllMenuItems() {
         this.menuItemsHidden = true;
 
-        return this.reRender();
+        return this.reRender({buffer: true});
     }
 
     /**
@@ -106,7 +106,7 @@ class HeaderView extends View {
     showAllActionItems() {
         this.menuItemsHidden = false;
 
-        return this.reRender();
+        return this.reRender({buffer: true});
     }
 
     afterRender() {

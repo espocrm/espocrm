@@ -106,12 +106,12 @@ class DefaultRowActionsView extends View {
             }
 
             if (this.menuIsShown) {
-                this.once('menu-hidden', () => this.reRender());
+                this.once('menu-hidden', () => this.reRender({buffer: true}));
 
                 return;
             }
 
-            this.reRender();
+            this.reRender({buffer: true});
         };
 
         this.listenTo(this.model, 'change', (m, /** Record */o) => handleReRender(o));
