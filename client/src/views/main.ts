@@ -344,7 +344,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
     }
 
     private reRenderHeader() {
-        this.getHeaderView()?.reRender({buffer: true});
+        this.getHeaderView()?.reRender({buffer: true, force: true});
     }
 
     private initShortcuts() {
