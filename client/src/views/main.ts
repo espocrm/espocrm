@@ -33,6 +33,7 @@ import type Model from 'model';
 import type Collection from 'collection';
 import type {AccessDefs} from 'utils';
 import Utils from 'utils';
+import type HeaderView from 'views/header';
 
 /**
  * A top-right menu item (button or dropdown action).
@@ -192,7 +193,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
         actions: (MenuItem | false)[];
     }
 
-    private $headerActionsContainer: JQuery
+    //private $headerActionsContainer: JQuery
 
     /**
      * A shortcut-key => action map.
@@ -316,18 +317,6 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
         }
 
         this.updateLastUrl();
-
-        this.on('after:render-internal', () => {
-            this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
-        });
-
-        this.on('header-rendered', () => {
-            this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
-
-            this.adjustButtons();
-        });
-
-        this.on('after:render', () => this.adjustButtons());
 
         if (this.shortcutKeys) {
             this.shortcutKeys = Utils.cloneDeep(this.shortcutKeys);
@@ -528,11 +517,10 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
      *
      * @param  name An item name.
      * @param item New item definitions to write.
-     * @param doNotReRender Skip re-render.
      *
      * @since 8.2.0
      */
-    updateMenuItem(name: string, item: Partial<MenuItem>, doNotReRender: boolean = false) {
+    updateMenuItem(name: string, item: Partial<MenuItem>) {
         const actionItem = this._getHeaderActionItem(name);
 
         if (!actionItem) {
@@ -543,11 +531,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             (actionItem as any)[key] = (item as any)[key];
         }
 
-        if (doNotReRender) {
-            return;
-        }
-
-        this.reRenderHeader();
+        this.getHeaderView()?.reRenderButtons();
     }
 
     /**
@@ -556,13 +540,11 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
      * @param type A type.
      * @param item Item definitions.
      * @param toBeginning To beginning.
-     * @param doNotReRender Skip re-render.
      */
     addMenuItem(
         type: 'buttons' | 'dropdown',
         item: MenuItem | false,
         toBeginning: boolean = false,
-        doNotReRender: boolean = false,
     ) {
         const list = this.menu[type];
 
@@ -612,20 +594,15 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
                 list.push(item);
         }
 
-        if (doNotReRender) {
-            return;
-        }
-
-        this.reRenderHeader();
+        this.getHeaderView()?.reRenderButtons();
     }
 
     /**
      * Remove a menu item.
      *
      * @param name An item name.
-     * @param doNotReRender Skip re-render.
      */
-    removeMenuItem(name: string, doNotReRender: boolean) {
+    removeMenuItem(name: string) {
         let index = -1;
         let type: 'buttons' | 'dropdown' | 'actions' | false = false;
 
@@ -646,15 +623,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             items.splice(index, 1);
         }
 
-        if (!doNotReRender) {
-            this.reRenderHeader();
-
-            return;
-        }
-
-        if (doNotReRender && this.isRendered()) {
-            this.$headerActionsContainer.find('[data-name="' + name + '"]').remove();
-        }
+        this.getHeaderView()?.reRenderButtons();
     }
 
     /**
@@ -669,24 +638,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             item.disabled = true;
         }
 
-        const process = () => {
-            this.$headerActionsContainer
-                .find(`[data-name="${name}"]`)
-                .addClass('disabled')
-                .attr('disabled');
-        };
-
-        if (this.isBeingRendered()) {
-            this.whenRendered().then(() => process());
-
-            return;
-        }
-
-        if (!this.isRendered()) {
-            return;
-        }
-
-        process();
+        this.getHeaderView()?.reRenderButtons();
     }
 
     /**
@@ -701,24 +653,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             item.disabled = false;
         }
 
-        const process = () => {
-            this.$headerActionsContainer
-                .find(`[data-name="${name}"]`)
-                .removeClass('disabled')
-                .removeAttr('disabled');
-        };
-
-        if (this.isBeingRendered()) {
-            this.whenRendered().then(() => process());
-
-            return;
-        }
-
-        if (!this.isRendered()) {
-            return;
-        }
-
-        process();
+        this.getHeaderView()?.reRenderButtons();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -772,17 +707,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             item.hidden = true;
         }
 
-        if (!this.isRendered()) {
-            return;
-        }
-
-        this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent().addClass('hidden');
-        this.$headerActionsContainer.find(`a.action[data-name="${name}"]`).addClass('hidden');
-
-        this.controlMenuDropdownVisibility();
-        this.adjustButtons();
-
-        this.getHeaderView()?.trigger('action-item-update');
+        this.getHeaderView()?.reRenderButtons();
     }
 
     /**
@@ -790,109 +715,22 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
      *
      * @param name A name.
      */
-    showHeaderActionItem(name: string) {
+    async showHeaderActionItem(name: string) {
         const item = this._getHeaderActionItem(name);
 
         if (item) {
             item.hidden = false;
         }
 
-        const processUi = () => {
-            const $dropdownItem = this.$headerActionsContainer.find(`li > .action[data-name="${name}"]`).parent();
-            const $button = this.$headerActionsContainer.find(`a.action[data-name="${name}"]`);
+        await this.getHeaderView()?.reRenderButtons();
 
-            // Item can be available but not rendered as it was skipped by access check in getMenu.
-            if (item && !$dropdownItem.length && !$button.length) {
-                this.reRenderHeader();
-
-                return;
-            }
-
-            $dropdownItem.removeClass('hidden');
-            $button.removeClass('hidden');
-
-            this.controlMenuDropdownVisibility();
-            this.adjustButtons();
-
-            this.getHeaderView()?.trigger('action-item-update');
-        };
-
-        if (!this.isRendered()) {
-            if (this.isBeingRendered()) {
-                this.whenRendered().then(() => processUi());
-            }
-
-            return;
-        }
-
-        processUi();
+        this.getHeaderView()?.trigger('action-item-update');
     }
 
-    /**
-     * Whether a menu has any non-hidden dropdown items.
-     */
-    private hasMenuVisibleDropdownItems(): boolean {
-        let hasItems = false;
 
-        (this.menu.dropdown || []).forEach(item => {
-            if (item && !item.hidden) {
-                hasItems = true;
-            }
-        });
-
-        return hasItems;
+    protected getHeaderView(): HeaderView | null {
+        return this.getView('header') as HeaderView | null;
     }
-
-    private controlMenuDropdownVisibility() {
-        const $group = this.$headerActionsContainer.find('.dropdown-group');
-
-        if (this.hasMenuVisibleDropdownItems()) {
-            $group.removeClass('hidden');
-            $group.find('> button').removeClass('hidden');
-
-            return;
-        }
-
-        $group.addClass('hidden');
-        $group.find('> button').addClass('hidden');
-    }
-
-    protected getHeaderView(): import('views/header').default {
-        return this.getView('header') as import('views/header').default;
-    }
-
-    private adjustButtons() {
-        const container = this.$headerActionsContainer.get(0);
-
-        const nodes = container?.querySelectorAll<HTMLElement>('.btn');
-
-        if (!nodes) {
-            return;
-        }
-
-        let buttons = [...nodes];
-
-        if (!buttons) {
-            return;
-        }
-
-        for (const it of buttons) {
-            it.classList.remove('radius-left', 'radius-right');
-        }
-
-        buttons = buttons.filter(it => !it.classList.contains('hidden'));
-
-        for (const [i, it] of buttons.entries()) {
-            if (i === 0 || buttons[i - 1].classList.contains('btn-text')) {
-                it.classList.add('radius-left');
-            }
-
-            if (i === buttons.length - 1 || buttons[i + 1].classList.contains('btn-text')) {
-                it.classList.add('radius-right');
-            }
-        }
-    }
-
     /**
      * Called when a stored view is reused (by the controller).
      *

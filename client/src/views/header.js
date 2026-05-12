@@ -29,10 +29,17 @@
 /** @module views/header */
 
 import View from 'view';
+import HeaderButtonsView from 'views/main/header-buttons';
 
 class HeaderView extends View {
 
     template = 'header'
+
+    /**
+     * @type {string}
+     * @private
+     */
+    scope
 
     data() {
         const data = {};
@@ -68,6 +75,8 @@ class HeaderView extends View {
     setup() {
         this.scope = this.options.scope;
 
+        this.setupButtons();
+
         if (this.model) {
             this.listenTo(this.model, 'after:save', () => {
                 if (this.isRendered()) {
@@ -92,10 +101,12 @@ class HeaderView extends View {
      *
      * @return {Promise}
      */
-    hideAllMenuItems() {
+    async hideAllMenuItems() {
         this.menuItemsHidden = true;
 
-        return this.reRender({buffer: true});
+        await this.reRenderButtons();
+
+        this.adjustFontSize();
     }
 
     /**
@@ -103,10 +114,12 @@ class HeaderView extends View {
      *
      * @return {Promise}
      */
-    showAllActionItems() {
+    async showAllActionItems() {
         this.menuItemsHidden = false;
 
-        return this.reRender({buffer: true});
+        await this.reRenderButtons();
+
+        this.adjustFontSize();
     }
 
     afterRender() {
@@ -214,6 +227,48 @@ class HeaderView extends View {
      */
     getParentMainView() {
         return /** @type {import('views/main').default} */this.getParentView();
+    }
+
+    /**
+     * @private
+     */
+    setupButtons() {
+        const view = new HeaderButtonsView({
+            scope: this.scope ?? this.getParentMainView().scope,
+            dataProvider: () => {
+                const items = this.getItems();
+
+                return {
+                    buttons: items.buttons ?? [],
+                    actions: items.actions ?? [],
+                    dropdown: items.dropdown ?? [],
+                    hidden: this.menuItemsHidden,
+                };
+            },
+        });
+
+        this.assignView('buttons', view);
+    }
+
+    /**
+     * @private
+     * @return {HeaderButtonsView}
+     */
+    getButtonsView() {
+        return this.getView('buttons');
+    }
+
+    /**
+     * Re-render buttons.
+     *
+     * @since 10.0.0
+     */
+    async reRenderButtons() {
+        if (!this.isReady) {
+            return;
+        }
+
+        await this.getButtonsView()?.reRender({buffer: true});
     }
 }
 

@@ -28,10 +28,11 @@
 
 import Language from 'language';
 import {inject} from 'di';
-import {h, VNode} from 'bullbone';
+import {h, VNode, toVNode} from 'bullbone';
 
 interface ButtonOptions {
-    name: string;
+    name: string | null;
+    action?: string | null;
     style?: 'default' | 'success' | 'danger'| 'warning' | 'info' | 'primary' | 'text' | null;
     className?: string | null;
     scope?: string | null;
@@ -45,11 +46,12 @@ interface ButtonOptions {
     hidden?: boolean;
     html?: string | null;
     iconHtml?: string | null;
-    dataset?: Record<string, unknown>;
+    data?: Record<string, unknown>;
 }
 
 interface DropdownItemOptions {
-    name: string;
+    name: string | null;
+    action?: string | null;
     className?: string | null;
     scope?: string | null;
     title?: string | null;
@@ -62,7 +64,7 @@ interface DropdownItemOptions {
     hidden?: boolean;
     html?: string | null;
     iconHtml?: string | null;
-    dataset?: Record<string, unknown>;
+    data?: Record<string, unknown>;
 }
 
 /**
@@ -113,13 +115,13 @@ export class ButtonComponent {
         const {content, props} = prepareItemContent(this.options, this.language);
 
         return h(tag, {
-            key: this.options.name ?? null,
+            key: this.options.name ?? undefined,
             class: classes,
             attrs: attrs,
             dataset: {
-                ...this.options.dataset,
-                name: this.options.name,
-                action: this.options.name,
+                ...this.options.data,
+                name: this.options.name!,
+                action: this.options.action ?? this.options.name!,
             },
             props,
         }, content);
@@ -175,15 +177,15 @@ export class DropdownItemComponent {
             class: classes,
             attrs: attrs,
             dataset: {
-                ...this.options.dataset,
-                name: this.options.name,
-                action: this.options.name,
+                ...this.options.data,
+                name: this.options.name!,
+                action: this.options.action ?? this.options.name!,
             },
             props: props,
         }, content);
 
         return h('li', {
-            key: this.options.name ?? null,
+            key: this.options.name ?? undefined,
             class: {
                 'disabled': this.options.disabled === true,
                 'hidden': this.options.hidden === true,
@@ -214,13 +216,16 @@ function prepareItemContent(
             (
                 options.labelTranslation ?
                     language.translatePath(options.labelTranslation) :
-                    language.translate(label, 'labels', options.scope)
+                    language.translate(label ?? '?', 'labels', options.scope)
             );
 
         let icon = null;
 
         if (options.iconHtml) {
-            icon = h('span', {props: {innerHTML: options.iconHtml}});
+            const div = document.createElement('div');
+            div.innerHTML = options.iconHtml;
+
+            icon = div.firstElementChild ? toVNode(div.firstElementChild) : null;
         } else if (options.iconClass) {
             icon = h('span', {props: {className: options.iconClass}});
         }

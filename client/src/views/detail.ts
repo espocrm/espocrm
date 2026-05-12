@@ -221,7 +221,7 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
 
         this.listenTo(this.model, 'sync', model => {
             if (model && model.hasChanged(this.nameAttribute)) {
-                this.getHeaderView()?.reRender();
+                this.getHeaderView()?.reRender({buffer: true});
             }
         });
     }
@@ -632,19 +632,11 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
     }
 
     protected hideAllHeaderActionItems() {
-        if (!this.getHeaderView()) {
-            return;
-        }
-
-        this.getHeaderView().hideAllMenuItems();
+        this.getHeaderView()?.hideAllMenuItems();
     }
 
     protected showAllHeaderActionItems() {
-        if (!this.getHeaderView()) {
-            return;
-        }
-
-        this.getHeaderView().showAllActionItems();
+        this.getHeaderView()?.showAllActionItems();
     }
 
     // noinspection JSUnusedGlobalSymbols
