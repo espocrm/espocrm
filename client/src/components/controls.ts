@@ -45,6 +45,7 @@ interface ButtonOptions {
     hidden?: boolean;
     html?: string | null;
     iconHtml?: string | null;
+    dataset?: Record<string, unknown>;
 }
 
 interface DropdownItemOptions {
@@ -61,6 +62,7 @@ interface DropdownItemOptions {
     hidden?: boolean;
     html?: string | null;
     iconHtml?: string | null;
+    dataset?: Record<string, unknown>;
 }
 
 /**
@@ -115,6 +117,7 @@ export class ButtonComponent {
             class: classes,
             attrs: attrs,
             dataset: {
+                ...this.options.dataset,
                 name: this.options.name,
                 action: this.options.name,
             },
@@ -164,11 +167,6 @@ export class DropdownItemComponent {
 
         const {content, props} = prepareItemContent(this.options, this.language, true);
 
-        const dataset = {
-            name: this.options.name,
-            action: this.options.name,
-        } as Record<string, any>;
-
         if (!this.options.link) {
             attrs.role = 'button';
         }
@@ -176,7 +174,11 @@ export class DropdownItemComponent {
         const a = h('a', {
             class: classes,
             attrs: attrs,
-            dataset: dataset,
+            dataset: {
+                ...this.options.dataset,
+                name: this.options.name,
+                action: this.options.name,
+            },
             props: props,
         }, content);
 
