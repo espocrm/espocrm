@@ -310,11 +310,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
                 }
 
                 this.listenTo(this.model as Model, 'sync', () => {
-                    if (!this.getHeaderView()) {
-                        return;
-                    }
-
-                    this.getHeaderView().reRender();
+                    this.reRenderHeader();
                 });
             });
         }
@@ -345,6 +341,10 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
                 className: 'main-header-manu-action',
             });
         });
+    }
+
+    private reRenderHeader() {
+        this.getHeaderView()?.reRender({buffer: true});
     }
 
     private initShortcuts() {
@@ -547,17 +547,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             return;
         }
 
-        if (this.isRendered()) {
-            this.getHeaderView().reRender();
-
-            return;
-        }
-
-        if (this.isBeingRendered()) {
-            this.whenRendered().then(() => {
-                this.getHeaderView().reRender();
-            })
-        }
+        this.reRenderHeader();
     }
 
     /**
@@ -622,17 +612,11 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
                 list.push(item);
         }
 
-        if (!doNotReRender && this.isRendered()) {
-            this.getHeaderView().reRender();
-
+        if (doNotReRender) {
             return;
         }
 
-        if (!doNotReRender && this.isBeingRendered()) {
-            this.once('after:render', () => {
-                this.getHeaderView().reRender();
-            });
-        }
+        this.reRenderHeader();
     }
 
     /**
@@ -662,17 +646,8 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             items.splice(index, 1);
         }
 
-        if (!doNotReRender && this.isRendered()) {
-            this.getHeaderView().reRender();
-
-            return;
-        }
-
-        if (!doNotReRender && this.isBeingRendered()) {
-            this.once('after:render', () => {
-                this.getHeaderView().reRender();
-
-            });
+        if (!doNotReRender) {
+            this.reRenderHeader();
 
             return;
         }
@@ -807,9 +782,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
         this.controlMenuDropdownVisibility();
         this.adjustButtons();
 
-        if (this.getHeaderView()) {
-            this.getHeaderView().trigger('action-item-update');
-        }
+        this.getHeaderView()?.trigger('action-item-update');
     }
 
     /**
@@ -830,9 +803,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
 
             // Item can be available but not rendered as it was skipped by access check in getMenu.
             if (item && !$dropdownItem.length && !$button.length) {
-                if (this.getHeaderView()) {
-                    this.getHeaderView().reRender();
-                }
+                this.reRenderHeader();
 
                 return;
             }
@@ -843,9 +814,7 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
 
-            if (this.getHeaderView()) {
-                this.getHeaderView().trigger('action-item-update');
-            }
+            this.getHeaderView()?.trigger('action-item-update');
         };
 
         if (!this.isRendered()) {

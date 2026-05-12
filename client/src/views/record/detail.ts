@@ -1096,8 +1096,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.isRendered()) {
-            this.getButtonsView()?.reRender();
-            this.getEditButtonsView()?.reRender();
+            this.reRenderButtons();
         }
     }
 
@@ -1140,8 +1139,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.isRendered()) {
-            this.getButtonsView()?.reRender();
-            this.getEditButtonsView()?.reRender();
+            this.reRenderButtons();
         }
     }
 
@@ -1185,8 +1183,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.isRendered()) {
-            this.getButtonsView()?.reRender();
-            this.getEditButtonsView()?.reRender();
+            this.reRenderButtons();
         }
     }
 
@@ -1230,8 +1227,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.isRendered()) {
-            this.getButtonsView()?.reRender();
-            this.getEditButtonsView()?.reRender();
+            this.reRenderButtons();
         }
     }
 
@@ -2895,15 +2891,15 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             this.buttonEditList.push(item);
     }
 
+
+
     // noinspection JSUnusedGlobalSymbols
     /**
      * @deprecated Use `enableActionItems`.
      */
     enableButtons() {
         this.allActionItemsDisabled = false;
-
-        this.getButtonsView()?.reRender();
-        this.getEditButtonsView()?.reRender();
+        this.reRenderButtons();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -2913,8 +2909,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     disableButtons() {
         this.allActionItemsDisabled = true;
 
-        this.getButtonsView()?.reRender();
-        this.getEditButtonsView()?.reRender();
+        this.reRenderButtons();
     }
 
     /**
@@ -2952,7 +2947,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             return;
         }
 
-        this.getButtonsView()?.reRender();
+        this.reRenderButtons();
     }
 
     /**
@@ -3835,6 +3830,11 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
     private getEditButtonsView(): DetailRecordButtonsView | null {
         return this.getView<DetailRecordButtonsView>('editButtons');
+    }
+
+    private reRenderButtons() {
+        this.getButtonsView()?.reRender({buffer: true});
+        this.getEditButtonsView()?.reRender({buffer: true});
     }
 }
 
