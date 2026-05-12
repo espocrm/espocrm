@@ -170,7 +170,7 @@ class ActivitiesDashletView extends BaseDashletView {
                 rowActionsView: this.rowActionsView,
                 checkboxes: false,
                 collection: this.collection,
-                listLayout: this.listLayout,
+                multiListLayout: this.listLayout,
             }, view => {
                 view.render();
             });
