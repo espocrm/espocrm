@@ -30,6 +30,37 @@ import Language from 'language';
 import {inject} from 'di';
 import {h, fragment, VNode} from 'bullbone';
 
+interface ButtonOptions {
+    name: string;
+    style?: 'default' | 'success' | 'danger'| 'warning' | 'info' | 'primary' | 'text' | null;
+    className?: string | null;
+    scope?: string | null;
+    title?: string | null;
+    label?: string | null;
+    labelTranslation?: string | null;
+    link?: string | null;
+    iconClass?: string | null;
+    text?: string | null;
+    disabled?: boolean;
+    hidden?: boolean;
+    html?: string | null;
+}
+
+interface DropdownItemOptions {
+    name: string;
+    className?: string | null;
+    scope?: string | null;
+    title?: string | null;
+    label?: string | null;
+    labelTranslation?: string | null;
+    link?: string | null;
+    iconClass?: string | null;
+    text?: string | null;
+    disabled?: boolean;
+    hidden?: boolean;
+    html?: string | null;
+}
+
 /**
  * @internal
  * @experimental
@@ -40,23 +71,7 @@ export class ButtonComponent {
     @inject(Language)
     private language: Language
 
-    constructor(
-        private options: {
-            name: string,
-            style?: 'default' | 'success' | 'danger'| 'warning' | 'info' | 'primary' | 'text' | null,
-            className?: string | null,
-            scope?: string | null,
-            title?: string | null,
-            label?: string | null,
-            labelTranslation?: string | null,
-            link?: string | null,
-            iconClass?: string | null,
-            text?: string | null,
-            disabled?: boolean,
-            hidden?: boolean,
-            html?: string | null,
-        },
-    ) {}
+    constructor(private options: ButtonOptions) {}
 
     node(): VNode {
         const classes: any = {
@@ -107,7 +122,6 @@ export class ButtonComponent {
                         this.language.translate(label, 'labels', this.options.scope)
                 );
 
-
             content = this.options.iconClass ?
                 fragment([
                     h('span', {class: {[this.options.iconClass]: true}}),
@@ -141,22 +155,7 @@ export class DropdownItemComponent {
     @inject(Language)
     private language: Language
 
-    constructor(
-        private options: {
-            name: string,
-            className?: string | null,
-            scope?: string | null,
-            title?: string | null,
-            label?: string | null,
-            labelTranslation?: string | null,
-            link?: string | null,
-            iconClass?: string | null,
-            text?: string | null,
-            disabled?: boolean,
-            hidden?: boolean,
-            html?: string | null,
-        },
-    ) {}
+    constructor(private options: DropdownItemOptions) {}
 
     node(): VNode {
         const classes: any = {
