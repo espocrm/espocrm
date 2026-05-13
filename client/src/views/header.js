@@ -234,7 +234,7 @@ class HeaderView extends View {
      */
     setupButtons() {
         const view = new HeaderButtonsView({
-            scope: this.scope ?? this.getParentMainView().scope,
+            scope: this.scope ?? this.model?.entityType ?? null,
             dataProvider: () => {
                 const items = this.getItems();
 
