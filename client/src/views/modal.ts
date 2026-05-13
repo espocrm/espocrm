@@ -429,8 +429,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                 this.adjustHeaderFontSize();
             }
 
-            this.adjustButtons();
-
             if (!this.noFullHeight) {
                 this.initBodyScrollListener();
             }
@@ -850,8 +848,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
         }
 
         await this.reRenderFooter();
-
-        this.adjustButtons();
     }
 
     /**
@@ -873,8 +869,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
         }
 
         await this.reRenderFooter();
-
-        this.adjustButtons();
     }
 
     /**
@@ -904,8 +898,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
         }
 
         await this.reRenderFooter();
-
-        this.adjustButtons();
     }
 
     /**
@@ -958,8 +950,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
         }
 
         await this.reRenderFooter();
-
-        this.adjustButtons();
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -1108,52 +1098,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @since 9.1.0
      */
     protected afterExpand() {}
-
-    private adjustButtons() {
-        this.adjustLeftButtons();
-        this.adjustRightButtons();
-    }
-
-    private adjustLeftButtons() {
-        if (!this.containerElement) {
-            return;
-        }
-
-        const $buttons = $(this.containerElement)
-            .find('footer.modal-footer > .main-btn-group button.btn');
-
-        $buttons
-            .removeClass('radius-left')
-            .removeClass('radius-right');
-
-        const $buttonsVisible = $buttons.filter('button:not(.hidden)');
-
-        $buttonsVisible.first().addClass('radius-left');
-        $buttonsVisible.last().addClass('radius-right');
-    }
-
-    private adjustRightButtons() {
-        if (!this.containerElement) {
-            return;
-        }
-
-        const $buttons = $(this.containerElement)
-            .find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
-
-        $buttons
-            .removeClass('radius-left')
-            .removeClass('radius-right')
-            .removeClass('margin-right');
-
-        const $buttonsVisible = $buttons.filter('button:not(.hidden)');
-
-        $buttonsVisible.first().addClass('radius-left');
-        $buttonsVisible.last().addClass('radius-right');
-
-        if ($buttonsVisible.last().next().hasClass('btn-text')) {
-            $buttonsVisible.last().addClass('margin-right');
-        }
-    }
 
     private initBodyScrollListener() {
         const $body = $(this.containerElement).find('> .dialog > .modal-dialog > .modal-content > .modal-body');

@@ -20,6 +20,20 @@
     }
 }
 
+.btn-text {
+    + .btn {
+        border-top-left-radius: var(--border-radius) !important;
+        border-bottom-left-radius: var(--border-radius) !important;
+    }
+}
+
+.btn {
+    &:has(+ .btn-text) {
+        border-top-right-radius: var(--border-radius) !important;
+        border-bottom-right-radius: var(--border-radius) !important;
+    }
+}
+
 .btn {
     height: var(--input-height-base);
     font-weight: 500;

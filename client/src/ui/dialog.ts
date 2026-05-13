@@ -247,12 +247,6 @@ class Dialog {
         this.$el = $('#' + this.id);
         this.el = this.$el.get(0) as HTMLElement;
 
-        /*this.$el.find('header a.close').on('click', () => {
-            //this.close();
-        });*/
-
-        //this.initButtonEvents();
-
         if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
 
@@ -375,6 +369,7 @@ class Dialog {
 
         element.textContent = text;
     }
+
     private callOnClose() {
         if (this.onClose) {
             this.onClose()
@@ -403,37 +398,6 @@ class Dialog {
     setActionItems(buttonList: DialogButton[], dropdownItemList: (DialogButton | false)[]) {
         this.buttonList = buttonList;
         this.dropdownItemList = dropdownItemList;
-    }
-
-    /**
-     * Init button events.
-     */
-    initButtonEvents() {
-        /*this.buttonList.forEach(item => {
-            if (typeof item.onClick !== 'function') {
-                return;
-            }
-
-            const $button = $(`#${this.id} .modal-footer button[data-name="${item.name}"]`);
-
-            $button.off('click');
-            $button.on('click', e => item.onClick?.(this, e.originalEvent as MouseEvent, e.currentTarget));
-        });
-
-        this.dropdownItemList.forEach(item => {
-            if (item === false) {
-                return;
-            }
-
-            if (!item.onClick) {
-                return;
-            }
-
-            const $button = $(`#${this.id} .modal-footer a[data-name="${item.name}"]`);
-
-            $button.off('click');
-            $button.on('click', e => item.onClick?.(this, e.originalEvent as MouseEvent, e.currentTarget));
-        });*/
     }
 
     private getHeader(): JQuery | null {
@@ -814,8 +778,17 @@ class FooterComponent {
         const right: any[] = [];
         const lis: any[] = [];
 
+        const leftButtonList: DialogButton[] = [];
+        const rightButtonList: DialogButton[]  = [];
+
         data.buttonList.forEach(it => {
-            const button = new ButtonComponent({
+            it.pullLeft || it.position === 'right' ?
+                rightButtonList.push(it) :
+                leftButtonList.push(it);
+        });
+
+        const prepareButton = (it: DialogButton) => {
+            return new ButtonComponent({
                 name: it.name,
                 className: it.className ?? 'btn-xs-wide',
                 style: it.style,
@@ -830,11 +803,16 @@ class FooterComponent {
                     }
                 },
             }).node();
+        };
 
-            it.pullLeft || it.position === 'right' ?
-                right.push(button) :
-                left.push(button);
-        });
+        const prepareButtons = (buttonList: DialogButton[], output: any[]) => {
+            buttonList.forEach((it) => {
+                output.push(prepareButton(it));
+            });
+        }
+
+        prepareButtons(leftButtonList, left);
+        prepareButtons(rightButtonList, right);
 
         data.dropdownItemList.forEach(it => {
             if (it === false) {

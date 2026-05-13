@@ -173,7 +173,7 @@ class DetailModalView extends ModalView {
                 html: '<span class="fas fa-chevron-left"></span>',
                 title: this.translate('Previous Entry'),
                 position: 'right',
-                className: 'btn-icon',
+                className: 'btn-icon margin-left',
                 style: 'text',
                 disabled: true,
             });

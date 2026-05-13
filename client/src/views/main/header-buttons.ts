@@ -53,6 +53,7 @@ export default class HeaderButtonsView extends View<{
     protected content(): VNode {
         const data = this.options.dataProvider();
 
+        const buttons = data.buttons.filter(it => !it.hidden);
         const actions = data.actions.filter(it => !it.hidden);
 
         const dropdown = data.dropdown
@@ -71,7 +72,7 @@ export default class HeaderButtonsView extends View<{
 
         const elements: any[] = [];
 
-        data.buttons.forEach(it => {
+        buttons.forEach(it => {
             const className = ('btn-xs-wide main-header-manu-action ' + (it.className ?? '')).trim();
 
             elements.push(
@@ -198,42 +199,5 @@ export default class HeaderButtonsView extends View<{
                 'hidden': data.hidden,
             },
         }, elements)
-    }
-
-    protected afterRender() {
-        this.adjustButtons();
-    }
-
-    /**
-     * @todo Move to data.
-     */
-    private adjustButtons() {
-        const nodes = this.element.querySelectorAll<HTMLElement>('.btn');
-
-        if (!nodes) {
-            return;
-        }
-
-        let buttons = [...nodes];
-
-        if (!buttons.length) {
-            return;
-        }
-
-        for (const it of buttons) {
-            it.classList.remove('radius-left', 'radius-right');
-        }
-
-        buttons = buttons.filter(it => !it.classList.contains('hidden'));
-
-        for (const [i, it] of buttons.entries()) {
-            if (i === 0 || buttons[i - 1].classList.contains('btn-text')) {
-                it.classList.add('radius-left');
-            }
-
-            if (i === buttons.length - 1 || buttons[i + 1].classList.contains('btn-text')) {
-                it.classList.add('radius-right');
-            }
-        }
     }
 }

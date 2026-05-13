@@ -153,22 +153,4 @@ export default class DetailRecordButtonsView extends View<{
             allDisabled: data.allDisabled,
         };
     }
-
-    protected afterRender() {
-        this.adjust();
-    }
-
-    /**
-     * @todo Revise the need.
-     */
-    private adjust() {
-        const buttons = this.element.querySelectorAll<HTMLButtonElement>('button.btn');
-
-        buttons.forEach(element => element.classList.remove('radius-left', 'radius-right'));
-
-        const visibleButtons = Array.from(buttons).filter(element => !element.classList.contains('hidden'));
-
-        visibleButtons[0]?.classList.add('radius-left');
-        visibleButtons[visibleButtons.length - 1]?.classList.add('radius-right');
-    }
 }
