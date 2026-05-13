@@ -50,10 +50,6 @@ export default class HeaderButtonsView extends View<{
     @inject(Language)
     private language: Language
 
-    protected data() {
-        return this.options.dataProvider();
-    }
-
     protected content(): VNode {
         const data = this.options.dataProvider();
 
@@ -62,8 +58,8 @@ export default class HeaderButtonsView extends View<{
         const dropdown = data.dropdown
             .filter(it => it === false || !it.hidden)
             .filter((it, i, list) => {
-                if (i === 0) {
-                    return true;
+                if (it === false && (i === 0 || i === list.length - 1)) {
+                    return false;
                 }
 
                 if (it === false && list[i - 1] === false) {
@@ -82,7 +78,7 @@ export default class HeaderButtonsView extends View<{
                 new ButtonComponent({
                     scope: this.options.scope,
                     name: it.name ?? null,
-                    action: it.action,
+                    action: it.action ?? it.name,
                     link: it.link,
                     text: it.text,
                     label: it.label,
@@ -124,7 +120,7 @@ export default class HeaderButtonsView extends View<{
                 dropdownItems.push(
                     new DropdownItemComponent({
                         name: it.name ?? null,
-                        action: it.action,
+                        action: it.action ?? it.name,
                         scope: this.options.scope,
                         link: it.link,
                         label: it.label,
@@ -161,12 +157,8 @@ export default class HeaderButtonsView extends View<{
 
             const dropdownItems: any[] = [];
 
-            dropdown.forEach((it, i) => {
+            dropdown.forEach(it => {
                 if (it === false) {
-                    if (i === 0 || i === data.dropdown.length - 1) {
-                        return;
-                    }
-
                     dropdownItems.push(
                         h('li', {class: {'divider': true}})
                     );
@@ -177,7 +169,7 @@ export default class HeaderButtonsView extends View<{
                 dropdownItems.push(
                     new DropdownItemComponent({
                         name: it.name ?? null,
-                        action: it.action,
+                        action: it.action ?? it.name,
                         scope: this.options.scope,
                         link: it.link,
                         label: it.label,

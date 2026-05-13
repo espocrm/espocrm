@@ -54,6 +54,7 @@ export default class DetailRecordButtonsView extends View<{
             buttons.push(
                 new ButtonComponent({
                     name: it.name,
+                    action: it.name,
                     scope: this.options.entityType,
                     label: it.label,
                     labelTranslation: it.labelTranslation,
@@ -88,12 +89,8 @@ export default class DetailRecordButtonsView extends View<{
 
             const dropdownItems: VNode[] = [];
 
-            data.dropdownItemList.forEach((it, i) => {
+            data.dropdownItemList.forEach(it => {
                 if (it === false) {
-                    if (i === 0 || i === data.dropdownItemList.length - 1) {
-                        return;
-                    }
-
                     dropdownItems.push(
                         h('li', {class: {'divider': true}})
                     );
@@ -104,6 +101,7 @@ export default class DetailRecordButtonsView extends View<{
                 dropdownItems.push(
                     new DropdownItemComponent({
                         name: it.name,
+                        action: it.name,
                         scope: this.options.entityType,
                         label: it.label,
                         labelTranslation: it.labelTranslation,
@@ -126,63 +124,6 @@ export default class DetailRecordButtonsView extends View<{
         return fragment(elements);
     }
 
-    /*
-    // language=Handlebars
-    templateContent_ = `
-        {{#each buttonList}}
-            {{#unless hidden}}
-                {{button name
-                     scope=../entityType
-                     label=label
-                     labelTranslation=labelTranslation
-                     style=style
-                     hidden=hidden
-                     html=html
-                     title=title
-                     text=text
-                     className=../buttonClassName
-                     disabled=disabled
-                }}
-            {{/unless}}
-        {{/each}}
-
-        {{#if dropdownItemList}}
-            <button
-                type="button"
-                class="btn btn-default dropdown-toggle dropdown-item-list-button {{#if dropdownEmpty}} hidden {{/if}}"
-                data-toggle="dropdown"
-            ><span class="fas fa-ellipsis-h"></span></button>
-            <ul class="dropdown-menu pull-left">
-                {{#each dropdownItemList}}
-                    {{#if this}}
-                        {{#unless hidden}}
-                            {{dropdownItem
-                                name
-                                scope=../entityType
-                                label=label
-                                labelTranslation=labelTranslation
-                                html=html
-                                title=title
-                                text=text
-                                hidden=hidden
-                                disabled=disabled
-                                data=data
-                                className=../actionClassName
-                            }}
-                        {{/unless}}
-                    {{else}}
-                        {{#unless @first}}
-                            {{#unless @last}}
-                                <li class="divider"></li>
-                            {{/unless}}
-                        {{/unless}}
-                    {{/if}}
-                {{/each}}
-            </ul>
-        {{/if}}
-    `
-    */
-
     protected data() {
         const data = this.options.dataProvider();
 
@@ -191,8 +132,8 @@ export default class DetailRecordButtonsView extends View<{
         const dropdownItemList = data.dropdownItemList
             .filter(it => it === false || !it.hidden)
             .filter((it, i, list) => {
-                if (i === 0) {
-                    return true;
+                if (it === false && (i === 0 || i === list.length - 1)) {
+                    return false;
                 }
 
                 if (it === false && list[i - 1] === false) {

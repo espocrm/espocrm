@@ -47,6 +47,7 @@ interface ButtonOptions {
     html?: string | null;
     iconHtml?: string | null;
     data?: Record<string, unknown>;
+    onClick?: (event: MouseEvent) => void;
 }
 
 interface DropdownItemOptions {
@@ -65,6 +66,7 @@ interface DropdownItemOptions {
     html?: string | null;
     iconHtml?: string | null;
     data?: Record<string, unknown>;
+    onClick?: (event: MouseEvent) => void;
 }
 
 /**
@@ -84,7 +86,7 @@ export class ButtonComponent {
             'btn': true,
             'disabled': this.options.disabled === true,
             'hidden': this.options.hidden === true,
-            'action': true,
+            'action': this.options.action != null,
         };
 
         const style = this.options.style ?? 'default';
@@ -114,6 +116,12 @@ export class ButtonComponent {
 
         const {content, props} = prepareItemContent(this.options, this.language);
 
+        const on: any = {};
+
+        if (this.options.onClick) {
+            on.click = (event: MouseEvent) => this.options.onClick!(event)
+        }
+
         return h(tag, {
             key: this.options.name ?? undefined,
             class: classes,
@@ -121,9 +129,10 @@ export class ButtonComponent {
             dataset: {
                 ...this.options.data,
                 name: (this.options.name ?? undefined)!,
-                action: (this.options.action ?? this.options.name ?? undefined)!,
+                action: (this.options.action ?? undefined)!,
             },
             props,
+            on: on,
         }, content);
     }
 }
@@ -144,7 +153,7 @@ export class DropdownItemComponent {
         const classes: any = {
             'disabled': this.options.disabled === true,
             'hidden': this.options.hidden === true,
-            'action': true,
+            'action': this.options.action != null,
         };
 
         if (this.options.className) {
@@ -173,15 +182,22 @@ export class DropdownItemComponent {
             attrs.role = 'button';
         }
 
+        const on: any = {};
+
+        if (this.options.onClick) {
+            on.click = (event: MouseEvent) => this.options.onClick!(event)
+        }
+
         const a = h('a', {
             class: classes,
             attrs: attrs,
             dataset: {
                 ...this.options.data,
                 name: (this.options.name ?? undefined)!,
-                action: (this.options.action ?? this.options.name ?? undefined)!,
+                action: (this.options.action ?? undefined)!,
             },
             props: props,
+            on: on,
         }, content);
 
         return h('li', {

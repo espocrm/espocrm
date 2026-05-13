@@ -93,7 +93,7 @@ interface ActionItem {
     /**
      * A style.
      */
-    style?: 'primary' | 'danger' | 'success' | 'warning' | 'text';
+    style?: 'primary' | 'danger' | 'success' | 'warning' | 'info' | 'text';
     /**
      * An icon HTML.
      */
@@ -303,9 +303,11 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
     /**
      * Use a flexible header font size.
      */
-    protected flexibleHeaderFontSize: boolean;
+    protected flexibleHeaderFontSize: boolean
 
-    private fontSizePercentage: number;
+    private fontSizePercentage: number
+
+    private footerReRenderPromise: Promise<void> | null = null
 
     protected init() {
         this.addHandler('click', '.action', (e, target) => {
@@ -502,10 +504,10 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                     '<span>' + this.getHelper().escapeString(o.text as string) + '</span>';
             }
 
-            o.onClick = o.onClick ?? ((_d, event, target) => {
+            o.onClick = o.onClick ?? ((_d, event) => {
                 const handler = o.handler || (o.data || {}).handler;
 
-                Utils.handleAction(this, event, target, {
+                Utils.handleAction(this, event, event.target as HTMLElement, {
                     action: o.name,
                     handler: handler,
                     actionFunction: o.actionFunction,
@@ -549,7 +551,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                 // noinspection ES6ConvertLetToConst
                 let handler = o.handler || (o.data || {}).handler;
 
-                Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                Utils.handleAction(this, e, e.target, {
                     action: o.name,
                     handler: handler,
                     actionFunction: o.actionFunction,
@@ -647,25 +649,19 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param name A button name.
      */
     disableButton(name: string) {
-        this.buttonList.forEach((d) => {
-            if (d.name !== name) {
+        this.buttonList.forEach(item => {
+            if (item.name !== name) {
                 return;
             }
 
-            d.disabled = true;
+            item.disabled = true;
         });
 
         if (!this.isRendered()) {
             return;
         }
 
-        if (!this.containerElement) {
-            return;
-        }
-
-        $(this.containerElement).find(`footer button[data-name="${name}"]`)
-            .addClass('disabled')
-            .attr('disabled', 'disabled');
+        this.reRenderFooter();
     }
 
     /**
@@ -674,25 +670,19 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param name A button name.
      */
     enableButton(name: string) {
-        this.buttonList.forEach((d) => {
-            if (d.name !== name) {
+        this.buttonList.forEach(item => {
+            if (item.name !== name) {
                 return;
             }
 
-            d.disabled = false;
+            item.disabled = false;
         });
 
         if (!this.isRendered()) {
             return;
         }
 
-        if (!this.containerElement) {
-            return;
-        }
-
-        $(this.containerElement).find('footer button[data-name="'+name+'"]')
-            .removeClass('disabled')
-            .removeAttr('disabled');
+        this.reRenderFooter();
     }
 
     /**
@@ -718,8 +708,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
         if (position === true) {
             this.buttonList.unshift(o);
-        }
-        else if (typeof position === 'string') {
+        } else if (typeof position === 'string') {
             index = -1;
 
             this.buttonList.forEach((item, i) => {
@@ -776,20 +765,32 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
         }
     }
 
-    private reRenderFooter() {
+    private async reRenderFooter() {
         if (!this.dialog) {
             return;
         }
 
-        this.updateDialog();
+        if (this.footerReRenderPromise) {
+            return this.footerReRenderPromise;
+        }
 
-        const $footer = this.dialog.getFooter();
+        let resolvePromise: (value: void) => void;
 
-        $(this.containerElement).find('footer.modal-footer')
-            .empty()
-            .append($footer as JQuery);
+        const promise = new Promise<void>(resolve => resolvePromise = resolve as any);
 
-        this.dialog.initButtonEvents();
+        this.footerReRenderPromise = promise;
+
+        queueMicrotask(() => {
+            this.updateDialog();
+            this.dialog.reRenderFooter();
+            //this.dialog.initButtonEvents();
+
+            this.footerReRenderPromise = null;
+
+            resolvePromise();
+        });
+
+        return promise;
     }
 
     /**
@@ -835,7 +836,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *
      * @todo Remove in 11.0.
      */
-    protected showButton(name: string) {
+     protected async showButton(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -848,11 +849,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             return;
         }
 
-        if (!this.containerElement) {
-            return;
-        }
-
-        $(this.containerElement).find(`footer button[data-name="${name}"]`).removeClass('hidden');
+        await this.reRenderFooter();
 
         this.adjustButtons();
     }
@@ -862,7 +859,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *
      * @todo Remove in 11.0.
      */
-    protected hideButton(name: string) {
+    protected async hideButton(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -875,11 +872,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             return;
         }
 
-        if (!this.containerElement) {
-            return;
-        }
-
-        $(this.containerElement).find(`footer button[data-name="${name}"]`).addClass('hidden');
+        await this.reRenderFooter();
 
         this.adjustButtons();
     }
@@ -889,7 +882,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *
      * @param name A name.
      */
-    showActionItem(name: string) {
+    async showActionItem(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
@@ -910,23 +903,32 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             return;
         }
 
-        if (!this.containerElement) {
+        await this.reRenderFooter();
+
+        this.adjustButtons();
+    }
+
+    /**
+     * Update action item.
+     *
+     * @param name A name.
+     * @param item Values to update.     *
+     * @since 10.0.0
+     */
+    async updateActionItem(name: string, item: Partial<ActionItem>) {
+        const found = [...this.buttonList, ...this.dropdownItemList].find(it => it && it.name === name);
+
+        if (!found) {
             return;
         }
 
-        const $el = $(this.containerElement);
+        Object.assign(found, item);
 
-        $el.find(`footer button[data-name="${name}"]`).removeClass('hidden');
-        $el.find(`footer li > a[data-name="${name}"]`).parent().removeClass('hidden');
-
-        if (!this.isDropdownItemListEmpty()) {
-            const $dropdownGroup = $el.find('footer .main-btn-group > .btn-group');
-
-            $dropdownGroup.removeClass('hidden');
-            $dropdownGroup.find('> button').removeClass('hidden');
+        if (!this.isRendered()) {
+            return;
         }
 
-        this.adjustButtons();
+        await this.reRenderFooter();
     }
 
     /**
@@ -934,7 +936,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *
      * @param name A name.
      */
-    hideActionItem(name: string) {
+    async hideActionItem(name: string) {
         for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
@@ -955,17 +957,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             return;
         }
 
-        const $el = $(this.containerElement);
-
-        $el.find(`footer button[data-name="${name}"]`).addClass('hidden');
-        $el.find(`footer li > a[data-name="${name}"]`).parent().addClass('hidden');
-
-        if (this.isDropdownItemListEmpty()) {
-            const $dropdownGroup = $el.find('footer .main-btn-group > .btn-group');
-
-            $dropdownGroup.addClass('hidden');
-            $dropdownGroup.find('> button').addClass('hidden');
-        }
+        await this.reRenderFooter();
 
         this.adjustButtons();
     }
@@ -1003,22 +995,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
         return this.dropdownItemList
             .findIndex(item => item && item.name === name && !item.disabled && !item.hidden) !== -1;
-    }
-
-    private isDropdownItemListEmpty(): boolean {
-        if (this.dropdownItemList.length === 0) {
-            return true;
-        }
-
-        let isEmpty = true;
-
-        this.dropdownItemList.forEach((item) => {
-            if (item && !item.hidden) {
-                isEmpty = false;
-            }
-        });
-
-        return isEmpty;
     }
 
     private adjustHeaderFontSize(step: number = 0) {
@@ -1139,6 +1115,10 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
     }
 
     private adjustLeftButtons() {
+        if (!this.containerElement) {
+            return;
+        }
+
         const $buttons = $(this.containerElement)
             .find('footer.modal-footer > .main-btn-group button.btn');
 
@@ -1153,6 +1133,10 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
     }
 
     private adjustRightButtons() {
+        if (!this.containerElement) {
+            return;
+        }
+
         const $buttons = $(this.containerElement)
             .find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
 

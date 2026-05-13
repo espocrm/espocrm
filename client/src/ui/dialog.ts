@@ -26,6 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {h, patch, VNode} from 'bullbone';
+import {ButtonComponent, DropdownItemComponent} from 'components/controls';
+
 const shownDialogList: Dialog[] = [];
 
 /**
@@ -74,8 +77,8 @@ export interface DialogButton {
     text?: string;
     disabled?: boolean;
     hidden?: boolean;
-    style?: 'default' | 'danger' | 'success' | 'warning';
-    onClick?: (dialog: Dialog, event: MouseEvent, target: HTMLElement) => void;
+    style?: 'default' | 'danger' | 'success' | 'warning' | 'info' | 'text';
+    onClick?: (dialog: Dialog, event: MouseEvent) => void;
     className?: string;
     title?: string;
     groupIndex?: number;
@@ -121,6 +124,12 @@ class Dialog {
     private $el: JQuery
     private readonly el: HTMLElement
     private $mouseDownTarget: JQuery | undefined
+
+    private footerComponent: FooterComponent
+
+    private readonly footerElement: HTMLElement | null = null
+
+    private footerVNode: VNode | null = null
 
     /**
      * @param options Options.
@@ -184,8 +193,22 @@ class Dialog {
             this.backdrop = 'static';
         }
 
+        const hasFooter = !!(this.buttonList.length || this.dropdownItemList.length);
+
+        this.footerComponent = new FooterComponent({
+            dataProvider: () => ({
+                buttonList: this.buttonList,
+                dropdownItemList: this.dropdownItemList,
+            })
+        }, this);
+
+        if (hasFooter) {
+            this.footerElement = document.createElement('footer');
+
+            this.footerVNode = patch(this.footerElement, this.footerComponent.node());
+        }
+
         const $header = this.getHeader();
-        const $footer = this.getFooter();
 
         const $body = $('<div>')
             .addClass('modal-body body')
@@ -197,14 +220,14 @@ class Dialog {
             $content.append($header);
         }
 
-        if ($footer && this.options.footerAtTheTop) {
-            $content.append($footer);
+        if (this.footerElement && this.options.footerAtTheTop) {
+            $content.append(this.footerElement);
         }
 
         $content.append($body);
 
-        if ($footer && !this.options.footerAtTheTop) {
-            $content.append($footer);
+        if (this.footerElement && !this.options.footerAtTheTop) {
+            $content.append(this.footerElement);
         }
 
         const $dialog = $('<div>')
@@ -228,7 +251,7 @@ class Dialog {
             //this.close();
         });*/
 
-        this.initButtonEvents();
+        //this.initButtonEvents();
 
         if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
@@ -386,13 +409,14 @@ class Dialog {
      * Init button events.
      */
     initButtonEvents() {
-        this.buttonList.forEach(item => {
+        /*this.buttonList.forEach(item => {
             if (typeof item.onClick !== 'function') {
                 return;
             }
 
             const $button = $(`#${this.id} .modal-footer button[data-name="${item.name}"]`);
 
+            $button.off('click');
             $button.on('click', e => item.onClick?.(this, e.originalEvent as MouseEvent, e.currentTarget));
         });
 
@@ -407,8 +431,9 @@ class Dialog {
 
             const $button = $(`#${this.id} .modal-footer a[data-name="${item.name}"]`);
 
+            $button.off('click');
             $button.on('click', e => item.onClick?.(this, e.originalEvent as MouseEvent, e.currentTarget));
-        });
+        });*/
     }
 
     private getHeader(): JQuery | null {
@@ -523,130 +548,14 @@ class Dialog {
     }
 
     /**
-     * Get a footer.
+     * @internal
      */
-    getFooter(): JQuery | null {
-        if (!this.buttonList.length && !this.dropdownItemList.length) {
-            return null;
+    reRenderFooter() {
+        if (!this.footerElement) {
+            return;
         }
 
-        const $footer = $('<footer>').addClass('modal-footer');
-
-        const $main = $('<div>')
-            .addClass('btn-group')
-            .addClass('main-btn-group');
-
-        const $additional = $('<div>')
-            .addClass('btn-group')
-            .addClass('additional-btn-group');
-
-        this.buttonList.forEach(o => {
-            const style = o.style || 'default';
-
-            const $button =
-                $('<button>')
-                    .attr('type', 'button')
-                    .attr('data-name', o.name)
-                    .addClass('btn')
-                    .addClass('btn-' + style)
-                    .addClass(o.className || 'btn-xs-wide');
-
-            if (o.disabled) {
-                $button.attr('disabled', 'disabled');
-                $button.addClass('disabled');
-            }
-
-            if (o.hidden) {
-                $button.addClass('hidden');
-            }
-
-            if (o.title) {
-                $button.attr('title', o.title);
-            }
-
-            if (o.text) {
-                $button.text(o.text);
-            }
-
-            if (o.html) {
-                $button.html(o.html);
-            }
-
-            if (o.pullLeft || o.position === 'right') {
-                $additional.append($button);
-
-                return;
-            }
-
-            $main.append($button);
-        });
-
-        const allDdItemsHidden = this.dropdownItemList.filter(o => o && !o.hidden).length === 0;
-
-        const $dropdown = $('<div>')
-            .addClass('btn-group')
-            .addClass(allDdItemsHidden ? 'hidden' : '')
-            .append(
-                $('<button>')
-                    .attr('type', 'button')
-                    .addClass('btn btn-default dropdown-toggle')
-                    .addClass(allDdItemsHidden ? 'hidden' : '')
-                    .attr('data-toggle', 'dropdown')
-                    .append(
-                        $('<span>').addClass('fas fa-ellipsis-h')
-                    )
-            );
-
-        const $ul = $('<ul>').addClass('dropdown-menu pull-right');
-
-        $dropdown.append($ul);
-
-        this.dropdownItemList.forEach((o, i) => {
-            if (o === false) {
-                if (i === this.dropdownItemList.length - 1) {
-                    return;
-                }
-
-                $ul.append(`<li class="divider"></li>`);
-
-                return;
-            }
-
-            const $a = $('<a>')
-                .attr('role', 'button')
-                .attr('tabindex', '0')
-                .attr('data-name', o.name);
-
-            if (o.text) {
-                $a.text(o.text);
-            }
-
-            if (o.title) {
-                $a.attr('title', o.title);
-            }
-
-            if (o.html) {
-                $a.html(o.html);
-            }
-
-            const $li = $('<li>')
-                .addClass(o.hidden ? ' hidden' : '')
-                .append($a);
-
-            $ul.append($li);
-        });
-
-        if ($ul.children().length) {
-            $main.append($dropdown);
-        }
-
-        if ($additional.children().length) {
-            $footer.append($additional);
-        }
-
-        $footer.append($main);
-
-        return $footer;
+        this.footerVNode = patch(this.footerVNode ?? this.footerElement, this.footerComponent.node());
     }
 
     /**
@@ -860,3 +769,125 @@ class Dialog {
 }
 
 export default Dialog;
+
+
+class FooterComponent {
+
+    constructor(
+        private options: {
+            dataProvider: () => {
+                buttonList: DialogButton[];
+                dropdownItemList: (DialogButton | false)[];
+            }
+        },
+        private dialog: Dialog,
+    ) {}
+
+    protected getPreparedData() {
+        const data = this.options.dataProvider();
+
+        const buttonList = data.buttonList.filter(it => !it.hidden);
+
+        const dropdownItemList = data.dropdownItemList
+            .filter(it => it === false || !it.hidden)
+            .filter((it, i, list) => {
+                if (it === false && (i === 0 || i === list.length - 1)) {
+                    return false;
+                }
+
+                if (it === false && list[i - 1] === false) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        return {buttonList, dropdownItemList};
+    }
+
+    node() {
+        const data = this.getPreparedData();
+
+        const elements: any[] = [];
+
+        const left: any[] = [];
+        const right: any[] = [];
+        const lis: any[] = [];
+
+        data.buttonList.forEach(it => {
+            const button = new ButtonComponent({
+                name: it.name,
+                className: it.className ?? 'btn-xs-wide',
+                style: it.style,
+                title: it.title,
+                hidden: it.hidden,
+                disabled: it.disabled,
+                text: it.text,
+                html: it.html,
+                onClick: event => {
+                    if (it.onClick) {
+                        it.onClick(this.dialog, event);
+                    }
+                },
+            }).node();
+
+            it.pullLeft || it.position === 'right' ?
+                right.push(button) :
+                left.push(button);
+        });
+
+        data.dropdownItemList.forEach(it => {
+            if (it === false) {
+                lis.push(
+                    h('li', {class: {'divider': true}})
+                );
+
+                return;
+            }
+
+            lis.push(
+                new DropdownItemComponent({
+                    name: it.name,
+                    title: it.title,
+                    hidden: it.hidden,
+                    disabled: it.disabled,
+                    text: it.text,
+                    html: it.html,
+                    onClick: event => {
+                        if (it.onClick) {
+                            it.onClick(this.dialog, event);
+                        }
+                    },
+                }).node()
+            )
+        });
+
+        if (lis.length) {
+            left.push(
+                h(
+                    'button',
+                    {
+                        key: '_menu-dropdown-button',
+                        attrs: {type: 'button'},
+                        props: {
+                            className: 'btn btn-default dropdown-toggle',
+                        },
+                        dataset: {toggle: 'dropdown'},
+                    },
+                    h('span', {props: {className: 'fas fa-ellipsis-h'}})
+                ),
+                h('ul', {props: {className: 'dropdown-menu pull-right'}}, lis)
+            );
+        }
+
+        elements.push(
+            h('div', {props: {className: 'btn-group main-btn-group'}}, left),
+        );
+
+        elements.push(
+            h('div', {props: {className: 'btn-group additional-btn-group'}}, right),
+        );
+
+        return h('footer', {props: {className: 'modal-footer'}}, elements);
+    }
+}

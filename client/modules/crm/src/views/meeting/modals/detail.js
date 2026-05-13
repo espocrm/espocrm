@@ -225,26 +225,7 @@ class MeetingModalDetailView extends DetailModalView {
 
     showAcceptanceButton() {
         this.showActionItem('setAcceptanceStatus');
-
-        if (!this.isRendered()) {
-            this.once('after:render', this.showAcceptanceButton, this);
-
-            return;
-        }
-
-        const data = this.getAcceptanceButtonData();
-
-        const $button = this.$el.find('.modal-footer [data-name="setAcceptanceStatus"]');
-
-        $button.html(data.html);
-
-        $button.removeClass('btn-default');
-        $button.removeClass('btn-success');
-        $button.removeClass('btn-warning');
-        $button.removeClass('btn-info');
-        $button.removeClass('btn-primary');
-        $button.removeClass('btn-danger');
-        $button.addClass('btn-' + data.style);
+        this.updateActionItem('setAcceptanceStatus', this.getAcceptanceButtonData());
     }
 
     hideAcceptanceButton() {
