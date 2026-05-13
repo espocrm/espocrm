@@ -54,7 +54,7 @@ class Extension extends RecordBase
      */
     public function postActionUpload(Request $request): stdClass
     {
-        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
+        if ($this->config->get('restrictedMode')) {
             throw new Forbidden();
         }
 

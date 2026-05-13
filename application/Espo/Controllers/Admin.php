@@ -101,10 +101,7 @@ class Admin
      */
     public function postActionUploadUpgradePackage(Request $request): object
     {
-        if (
-            $this->config->get('restrictedMode') &&
-            !$this->user->isSuperAdmin()
-        ) {
+        if ($this->config->get('restrictedMode')) {
             throw new Forbidden();
         }
 
