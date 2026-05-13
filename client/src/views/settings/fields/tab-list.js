@@ -232,35 +232,6 @@ class TabListFieldView extends ArrayFieldView {
         );
 
         return div.outerHTML;
-
-
-        return $('<div>')
-            .addClass('list-group-item')
-            .attr('data-value', item.id)
-            .css('cursor', 'default')
-            .append(
-                $('<a>')
-                    .attr('role', 'button')
-                    .attr('tabindex', '0')
-                    .attr('data-value', item.id)
-                    .attr('data-action', 'editGroup')
-                    .css('margin-right', '7px')
-                    .append(
-                        $('<span>').addClass('fas fa-pencil-alt fa-sm')
-                    ),
-                $item,
-                '&nbsp;',
-                $('<a>')
-                    .addClass('pull-right')
-                    .attr('role', 'button')
-                    .attr('tabindex', '0')
-                    .attr('data-value', item.id)
-                    .attr('data-action', 'removeValue')
-                    .append(
-                        $('<span>').addClass('fas fa-times')
-                    )
-            )
-            .get(0).outerHTML;
     }
 
     fetchFromDom() {
