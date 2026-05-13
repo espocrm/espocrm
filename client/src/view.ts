@@ -96,10 +96,7 @@ export default class View<S extends ViewSchema = ViewSchema> extends BullView<S[
      * @param options Options.
      */
     constructor(
-        options: Record<string, any> & S['options'] & {
-            model?: S['model'],
-            collection?: S['collection'],
-        } = {}
+        options: Record<string, any> & S['options'] = {}
     ) {
         super(options);
 

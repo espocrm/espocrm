@@ -48,7 +48,7 @@ export interface BaseOptions {
     /**
      * A model.
      */
-    model?: import('model').default;
+    model?: Model
     /**
      * Disabled inline edit.
      */
