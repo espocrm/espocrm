@@ -662,12 +662,12 @@
         "actionClassName": "Espo\\Tools\\Stream\\Api\\GetStreamAttachments"
     },
     {
-        "route": "/:Note/:id/pin",
+        "route": "/Note/:id/pin",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Stream\\Api\\PostNotePin"
     },
     {
-        "route": "/:Note/:id/pin",
+        "route": "/Note/:id/pin",
         "method": "delete",
         "actionClassName": "Espo\\Tools\\Stream\\Api\\DeleteNotePin"
     },
