@@ -564,6 +564,9 @@ class Step1ImportView extends View {
         $container.empty().append($table);
     }
 
+    /**
+     * @todo Use a better alternative that can parse double quotes.
+     */
     csvToArray(strData, strDelimiter, strQualifier) {
         strDelimiter = (strDelimiter || ',');
         strQualifier = (strQualifier || '\"');
