@@ -51,6 +51,11 @@
             "noEmptyString": true,
             "duplicateIgnore": true
         },
+        "fetchValidityNumber": {
+            "type": "int",
+            "readOnly": true,
+            "default": 0
+        },
         "fetchSince": {
             "type": "date",
             "validatorClassNameList": [

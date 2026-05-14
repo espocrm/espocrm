@@ -493,6 +493,22 @@
         "actionClassName": "Espo\\Tools\\User\\Api\\PutTeamUserPosition"
     },
     {
+        "route": "EmailAccount/:id/resetFetchData",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\EmailAccount\\Api\\PostResetFetchData",
+        "params": {
+            "entityType": "EmailAccount"
+        }
+    },
+    {
+        "route": "InboundEmail/:id/resetFetchData",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\EmailAccount\\Api\\PostResetFetchData",
+        "params": {
+            "entityType": "InboundEmail"
+        }
+    },
+    {
         "route": "/Oidc/authorizationData",
         "method": "get",
         "params": {

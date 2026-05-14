@@ -14,6 +14,15 @@
             "name": "active"
         }
     ],
+    "detailActionList": [
+        {
+            "name": "resetFetchData",
+            "label": "Reset",
+            "acl": "edit",
+            "handler": "handlers/email-account/reset-fetch-data-action",
+            "actionFunction": "process"
+        }
+    ],
     "relationshipPanels": {
         "filters": {
             "select": false,

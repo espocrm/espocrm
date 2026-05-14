@@ -71,6 +71,11 @@
         "keepFetchedEmailsUnread": {
             "type": "bool"
         },
+        "fetchValidityNumber": {
+            "type": "int",
+            "readOnly": true,
+            "default": 0
+        },
         "fetchSince": {
             "type": "date",
             "validatorClassNameList": [

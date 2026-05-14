@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,32 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+import ActionHandler from 'action-handler';
+import {inject} from 'di';
+import Language from 'language';
+import ResetFetchDataModalView from 'views/email-account/modals/reset-fetch-data';
 
-use Espo\Core\Mail\Account\GroupAccount\Service;
-use Espo\Core\Job\Job;
-use Espo\Core\Job\Job\Data;
+export default class ResetFetchDataActionHandler extends ActionHandler {
 
-use RuntimeException;
-use Throwable;
+    /**
+     * @private
+     * @type {Language}
+     */
+    @inject(Language)
+    language
 
-class CheckInboundEmails implements Job
-{
-    public function __construct(private Service $service)
-    {}
+    async process() {
+        const model = this.view.model;
 
-    public function run(Data $data): void
-    {
-        $targetId = $data->getTargetId();
+        const view = new ResetFetchDataModalView({
+            model: model,
+        });
 
-        if (!$targetId) {
-            throw new RuntimeException("No target.");
-        }
-
-        try {
-            $this->service->fetch($targetId);
-        } catch (Throwable $e) {
-            throw new RuntimeException("CheckInboundEmails job failed, $targetId.", 0, $e);
-        }
+        await this.view.assignView('dialog', view);
+        await view.render();
     }
 }
+

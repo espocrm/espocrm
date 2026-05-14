@@ -61,6 +61,7 @@
         "active": "Active"
     },
     "messages": {
+        "resetFetchData": "Emails will be re-fetched starting from the specified date. Existing emails will not be duplicated.",
         "noFolder": "Mapped folder does not exist.",
         "couldNotConnectToImap": "Could not connect to IMAP server",
         "connectionIsOk": "Connection is Ok",

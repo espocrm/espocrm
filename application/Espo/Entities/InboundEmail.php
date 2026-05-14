@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Mail\Account\FetchData;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 
@@ -47,6 +48,9 @@ class InboundEmail extends Entity
     public const CASE_DISTRIBUTION_DIRECT_ASSIGNMENT = 'Direct-Assignment';
     public const CASE_DISTRIBUTION_ROUND_ROBIN = 'Round-Robin';
     public const CASE_DISTRIBUTION_LEAST_BUSY = 'Least-Busy';
+
+    public const string FIELD_FETCH_VALIDITY_NUMBER = 'fetchValidityNumber';
+    public const string FIELD_FETCH_DATA = 'fetchData';
 
     public function isAvailableForFetching(): bool
     {
@@ -134,6 +138,29 @@ class InboundEmail extends Entity
     public function keepFetchedEmailsUnread(): bool
     {
         return (bool) $this->get('keepFetchedEmailsUnread');
+    }
+
+    /**
+     * @since 10.0.0
+     */
+    public function getFetchValidityNumber(): int
+    {
+        return $this->get(InboundEmail::FIELD_FETCH_VALIDITY_NUMBER);
+    }
+
+    public function setFetchSince(Date $fetchSince): self
+    {
+        return $this->setValueObject('fetchSince', $fetchSince);
+    }
+
+    public function setFetchData(FetchData $data): self
+    {
+        return $this->set('fetchData', $data->getRaw());
+    }
+
+    public function setFetchValidityNumber(int $number): self
+    {
+        return $this->set(InboundEmail::FIELD_FETCH_VALIDITY_NUMBER, $number);
     }
 
     public function getFetchData(): stdClass

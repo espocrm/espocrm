@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
@@ -39,6 +40,7 @@ use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Crypt;
 use Espo\Entities\GroupEmailFolder;
@@ -49,7 +51,9 @@ use Espo\ORM\EntityManager;
 use Espo\Core\Mail\Account\Account as AccountInterface;
 use Espo\Core\Mail\Account\FetchData;
 
+use Espo\ORM\Mapper\Util;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\UpdateBuilder;
 use RuntimeException;
 
 class Account implements AccountInterface
@@ -70,9 +74,24 @@ class Account implements AccountInterface
 
     public function updateFetchData(FetchData $fetchData): void
     {
-        $this->entity->set('fetchData', $fetchData->getRaw());
+        $query = UpdateBuilder::create()
+            ->in(InboundEmail::ENTITY_TYPE)
+            ->where([
+                InboundEmail::FIELD_FETCH_VALIDITY_NUMBER => $fetchData->getValidityNumber(),
+                Attribute::ID => $this->entity->getId(),
+                Attribute::DELETED => false,
+            ])
+            ->set([
+                InboundEmail::FIELD_FETCH_DATA => Util::prepareValue(FieldType::JSON_OBJECT, $fetchData->getRaw()),
+            ])
+            ->build();
 
-        $this->entityManager->saveEntity($this->entity, [SaveOption::SILENT => true]);
+        $sth = $this->entityManager->getQueryExecutor()->execute($query);
+
+        if ($sth->rowCount() !== 0) {
+            $this->entity->setFetchData($fetchData);
+            $this->entity->setAsFetched();
+        }
     }
 
     public function updateConnectedAt(): void
@@ -226,7 +245,8 @@ class Account implements AccountInterface
     public function getFetchData(): FetchData
     {
         return FetchData::fromRaw(
-            $this->entity->getFetchData()
+            $this->entity->getFetchData(),
+            $this->entity->getFetchValidityNumber(),
         );
     }
 

@@ -27,32 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+namespace Espo\ORM\Mapper;
 
-use Espo\Core\Mail\Account\GroupAccount\Service;
-use Espo\Core\Job\Job;
-use Espo\Core\Job\Job\Data;
+use Espo\ORM\Entity;
+use stdClass;
 
-use RuntimeException;
-use Throwable;
-
-class CheckInboundEmails implements Job
+/**
+ * @since 10.0.0
+ * @internal
+ */
+class Util
 {
-    public function __construct(private Service $service)
-    {}
-
-    public function run(Data $data): void
+    /**
+     * @internal
+     */
+    public static function prepareValue(?string $type, mixed $value): mixed
     {
-        $targetId = $data->getTargetId();
-
-        if (!$targetId) {
-            throw new RuntimeException("No target.");
+        if ($type == Entity::JSON_ARRAY && is_array($value)) {
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+        } else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof stdClass)) {
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+        } else {
+            if (is_array($value) || is_object($value)) {
+                return null;
+            }
         }
 
-        try {
-            $this->service->fetch($targetId);
-        } catch (Throwable $e) {
-            throw new RuntimeException("CheckInboundEmails job failed, $targetId.", 0, $e);
-        }
+        return $value;
     }
 }

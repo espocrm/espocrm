@@ -42,14 +42,16 @@ class FetchData
     /**
      * @internal
      */
-    public function __construct(?stdClass $data = null)
-    {
+    public function __construct(
+        ?stdClass $data = null,
+        private int $validityNumber = 0,
+    ) {
         $this->data = ObjectUtil::clone($data ?? (object) []);
     }
 
-    public static function fromRaw(stdClass $data): self
+    public static function fromRaw(stdClass $data, int $fetchNumber): self
     {
-        return new self($data);
+        return new self($data, $fetchNumber);
     }
 
     public function getRaw(): stdClass
@@ -145,5 +147,13 @@ class FetchData
         }
 
         $this->data->byDate->$folder = $forceByDate;
+    }
+
+    /**
+     * @since 10.0.0
+     */
+    public function getValidityNumber(): int
+    {
+        return $this->validityNumber;
     }
 }

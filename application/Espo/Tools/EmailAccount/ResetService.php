@@ -27,32 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Jobs;
+declare(strict_types=1);
 
-use Espo\Core\Mail\Account\GroupAccount\Service;
-use Espo\Core\Job\Job;
-use Espo\Core\Job\Job\Data;
+namespace Espo\Tools\EmailAccount;
 
-use RuntimeException;
-use Throwable;
+use Espo\Core\Field\Date;
+use Espo\Core\Mail\Account\FetchData;
+use Espo\Entities\EmailAccount;
+use Espo\Entities\InboundEmail;
+use Espo\ORM\EntityManager;
 
-class CheckInboundEmails implements Job
+class ResetService
 {
-    public function __construct(private Service $service)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
-    public function run(Data $data): void
+    public function reset(InboundEmail|EmailAccount $entity, Date $fetchSince): void
     {
-        $targetId = $data->getTargetId();
+        $number = $entity->getFetchValidityNumber();
 
-        if (!$targetId) {
-            throw new RuntimeException("No target.");
-        }
+        $entity
+            ->setFetchSince($fetchSince)
+            ->setFetchData(new FetchData())
+            ->setFetchValidityNumber($number + 1);
 
-        try {
-            $this->service->fetch($targetId);
-        } catch (Throwable $e) {
-            throw new RuntimeException("CheckInboundEmails job failed, $targetId.", 0, $e);
-        }
+        $this->entityManager->saveEntity($entity);
     }
 }
