@@ -526,6 +526,14 @@ class Import
             }
         }
 
+        $this->processAdditionalAccessCheck(
+            entity: $entity,
+            import: $import,
+            row: $row,
+            index: $index,
+            errorIndex: $errorIndex,
+        );
+
         $defaultCurrency = $params->getCurrency() ?? $this->currencyConfig->getDefaultCurrency();
 
         $fieldsDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [];
@@ -1452,5 +1460,38 @@ class Import
 
             $entity->set('emailAddressData', $emailAddressData);
         }
+    }
+
+    /**
+     * @param string[] $row
+     */
+    private function processAdditionalAccessCheck(
+        CoreEntity $entity,
+        ImportEntity $import,
+        $row,
+        int $index,
+        int $errorIndex,
+    ): void {
+
+        $noAccess = false;
+
+        if (
+            $entity instanceof User &&
+            $entity->getType() === User::TYPE_SUPER_ADMIN
+        ) {
+            $noAccess = true;
+        }
+
+        if (!$noAccess) {
+            return;
+        }
+
+        $this->createError(
+            type: ImportError::TYPE_NO_ACCESS,
+            index: $index,
+            row: $row,
+            import: $import,
+            errorIndex: $errorIndex,
+        );
     }
 }
