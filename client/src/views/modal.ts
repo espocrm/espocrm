@@ -150,7 +150,7 @@ interface ViewSchema {
 
 // noinspection JSUnusedGlobalSymbols
 export {
-    Options as ModalOptions,
+    Options as ModalViewOptions,
     ActionItem as ModalActionItem,
 };
 

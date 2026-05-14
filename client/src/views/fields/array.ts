@@ -35,7 +35,7 @@ import BaseFieldView, {
 import {StyleMap} from 'views/fields/enum';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
-import ModalView, {ModalOptions} from 'views/modal';
+import ModalView, {ModalViewOptions} from 'views/modal';
 import Model from 'model';
 import EditForModalRecordView from 'views/record/edit-for-modal';
 import VarcharFieldView from 'views/fields/varchar';
@@ -1103,7 +1103,7 @@ class ArrayFieldView<
 
 export default ArrayFieldView;
 
-interface EditModalOptions extends ModalOptions {
+interface EditModalOptions extends ModalViewOptions {
     value: string;
     maxLength: number | null;
     required: boolean;
