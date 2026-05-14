@@ -31,6 +31,8 @@ import Detail from 'views/email-account/record/detail';
 
 export default class extends EditRecordView {
 
+    hasModifyDetailLayout = true
+
     setup() {
         super.setup();
 

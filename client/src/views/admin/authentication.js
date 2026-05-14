@@ -68,6 +68,8 @@ class AdminAuthenticationRecordView extends SettingsEditRecordView {
         panels: {},
     }
 
+    hasModifyDetailLayout = true
+
     setup() {
         this.methodList = [];
 

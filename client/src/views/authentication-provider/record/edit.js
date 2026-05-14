@@ -39,6 +39,8 @@ export default class extends EditRecordView {
      */
     helper
 
+    hasModifyDetailLayout = true;
+
     setup() {
         this.helper = new Helper(this);
 

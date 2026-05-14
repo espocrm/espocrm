@@ -30,6 +30,8 @@ import DetailRecordView from 'views/record/detail';
 
 export default class extends DetailRecordView {
 
+    hasModifyDetailLayout = true
+
     setup() {
         super.setup();
 

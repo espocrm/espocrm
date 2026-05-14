@@ -691,15 +691,18 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
     private underShowMoreDetailPanelList: string[]
 
-    private modifyDetailLayout: ((items: any[]) => void) | undefined = undefined
-
     private recordUpdateWebSocketTopic: string
 
     private isSubscribedToWebSocket: boolean = false
 
     private updateWebSocketIsBlocked: boolean = false
 
-    private _hasMiddleTabs: boolean;
+    private _hasMiddleTabs: boolean
+
+    /**
+     * @internal
+     */
+    protected hasModifyDetailLayout: boolean = false
 
     /**
      * A shortcut-key => action map.
@@ -3000,7 +3003,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         this.getHelper().layoutManager.get(this.entityType, this.layoutName, (detailLayout: any) => {
-            if (typeof this.modifyDetailLayout === 'function') {
+            if (this.hasModifyDetailLayout) {
                 detailLayout = Utils.cloneDeep(detailLayout);
 
                 this.modifyDetailLayout(detailLayout);
@@ -3835,6 +3838,14 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     private reRenderButtons() {
         this.getButtonsView()?.reRender({buffer: true});
         this.getEditButtonsView()?.reRender({buffer: true});
+    }
+
+    /**
+     * @internal
+     */
+    protected modifyDetailLayout(layout: any) {
+        // noinspection BadExpressionStatementJS
+        layout;
     }
 }
 
