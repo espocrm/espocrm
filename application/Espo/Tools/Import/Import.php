@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\Currency\ConfigDataProvider as CurrencyConfig;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
@@ -52,7 +53,6 @@ use Espo\Core\FieldValidation\FieldValidationManager;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Log;
@@ -91,7 +91,6 @@ class Import
         private AclManager $aclManager,
         private EntityManager $entityManager,
         private Metadata $metadata,
-        private Config $config,
         private User $user,
         private FileStorageManager $fileStorageManager,
         private RecordServiceContainer $recordServiceContainer,
@@ -99,6 +98,7 @@ class Import
         private Log $log,
         private FieldValidationManager $fieldValidationManager,
         private PhoneNumberSanitizer $phoneNumberSanitizer,
+        private CurrencyConfig $currencyConfig,
 
     ) {
         $this->params = Params::create();
@@ -182,6 +182,7 @@ class Import
 
     /**
      * Run import.
+     *
      * @throws Error
      * @throws Forbidden
      */
@@ -251,7 +252,7 @@ class Import
             /** @var ImportEntity $import */
             $import = $this->entityManager->getNewEntity(ImportEntity::ENTITY_TYPE);
 
-            $import->set([
+            $import->setMultiple([
                 'entityType' => $this->entityType,
                 'fileId' => $this->attachmentId,
             ]);
@@ -463,10 +464,10 @@ class Import
             ) {
                 $this->createError(
                     ImportError::TYPE_NO_ACCESS,
-                    $index,
-                    $row,
-                    $import,
-                    $errorIndex
+                    index: $index,
+                    row: $row,
+                    import: $import,
+                    errorIndex: $errorIndex,
                 );
 
                 return ['isError' => true];
@@ -474,11 +475,11 @@ class Import
 
             if (!$entity && $action === Params::ACTION_UPDATE) {
                 $this->createError(
-                    ImportError::TYPE_NOT_FOUND,
-                    $index,
-                    $row,
-                    $import,
-                    $errorIndex
+                    type: ImportError::TYPE_NOT_FOUND,
+                    index: $index,
+                    row: $row,
+                    import: $import,
+                    errorIndex: $errorIndex,
                 );
 
                 return ['isError' => true];
@@ -487,8 +488,8 @@ class Import
             if (!$entity) {
                 $entity = $this->entityManager->getNewEntity($this->entityType);
 
-                if (array_key_exists('id', $whereClause)) {
-                    $entity->set('id', $whereClause['id']);
+                if (array_key_exists(Attribute::ID, $whereClause)) {
+                    $entity->set(Attribute::ID, $whereClause[Attribute::ID]);
                 }
             }
         } else {
@@ -525,14 +526,14 @@ class Import
             }
         }
 
-        $defaultCurrency = $params->getCurrency() ?? $this->config->get('defaultCurrency');
+        $defaultCurrency = $params->getCurrency() ?? $this->currencyConfig->getDefaultCurrency();
 
         $fieldsDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [];
 
         foreach ($fieldsDefs as $field => $defs) {
             $fieldType = $defs['type'] ?? null;
 
-            if ($fieldType === 'currency') {
+            if ($fieldType === FieldType::CURRENCY) {
                 if ($entity->has($field) && !$entity->get($field . 'Currency')) {
                     $entity->set($field . 'Currency', $defaultCurrency);
                 }
@@ -550,12 +551,12 @@ class Import
 
             if ($failureList !== []) {
                 $this->createError(
-                    ImportError::TYPE_VALIDATION,
-                    $index,
-                    $row,
-                    $import,
-                    $errorIndex,
-                    $failureList
+                    type: ImportError::TYPE_VALIDATION,
+                    index: $index,
+                    row: $row,
+                    import: $import,
+                    errorIndex: $errorIndex,
+                    failureList: $failureList,
                 );
 
                 return ['isError' => true];
@@ -611,11 +612,11 @@ class Import
             $this->log->error($msg);
 
             $this->createError(
-                $errorType,
-                $index,
-                $row,
-                $import,
-                $errorIndex
+                type: $errorType,
+                index: $index,
+                row: $row,
+                import: $import,
+                errorIndex: $errorIndex,
             );
 
             return ['isError' => true];
@@ -711,7 +712,7 @@ class Import
         CoreEntity $entity,
         string $attribute,
         string $value,
-        stdClass $valueMap
+        stdClass $valueMap,
     ): void {
 
         assert(is_string($this->entityType));
@@ -796,10 +797,6 @@ class Import
         if ($type !== Entity::BOOL && $value === '') {
             return null;
         }
-
-        /*if ($type !== Entity::BOOL && strtolower($value) === 'null') {
-            return null;
-        }*/
 
         $fieldDefs = $this->entityManager
             ->getDefs()
@@ -1000,6 +997,7 @@ class Import
 
             case 'l f m':
                 $pos = strpos($value, ' ');
+
                 if ($pos) {
                     $lastName = trim(substr($value, 0, $pos));
                     $firstName = trim(substr($value, $pos + 1));
@@ -1035,8 +1033,9 @@ class Import
     private function readCsvString(
         string &$string,
         string $separator = ';',
-        string $enclosure = '"'
+        string $enclosure = '"',
     ): array {
+
         $o = [];
 
         $cnt = strlen($string);
@@ -1063,7 +1062,6 @@ class Import
                 } else {
                     $num++;
 
-                    //$esc = false;
                     $escEsc = false;
                 }
             } else if ($s == $enclosure) {
@@ -1125,8 +1123,9 @@ class Import
         array $row,
         ImportEntity $import,
         int &$errorIndex,
-        ?array $failureList = null
+        ?array $failureList = null,
     ): void {
+
         $validationFailures = null;
 
         if ($type === ImportError::TYPE_VALIDATION && $failureList !== null) {
@@ -1287,7 +1286,7 @@ class Import
         Params $params,
         CoreEntity $entity,
         string $attribute,
-        string $value
+        string $value,
     ): void {
 
         $firstNameAttribute = 'first' . ucfirst($attribute);
@@ -1336,7 +1335,7 @@ class Import
             $value = substr($value, 1);
         }
 
-        $o = (object)[
+        $o = (object) [
             'phoneNumber' => $this->formatPhoneNumber($value, $params),
             'primary' => true,
         ];
@@ -1350,7 +1349,7 @@ class Import
         $emailAddressData = $entity->get('emailAddressData');
         $emailAddressData = $emailAddressData ?? [];
 
-        $o = (object)[
+        $o = (object) [
             'emailAddress' => $value,
             'primary' => true,
         ];
@@ -1365,7 +1364,7 @@ class Import
         CoreEntity $entity,
         string $attribute,
         string $value,
-        stdClass $valueMap
+        stdClass $valueMap,
     ): bool {
 
         assert(is_string($this->entityType));
@@ -1403,7 +1402,7 @@ class Import
                 $value = substr($value, 1);
             }
 
-            $phoneNumberData[] = (object)[
+            $phoneNumberData[] = (object) [
                 'phoneNumber' => $this->formatPhoneNumber($value, $params),
                 'type' => $type,
                 'primary' => $isPrimary,
@@ -1421,7 +1420,7 @@ class Import
         CoreEntity $entity,
         string $attribute,
         string $value,
-        stdClass $valueMap
+        stdClass $valueMap,
     ): void {
 
         if (
@@ -1444,7 +1443,7 @@ class Import
                 }
             }
 
-            $o = (object)[
+            $o = (object) [
                 'emailAddress' => $value,
                 'primary' => $isPrimary,
             ];
