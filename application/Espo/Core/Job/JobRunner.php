@@ -131,7 +131,7 @@ class JobRunner
 
             $jobId = $jobEntity->hasId() ? $jobEntity->getId() : null;
 
-            $this->log->critical("Failed job {id}. {message}", [
+            $this->log->critical("Failed job {id}.", [
                 'exception' => $e,
                 'message' => $e->getMessage(),
                 Attribute::ID => $jobId,
