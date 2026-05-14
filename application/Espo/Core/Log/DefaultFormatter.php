@@ -37,8 +37,8 @@ use Throwable;
 
 class DefaultFormatter extends LineFormatter
 {
-    private const LINE_FORMAT = "[%datetime%] %level_name%: %code% %message% %request% %exception%\n";
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
+    private const string LINE_FORMAT = "[%datetime%] %level_name%: %code% %message% %request% %exception%\n";
+    private const string DATE_FORMAT = 'Y-m-d H:i:s';
 
     public function __construct(
         private bool $includeTraces = false,
@@ -124,7 +124,6 @@ class DefaultFormatter extends LineFormatter
             }
         }
 
-        $line = strtr($line, $replace);
-        return $line;
+        return strtr($line, $replace);
     }
 }
