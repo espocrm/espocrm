@@ -133,9 +133,8 @@ class Service
             $storage = $this->storageFactory->createWithParams($params);
             $storage->getFolderNames();
         } catch (Exception $e) {
-            $this->log->warning("IMAP test connection failed; {message}", [
+            $this->log->warning("IMAP test connection failed.", [
                 'exception' => $e,
-                'message' => $e->getMessage(),
             ]);
 
             $message = $e instanceof ImapError ?

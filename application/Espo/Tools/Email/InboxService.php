@@ -99,7 +99,7 @@ class InboxService
             try {
                 $this->moveToGroupFolder($email, substr($folderId, 6), $user);
             } catch (Exception $e) {
-                $this->log->debug("Could not move email to group folder. {message}", ['message' => $e->getMessage()]);
+                $this->log->debug("Could not move email to group folder.", ['exception' => $e]);
 
                 throw $e;
             }

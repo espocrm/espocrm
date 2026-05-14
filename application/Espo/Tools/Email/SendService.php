@@ -234,7 +234,7 @@ class SendService
 
             $this->entityManager->saveEntity($entity, [SaveOption::SILENT => true]);
 
-            $this->log->error("Email sending: " . $e->getMessage(), ['exception' => $e]);
+            $this->log->error("Email sending error.", ['exception' => $e]);
 
             $errorData = [
                 'id' => $entity->getId(),

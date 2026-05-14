@@ -160,9 +160,9 @@ class LdapLogin implements Login
         } catch (Exception $e) {
             $options = $this->utils->getLdapClientOptions();
 
-            $this->log->error("LDAP: Could not connect to LDAP server host. {message}", [
+            $this->log->error("LDAP: Could not connect to LDAP server host.", [
                 'host' => $options['host'],
-                'message' => $e->getMessage()
+                'exception' => $e,
             ]);
 
             /** @var string $username */
@@ -186,9 +186,9 @@ class LdapLogin implements Login
             try {
                 $userDn = $this->findLdapUserDnByUsername($username);
             } catch (Exception $e) {
-                $this->log->error("Error while finding DN for '{username}'. {message}", [
+                $this->log->error("Error while finding DN for '{username}'.", [
                     'username' => $username,
-                    'message' => $e->getMessage(),
+                    'exception' => $e,
                 ]);
             }
 
@@ -216,9 +216,9 @@ class LdapLogin implements Login
             try {
                 $ldapClient->bind($userDn, $password);
             } catch (Exception $e) {
-                $this->log->error("LDAP: Authentication failed for '{username}'. {message}", [
+                $this->log->error("LDAP: Authentication failed for '{username}'.", [
                     'username' => $username,
-                    'message' => $e->getMessage(),
+                    'exception' => $e,
                 ]);
 
                 return Result::fail();
@@ -268,7 +268,7 @@ class LdapLogin implements Login
             try {
                 $this->client = $this->clientFactory->create($options);
             } catch (Exception $e) {
-                $this->log->error("LDAP error. {message}", ['message' => $e->getMessage()]);
+                $this->log->error("LDAP error.", ['exception' => $e]);
             }
         }
 

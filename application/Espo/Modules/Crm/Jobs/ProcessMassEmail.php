@@ -70,9 +70,8 @@ class ProcessMassEmail implements JobDataLess
             try {
                 $this->queue->create($massEmail);
             } catch (Throwable $e) {
-                $this->log->error("Create queue error. {id}. {message}", [
+                $this->log->error("Create queue error. {id}.", [
                     'id' => $massEmail->getId(),
-                    'message' => $e->getMessage(),
                     'exception' => $e,
                 ]);
             }
@@ -92,9 +91,8 @@ class ProcessMassEmail implements JobDataLess
             try {
                 $this->processor->process($massEmail);
             } catch (Throwable $e) {
-                $this->log->error("Sending mass email error. {id}. {message}", [
+                $this->log->error("Sending mass email error. {id}.", [
                     'id' => $massEmail->getId(),
-                    'message' => $e->getMessage(),
                     'exception' => $e,
                 ]);
             }

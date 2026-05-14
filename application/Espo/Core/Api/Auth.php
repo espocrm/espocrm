@@ -241,7 +241,7 @@ class Auth
             }
 
             if ($e->getMessage()) {
-                $this->log->notice("Auth exception: {message}", ['message' => $e->getMessage()]);
+                $this->log->notice("Auth exception.", ['exception' => $e]);
             }
 
             return;

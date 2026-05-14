@@ -133,7 +133,6 @@ class JobRunner
 
             $this->log->critical("Failed job {id}.", [
                 'exception' => $e,
-                'message' => $e->getMessage(),
                 Attribute::ID => $jobId,
             ]);
 

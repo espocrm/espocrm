@@ -283,10 +283,9 @@ class Queue
         } catch (Exception $e) {
             $this->failQueueItemList($itemList, true);
 
-            $this->log->error("Webhook Queue: Webhook '{id}' sending failed; {message}", [
+            $this->log->error("Webhook Queue: Webhook '{id}' sending failed.", [
                 'exception' => $e,
                 'id' => $webhook->getId(),
-                'message' => $e->getMessage(),
             ]);
 
             return;
