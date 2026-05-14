@@ -38,9 +38,9 @@ use TypeError;
  */
 class Params
 {
-    public const ACTION_CREATE = 'create';
-    public const ACTION_CREATE_AND_UPDATE = 'createAndUpdate';
-    public const ACTION_UPDATE = 'update';
+    public const string ACTION_CREATE = 'create';
+    public const string ACTION_CREATE_AND_UPDATE = 'createAndUpdate';
+    public const string ACTION_UPDATE = 'update';
 
     private ?string $action = null;
     private ?string $delimiter = null;

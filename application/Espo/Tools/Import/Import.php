@@ -72,15 +72,15 @@ use PDOException;
 
 class Import
 {
-    private const DEFAULT_DELIMITER = ',';
-    private const DEFAULT_TEXT_QUALIFIER = '"';
-    private const DEFAULT_ACTION = Params::ACTION_CREATE;
-    private const DEFAULT_DECIMAL_MARK = '.';
-    private const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
-    private const DEFAULT_TIME_FORMAT = 'HH:mm';
+    private const string DEFAULT_DELIMITER = ',';
+    private const string DEFAULT_TEXT_QUALIFIER = '"';
+    private const string DEFAULT_ACTION = Params::ACTION_CREATE;
+    private const string DEFAULT_DECIMAL_MARK = '.';
+    private const string DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
+    private const string DEFAULT_TIME_FORMAT = 'HH:mm';
 
     /** @var string[] */
-    private $attributeList = [];
+    private array $attributeList = [];
     private Params $params;
 
     private ?string $id = null;
@@ -98,7 +98,7 @@ class Import
         private JobSchedulerFactory $jobSchedulerFactory,
         private Log $log,
         private FieldValidationManager $fieldValidationManager,
-        private PhoneNumberSanitizer $phoneNumberSanitizer
+        private PhoneNumberSanitizer $phoneNumberSanitizer,
 
     ) {
         $this->params = Params::create();
@@ -572,7 +572,6 @@ class Import
             }
 
             if ($entity->hasId()) {
-                /** @noinspection PhpDeprecationInspection */
                 $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
                     ->deleteFromDb($entity->getId(), true);
