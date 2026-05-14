@@ -546,6 +546,7 @@ class Converter
                 AttributeParam::TYPE => Entity::INT,
                 AttributeParam::DB_TYPE => Types::BIGINT,
                 CoreAttributeParam::NOT_EXPORTABLE => true,
+                AttributeParam::DEFAULT => 0,
             ];
         }
 
