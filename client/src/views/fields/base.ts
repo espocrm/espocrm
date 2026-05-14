@@ -119,7 +119,7 @@ export default class BaseFieldView<
     /**
      * @param options Options.
      */
-    constructor(options: {[s: string]: unknown} & O & {params: P}) {
+    constructor(options: {[s: string]: unknown} & O & {params?: P}) {
         super(options);
 
         this.name = options.name;

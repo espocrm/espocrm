@@ -93,7 +93,7 @@ type User = import('models/user').default;
 /**
  * A model.
  */
-export default class Model<T extends Record<string, unknown> = Record<string, any>> {
+export default class Model<T extends Record<string, any> = Record<string, any>> {
 
     /**
      * A root URL. An ID will be appended. Used for syncing with backend.
