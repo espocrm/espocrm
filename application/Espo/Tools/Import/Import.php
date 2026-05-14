@@ -501,7 +501,7 @@ class Import
 
         $isNew = $entity->isNew();
 
-        $entity->set($params->getDefaultValues());
+        $entity->setMultiple($params->getDefaultValues());
 
         // Values are not supposed to be sanitized with the field Sanitizer.
         $valueMap = $this->prepareRowValueMap($attributeList, $row);
