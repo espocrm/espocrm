@@ -45,6 +45,8 @@ class User extends Person
 
     /** @since 10.0.0 */
     public const string FIELD_USER_NAME = 'userName';
+    /** @since 10.0.0 */
+    public const string FIELD_PASSWORD = 'password';
 
     public const LINK_ACCOUNTS = 'accounts';
     public const LINK_CONTACT = 'contact';
@@ -63,6 +65,7 @@ class User extends Person
 
     public const RELATIONSHIP_ENTITY_USER = 'EntityUser';
     public const RELATIONSHIP_ENTITY_COLLABORATOR = 'EntityCollaborator';
+
 
     public function get(string $attribute): mixed
     {
@@ -317,7 +320,7 @@ class User extends Person
      */
     public function getPassword(): string
     {
-        return $this->get('password') ?? '';
+        return $this->get(self::FIELD_PASSWORD) ?? '';
     }
 
     private function getNameInternal(): ?string

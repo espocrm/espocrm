@@ -194,34 +194,15 @@ class Import
 
         $attributeList = $this->attributeList;
 
-        $delimiter = str_replace(
-            '\t',
-            "\t",
-            $params->getDelimiter() ?? self::DEFAULT_DELIMITER
-        );
-
+        $delimiter = $this->prepareDelimiter($params);
         $enclosure = $params->getTextQualifier() ?? self::DEFAULT_TEXT_QUALIFIER;
+
+        $this->applyAcl($attributeList);
 
         assert(is_string($this->entityType));
         assert(is_string($this->attachmentId));
 
-        if (!$this->user->isAdmin()) {
-            $forbiddenAttributeList =
-                $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, Table::ACTION_EDIT);
-
-            foreach ($attributeList as $i => $attribute) {
-                if (in_array($attribute, $forbiddenAttributeList)) {
-                    unset($attributeList[$i]);
-                }
-            }
-
-            if (!$this->aclManager->checkScope($this->user, $this->entityType, Table::ACTION_CREATE)) {
-                throw new Forbidden("Import: Create is forbidden for $this->entityType.");
-            }
-        }
-
-        /** @var ?Attachment $attachment */
-        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $this->attachmentId);
+        $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getById($this->attachmentId);
 
         if (!$attachment) {
             throw new Error('Import: Attachment not found.');
@@ -229,15 +210,14 @@ class Import
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
-        if (empty($contents)) {
+        if (!$contents) {
             throw new Error('Import: Empty contents.');
         }
 
         $startFromIndex = null;
 
         if ($this->id) {
-            /** @var ?ImportEntity $import */
-            $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $this->id);
+            $import = $this->entityManager->getRepositoryByClass(ImportEntity::class)->getById($this->id);
 
             if (!$import) {
                 throw new Error('Import: Could not find import record.');
@@ -1493,5 +1473,50 @@ class Import
             import: $import,
             errorIndex: $errorIndex,
         );
+    }
+
+    /**
+     * @param string[] $attributeList
+     * @throws Forbidden
+     */
+    private function applyAcl(array &$attributeList): void
+    {
+        $entityType = $this->entityType ?? throw new LogicException();
+
+        $forbiddenAttributeList =
+            $this->aclManager->getScopeForbiddenAttributeList($this->user, $entityType, Table::ACTION_EDIT);
+
+        foreach ($attributeList as $k => $attribute) {
+            if (in_array($attribute, $forbiddenAttributeList)) {
+                unset($attributeList[$k]);
+            }
+        }
+
+        if ($entityType === User::ENTITY_TYPE) {
+            $this->unsetUserAttributeList($attributeList);
+        }
+
+        if (!$this->aclManager->checkScope($this->user, $entityType, Table::ACTION_CREATE)) {
+            throw new Forbidden("Import: Create is forbidden for $entityType.");
+        }
+    }
+
+    private function prepareDelimiter(Params $params): string
+    {
+        return str_replace('\t', "\t", $params->getDelimiter() ?? self::DEFAULT_DELIMITER);
+    }
+
+    /**
+     * @param string[] $attributeList
+     */
+    private function unsetUserAttributeList(array &$attributeList): void
+    {
+        $restrictedAttributes = [
+            User::FIELD_PASSWORD,
+        ];
+
+        foreach ($restrictedAttributes as $attribute) {
+            unset($attributeList[$attribute]);
+        }
     }
 }
