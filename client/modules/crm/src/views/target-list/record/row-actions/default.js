@@ -33,7 +33,11 @@ define('crm:views/target-list/record/row-actions/default', ['views/record/row-ac
         getActionList: function () {
             const list = Dep.prototype.getActionList.call(this);
 
-            if (this.options.acl.edit) {
+            if (
+                this.model.collection &&
+                this.model.collection.parentModel &&
+                this.getAcl().checkModel(this.model.collection.parentModel, 'edit')
+            ) {
                 if (this.model.get('targetListIsOptedOut')) {
                     list.push({
                         action: 'cancelOptOut',
