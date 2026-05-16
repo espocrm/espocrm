@@ -438,6 +438,8 @@ class Service
             throw new NotFound();
         }
 
+        $this->getImport($importId);
+
         $entity->set('isDuplicate', false);
 
         $this->entityManager->saveEntity($entity);
