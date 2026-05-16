@@ -66,12 +66,7 @@ class OptOutService
     public function optOut(string $id, string $targetType, string $targetId): void
     {
         $targetList = $this->getTargetListForEdit($id);
-
-        $target = $this->entityManager->getEntityById($targetType, $targetId);
-
-        if (!$target) {
-            throw new NotFound();
-        }
+        $target = $this->entityProvider->get($targetType, $targetId);
 
         $map = $this->metadataProvider->getEntityTypeLinkMap();
 
@@ -82,9 +77,8 @@ class OptOutService
         $link = $map[$targetType];
 
         $this->entityManager
-            ->getRDBRepository(TargetList::ENTITY_TYPE)
             ->getRelation($targetList, $link)
-            ->relateById($targetId, ['optedOut' => true]);
+            ->relateById($target->getId(), ['optedOut' => true]);
 
         $hookData = [
             'link' => $link,
@@ -104,12 +98,7 @@ class OptOutService
     public function cancelOptOut(string $id, string $targetType, string $targetId): void
     {
         $targetList = $this->getTargetListForEdit($id);
-
-        $target = $this->entityManager->getEntityById($targetType, $targetId);
-
-        if (!$target) {
-            throw new NotFound();
-        }
+        $target = $this->entityProvider->get($targetType, $targetId);
 
         $map = $this->metadataProvider->getEntityTypeLinkMap();
 
@@ -121,7 +110,7 @@ class OptOutService
 
         $this->entityManager
             ->getRelation($targetList, $link)
-            ->updateColumnsById($targetId, ['optedOut' => false]);
+            ->updateColumnsById($target->getId(), ['optedOut' => false]);
 
         $hookData = [
             'link' => $link,
