@@ -100,6 +100,10 @@ class AccessChecker implements AccessEntityCREDChecker
         $parentId = $entity->getParentId();
         $parentType = $entity->getParentType();
 
+        if ($entity->isInternal()) {
+            return false;
+        }
+
         if ($parentId && $parentType) {
             $parent = $this->entityManager->getEntityById($parentType, $parentId);
 
