@@ -94,7 +94,7 @@
         },
         "transactionalSave": {
             "type": "boolean",
-            "description": "Enables record saving and removing in a DB transaction. As of v9.4."
+            "description": "Enables record saving and removing in a DB transaction. As of v10.0."
         },
         "entityClassName": {
             "type": "string",
@@ -498,7 +498,7 @@
                             },
                             "protocolRequired": {
                                 "type": "boolean",
-                                "description": "Require protocol. As of v9.4."
+                                "description": "Require protocol. As of v10.0."
                             }
                         }
                     }
@@ -1032,7 +1032,7 @@
                     "items": {
                         "type": "string"
                     },
-                    "description": "Change of any of the listed fields triggers the validation. As of v9.4."
+                    "description": "Change of any of the listed fields triggers the validation. As of v10.0."
                 },
                 "validatorClassNameMap": {
                     "type": "object",
@@ -1283,7 +1283,7 @@
                 },
                 "notLockable": {
                     "type": "boolean",
-                    "description": "Is not locked when the record is locked. As of v9.4."
+                    "description": "Is not locked when the record is locked. As of v10.0."
                 },
                 "select": {
                     "type": "object",
@@ -1663,7 +1663,7 @@
                         "properties": {
                             "cascadeRemoval": {
                                 "type": "boolean",
-                                "description": "Cascade removal. Related records will be removed along with the parent record removal. Not allowed for many-to-many and many-to-one. As of v9.4."
+                                "description": "Cascade removal. Related records will be removed along with the parent record removal. Not allowed for many-to-many and many-to-one. As of v10.0."
                             }
                         }
                     }

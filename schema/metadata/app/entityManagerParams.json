@@ -37,7 +37,7 @@
                 },
                 "groupIndex": {
                     "type": "integer",
-                    "description": "An index to group related parameters into panels. As of v9.4."
+                    "description": "An index to group related parameters into panels. As of v10.0."
                 }
             }
         }

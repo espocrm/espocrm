@@ -854,7 +854,7 @@
                 },
                 "index": {
                     "type": "integer",
-                    "description": "A position index. As of v9.4."
+                    "description": "A position index. As of v10.0."
                 }
             }
         },
