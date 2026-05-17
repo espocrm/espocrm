@@ -208,6 +208,21 @@ class Params
     {
         $this->entityType = $data['entityType'];
         $this->ids = $data['ids'];
-        $this->searchParams = unserialize($data['searchParams']);
+        $this->searchParams = unserialize($data['searchParams'], [
+            'allowed_classes' => [SearchParams::class],
+        ]);
+    }
+
+    /**
+     * @internal
+     */
+    public static function fromSerializedRaw(string $raw): self
+    {
+        /** @var Params $params */
+        $params = unserialize(base64_decode($raw), [
+            'allowed_classes' => [Params::class],
+        ]);
+
+        return $params;
     }
 }

@@ -37,6 +37,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\Params;
 
+use Espo\Core\Select\SearchParams;
 use RuntimeException;
 
 use stdClass;
@@ -61,10 +62,7 @@ class MassAction extends Entity
             throw new RuntimeException("No 'params'.");
         }
 
-        /** @var Params $params */
-        $params = unserialize(base64_decode($raw));
-
-        return $params;
+        return Params::fromSerializedRaw($raw);
     }
 
     public function getData(): Data
