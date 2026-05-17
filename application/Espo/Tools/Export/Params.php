@@ -329,7 +329,10 @@ class Params
     {
         /** @var Params $params */
         $params = unserialize(base64_decode($raw), [
-            'allowed_classes' => [Params::class],
+            'allowed_classes' => [
+                Params::class,
+                SearchParams::class,
+            ],
         ]);
 
         return $params;
