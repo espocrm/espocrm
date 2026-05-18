@@ -81,8 +81,7 @@ class JobRunner
             throw new RuntimeException("Empty job ID.");
         }
 
-        /** @var ?JobEntity $jobEntity */
-        $jobEntity = $this->entityManager->getEntityById(JobEntity::ENTITY_TYPE, $id);
+        $jobEntity = $this->entityManager->getRDBRepositoryByClass(JobEntity::class)->getById($id);
 
         if (!$jobEntity) {
             throw new RuntimeException("Job '$id' not found.");
@@ -93,7 +92,6 @@ class JobRunner
         }
 
         $this->setJobRunning($jobEntity);
-
         $this->run($jobEntity);
     }
 
