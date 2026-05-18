@@ -30,15 +30,17 @@
 namespace tests\integration\Espo\Core\Authentication\AuthToken;
 
 use Espo\Core\Authentication\AuthToken\Data;
+use Espo\Core\Authentication\AuthToken\Manager;
+use tests\integration\Core\BaseTestCase;
 
-class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
+class AuthTokenManagerTest extends BaseTestCase
 {
     public function testCreateWithSecret()
     {
-        $authTokenManager = $this->getContainer()->get('authTokenManager');
+        $authTokenManager = $this->getContainer()->getByClass(Manager::class);
 
         $authTokenData = Data::create([
-            'hash' => 'test-hash',
+            'passwordVersion' => 1,
             'ipAddress' => 'ip-address',
             'userId' => 'user-id',
             'portalId' => 'portal-id',
@@ -47,7 +49,7 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
 
         $authToken = $authTokenManager->create($authTokenData);
 
-        $this->assertEquals($authTokenData->getHash(), $authToken->getHash());
+        $this->assertEquals($authTokenData->getPasswordVersion(), $authToken->getPasswordVersion());
         $this->assertEquals($authTokenData->getUserId(), $authToken->getUserId());
         $this->assertEquals($authTokenData->getPortalId(), $authToken->getPortalId());
 
@@ -61,10 +63,10 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
 
     public function testCreateWithNoSecretNoPortal()
     {
-        $authTokenManager = $this->getContainer()->get('authTokenManager');
+        $authTokenManager = $this->getContainer()->getByClass(Manager::class);
 
         $authTokenData = Data::create([
-            'hash' => 'test-hash',
+            'passwordVersion' => 1,
             'ipAddress' => 'ip-address',
             'userId' => 'user-id',
             'portalId' => null,
@@ -73,7 +75,7 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
 
         $authToken = $authTokenManager->create($authTokenData);
 
-        $this->assertEquals($authTokenData->getHash(), $authToken->getHash());
+        $this->assertEquals($authTokenData->getPasswordVersion(), $authToken->getPasswordVersion());
         $this->assertEquals($authTokenData->getUserId(), $authToken->getUserId());
 
         $this->assertEmpty($authToken->getPortalId());
@@ -84,10 +86,10 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
 
     public function testRenew()
     {
-        $authTokenManager = $this->getContainer()->get('authTokenManager');
+        $authTokenManager = $this->getContainer()->getByClass(Manager::class);
 
         $authTokenData = Data::create([
-            'hash' => 'test-hash',
+            'passwordVersion' => 1,
             'userId' => 'user-id',
         ]);
 
@@ -102,10 +104,10 @@ class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
 
     public function testInactivate()
     {
-        $authTokenManager = $this->getContainer()->get('authTokenManager');
+        $authTokenManager = $this->getContainer()->getByClass(Manager::class);
 
         $authTokenData = Data::create([
-            'hash' => 'test-hash',
+            'passwordVersion' => 1,
             'userId' => 'user-id',
         ]);
 

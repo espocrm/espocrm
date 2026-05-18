@@ -27,27 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Authentication\AuthToken;
+namespace Espo\Hooks\User;
 
-use Espo\Core\Authentication\AuthToken\Data;
-use PHPUnit\Framework\TestCase;
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\Repository\Option\SaveOptions;
+use RuntimeException;
 
-class AuthTokenDataTest extends TestCase
+/**
+ * @implements BeforeSave<User>
+ */
+class IncrementPasswordVersion implements BeforeSave
 {
-    public function testCreate()
+    public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        $authTokenData = Data::create([
-            'passwordVersion' => 1,
-            'ipAddress' => 'ip-address',
-            'userId' => 'user-id',
-            'portalId' => 'portal-id',
-            'createSecret' => true,
-        ]);
+        if (!$entity->isAttributeChanged(User::FIELD_PASSWORD)) {
+            return;
+        }
 
-        $this->assertEquals(1, $authTokenData->getPasswordVersion());
-        $this->assertEquals('ip-address', $authTokenData->getIpAddress());
-        $this->assertEquals('user-id', $authTokenData->getUserId());
-        $this->assertEquals('portal-id', $authTokenData->getPortalId());
-        $this->assertTrue($authTokenData->toCreateSecret());
+        $version = $entity->get(User::FIELD_PASSWORD_VERSION) ?? 0;
+
+        if (!is_int($version)) {
+            throw new RuntimeException("Non-int passwordVersion.");
+        }
+
+        $version ++;
+
+        $entity->set(User::FIELD_PASSWORD_VERSION, $version);
     }
 }

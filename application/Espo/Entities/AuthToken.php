@@ -35,7 +35,10 @@ use Espo\Core\ORM\Entity as BaseEntity;
 
 class AuthToken extends BaseEntity implements AuthTokenInterface
 {
-    public const ENTITY_TYPE = 'AuthToken';
+    public const string ENTITY_TYPE = 'AuthToken';
+
+    /** @since 10.0.0 */
+    public const string FIELD_PASSWORD_VERSION = 'passwordVersion';
 
     public function getToken(): string
     {
@@ -62,9 +65,19 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
         return $this->get('isActive');
     }
 
-    public function getHash(): ?string
+    public function getPasswordVersion(): ?int
     {
-        return $this->get('hash');
+        return $this->get(self::FIELD_PASSWORD_VERSION);
+    }
+
+    /**
+     * @since 10.0.0
+     */
+    public function setPasswordVersion(?int $version): self
+    {
+        $this->set(self::FIELD_PASSWORD_VERSION, $version);
+
+        return $this;
     }
 
     public function setIsActive(bool $isActive): self
@@ -84,13 +97,6 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
     public function setPortalId(?string $portalId): self
     {
         $this->set('portalId', $portalId);
-
-        return $this;
-    }
-
-    public function setHash(?string $hash): self
-    {
-        $this->set('hash', $hash);
 
         return $this;
     }

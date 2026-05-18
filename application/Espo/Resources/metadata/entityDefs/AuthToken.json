@@ -35,6 +35,13 @@
             "type": "bool",
             "default": true
         },
+        "passwordVersion": {
+            "type": "int",
+            "default": 0,
+            "notNull": true,
+            "readOnly": true,
+            "utility": true
+        },
         "lastAccess": {
             "type": "datetime",
             "readOnly": true,

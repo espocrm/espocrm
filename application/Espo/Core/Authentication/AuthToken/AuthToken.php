@@ -60,8 +60,9 @@ interface AuthToken
     public function isActive(): bool;
 
     /**
-     * Get a password hash. If a password hash is not stored in token, then return NULL.
-     * If you store auth tokens remotely it's reasonable to avoid hashes being sent.
+     * Get the password version. If the password version is not stored in token, then return NULL.
+     *
+     * @since 10.0.0
      */
-    public function getHash(): ?string;
+    public function getPasswordVersion(): ?int;
 }

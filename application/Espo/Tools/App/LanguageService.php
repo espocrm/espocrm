@@ -143,7 +143,7 @@ class LanguageService
 
         $data['User']['fields'] = $data['User']['fields'] ?? [];
 
-        $data['User']['fields']['password'] = $language->translate('password', 'fields', 'User');
+        $data['User']['fields'][User::FIELD_PASSWORD] = $language->translate('password', 'fields', 'User');
         $data['User']['fields']['passwordConfirm'] = $language->translate('passwordConfirm', 'fields', 'User');
         $data['User']['fields']['newPassword'] = $language->translate('newPassword', 'fields', 'User');
         $data['User']['fields']['newPasswordConfirm'] = $language->translate('newPasswordConfirm', 'fields', 'User');

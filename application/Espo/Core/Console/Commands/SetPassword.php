@@ -95,7 +95,7 @@ class SetPassword implements Command
             return;
         }
 
-        $user->set('password', $this->passwordHash->hash($password));
+        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
 
         $em->saveEntity($user);
 

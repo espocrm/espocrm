@@ -24,6 +24,9 @@
         "lastAccess": {
             "readOnly": true
         },
+        "passwordVersion": {
+            "forbidden": true
+        },
         "createdAt": {
             "readOnly": true
         },
