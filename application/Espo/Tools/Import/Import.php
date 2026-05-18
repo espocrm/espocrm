@@ -204,19 +204,17 @@ class Import
         assert(is_string($this->entityType));
         assert(is_string($this->attachmentId));
 
-        if (!$this->user->isAdmin()) {
-            $forbiddenAttributeList =
-                $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, Table::ACTION_EDIT);
+        $forbiddenAttributeList =
+            $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, Table::ACTION_EDIT);
 
-            foreach ($attributeList as $i => $attribute) {
-                if (in_array($attribute, $forbiddenAttributeList)) {
-                    unset($attributeList[$i]);
-                }
+        foreach ($attributeList as $i => $attribute) {
+            if (in_array($attribute, $forbiddenAttributeList)) {
+                unset($attributeList[$i]);
             }
+        }
 
-            if (!$this->aclManager->checkScope($this->user, $this->entityType, Table::ACTION_CREATE)) {
-                throw new Forbidden("Import: Create is forbidden for $this->entityType.");
-            }
+        if (!$this->aclManager->checkScope($this->user, $this->entityType, Table::ACTION_CREATE)) {
+            throw new Forbidden("Import: Create is forbidden for $this->entityType.");
         }
 
         /** @var ?Attachment $attachment */
@@ -458,7 +456,6 @@ class Import
 
             if (
                 $entity &&
-                !$this->user->isAdmin() &&
                 !$this->aclManager->checkEntityEdit($this->user, $entity)
             ) {
                 $this->createError(
