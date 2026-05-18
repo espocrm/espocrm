@@ -769,14 +769,15 @@ class RelationshipPanelView extends BottomPanelView {
                 entityType: scope,
                 id: id,
                 model: model,
-            })
-            .then(view => {
-                // @todo Move to afterSave?
-                this.listenTo(view, 'after:save', () => {
+                afterSave: model => {
+                    if (!model) {
+                        return;
+                    }
+
                     this.collection.fetch();
 
                     this.processSyncBack();
-                });
+                },
             });
     }
 
