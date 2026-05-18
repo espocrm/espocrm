@@ -53,6 +53,7 @@ export interface DetailViewOptions extends MainViewOptions {
 type RecordView = View & {
     setupReuse?: () => void;
     getMode: () => 'detail' | 'edit';
+    blockUpdateWebSocket?: (toUnblock: boolean) => void;
 }
 
 /**
