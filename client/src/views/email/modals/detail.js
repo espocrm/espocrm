@@ -28,6 +28,8 @@
 
 import DetailModalView from 'views/modals/detail';
 import DetailView from 'views/email/detail';
+import EmailHelper from 'email-helper';
+import Ui from 'ui';
 
 export default class extends DetailModalView {
 
@@ -64,7 +66,29 @@ export default class extends DetailModalView {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionReply(data, e) {
-        DetailView.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
+    async actionReply() {
+        const replyByDefault = this.getPreferences().get('emailReplyToAllByDefault');
+
+        const emailHelper = new EmailHelper();
+
+        const attributes = emailHelper.getReplyAttributes(this.model, replyByDefault);
+
+        Ui.notifyWait();
+
+        const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+            'views/modals/compose-email';
+
+        const view = await this.createView('quickCreate', viewName, {
+            attributes: attributes,
+            focusForCreate: true,
+        });
+
+        this.listenTo(view, 'after:save', () => {
+            this.model.fetch();
+        });
+
+        await view.render();
+
+        Ui.notify();
     }
 }

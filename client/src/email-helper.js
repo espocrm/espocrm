@@ -76,11 +76,10 @@ class EmailHelper {
      * Get reply email attributes.
      *
      * @param {module:model} model An email model.
-     * @param {Object|null} [data=null] Action data. Unused.
      * @param {boolean} [cc=false] To include CC (reply-all).
      * @returns {Object.<string, *>}
      */
-    getReplyAttributes(model, data, cc) {
+    getReplyAttributes(model, cc) {
         const attributes = {
             status: 'Draft',
             isHtml: model.attributes.isHtml,
