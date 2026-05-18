@@ -30,7 +30,6 @@
 namespace Espo\Core\Job;
 
 use Espo\Core\ORM\EntityManager;
-use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Data;
@@ -48,7 +47,6 @@ class JobRunner
         private JobFactory $jobFactory,
         private ScheduleUtil $scheduleUtil,
         private EntityManager $entityManager,
-        private ServiceFactory $serviceFactory,
         private Log $log,
     ) {}
 
@@ -119,8 +117,6 @@ class JobRunner
                 $this->runJobNamed($jobEntity);
             } else if ($jobEntity->getClassName()) {
                 $this->runJobWithClassName($jobEntity);
-            } else if ($jobEntity->getServiceName()) {
-                $this->runService($jobEntity);
             } else {
                 $id = $jobEntity->getId();
 
@@ -222,37 +218,6 @@ class JobRunner
             ->withTargetType($jobEntity->getTargetType());
 
         $job->run($data);
-    }
-
-    private function runService(JobEntity $jobEntity): void
-    {
-        $serviceName = $jobEntity->getServiceName();
-
-        if (!$serviceName) {
-            throw new RuntimeException("Job with empty serviceName.");
-        }
-
-        if (!$this->serviceFactory->checkExists($serviceName)) {
-            throw new RuntimeException("No service $serviceName.");
-        }
-
-        $service = $this->serviceFactory->create($serviceName);
-
-        $methodName = $jobEntity->getMethodName();
-
-        if (!$methodName) {
-            throw new RuntimeException('Job with empty methodName.');
-        }
-
-        if (!method_exists($service, $methodName)) {
-            throw new RuntimeException("No method '$methodName' in service '$serviceName'.");
-        }
-
-        $service->$methodName(
-            $jobEntity->getData(),
-            $jobEntity->getTargetId(),
-            $jobEntity->getTargetType()
-        );
     }
 
     private function setJobRunning(JobEntity $jobEntity): void

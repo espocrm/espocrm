@@ -36,15 +36,6 @@
             "required": true,
             "maxLength": 255
         },
-        "serviceName": {
-            "type": "varchar",
-            "required": true,
-            "maxLength": 100
-        },
-        "methodName": {
-            "type": "varchar",
-            "maxLength": 100
-        },
         "job": {
             "type": "varchar",
             "view": "views/scheduled-job/fields/job"

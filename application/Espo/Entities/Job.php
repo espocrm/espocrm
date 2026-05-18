@@ -125,22 +125,6 @@ class Job extends Entity
     }
 
     /**
-     * Get a service name.
-     */
-    public function getServiceName(): ?string
-    {
-        return $this->get('serviceName');
-    }
-
-    /**
-     * Get a method name.
-     */
-    public function getMethodName(): ?string
-    {
-        return $this->get('methodName');
-    }
-
-    /**
      * Get a scheduled job ID.
      */
     public function getScheduledJobId(): ?string
