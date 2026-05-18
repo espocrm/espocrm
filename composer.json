@@ -23,7 +23,7 @@
         "slim/slim": "^4.15",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "^3.4",
-        "laminas/laminas-ldap": "2.20.x-dev#e7b9fe0e295f3898fb97d08b320654c92849918a",
+        "laminas/laminas-ldap": "^2.20",
         "monolog/monolog": "^3.10",
         "composer/semver": "^3",
         "spatie/async": "^1.8.1",
@@ -95,10 +95,6 @@
         }
     },
     "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/yurikuzn/laminas-ldap.git"
-        },
         {
             "type": "vcs",
             "url": "https://github.com/yurikuzn/php-initial-avatar-generator.git"

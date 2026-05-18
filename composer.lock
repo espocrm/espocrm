@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ecb1bf818a541859442dbde55d92dcf",
+    "content-hash": "c4971184fe7b94063ee84e91227012bc",
     "packages": [
         {
             "name": "async-aws/core",
@@ -2393,18 +2393,26 @@
         },
         {
             "name": "laminas/laminas-ldap",
-            "version": "2.20.x-dev",
+            "version": "2.20.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/yurikuzn/laminas-ldap.git",
-                "reference": "e7b9fe0e295f3898fb97d08b320654c92849918a"
+                "url": "https://github.com/laminas/laminas-ldap.git",
+                "reference": "0af21ed3f77ef88326839f90e95f3b390ab84725"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-ldap/zipball/0af21ed3f77ef88326839f90e95f3b390ab84725",
+                "reference": "0af21ed3f77ef88326839f90e95f3b390ab84725",
+                "shasum": ""
             },
             "require": {
                 "ext-ldap": "*",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
             },
             "conflict": {
                 "amphp/amp": "<2.6.4",
+                "amphp/dns": "<2.4.0",
+                "amphp/socket": "<2.3.1",
                 "zendframework/zend-ldap": "*"
             },
             "require-dev": {
@@ -2412,47 +2420,24 @@
                 "laminas/laminas-config": "^3.8.0",
                 "laminas/laminas-eventmanager": "^3.6.0",
                 "laminas/laminas-stdlib": "^3.15.0",
-                "php-mock/php-mock-phpunit": "^2.8.0",
-                "phpunit/phpunit": "^10.5.41",
-                "psalm/plugin-phpunit": "^0.18.4",
-                "vimeo/psalm": "^5.16"
+                "php-mock/php-mock-phpunit": "^2.14.0",
+                "phpunit/phpunit": "^11.5.55",
+                "psalm/plugin-phpunit": "^0.19.5",
+                "symfony/console": "^6.0 || ^7.0",
+                "symfony/filesystem": "^6.0 || ^7.0",
+                "symfony/string": "^6.0 || ^7.0",
+                "vimeo/psalm": "^6.14"
             },
             "suggest": {
                 "laminas/laminas-eventmanager": "Laminas\\EventManager component"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Laminas\\Ldap\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "LaminasTest\\Ldap\\": "test/"
-                }
-            },
-            "scripts": {
-                "check": [
-                    "@cs-check",
-                    "@test"
-                ],
-                "cs-check": [
-                    "phpcs"
-                ],
-                "cs-fix": [
-                    "phpcbf"
-                ],
-                "static-analysis": [
-                    "psalm --shepherd --stats"
-                ],
-                "test": [
-                    "phpunit --colors=always"
-                ],
-                "test-coverage": [
-                    "phpunit --colors=always --coverage-clover clover.xml"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2463,14 +2448,20 @@
                 "ldap"
             ],
             "support": {
-                "docs": "https://docs.laminas.dev/laminas-ldap/",
-                "issues": "https://github.com/laminas/laminas-ldap/issues",
-                "source": "https://github.com/laminas/laminas-ldap",
-                "rss": "https://github.com/laminas/laminas-ldap/releases.atom",
                 "chat": "https://laminas.dev/chat",
-                "forum": "https://discourse.laminas.dev"
+                "docs": "https://docs.laminas.dev/laminas-ldap/",
+                "forum": "https://discourse.laminas.dev",
+                "issues": "https://github.com/laminas/laminas-ldap/issues",
+                "rss": "https://github.com/laminas/laminas-ldap/releases.atom",
+                "source": "https://github.com/laminas/laminas-ldap"
             },
-            "time": "2025-12-03T11:18:00+00:00"
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2026-05-01T13:27:43+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -10122,7 +10113,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "laminas/laminas-ldap": 20,
         "cboden/ratchet": 20,
         "lasserafn/php-initial-avatar-generator": 20
     },
