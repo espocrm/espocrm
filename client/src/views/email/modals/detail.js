@@ -27,11 +27,11 @@
  ************************************************************************/
 
 import DetailModalView from 'views/modals/detail';
-import DetailView from 'views/email/detail';
 import EmailHelper from 'email-helper';
+import MultiCollection from 'multi-collection';
 import Ui from 'ui';
 
-export default class extends DetailModalView {
+export default class EmailDetailModalView extends DetailModalView {
 
     setup() {
         super.setup();
@@ -90,5 +90,14 @@ export default class extends DetailModalView {
         await view.render();
 
         Ui.notify();
+
+        this.listenToOnce(view, 'after:send', () => {
+            if (!(this.sourceModel?.collection instanceof MultiCollection)) {
+                return;
+            }
+
+            // Fetch history.
+            this.sourceModel.collection.fetch();
+        });
     }
 }
