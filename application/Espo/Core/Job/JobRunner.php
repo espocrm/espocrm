@@ -35,7 +35,6 @@ use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
 use Espo\Entities\Job as JobEntity;
-
 use Espo\ORM\Name\Attribute;
 use LogicException;
 use RuntimeException;
@@ -153,11 +152,10 @@ class JobRunner
 
         if ($jobEntity->getScheduledJobId()) {
             $this->scheduleUtil->addLogRecord(
-                $jobEntity->getScheduledJobId(),
-                $status,
-                null,
-                $jobEntity->getTargetId(),
-                $jobEntity->getTargetType()
+                scheduledJobId: $jobEntity->getScheduledJobId(),
+                status: $status,
+                targetId: $jobEntity->getTargetId(),
+                targetType: $jobEntity->getTargetType(),
             );
         }
     }
@@ -201,11 +199,7 @@ class JobRunner
         $this->runJob($job, $jobEntity);
     }
 
-    /**
-     * @param Job|JobDataLess $job
-     * @internal Native type is not used for bc.
-     */
-    private function runJob($job, JobEntity $jobEntity): void
+    private function runJob(Job|JobDataLess $job, JobEntity $jobEntity): void
     {
         if ($job instanceof JobDataLess) {
             $job->run();

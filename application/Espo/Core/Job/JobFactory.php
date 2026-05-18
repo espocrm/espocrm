@@ -38,15 +38,13 @@ class JobFactory
     public function __construct(
         private ClassFinder $classFinder,
         private InjectableFactory $injectableFactory,
-        private MetadataProvider $metadataProvider
+        private MetadataProvider $metadataProvider,
     ) {}
 
     /**
      * Create a job by a scheduled job name.
-     *
-     * @return Job|JobDataLess
      */
-    public function create(string $name): object
+    public function create(string $name): Job|JobDataLess
     {
         $className = $this->getClassName($name);
 
@@ -61,9 +59,8 @@ class JobFactory
      * Create a job by a class name.
      *
      * @param class-string<Job|JobDataLess> $className
-     * @return Job|JobDataLess
      */
-    public function createByClassName(string $className): object
+    public function createByClassName(string $className): Job|JobDataLess
     {
         return $this->injectableFactory->create($className);
     }
