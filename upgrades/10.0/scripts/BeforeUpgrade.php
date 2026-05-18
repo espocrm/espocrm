@@ -151,8 +151,6 @@ class BeforeUpgrade
             }
         }
 
-        echo "!";
-
         if ($output === []) {
             return;
         }
