@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\Acl\SystemRestriction;
 use Espo\Core\Currency\ConfigDataProvider as CurrencyConfig;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
@@ -99,6 +100,7 @@ class Import
         private FieldValidationManager $fieldValidationManager,
         private PhoneNumberSanitizer $phoneNumberSanitizer,
         private CurrencyConfig $currencyConfig,
+        private SystemRestriction $systemRestriction,
 
     ) {
         $this->params = Params::create();
@@ -205,13 +207,13 @@ class Import
         $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getById($this->attachmentId);
 
         if (!$attachment) {
-            throw new Error('Import: Attachment not found.');
+            throw new Error('Attachment not found.');
         }
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
         if (!$contents) {
-            throw new Error('Import: Empty contents.');
+            throw new Error('Empty contents.');
         }
 
         $startFromIndex = null;
@@ -220,7 +222,7 @@ class Import
             $import = $this->entityManager->getRepositoryByClass(ImportEntity::class)->getById($this->id);
 
             if (!$import) {
-                throw new Error('Import: Could not find import record.');
+                throw new Error('Could not find import record.');
             }
 
             if ($params->startFromLastIndex()) {
@@ -476,7 +478,7 @@ class Import
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new Error("Import: Only `Espo\Core\ORM\Entity` supported.");
+            throw new Error("Only `Espo\Core\ORM\Entity` supported.");
         }
 
         $isNew = $entity->isNew();
@@ -1495,8 +1497,12 @@ class Import
             $this->unsetUserAttributeList($attributeList);
         }
 
+        if (!$this->systemRestriction->checkEntityTypeWrite($entityType)) {
+            throw new Forbidden("Import is restricted for '$entityType'.");
+        }
+
         if (!$this->aclManager->checkScope($this->user, $entityType, Table::ACTION_CREATE)) {
-            throw new Forbidden("Import: Create is forbidden for $entityType.");
+            throw new Forbidden("Create is forbidden for '$entityType'.");
         }
     }
 
