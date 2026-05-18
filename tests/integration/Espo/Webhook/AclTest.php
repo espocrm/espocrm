@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Webhook;
 
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\ORM\EntityManager;
 use Espo\Core\Exceptions\Forbidden;
 
@@ -142,6 +143,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
     public function testApiUserHasAccess1()
     {
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->set('webhookAllowedAddressList', ['test.com:443']);
+        $configWriter->save();
+
         $this->createUser(
             [
                 'userName' => 'api',
