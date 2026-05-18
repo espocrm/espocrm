@@ -439,7 +439,6 @@ class Import
 
             if (
                 $entity &&
-                !$this->user->isAdmin() &&
                 !$this->aclManager->checkEntityEdit($this->user, $entity)
             ) {
                 $this->createError(
