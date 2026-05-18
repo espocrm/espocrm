@@ -27,27 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Authentication\AuthToken;
+namespace tests\integration\Espo\Password;
 
-use Espo\Core\Authentication\AuthToken\Data;
-use PHPUnit\Framework\TestCase;
+use Espo\Entities\User;
+use tests\integration\Core\BaseTestCase;
 
-class AuthTokenDataTest extends TestCase
+class VersionTest extends BaseTestCase
 {
-    public function testCreate()
+    public function testVersionIncrement(): void
     {
-        $authTokenData = Data::create([
-            'passwordVersion' => 1,
-            'ipAddress' => 'ip-address',
-            'userId' => 'user-id',
-            'portalId' => 'portal-id',
-            'createSecret' => true,
-        ]);
+        $em = $this->getEntityManager();
 
-        $this->assertEquals(1, $authTokenData->getPasswordVersion());
-        $this->assertEquals('ip-address', $authTokenData->getIpAddress());
-        $this->assertEquals('user-id', $authTokenData->getUserId());
-        $this->assertEquals('portal-id', $authTokenData->getPortalId());
-        $this->assertTrue($authTokenData->toCreateSecret());
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user->setUserName('test');
+        $em->saveEntity($user);
+
+        $version = $user->get(User::FIELD_PASSWORD_VERSION);
+
+        $user->set(User::FIELD_PASSWORD, '1');
+        $em->saveEntity($user);
+
+        $this->assertEquals($version + 1, $user->get(User::FIELD_PASSWORD_VERSION));
     }
 }

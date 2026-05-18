@@ -31,6 +31,7 @@ namespace Espo\Core\Authentication\AuthToken;
 
 use Espo\Core\Name\Field;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Entities\AuthToken as AuthTokenEntity;
 
@@ -50,7 +51,7 @@ class EspoManager implements Manager
     /** @var RDBRepository<AuthTokenEntity> */
     private RDBRepository $repository;
 
-    private const TOKEN_RANDOM_LENGTH = 16;
+    private const int TOKEN_RANDOM_LENGTH = 16;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -61,13 +62,14 @@ class EspoManager implements Manager
     {
         return $this->repository
             ->select([
-                'id',
+                Attribute::ID,
                 'isActive',
                 'token',
                 'secret',
                 'userId',
                 'portalId',
                 'hash',
+                AuthTokenEntity::FIELD_PASSWORD_VERSION,
                 Field::CREATED_AT,
                 'lastAccess',
                 Field::MODIFIED_AT,
@@ -83,7 +85,7 @@ class EspoManager implements Manager
         $authToken
             ->setUserId($data->getUserId())
             ->setPortalId($data->getPortalId())
-            ->setHash($data->getHash())
+            ->setPasswordVersion($data->getPasswordVersion())
             ->setIpAddress($data->getIpAddress())
             ->setToken($this->generateToken())
             ->setLastAccessNow();

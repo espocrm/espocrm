@@ -44,6 +44,7 @@ use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
+use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\EntityManager;
 use SensitiveParameter;
 
@@ -208,17 +209,17 @@ class Service
         }
 
         $validLength = $this->fieldValidationManager->check(
-            $user,
-            'password',
-            'maxLength',
-            (object) ['password' => $password]
+            entity: $user,
+            field: User::FIELD_PASSWORD,
+            type: FieldParam::MAX_LENGTH,
+            data: (object) [User::FIELD_PASSWORD => $password],
         );
 
         if (!$validLength) {
             throw new Forbidden("Password exceeds max length.");
         }
 
-        $user->set('password', $this->passwordHash->hash($password));
+        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
 
         $this->entityManager->saveEntity($user);
     }
@@ -305,14 +306,14 @@ class Service
 
     private function savePassword(User $user, #[SensitiveParameter] string $password): void
     {
-        $user->set('password', $this->passwordHash->hash($password));
+        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
 
         $this->entityManager->saveEntity($user);
     }
 
     private function savePasswordSilent(User $user, #[SensitiveParameter] string $password): void
     {
-        $user->set('password', $this->passwordHash->hash($password));
+        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
 
         $this->entityManager->saveEntity($user, [SaveOption::SILENT => true]);
     }

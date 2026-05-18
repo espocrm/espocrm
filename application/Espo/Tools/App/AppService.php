@@ -61,7 +61,7 @@ class AppService
     private array $forbiddenUserAttributeList = [
         'apiKey',
         'authTokenId',
-        'password',
+        User::FIELD_PASSWORD,
         'rolesIds',
         'rolesNames',
     ];
