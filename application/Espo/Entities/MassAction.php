@@ -43,15 +43,11 @@ use stdClass;
 
 class MassAction extends Entity
 {
-    public const ENTITY_TYPE = 'MassAction';
-
-    public const STATUS_PENDING = 'Pending';
-
-    public const STATUS_RUNNING = 'Running';
-
-    public const STATUS_SUCCESS = 'Success';
-
-    public const STATUS_FAILED = 'Failed';
+    public const string ENTITY_TYPE = 'MassAction';
+    public const string STATUS_PENDING = 'Pending';
+    public const string STATUS_RUNNING = 'Running';
+    public const string STATUS_SUCCESS = 'Success';
+    public const string STATUS_FAILED = 'Failed';
 
     public function getParams(): Params
     {
@@ -61,10 +57,7 @@ class MassAction extends Entity
             throw new RuntimeException("No 'params'.");
         }
 
-        /** @var Params $params */
-        $params = unserialize(base64_decode($raw));
-
-        return $params;
+        return Params::fromSerializedRaw($raw);
     }
 
     public function getData(): Data

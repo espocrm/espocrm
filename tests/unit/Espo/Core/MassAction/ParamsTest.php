@@ -172,8 +172,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
             'Test'
         );
 
-        /** @var Params $params2 */
-        $params2 = unserialize(serialize($params1));
+        $params2 = Params::fromSerializedRaw(base64_encode(serialize($params1)));
 
         $this->assertEquals($params1, $params2);
 

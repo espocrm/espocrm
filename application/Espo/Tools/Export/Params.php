@@ -321,4 +321,20 @@ class Params
     {
         return $this->applyAccessControl;
     }
+
+    /**
+     * @internal
+     */
+    public static function fromSerializedRaw(string $raw): self
+    {
+        /** @var Params $params */
+        $params = unserialize(base64_decode($raw), [
+            'allowed_classes' => [
+                Params::class,
+                SearchParams::class,
+            ],
+        ]);
+
+        return $params;
+    }
 }
