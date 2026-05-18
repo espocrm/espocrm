@@ -7,6 +7,7 @@
                 type="file"
                 class="file pull-right"
                 {{#if acceptAttribute}}accept="{{acceptAttribute}}"{{/if}}
+                {{#if capture}} capture="{{capture}}" {{/if}}
                 tabindex="-1"
             >
         </label>

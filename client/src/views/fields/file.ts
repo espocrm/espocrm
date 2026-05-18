@@ -62,6 +62,12 @@ export interface FileParams extends LinkParams {
      * A max file size (in Mb).
      */
     maxFileSize?: number;
+    /**
+     * Specifies which camera to use for capture of image data.
+     *
+     * @since 10.0.0
+     */
+    capture?: null | 'user' | 'environment';
 }
 
 export interface FileOptions extends LinkOptions {
@@ -128,6 +134,7 @@ class FileFieldView<
             ...super.data(),
             id: this.model.get(this.idName),
             acceptAttribute: this.acceptAttribute,
+            capture: this.params.capture,
         } as any;
 
         if (this.mode === this.MODE_EDIT) {

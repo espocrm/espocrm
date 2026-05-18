@@ -215,6 +215,7 @@
         "preview": "Preview",
         "attachmentField": "Attachment Field",
         "maxFileSize": "Max File Size (Mb)",
+        "capture": "Capture",
         "isPersonalData": "Is Personal Data",
         "useIframe": "Use Iframe",
         "useNumericFormat": "Use Numeric Format",
@@ -359,6 +360,10 @@
         "labelType": {
             "state": "State",
             "regular": "Regular"
+        },
+        "capture": {
+            "user": "User",
+            "environment": "Environment"
         }
     },
     "logicalOperators": {
