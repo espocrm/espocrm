@@ -960,4 +960,18 @@ class Util
 
         return implode('', $shuffle($array));
     }
+
+    /**
+     * @internal
+     * @since 10.0.0
+     */
+    public static function toAbsolutePath(string $path): string
+    {
+        // Already absolute.
+        if (str_starts_with($path, '/') || substr($path, 1, 1) === ':' || str_starts_with($path, '\\\\')) {
+            return $path;
+        }
+
+        return getcwd() . '/' . $path;
+    }
 }
