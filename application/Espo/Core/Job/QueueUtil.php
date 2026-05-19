@@ -92,8 +92,6 @@ class QueueUtil
                 'targetId',
                 'targetType',
                 'targetGroup',
-                'methodName',
-                'serviceName',
                 'className',
                 'job',
                 'data',
