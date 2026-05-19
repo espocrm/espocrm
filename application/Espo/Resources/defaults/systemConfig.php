@@ -63,6 +63,8 @@ return [
         'restrictedMode',
         'instanceId',
         'adminUpgradeDisabled',
+        'adminUpgrade',
+        'adminExtensionUpload',
         'userLimit',
         'portalUserLimit',
         'stylesheet',

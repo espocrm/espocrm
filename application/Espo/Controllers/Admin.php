@@ -186,8 +186,12 @@ class Admin
             throw new Forbidden("Not allowed in restricted mode.");
         }
 
+        if ($this->config->get('adminUpgrade') !== true) {
+            throw new Forbidden("Cannot upgrade via the UI as `adminUpgrade` is not enabled.");
+        }
+
         if ($this->config->get('adminUpgradeDisabled')) {
-            throw new Forbidden("Disabled with 'adminUpgradeDisabled' parameter.");
+            throw new Forbidden("Disabled with `adminUpgradeDisabled` parameter.");
         }
     }
 }

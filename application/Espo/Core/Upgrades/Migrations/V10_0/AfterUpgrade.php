@@ -30,6 +30,7 @@
 namespace Espo\Core\Upgrades\Migrations\V10_0;
 
 use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
@@ -43,31 +44,14 @@ class AfterUpgrade implements Script
         private EntityManager $entityManager,
         private ConfigWriter $configWriter,
         private Metadata $metadata,
+        private Config $config,
     ) {}
 
     public function run(): void
     {
         $this->updatePreferences();
         $this->updateConfig();
-
-        /** @var array<string, array<string, mixed>> $clientDefs */
-        $clientDefs = $this->metadata->get('clientDefs') ?? [];
-
-        foreach ($clientDefs as $name => $defs) {
-            if ($name === CaseObj::ENTITY_TYPE) {
-                continue;
-            }
-
-            if ($defs['allowInternalNotes'] ?? false) {
-                $this->metadata->set('streamDefs', $name, [
-                    'allowInternalNotes' => true,
-                ]);
-
-                $this->metadata->delete('clientDefs', $name, ['allowInternalNotes']);
-            }
-        }
-
-        $this->metadata->save();
+        $this->updateMetadata();
     }
 
     private function updatePreferences(): void
@@ -100,6 +84,35 @@ class AfterUpgrade implements Script
     private function updateConfig(): void
     {
         $this->configWriter->set('currencyNoJoinMode', true);
+
+        if ($this->config->get('adminUpgradeDisabled')) {
+            $this->configWriter->set('adminExtensionUpload', false);
+        } else {
+            $this->configWriter->set('adminExtensionUpload', true);
+        }
+
         $this->configWriter->save();
+    }
+
+    private function updateMetadata(): void
+    {
+        /** @var array<string, array<string, mixed>> $clientDefs */
+        $clientDefs = $this->metadata->get('clientDefs') ?? [];
+
+        foreach ($clientDefs as $name => $defs) {
+            if ($name === CaseObj::ENTITY_TYPE) {
+                continue;
+            }
+
+            if ($defs['allowInternalNotes'] ?? false) {
+                $this->metadata->set('streamDefs', $name, [
+                    'allowInternalNotes' => true,
+                ]);
+
+                $this->metadata->delete('clientDefs', $name, ['allowInternalNotes']);
+            }
+        }
+
+        $this->metadata->save();
     }
 }

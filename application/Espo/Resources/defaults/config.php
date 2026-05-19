@@ -306,6 +306,8 @@ return [
     'phoneNumberExtensions' => false,
     'phoneNumberPreferredCountryList' => ['us', 'de'],
     'adminUpgradeDisabled' => false,
+    'adminUpgrade' => false,
+    'adminExtensionUpload' => true,
     'wysiwygCodeEditorDisabled' => false,
     'customPrefixDisabled' => false,
     'listPagination' => true,

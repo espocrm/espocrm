@@ -154,8 +154,12 @@ class Extension extends RecordBase
             throw new Forbidden("Not allowed in restricted mode.");
         }
 
+        if ($this->config->get('adminExtensionUpload') !== true) {
+            throw new Forbidden("Cannot upload extensions as `adminExtensionUpload` is not enabled.");
+        }
+
         if ($this->config->get('adminUpgradeDisabled')) {
-            throw new Forbidden("Disabled with 'adminUpgradeDisabled' parameter.");
+            throw new Forbidden("Disabled with `adminUpgradeDisabled` parameter.");
         }
     }
 }
