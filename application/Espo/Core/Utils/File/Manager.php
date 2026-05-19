@@ -670,7 +670,7 @@ class Manager
              * Returning true will cause situations when files are created with
              * a wrong ownership. This is a trade-off for being able to run
              * Espo under a user that is neither webserver-user nor root. A file
-             * will be created owned by a user running the process.
+             * will be created owned by the user running the process.
              */
             return true;
         }
