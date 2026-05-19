@@ -41,17 +41,17 @@ class Permission
      *
      * @var string[]
      */
-    protected $permissionError = [];
+    private $permissionError = [];
 
     /**
      * @var ?array<string, mixed>
      */
-    protected $permissionErrorRules = null;
+    private $permissionErrorRules = null;
 
     /**
      * @var array<string, array<string, mixed>>
      */
-    protected $writableMap = [
+    private $writableMap = [
         'data' => [
             'recursive' => true,
         ],
@@ -74,7 +74,7 @@ class Permission
      *   group: string|int|null,
      * }
      */
-    protected $defaultPermissions = [
+    private $defaultPermissions = [
         'dir' => '0755',
         'file' => '0644',
         'user' => null,
@@ -87,7 +87,7 @@ class Permission
      *   dir: string|int|null,
      * }
      */
-    protected $writablePermissions = [
+    private $writablePermissions = [
         'file' => '0664',
         'dir' => '0775',
     ];
@@ -152,7 +152,7 @@ class Permission
     {
         $permission = $this->getDefaultPermissions();
 
-        foreach ($this->getWritableMap() as $writablePath => $writableOptions) {
+        foreach ($this->writableMap as $writablePath => $writableOptions) {
             if (!$writableOptions['recursive'] && $path == $writablePath) {
                 /** @phpstan-ignore-next-line */
                 return array_merge($permission, $this->writablePermissions);
@@ -278,7 +278,7 @@ class Permission
      * @param int $fileOctal Ex. 0644.
      * @param int $dirOctal Ex. 0755.
      */
-    protected function chmodRecurse(string $path, $fileOctal = 0644, $dirOctal = 0755): bool
+    private function chmodRecurse(string $path, $fileOctal = 0644, $dirOctal = 0755): bool
     {
         if (!file_exists($path)) {
             return false;
@@ -332,7 +332,7 @@ class Permission
      *
      * @param int|string $user
      */
-    protected function chownRecurse(string $path, $user): bool
+    private function chownRecurse(string $path, $user): bool
     {
         if (!file_exists($path)) {
             return false;
@@ -388,7 +388,7 @@ class Permission
      * @param int|string $group
      * @noinspection SpellCheckingInspection
      */
-    protected function chgrpRecurse(string $path, $group): bool
+    private function chgrpRecurse(string $path, $group): bool
     {
         if (!file_exists($path)) {
             return false;
@@ -413,7 +413,7 @@ class Permission
     /**
      * @param int $mode
      */
-    protected function chmodReal(string $filename, $mode): bool
+    private function chmodReal(string $filename, $mode): bool
     {
         $result = @chmod($filename, $mode);
 
@@ -443,7 +443,7 @@ class Permission
     /**
      * @param int|string $user
      */
-    protected function chownReal(string $path, $user): bool
+    private function chownReal(string $path, $user): bool
     {
         if (!function_exists('chown')) {
             return true;
@@ -458,7 +458,7 @@ class Permission
      * @todo Revise the need of exception handling.
      *
      */
-    protected function chgrpReal(string $path, $group): bool
+    private function chgrpReal(string $path, $group): bool
     {
         if (!function_exists('chgrp')) {
             return true;
@@ -521,7 +521,7 @@ class Permission
 
         $result = true;
 
-        foreach ($this->getWritableMap() as $path => $options) {
+        foreach ($this->writableMap as $path => $options) {
             if (!file_exists($path)) {
                 continue;
             }
@@ -619,9 +619,8 @@ class Permission
      *
      * @param string $search
      * @param string[] $array
-     * @return int
      */
-    protected function getSearchCount(string $search, array $array)
+    private function getSearchCount(string $search, array $array): int
     {
         $searchQuoted = $this->getPregQuote($search);
 
@@ -639,7 +638,7 @@ class Permission
     /**
      * @param string[] $array
      */
-    protected function itemIncludes(string $item, array $array): bool
+    private function itemIncludes(string $item, array $array): bool
     {
         foreach ($array as $value) {
             $value = $this->getPregQuote($value);
@@ -652,10 +651,7 @@ class Permission
         return false;
     }
 
-    /**
-     * @return string
-     */
-    protected function getPregQuote(string $string): string
+    private function getPregQuote(string $string): string
     {
         return preg_quote($string, '/-+=.');
     }
