@@ -30,36 +30,19 @@
 namespace Espo\Tools\PopupNotification;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
-
-use stdClass;
 use Throwable;
 
 class Service
 {
-    private Metadata $metadata;
-    private ServiceFactory $serviceFactory;
-    private User $user;
-    private Log $log;
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Metadata $metadata,
-        ServiceFactory $serviceFactory,
-        User $user,
-        Log $log,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->metadata = $metadata;
-        $this->serviceFactory = $serviceFactory;
-        $this->user = $user;
-        $this->log = $log;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private Metadata $metadata,
+        private User $user,
+        private Log $log,
+        private InjectableFactory $injectableFactory,
+    ) {}
 
     /**
      * @return array<string, Item[]> Items grouped by type.
@@ -77,10 +60,7 @@ class Service
                 return false;
             }
 
-            if (
-                empty($item['providerClassName']) &&
-                (empty($item['serviceName']) || empty($item['methodName']))
-            ) {
+            if (empty($item['providerClassName'])) {
                 return false;
             }
 
@@ -99,36 +79,16 @@ class Service
             /** @var ?class-string<Provider> $className */
             $className = $item['providerClassName'] ?? null;
 
+            if (!$className) {
+                continue;
+            }
+
             try {
-                if ($className) {
-                    $provider = $this->injectableFactory->create($className);
+                $provider = $this->injectableFactory->create($className);
 
-                    $result[$type] = $provider->get($this->user);
-
-                    continue;
-                }
-
-                // For bc.
-
-                $serviceName = $item['serviceName'];
-                $methodName = $item['methodName'];
-
-                $service = $this->serviceFactory->create($serviceName);
-
-                $itemList = array_map(
-                    function ($raw) {
-                        if ($raw instanceof stdClass) {
-                            return new Item($raw->id ?? null, $raw->data);
-                        }
-
-                        return new Item($raw['id'] ?? null, $raw['data']);
-                    },
-                    $service->$methodName($this->user->getId())
-                );
-
-                $result[$type] = $itemList;
+                $result[$type] = $provider->get($this->user);
             } catch (Throwable $e) {
-                $this->log->error("Popup notifications: " . $e->getMessage());
+                $this->log->error("Popup notification error.", ['exception' => $e]);
             }
         }
 
