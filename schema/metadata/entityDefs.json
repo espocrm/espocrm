@@ -1423,11 +1423,11 @@
                 },
                 "layoutRelationshipsDisabled": {
                     "type": "boolean",
-                    "description": "Makes the link not available in the Bottom Panels layout (in the Layout Manager tool). Available for hasMany"
+                    "description": "Makes the link not available in the Bottom Panels layout (in the Layout Manager tool). Available for hasMany."
                 },
                 "relationName": {
                     "type": "string",
-                    "description": "A relationship name. Defines how a middle table will be named (for a many-to-many relationships). Available for hasMany"
+                    "description": "A relationship name. Defines how a middle table will be named (for a many-to-many relationships). Available for hasMany."
                 },
                 "columnAttributeMap": {
                     "type": "object",
