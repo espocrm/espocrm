@@ -766,8 +766,6 @@ function init(langSets) {
                     view.render();
 
                     self.listenToOnce(view, 'insert', (data) => {
-                        data.text = Handlebars.Utils.escapeExpression(data.text);
-
                         self.$summernote.summernote('createLink', data);
                     });
 
@@ -837,8 +835,6 @@ function init(langSets) {
                         const scrollY = ('scrollY' in container) ?
                             container.scrollY :
                             container.scrollTop;
-
-                        data.text = Handlebars.Utils.escapeExpression(data.text);
 
                         self.$summernote.summernote('createLink', data);
 
