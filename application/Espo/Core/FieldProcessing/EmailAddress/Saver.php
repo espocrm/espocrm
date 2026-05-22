@@ -46,17 +46,17 @@ use Espo\Core\ORM\EntityManager;
  */
 class Saver implements SaverInterface
 {
-    private const ATTR_EMAIL_ADDRESS = 'emailAddress';
-    private const ATTR_EMAIL_ADDRESS_DATA = 'emailAddressData';
-    private const ATTR_EMAIL_ADDRESS_IS_OPTED_OUT = 'emailAddressIsOptedOut';
-    private const ATTR_EMAIL_ADDRESS_IS_INVALID = 'emailAddressIsInvalid';
+    private const string ATTR_EMAIL_ADDRESS = 'emailAddress';
+    private const string ATTR_EMAIL_ADDRESS_DATA = 'emailAddressData';
+    private const string ATTR_EMAIL_ADDRESS_IS_OPTED_OUT = 'emailAddressIsOptedOut';
+    private const string ATTR_EMAIL_ADDRESS_IS_INVALID = 'emailAddressIsInvalid';
 
-    private const LINK_EMAIL_ADDRESSES = Link::EMAIL_ADDRESSES;
+    private const string LINK_EMAIL_ADDRESSES = Link::EMAIL_ADDRESSES;
 
     public function __construct(
         private EntityManager $entityManager,
         private ApplicationState $applicationState,
-        private AccessChecker $accessChecker
+        private AccessChecker $accessChecker,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -405,29 +405,33 @@ class Saver implements SaverInterface
             return;
         }
 
-        $emailAddressValue = $entity->get(self::ATTR_EMAIL_ADDRESS);
+        $address = $entity->get(self::ATTR_EMAIL_ADDRESS);
 
-        if (is_string($emailAddressValue)) {
-            $emailAddressValue = trim($emailAddressValue);
+        if (is_string($address)) {
+            $address = trim($address);
         }
 
-        if ($emailAddressValue) {
-            $this->storePrimaryNotEmpty($entity, $emailAddressValue);
+        if ($address) {
+            $this->storePrimaryNotEmpty($entity, $address);
 
             return;
         }
 
-        $emailAddressValueOld = $entity->getFetched(self::ATTR_EMAIL_ADDRESS);
+        $fetchedAddress = $entity->getFetched(self::ATTR_EMAIL_ADDRESS);
 
-        if (!empty($emailAddressValueOld)) {
-            $emailAddressOld = $this->getByAddress($emailAddressValueOld);
-
-            if ($emailAddressOld) {
-                $this->entityManager
-                    ->getRelation($entity, self::LINK_EMAIL_ADDRESSES)
-                    ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
-            }
+        if (!$fetchedAddress) {
+            return;
         }
+
+        $emailAddressOld = $this->getByAddress($fetchedAddress);
+
+        if (!$emailAddressOld) {
+            return;
+        }
+
+        $this->entityManager
+            ->getRelation($entity, self::LINK_EMAIL_ADDRESSES)
+            ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
     }
 
     private function storePrimaryNotEmpty(Entity $entity, string $emailAddressValue): void
@@ -466,15 +470,14 @@ class Saver implements SaverInterface
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
         $emailAddressNew = $this->entityManager
-            ->getRDBRepository(EmailAddress::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(EmailAddress::class)
             ->where([
                 'lower' => strtolower($emailAddressValue),
             ])
             ->findOne();
 
         if (!$emailAddressNew) {
-            /** @var EmailAddress $emailAddressNew */
-            $emailAddressNew = $this->entityManager->getNewEntity(EmailAddress::ENTITY_TYPE);
+            $emailAddressNew = $this->entityManager->getRDBRepositoryByClass(EmailAddress::class)->getNew();
 
             $emailAddressNew->setAddress($emailAddressValue);
 
@@ -491,7 +494,7 @@ class Saver implements SaverInterface
 
         $emailAddressValueOld = $entity->getFetched(self::ATTR_EMAIL_ADDRESS);
 
-        if (!empty($emailAddressValueOld)) {
+        if ($emailAddressValueOld) {
             $emailAddressOld = $this->getByAddress($emailAddressValueOld);
 
             if ($emailAddressOld) {
@@ -516,7 +519,7 @@ class Saver implements SaverInterface
         $updateQuery = $this->entityManager
             ->getQueryBuilder()
             ->update()
-            ->in('EntityEmailAddress')
+            ->in(EmailAddress::RELATION_ENTITY_EMAIL_ADDRESS)
             ->set(['primary' => true])
             ->where([
                 'entityId' => $entity->getId(),

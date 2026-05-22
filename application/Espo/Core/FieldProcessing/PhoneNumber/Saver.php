@@ -47,16 +47,16 @@ use Espo\Core\Utils\Metadata;
  */
 class Saver implements SaverInterface
 {
-    private const ATTR_PHONE_NUMBER = 'phoneNumber';
-    private const ATTR_PHONE_NUMBER_DATA = 'phoneNumberData';
-    private const ATTR_PHONE_NUMBER_IS_OPTED_OUT = 'phoneNumberIsOptedOut';
-    private const ATTR_PHONE_NUMBER_IS_INVALID = 'phoneNumberIsInvalid';
+    private const string ATTR_PHONE_NUMBER = 'phoneNumber';
+    private const string ATTR_PHONE_NUMBER_DATA = 'phoneNumberData';
+    private const string ATTR_PHONE_NUMBER_IS_OPTED_OUT = 'phoneNumberIsOptedOut';
+    private const string ATTR_PHONE_NUMBER_IS_INVALID = 'phoneNumberIsInvalid';
 
     public function __construct(
         private EntityManager $entityManager,
         private ApplicationState $applicationState,
         private AccessChecker $accessChecker,
-        private Metadata $metadata
+        private Metadata $metadata,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -409,57 +409,37 @@ class Saver implements SaverInterface
             return;
         }
 
-        $phoneNumberValue = trim($entity->get(self::ATTR_PHONE_NUMBER) ?? '');
+        $number = trim($entity->get(self::ATTR_PHONE_NUMBER) ?? '');
 
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
-        if ($phoneNumberValue) {
-            if ($phoneNumberValue !== $entity->getFetched(self::ATTR_PHONE_NUMBER)) {
-                $this->storePrimaryNotEmpty($phoneNumberValue, $entity);
+        if ($number) {
+            if ($number !== $entity->getFetched(self::ATTR_PHONE_NUMBER)) {
+                $this->storePrimaryNotEmpty($number, $entity);
 
                 return;
             }
 
-            if (
-                $entity->has(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) &&
-                (
-                    $entity->isNew() ||
-                    (
-                        $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) &&
-                        $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)
-                    )
-                )
-            ) {
-                $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT));
-            }
-
-            if (
-                $entity->has(self::ATTR_PHONE_NUMBER_IS_INVALID) &&
-                (
-                    $entity->isNew() ||
-                    (
-                        $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_INVALID) &&
-                        $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_INVALID)
-                    )
-                )
-            ) {
-                $this->markNumberInvalid($phoneNumberValue, (bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
-            }
+            $this->storePrimaryNotChanged($entity, $number);
 
             return;
         }
 
-        $phoneNumberValueOld = $entity->getFetched(self::ATTR_PHONE_NUMBER);
+        $fetchedNumber = $entity->getFetched(self::ATTR_PHONE_NUMBER);
 
-        if (!empty($phoneNumberValueOld)) {
-            $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
-
-            if ($phoneNumberOld) {
-                $entityRepository
-                    ->getRelation($entity, 'phoneNumbers')
-                    ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
-            }
+        if (!$fetchedNumber) {
+            return;
         }
+
+        $phoneNumberOld = $this->getByNumber($fetchedNumber);
+
+        if (!$phoneNumberOld) {
+            return;
+        }
+
+        $entityRepository
+            ->getRelation($entity, 'phoneNumbers')
+            ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
     }
 
     private function getByNumber(string $number): ?PhoneNumber
@@ -504,24 +484,23 @@ class Saver implements SaverInterface
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
         $phoneNumberNew = $this->entityManager
-            ->getRDBRepository(PhoneNumber::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(PhoneNumber::class)
             ->where([
                 'name' => $phoneNumberValue,
             ])
             ->findOne();
 
         if (!$phoneNumberNew) {
-            /** @var PhoneNumber $phoneNumberNew */
-            $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
+            $phoneNumberNew = $this->entityManager->getRDBRepositoryByClass(PhoneNumber::class)->getNew();
 
             $phoneNumberNew->setNumber($phoneNumberValue);
 
             if ($entity->has(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)) {
-                $phoneNumberNew->setOptedOut((bool)$entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT));
+                $phoneNumberNew->setOptedOut((bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT));
             }
 
             if ($entity->has(self::ATTR_PHONE_NUMBER_IS_INVALID)) {
-                $phoneNumberNew->setInvalid((bool)$entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
+                $phoneNumberNew->setInvalid((bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
             }
 
             $defaultType = $this->metadata
@@ -559,7 +538,7 @@ class Saver implements SaverInterface
         $update = $this->entityManager
             ->getQueryBuilder()
             ->update()
-            ->in('EntityPhoneNumber')
+            ->in(PhoneNumber::RELATION_ENTITY_PHONE_NUMBER)
             ->set(['primary' => true])
             ->where([
                 'entityId' => $entity->getId(),
@@ -569,5 +548,34 @@ class Saver implements SaverInterface
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($update);
+    }
+
+    private function storePrimaryNotChanged(Entity $entity, string $phoneNumberValue): void
+    {
+        if (
+            $entity->has(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) &&
+            (
+                $entity->isNew() ||
+                (
+                    $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT) &&
+                    $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT)
+                )
+            )
+        ) {
+            $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_OPTED_OUT));
+        }
+
+        if (
+            $entity->has(self::ATTR_PHONE_NUMBER_IS_INVALID) &&
+            (
+                $entity->isNew() ||
+                (
+                    $entity->hasFetched(self::ATTR_PHONE_NUMBER_IS_INVALID) &&
+                    $entity->isAttributeChanged(self::ATTR_PHONE_NUMBER_IS_INVALID)
+                )
+            )
+        ) {
+            $this->markNumberInvalid($phoneNumberValue, (bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
+        }
     }
 }
