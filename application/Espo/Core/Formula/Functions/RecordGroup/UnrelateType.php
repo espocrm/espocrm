@@ -99,6 +99,10 @@ class UnrelateType extends BaseFunction implements
     {
         $restriction = $this->injectableFactory->create(SystemRestriction::class);
 
+        if (!$restriction->checkEntityTypeWrite($entityType)) {
+            throw new NotAllowedUsage("Cannot write '$entityType'.");
+        }
+
         if (!$restriction->checkLinkWrite($entityType, $link) ) {
             throw new NotAllowedUsage("Cannot write restricted link $entityType.$link.");
         }
