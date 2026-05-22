@@ -411,7 +411,7 @@ class Saver implements SaverInterface
             $emailAddressValue = trim($emailAddressValue);
         }
 
-        if (!empty($emailAddressValue)) {
+        if ($emailAddressValue) {
             $this->storePrimaryNotEmpty($entity, $emailAddressValue);
 
             return;

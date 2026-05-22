@@ -413,7 +413,7 @@ class Saver implements SaverInterface
 
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
-        if (!empty($phoneNumberValue)) {
+        if ($phoneNumberValue) {
             if ($phoneNumberValue !== $entity->getFetched(self::ATTR_PHONE_NUMBER)) {
                 $this->storePrimaryNotEmpty($phoneNumberValue, $entity);
 
