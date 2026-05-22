@@ -157,7 +157,13 @@ export default class extends OptionsView {
         data.style = {};
 
         (data.options || []).forEach(item => {
-            data.style[item] = this.optionsStyleMap[item] || null;
+            const style = this.optionsStyleMap[item];
+
+            if (style == null) {
+                return;
+            }
+
+            data.style[item] = style;
         });
 
         return data;
