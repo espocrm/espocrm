@@ -45,7 +45,7 @@ describe('router', () => {
         expect(options.p).toBe('1');
 
         options = router._parseOptionsParams("p");
-        expect(options).toBe("p");
+        expect(options).toEqual({p: true});
 
         options = router._parseOptionsParams("p=1&t");
         expect(options.p).toBe('1');

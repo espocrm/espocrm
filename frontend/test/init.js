@@ -81,7 +81,9 @@ scriptEl.textContent = JSON.stringify({
         "js-base64": "lib!base64",
         "handlebars": "lib!handlebars",
         "bullbone": "lib!bullbone",
-        "backbone": "lib!backbone"
+        "backbone": "lib!backbone",
+        "marked": "lib!marked",
+        "dompurify": "lib!dompurify"
     }
 });
 

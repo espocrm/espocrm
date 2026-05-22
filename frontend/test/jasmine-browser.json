@@ -5,8 +5,15 @@
         "client/lib/espo.js",
         "client/lib/transpiled/src/exceptions.js",
         "client/lib/transpiled/src/utils.js",
+        "client/lib/transpiled/src/util/event.js",
+        "client/lib/transpiled/src/util/ajax.js",
         "client/lib/transpiled/src/ajax.js",
+        "client/lib/transpiled/src/helpers/model/default-value-provider.js",
         "client/lib/transpiled/src/model.js",
+        "client/lib/transpiled/src/helpers/site/modal-bar-provider.js",
+        "client/lib/transpiled/src/components/controls.js",
+        "client/lib/transpiled/src/ui/dialog.js",
+        "client/lib/transpiled/src/ui.js",
         "client/lib/transpiled/src/router.js",
         "client/lib/transpiled/src/collection.js",
         "client/lib/transpiled/src/controller.js",
@@ -20,12 +27,18 @@
         "client/lib/transpiled/src/models/settings.js",
         "client/lib/transpiled/src/models/preferences.js",
         "client/lib/transpiled/src/metadata.js",
-        "client/lib/transpiled/src/theme-manager.js"
+        "client/lib/transpiled/src/theme-manager.js",
+        "client/lib/transpiled/src/di.js",
+        "client/lib/transpiled/src/language.js",
+        "client/lib/transpiled/src/models/user.js",
+        "client/lib/transpiled/src/email-helper.js",
+        "frontend/test/stubs/file-field-view-deps.js",
+        "client/lib/transpiled/src/views/fields/file.js"
     ],
     "specDir": "frontend/test/spec",
     "specFiles": [
         "**/test.*.js"
     ],
     "helpers": [],
-    "browser": "chrome"
+    "browser": "headlessChrome"
 }
