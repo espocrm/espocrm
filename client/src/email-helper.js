@@ -417,7 +417,7 @@ class EmailHelper {
         let name = value.replace(/<(.*)>/, '').trim();
 
         if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
-            name = name.slice(1, name.length - 2);
+            name = name.slice(1, name.length - 1);
         }
 
         return name;
