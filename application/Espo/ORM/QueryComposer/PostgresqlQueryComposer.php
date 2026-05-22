@@ -174,7 +174,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         if ($function === 'UNIX_TIMESTAMP') {
             $arg = $argumentPartList[0] ?? 'NOW()';
 
-            return "FLOOR(EXTRACT(EPOCH FROM $arg))";
+            return "FLOOR(EXTRACT(EPOCH FROM $arg::timestamp))";
         }
 
         if ($function === 'BINARY') {
