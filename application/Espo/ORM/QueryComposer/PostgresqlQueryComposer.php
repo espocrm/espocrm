@@ -346,10 +346,10 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                     return "FLOOR(($toEpoch - $fromEpoch) / (3600 * 24))";
 
                 case 'TIMESTAMPDIFF_HOUR':
-                    return "($toEpoch - $fromEpoch) / 3600";
+                    return "FLOOR(($toEpoch - $fromEpoch) / 3600)";
 
                 case 'TIMESTAMPDIFF_MINUTE':
-                    return "($toEpoch - $fromEpoch) / 60";
+                    return "FLOOR(($toEpoch - $fromEpoch) / 60)";
 
                 case 'TIMESTAMPDIFF_SECOND':
                     return "$toEpoch - $fromEpoch";

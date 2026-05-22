@@ -540,6 +540,46 @@ class Expression implements WhereItem
     }
 
     /**
+     * Difference between two dates in days. Floor is applied.
+     *
+     * @since 10.0.0
+     */
+    public function timestampDiffDay(Expression $from, Expression $to): self
+    {
+        return self::composeFunction('TIMESTAMPDIFF_DAY', $from, $to);
+    }
+
+    /**
+     * Difference between two dates in hours. Floor is applied.
+     *
+     * @since 10.0.0
+     */
+    public function timestampDiffHour(Expression $from, Expression $to): self
+    {
+        return self::composeFunction('TIMESTAMPDIFF_HOUR', $from, $to);
+    }
+
+    /**
+     * Difference between two dates in minutes. Floor is applied.
+     *
+     * @since 10.0.0
+     */
+    public function timestampDiffMinute(Expression $from, Expression $to): self
+    {
+        return self::composeFunction('TIMESTAMPDIFF_MINUTE', $from, $to);
+    }
+
+    /**
+     * Difference between two dates in seconds.
+     *
+     * @since 10.0.0
+     */
+    public function timestampDiffSecond(Expression $from, Expression $to): self
+    {
+        return self::composeFunction('TIMESTAMPDIFF_SECOND', $from, $to);
+    }
+
+    /**
      * 'NOW' function. A current date and time.
      */
     public static function now(): self
