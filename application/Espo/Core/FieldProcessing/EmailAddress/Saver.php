@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
+use Espo\Core\FieldProcessing\Loader\Params as LoeaderParams;
 use Espo\Core\Name\Link;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
@@ -57,6 +58,7 @@ class Saver implements SaverInterface
         private EntityManager $entityManager,
         private ApplicationState $applicationState,
         private AccessChecker $accessChecker,
+        private Loader $loader,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -86,7 +88,7 @@ class Saver implements SaverInterface
         }
 
         if ($entity->has(self::ATTR_EMAIL_ADDRESS)) {
-            $this->storePrimary($entity);
+            $this->storePrimaryAndPrepareData($entity);
         }
     }
 
@@ -566,5 +568,16 @@ class Saver implements SaverInterface
         // @todo Check if not modified by system.
 
         return !$this->accessChecker->checkEdit($user, $emailAddress, $entity);
+    }
+
+    private function storePrimaryAndPrepareData(Entity $entity): void
+    {
+        $this->loader->process($entity, LoeaderParams::create());
+        $previous = $entity->get(self::ATTR_EMAIL_ADDRESS_DATA);
+
+        $this->storePrimary($entity);
+
+        $this->loader->process($entity, LoeaderParams::create());
+        $entity->setFetched(self::ATTR_EMAIL_ADDRESS_DATA, $previous);
     }
 }

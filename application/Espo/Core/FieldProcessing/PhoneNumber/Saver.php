@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
+use Espo\Core\FieldProcessing\Loader\Params as LoeaderParams;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\PhoneNumber;
@@ -57,6 +58,7 @@ class Saver implements SaverInterface
         private ApplicationState $applicationState,
         private AccessChecker $accessChecker,
         private Metadata $metadata,
+        private Loader $loader,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -86,7 +88,7 @@ class Saver implements SaverInterface
         }
 
         if ($entity->has(self::ATTR_PHONE_NUMBER)) {
-            $this->storePrimary($entity);
+            $this->storePrimaryAndPrepareData($entity);
         }
     }
 
@@ -577,5 +579,16 @@ class Saver implements SaverInterface
         ) {
             $this->markNumberInvalid($phoneNumberValue, (bool) $entity->get(self::ATTR_PHONE_NUMBER_IS_INVALID));
         }
+    }
+
+    private function storePrimaryAndPrepareData(Entity $entity): void
+    {
+        $this->loader->process($entity, LoeaderParams::create());
+        $previous = $entity->get(self::ATTR_PHONE_NUMBER_DATA);
+
+        $this->storePrimary($entity);
+
+        $this->loader->process($entity, LoeaderParams::create());
+        $entity->setFetched(self::ATTR_PHONE_NUMBER_DATA, $previous);
     }
 }
