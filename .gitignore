@@ -1,3 +1,10 @@
+# Installer / setup artifacts
+/espocrm-installer-*.zip
+/espocrm-installer-*/
+/espocrm-setup.sh
+/install.sh
+/public/client
+
 /data/logs/*
 /data/cache/*
 /data/upload/*
