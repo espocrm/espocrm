@@ -701,7 +701,7 @@ class Manager
         $result = true;
 
         foreach ($dirPaths as $dirPath) {
-            if (is_dir($dirPath) && is_writable($dirPath)) {
+            if (is_dir($dirPath) && is_writable($dirPath) && is_link($dirPath) === false) {
                 $result &= rmdir($dirPath);
             }
         }
