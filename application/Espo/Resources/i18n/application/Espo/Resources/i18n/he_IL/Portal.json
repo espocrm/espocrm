@@ -1,0 +1,45 @@
+{
+    "fields": {
+        "name": "שם",
+        "logo": "לוגו",
+        "url": "כתובת URL",
+        "portalRoles": "תפקידים",
+        "isActive": "פעיל",
+        "isDefault": "ברירת מחדל",
+        "tabList": "רשימת טאבים",
+        "applicationName": "שם היישום",
+        "quickCreateList": "רשימת יצירה מהירה",
+        "companyLogo": "לוגו החברה",
+        "theme": "ערכת נושא",
+        "language": "שפה",
+        "dashboardLayout": "פריסת לוח בקרה",
+        "dateFormat": "תבנית תאריך",
+        "timeFormat": "תבנית שעה",
+        "timeZone": "אזור זמן",
+        "weekStart": "יום ראשון בשבוע",
+        "defaultCurrency": "מטבע ברירת מחדל",
+        "layoutSet": "ערכת פריסה",
+        "authenticationProvider": "ספק אימות",
+        "customUrl": "כתובת URL מותאמת",
+        "customId": "מזהה מותאם",
+        "authTokenLifetime": "משך חיים של אסימון אימות (שעות)",
+        "authTokenMaxIdleTime": "זמן אי פעילות מרבי של אסימון אימות (שעות)"
+    },
+    "links": {
+        "users": "משתמשים",
+        "portalRoles": "תפקידים",
+        "layoutSet": "ערכת פריסה",
+        "authenticationProvider": "ספק אימות",
+        "notes": "הערות"
+    },
+    "tooltips": {
+        "layoutSet": "מאפשר להשתמש בפריסות שונות מהפריסה הסטנדרטית.",
+        "portalRoles": "התפקידים שצוינו יוחלו על כל המשתמשים בפורטל זה."
+    },
+    "labels": {
+        "Create Portal": "צור פורטל",
+        "User Interface": "ממשק משתמש",
+        "General": "כללי",
+        "Settings": "הגדרות"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "name": "שם",
+        "version": "גרסה",
+        "description": "תיאור",
+        "isInstalled": "מותקן",
+        "checkVersionUrl": "כתובת URL לבדיקת גרסאות חדשות"
+    },
+    "labels": {
+        "Uninstall": "הסרת ההתקנה",
+        "Install": "להתקין"
+    },
+    "messages": {
+        "uninstalled": "התוסף {name} הוסר",
+        "fileExceedsMaxUploadSize": "גודל הקובץ חורג מגודל ההעלאה המרבי {maxSize}. שקול להגדיל את `post_max_size` או להתקין את ההרחבה דרך ממשק שורת פקודה (CLI)."
+    }
+}

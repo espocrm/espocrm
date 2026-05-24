@@ -1,0 +1,68 @@
+{
+    "fields": {
+        "dateFormat": "תבנית תאריך",
+        "timeFormat": "תבנית שעה",
+        "timeZone": "אזור זמן",
+        "weekStart": "יום תחילת השבוע",
+        "thousandSeparator": "מפריד אלפים",
+        "decimalMark": "סימן עשרוני",
+        "defaultCurrency": "מטבע ברירת מחדל",
+        "currencyList": "רשימת מטבעות",
+        "language": "שפה",
+        "exportDelimiter": "תו מפריד בקובץ ייצוא",
+        "receiveAssignmentEmailNotifications": "קבל התראות במייל על הקצאות",
+        "receiveMentionEmailNotifications": "קבל התראות במייל על אזכורים בפוסטים",
+        "receiveStreamEmailNotifications": "קבל התראות במייל על פוסטים ועדכוני סטטוס",
+        "assignmentNotificationsIgnoreEntityTypeList": "התראות הקצאה בתוך המערכת",
+        "assignmentEmailNotificationsIgnoreEntityTypeList": "התראות הקצאה במייל",
+        "reactionNotifications": "התראות על תגובות בתוך המערכת",
+        "autoFollowEntityTypeList": "מעקב אוטומטי גלובלי",
+        "signature": "חתימת מייל",
+        "dashboardTabList": "רשימת לשוניות",
+        "defaultReminders": "תזכורות ברירת מחדל",
+        "defaultRemindersTask": "תזכורות ברירת מחדל למשימות",
+        "theme": "ערכת נושא",
+        "useCustomTabList": "השתמש ברשימת לשוניות מותאמת אישית",
+        "addCustomTabs": "הוסף לשוניות מותאמות",
+        "tabList": "רשימת לשוניות",
+        "emailReplyToAllByDefault": "השב לכולם כברירת מחדל",
+        "dashboardLayout": "פריסת לוח בקרה",
+        "dashboardLocked": "נעל לוח בקרה",
+        "emailReplyForceHtml": "השב במייל בפורמט HTML",
+        "doNotFillAssignedUserIfNotRequired": "אל תמלא משתמש מוקצה אוטומטית אם לא חובה",
+        "followEntityOnStreamPost": "מעקב אוטומטי אחרי רשומה לאחר פרסום בפיד",
+        "followCreatedEntities": "מעקב אוטומטי אחרי רשומות חדשות",
+        "followCreatedEntityTypeList": "מעקב אוטומטי אחרי סוגי רשומות מסוימים",
+        "emailUseExternalClient": "השתמש בתוכנת מייל חיצונית",
+        "textSearchStoringDisabled": "בטל שמירת מסנני טקסט",
+        "calendarSlotDuration": "משך משבצת ביומן",
+        "calendarScrollHour": "שעת גלילה ביומן"
+    },
+    "links": {
+    },
+    "options": {
+        "weekStart": {
+            "0": "ראשון",
+            "1": "שני"
+        }
+    },
+    "labels": {
+        "Notifications": "התראות",
+        "User Interface": "ממשק משתמש",
+        "Misc": "שונות",
+        "Locale": "אזוריות",
+        "Reset Dashboard to Default": "איפוס לוח הבקרה לברירת מחדל"
+    },
+    "tooltips": {
+        "addCustomTabs": "אם מסומן, לשוניות מותאמות אישית יתווספו ללשוניות ברירת המחדל. אחרת, רק הלשוניות המותאמות יוצגו.",
+        "autoFollowEntityTypeList": "עקוב אוטומטית אחר כל הרשומות החדשות (שנוצרו על ידי כל משתמש) מהסוגים שנבחרו. כך תוכל לצפות במידע בפיד ולקבל התראות על כל הרשומות במערכת.",
+        "doNotFillAssignedUserIfNotRequired": "בעת יצירת רשומה, לא ימולא משתמש מוקצה אלא אם השדה חובה.",
+        "followCreatedEntities": "בעת יצירת רשומות חדשות, הן ייכנסו למעקב אוטומטי גם אם הוקצו למשתמש אחר.",
+        "followCreatedEntityTypeList": "בעת יצירת רשומות מסוגים נבחרים, הן ייכנסו למעקב אוטומטי גם אם הוקצו למשתמש אחר."
+    },
+    "tabFields": {
+        "label": "תווית",
+        "iconClass": "איקון",
+        "color": "צבע"
+    }
+}

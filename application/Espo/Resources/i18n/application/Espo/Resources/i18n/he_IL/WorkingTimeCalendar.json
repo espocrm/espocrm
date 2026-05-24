@@ -1,0 +1,26 @@
+{
+    "labels": {
+        "Create WorkingTimeCalendar": "צור לוח שנה לזמן עבודה"
+    },
+    "fields": {
+        "timeZone": "אזור זמן",
+        "timeRanges": "לו\"ז זמנים של יום",
+        "weekday0": "שבת",
+        "weekday1": "ראשון",
+        "weekday2": "שני",
+        "weekday3": "שלישי",
+        "weekday4": "רביעי",
+        "weekday5": "חמישי",
+        "weekday6": "שישי",
+        "weekday0TimeRanges": "לוח זמנים יום שבת",
+        "weekday1TimeRanges": "לוח זמנים יום ראשון",
+        "weekday2TimeRanges": "לוח זמנים יום שני",
+        "weekday3TimeRanges": "לוח זמנים יום שלישי",
+        "weekday4TimeRanges": "לוח זמנים יום רביעי",
+        "weekday5TimeRanges": "לוח זמנים יום חמישי",
+        "weekday6TimeRanges": "לוח זמנים יום שישי"
+    },
+    "links": {
+        "ranges": "טווח זמן יוצא מן הכלל"
+    }
+}
