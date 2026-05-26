@@ -45,6 +45,7 @@ class PostgresqlColumnPreparator implements ColumnPreparator
     private const PARAM_AUTOINCREMENT = 'autoincrement';
     private const PARAM_PRECISION = 'precision';
     private const PARAM_SCALE = 'scale';
+    private const string PARAM_STORE_ARRAY_VALUES = 'storeArrayValues';
 
     /** @var string[] */
     private array $textTypeList = [
@@ -119,6 +120,10 @@ class PostgresqlColumnPreparator implements ColumnPreparator
 
             case Entity::JSON_ARRAY:
                 $default = is_array($default) ? json_encode($default) : null;
+
+                if ($defs->getParam(self::PARAM_STORE_ARRAY_VALUES)) {
+                    $default = json_encode([]);
+                }
 
                 $column = $column->withDefault($default);
 

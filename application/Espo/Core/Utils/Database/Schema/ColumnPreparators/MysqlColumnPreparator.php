@@ -49,6 +49,7 @@ class MysqlColumnPreparator implements ColumnPreparator
     private const PARAM_PRECISION = 'precision';
     private const PARAM_SCALE = 'scale';
     private const PARAM_BINARY = 'binary';
+    private const string PARAM_STORE_ARRAY_VALUES = 'storeArrayValues';
 
     public const TYPE_MYSQL = 'MySQL';
     public const TYPE_MARIADB = 'MariaDB';
@@ -141,6 +142,10 @@ class MysqlColumnPreparator implements ColumnPreparator
 
             case Entity::JSON_ARRAY:
                 $default = is_array($default) ? json_encode($default) : null;
+
+                if ($defs->getParam(self::PARAM_STORE_ARRAY_VALUES)) {
+                    $default = json_encode([]);
+                }
 
                 $column = $column->withDefault($default);
 
