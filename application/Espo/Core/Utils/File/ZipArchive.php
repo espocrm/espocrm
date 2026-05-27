@@ -80,7 +80,7 @@ class ZipArchive
                 str_starts_with($filename, '/') ||
                 str_starts_with($filename, '\\')
             ) {
-                throw new RuntimeException("No allowed path.");
+                throw new RuntimeException("No allowed path '$filename'.");
             }
 
             $zip->extractTo($destination, $filename);
