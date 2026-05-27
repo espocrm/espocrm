@@ -75,6 +75,11 @@ class ZipArchive
                 continue;
             }
 
+            // For BC.
+            if (str_starts_with($filename, '/')) {
+                $filename = substr($filename, 1);
+            }
+
             if (
                 str_contains($filename, '..') ||
                 str_starts_with($filename, '/') ||
