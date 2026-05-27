@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils\Util;
 use RuntimeException;
 
 class ZipArchive
