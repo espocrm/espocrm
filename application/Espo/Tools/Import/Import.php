@@ -501,7 +501,7 @@ class Import
             $value = $row[$i];
 
             try {
-                $this->processRowItem($entity, $attribute, $value, $valueMap);
+                $this->processRowItem($entity, $attribute, $value, $valueMap, $updateByAttributeList);
             } catch (ValidationError $e) {
                 $failureList[] = $e->getFailure();
             }
@@ -695,6 +695,7 @@ class Import
     }
 
     /**
+     * @param string[] $updateByAttributeList
      * @throws ValidationError
      */
     private function processRowItem(
@@ -702,6 +703,7 @@ class Import
         string $attribute,
         string $value,
         stdClass $valueMap,
+        array $updateByAttributeList,
     ): void {
 
         assert(is_string($this->entityType));
@@ -715,6 +717,14 @@ class Import
                 $entity->set(Attribute::ID, $value);
             }
 
+            return;
+        }
+
+        if (
+            in_array($action, [Params::ACTION_CREATE_AND_UPDATE, Params::ACTION_UPDATE]) &&
+            in_array($attribute, $updateByAttributeList) &&
+            !$entity->isNew()
+        ) {
             return;
         }
 
