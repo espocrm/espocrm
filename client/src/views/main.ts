@@ -410,12 +410,6 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
                     }
                 }
 
-                if (item.labelTranslation) {
-                    item.html = this.getHelper().escapeString(
-                        this.getLanguage().translatePath(item.labelTranslation)
-                    );
-                }
-
                 menu[type].push(item);
             });
         });
