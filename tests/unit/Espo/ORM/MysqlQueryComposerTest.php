@@ -3642,7 +3642,6 @@ class MysqlQueryComposerTest extends TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-
     public function testWithRecursive1(): void
     {
         $query = (new SelectBuilder())

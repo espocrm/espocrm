@@ -90,7 +90,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
     protected function quoteColumn(string $column): string
     {
         $list = explode('.', $column);
-        $list = array_map(fn ($item) => '"' . $item . '"', $list);
+        $list = array_map(fn ($item) => $this->quoteIdentifier($item), $list);
 
         return implode('.', $list);
     }

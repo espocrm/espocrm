@@ -203,7 +203,17 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function quoteColumn(string $column): string
     {
-        return $column;
+        $list = explode('.', $column);
+
+        $list = array_map(function ($item) {
+            if ($this->sanitize($item) === $item) {
+                return $item;
+            }
+
+            return $this->quoteIdentifier($item);
+        }, $list);
+
+        return implode('.', $list);
     }
 
     protected function getSeed(?string $entityType): Entity
@@ -1266,23 +1276,21 @@ abstract class BaseQueryComposer implements QueryComposer
         $relName = null;
         $entityType = $entity->getEntityType();
 
-        if (strpos($argument, '.')) {
+        if (strpos($argument, '.') && !str_starts_with($argument, '#')) {
             [$relName, $attribute] = explode('.', $argument);
         }
 
-        if (!empty($relName)) {
-            /** @noinspection PhpDeprecationInspection */
+        if ($relName) {
             $relName = $this->sanitize($relName);
         }
 
         $isAlias = false;
 
-        if (!empty($attribute)) {
+        if ($attribute !== '') {
             $isAlias = str_starts_with($attribute, '#');
 
-            /** @noinspection PhpDeprecationInspection */
             $attribute = $isAlias ?
-                $this->sanitizeSelectAlias($attribute) :
+                $this->sanitizeSelectAliasStrict($attribute) :
                 $this->sanitize($attribute);
         }
 
@@ -2995,6 +3003,17 @@ abstract class BaseQueryComposer implements QueryComposer
     protected function sanitize(string $string): string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string) ?? '';
+    }
+
+    private function sanitizeSelectAliasStrict(string $string): string
+    {
+        $string = preg_replace('/[^A-Za-z0-9_\-]+/', '', $string) ?? '';
+
+        if (strlen($string) > $this->aliasMaxLength) {
+            $string = substr($string, 0, $this->aliasMaxLength);
+        }
+
+        return $string;
     }
 
     /**
