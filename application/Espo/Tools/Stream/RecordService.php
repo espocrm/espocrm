@@ -463,6 +463,7 @@ class RecordService
             ->create()
             ->from(Attachment::ENTITY_TYPE)
             ->withSearchParams($searchParams)
+            ->withComplexExpressionsForbidden()
             ->buildQueryBuilder()
             ->where(
                 Condition::in(
