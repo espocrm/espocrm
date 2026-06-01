@@ -1274,14 +1274,13 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         $relName = null;
-        $entityType = $entity->getEntityType();
 
         if (strpos($argument, '.') && !str_starts_with($argument, '#')) {
             [$relName, $attribute] = explode('.', $argument);
-        }
 
-        if ($relName) {
-            $relName = $this->sanitize($relName);
+            if ($relName) {
+                $relName = $this->sanitize($relName);
+            }
         }
 
         $isAlias = false;
@@ -1295,9 +1294,9 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($attribute !== '') {
-            $part = !$isAlias ?
-                $this->toDb($attribute):
-                $attribute;
+            $part = $isAlias ?
+                $attribute :
+                $this->toDb($attribute);
         } else {
             $part = '';
         }
@@ -1332,7 +1331,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->quoteColumn($part);
         }
 
-        $part = $this->getFromAlias($params, $entityType) . '.' . $part;
+        $part = $this->getFromAlias($params, $entity->getEntityType()) . '.' . $part;
 
         return $this->quoteColumn($part);
     }
