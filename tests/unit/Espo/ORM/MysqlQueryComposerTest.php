@@ -2385,7 +2385,7 @@ class MysqlQueryComposerTest extends TestCase
     {
         $expression = "CONCAT:(MONTH:comment.created_at,' ',CONCAT:(comment.name,'+'))";
 
-        $list = $this->query::getAllAttributesFromComplexExpression($expression);
+        $list = Util::getAllAttributesFromComplexExpression($expression);
 
         $this->assertTrue(in_array('comment.created_at', $list));
         $this->assertTrue(in_array('comment.name', $list));
@@ -2394,14 +2394,14 @@ class MysqlQueryComposerTest extends TestCase
     public function testGetAllAttributesFromComplexExpression1()
     {
         $expression = "test";
-        $list = $this->query::getAllAttributesFromComplexExpression($expression);
+        $list = Util::getAllAttributesFromComplexExpression($expression);
         $this->assertTrue(in_array('test', $list));
     }
 
     public function testGetAllAttributesFromComplexExpression2()
     {
         $expression = "comment.test";
-        $list = $this->query::getAllAttributesFromComplexExpression($expression);
+        $list = Util::getAllAttributesFromComplexExpression($expression);
         $this->assertTrue(in_array('comment.test', $list));
     }
 

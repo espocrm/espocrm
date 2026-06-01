@@ -35,7 +35,6 @@ use Espo\ORM\Query\Delete as DeleteQuery;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\Insert as InsertQuery;
 use Espo\ORM\Query\LockTable as LockTableQuery;
-
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Update as UpdateQuery;
@@ -531,11 +530,11 @@ class PostgresqlQueryComposer extends BaseQueryComposer
                 $alias = $this->sanitize($alias);
                 $column = $this->toDb($this->sanitize($attribute));
 
-                $left = $this->quoteColumn("{$alias}.{$column}");
+                $left = $this->quoteColumn("$alias.$column");
             } else {
                 $column = $this->toDb($this->sanitize($attribute));
 
-                $left = $this->quoteColumn("{$column}"); // Diff.
+                $left = $this->quoteColumn("$column"); // Diff.
             }
 
             $right = $isNotValue ?
@@ -584,17 +583,12 @@ class PostgresqlQueryComposer extends BaseQueryComposer
     protected function limit(string $sql, ?int $offset = null, ?int $limit = null): string
     {
         if (!is_null($offset) && !is_null($limit)) {
-            $offset = intval($offset);
-            $limit = intval($limit);
-
             $sql .= " LIMIT $limit OFFSET $offset";
 
             return $sql;
         }
 
         if (!is_null($limit)) {
-            $limit = intval($limit);
-
             $sql .= " LIMIT $limit";
 
             return $sql;
