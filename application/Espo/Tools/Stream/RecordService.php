@@ -464,6 +464,7 @@ class RecordService
             ->from(Attachment::ENTITY_TYPE)
             ->withSearchParams($searchParams)
             ->withComplexExpressionsForbidden()
+            ->withWherePermissionCheck()
             ->buildQueryBuilder()
             ->where(
                 Condition::in(
