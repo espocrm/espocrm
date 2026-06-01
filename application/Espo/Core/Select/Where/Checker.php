@@ -121,6 +121,10 @@ class Checker
         $forbidComplexExpressions = $params->forbidComplexExpressions();
         $checkWherePermission = $params->applyPermissionCheck();
 
+        if ($attribute && str_contains($attribute, '#')) {
+            throw new Forbidden("Not allowed character in attribute.");
+        }
+
         if ($forbidComplexExpressions) {
             if (in_array($type, $this->subQueryTypeList)) {
                 throw new Forbidden("Sub-queries are forbidden in where.");
