@@ -104,8 +104,8 @@ class UserInfoPopulatorTest extends BaseTestCase
         $em->saveEntity($user);
         $em->refreshEntity($user);
 
-        $this->assertNull($user->getEmailAddress());
-        $this->assertNull($user->getPhoneNumber());
+        $this->assertEquals('test2@test.com', $user->getEmailAddress());
+        $this->assertEquals('+200', $user->getPhoneNumber());
 
         $this->assertCount(1, $user->getEmailAddressGroup()->getList());
         $this->assertCount(1, $user->getPhoneNumberGroup()->getList());

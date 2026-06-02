@@ -32,7 +32,6 @@ namespace Espo\Core\FieldProcessing\PhoneNumber;
 use Espo\Core\FieldProcessing\Loader\Params as LoeaderParams;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
-use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\RDBRelation;
@@ -603,8 +602,6 @@ class Saver implements SaverInterface
             return;
         }
 
-        $one->set(EmailAddress::FIELD_PRIMARY, true);
-
-        $this->entityManager->saveEntity($one);
+        $relation->updateColumns($one, ['primary' => true]);
     }
 }

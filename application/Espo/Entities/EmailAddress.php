@@ -40,8 +40,6 @@ class EmailAddress extends Entity
 
     public const RELATION_ENTITY_EMAIL_ADDRESS = 'EntityEmailAddress';
 
-    public const string FIELD_PRIMARY = 'primary';
-
     /**
      * @param string $value
      * @return void

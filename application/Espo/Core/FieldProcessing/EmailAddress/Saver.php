@@ -591,8 +591,6 @@ class Saver implements SaverInterface
             return;
         }
 
-        $one->set(EmailAddress::FIELD_PRIMARY, true);
-
-        $this->entityManager->saveEntity($one);
+        $relation->updateColumns($one, ['primary' => true]);
     }
 }
