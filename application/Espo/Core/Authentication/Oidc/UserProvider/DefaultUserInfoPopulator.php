@@ -48,8 +48,6 @@ class DefaultUserInfoPopulator implements UserInfoPopulator
         return [
             'emailAddress' => $userInfo->get('email'),
             'phoneNumber' => $userInfo->get('phone_number'),
-            'emailAddressData' => null,
-            'phoneNumberData' => null,
             'firstName' => $userInfo->get('given_name'),
             'lastName' => $userInfo->get('family_name'),
             'middle_name' => $userInfo->get('middle_name'),

@@ -35,6 +35,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\EmailAddress;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Repository\RDBRelation;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\ORM\Entity;
 use Espo\Core\ApplicationState;
@@ -419,21 +420,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        $fetchedAddress = $entity->getFetched(self::ATTR_EMAIL_ADDRESS);
-
-        if (!$fetchedAddress) {
-            return;
-        }
-
-        $emailAddressOld = $this->getByAddress($fetchedAddress);
-
-        if (!$emailAddressOld) {
-            return;
-        }
-
-        $this->entityManager
-            ->getRelation($entity, self::LINK_EMAIL_ADDRESSES)
-            ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
+        $this->storePrimaryEmpty($entity);
     }
 
     private function storePrimaryNotEmpty(Entity $entity, string $emailAddressValue): void
@@ -579,5 +566,33 @@ class Saver implements SaverInterface
 
         $this->loader->process($entity, LoaderParams::create());
         $entity->setFetched(self::ATTR_EMAIL_ADDRESS_DATA, $previous);
+    }
+
+    private function storePrimaryEmpty(Entity $entity): void
+    {
+        $fetchedAddress = $entity->getFetched(self::ATTR_EMAIL_ADDRESS);
+
+        if (!$fetchedAddress) {
+            return;
+        }
+
+        /** @var RDBRelation<EmailAddress> $relation */
+        $relation = $this->entityManager->getRelation($entity, self::LINK_EMAIL_ADDRESSES);
+
+        $emailAddressOld = $this->getByAddress($fetchedAddress);
+
+        if ($emailAddressOld) {
+            $relation->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
+        }
+
+        $one = $relation->findOne();
+
+        if (!$one) {
+            return;
+        }
+
+        $one->set(EmailAddress::FIELD_PRIMARY, true);
+
+        $this->entityManager->saveEntity($one);
     }
 }

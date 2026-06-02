@@ -40,6 +40,8 @@ class PhoneNumber extends Entity
 
     public const RELATION_ENTITY_PHONE_NUMBER = 'EntityPhoneNumber';
 
+    public const string FIELD_PRIMARY = 'primary';
+
     /**
      * @param string $value
      * @return void
