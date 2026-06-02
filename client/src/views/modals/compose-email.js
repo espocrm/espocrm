@@ -120,7 +120,7 @@ class ComposeEmailModalView extends EditModalView {
             this.dialogIsHidden = false;
         });
 
-        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
+        const helper = new MailtoHelper();
 
         if (helper.toUse()) {
             this.once('after:render', () => this.actionClose());

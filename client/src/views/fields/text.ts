@@ -26,7 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
 import BaseFieldView, {BaseOptions, BaseParams, BaseViewSchema} from 'views/fields/base';
 import MailtoHelper from 'helpers/misc/mailto';
 import TextPreviewModalView from 'views/modals/text-preview';
@@ -570,7 +569,7 @@ class TextFieldView<
             to: emailAddress,
         };
 
-        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
+        const helper = new MailtoHelper();
 
         if (helper.toUse()) {
             document.location.href = helper.composeLink(attributes);

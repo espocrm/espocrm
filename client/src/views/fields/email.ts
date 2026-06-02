@@ -485,7 +485,7 @@ class EmailFieldView<
             attributes.nameHash[emailAddress] = this.model.get('name');
         }
 
-        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
+        const helper = new MailtoHelper();
 
         if (helper.toUse()) {
             document.location.href = helper.composeLink(attributes);

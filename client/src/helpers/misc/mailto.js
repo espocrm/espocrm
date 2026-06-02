@@ -26,18 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import {inject} from 'di';
+import Settings from 'models/settings';
+import Preferences from 'models/preferences';
+import AclManager from 'acl-manager';
+
 class MailtoHelper {
 
     /**
-     * @param {import('models/settings').default} config
-     * @param {import('models/preferences').default} preferences
-     * @param {import('acl-manager').default} acl
+     * @type {Settings}
      */
-    constructor(config, preferences, acl) {
-        this.config = config;
-        this.preferences = preferences;
-        this.acl = acl;
-    }
+    @inject(Settings)
+    config
+
+    /**
+     * @type {Preferences}
+     */
+    @inject(Preferences)
+    preferences
+
+    /**
+     * @type {AclManager}
+     */
+    @inject(AclManager)
+    acl
 
     /**
      * Whether mailto should be used.

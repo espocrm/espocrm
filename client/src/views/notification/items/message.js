@@ -28,6 +28,8 @@
 
 import BaseNotificationItemView from 'views/notification/items/base';
 import DOMPurify from 'dompurify';
+import MailtoHelper from 'helpers/misc/mailto';
+import Ui from 'ui';
 
 class MessageNotificationItemView extends BaseNotificationItemView {
 
@@ -69,6 +71,35 @@ class MessageNotificationItemView extends BaseNotificationItemView {
                 .text(data.entityName);
 
         this.createMessage();
+
+        this.addActionHandler('mailTo', (_, target) => this.mailTo(target.dataset.emailAddress));
+    }
+
+    /**
+     * @private
+     * @param {string} emailAddress
+     * @return {Promise<void>}
+     */
+    async mailTo(emailAddress) {
+        const attributes = {
+            status: 'Draft',
+            to: emailAddress,
+        };
+
+        const helper = new MailtoHelper();
+
+        if (helper.toUse()) {
+            document.location.href = helper.composeLink(attributes);
+
+            return;
+        }
+
+        Ui.notifyWait();
+
+        const view = await this.createView('dialog', 'views/modals/compose-email', {attributes: attributes});
+        await view.render();
+
+        Ui.notify();
     }
 }
 
