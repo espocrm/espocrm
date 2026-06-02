@@ -29,7 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\EmailAddress;
 
-use Espo\Core\FieldProcessing\Loader\Params as LoeaderParams;
+use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
 use Espo\Core\Name\Link;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
@@ -572,12 +572,12 @@ class Saver implements SaverInterface
 
     private function storePrimaryAndPrepareData(Entity $entity): void
     {
-        $this->loader->process($entity, LoeaderParams::create());
+        $this->loader->process($entity, LoaderParams::create());
         $previous = $entity->get(self::ATTR_EMAIL_ADDRESS_DATA);
 
         $this->storePrimary($entity);
 
-        $this->loader->process($entity, LoeaderParams::create());
+        $this->loader->process($entity, LoaderParams::create());
         $entity->setFetched(self::ATTR_EMAIL_ADDRESS_DATA, $previous);
     }
 }
