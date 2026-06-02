@@ -118,19 +118,39 @@ class Sync
      */
     private function getUserDataFromToken(UserInfo $userInfo): array
     {
-        return [
-            'emailAddress' => $userInfo->get('email'),
-            'phoneNumber' => $userInfo->get('phone_number'),
-            'emailAddressData' => null,
-            'phoneNumberData' => null,
-            'firstName' => $userInfo->get('given_name'),
-            'lastName' => $userInfo->get('family_name'),
-            'middle_name' => $userInfo->get('middle_name'),
-            'gender' =>
-                in_array($userInfo->get('gender'), ['male', 'female']) ?
-                    ucfirst($userInfo->get('gender') ?? '') :
-                    null,
-        ];
+        $data = [];
+
+        if ($userInfo->has('email')) {
+            $data['emailAddress'] = $userInfo->get('email');
+            $data['emailAddressData'] = null;
+        }
+
+        if ($userInfo->has('phone_number')) {
+            $data['phoneNumber'] = $userInfo->get('phone_number');
+            $data['phoneNumberData'] = null;
+        }
+
+        if ($userInfo->has('given_name')) {
+            $data['firstName'] = $userInfo->get('given_name');
+        }
+
+        if ($userInfo->has('family_name')) {
+            $data['lastName'] = $userInfo->get('family_name');
+        }
+
+        if ($userInfo->has('middle_name')) {
+            $data['middle_name'] = $userInfo->get('middle_name');
+        }
+
+        if ($userInfo->has('gender')) {
+            $gender = $userInfo->get('gender');
+
+            $data['gender'] = in_array($gender, ['male', 'female']) ?
+                ucfirst($gender ?? '') :
+                null;
+        }
+
+        return $data;
     }
 
     /**

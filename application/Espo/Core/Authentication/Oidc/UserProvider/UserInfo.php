@@ -46,4 +46,13 @@ class UserInfo
     {
         return $this->payload->get($name) ?? $this->data[$name] ?? null;
     }
+
+    /**
+     * Whether a claim is present. A claim explicitly set to null is considered
+     * present, as opposed to an absent claim.
+     */
+    public function has(string $name): bool
+    {
+        return $this->payload->has($name) || array_key_exists($name, $this->data);
+    }
 }
