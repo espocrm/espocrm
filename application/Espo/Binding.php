@@ -299,6 +299,11 @@ class Binding implements BindingProcessor
             );
 
         $binder->bindImplementation(
+            'Espo\\Core\\Authentication\\Oidc\\UserProvider\\UserInfoPopulator',
+            'Espo\\Core\\Authentication\\Oidc\\UserProvider\\DefaultUserInfoPopulator'
+        );
+
+        $binder->bindImplementation(
             'Espo\\Core\\Mail\\Importer\\ParentFinder',
             'Espo\\Core\\Mail\\Importer\\DefaultParentFinder'
         );
