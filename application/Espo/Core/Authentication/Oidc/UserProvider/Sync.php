@@ -50,6 +50,7 @@ class Sync
         private PasswordHash $passwordHash,
         private AclCacheClearer $aclCacheClearer,
         private ApplicationState $applicationState,
+        private UserInfoPopulator $userInfoPopulator,
     ) {}
 
     public function createUser(UserInfo $userInfo): User
@@ -67,7 +68,7 @@ class Sync
             'password' => $this->passwordHash->hash(Util::generatePassword(10, 4, 2, true)),
         ]);
 
-        $user->set($this->getUserDataFromToken($userInfo));
+        $this->userInfoPopulator->populate($userInfo, $user);
         $user->set($this->getUserTeamsDataFromToken($userInfo));
 
         if ($this->applicationState->isPortal()) {
@@ -93,7 +94,7 @@ class Sync
         }
 
         if ($this->configDataProvider->sync()) {
-            $user->set($this->getUserDataFromToken($payload));
+            $this->userInfoPopulator->populate($payload, $user);
         }
 
         $clearAclCache = false;
@@ -111,26 +112,6 @@ class Sync
         if ($clearAclCache) {
             $this->aclCacheClearer->clearForUser($user);
         }
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function getUserDataFromToken(UserInfo $userInfo): array
-    {
-        return [
-            'emailAddress' => $userInfo->get('email'),
-            'phoneNumber' => $userInfo->get('phone_number'),
-            'emailAddressData' => null,
-            'phoneNumberData' => null,
-            'firstName' => $userInfo->get('given_name'),
-            'lastName' => $userInfo->get('family_name'),
-            'middle_name' => $userInfo->get('middle_name'),
-            'gender' =>
-                in_array($userInfo->get('gender'), ['male', 'female']) ?
-                    ucfirst($userInfo->get('gender') ?? '') :
-                    null,
-        ];
     }
 
     /**

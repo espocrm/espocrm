@@ -32,6 +32,7 @@ namespace tests\unit\Espo\Core\Authentication\Logins\Oidc;
 use Espo\Core\Acl\Cache\Clearer;
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Oidc\ConfigDataProvider;
+use Espo\Core\Authentication\Oidc\UserProvider\DefaultUserInfoPopulator;
 use Espo\Core\Authentication\Oidc\UserProvider\Sync;
 use Espo\Core\Authentication\Oidc\UserProvider\UsernameValidator;
 use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
@@ -50,6 +51,8 @@ class SyncTest extends TestCase
         $this->config = $this->createMock(Config::class);
         $configDataProvider = $this->createMock(ConfigDataProvider::class);
 
+        $populator = new DefaultUserInfoPopulator();
+
         $this->sync = new Sync(
             $this->createMock(UsernameValidator::class),
             $this->config,
@@ -57,7 +60,8 @@ class SyncTest extends TestCase
             $this->createMock(UserRepository::class),
             $this->createMock(PasswordHash::class),
             $this->createMock(Clearer::class),
-            $this->createMock(ApplicationState::class)
+            $this->createMock(ApplicationState::class),
+            $populator,
         );
     }
 
