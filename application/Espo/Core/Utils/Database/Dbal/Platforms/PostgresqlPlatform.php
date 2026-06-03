@@ -50,6 +50,28 @@ class PostgresqlPlatform extends PostgreSQL100Platform
         return new PostgreSQLSchemaManager($connection, $this);
     }
 
+    public function getDoctrineTypeMapping($dbType)
+    {
+        $dbType = strtolower((string) $dbType);
+
+        return parent::getDoctrineTypeMapping($this->resolvePostgresArrayType($dbType));
+    }
+
+    private function resolvePostgresArrayType(string $dbType): string
+    {
+        if (!str_starts_with($dbType, '_')) {
+            return $dbType;
+        }
+
+        $innerType = substr($dbType, 1);
+
+        if ($innerType === '' || !$this->hasDoctrineTypeMappingFor($innerType)) {
+            return $dbType;
+        }
+
+        return $innerType;
+    }
+
     public function getCreateIndexSQL(Index $index, $table)
     {
         if (!$index->hasFlag('fulltext')) {
