@@ -433,7 +433,7 @@ div.list-expanded > ul > li > div.expanded-row {
         }
     }
 
-    &:not(.list-selectable) {
+    &:not(.list-selectable):not(.list-tree) {
         a.link {
             .link-content-color();
         }
@@ -3522,7 +3522,7 @@ table.table-admin-panel {
 
                 .category-item-name {
                     text-decoration: underline;
-                    color: @gray-soft;
+                    //color: @gray-soft;
                 }
             }
 

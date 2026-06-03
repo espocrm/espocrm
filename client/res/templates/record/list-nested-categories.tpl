@@ -95,7 +95,7 @@
                     <div class="category-item" data-id="{{id}}">
                         <a
                             href="{{link}}"
-                            class="action link-gray"
+                            class="action text-default"
                             data-action="openCategory"
                             data-id="{{id}}"
                             data-name="{{name}}"
