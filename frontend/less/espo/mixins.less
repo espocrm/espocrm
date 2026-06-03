@@ -220,3 +220,18 @@
     border-radius: var(--dropdown-border-radius);
     border-width: var(--dropdown-border-width);
 }
+
+.link-content-color() {
+    &,
+    &:hover,
+    &:focus {
+        color: var(--text-color);
+    }
+
+    &:hover {
+        > .fas,
+        > .far {
+            color: var(--text-gray-color);
+        }
+    }
+}

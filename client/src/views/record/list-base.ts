@@ -845,6 +845,7 @@ abstract class ListBaseRecordView<
             checkboxColumnWidth: checkboxColumnWidth,
             noDataDisabled: noDataDisabled,
             hasStickyBar: hasStickyBar,
+            selectable: this.selectable,
         };
     }
 

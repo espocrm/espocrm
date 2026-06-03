@@ -258,20 +258,8 @@ a.text-soft {
     }
 }
 
-a.link,
 a.text-content {
-    &,
-    &:hover,
-    &:focus {
-        color: var(--text-color);
-    }
-
-    &:hover {
-        > .fas,
-        > .far {
-            color: var(--text-gray-color);
-        }
-    }
+    .link-content-color();
 }
 
 a.text-default {
@@ -310,7 +298,8 @@ a.no-underline {
 .text-info {
     .text-emphasis-variant-espo(var(--state-info-text), var(--state-info-text-10));
 }
-.text-warning {
+.text-warning,
+a.text-warning {
     .text-emphasis-variant-espo(var(--state-warning-text); var(--state-warning-text-10));
 }
 .text-danger {

@@ -138,7 +138,7 @@
 
 {{#if collectionLength}}
     <div
-        class="list {{#if showMoreActive}} has-show-more {{/if}}"
+        class="list {{#if showMoreActive}} has-show-more {{/if}} {{#if selectable}} list-selectable {{/if}}"
         data-scope="{{scope}}"
         tabindex="-1"
     >
