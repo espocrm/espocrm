@@ -258,6 +258,22 @@ a.text-soft {
     }
 }
 
+a.link,
+a.text-content {
+    &,
+    &:hover,
+    &:focus {
+        color: var(--text-color);
+    }
+
+    &:hover {
+        > .fas,
+        > .far {
+            color: var(--text-gray-color);
+        }
+    }
+}
+
 a.text-default {
     color: var(--btn-text-color);
 
