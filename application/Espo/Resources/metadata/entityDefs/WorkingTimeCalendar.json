@@ -83,6 +83,14 @@
             "default": null,
             "view": "views/working-time-calendar/fields/time-ranges"
         },
+        "isDefault": {
+            "type": "bool",
+            "readOnly": true,
+            "notStorable": true,
+            "orderDisabled": true,
+            "loaderClassName": "Espo\\Classes\\FieldProcessing\\WorkingTimeCalendar\\IsDefaultLoader",
+            "tooltip": true
+        },
         "teams": {
             "type": "linkMultiple",
             "readOnly": true
@@ -109,6 +117,12 @@
             "type": "hasMany",
             "foreign": "calendars",
             "entity": "WorkingTimeRange"
+        },
+        "users": {
+            "type": "hasMany",
+            "foreign": "workingTimeCalendar",
+            "entity": "User",
+            "readOnly": true
         },
         "teams": {
             "type": "hasMany",
