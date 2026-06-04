@@ -67,6 +67,7 @@ class DefaultPopulator implements Populator
         private Metadata $metadata,
         private PipelineMetadata $pipelineMetadata,
         private UserPipelineDataProvider $userPipelineDataProvider,
+        private Acl\AssignmentChecker\Helper $assignmentHelper,
     ) {}
 
     public function populate(Entity $entity): void
@@ -84,6 +85,10 @@ class DefaultPopulator implements Populator
     private function isAssignedUserShouldBeSetWithSelf(string $entityType): bool
     {
         if ($this->user->isPortal()) {
+            return false;
+        }
+
+        if ($this->assignmentHelper->hasAssignedUsersField($entityType)) {
             return false;
         }
 
@@ -193,6 +198,8 @@ class DefaultPopulator implements Populator
         if (!$this->isAssignedUserShouldBeSetWithSelf($entity->getEntityType())) {
             return;
         }
+
+        // @todo Support Multiple Assigned Users.
 
         $entity->set(Field::ASSIGNED_USER . 'Id', $this->user->getId());
         $entity->set(Field::ASSIGNED_USER . 'Name', $this->user->getName());
