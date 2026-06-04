@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import LayoutBaseView from 'views/admin/layouts/base';
+import View from 'view';
 
 /**
  * @abstract
@@ -57,8 +58,8 @@ class LayoutGridView extends LayoutBaseView {
 
     additionalEvents = {
         /** @this LayoutGridView */
-        'click #layout a[data-action="addPanel"]': function () {
-            this.addPanel();
+        'click #layout a[data-action="addPanel"]': async function () {
+            await this.addPanel();
             this.setIsChanged();
             this.makeDraggable();
         },
@@ -263,7 +264,10 @@ class LayoutGridView extends LayoutBaseView {
         if (this.$style) this.$style.remove();
     }
 
-    addPanel() {
+    /**
+     * @private
+     */
+    async addPanel() {
         this.lastPanelNumber ++;
 
         const number = this.lastPanelNumber;
@@ -294,8 +298,12 @@ class LayoutGridView extends LayoutBaseView {
 
         this.$el.find('ul.panels').append($li);
 
-        this.createPanelView(data, true, (view) => {
-            view.render();
+        return new Promise(resolve => {
+            this.createPanelView(data, true, view => {
+                view.render();
+
+                resolve();
+            });
         });
     }
 
@@ -343,7 +351,13 @@ class LayoutGridView extends LayoutBaseView {
         });
     }
 
-    createPanelView(data, empty, callback) {
+    /**
+     *
+     * @param {Record<string, any>} data
+     * @param {boolean} empty
+     * @param {(View) => void} [callback]
+     */
+    async createPanelView(data, empty, callback) {
         data.label = data.label || '';
 
         data.isCustomLabel = false;
@@ -377,25 +391,18 @@ class LayoutGridView extends LayoutBaseView {
             }
         });
 
-        this.createView('panel-' + data.number, 'view', {
-            selector: 'li.panel-layout[data-number="'+data.number+'"]',
-            template: 'admin/layouts/grid-panel',
-            data: () => {
-                const o = Espo.Utils.clone(data);
+        const view = new PanelView({
+            data: data,
+            panelDataAttributeList: this.panelDataAttributeList,
+        });
 
-                o.dataAttributeList = [];
+        await this.assignView(`panel-${data.number}`, view, `li.panel-layout[data-number="${data.number}"]`);
 
-                this.panelDataAttributeList.forEach((item) => {
-                    if (item === 'panelName') {
-                        return;
-                    }
+        if (!callback) {
+            return;
+        }
 
-                    o.dataAttributeList.push(item);
-                });
-
-                return o;
-            }
-        }, callback);
+        callback(view);
     }
 
     makeDraggable() {
@@ -592,3 +599,110 @@ class LayoutGridView extends LayoutBaseView {
 }
 
 export default LayoutGridView;
+
+class PanelView extends View {
+
+    // language=Handlebars
+    templateContent = `
+        <header data-name="{{name}}">
+            <a
+                role="button"
+                tabindex="0"
+                data-action="edit-panel-label"
+                class="edit-panel-label"
+            ><i class="fas fa-pencil-alt fa-sm"></i></a>
+            <label
+                data-is-custom="{{#if isCustomLabel}}true{{/if}}"
+                data-label="{{label}}"
+                class="panel-label"
+            >{{labelTranslated}}</label>&nbsp;
+            <a
+                role="button"
+                tabindex="0"
+                style="float: right;"
+                data-action="removePanel"
+                class="remove-panel"
+                data-number="{{number}}"
+            ><i class="fas fa-times"></i></a>
+        </header>
+        <ul class="rows">
+        {{#each rows}}
+            <li data-cell-count="{{./this.length}}">
+                <div class="row-actions clear-fix">
+                    <a
+                        role="button"
+                        tabindex="0"
+                        data-action="removeRow"
+                        class="remove-row"
+                    ><i class="fas fa-times"></i></a>
+                    <a
+                        role="button"
+                        tabindex="0"
+                        data-action="plusCell"
+                        class="add-cell"
+                    ><i class="fas fa-plus"></i></a>
+                </div>
+                <ul class="cells" data-cell-count="{{./this.length}}">
+                {{#each this}}
+                    {{#if this}}
+                    <li
+                        class="cell"
+                        data-name="{{name}}"
+                        {{#if hasCustomLabel}}
+                        data-custom-label="{{customLabel}}"
+                        {{/if}}
+                        data-no-label="{{noLabel}}"
+                        title="{{label}}"
+                    >
+                        <div class="left" style="width: calc(100% - var(--14px));">{{label}}</div>
+                        <div class="right" style="width: var(--14px);">
+                            <a
+                                role="button"
+                                tabindex="0"
+                                data-action="removeField"
+                                class="remove-field"
+                            ><i class="fas fa-times"></i></a>
+                        </div>
+                    </li>
+                    {{else}}
+                    <li class="empty cell">
+                        <div class="right" style="width: var(--14px);">
+                            <a
+                                role="button"
+                                tabindex="0"
+                                data-action="minusCell"
+                                class="remove-field"
+                            ><i class="fas fa-minus"></i></a>
+                        </div>
+                    </li>
+                    {{/if}}
+                {{/each}}
+                </ul>
+            </li>
+        {{/each}}
+        </ul>
+        <div>
+            <a
+                role="button"
+                tabindex="0"
+                data-action="addRow"
+            ><i class="fas fa-plus"></i></a>
+        </div>
+    `
+
+    data() {
+        const o = Espo.Utils.clone(this.options.data);
+
+        o.dataAttributeList = [];
+
+        this.options.panelDataAttributeList.forEach(item => {
+            if (item === 'panelName') {
+                return;
+            }
+
+            o.dataAttributeList.push(item);
+        });
+
+        return o;
+    }
+}
