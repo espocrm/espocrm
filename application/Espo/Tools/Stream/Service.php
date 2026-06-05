@@ -75,6 +75,7 @@ use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
+use Espo\Tools\Object\MetadataProvider as ObjectMetadataProvider;
 use stdClass;
 
 class Service
@@ -108,6 +109,7 @@ class Service
         private RecordServiceContainer $recordServiceContainer,
         private SystemUser $systemUser,
         private AssignmentHelper $assignmentHelper,
+        private ObjectMetadataProvider $objectMetadataProvider,
     ) {}
 
     private function getStatusField(string $entityType): ?string
@@ -1131,19 +1133,15 @@ class Service
 
     private function setSuperParent(Entity $entity, Note $note, bool $processTeamsUsers): void
     {
-        $accountId = $entity->get('accountId');
+        $link = $this->objectMetadataProvider->getAccountLink($entity->getEntityType());
 
-        if (!$accountId) {
+        if (!$link) {
             return;
         }
 
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entity->getEntityType());
+        $accountId = $entity->get($link . 'Id');
 
-        $foreignEntityType = $entityDefs->tryGetRelation('account')?->tryGetForeignEntityType();
-
-        if ($foreignEntityType !== Account::ENTITY_TYPE) {
+        if (!$accountId) {
             return;
         }
 

@@ -331,6 +331,10 @@
             "type": "boolean",
             "description": "Force to be available in Last Viewed."
         },
+        "accountLink": {
+            "type": "string",
+            "description": "A link determining the Account the record belongs to. As of v10.0."
+        },
         "entityManager": {
             "description": "Entity manager items availability.",
             "type": "object",
