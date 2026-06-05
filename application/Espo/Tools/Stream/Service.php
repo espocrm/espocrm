@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\Acl\AssignmentChecker\Helper as AsssignmentHelper;
+use Espo\Core\Acl\AssignmentChecker\Helper as AssignmentHelper;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
@@ -79,7 +79,7 @@ use stdClass;
 
 class Service
 {
-    private const FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
+    private const string FIELD_ASSIGNED_USERS = Field::ASSIGNED_USERS;
 
     /**
      * @var array<
@@ -107,7 +107,7 @@ class Service
         private UserAclManagerProvider $userAclManagerProvider,
         private RecordServiceContainer $recordServiceContainer,
         private SystemUser $systemUser,
-        private AsssignmentHelper $assignmentHelper,
+        private AssignmentHelper $assignmentHelper,
     ) {}
 
     private function getStatusField(string $entityType): ?string
@@ -158,15 +158,15 @@ class Service
         if (!$skipAclCheck) {
             foreach ($userIdList as $i => $userId) {
                 $user = $this->entityManager
-                    ->getRDBRepository(User::ENTITY_TYPE)
+                    ->getRDBRepositoryByClass(User::class)
                     ->select([
                         Attribute::ID,
-                        'type',
-                        'isActive',
+                        User::FIELD_TYPE,
+                        User::ATTR_IS_ACTIVE,
                     ])
                     ->where([
                         Attribute::ID => $userId,
-                        'isActive' => true,
+                        User::ATTR_IS_ACTIVE => true,
                     ])
                     ->findOne();
 
@@ -235,10 +235,10 @@ class Service
 
         if (!$skipAclCheck) {
             $user = $this->entityManager
-                ->getRDBRepository(User::ENTITY_TYPE)
+                ->getRDBRepositoryByClass(User::class)
                 ->where([
                     Attribute::ID => $userId,
-                    'isActive' => true,
+                    User::ATTR_IS_ACTIVE,
                 ])
                 ->findOne();
 
@@ -783,14 +783,6 @@ class Service
 
         $this->entityManager->saveEntity($note, $noteOptions);
     }
-
-    /**
-     * @param array<string, mixed> $options
-     * @deprecated As of v9.2.0. The Update type note carries the status information now.
-     * @todo Remove in v9.3.0.
-     */
-    public function noteStatus(Entity $entity, string $field, array $options = []): void
-    {}
 
     /**
      * @return array<
