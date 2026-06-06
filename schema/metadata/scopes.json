@@ -333,7 +333,11 @@
         },
         "accountLink": {
             "type": "string",
-            "description": "A link determining the Account the record belongs to. As of v10.0."
+            "description": "A link determining the Account the record belongs to. The system falls back to 'account' if such a link exists. As of v10.0."
+        },
+        "parentLink": {
+            "type": "string",
+            "description": "A link determining the parent record. For example, a project is a parent for a task. The system falls back to 'parent' if such a link exists. As of v10.0."
         },
         "entityManager": {
             "description": "Entity manager items availability.",

@@ -27,42 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Name;
+namespace tests\integration\Espo\Tools\Object;
 
-class Field
+use Espo\Core\Name\Field;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\Modules\Crm\Entities\Task;
+use Espo\Tools\Object\MetadataProvider;
+use tests\integration\Core\BaseTestCase;
+
+class MetadataProviderTest extends BaseTestCase
 {
-    public const ID = 'id';
-    public const NAME = 'name';
-    public const CREATED_BY = 'createdBy';
-    public const CREATED_AT = 'createdAt';
-    public const MODIFIED_BY = 'modifiedBy';
-    public const MODIFIED_AT = 'modifiedAt';
-    public const STREAM_UPDATED_AT = 'streamUpdatedAt';
-    public const ASSIGNED_USER = 'assignedUser';
-    public const ASSIGNED_USERS = 'assignedUsers';
-    public const COLLABORATORS = 'collaborators';
-    public const TEAMS = 'teams';
-    public const PARENT = 'parent';
-    public const IS_FOLLOWED = 'isFollowed';
-    public const FOLLOWERS = 'followers';
-    public const IS_STARRED = 'isStarred';
-    public const EMAIL_ADDRESS = 'emailAddress';
-    public const PHONE_NUMBER = 'phoneNumber';
-    public const VERSION_NUMBER = 'versionNumber';
-    public const string IS_LOCKED = 'isLocked';
+    public function testGetLinks(): void
+    {
+        $provider = $this->getInjectableFactory()->create(MetadataProvider::class);
 
-    /**
-     * @since 10.0.0
-     */
-    public const string ACCOUNT = 'account';
+        $this->assertEquals(Field::ACCOUNT, $provider->getAccountLink(Opportunity::ENTITY_TYPE));
+        $this->assertEquals(Field::ACCOUNT, $provider->getAccountLink(Meeting::ENTITY_TYPE));
 
-    /**
-     * @since 10.0.0
-     */
-    public const string PIPELINE = 'pipeline';
-
-    /**
-     * @since 10.0.0
-     */
-    public const string PIPELINE_STAGE = 'pipelineStage';
+        $this->assertEquals(Field::PARENT, $provider->getParentLink(Meeting::ENTITY_TYPE));
+        $this->assertEquals(Field::PARENT, $provider->getParentLink(Task::ENTITY_TYPE));
+    }
 }

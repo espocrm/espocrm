@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Object;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\Defs;
@@ -39,8 +40,6 @@ use Espo\ORM\Type\RelationType;
  */
 class MetadataProvider
 {
-    private const string LINK_ACCOUNT = 'account';
-
     public function __construct(
         private Metadata $metadata,
         private Defs $defs,
@@ -54,7 +53,7 @@ class MetadataProvider
             return $link;
         }
 
-        $link = self::LINK_ACCOUNT;
+        $link = Field::ACCOUNT;
 
         $relationDefs = $this->defs
             ->getEntity($entityType)
@@ -69,6 +68,27 @@ class MetadataProvider
         }
 
         if ($relationDefs->tryGetForeignEntityType() !== Account::ENTITY_TYPE) {
+            return null;
+        }
+
+        return $link;
+    }
+
+    public function getParentLink(string $entityType): ?string
+    {
+        $link = $this->metadata->get("scopes.$entityType.parentLink");
+
+        if ($link) {
+            return $link;
+        }
+
+        $link = Field::PARENT;
+
+        $relationDefs = $this->defs
+            ->getEntity($entityType)
+            ->tryGetRelation($link);
+
+        if ($relationDefs?->getType() !== RelationType::BELONGS_TO_PARENT) {
             return null;
         }
 
