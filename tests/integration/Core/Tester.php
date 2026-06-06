@@ -137,7 +137,7 @@ class Tester
         return null;
     }
 
-    public function setParam($name, $value)
+    public function setParam(string $name, mixed $value): void
     {
         $this->params[$name] = $value;
     }
@@ -177,11 +177,11 @@ class Tester
     }
 
     public function auth(
-        $userName,
-        $password = null,
-        $portalId = null,
-        $authenticationMethod = null,
-        $request = null,
+        ?string $userName,
+        ?string $password = null,
+        ?string $portalId = null,
+        ?string $authenticationMethod = null,
+        ?RequestWrapper $request = null,
     ): void {
 
         $this->userName = $userName;
@@ -421,7 +421,7 @@ class Tester
         }
     }
 
-    private function reset($fileManager, $latestEspoDir): void
+    private function reset(FileManager $fileManager, string $latestEspoDir): void
     {
         $configData = $this->getTestConfigData();
 
@@ -513,9 +513,7 @@ class Tester
     {
         $this->clearVars();
 
-        $fileManager = new FileManager();
-
-        $fileManager->removeInDir('data/cache');
+        (new FileManager())->removeInDir('data/cache');
     }
 
     private function clearVars(): void
@@ -527,9 +525,9 @@ class Tester
     /**
      * Create a user with roles.
      *
-     * @param string|array $userData If $userData is a string, then it's a userName with default password.
+     * @param string|array<string, mixed> $userData If string, then it's a userName with the default password.
      */
-    public function createUser($userData, ?array $roleData = null, $isPortal = false): User
+    public function createUser($userData, ?array $roleData = null, bool $isPortal = false): User
     {
         if (!is_array($userData)) {
             $userData = [
@@ -572,7 +570,7 @@ class Tester
         }
 
         $user = $entityManager->getNewEntity(User::ENTITY_TYPE);
-        $user->set($userData);
+        $user->setMultiple($userData);
 
         $entityManager->saveEntity($user);
 

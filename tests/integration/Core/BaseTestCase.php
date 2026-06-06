@@ -35,6 +35,7 @@ use Espo\Core\Application;
 use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Container;
 use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -44,6 +45,7 @@ use Espo\ORM\EntityManager;
 
 use PHPUnit\Framework\TestCase;
 
+use RuntimeException;
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Factory\StreamFactory;
@@ -176,7 +178,12 @@ abstract class BaseTestCase extends TestCase
 
         $this->beforeSetUp();
 
-        $this->espoTester->initialize();
+        try {
+            $this->espoTester->initialize();
+        } catch (Error $e) {
+            throw new RuntimeException("Initialization error.", previous: $e);
+        }
+
         $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
 
         $this->beforeStartApplication();
@@ -217,12 +224,15 @@ abstract class BaseTestCase extends TestCase
     protected function afterStartApplication(): void
     {}
 
+    /**
+     * @param array<string, mixed> $queryParams
+     */
     protected function createRequest(
         string $method,
         array $queryParams = [],
         array $headers = [],
         ?string $body = null,
-        array $routeParams = []
+        array $routeParams = [],
     ): RequestWrapper {
 
         $request = (new RequestFactory())
@@ -247,11 +257,6 @@ abstract class BaseTestCase extends TestCase
             (new ResponseFactory())->createResponse()
         );
     }
-
-    /*protected function setData(array $data): void
-    {
-        $this->espoTester->setData($data);
-    }*/
 
     /**
      * @todo Revise whether needed.
