@@ -29,12 +29,14 @@
 
 namespace tests\integration\Core;
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
-
 use Espo\Core\Application;
 use Espo\Core\Binding\BindingProcessor;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\InjectableFactory;
@@ -48,15 +50,13 @@ use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory;
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\PasswordHash;
-
 use Espo\Entities\PortalRole;
 use Espo\Entities\Role;
 use Espo\Entities\User;
-
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
-
 use Installer;
+use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 use RuntimeException;
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Response;
@@ -104,19 +104,22 @@ class Tester
         if (isset($params['dataFile'])) {
             $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
 
-            if (!file_exists($params['dataFile'])) {
-                die('"dataFile" is not found, path: '.$params['dataFile'].'.');
+            $dataFile = $params['dataFile'];
+
+            if (!file_exists($dataFile)) {
+                throw new RuntimeException("File '$dataFile' not found.");
             }
         } else {
-            $params['dataFile'] = realpath($this->testDataPath) . '/' .
-                str_replace('\\', '/', $classPath) . '.php';
+            $params['dataFile'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath) . '.php';
         }
 
         if (isset($params['pathToFiles'])) {
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . $params['pathToFiles'];
 
-            if (!file_exists($params['pathToFiles'])) {
-                die('"pathToFiles" is not found, path: '.$params['pathToFiles'].'.');
+            $pathToFiles = $params['pathToFiles'];
+
+            if (!file_exists($pathToFiles)) {
+                throw new RuntimeException("File '$pathToFiles' not found.");
             }
         } else {
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath);
@@ -148,7 +151,7 @@ class Tester
         } else if (getenv('TEST_DATABASE_NAME')) {
             $data = include($this->envConfigPath);
         } else {
-            die('Config for integration tests ['. $this->configPath .'] is not found');
+            throw new RuntimeException("Config `$this->configPath` not found. Create the config file.");
         }
 
         $packageData = json_decode(file_get_contents($this->packageJsonPath));
@@ -160,19 +163,17 @@ class Tester
         return $data;
     }
 
-    private function saveTestConfigData(string $optionName, $data): void
+    private function setLastModifiedTime($time): void
     {
         $configData = $this->getTestConfigData();
 
-        if (array_key_exists($optionName, $configData) && $configData[$optionName] === $data) {
+        if (array_key_exists('lastModifiedTime', $configData) && $configData['lastModifiedTime'] === $time) {
             return;
         }
 
-        $configData[$optionName] = $data;
+        $configData['lastModifiedTime'] = $time;
 
-        $fileManager = new FileManager();
-
-        $fileManager->putPhpContents($this->configPath, $configData);
+        (new FileManager())->putPhpContents($this->configPath, $configData);
     }
 
     public function auth(
@@ -180,7 +181,7 @@ class Tester
         $password = null,
         $portalId = null,
         $authenticationMethod = null,
-        $request = null
+        $request = null,
     ): void {
 
         $this->userName = $userName;
@@ -224,10 +225,10 @@ class Tester
                 ->getByClass(InjectableFactory::class)
                 ->createWith(Authentication::class, ['allowAnyAccess' => false]);
 
-            $request = $this->request ??
-                new RequestWrapper(
-                    (new RequestFactory())->createRequest('POST', '')
-                );
+            /** @var Psr7Request $requestWrapped */
+            $requestWrapped = (new RequestFactory())->createRequest('POST', '');
+
+            $request = $this->request ?? new RequestWrapper($requestWrapped);
 
             $response = new ResponseWrapper(new Response());
 
@@ -257,6 +258,9 @@ class Tester
         return $this->dataLoader;
     }
 
+    /**
+     * @throws Error
+     */
     public function initialize(): void
     {
         $this->install();
@@ -278,10 +282,13 @@ class Tester
         $this->changeDirToBase();
 
         if ($this->getParam('fullReset')) {
-            $this->saveTestConfigData('lastModifiedTime', null);
+            $this->setLastModifiedTime(null);
         }
     }
 
+    /**
+     * @throws Error
+     */
     protected function install(): void
     {
         $fileManager = new FileManager();
@@ -291,7 +298,7 @@ class Tester
         $latestEspoDir = Utils::getLatestBuiltPath($this->buildPath);
 
         if (empty($latestEspoDir)) {
-            die("EspoCRM build is not found. Please run \"grunt\" in your terminal.\n");
+            throw new RuntimeException("Espo build is not found. Run `grunt test`.");
         }
 
         if (!isset($configData['siteUrl']) && file_exists('data/config.php')) {
@@ -311,7 +318,7 @@ class Tester
         }
 
         if (!is_writable($this->installPath)) {
-            die("Permission denied for directory [".$this->installPath."].\n");
+            throw new RuntimeException("Dir '$this->installPath' is not writable. Check permissions.");
         }
 
         $this->reset($fileManager, $latestEspoDir);
@@ -322,7 +329,7 @@ class Tester
         set_include_path($this->installPath);
 
         if (!file_exists('bootstrap.php')) {
-            die("Permission denied to copy espo files.\n");
+            throw new RuntimeException("Could not read bootstrap.php.");
         }
 
         require_once('install/core/Installer.php');
@@ -339,8 +346,12 @@ class Tester
 
         $app = new Application($applicationParams);
 
-        $this->createDatabase($app);
-        $this->dropTables($app);
+        try {
+            $this->createDatabase($app);
+            $this->dropTables($app);
+        } catch (Exception $e) {
+            throw new RuntimeException("DBAL error.", previous: $e);
+        }
 
         $installer = new Installer($applicationParams); // reload installer to have all config data
         $installer->rebuild();
@@ -348,6 +359,10 @@ class Tester
     }
 
     // PDO can't be instantiated as dbname is set but database does not exist.
+
+    /**
+     * @throws Exception
+     */
     private function createDatabase(Application $app): void
     {
         $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
@@ -382,6 +397,10 @@ class Tester
         $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
     }
 
+    /**
+     * @throws SchemaException
+     * @throws Exception
+     */
     private function dropTables(Application $app): void
     {
         $databaseHelper = $app->getContainer()
@@ -419,7 +438,7 @@ class Tester
                 $fullReset = false;
             }
 
-            $this->saveTestConfigData('lastModifiedTime', $modifiedTime);
+            $this->setLastModifiedTime($modifiedTime);
         }
 
         if ($fullReset) {
@@ -472,7 +491,7 @@ class Tester
         if (!empty($this->params['pathToFiles']) && file_exists($this->params['pathToFiles'])) {
             $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
 
-            $this->getApplication(true, true)->run(Rebuild::class);
+            $this->getApplication(true)->run(Rebuild::class);
         }
 
         if (!empty($this->params['dataFile'])) {
@@ -486,15 +505,9 @@ class Tester
         }
 
         if ($applyChanges) {
-            $this->getApplication(true, true)->run(Rebuild::class);
+            $this->getApplication(true)->run(Rebuild::class);
         }
     }
-
-    /*public function setData(array $data): void
-    {
-        $this->getDataLoader()->setData($data);
-        $this->getApplication(true, true)->run(Rebuild::class);
-    }*/
 
     public function clearCache(): void
     {
