@@ -667,7 +667,7 @@ class TextFieldView<
         const after = value.substring(selectionEnd);
 
         // Last line, a list item syntax.
-        const match = before.match(/(^|\n)( *[-*]|\d+\.) ([^*\-\n]*)$/);
+        const match = before.match(/(^|\n)( *[-*]|\d+\.) ([^\n]*)$/);
 
         if (!match) {
             // Prevent unwanted scroll applied by the browser on enter.
