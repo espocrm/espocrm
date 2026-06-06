@@ -432,12 +432,20 @@ class Installer
     public function rebuild(): void
     {
         try {
-            $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
+            $this->rebuildInternal();
         } catch (Exception) {
             $this->auth();
 
-            $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
+            $this->rebuildInternal();
         }
+    }
+
+    /**
+     * @throws Error
+     */
+    private function rebuildInternal(): void
+    {
+        $this->app->getContainer()->getByClass(DataManager::class)->rebuild();
     }
 
     public function savePreferences(array $rawPreferences)
