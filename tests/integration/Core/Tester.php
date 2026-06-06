@@ -200,50 +200,51 @@ class Tester
 
         $portalId = $portalId ?? $this->portalId ?? null;
 
-        if (!isset($this->application) || $reload)  {
-            if ($clearCache) {
-                $this->clearCache();
+        if ($this->application && !$reload) {
+            return $this->application;
+        }
+
+        if ($clearCache) {
+            $this->clearCache();
+        }
+
+        $applicationParams = new Application\ApplicationParams(
+            noErrorHandler: true,
+            binding: $binding,
+        );
+
+        if ($portalId) {
+            try {
+                $this->application = new PortalApplication($portalId, $applicationParams);
+            } catch (Forbidden|NotFound $e) {
+                throw new RuntimeException(previous: $e);
             }
+        } else {
+            $this->application = new Application($applicationParams);
+        }
 
-            $applicationParams = new Application\ApplicationParams(
-                noErrorHandler: true,
-                binding: $binding,
-            );
+        $auth = $this->application
+            ->getInjectableFactory()
+            ->createWith(Authentication::class, ['allowAnyAccess' => false]);
 
-            if ($portalId) {
-                try {
-                    $this->application = new PortalApplication($portalId, $applicationParams);
-                } catch (Forbidden|NotFound $e) {
-                    throw new RuntimeException(previous: $e);
-                }
-            } else {
-                $this->application = new Application($applicationParams);
-            }
+        /** @var Psr7Request $requestWrapped */
+        $requestWrapped = (new RequestFactory())->createRequest('POST', '');
 
-            $auth = $this->application
-                ->getContainer()
-                ->getByClass(InjectableFactory::class)
-                ->createWith(Authentication::class, ['allowAnyAccess' => false]);
+        $request = $this->request ?? new RequestWrapper($requestWrapped);
 
-            /** @var Psr7Request $requestWrapped */
-            $requestWrapped = (new RequestFactory())->createRequest('POST', '');
+        $response = new ResponseWrapper(new Response());
 
-            $request = $this->request ?? new RequestWrapper($requestWrapped);
+        if (isset($this->userName) || $this->authenticationMethod) {
+            $this->password = $this->password ?? $this->defaultUserPassword;
 
-            $response = new ResponseWrapper(new Response());
+            $authenticationData = AuthenticationData::create()
+                ->withUsername($this->userName)
+                ->withPassword($this->password)
+                ->withMethod($this->authenticationMethod);
 
-            if (isset($this->userName) || $this->authenticationMethod) {
-                $this->password = $this->password ?? $this->defaultUserPassword;
-
-                $authenticationData = AuthenticationData::create()
-                    ->withUsername($this->userName)
-                    ->withPassword($this->password)
-                    ->withMethod($this->authenticationMethod);
-
-                $auth->login($authenticationData, $request, $response);
-            } else {
-                $this->application->setupSystemUser();
-            }
+            $auth->login($authenticationData, $request, $response);
+        } else {
+            $this->application->setupSystemUser();
         }
 
         return $this->application;
