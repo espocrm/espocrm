@@ -29,6 +29,9 @@
 
 namespace tests\integration\Espo\Core\Utils\Database;
 
+use integration\Core\NoTransaction;
+
+#[NoTransaction]
 class AutoIncrementFieldTest extends Base
 {
     public function testColumn()

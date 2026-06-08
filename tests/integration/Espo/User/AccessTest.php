@@ -48,8 +48,7 @@ class AccessTest extends BaseTestCase
             User::ATTR_TYPE => User::TYPE_ADMIN,
         ]);
 
-        $this->auth('admin-test');
-        $this->reCreateApplication();
+        $this->authenticate('admin-test');
 
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)

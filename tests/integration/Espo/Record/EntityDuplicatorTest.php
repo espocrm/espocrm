@@ -50,8 +50,7 @@ class EntityDuplicatorTest extends BaseTestCase
             'type' => User::TYPE_ADMIN,
         ]);
 
-        $this->auth('test');
-        $this->reCreateApplication();
+        $this->authenticate('test');
 
         $em = $this->getEntityManager();
 

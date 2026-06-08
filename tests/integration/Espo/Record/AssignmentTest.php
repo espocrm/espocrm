@@ -58,8 +58,7 @@ class AssignmentTest extends BaseTestCase
             'assignmentPermission' => Table::LEVEL_NO,
         ]);
 
-        $this->auth('test1');
-        $this->reCreateApplication();
+        $this->authenticate('test1');
 
         /**
          * @noinspection PhpUnhandledExceptionInspection

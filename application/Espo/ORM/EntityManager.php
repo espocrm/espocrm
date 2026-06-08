@@ -120,6 +120,11 @@ class EntityManager
         $this->transactionManager = new TransactionManager($this->pdoProvider->get(), $this->queryComposer);
 
         $this->initLocker();
+
+        $eventDispatcher->subscribeToMetadataUpdate(function () {
+            $this->repositoryHash = [];
+            $this->mappers = [];
+        });
     }
 
     private function initQueryComposer(): void

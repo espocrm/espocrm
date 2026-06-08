@@ -30,7 +30,9 @@
 namespace tests\integration\Espo\Core\Utils\Database;
 
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use integration\Core\NoTransaction;
 
+#[NoTransaction]
 class VarcharFieldTest extends Base
 {
     public function testColumn()

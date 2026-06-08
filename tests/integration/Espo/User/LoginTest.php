@@ -29,21 +29,39 @@
 
 namespace tests\integration\Espo\User;
 
-class LoginTest extends \tests\integration\Core\BaseTestCase
+use Espo\Entities\User;
+use integration\Core\NoTransaction;
+use tests\integration\Core\BaseTestCase;
+
+class LoginTest extends BaseTestCase
 {
-    protected ?string $userName = 'admin';
     protected ?string $password = '1';
 
-    public function testLogin()
+    protected function setUp(): void
     {
-        $user = $this->getContainer()->get('user');
+        parent::setUp();
 
-        $this->assertEquals('Espo\\Entities\\User', get_class($user));
-        $this->assertEquals('1', $user->get('id'));
-        $this->assertEquals('admin', $user->get('userName'));
+        $this->createUser([
+            'type' => User::TYPE_ADMIN,
+            'userName' => 'admin',
+            'lastName' => 'Admin',
+        ]);
+
+        $this->authenticate('admin');
     }
 
-    public function testWrongCredentials()
+    public function testLogin(): void
+    {
+        $this->authenticate('admin');
+
+        $user = $this->getContainer()->getByClass(User::class);
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals('admin', $user->getUserName());
+    }
+
+    #[NoTransaction]
+    public function testWrongCredentials(): void
     {
         $this->auth('admin', 'wrong-password');
 

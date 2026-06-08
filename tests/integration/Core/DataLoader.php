@@ -152,7 +152,7 @@ class DataLoader
                 try {
                     $entityManager->saveEntity($entity);
                 } catch (Exception $e) {
-                    throw new RuntimeException('Error loadEntities: ' . $e->getMessage() . ', ' . print_r($entityData, true));
+                    throw new RuntimeException('Save entity error.', previous: $e);
                 }
             }
         }

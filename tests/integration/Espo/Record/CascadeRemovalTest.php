@@ -37,6 +37,7 @@ use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\SelectBuilder;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class CascadeRemovalTest extends BaseTestCase
@@ -44,6 +45,7 @@ class CascadeRemovalTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    #[NoTransaction]
     public function testRemovalAndRestoral(): void
     {
         $metadata = $this->getMetadata();

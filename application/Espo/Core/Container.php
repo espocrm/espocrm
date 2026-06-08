@@ -381,4 +381,19 @@ class Container implements ContainerInterface
     {
         return new InjectableFactory($this, $this->bindingContainer);
     }
+
+    /**
+     * @internal
+     * @param string[] $exceptions
+     */
+    public function reset(array $exceptions): void
+    {
+        foreach (array_diff(array_keys($this->data), $exceptions) as $id) {
+            unset($this->data[$id]);
+        }
+
+        foreach (array_diff(array_keys($this->classCache), $exceptions) as $id) {
+            unset($this->classCache[$id]);
+        }
+    }
 }

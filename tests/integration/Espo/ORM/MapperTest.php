@@ -36,10 +36,7 @@ class MapperTest extends BaseTestCase
 {
     public function testRelate1()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
         $account = $entityManager->getNewEntity('Account');
         $account->set('name', 'Test');
@@ -60,10 +57,7 @@ class MapperTest extends BaseTestCase
 
     public function testRelate2()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+        $entityManager = $this->getEntityManager();
 
         $account = $entityManager->getNewEntity('Account');
         $account->set('name', 'Test');
@@ -87,10 +81,7 @@ class MapperTest extends BaseTestCase
 
     public function testRelate3WithEntityReFetching()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+        $entityManager = $this->getEntityManager();
 
         $account = $entityManager->getNewEntity('Account');
         $account->set('name', 'Test');
@@ -112,8 +103,7 @@ class MapperTest extends BaseTestCase
 
         $this->assertTrue($isRelated);
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+        $entityManager = $this->getEntityManager();
 
         $entityManager->getRDBRepository('Contact')
             ->getRelation($contact, 'account')
@@ -131,10 +121,7 @@ class MapperTest extends BaseTestCase
 
     public function testRelate4()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+        $entityManager = $this->getEntityManager();
 
         $account = $entityManager->getNewEntity('Account');
         $account->set('name', 'Test');
@@ -158,10 +145,7 @@ class MapperTest extends BaseTestCase
 
     public function testRelateOneToOne1()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $a1 = $em->createEntity('Account', [
             'name' => '1',
@@ -214,10 +198,7 @@ class MapperTest extends BaseTestCase
 
     public function testRelateOneToOne2()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $a1 = $em->createEntity('Account', [
             'name' => '1',
@@ -272,10 +253,7 @@ class MapperTest extends BaseTestCase
 
     public function testRelateOneToOne3()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $a1 = $em->createEntity('Account', [
             'name' => '1',
@@ -329,10 +307,7 @@ class MapperTest extends BaseTestCase
 
     public function testUnrelateOneToOne1()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $a1 = $em->createEntity('Account', [
             'name' => '1',

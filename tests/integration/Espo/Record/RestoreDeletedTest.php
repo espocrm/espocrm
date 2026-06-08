@@ -33,14 +33,13 @@ use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ReadParams;
 use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\ServiceContainer;
+use tests\integration\Core\BaseTestCase;
 
-class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
+class RestoreDeletedTest extends BaseTestCase
 {
-    public function testDeleted()
+    public function testDeleted(): void
     {
-        $app = $this->createApplication();
-
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account');
 
@@ -59,9 +58,7 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
 
     public function testRestoreDeleted()
     {
-        $app = $this->createApplication();
-
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account');
 

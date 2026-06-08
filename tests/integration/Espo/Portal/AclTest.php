@@ -35,8 +35,10 @@ use Espo\Core\Record\Service;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\CaseObj;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
+#[NoTransaction]
 class AclTest extends BaseTestCase
 {
     public function testAccessContact(): void

@@ -74,9 +74,11 @@ class ProcessingTest extends BaseTestCase
             'skipOwn' => true,
         ]);
 
-        $app = $this->createApplication();
+        $this->getDataManager()->clearCache();
 
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $this->authenticate(null);
+
+        $em = $this->getEntityManager();
 
         $account1 = $em->createEntity(Account::ENTITY_TYPE, [
             'name' => 'test1',
@@ -119,8 +121,7 @@ class ProcessingTest extends BaseTestCase
 
         $sender = $this->createMock(Sender::class);
 
-        /** @var Queue $queue */
-        $queue = $app->getContainer()
+        $queue = $this->getContainer()
             ->getByClass(InjectableFactory::class)
             ->createWith(Queue::class, [
                 'sender' => $sender,
@@ -185,10 +186,11 @@ class ProcessingTest extends BaseTestCase
             ]
         );
 
-        $app = $this->createApplication();
+        $this->getDataManager()->clearCache();
 
-        /* @var $em EntityManager */
-        $em = $app->getContainer()->get('entityManager');
+        $this->authenticate(null);
+
+        $em = $this->getEntityManager();
 
         $account1 = $em->createEntity(Account::ENTITY_TYPE, [
             'name' => 'test1',
@@ -207,18 +209,18 @@ class ProcessingTest extends BaseTestCase
             'skipOwn' => true,
         ]);
 
-        $app = $this->createApplication();
+        $this->getDataManager()->clearCache();
 
-        $em = $app->getContainer()->get('entityManager');
+        $this->authenticate(null);
+
+        $em = $this->getEntityManager();
 
         $em->removeEntity($account1);
         $em->removeEntity($account2, [SaveOption::MODIFIED_BY_ID => $user->getId()]);
 
         $sender = $this->createMock(Sender::class);
 
-        /* @var $queue Queue */
-        $queue = $app->getContainer()
-            ->get('injectableFactory')
+        $queue = $this->getInjectableFactory()
             ->createWith(Queue::class, [
                 'sender' => $sender,
             ]);
@@ -276,10 +278,8 @@ class ProcessingTest extends BaseTestCase
             ]
         );
 
-        $app = $this->createApplication();
 
-        /* @var $em EntityManager */
-        $em = $app->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $account1 = $em->createEntity(Account::ENTITY_TYPE, [
             'name' => 'test1',
@@ -292,9 +292,11 @@ class ProcessingTest extends BaseTestCase
             'url' => 'https://test.com',
         ]);
 
-        $app = $this->createApplication();
+        $this->getDataManager()->clearCache();
 
-        $em = $app->getContainer()->get('entityManager');
+        $this->authenticate(null);
+
+        $em = $this->getEntityManager();
 
         $account1->set('name', 'test-1-changed');
 
@@ -309,9 +311,7 @@ class ProcessingTest extends BaseTestCase
 
         $sender = $this->createMock(Sender::class);
 
-        /* @var $queue Queue */
-        $queue = $app->getContainer()
-            ->get('injectableFactory')
+        $queue = $this->getInjectableFactory()
             ->createWith(Queue::class, [
                 'sender' => $sender,
             ]);

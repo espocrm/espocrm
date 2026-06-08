@@ -44,6 +44,7 @@ use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Select;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class SelectBuilderTest extends BaseTestCase
@@ -53,7 +54,7 @@ class SelectBuilderTest extends BaseTestCase
      */
     private $factory;
 
-    private $user;
+    private ?User $user = null;
     private $contact;
     private $account;
 
@@ -73,18 +74,16 @@ class SelectBuilderTest extends BaseTestCase
         ]);
 
         if (!$skipLogin) {
-            $this->auth('tester');
+            $this->authenticate('tester');
         }
 
-        $app = $this->createApplication();
-
-        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
+        $injectableFactory = $this->getInjectableFactory();
 
         $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
 
-        $this->user = $app->getContainer()->getByClass(User::class);
+        $this->user = $this->getContainer()->getByClass(User::class);
 
-        return $app;
+        return $this->getApplication();
     }
 
     protected function initTestPortal(array $aclData = [], bool $skipLogin = false) : Application
@@ -434,6 +433,7 @@ class SelectBuilderTest extends BaseTestCase
         $this->assertEquals($expected, $raw);
     }
 
+    #[NoTransaction]
     public function testEmailAccessFilterOnlyAccount()
     {
         $this->initTestPortal(
@@ -485,6 +485,7 @@ class SelectBuilderTest extends BaseTestCase
         $this->assertEquals($expected['joins'], $raw['joins']);
     }
 
+    #[NoTransaction]
     public function testEmailAccessFilterOnlyContact()
     {
         $this->initTestPortal(

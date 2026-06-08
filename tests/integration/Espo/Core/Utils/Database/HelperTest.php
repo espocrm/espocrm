@@ -32,8 +32,9 @@ namespace tests\integration\Espo\Core\Utils\Database;
 use Espo\Core\Utils\Database\Helper;
 use Doctrine\DBAL\Connection;
 use PDO;
+use tests\integration\Core\BaseTestCase;
 
-class HelperTest extends \tests\integration\Core\BaseTestCase
+class HelperTest extends BaseTestCase
 {
     /** @var ?Helper */
     protected $helper;
@@ -45,7 +46,7 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
 
     private function getDatabaseInfo()
     {
-        $pdo = $this->getContainer()->get('entityManager')->getPDO();
+        $pdo = $this->getEntityManager()->getPDO();
 
         $sth = $pdo->prepare("select version()");
         $sth->execute();

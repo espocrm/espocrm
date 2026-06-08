@@ -31,8 +31,9 @@ namespace tests\integration\Espo\User;
 
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
+use tests\integration\Core\BaseTestCase;
 
-class AclAdminTest extends \tests\integration\Core\BaseTestCase
+class AclAdminTest extends BaseTestCase
 {
     public function testCreateUser()
     {
@@ -41,12 +42,9 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
         ]);
 
-        $this->auth('admin-test');
+        $this->authenticate('admin-test');
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()
-            ->get('injectableFactory')
+        $processor = $this->getInjectableFactory()
             ->create(ControllerActionProcessor::class);
 
         $data = [
@@ -78,13 +76,9 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
         ]);
 
-        $this->auth('admin-test');
+        $this->authenticate('admin-test');
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()
-            ->get('injectableFactory')
-            ->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -113,13 +107,9 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
         ]);
 
-        $this->auth('admin-test');
+        $this->authenticate('admin-test');
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()
-            ->get('injectableFactory')
-            ->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',
@@ -148,13 +138,9 @@ class AclAdminTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
         ]);
 
-        $this->auth('admin-test');
+        $this->authenticate('admin-test');
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()
-            ->get('injectableFactory')
-            ->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $data = [
             'name' => 'test',

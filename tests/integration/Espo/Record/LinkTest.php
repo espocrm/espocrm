@@ -119,8 +119,7 @@ class LinkTest extends BaseTestCase
             'name' => '2',
         ]);
 
-        $this->auth('test');
-        $this->reCreateApplication();
+        $this->authenticate('test');
 
         $oppService = $this->getContainer()
             ->getByClass(ServiceContainer::class)
@@ -218,6 +217,7 @@ class LinkTest extends BaseTestCase
                 ]
             ]
         ]);
+
         $metadata->save();
 
         $this->reCreateApplication();
@@ -286,8 +286,7 @@ class LinkTest extends BaseTestCase
             'parentType' => Lead::ENTITY_TYPE,
         ]);
 
-        $this->auth('test');
-        $this->reCreateApplication();
+        $this->authenticate('test');
 
         $caseService = $this->getContainer()
             ->getByClass(ServiceContainer::class)

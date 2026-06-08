@@ -39,6 +39,7 @@ use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Portal\Application as PortalApplication;
@@ -198,11 +199,11 @@ class Tester
         ?BindingProcessor $binding = null,
     ): Application {
 
-        $portalId = $portalId ?? $this->portalId ?? null;
-
         if ($this->application && !$reload) {
             return $this->application;
         }
+
+        $portalId ??= $this->portalId ?? null;
 
         if ($clearCache) {
             $this->clearCache();
@@ -223,26 +224,8 @@ class Tester
             $this->application = new Application($applicationParams);
         }
 
-        $auth = $this->application
-            ->getInjectableFactory()
-            ->createWith(Authentication::class, ['allowAnyAccess' => false]);
-
-        /** @var Psr7Request $requestWrapped */
-        $requestWrapped = (new RequestFactory())->createRequest('POST', '');
-
-        $request = $this->request ?? new RequestWrapper($requestWrapped);
-
-        $response = new ResponseWrapper(new Response());
-
         if (isset($this->userName) || $this->authenticationMethod) {
-            $this->password = $this->password ?? $this->defaultUserPassword;
-
-            $authenticationData = AuthenticationData::create()
-                ->withUsername($this->userName)
-                ->withPassword($this->password)
-                ->withMethod($this->authenticationMethod);
-
-            $auth->login($authenticationData, $request, $response);
+            $this->login();
         } else {
             $this->application->setupSystemUser();
         }
@@ -257,15 +240,6 @@ class Tester
         }
 
         return $this->dataLoader;
-    }
-
-    /**
-     * @throws Error
-     */
-    public function initialize(): void
-    {
-        $this->install();
-        $this->loadData();
     }
 
     private function changeDirToBase(): void
@@ -290,7 +264,7 @@ class Tester
     /**
      * @throws Error
      */
-    protected function install(): void
+    public function install(): void
     {
         $fileManager = new FileManager();
 
@@ -348,8 +322,8 @@ class Tester
         $app = new Application($applicationParams);
 
         try {
-            $this->createDatabase($app);
-            $this->dropTables($app);
+            $this->createDatabaseIfDoesNotExist($app);
+            $this->prepareDatabase($app);
         } catch (Exception $e) {
             throw new RuntimeException("DBAL error.", previous: $e);
         }
@@ -357,6 +331,8 @@ class Tester
         $installer = new Installer($applicationParams); // reload installer to have all config data
         $installer->rebuild();
         $installer->setSuccess();
+
+        Registry::$isCleanAndReady = true;
     }
 
     // PDO can't be instantiated as dbname is set but database does not exist.
@@ -364,7 +340,7 @@ class Tester
     /**
      * @throws Exception
      */
-    private function createDatabase(Application $app): void
+    private function createDatabaseIfDoesNotExist(Application $app): void
     {
         $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
 
@@ -402,8 +378,12 @@ class Tester
      * @throws SchemaException
      * @throws Exception
      */
-    private function dropTables(Application $app): void
+    private function prepareDatabase(Application $app): void
     {
+        if (Registry::$isCleanAndReady) {
+            return;
+        }
+
         $databaseHelper = $app->getContainer()
             ->getByClass(InjectableFactory::class)
             ->create(DatabaseHelper::class);
@@ -460,32 +440,7 @@ class Tester
         $fileManager->unlink($this->installPath . '/install/config.php');
     }
 
-    /*private function cleanDirectory(string $path, array $ignoreList = []): void
-    {
-        if (!file_exists($path)) {
-            return;
-        }
-
-        $fileManager = new FileManager();
-
-        $list = $fileManager->getFileList($path);
-
-        foreach ($list as $itemName) {
-            if (in_array($itemName, $ignoreList)) {
-                continue;
-            }
-
-            $itemPath = $path . '/' . $itemName;
-
-            if (is_file($itemPath)) {
-                $fileManager->unlink($itemPath);
-            } else {
-                $fileManager->removeInDir($itemPath, true);
-            }
-        }
-    }*/
-
-    private function loadData(): void
+    public function loadData(): void
     {
         $applyChanges = false;
 
@@ -495,13 +450,15 @@ class Tester
             $this->getApplication(true)->run(Rebuild::class);
         }
 
-        if (!empty($this->params['dataFile'])) {
+        if (!empty($this->params['dataFile']) && file_exists($this->params['dataFile'])) {
             $this->getDataLoader()->loadData($this->params['dataFile']);
+
             $applyChanges = true;
         }
 
         if (!empty($this->params['initData'])) {
             $this->getDataLoader()->setData($this->params['initData']);
+
             $applyChanges = true;
         }
 
@@ -618,5 +575,32 @@ class Tester
         }
 
         return true;
+    }
+
+    public function login(): void
+    {
+        $this->password ??= $this->defaultUserPassword;
+
+        $authenticationData = AuthenticationData::create()
+            ->withUsername($this->userName)
+            ->withPassword($this->password)
+            ->withMethod($this->authenticationMethod);
+
+        $auth = $this->application
+            ->getInjectableFactory()
+            ->createWith(Authentication::class, ['allowAnyAccess' => false]);
+
+        /** @var Psr7Request $requestWrapped */
+        $requestWrapped = (new RequestFactory())->createRequest('POST', '');
+
+        $request = $this->request ?? new RequestWrapper($requestWrapped);
+
+        $response = new ResponseWrapper(new Response());
+
+        try {
+            $auth->login($authenticationData, $request, $response);
+        } catch (ServiceUnavailable|Forbidden $e) {
+            throw new RuntimeException(previous: $e);
+        }
     }
 }

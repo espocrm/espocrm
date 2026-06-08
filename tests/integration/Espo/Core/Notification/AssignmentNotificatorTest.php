@@ -29,13 +29,11 @@
 
 namespace tests\integration\Espo\Core\Notification;
 
-use Espo\Core\Container;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Config\ConfigWriter;
 
-use Espo\{
-    Core\InjectableFactory,
-    Entities\User};
+use Espo\Core\InjectableFactory;
+use Espo\Entities\User;
 use tests\integration\Core\BaseTestCase;
 
 class AssignmentNotificatorTest extends BaseTestCase
@@ -56,18 +54,13 @@ class AssignmentNotificatorTest extends BaseTestCase
      */
     private $user2;
 
-
     public function setUp(): void
     {
         parent::setUp();
 
         $this->initTestData();
 
-        $application = $this->createApplication();
-
-        $container = $application->getContainer();
-
-        $this->entityManager = $container->getByClass(EntityManager::class);
+        $this->entityManager = $this->getEntityManager();
     }
 
     private function initTestData() : void
@@ -87,7 +80,7 @@ class AssignmentNotificatorTest extends BaseTestCase
 
         $configWriter->save();
 
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $role = $em->createEntity('Role', [
             'name' => 'test',
@@ -122,7 +115,7 @@ class AssignmentNotificatorTest extends BaseTestCase
             'emailAddress' => 'test3@test.com',
         ]);
 
-        $preferences2 = $em->getEntity('Preferences', $this->user2->getId());
+        $preferences2 = $em->getEntityById('Preferences', $this->user2->getId());
 
         $preferences2->set([
             'assignmentNotificationsIgnoreEntityTypeList' => ['Meeting'],
@@ -223,7 +216,7 @@ class AssignmentNotificatorTest extends BaseTestCase
         ]);
 
         $notification = $this->entityManager
-            ->getRepository('Notification')
+            ->getRDBRepository('Notification')
             ->where([
                 'userId' => $this->user1->getId(),
                 'type' => 'EmailReceived',
