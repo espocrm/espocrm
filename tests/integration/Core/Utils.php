@@ -29,6 +29,8 @@
 
 namespace tests\integration\Core;
 
+use RuntimeException;
+
 class Utils
 {
     /**
@@ -42,6 +44,10 @@ class Utils
         $archives = [];
 
         $buildDir = dir($path);
+
+        if (!$buildDir) {
+            throw new RuntimeException("No test build. Run `grunt test`.");
+        }
 
         while ($folderName = $buildDir->read()) {
             if ($folderName === '.'|| $folderName === '..' || empty($folderName)) {
