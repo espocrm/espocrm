@@ -30,26 +30,41 @@
 namespace tests\integration\Espo\Extension;
 
 use Espo\Core\Upgrades\ExtensionManager;
+use Espo\Entities\User;
+use integration\Core\NoTransaction;
+use tests\integration\Core\BaseTestCase;
 
-class GeneralTest extends \tests\integration\Core\BaseTestCase
+class GeneralTest extends BaseTestCase
 {
-    protected ?string $dataFile = 'InitData.php';
-
-    protected ?string $userName = 'admin';
     protected ?string $password = '1';
 
     protected $packagePath = 'Extension/General.zip';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->createUser([
+            'type' => User::TYPE_ADMIN,
+            'userName' => 'admin',
+            'lastName' => 'Admin',
+            'password' => $this->password,
+        ]);
+    }
+
     protected function beforeSetUp(): void
     {
-        //$this->fullReset();
+        $this->fullReset();
     }
 
     /**
      * If this test fails, an instance may become broken for consecutive test runs.
      */
+    #[NoTransaction]
     public function testExtensionUploadInstallUninstallDelete(): void
     {
+        $this->authenticate('admin');
+
         $extensionId = $this->testUninstall();
 
         $extensionManager = new ExtensionManager($this->getContainer());

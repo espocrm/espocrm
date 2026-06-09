@@ -83,8 +83,6 @@ class AuditTest extends BaseTestCase
         ]);
         $this->getMetadata()->save();
 
-        $this->reCreateApplication();
-
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(KnowledgeBaseArticle::class);
@@ -115,8 +113,7 @@ class AuditTest extends BaseTestCase
 
         $searchParams = SearchParams::create();
 
-        $this->auth('test1');
-        $this->reCreateApplication();
+        $this->authenticate('test1');
 
         $service = $this->getInjectableFactory()->create(RecordService::class);
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -124,8 +121,7 @@ class AuditTest extends BaseTestCase
 
         $this->assertCount(1, $recordCollection->getCollection()->getValueMapList());
 
-        $this->auth('test2');
-        $this->reCreateApplication();
+        $this->authenticate('test2');
 
         $isThrown = false;
 
@@ -139,8 +135,7 @@ class AuditTest extends BaseTestCase
 
         $this->assertTrue($isThrown);
 
-        $this->auth('test3');
-        $this->reCreateApplication();
+        $this->authenticate('test3');
 
         $isThrown = false;
 

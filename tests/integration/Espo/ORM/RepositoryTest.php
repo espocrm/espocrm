@@ -32,28 +32,27 @@ namespace tests\integration\Espo\ORM;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
-use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
 
-class RepositoryTest extends \tests\integration\Core\BaseTestCase
+class RepositoryTest extends BaseTestCase
 {
     public function testModifiedBy(): void
     {
         $user1 = $this->createUser('test-1');
         $user2 = $this->createUser('test-2');
 
-        $this->auth('test-1');
-        $app = $this->createApplication();
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $this->authenticate('test-1');
+
+        $em = $this->getEntityManager();
 
         $account = $em->createEntity(Account::ENTITY_TYPE, ['name' => '1']);
 
         $this->assertEquals($user1->getId(), $account->get('createdById'));
 
-        $this->auth('test-2');
-        $app = $this->createApplication();
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $this->authenticate('test-2');
+
+
+        $em = $this->getEntityManager();
 
         $account = $em->getEntityById(Account::ENTITY_TYPE, $account->getId());
         $account->set('name', '2');
@@ -61,10 +60,9 @@ class RepositoryTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals($user2->getId(), $account->get('modifiedById'));
 
-        $this->auth('test-1');
-        $app = $this->createApplication();
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $this->authenticate('test-1');
+
+        $em = $this->getEntityManager();
 
         $account = $em->getEntityById(Account::ENTITY_TYPE, $account->getId());
         $account->set('name', '2');

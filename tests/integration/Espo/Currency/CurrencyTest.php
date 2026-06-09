@@ -40,6 +40,7 @@ use Espo\Core\Currency\Rates;
 use Espo\Core\Field\Currency;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Tools\Currency\SyncManager;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class CurrencyTest extends BaseTestCase
@@ -78,6 +79,7 @@ class CurrencyTest extends BaseTestCase
     /**
      * @throws Error
      */
+    #[NoTransaction]
     public function testDecimal1(): void
     {
         $this->getMetadata()->set('entityDefs', 'Lead', [
@@ -183,6 +185,7 @@ class CurrencyTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    #[NoTransaction]
     public function testDefaultCurrencyJoinMode(): void
     {
         $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
@@ -225,6 +228,7 @@ class CurrencyTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    #[NoTransaction]
     public function testDefaultCurrencyNoJoinMode(): void
     {
         $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);

@@ -37,6 +37,7 @@ use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Lead;
@@ -48,7 +49,7 @@ class FieldValidationTest extends BaseTestCase
 {
     private function setFieldsDefs(Application $app, string $entityType, array $data)
     {
-        $metadata = $app->getContainer()->get('metadata');
+        $metadata = $app->getContainer()->getByClass(Metadata::class);
 
         $metadata->set('entityDefs', $entityType, [
             'fields' => $data,
@@ -59,9 +60,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredVarchar1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'name' => [
                 'required' => true,
             ],
@@ -69,7 +68,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -79,15 +78,13 @@ class FieldValidationTest extends BaseTestCase
 
     public function testUpdateRequiredVarchar1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'name' => [
                 'required' => true,
             ],
         ]);
 
-        $entity = $app->getContainer()
+        $entity = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create(
@@ -100,7 +97,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->update(
@@ -114,9 +111,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredVarchar2()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'name' => [
                 'required' => true,
             ],
@@ -124,7 +119,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create(
@@ -137,15 +132,13 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredVarchar3()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'name' => [
                 'required' => true,
             ],
         ]);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -157,9 +150,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testMaxLength1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'name' => [
                 'required' => true,
                 'maxLength' => 5,
@@ -168,7 +159,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -178,16 +169,14 @@ class FieldValidationTest extends BaseTestCase
 
     public function testMaxLength2()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'name' => [
                 'required' => true,
                 'maxLength' => 5,
             ]
         ]);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -199,9 +188,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredLink1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'assignedUser' => [
                 'required' => true,
             ]
@@ -209,7 +196,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -241,15 +228,13 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredLink2()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'assignedUser' => [
                 'required' => true,
             ]
         ]);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -262,9 +247,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredLinkMultiple1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'teams' => [
                 'required' => true,
             ]
@@ -272,7 +255,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Account')
             ->create((object) [
@@ -283,9 +266,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredCurrency1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Lead', [
+        $this->setFieldsDefs($this->getApplication(), 'Lead', [
             'opportunityAmount' => [
                 'required' => true,
             ]
@@ -293,7 +274,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Lead')
             ->create((object) [
@@ -304,15 +285,13 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredCurrency2()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Lead', [
+        $this->setFieldsDefs($this->getApplication(), 'Lead', [
             'opportunityAmount' => [
                 'required' => true,
             ]
         ]);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Lead')
             ->create((object) [
@@ -326,15 +305,13 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredCurrency3()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Lead', [
+        $this->setFieldsDefs($this->getApplication(), 'Lead', [
             'opportunityAmount' => [
                 'required' => true,
             ]
         ]);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Lead')
             ->create((object) [
@@ -348,20 +325,21 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredEnum1()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Lead', [
+        $this->setFieldsDefs($this->getApplication(), 'Lead', [
             'status' => [
                 'required' => true,
                 'default' => null,
             ]
         ]);
 
-        $app = $this->createApplication();
+        $this->getDataManager()->clearCache();
+        $this->getDataManager()->rebuildMetadata();
+
+        $this->authenticate(null);
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Lead')
             ->create((object) [
@@ -371,9 +349,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredEnum2()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Lead', [
+        $this->setFieldsDefs($this->getApplication(), 'Lead', [
             'status' => [
                 'required' => true,
             ]
@@ -381,7 +357,7 @@ class FieldValidationTest extends BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Lead')
             ->create((object) [
@@ -392,15 +368,13 @@ class FieldValidationTest extends BaseTestCase
 
     public function testRequiredEnum3()
     {
-        $app = $this->createApplication();
-
-        $this->setFieldsDefs($app, 'Lead', [
+        $this->setFieldsDefs($this->getApplication(), 'Lead', [
             'status' => [
                 'required' => true,
             ]
         ]);
 
-        $app->getContainer()
+        $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->get('Lead')
             ->create((object) [
@@ -429,7 +403,7 @@ class FieldValidationTest extends BaseTestCase
 
     public function testSettings()
     {
-        $service = $this->getContainer()->get('injectableFactory')->create(SettingsService::class);
+        $service = $this->getInjectableFactory()->create(SettingsService::class);
 
         $this->expectException(BadRequest::class);
 
@@ -544,7 +518,8 @@ class FieldValidationTest extends BaseTestCase
 
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->getDataManager()->clearCache();
+        $this->getDataManager()->rebuildMetadata();
 
         $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Account::class);
 
@@ -724,25 +699,21 @@ class FieldValidationTest extends BaseTestCase
      */
     public function testDependsOn(): void
     {
-        $app = $this->createApplication();
-
-        $this->setApplication($app);
-
         $em = $this->getEntityManager();
 
         $account = $em->createEntity('Account', [
             'name' => 'Test',
         ]);
 
-        $this->setFieldsDefs($app, 'Account', [
+        $this->setFieldsDefs($this->getApplication(), 'Account', [
             'description' => [
                 'required' => true,
                 'validationDependsOnFieldList' => ['name'],
             ],
         ]);
 
-        $this->setApplication($app);
-        $this->reCreateApplication();
+        $this->getDataManager()->clearCache();
+        $this->getDataManager()->rebuildMetadata();
 
         $this->expectException(BadRequest::class);
 

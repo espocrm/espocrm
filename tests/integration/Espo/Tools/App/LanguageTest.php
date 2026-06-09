@@ -49,8 +49,7 @@ class LanguageTest extends BaseTestCase
             ]
         ]);
 
-        $this->auth('tester');
-        $this->setApplication($this->createApplication());
+        $this->authenticate('tester');
 
         $data = $this->getInjectableFactory()->create(LanguageService::class)->getDataForFrontend();
 

@@ -78,8 +78,7 @@ class ReactionsTest extends BaseTestCase
             ->setPost('Test');
         $em->saveEntity($note2);
 
-        $this->auth('test');
-        $this->reCreateApplication();
+        $this->authenticate('test');
 
         // Has access.
 

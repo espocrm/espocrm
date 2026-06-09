@@ -33,6 +33,7 @@ use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\Application;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\Date;
@@ -42,10 +43,10 @@ use Espo\Core\Record\UpdateParams;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Where\Item as WhereItem;
-
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Metadata;
+use Espo\Entities\Portal;
 use Espo\Entities\Role;
 use Espo\Entities\Team;
 use Espo\Entities\User;
@@ -58,17 +59,39 @@ use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
 use Exception;
+use integration\Core\NoTransaction;
+use tests\integration\Core\BaseTestCase;
 
-class AclTest extends \tests\integration\Core\BaseTestCase
+class AclTest extends BaseTestCase
 {
-    protected ?string $dataFile = 'User/Login.php';
-
-    protected ?string $userName = 'admin';
     protected ?string $password = '1';
 
-    private function setFieldsDefs($app, $entityType, $data)
+    protected function setUp(): void
     {
-        $metadata = $app->getContainer()->get('metadata');
+        parent::setUp();
+
+        $this->createUser([
+            'type' => User::TYPE_ADMIN,
+            'userName' => 'admin',
+            'lastName' => 'Admin',
+            'password' => $this->password,
+        ]);
+
+        $portal = $this->getEntityManager()->getRDBRepositoryByClass(Portal::class)->getNew();
+        $portal->setMultiple([
+            'id' => 'testPortalId',
+            'isActive' => true,
+            'name' => 'Test portal',
+            'customId' => 'test',
+        ]);
+        $this->getEntityManager()->saveEntity($portal);
+
+        $this->authenticate('admin');
+    }
+
+    private function setFieldsDefs(Application $app, $entityType, $data)
+    {
+        $metadata = $app->getContainer()->getByClass(Metadata::class);
 
         $metadata->set('entityDefs', $entityType, [
             'fields' => $data
@@ -77,7 +100,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $metadata->save();
     }
 
-    public function testUserAccess0()
+    public function testUserAccess0(): void
     {
         $this->expectException(Forbidden::class);
 
@@ -105,11 +128,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $request = $this->createRequest(
             'POST',
@@ -121,11 +142,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $processor->process('Account', 'create', $request, $this->createResponse());
     }
 
-    public function testPortalUserAccess()
+    public function testPortalUserAccess(): void
     {
         $this->expectException(Forbidden::class);
 
-        $newUser = $this->createUser([
+        $this->createUser([
                 'userName' => 'tester',
                 'lastName' => 'tester',
                 'portalsIds' => [
@@ -152,19 +173,19 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $app->getInjectableFactory()->create(ControllerActionProcessor::class);
 
-        $data = json_decode('{"name":"Test Account"}');
+        json_decode('{"name":"Test Account"}');
 
         $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"name":"Test Account"}');
 
         $processor->process('Account', 'create', $request, $this->createResponse());
     }
 
-    public function testUserAccessEditOwn1()
+    public function testUserAccessEditOwn1(): void
     {
         $user1 = $this->createUser('test-1', [
-            "id" => "test-1",
+            'id' => "test-1",
             'data' => [
                 'User' => [
                     'read' => 'all',
@@ -175,11 +196,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $user2 = $this->createUser('test-2', []);
 
-        $this->auth('test-1');
 
-        $app = $this->createApplication();
+        $this->authenticate('test-1');
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $params = [
             'id' => $user1->getId(),
@@ -238,8 +258,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $processor->process('User', 'update', $request, $this->createResponse());
 
-        $service = $app->getContainer()
-            ->getByClass(ServiceContainer::class)
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)
             ->getByClass(User::class);
 
         $resultData = $service->update($user1->getId(), $data, UpdateParams::create());
@@ -252,7 +271,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         );
     }
 
-    public function testUserAccessEditOwn2()
+    public function testUserAccessEditOwn2(): void
     {
         $user1 = $this->createUser('test-1', [
             "id" => "test-1",
@@ -264,11 +283,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $this->auth('test-1');
+        $this->authenticate('test-1');
 
-        $app = $this->createApplication();
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $params = [
             'id' => $user1->getId()
@@ -290,20 +308,18 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         try {
             $processor->process('User', 'update', $request, $response);
-        } catch (Exception $e) {};
+        } catch (Exception) {};
     }
 
-    protected function prepareTestUser()
+    protected function prepareTestUser(): void
     {
-        $app = $this->createApplication();
+        $entityManager = $this->getEntityManager();
 
-        $entityManager = $app->getContainer()->get('entityManager');
-
-        $team = $entityManager->getEntity('Team');
+        $team = $entityManager->getNewEntity('Team');
         $team->set('id', 'testTeamId');
         $entityManager->saveEntity($team);
 
-        $team = $entityManager->getEntity('Team');
+        $team = $entityManager->getNewEntity('Team');
         $team->set('id', 'testOtherTeamId');
         $entityManager->saveEntity($team);
 
@@ -347,46 +363,42 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         );
     }
 
-    public function testUserAccessCreateNo1()
+    public function testUserAccessCreateNo1(): void
     {
         $this->prepareTestUser();
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
         $this->expectException(Forbidden::class);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Account::class);
 
         $service->create((object) ['name' => 'Test'], CreateParams::create());
     }
 
-    public function testUserAccessCreateNo2()
+    public function testUserAccessCreateNo2(): void
     {
         $this->prepareTestUser();
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
         $this->expectException(Forbidden::class);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Lead::class);
 
         $service->create((object) ['lastName' => 'Test'], CreateParams::create());
     }
 
-    public function testUserAccessAclStrictCreateNo()
+    public function testUserAccessAclStrictCreateNo(): void
     {
         $this->prepareTestUser();
-
-        $this->auth('test');
-        $app = $this->createApplication(true);
+        $this->authenticate('test');
 
         $this->expectException(Forbidden::class);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(CaseObj::class);
 
@@ -396,11 +408,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     public function testUserAccessAclStrictCreateYes()
     {
         $this->prepareTestUser();
+        $this->authenticate('test');
 
-        $this->auth('test');
-        $app = $this->createApplication(true);
-
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -414,21 +424,20 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->assertNotNull($e);
     }
 
-    public function testUserAccessCreateAssignedPermissionNo1()
+    #[NoTransaction]
+    public function testUserAccessCreateAssignedPermissionNo1(): void
     {
         $this->prepareTestUser();
 
-        $app = $this->createApplication();
-        $this->setFieldsDefs($app, 'Meeting', [
+        $this->setFieldsDefs($this->getApplication(), 'Meeting', [
             'assignedUser' => [
                 'required' => false
             ]
         ]);
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -445,10 +454,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -467,10 +475,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -489,18 +496,17 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $this->getEntityManager();
 
-        $lead = $entityManager->getEntity('Lead');
+        $lead = $entityManager->getNewEntity('Lead');
         $lead->set([
             'id' => 'testLeadId'
         ]);
         $entityManager->saveEntity($lead);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Lead::class);
 
@@ -513,12 +519,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $this->getEntityManager();
 
-        $meeting = $entityManager->getEntity('Meeting');
+        $meeting = $entityManager->getNewEntity('Meeting');
         $meeting->set([
             'id' => 'testMeetingId',
             'teamsIds' => ['testOtherTeamId']
@@ -526,7 +531,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -539,12 +544,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $this->getEntityManager();
 
-        $lead = $entityManager->getEntity('Lead');
+        $lead = $entityManager->getNewEntity('Lead');
         $lead->set([
             'id' => 'testLeadId',
             'assignedUserId' => 'testUserId'
@@ -552,7 +556,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($lead);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Lead::class);
 
@@ -565,12 +569,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $this->getEntityManager();
 
-        $meeting = $entityManager->getEntity('Meeting');
+        $meeting = $entityManager->getNewEntity('Meeting');
         $meeting->set([
             'id' => 'testMeetingId',
             'teamsIds' => ['testTeamId']
@@ -578,7 +581,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->saveEntity($meeting);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -587,21 +590,20 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->assertNotNull($e);
     }
 
-    public function testUserAccessEditNo1()
+    public function testUserAccessEditNo1(): void
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $app = $this->createApplication();
+        $this->authenticate('test');
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $this->getEntityManager();
 
         $entityManager->createEntity('Meeting', [
             'id' => 'testMeetingId',
             'teamsIds' => ['testTeamId']
         ]);
 
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Meeting::class);
 
@@ -610,15 +612,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $service->update('testMeetingId', (object) [], UpdateParams::create());
     }
 
-    public function testUserAccessSearchByInternalField()
+    public function testUserAccessSearchByInternalField(): void
     {
         $this->prepareTestUser();
 
-        $this->auth('test');
+        $this->authenticate('test');
 
-        $app = $this->createApplication();
-
-        $service = $app->getContainer()
+        $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(User::class);
 
@@ -641,9 +641,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $userId = 'testUserId';
 
         $this->prepareTestUser();
-        $this->auth('test');
-        $this->setApplication($this->createApplication());
 
+        $this->authenticate('test');
         $contact1 = $this->getEntityManager()
             ->createEntity(Contact::ENTITY_TYPE, [
                 'lastName' => 'Contact 1',
@@ -655,7 +654,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
                 'lastName' => 'Contact 2',
             ]);
 
-        $recordServiceContainer = $this->getContainer()->get('recordServiceContainer');
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Opportunity::class);
@@ -891,8 +889,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->prepareTestUser();
 
-        $this->auth('test');
-        $this->reCreateApplication();
+        $this->authenticate('test');
+
 
         $user = $this->getContainer()->getByClass(User::class);
 

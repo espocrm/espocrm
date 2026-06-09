@@ -32,17 +32,16 @@ namespace tests\integration\Espo\Webhook;
 use Espo\Core\Api\ControllerActionProcessor;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Utils\Config\ConfigWriter;
-use Espo\ORM\EntityManager;
 use Espo\Core\Exceptions\Forbidden;
+use tests\integration\Core\BaseTestCase;
 
-class AclTest extends \tests\integration\Core\BaseTestCase
+class AclTest extends BaseTestCase
 {
-    public function testRegularUserNoAccess()
+    public function testRegularUserNoAccess(): void
     {
         $this->createUser(
             [
                 'userName' => 'test',
-                'password' => '1',
             ],
             [
                 'data' => [
@@ -52,11 +51,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        $this->auth('test', '1');
+        $this->authenticate('test');
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $this->expectException(Forbidden::class);
 
@@ -82,6 +79,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
+        $this->getDataManager()->clearCache();
+
         $request = $this->createRequest(
             'POST',
             [],
@@ -92,11 +91,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             '{"event":"Account.create", "url": "https://test.com"}'
         );
 
-        $this->auth(null, null, null, 'ApiKey', $request);
+        $this->authenticate(method: 'ApiKey', request: $request);
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $this->expectException(Forbidden::class);
 
@@ -120,6 +117,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
+        $this->getDataManager()->clearCache();
+
         $request = $this->createRequest(
             'POST',
             [],
@@ -130,11 +129,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             '{"event":"Account.create", "url": "https://test.com"}'
         );
 
-        $this->auth(null, null, null, 'ApiKey', $request);
+        $this->authenticate(method: 'ApiKey', request: $request);
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $this->expectException(Forbidden::class);
 
@@ -172,11 +169,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             '{"event":"Account.create", "url": "https://test.com"}'
         );
 
-        $this->auth(null, null, null, 'ApiKey', $request);
+        $this->authenticate(method: 'ApiKey', request: $request);
 
-        $app = $this->createApplication();
-
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $response = $this->createMock(ResponseWrapper::class);
 
@@ -204,8 +199,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        /* @var $em EntityManager */
-        $em = $this->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $webhook = $em->createEntity('Webhook', [
             'event' => 'Account.create',
@@ -226,19 +220,17 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        $this->auth(null, null, null, 'ApiKey', $request);
+        $this->authenticate(method: 'ApiKey', request: $request);
 
-        $app = $this->createApplication();
-
-        $em = $app->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $response = $this->createMock(ResponseWrapper::class);
 
-        $processor = $app->getContainer()->get('injectableFactory')->create(ControllerActionProcessor::class);
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         $processor->process('Webhook', 'delete', $request, $response);
 
-        $fetchedWebhook = $em->getEntity('Webhook', $webhook->getId());
+        $fetchedWebhook = $em->getEntityById('Webhook', $webhook->getId());
 
         $this->assertNull($fetchedWebhook);
     }

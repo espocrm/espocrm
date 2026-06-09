@@ -44,12 +44,8 @@ use tests\integration\Core\BaseTestCase;
 
 class ActionTest extends BaseTestCase
 {
-    /** @var Application */
-    private $app;
-
     /** @var EntityManager */
     private $entityManager;
-
 
     /** @var Merger */
     private $merger;
@@ -58,17 +54,14 @@ class ActionTest extends BaseTestCase
 
     private function init(): void
     {
-        $this->app = $this->createApplication();
-
-        $this->entityManager = $this->app
+        $this->entityManager = $this->getApplication()
             ->getContainer()
-            ->get('entityManager');
+            ->getByClass(EntityManager::class);
 
         $this->action = $this->getInjectableFactory()->create(PostProcess::class);
 
-        $this->merger = $this->app
-            ->getContainer()
-            ->get('injectableFactory')
+        $this->merger = $this->getApplication()
+            ->getInjectableFactory()
             ->create(Merger::class);
     }
 
@@ -109,7 +102,7 @@ class ActionTest extends BaseTestCase
             ],
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
         $this->init();
 
@@ -330,7 +323,7 @@ class ActionTest extends BaseTestCase
             ],
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
         $this->init();
 
@@ -358,7 +351,7 @@ class ActionTest extends BaseTestCase
             ],
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
         $this->init();
 

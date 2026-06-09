@@ -40,10 +40,8 @@ use Espo\Core\MassAction\Jobs\Process as JobProcess;
 use Espo\Core\Job\Job\Data as JobData;
 
 use Espo\Core\Select\SearchParams;
-use Espo\Core\InjectableFactory;
 
 use Espo\Core\Api\ResponseWrapper;
-use Espo\Core\Application;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\EntityManager;
@@ -51,11 +49,10 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
 use Espo\Tools\MassUpdate\Processor;
+use tests\integration\Core\BaseTestCase;
 
-class MassActionTest extends \tests\integration\Core\BaseTestCase
+class MassActionTest extends BaseTestCase
 {
-    /** @var Application */
-    private $app;
     /** @var EntityManager */
     private $entityManager;
 
@@ -63,11 +60,9 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
     private function init(): void
     {
-        $this->app = $this->createApplication();
-
-        $this->entityManager = $this->app
+        $this->entityManager = $this->getApplication()
             ->getContainer()
-            ->get('entityManager');
+            ->getByClass(EntityManager::class);
 
         $this->action = $this->getInjectableFactory()->create(PostProcess::class);
     }
@@ -102,8 +97,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
         ]);
 
-        $this->auth('admin-test');
-
+        $this->authenticate('admin-test');
         $this->init();
 
         $account = $this->entityManager->createEntity('Account', [
@@ -157,17 +151,16 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             json_encode($data)
         );
 
-        $response = $this->createMock(ResponseWrapper::class);
+        $this->createMock(ResponseWrapper::class);
 
         $this->expectException(Forbidden::class);
 
         $this->action->process($request);
     }
 
-    public function testAcl1()
+    public function testAcl1(): void
     {
-        /** @var EntityManager $em */
-        $em = $this->getApplication()->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $user = $this->createUser('tester', [
             'massUpdatePermission' => 'yes',
@@ -190,14 +183,11 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             'name' => '2',
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
-        $app = $this->createApplication();
+        $injectableFactory = $this->getInjectableFactory();
 
-        /** @var InjectableFactory $injectableFactory */
-        $injectableFactory = $app->getContainer()->get('injectableFactory');
-
-        $this->assertEquals($user->getId(), $app->getContainer()->get('user')->getId());
+        $this->assertEquals($user->getId(), $this->getContainer()->getByClass(User::class)->getId());
 
         /** @var Service $service */
         $service = $injectableFactory->create(Service::class);
@@ -221,14 +211,11 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $massActionId = $serviceResult->getId();
 
-        $this->auth(null);
+        $this->authenticate(null);
 
-        $app1 = $this->getApplication();
+        $this->assertEquals('system', $this->getContainer()->getByClass(User::class)->getId());
 
-        $this->assertEquals('system', $app1->getContainer()->get('user')->getId());
-
-        /** @var InjectableFactory $injectableFactory1 */
-        $injectableFactory1 = $app1->getContainer()->get('injectableFactory');
+        $injectableFactory1 = $this->getInjectableFactory();
 
         $process = $injectableFactory1->create(JobProcess::class);
 
@@ -243,9 +230,6 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
     public function testAcl2()
     {
-        /** @var EntityManager $em */
-        $em = $this->getApplication()->getContainer()->get('entityManager');
-
         $user = $this->createUser('tester', [
             'massUpdatePermission' => 'yes',
             'data' => [
@@ -258,18 +242,14 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             ],
         ]);
 
-        $user1 = $this->createUser('tester-1', []);
+        $this->createUser('tester-1', []);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
-        $app = $this->createApplication();
+        $injectableFactory = $this->getInjectableFactory();
 
-        /** @var InjectableFactory $injectableFactory */
-        $injectableFactory = $app->getContainer()->get('injectableFactory');
+        $this->assertEquals($user->getId(), $this->getContainer()->getByClass(User::class)->getId());
 
-        $this->assertEquals($user->getId(), $app->getContainer()->get('user')->getId());
-
-        /** @var Service $service */
         $service = $injectableFactory->create(Service::class);
 
         $serviceParams = ServiceParams
@@ -291,14 +271,11 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $massActionId = $serviceResult->getId();
 
-        $this->auth(null);
+        $this->authenticate(null);
 
-        $app1 = $this->getApplication();
+        $this->assertEquals('system', $this->getContainer()->getByClass(User::class)->getId());
 
-        $this->assertEquals('system', $app1->getContainer()->get('user')->getId());
-
-        /** @var InjectableFactory $injectableFactory1 */
-        $injectableFactory1 = $app1->getContainer()->get('injectableFactory');
+        $injectableFactory1 = $this->getInjectableFactory();
 
         $process = $injectableFactory1->create(JobProcess::class);
 
@@ -306,12 +283,6 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
         $this->expectException(Error::class);
 
         $process->run(JobData::create()->withTargetId($massActionId));
-
-        /*$em->refreshEntity($user);
-        $em->refreshEntity($user1);
-
-        $this->assertEquals('Tester', $user->get('title'));
-        $this->assertEquals(null, $user1->get('title'));*/
     }
 
     public function testMassUpdateLinkAccess(): void
@@ -334,8 +305,8 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
             ],
         ]);
 
-        $this->auth('tester');
-        $this->setApplication($this->createApplication());
+
+        $this->authenticate('tester');
 
         $contact1 = $this->getEntityManager()
             ->createEntity(Contact::ENTITY_TYPE, [

@@ -36,6 +36,7 @@ use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Task;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class AclTest extends BaseTestCase
@@ -94,8 +95,7 @@ class AclTest extends BaseTestCase
             ],
         ]);
 
-        $this->auth('tester');
-        $this->reCreateApplication();
+        $this->authenticate('tester');
 
         $acl = $this->getContainer()->getByClass(Acl::class);
 
@@ -136,6 +136,7 @@ class AclTest extends BaseTestCase
         $this->assertFalse($aclManager->checkField($user, 'Call', 'contacts', Acl\Table::ACTION_EDIT));
     }
 
+    #[NoTransaction]
     public function testDisabledField(): void
     {
         $metadata = $this->getMetadata();
@@ -157,6 +158,7 @@ class AclTest extends BaseTestCase
         $this->assertTrue($acl->checkField(Account::ENTITY_TYPE, 'name'));
     }
 
+    #[NoTransaction]
     public function testDisabledLink(): void
     {
         $metadata = $this->getMetadata();

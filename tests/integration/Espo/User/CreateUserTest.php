@@ -29,14 +29,23 @@
 
 namespace tests\integration\Espo\User;
 
+use Espo\Entities\User;
 use tests\integration\Core\BaseTestCase;
 
 class CreateUserTest extends BaseTestCase
 {
-    protected ?string $dataFile = 'User/Login.php';
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-    protected ?string $userName = 'admin';
-    protected ?string $password = '1';
+        $this->createUser([
+            'type' => User::TYPE_ADMIN,
+            'userName' => 'admin',
+            'lastName' => 'Admin',
+        ]);
+
+        $this->authenticate('admin');
+    }
 
     public function testCreateUser()
     {

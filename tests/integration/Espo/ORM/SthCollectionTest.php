@@ -30,7 +30,6 @@
 namespace tests\integration\Espo\ORM;
 
 use Espo\Modules\Crm\Entities\Account;
-use Espo\ORM\EntityManager;
 use Espo\ORM\SthCollection;
 use tests\integration\Core\BaseTestCase;
 
@@ -38,10 +37,7 @@ class SthCollectionTest extends BaseTestCase
 {
     public function test1()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $em->createEntity('Account', [
             'name' => 'test-1',
@@ -82,9 +78,7 @@ class SthCollectionTest extends BaseTestCase
 
     public function test2(): void
     {
-        $app = $this->createApplication();
-
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $em->createEntity('Account', [
             'name' => 'test-2',
@@ -113,10 +107,7 @@ class SthCollectionTest extends BaseTestCase
 
     public function testFind1()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $em->createEntity('Account', [
             'name' => 'test-1',
@@ -152,10 +143,7 @@ class SthCollectionTest extends BaseTestCase
 
     public function testFindRelatedOneToMany()
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $account = $em->createEntity('Account', [
             'name' => 'test-1',
@@ -198,9 +186,7 @@ class SthCollectionTest extends BaseTestCase
 
     public function testFindRelatedManyToMany()
     {
-        $app = $this->createApplication();
-
-        $em = $app->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $contact = $em->createEntity('Contact', [
             'lastName' => 'test-1',

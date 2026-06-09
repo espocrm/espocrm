@@ -30,14 +30,14 @@
 namespace tests\integration\Espo\GlobalSearch;
 
 use Espo\Tools\GlobalSearch\Service;
+use tests\integration\Core\BaseTestCase;
 
-class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
+class GlobalSearchTest extends BaseTestCase
 {
-    public function testSearch1()
+    public function testSearch1(): void
     {
-        $app = $this->createApplication();
 
-        $em = $app->getContainer()->get('entityManager');
+        $em = $this->getEntityManager();
 
         $team = $em->createEntity('Team', [
             'name' => 'test',
@@ -82,11 +82,9 @@ class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
             ],
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
-        $app = $this->createApplication(true);
-
-        $service = $app->getContainer()->get('injectableFactory')->create(Service::class);
+        $service = $this->getInjectableFactory()->create(Service::class);
 
         $result = $service->find('1', 0, 10);
 

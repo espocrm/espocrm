@@ -49,8 +49,6 @@ class MetadataTest extends BaseTestCase
 
         $metadata->save();
 
-        $this->reCreateApplication();
-
         $this->createUser('tester', [
             'data' => [
                 'Lead' => false,
@@ -64,8 +62,7 @@ class MetadataTest extends BaseTestCase
             ]
         ]);
 
-        $this->auth('tester');
-        $this->setApplication($this->createApplication());
+        $this->authenticate('tester');
 
         $data = $this->getInjectableFactory()->create(MetadataService::class)->getDataForFrontend();
 

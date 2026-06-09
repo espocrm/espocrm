@@ -31,14 +31,13 @@ namespace tests\integration\Espo\Settings;
 
 use Espo\Entities\User;
 use Espo\Tools\App\SettingsService;
+use tests\integration\Core\BaseTestCase;
 
-class AccessTest extends \tests\integration\Core\BaseTestCase
+class AccessTest extends BaseTestCase
 {
     public function testGlobalAccess()
     {
-        $app = $this->createApplication();
-
-        $data = $app->getContainer()->get('injectableFactory')
+        $data = $this->getInjectableFactory()
             ->create(SettingsService::class)
             ->getConfigData();
 
@@ -62,11 +61,9 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
-        $app = $this->createApplication();
-
-        $data = $app->getContainer()->get('injectableFactory')
+        $data = $this->getInjectableFactory()
             ->create(SettingsService::class)
             ->getConfigData();
 
@@ -84,11 +81,9 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $this->auth('tester');
+        $this->authenticate('tester');
 
-        $app = $this->createApplication();
-
-        $data = $app->getContainer()->get('injectableFactory')
+        $data = $this->getInjectableFactory()
             ->create(SettingsService::class)
             ->getConfigData();
 
@@ -102,12 +97,9 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
             'type' => 'admin',
         ]);
 
-        $this->auth('admin-tester');
+        $this->authenticate('admin-tester');
 
-        $app = $this->createApplication();
-
-        $data = $app->getContainer()
-            ->get('injectableFactory')
+        $data = $this->getInjectableFactory()
             ->create(SettingsService::class)
             ->getConfigData();
 
@@ -124,8 +116,7 @@ class AccessTest extends \tests\integration\Core\BaseTestCase
             'type' => User::TYPE_ADMIN,
         ]);
 
-        $this->auth('admin-tester');
-        $this->setApplication($this->createApplication());
+        $this->authenticate('admin-tester');
 
         $this->getInjectableFactory()
             ->create(SettingsService::class)

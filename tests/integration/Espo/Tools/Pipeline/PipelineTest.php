@@ -44,6 +44,7 @@ use Espo\Entities\Role;
 use Espo\Entities\Team;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class PipelineTest extends BaseTestCase
@@ -51,6 +52,7 @@ class PipelineTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    #[NoTransaction]
     public function testPipeline1(): void
     {
         $this->initPipeline(Opportunity::ENTITY_TYPE);
