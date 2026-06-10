@@ -60,7 +60,7 @@ class LinkTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->reCreateApplication(reuse: true);
 
         $em = $this->getContainer()->getByClass(EntityManager::class);
 

@@ -31,17 +31,13 @@ namespace tests\integration\Espo\ORM;
 
 use Espo\Entities\Team;
 use Espo\Modules\Crm\Entities\Account;
-use Espo\ORM\EntityManager;
 use tests\integration\Core\BaseTestCase;
 
 class EntityManagerTest extends BaseTestCase
 {
     public function testRefreshEntity(): void
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $em */
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $team1 = $em->createEntity(Team::ENTITY_TYPE);
         $team2 = $em->createEntity(Team::ENTITY_TYPE);

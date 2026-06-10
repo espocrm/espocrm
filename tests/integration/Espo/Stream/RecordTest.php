@@ -89,9 +89,16 @@ class RecordTest extends BaseTestCase
         $noteInternalPinned->setIsInternal(true);
         $em->saveEntity($noteInternalPinned);
 
-        $this->auth('test', portalId: $portal->getId());
+        $this->auth(
+            userName: 'test',
+            portalId: $portal->getId(),
+        );
 
-        $app = $this->createApplication(portalId: $portal->getId());
+        $app = $this->createApplication(
+            portalId: $portal->getId(),
+            reuse: true,
+        );
+
         $this->setApplication($app);
 
         $service = $this->getInjectableFactory()->create(RecordService::class);

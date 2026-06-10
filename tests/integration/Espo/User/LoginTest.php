@@ -30,7 +30,6 @@
 namespace tests\integration\Espo\User;
 
 use Espo\Entities\User;
-use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class LoginTest extends BaseTestCase
@@ -60,12 +59,11 @@ class LoginTest extends BaseTestCase
         $this->assertEquals('admin', $user->getUserName());
     }
 
-    #[NoTransaction]
     public function testWrongCredentials(): void
     {
         $this->auth('admin', 'wrong-password');
 
-        $application = $this->createApplication();
+        $application = $this->createApplication(reuse: true);
 
         $this->assertFalse($application->getContainer()->has('user'));
     }

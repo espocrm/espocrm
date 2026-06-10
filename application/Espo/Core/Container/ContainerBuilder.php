@@ -206,6 +206,10 @@ class ContainerBuilder
         $this->services['module'] = $module;
         $this->services['systemConfig'] = $systemConfig;
 
+        if ($this->params?->services) {
+            $this->services = array_merge($this->services, $this->params->services);
+        }
+
         $bindingLoader = $this->bindingLoader ?? (
             new EspoBindingLoader(
                 module: $module,

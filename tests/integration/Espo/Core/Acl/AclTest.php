@@ -36,15 +36,13 @@ use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Task;
-use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class AclTest extends BaseTestCase
 {
     public function testGetReadOwnerUserField()
     {
-        /* @var $aclManager AclManager */
-        $aclManager = $this->getContainer()->get('aclManager');
+        $aclManager = $this->getContainer()->getByClass(AclManager::class);
 
         $this->assertEquals(
             'assignedUser',
@@ -128,15 +126,13 @@ class AclTest extends BaseTestCase
         /** @var User $user */
         $user = $this->getEntityManager()->getEntityById(User::ENTITY_TYPE, $user->getId());
 
-        /* @var $aclManager AclManager */
-        $aclManager = $this->getContainer()->get('aclManager');
+        $aclManager = $this->getContainer()->getByClass(AclManager::class);
 
         $this->assertFalse($aclManager->checkField($user, 'Call', 'direction'));
         $this->assertTrue($aclManager->checkField($user, 'Call', 'contacts'));
         $this->assertFalse($aclManager->checkField($user, 'Call', 'contacts', Acl\Table::ACTION_EDIT));
     }
 
-    #[NoTransaction]
     public function testDisabledField(): void
     {
         $metadata = $this->getMetadata();
@@ -150,7 +146,7 @@ class AclTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->reCreateApplication(reuse: true);
 
         $acl = $this->getContainer()->getByClass(Acl::class);
 
@@ -158,7 +154,6 @@ class AclTest extends BaseTestCase
         $this->assertTrue($acl->checkField(Account::ENTITY_TYPE, 'name'));
     }
 
-    #[NoTransaction]
     public function testDisabledLink(): void
     {
         $metadata = $this->getMetadata();
@@ -172,7 +167,7 @@ class AclTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->reCreateApplication(reuse: true);
 
         $acl = $this->getContainer()->getByClass(Acl::class);
 

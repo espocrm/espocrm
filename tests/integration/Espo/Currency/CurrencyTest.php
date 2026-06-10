@@ -157,7 +157,7 @@ class CurrencyTest extends BaseTestCase
         $configWriter->set('currencyList', ['USD', 'EUR']);
         $configWriter->set('defaultCurrency', 'USD');
         $configWriter->set('baseCurrency', 'USD');
-        $configWriter->save();;
+        $configWriter->save();
 
         $syncManager = $this->getInjectableFactory()->create(SyncManager::class);
 
@@ -169,7 +169,6 @@ class CurrencyTest extends BaseTestCase
         $rate->setRate('2.0');
 
         $em->saveEntity($rate);
-
 
         $syncManager->refreshCache();
 
@@ -185,7 +184,6 @@ class CurrencyTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    #[NoTransaction]
     public function testDefaultCurrencyJoinMode(): void
     {
         $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
@@ -203,8 +201,8 @@ class CurrencyTest extends BaseTestCase
             'USD' => 0.5,
         ], 'EUR'));
 
-        $this->getDataManager()->rebuild();
-        $this->reCreateApplication();
+        $this->getDataManager()->rebuild([]);
+        $this->reCreateApplication(reuse: true);
 
         $em = $this->getEntityManager();
 
@@ -228,7 +226,6 @@ class CurrencyTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    #[NoTransaction]
     public function testDefaultCurrencyNoJoinMode(): void
     {
         $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
@@ -246,8 +243,8 @@ class CurrencyTest extends BaseTestCase
             'USD' => 0.5,
         ], 'EUR'));
 
-        $this->getDataManager()->rebuild();
-        $this->reCreateApplication();
+        $this->getDataManager()->rebuild([]);
+        $this->reCreateApplication(reuse: true);
 
         $em = $this->getEntityManager();
 

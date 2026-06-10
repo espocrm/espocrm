@@ -44,7 +44,6 @@ use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Select;
-use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class SelectBuilderTest extends BaseTestCase
@@ -86,11 +85,9 @@ class SelectBuilderTest extends BaseTestCase
         return $this->getApplication();
     }
 
-    protected function initTestPortal(array $aclData = [], bool $skipLogin = false) : Application
+    protected function initTestPortal(array $aclData = [], bool $skipLogin = false): Application
     {
-        $app = $this->createApplication();
-
-        $em = $app->getContainer()->getByClass(EntityManager::class);
+        $em = $this->getEntityManager();
 
         $this->contact = $em->createEntity('Contact', []);
         $this->account = $em->createEntity('Account', []);
@@ -112,18 +109,15 @@ class SelectBuilderTest extends BaseTestCase
         );
 
         if (!$skipLogin) {
-            $this->auth('tester', null, $portal->getId());
+            $this->auth(userName: 'tester', portalId: $portal->getId());
         }
 
-        $app = $this->createApplication();
+        $app = $this->createApplication(reuse: true);
 
-        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
+        $this->setApplication($app);
 
-        $this->factory = $injectableFactory->create(SelectBuilderFactory::class);
-
-        $container = $app->getContainer();
-
-        $this->user = $container->getByClass(User::class);
+        $this->factory = $this->getInjectableFactory()->create(SelectBuilderFactory::class);
+        $this->user = $this->getContainer()->getByClass(User::class);
 
         return $app;
     }
@@ -433,8 +427,7 @@ class SelectBuilderTest extends BaseTestCase
         $this->assertEquals($expected, $raw);
     }
 
-    #[NoTransaction]
-    public function testEmailAccessFilterOnlyAccount()
+    public function testEmailAccessFilterOnlyAccount(): void
     {
         $this->initTestPortal(
             [
@@ -485,8 +478,7 @@ class SelectBuilderTest extends BaseTestCase
         $this->assertEquals($expected['joins'], $raw['joins']);
     }
 
-    #[NoTransaction]
-    public function testEmailAccessFilterOnlyContact()
+    public function testEmailAccessFilterOnlyContact(): void
     {
         $this->initTestPortal(
             [

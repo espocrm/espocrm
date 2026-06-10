@@ -90,9 +90,10 @@ abstract class BaseTestCase extends TestCase
         bool $clearCache = true,
         ?string $portalId = null,
         ?BindingProcessor $binding = null,
+        bool $reuse = false,
     ): Application {
 
-        if (!$this->isNotCleanTest()) {
+        if (!$this->isNotCleanTest() && !$reuse) {
             if ($this->transactionManager?->isStarted()) {
                 try {
                     $this->transactionManager->commit();
@@ -107,6 +108,7 @@ abstract class BaseTestCase extends TestCase
             clearCache: $clearCache,
             portalId: $portalId,
             binding: $binding,
+            reuse: $reuse,
         );
     }
 
@@ -240,6 +242,9 @@ abstract class BaseTestCase extends TestCase
 
         $this->getContainer()->reset([
             'entityManager',
+            'ormMetadataData',
+            'ormDefs',
+            'metadata',
             'config',
             'module',
             'fileManager',
@@ -258,9 +263,11 @@ abstract class BaseTestCase extends TestCase
     /**
      * Re-create an application.
      */
-    protected function reCreateApplication(): void
+    protected function reCreateApplication(bool $reuse = false): void
     {
-        $this->espoApplication = $this->createApplication();
+        $this->espoApplication = $this->createApplication(
+            reuse: $reuse,
+        );
     }
 
     protected function tearDown(): void

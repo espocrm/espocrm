@@ -29,15 +29,16 @@
 
 namespace tests\integration\Espo\ORM;
 
-class QueryTest extends \tests\integration\Core\BaseTestCase
+use PDO;
+use tests\integration\Core\BaseTestCase;
+
+class QueryTest extends BaseTestCase
 {
     public function testQuery1()
     {
-        $app = $this->createApplication();
+        $entityManager = $this->getEntityManager();
 
-        $entityManager = $app->getContainer()->get('entityManager');
-
-        $account = $entityManager->getEntity('Account');
+        $account = $entityManager->getNewEntity('Account');
         $account->set('name', 'Test');
         $entityManager->saveEntity($account);
 
@@ -52,7 +53,7 @@ class QueryTest extends \tests\integration\Core\BaseTestCase
 
         $sth = $entityManager->getQueryExecutor()->execute($query);
 
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+        while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $rowList[] = $row;
         }
 

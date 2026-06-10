@@ -70,6 +70,7 @@ class FailedLoginAttemptsTest extends BaseTestCase
                     $binder->bindInstance(DelayUtil::class, $this->delayUtil);
                 }
             },
+            reuse: true,
         );
         $this->setApplication($app);
 

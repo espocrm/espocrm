@@ -81,7 +81,9 @@ class FollowTest extends BaseTestCase
         /** @noinspection PhpArrayKeyDoesNotMatchArrayShapeInspection */
         $tool->update(Contact::ENTITY_TYPE, ['assignedUsers' => true]);
 
-        $this->reCreateApplication();
+        $this->getDataManager()->rebuildMetadata();
+
+        $this->reCreateApplication(reuse: true);
 
         $streamService = $this->getInjectableFactory()->create(Service::class);
 

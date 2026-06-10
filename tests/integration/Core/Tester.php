@@ -197,6 +197,7 @@ class Tester
         bool $clearCache = true,
         ?string $portalId = null,
         ?BindingProcessor $binding = null,
+        bool $reuse = false,
     ): Application {
 
         if ($this->application && !$reload) {
@@ -205,14 +206,15 @@ class Tester
 
         $portalId ??= $this->portalId ?? null;
 
-        if ($clearCache) {
-            $this->clearCache();
-        }
-
         $applicationParams = new Application\ApplicationParams(
             noErrorHandler: true,
             binding: $binding,
+            services: $this->prepareServices($reuse),
         );
+
+        if ($clearCache) {
+            $this->clearCache();
+        }
 
         if ($portalId) {
             try {
@@ -602,5 +604,36 @@ class Tester
         } catch (ServiceUnavailable|Forbidden $e) {
             throw new RuntimeException(previous: $e);
         }
+    }
+
+    /**
+     * @return array<string, object>
+     */
+    private function prepareServices(bool $reuse): array
+    {
+        $services = [];
+
+        if ($reuse && $this->application) {
+            $this->application
+                ->getContainer()
+                ->getByClass(EntityManager::class)
+                ->getMetadata()
+                ->updateData();
+
+            $serviceList = [
+                'entityManager',
+                'ormMetadataData',
+                'ormDefs',
+                'metadata',
+            ];
+
+            foreach ($serviceList as $service) {
+                $instance = $this->application->getContainer()->get($service);
+
+                $services[$service] = $instance;
+            }
+        }
+
+        return $services;
     }
 }

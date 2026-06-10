@@ -34,10 +34,8 @@ use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\Account;
-use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
-#[NoTransaction]
 class ReadOnlyTest extends BaseTestCase
 {
     public function testReadOnly(): void
@@ -55,7 +53,7 @@ class ReadOnlyTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->reCreateApplication(reuse: true);
 
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
@@ -103,7 +101,7 @@ class ReadOnlyTest extends BaseTestCase
 
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->reCreateApplication(reuse: true);
 
         $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Account::class);
 

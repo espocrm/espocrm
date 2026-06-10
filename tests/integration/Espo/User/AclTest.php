@@ -59,7 +59,6 @@ use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
 use Exception;
-use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
 class AclTest extends BaseTestCase
@@ -169,11 +168,13 @@ class AclTest extends BaseTestCase
             ]
         ], true);
 
-        $this->auth('tester', null, 'testPortalId');
+        $this->auth(userName: 'tester', portalId: 'testPortalId');
 
-        $app = $this->createApplication();
+        $app = $this->createApplication(reuse: true);
 
-        $processor = $app->getInjectableFactory()->create(ControllerActionProcessor::class);
+        $this->setApplication($app);
+
+        $processor = $this->getInjectableFactory()->create(ControllerActionProcessor::class);
 
         json_decode('{"name":"Test Account"}');
 
@@ -424,7 +425,6 @@ class AclTest extends BaseTestCase
         $this->assertNotNull($e);
     }
 
-    #[NoTransaction]
     public function testUserAccessCreateAssignedPermissionNo1(): void
     {
         $this->prepareTestUser();
@@ -450,7 +450,7 @@ class AclTest extends BaseTestCase
         ], CreateParams::create());
     }
 
-    public function testUserAccessCreateAssignedPermissionNo2()
+    public function testUserAccessCreateAssignedPermissionNo2(): void
     {
         $this->prepareTestUser();
 

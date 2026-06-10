@@ -54,9 +54,7 @@ class RelationsTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->authenticate(null);
-
-        //$this->reCreateApplication();
+        $this->authenticate();
 
         $em = $this->getEntityManager();
 
@@ -111,9 +109,7 @@ class RelationsTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->authenticate(null);
-
-        //$this->reCreateApplication();
+        $this->authenticate();
 
         $em = $this->getEntityManager();
 
@@ -268,7 +264,9 @@ class RelationsTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->getDataManager()->rebuildMetadata();
+
+        $this->reCreateApplication(reuse: true);
 
         $em = $this->getEntityManager();
 
@@ -294,7 +292,10 @@ class RelationsTest extends BaseTestCase
         ]);
         $metadata->save();
 
-        $this->reCreateApplication();
+        $this->getDataManager()->clearCache();
+        $this->getDataManager()->rebuildMetadata();
+
+        $this->reCreateApplication(reuse: true);
 
         $em = $this->getEntityManager();
 

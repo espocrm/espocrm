@@ -29,18 +29,14 @@
 
 namespace tests\integration\Espo\ORM;
 
-use Espo\ORM\EntityManager;
-
 use Espo\ORM\Query\Part\Selection;
+use tests\integration\Core\BaseTestCase;
 
-class FunctionConverterTest extends \tests\integration\Core\BaseTestCase
+class FunctionConverterTest extends BaseTestCase
 {
     public function testAbs(): void
     {
-        $app = $this->createApplication();
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $this->getEntityManager();
 
         $query = $entityManager->getQueryBuilder()
             ->select(Selection::fromString('ABS:(-1)')->withAlias('value'))

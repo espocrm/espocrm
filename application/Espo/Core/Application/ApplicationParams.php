@@ -37,11 +37,15 @@ use Espo\Core\Binding\BindingProcessor;
 readonly class ApplicationParams
 {
     /**
+     * Important. Use named parameters. Backward compatibility for parameter order is not guaranteed.
+     *
      * @param bool $noErrorHandler Disable error handling for tests.
      * @param ?BindingProcessor $binding Additional DI binding for integration tests. Since v9.3.
+     * @param ?array<string, object> $services Instances of services. Since 10.0.
      */
     public function __construct(
         public bool $noErrorHandler = false,
         public ?BindingProcessor $binding = null,
+        public ?array $services = null,
     ) {}
 }

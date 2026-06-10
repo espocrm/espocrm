@@ -46,7 +46,7 @@ class MetadataTest extends BaseTestCase
         parent::tearDown();
     }
 
-    public function testAppend1()
+    public function testAppend1(): void
     {
         $initial = $this->getMetadata()->get(['app', 'rebuild', 'actionClassNameList']);
 
@@ -70,11 +70,11 @@ class MetadataTest extends BaseTestCase
         $this->getFileManager()->putContents($this->filePath1, $contents1);
         $this->getFileManager()->putContents($this->filePath2, $contents2);
         $this->getDataManager()->clearCache();
+        $this->getDataManager()->rebuildMetadata();
 
-        $app = $this->createApplication();
+        $this->reCreateApplication(reuse: true);
 
-        /** @var Metadata $metadata */
-        $metadata = $app->getContainer()->get('metadata');
+        $metadata = $this->getContainer()->getByClass(Metadata::class);
 
         $this->assertSame(
             array_merge(
