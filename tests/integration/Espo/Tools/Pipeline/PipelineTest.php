@@ -44,8 +44,10 @@ use Espo\Entities\Role;
 use Espo\Entities\Team;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
+use integration\Core\NoTransaction;
 use tests\integration\Core\BaseTestCase;
 
+#[NoTransaction]
 class PipelineTest extends BaseTestCase
 {
     /**
