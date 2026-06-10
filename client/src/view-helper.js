@@ -901,10 +901,11 @@ class ViewHelper {
      * @returns {string}
      */
     stripEventHandlersInHtml(html) {
-        let j; // @todo Revise.
+        let j;
 
         function stripHTML() {
             html = html.slice(0, strip) + html.slice(j);
+
             j = strip;
 
             strip = false;
@@ -921,7 +922,7 @@ class ViewHelper {
             if (html[i] === '<' && html[i + 1] && isValidTagChar(html[i + 1])) {
                 i++;
 
-                for (let j = i; j < html.length; j++){
+                for (j = i; j < html.length; j++){
                     if (!lastQuote && html[j] === '>'){
                         if (strip) {
                             stripHTML();
@@ -943,11 +944,21 @@ class ViewHelper {
                         lastQuote = html[j];
                     }
 
-                    if (!lastQuote && html[j - 2] === " " && html[j - 1] === "o" && html[j] === "n") {
+
+                    if (
+                        !lastQuote &&
+                        (html[j - 2] === " " || html[j - 2] === "/") &&
+                        html[j - 1] === "o" &&
+                        html[j] === "n"
+                    ) {
                         strip = j - 2;
                     }
 
-                    if (strip && html[j] === " " && !lastQuote){
+                    if (
+                        strip !== false &&
+                        (html[j] === " ") &&
+                        !lastQuote
+                    ) {
                         stripHTML();
                     }
                 }
