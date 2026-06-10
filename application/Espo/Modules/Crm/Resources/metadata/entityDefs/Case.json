@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "pattern": "$noBadCharacters"
+            "pattern": "$noBadCharacters",
+            "audited": true
         },
         "number": {
             "type": "autoincrement",
@@ -57,7 +58,8 @@
             "cutHeight": 500
         },
         "account": {
-            "type": "link"
+            "type": "link",
+            "audited": true
         },
         "lead": {
             "type": "link"
@@ -70,7 +72,8 @@
             "view": "views/fields/link-multiple-with-primary",
             "orderBy": "name",
             "detailLayoutIncompatibleFieldList": ["contact"],
-            "primaryLink": "contact"
+            "primaryLink": "contact",
+            "audited": true
         },
         "inboundEmail": {
             "type": "link",
@@ -86,7 +89,8 @@
             "directAccessDisabled": true
         },
         "isInternal": {
-            "type": "bool"
+            "type": "bool",
+            "audited": true
         },
         "createdAt": {
             "type": "datetime",
