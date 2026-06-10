@@ -43,6 +43,7 @@ use Espo\Tools\Export\Format\CellValuePreparatorFactory;
 use Espo\Tools\Export\Processor as ProcessorInterface;
 use Espo\Tools\Export\Processor\Params;
 
+use Espo\Tools\Export\Processor\Util;
 use GuzzleHttp\Psr7\Stream;
 use LogicException;
 use OpenSpout\Common\Entity\Cell;
@@ -174,7 +175,7 @@ class OpenSpoutProcessor implements ProcessorInterface
             ->prepare($entity, $name);
 
         if (is_string($value)) {
-            $value = $this->sanitizeCellValue($value);
+            $value = Util::sanitizeCellValue($value);
 
             return Cell\StringCell::fromValue($value);
         }
@@ -274,22 +275,5 @@ class OpenSpoutProcessor implements ProcessorInterface
         }
 
         return '[$' . $currencySymbol . '-409]#,##0.00;-[$' . $currencySymbol . '-409]#,##0.00';
-    }
-
-    private function sanitizeCellValue(string $value): string
-    {
-        if ($value === '') {
-            return $value;
-        }
-
-        if (is_numeric($value)) {
-            return $value;
-        }
-
-        if (in_array($value[0], ['+', '-', '@', '='])) {
-            return "'" . $value;
-        }
-
-        return $value;
     }
 }

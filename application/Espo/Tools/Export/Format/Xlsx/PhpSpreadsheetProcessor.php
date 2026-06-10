@@ -49,6 +49,7 @@ use Espo\Tools\Export\Format\CellValuePreparatorFactory;
 use Espo\Tools\Export\Processor as ProcessorInterface;
 use Espo\Tools\Export\Processor\Params;
 
+use Espo\Tools\Export\Processor\Util;
 use Psr\Http\Message\StreamInterface;
 use GuzzleHttp\Psr7\Stream;
 
@@ -625,19 +626,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             return $value;
         }
 
-        if ($value === '') {
-            return $value;
-        }
-
-        if (is_numeric($value)) {
-            return $value;
-        }
-
-        if (in_array($value[0], ['+', '-', '@', '='])) {
-            return "'" . $value;
-        }
-
-        return $value;
+        return Util::sanitizeCellValue($value);
     }
 
     private function sanitizeUrl(string $value): ?string

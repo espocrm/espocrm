@@ -37,6 +37,7 @@ use Espo\Tools\Export\Collection;
 use Espo\Tools\Export\Processor as ProcessorInterface;
 use Espo\Tools\Export\Processor\Params;
 
+use Espo\Tools\Export\Processor\Util;
 use Psr\Http\Message\StreamInterface;
 use GuzzleHttp\Psr7\Stream;
 
@@ -98,26 +99,9 @@ class Processor implements ProcessorInterface
 
             $value = (string) $value;
 
-            $preparedRow[] = $this->sanitizeCellValue($value);
+            $preparedRow[] = Util::sanitizeCellValue($value);
         }
 
         return $preparedRow;
-    }
-
-    private function sanitizeCellValue(string $value): string
-    {
-        if ($value === '') {
-            return $value;
-        }
-
-        if (is_numeric($value)) {
-            return $value;
-        }
-
-        if (in_array($value[0], ['+', '-', '@', '='])) {
-            return "'" . $value;
-        }
-
-        return $value;
     }
 }
