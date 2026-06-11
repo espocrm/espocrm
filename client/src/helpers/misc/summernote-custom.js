@@ -320,7 +320,7 @@ function init(langSets) {
             /** @type {JQuery} */
             const $editable = context.layoutInfo.editable;
 
-            const view = /** @type {module:view} */options.espoView;
+            const view = /** @type {import('view').default} */options.espoView;
 
             if (!view) {
                 return;
