@@ -849,7 +849,7 @@ class ViewHelper {
      * @returns {string}
      */
     sanitizeHtml(text) {
-        return DOMPurify.sanitize(text, options).toString();
+        return DOMPurify.sanitize(text).toString();
     }
 
     /**
