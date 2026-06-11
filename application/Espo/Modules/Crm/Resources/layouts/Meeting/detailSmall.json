@@ -1,14 +1,14 @@
 [
 	{
 		"rows":[
-			[{"name":"name"}],
-			[{"name":"status"}, false],
-			[{"name":"dateStart"}],
-			[{"name":"duration"}, false],
-			[{"name":"dateEnd"}],
-			[{"name":"parent"}],
-			[{"name":"reminders"}],
-			[{"name":"description"}]
+			[{"name": "name"}],
+			[{"name": "status"}, false],
+			[{"name": "dateStart"}],
+			[{"name": "duration"}, false],
+			[{"name": "dateEnd"}],
+			[{"name": "parent"}],
+			[{"name": "reminders"}],
+			[{"name": "description"}]
 		]
 	}
 ]
