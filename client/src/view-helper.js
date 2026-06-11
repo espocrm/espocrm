@@ -835,10 +835,8 @@ class ViewHelper {
             html = $span.get(0).outerHTML;
         }
 
-        if (!noWhiteSpace) {
-            if (html) {
-                html += `<span style="user-select: none;">&nbsp;</span>`;
-            }
+        if (!noWhiteSpace && html) {
+            html += `<span style="user-select: none;">&nbsp;</span>`;
         }
 
         return html;
