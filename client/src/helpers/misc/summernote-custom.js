@@ -493,6 +493,40 @@ function init(langSets) {
                         'ace/mode/handlebars' :
                         'ace/mode/html';
 
+                    if (options.handlebars) {
+                        aceEditor.completers ??= [];
+
+                        aceEditor.completers.push({
+                            getCompletions(editor, session, pos, prefix, callback) {
+                                const before = session.getLine(pos.row).substring(0, pos.column);
+
+                                const lastOpen = before.lastIndexOf('<');
+                                const lastClose = before.lastIndexOf('>');
+
+                                const insideTag = lastOpen > lastClose;
+
+                                if (!insideTag) {
+                                    return callback(null, []);
+                                }
+
+                                callback(null, [
+                                    {
+                                        caption: 'x-if',
+                                        snippet: 'x-if="\{\{${1}\}\}"',
+                                        value: 'x-if',
+                                        meta: 'attribute'
+                                    },
+                                    {
+                                        caption: 'iterate',
+                                        snippet: 'iterate="\{\{${1}\}\}"',
+                                        value: 'iterate',
+                                        meta: 'attribute'
+                                    },
+                                ]);
+                            }
+                        });
+                    }
+
                     const Mode = ace.require(modeToRequired).Mode;
                     aceEditor.session.setMode(new Mode());
 
