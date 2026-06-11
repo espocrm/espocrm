@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "ایسپوکرم میں خوش آمدید",
+    "Main page title": "ایسپو سی آر ایم (EspoCRM) میں خوش آمدید",
     "Start page title": "لائسنس کا معاہدہ",
     "Step1 page title": "لائسنس کا معاہدہ",
     "License Agreement": "لائسنس کا معاہدہ",
@@ -8,24 +8,24 @@
     "Step2 page title": "ڈیٹا بیس کی تشکیل",
     "Step3 page title": "ایڈمنسٹریٹر سیٹ اپ",
     "Step4 page title": "سسٹم کی ترتیبات",
-    "Step5 page title": "سبکدوش ہونے والے ای میلز کے لئے ایس ایم ٹی پی کی ترتیبات",
+    "Step5 page title": "آؤٹ باؤنڈ ای میل کے لئے ایس ایم ٹی پی کی ترتیبات",
     "Errors page title": "غلطیاں",
     "Finish page title": "تنصیب مکمل ہے",
-    "Congratulation! Welcome to EspoCRM": "مبارکباد! EspoCRM کو کامیابی کے ساتھ انسٹال کیا گیا ہے.",
+    "Congratulation! Welcome to EspoCRM": "مبارکباد! ایسپو سی آر ایم (EspoCRM) کو کامیابی کے ساتھ انسٹال کیا گیا ہے.",
     "More Information": "مزید معلومات کے لئے ، براہ کرم ہمارا {بلاگ} ملاحظہ کریں ، {ٹویٹر} پر ہماری پیروی کریں۔ <br> <br> اگر آپ کے پاس کوئی مشورے یا سوالات ہیں تو ، براہ کرم {فورم} پر پوچھیں۔",
     "share": "اگر آپ کو ایسپوکرم پسند ہے تو ، اسے اپنے دوستوں کے ساتھ شیئر کریں۔ انہیں اس پروڈکٹ کے بارے میں بتائیں۔",
     "blog": "بلاگ",
     "twitter": "ٹویٹر",
     "forum": "فورم",
     "Installation Guide": "انسٹالیشن گائیڈ",
-    "admin": "ایڈمن",
+    "admin": "منتظم",
     "localhost": "لوکل ہوسٹ",
     "Locale": "مقام",
     "Outbound Email Configuration": "آؤٹ باؤنڈ ای میل کنفیگریشن",
     "SMTP": "smtp",
     "Start": "شروع کریں",
-    "Back": "واپس",
-    "Next": "اگلا",
+    "Back": "پیچھے",
+    "Next": "آگے",
     "Go to EspoCRM": "ایسپروکم پر جائیں",
     "Re-check": "دوبارہ چیک کریں",
     "Version": "ورژن",
@@ -97,7 +97,7 @@
     "Failed to connect to database": "ڈیٹا بیس سے رابطہ قائم کرنے میں ناکام",
     "PHP version": "پی ایچ پی ورژن",
     "You must agree to the license agreement": "آپ کو لائسنس کے معاہدے سے اتفاق کرنا چاہئے",
-    "Passwords do not match": "پاس ورڈ مماثل نہیں ہیں",
+    "Passwords do not match": "پاس ورڈ ایک جیسے نہیں ہیں",
     "Enable mod_rewrite in Apache server": "اپاچی سرور میں Mod_rewrite کو فعال کریں",
     "checkWritable error": "چیک لکھنے کی غلطی",
     "applySett error": "اپلیسیٹ کی خرابی",
@@ -121,7 +121,7 @@
   },
   "options": {
     "db driver": {
-      "mysqli": "میسقلی",
+      "mysqli": "MySQLi\n",
       "pdo_mysql": "pdo mysql"
     },
     "modRewriteTitle": {
@@ -143,10 +143,10 @@
   "systemRequirements": {
     "requiredPhpVersion": "پی ایچ پی ورژن",
     "requiredMysqlVersion": "ایس کیو ایل ورژن",
-    "host": "میزبان کا نام",
+    "host": "ہوسٹ ",
     "dbname": "ڈیٹا بیس کا نام",
     "user": "صارف کا نام",
-    "writable": "قابل ذکر",
+    "writable": "لکھنے کے قابل",
     "readable": "پڑھنے کے قابل",
     "requiredMariadbVersion": "ماریا ڈی بی ورژن"
   }
