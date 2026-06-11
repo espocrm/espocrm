@@ -29,7 +29,6 @@
 import $ from 'jquery';
 import EditTableModalView from 'views/wysiwyg/modals/edit-table';
 import EditCellModalView from 'views/wysiwyg/modals/edit-cell';
-import Handlebars from 'handlebars';
 
 /**
  * @type {{
