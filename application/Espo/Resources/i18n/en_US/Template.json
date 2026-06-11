@@ -49,6 +49,7 @@
         "fontFace": {}
     },
     "tooltips": {
+        "body": "See the [documentation](https://docs.espocrm.com/user-guide/printing-to-pdf/#templates).\n\nUse Code View for precise markup editing.\n\nAdditional tag attributes:\n- `x-if`\n- `iterate`",
         "filename": "An optional filename. Entity attributes can be used as placeholders.\n\nAdditional placeholder:\n- `{{today}}`\n\nExample:\n`Document_{{today}}_{{name}}`",
         "footer": "Use {pageNumber} to print page number.",
         "variables": "Copy-paste needed placeholder to Header, Body or Footer."
