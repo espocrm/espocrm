@@ -101,6 +101,7 @@ class Builder
         ['clientDefs', self::ANY_KEY, 'detailActionList'],
         ['clientDefs', self::ANY_KEY, 'editActionList'],
         ['clientDefs', self::ANY_KEY, 'modalDetailActionList'],
+        ['clientDefs', self::ANY_KEY, 'modalEditActionList'],
     ];
 
     private const ANY_KEY = '__ANY__';
