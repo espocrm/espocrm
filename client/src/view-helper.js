@@ -847,125 +847,26 @@ class ViewHelper {
     /**
      * Sanitize HTML.
      *
-     * @param {string} text HTML.
-     * @param {Object} [options] Options.
+     * @param {string} text An HTML.
      * @returns {string}
      */
-    sanitizeHtml(text, options) {
-        return DOMPurify.sanitize(text, options);
+    sanitizeHtml(text) {
+        return DOMPurify.sanitize(text, options).toString();
     }
 
     /**
      * Moderately sanitize HTML.
      *
-     * @param {string} value HTML.
+     * @param {string} value An HTML.
      * @returns {string}
      */
     moderateSanitizeHtml(value) {
-        value = value || '';
-        value = value.replace(/<\/?(base)[^><]*>/gi, '');
-        value = value.replace(/<\/?(object)[^><]*>/gi, '');
-        value = value.replace(/<\/?(embed)[^><]*>/gi, '');
-        value = value.replace(/<\/?(applet)[^><]*>/gi, '');
-        value = value.replace(/<\/?(iframe)[^><]*>/gi, '');
-        value = value.replace(/<\/?(script)[^><]*>/gi, '');
-        value = value.replace(/<[^><]*([^a-z]on[a-z]+)=[^><]*>/gi, function (match) {
-            return match.replace(/[^a-z]on[a-z]+=/gi, ' data-handler-stripped=');
-        });
+        const params = {
+            ADD_ATTR: ['x-if', 'iterate'],
+            ADD_TAGS: ['#comment'],
+        };
 
-        value = this.stripEventHandlersInHtml(value);
-
-        value = value.replace(/href=" *javascript:(.*?)"/gi, () => {
-            return 'removed=""';
-        });
-
-        value = value.replace(/href=' *javascript:(.*?)'/gi, () => {
-            return 'removed=""';
-        });
-
-        value = value.replace(/src=" *javascript:(.*?)"/gi, () => {
-            return 'removed=""';
-        });
-
-        value = value.replace(/src=' *javascript:(.*?)'/gi, () => {
-            return 'removed=""';
-        });
-
-        return value;
-    }
-
-    /**
-     * Strip event handlers in HTML.
-     *
-     * @param {string} html HTML.
-     * @returns {string}
-     */
-    stripEventHandlersInHtml(html) {
-        let j;
-
-        function stripHTML() {
-            html = html.slice(0, strip) + html.slice(j);
-
-            j = strip;
-
-            strip = false;
-        }
-
-        function isValidTagChar(str) {
-            return str.match(/[a-z?\\\/!]/i);
-        }
-
-        let strip = false;
-        let lastQuote = false;
-
-        for (let i = 0; i < html.length; i++){
-            if (html[i] === '<' && html[i + 1] && isValidTagChar(html[i + 1])) {
-                i++;
-
-                for (j = i; j < html.length; j++){
-                    if (!lastQuote && html[j] === '>'){
-                        if (strip) {
-                            stripHTML();
-                        }
-
-                        i = j;
-
-                        break;
-                    }
-
-                    // noinspection JSIncompatibleTypesComparison
-                    if (lastQuote === html[j]){
-                        lastQuote = false;
-
-                        continue;
-                    }
-
-                    if (!lastQuote && html[j - 1] === "=" && (html[j] === "'" || html[j] === '"')) {
-                        lastQuote = html[j];
-                    }
-
-
-                    if (
-                        !lastQuote &&
-                        (html[j - 2] === " " || html[j - 2] === "/") &&
-                        html[j - 1] === "o" &&
-                        html[j] === "n"
-                    ) {
-                        strip = j - 2;
-                    }
-
-                    if (
-                        strip !== false &&
-                        (html[j] === " ") &&
-                        !lastQuote
-                    ) {
-                        stripHTML();
-                    }
-                }
-            }
-        }
-
-        return html;
+        return DOMPurify.sanitize(value || '', params).toString();
     }
 
     /**
