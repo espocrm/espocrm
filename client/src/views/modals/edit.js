@@ -31,6 +31,7 @@
 import ModalView from 'views/modal';
 import Backbone from 'backbone';
 import DefaultsPopulator from 'helpers/model/defaults-populator';
+import ActionItemSetup from 'helpers/action-item-setup';
 
 /**
  * A quick edit modal.
@@ -234,6 +235,7 @@ class EditModalView extends ModalView {
                     this.headerHtml = this.composeHeaderHtml();
                 }
 
+                this.setupActionItems();
                 this.createRecordView(model);
 
                 return;
@@ -257,6 +259,7 @@ class EditModalView extends ModalView {
                 this.headerHtml = this.composeHeaderHtml();
             }
 
+            this.setupActionItems();
             this.createRecordView(model);
         });
 
@@ -538,6 +541,23 @@ class EditModalView extends ModalView {
         }
 
         this.getRouter().removeWindowLeaveOutObject(this);
+    }
+
+    /**
+     * @private
+     */
+    setupActionItems() {
+        const actionItemSetup = new ActionItemSetup();
+
+        actionItemSetup.setup(
+            this,
+            'modalEdit',
+            promise => this.wait(promise),
+            item => this.addDropdownItem(item),
+            name => this.showActionItem(name),
+            name => this.hideActionItem(name),
+            {listenToViewModelSync: true}
+        );
     }
 }
 

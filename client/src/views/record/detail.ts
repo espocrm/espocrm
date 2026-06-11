@@ -1023,6 +1023,10 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             });
         }
 
+        if (this.buttonsDisabled) {
+            return;
+        }
+
         if (this.type === this.TYPE_DETAIL) {
             const actionItemSetup = new ActionItemSetup();
 
@@ -1043,6 +1047,25 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                     groupIndex: 0,
                 });
             }
+        }
+
+        if (this.type === this.TYPE_EDIT || this.type === this.TYPE_DETAIL) {
+            const actionItemSetup = new ActionItemSetup();
+
+            actionItemSetup.setup(
+                this,
+                'edit',
+                promise => this.wait(promise),
+                item => {
+                    if (this.type === this.TYPE_EDIT) {
+                        this.addDropdownItem(item);
+                    } else {
+                        this.dropdownEditItemList.push(item);
+                    }
+                },
+                name => this.showActionItem(name),
+                name => this.hideActionItem(name)
+            );
         }
     }
 
@@ -1808,10 +1831,13 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         };
     }
 
-    private getDropdownItemDataList(): (DropdownItem | false)[] {
+    private getDropdownItemDataList(type: 'detail' | 'edit' = 'detail'): (DropdownItem | false)[] {
         const dropdownGroups: DropdownItem[][] = [];
 
-        this.dropdownItemList.forEach(item => {
+        const list = type === 'edit' ?
+            this.dropdownEditItemList : this.dropdownItemList;
+
+        list.forEach(item => {
             // For bc.
             if ((item as any) === false) {
                 return;
@@ -3816,7 +3842,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                 dataProvider: () => {
                     return {
                         buttonList: this.buttonEditList,
-                        dropdownItemList: this.dropdownEditItemList,
+                        dropdownItemList: this.getDropdownItemDataList('edit'),
                         allDisabled: this.allActionItemsDisabled,
                     };
                 },

@@ -726,8 +726,32 @@
                 ]
             }
         },
+        "editActionList": {
+            "description": "Edit view actions (available from the dropdown next to the Save button). As of v10.0.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "$ref": "#/definitions/actionDefs"
+                    }
+                ]
+            }
+        },
         "modalDetailActionList": {
             "description": "Modal detail view actions.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "$ref": "#/definitions/actionDefs"
+                    }
+                ]
+            }
+        },
+        "modalEditActionList": {
+            "description": "Modal edit view actions. As of v10.0.",
             "type": "array",
             "items": {
                 "anyOf": [
