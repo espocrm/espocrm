@@ -113,7 +113,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
      * @param  Smarty_Template_Cached   $cached    cached object
      * @return booelan                  true or false if the cached content does not exist
      */
-    public function process(Smarty_Internal_Template $_template, Smarty_Template_Cached $cached=null)
+    public function process(Smarty_Internal_Template $_template, ?Smarty_Template_Cached $cached=null)
     {
         if (!$cached) {
             $cached = $_template->cached;

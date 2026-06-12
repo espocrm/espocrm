@@ -296,8 +296,11 @@ class Installer
         return $this->getInstallerConfig()->getAllData();
     }
 
-    public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
-    {
+    public function getSystemRequirementList(
+        string $type,
+        bool $requiredOnly = false,
+        ?array $additionalData = null
+    ): array {
         $platform = $additionalData['databaseParams']['platform'] ?? 'Mysql';
 
         $dbConfigDataProvider = new DatabaseConfigDataProvider($platform);

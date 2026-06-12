@@ -26,7 +26,7 @@ class Smarty_Internal_Resource_Registered extends Smarty_Resource
      * @param  Smarty_Internal_Template $_template template object
      * @return void
      */
-    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
+    public function populate(Smarty_Template_Source $source, ?Smarty_Internal_Template $_template=null)
     {
         $source->filepath = $source->type . ':' . $source->name;
         $source->uid = sha1($source->filepath);

@@ -18,7 +18,7 @@ class Smarty_Resource_Extendsall extends Smarty_Internal_Resource_Extends
      * @param  Smarty_Internal_Template $_template template object
      * @return void
      */
-    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template=null)
+    public function populate(Smarty_Template_Source $source, ?Smarty_Internal_Template $_template=null)
     {
         $uid = '';
         $sources = array();
