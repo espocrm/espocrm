@@ -691,7 +691,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *   then will be added after a button with a corresponding name.
      * @param [doNotReRender=false] Do not re-render.
      */
-    addButton(o: ActionItem, position: boolean | string, doNotReRender: boolean = false) {
+    addButton(o: ActionItem, position: boolean | string = false, doNotReRender: boolean = false) {
         let index = -1;
 
         this.buttonList.forEach((item, i) => {
@@ -736,7 +736,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param [toBeginning=false] To prepend.
      * @param [doNotReRender=false] Do not re-render.
      */
-    addDropdownItem(o: ActionItem, toBeginning: boolean, doNotReRender: boolean = false) {
+    addDropdownItem(o: ActionItem, toBeginning: boolean = false, doNotReRender: boolean = false) {
         if (!o) {
             // For bc.
             return;
