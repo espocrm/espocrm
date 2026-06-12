@@ -441,14 +441,7 @@ class Htmlizer
                 $timezone = $context->hash['timezone'] ?? null;
                 $language = $context->hash['language'] ?? null;
 
-                $rootData = $context->data['root'];
-
-                $dateTime = $rootData['__dateTime'];
-
-                /** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
-                if (!$dateTime instanceof \Espo\Core\Utils\DateTime) {
-                    throw new RuntimeException();
-                }
+                $dateTime = $this->dateTime;
 
                 if (strlen($dateValue) > 11) {
                     return $dateTime->convertSystemDateTime($dateValue, $timezone, $format, $language);
