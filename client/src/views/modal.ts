@@ -646,7 +646,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *
      * @param name A button name.
      */
-    disableButton(name: string) {
+    async disableButton(name: string) {
         this.buttonList.forEach(item => {
             if (item.name !== name) {
                 return;
@@ -659,7 +659,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             return;
         }
 
-        this.reRenderFooter();
+        await this.reRenderFooter();
     }
 
     /**
@@ -667,7 +667,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      *
      * @param name A button name.
      */
-    enableButton(name: string) {
+    async enableButton(name: string) {
         this.buttonList.forEach(item => {
             if (item.name !== name) {
                 return;
@@ -680,7 +680,7 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             return;
         }
 
-        this.reRenderFooter();
+        await this.reRenderFooter();
     }
 
     /**
