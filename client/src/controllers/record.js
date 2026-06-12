@@ -303,7 +303,7 @@ class RecordController extends Controller {
     /**
      * @param {{
      *     options?: Record,
-     *     relate?: model:model~setRelateItem | model:model~setRelateItem[],
+     *     relate?: import('model').SetRelateItem | import('model').SetRelateItem [],
      *     returnUrl?: string,
      *     returnDispatchParams?: Record,
      *     attributes?: Record,
@@ -344,7 +344,7 @@ class RecordController extends Controller {
     /**
      * @param {{
      *     options?: Record,
-     *     relate?: model:model~setRelateItem | model:model~setRelateItem[],
+     *     relate?: import('model').SetRelateItem | import('model').SetRelateItem [],
      *     returnUrl?: string,
      *     returnDispatchParams?: Record,
      *     options?: Record,

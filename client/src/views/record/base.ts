@@ -1557,6 +1557,15 @@ class BaseRecordView<S extends BaseRecordViewSchema = BaseRecordViewSchema> exte
         // noinspection BadExpressionStatementJS
         after;
     }
+
+    /**
+     * Is changed.
+     *
+     * @since 10.0.0
+     */
+    public hasChanged(): boolean {
+        return this.isChanged
+    }
 }
 
 export default BaseRecordView;

@@ -121,7 +121,7 @@ class EditModalView extends ModalView {
                 this.model.set(focusedFieldView.fetch(), {skipReRender: true});
             }
 
-            if (!this.getRecordView().isChanged) {
+            if (!this.getRecordView().hasChanged()) {
                 this.actionClose();
 
                 return;
@@ -144,7 +144,7 @@ class EditModalView extends ModalView {
      * @property {string} [id] An ID.
      * @property {string} [layoutName] A layout name.
      * @property {Record} [attributes] Attributes.
-     * @property {model:model~setRelateItem | model:model~setRelateItem[]} [relate] A relate data.
+     * @property {import('model').SetRelateItem | import('model').SetRelateItem[]} [relate] A relate data.
      * @property {import('view-record-helper')} [recordHelper] A record helper.
      * @property {boolean} [saveDisabled] Disable save.
      * @property {boolean} [fullFormDisabled] Disable full-form.
@@ -325,14 +325,14 @@ class EditModalView extends ModalView {
     handleRecordViewOptions(options) {}
 
     /**
-     * @return {module:views/record/edit}
+     * @return {import('views/record/edit').default}
      */
     getRecordView() {
-        return this.getView('edit');
+        return /** @type {import('views/record/edit').default} */this.getView('edit');
     }
 
     onBackdropClick() {
-        if (this.getRecordView().isChanged) {
+        if (this.getRecordView().hasChanged()) {
             return;
         }
 

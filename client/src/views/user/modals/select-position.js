@@ -115,7 +115,7 @@ export default class UserSelectPositionModalView extends ModalView {
     }
 
     onBackdropClick() {
-        if (this.recordView.isChanged) {
+        if (this.recordView.hasChanged()) {
             return;
         }
 

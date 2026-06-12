@@ -73,7 +73,7 @@ class ComposeEmailModalView extends EditModalView {
                 this.model.set(focusedFieldView.fetch());
             }
 
-            if (this.getRecordView().isChanged) {
+            if (this.getRecordView().hasChanged()) {
                 this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
                     .then(() => this.actionClose());
 

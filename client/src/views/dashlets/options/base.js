@@ -89,7 +89,7 @@ class BaseDashletOptionsModalView extends ModalView {
                 this.model.set(focusedFieldView.fetch(), {skipReRender: true});
             }
 
-            if (this.getRecordView().isChanged) {
+            if (this.getRecordView().hasChanged()) {
                 this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
                     .then(() => this.actionClose());
 
@@ -184,7 +184,7 @@ class BaseDashletOptionsModalView extends ModalView {
     setupBeforeFinal() {}
 
     onBackdropClick() {
-        if (this.getRecordView().isChanged) {
+        if (this.getRecordView().hasChanged()) {
             return;
         }
 
@@ -192,7 +192,7 @@ class BaseDashletOptionsModalView extends ModalView {
     }
 
     /**
-     * @return {module:views/record/edit}
+     * @return {import('views/record/edit').default}
      */
     getRecordView() {
         return this.recordView;

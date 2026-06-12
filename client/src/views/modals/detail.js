@@ -33,6 +33,7 @@ import ActionItemSetup from 'helpers/action-item-setup';
 import Backbone from 'backbone';
 import RecordModal from 'helpers/record-modal';
 import Utils from 'utils';
+import _ from 'underscore';
 
 /**
  * A quick view modal.
@@ -463,10 +464,10 @@ class DetailModalView extends ModalView {
     }
 
     /**
-     * @return {module:views/record/detail}
+     * @return {import('views/record/detail').default}
      */
     getRecordView() {
-        return this.getView('record');
+        return /** @type {import('views/record/detail').default} */this.getView('record');
     }
 
     afterRender() {
@@ -708,7 +709,7 @@ class DetailModalView extends ModalView {
         const model = this.getRecordView().model;
 
         this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
-            const $buttons = this.dialog.$el.find('.modal-footer button');
+            const $buttons = $(this.dialog.getElement()).find('.modal-footer button');
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 

@@ -290,7 +290,7 @@ class RecordModalHelper {
      *   fullFormDisabled?: boolean,
      *   fullFormUrl?: string,
      *   returnUrl?: string,
-     *   relate?: model:model~setRelateItem | model:model~setRelateItem[],
+     *   relate?: import('model').SetRelateItem | import('model').SetRelateItem[],
      *   attributes?: Record.<string, *>,
      *   afterSave?: function(import('model').default, {bypassClose: boolean} & Record),
      *   beforeRender?: function(import('views/modals/edit').default),
