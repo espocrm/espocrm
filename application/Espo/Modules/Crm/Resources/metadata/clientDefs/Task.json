@@ -36,7 +36,7 @@
     "modalDetailActionList": [
         {
             "name": "complete",
-            "label": "Complete",
+            "labelTranslation": "Task.labels.Complete",
             "acl": "edit",
             "handler": "modules/crm/handlers/task/detail-actions",
             "actionFunction": "complete",

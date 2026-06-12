@@ -110,7 +110,7 @@ class ActionItemSetupHelper {
         actionDefsList.forEach(item => {
             const name = item.name;
 
-            if (!item.label) {
+            if (!item.label && !item.labelTranslation) {
                 item.text = this.language.translate(name, 'actions', scope);
             }
 
