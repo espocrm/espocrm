@@ -53,6 +53,6 @@
     "presetFilters": {
         "portalUsers": "Portal Users",
         "notPortalUsers": "Not Portal Users",
-        "accountActive": "Active"
+        "accountActive": "Active Relation"
     }
 }
