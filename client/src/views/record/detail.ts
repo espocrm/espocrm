@@ -1030,14 +1030,14 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         if (this.type === this.TYPE_DETAIL) {
             const actionItemSetup = new ActionItemSetup();
 
-            actionItemSetup.setup(
-                this,
-                this.type,
-                promise => this.wait(promise),
-                item => this.addDropdownItem(item),
-                name => this.showActionItem(name),
-                name => this.hideActionItem(name)
-            );
+            actionItemSetup.setup({
+                view: this,
+                type: this.type,
+                waitFunc: promise => this.wait(promise),
+                addFunc: item => this.addDropdownItem(item),
+                showFunc: name => this.showActionItem(name),
+                hideFunc: name => this.hideActionItem(name),
+            });
 
             if (this.saveAndContinueEditingAction) {
                 this.dropdownEditItemList.push({
@@ -1052,20 +1052,20 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         if (this.type === this.TYPE_EDIT || this.type === this.TYPE_DETAIL) {
             const actionItemSetup = new ActionItemSetup();
 
-            actionItemSetup.setup(
-                this,
-                'edit',
-                promise => this.wait(promise),
-                item => {
+            actionItemSetup.setup({
+                view: this,
+                type: 'edit',
+                waitFunc: promise => this.wait(promise),
+                addFunc: item => {
                     if (this.type === this.TYPE_EDIT) {
                         this.addDropdownItem(item);
                     } else {
                         this.dropdownEditItemList.push(item);
                     }
                 },
-                name => this.showActionItem(name),
-                name => this.hideActionItem(name)
-            );
+                showFunc: name => this.showActionItem(name),
+                hideFunc: name => this.hideActionItem(name),
+            });
         }
     }
 

@@ -65,16 +65,24 @@ class ActionItemSetupHelper {
     language
 
     /**
-     * @param {import('view').default<any>} view
-     * @param {string} type
-     * @param {function(Promise): void} waitFunc
-     * @param {(item: import('views/record/detail').DropdownItem) => void} addFunc
-     * @param {function(string): void} showFunc
-     * @param {function(string): void} hideFunc
-     * @param {{listenToViewModelSync?: boolean}} [options]
+     * @param {{
+     *     view: import('view').default<any>,
+     *     type: string,
+     *     waitFunc: (Promise) => void,
+     *     addFunc: (item: import('views/record/detail').DropdownItem) => void,
+     *     showFunc: (string) => void,
+     *     hideFunc: (string) => void,
+     *     listenToViewModelSync?: boolean,
+     * }} options
      */
-    setup(view, type, waitFunc, addFunc, showFunc, hideFunc, options) {
-        options = options || {};
+    setup(options) {
+        const view = options.view;
+        const type = options.type;
+        const waitFunc = options.waitFunc;
+        const addFunc = options.addFunc;
+        const showFunc = options.showFunc;
+        const hideFunc = options.hideFunc;
+
         const actionList = [];
 
         // noinspection JSUnresolvedReference
