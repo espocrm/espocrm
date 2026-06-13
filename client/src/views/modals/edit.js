@@ -551,7 +551,7 @@ class EditModalView extends ModalView {
 
         actionItemSetup.setup({
             view: this,
-            type: 'modalEdit',
+            type: 'modalEditActionList',
             waitFunc: promise => this.wait(promise),
             addFunc: item => this.addDropdownItem(item),
             showFunc: name => this.showActionItem(name),

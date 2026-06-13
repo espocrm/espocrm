@@ -94,8 +94,8 @@ class ActionItemSetupHelper {
 
         /** @type {({name?: string} & Record | string)[]} */
         const actionDefsListOriginal = [
-            ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
-            ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
+            ...this.metadata.get(['clientDefs', 'Global', type]) || [],
+            ...this.metadata.get(['clientDefs', scope, type]) || [],
         ];
 
         /** @type {({name?: string} & Object.<string, *>)[]} */

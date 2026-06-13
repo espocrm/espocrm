@@ -1032,7 +1032,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
             actionItemSetup.setup({
                 view: this,
-                type: this.type,
+                type: 'detailActionList',
                 waitFunc: promise => this.wait(promise),
                 addFunc: item => this.addDropdownItem(item),
                 showFunc: name => this.showActionItem(name),
@@ -1054,7 +1054,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
             actionItemSetup.setup({
                 view: this,
-                type: 'edit',
+                type: 'editActionList',
                 waitFunc: promise => this.wait(promise),
                 addFunc: item => {
                     if (this.type === this.TYPE_EDIT) {

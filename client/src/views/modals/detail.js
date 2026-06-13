@@ -290,7 +290,7 @@ class DetailModalView extends ModalView {
 
         actionItemSetup.setup({
             view: this,
-            type: 'modalDetail',
+            type: 'modalDetailActionList',
             waitFunc: promise => this.wait(promise),
             addFunc: item => this.addDropdownItem(item),
             showFunc: name => this.showActionItem(name),
