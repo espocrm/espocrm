@@ -1089,8 +1089,12 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
      * @param name A name.
      */
     hideActionItem(name: string) {
+        let changed = false;
+
         for (const item of this.buttonList) {
             if (item.name === name) {
+                changed ||= !item.hidden;
+
                 item.hidden = true;
 
                 break;
@@ -1099,6 +1103,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownItemList) {
             if (item.name === name) {
+                changed ||= !item.hidden
+
                 item.hidden = true;
 
                 break;
@@ -1107,6 +1113,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
+                changed ||= !item.hidden
+
                 item.hidden = true;
 
                 break;
@@ -1115,10 +1123,16 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.buttonEditList) {
             if (item.name === name) {
+                changed ||= !item.hidden
+
                 item.hidden = true;
 
                 break;
             }
+        }
+
+        if (!changed) {
+            return;
         }
 
         if (this.isRendered()) {
@@ -1132,8 +1146,12 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
      * @param name A name.
      */
     showActionItem(name: string) {
+        let changed: any = false;
+
         for (const item of this.buttonList) {
             if (item.name === name) {
+                changed ||= item.hidden;
+
                 item.hidden = false;
 
                 break;
@@ -1142,6 +1160,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownItemList) {
             if (item.name === name) {
+                changed ||= item.hidden;
+
                 item.hidden = false;
 
                 break;
@@ -1150,6 +1170,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
+                changed ||= item.hidden;
+
                 item.hidden = false;
 
                 break;
@@ -1158,10 +1180,16 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.buttonEditList) {
             if (item.name === name) {
+                changed ||= item.hidden;
+
                 item.hidden = false;
 
                 break;
             }
+        }
+
+        if (!changed) {
+            return;
         }
 
         if (this.isRendered()) {
@@ -1176,8 +1204,12 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
      * @param name A name.
      */
     disableActionItem(name: string) {
+        let changed = false;
+
         for (const item of this.buttonList) {
             if (item.name === name) {
+                changed ||= !item.disabled;
+
                 item.disabled = true;
 
                 break;
@@ -1186,6 +1218,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownItemList) {
             if (item.name === name) {
+                changed ||= !item.disabled;
+
                 item.disabled = true;
 
                 break;
@@ -1194,6 +1228,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
+                changed ||= !item.disabled;
+
                 item.disabled = true;
 
                 break;
@@ -1202,10 +1238,16 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.buttonEditList) {
             if (item.name === name) {
+                changed ||= !item.disabled;
+
                 item.disabled = true;
 
                 break;
             }
+        }
+
+        if (!changed) {
+            return false;
         }
 
         if (this.isRendered()) {
@@ -1220,8 +1262,12 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
      * @param name A name.
      */
     enableActionItem(name: string) {
+        let changed: any = false;
+
         for (const item of this.buttonList) {
             if (item.name === name) {
+                changed ||= item.disabled;
+
                 item.disabled = false;
 
                 break;
@@ -1230,6 +1276,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownItemList) {
             if (item.name === name) {
+                changed ||= item.disabled;
+
                 item.disabled = false;
 
                 break;
@@ -1238,6 +1286,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
+                changed ||= item.disabled;
+
                 item.disabled = false;
 
                 break;
@@ -1246,10 +1296,16 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
         for (const item of this.buttonEditList) {
             if (item.name === name) {
+                changed ||= item.disabled;
+
                 item.disabled = false;
 
                 break;
             }
+        }
+
+        if (!changed) {
+            return false;
         }
 
         if (this.isRendered()) {

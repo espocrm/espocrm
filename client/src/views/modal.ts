@@ -647,13 +647,21 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param name A button name.
      */
     async disableButton(name: string) {
+        let changed = false;
+
         this.buttonList.forEach(item => {
             if (item.name !== name) {
                 return;
             }
 
+            changed ||= !item.disabled;
+
             item.disabled = true;
         });
+
+        if (!changed) {
+            return;
+        }
 
         if (!this.isRendered()) {
             return;
@@ -668,13 +676,21 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param name A button name.
      */
     async enableButton(name: string) {
+        let changed: any = false;
+
         this.buttonList.forEach(item => {
             if (item.name !== name) {
                 return;
             }
 
+            changed ||= item.disabled;
+
             item.disabled = false;
         });
+
+        if (!changed) {
+            return;
+        }
 
         if (!this.isRendered()) {
             return;
@@ -877,8 +893,12 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param name A name.
      */
     async showActionItem(name: string) {
+        let changed: any = false;
+
         for (const item of this.buttonList) {
             if (item.name === name) {
+                changed ||= item.hidden;
+
                 item.hidden = false;
 
                 break;
@@ -887,10 +907,16 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
         for (const item of this.dropdownItemList) {
             if (item && item.name === name) {
+                changed ||= item.hidden;
+
                 item.hidden = false;
 
                 break;
             }
+        }
+
+        if (!changed) {
+            return;
         }
 
         if (!this.isRendered()) {
@@ -929,8 +955,12 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
      * @param name A name.
      */
     async hideActionItem(name: string) {
+        let changed = false;
+
         for (const item of this.buttonList) {
             if (item.name === name) {
+                changed ||= !item.hidden;
+
                 item.hidden = true;
 
                 break;
@@ -939,10 +969,16 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
 
         for (const item of this.dropdownItemList) {
             if (item && item.name === name) {
+                changed ||= !item.hidden;
+
                 item.hidden = true;
 
                 break;
             }
+        }
+
+        if (changed) {
+            return;
         }
 
         if (!this.isRendered()) {
