@@ -29,6 +29,7 @@
 import EditModalView from 'views/modals/edit';
 import MailtoHelper from 'helpers/misc/mailto';
 import EmailScheduleSendModalView from 'views/email/modals/schedule-send';
+import ActionItemSetup from 'helpers/action-item-setup';
 
 class ComposeEmailModalView extends EditModalView {
 
@@ -337,6 +338,38 @@ class ComposeEmailModalView extends EditModalView {
 
         await this.assignView('dialog', view);
         await view.render();
+    }
+
+    /**
+     * @protected
+     */
+    setupActionItems() {
+        const actionItemSetup = new ActionItemSetup();
+
+        actionItemSetup.setup({
+            view: this,
+            type: 'recordControls.compose.dropdown',
+            waitFunc: promise => this.wait(promise),
+            addFunc: item => this.addDropdownItem(item),
+            showFunc: name => this.showActionItem(name),
+            hideFunc: name => this.hideActionItem(name),
+        });
+
+        actionItemSetup.setup({
+            view: this,
+            type: 'recordControls.composeSide.buttons',
+            waitFunc: promise => this.wait(promise),
+            addFunc: item => {
+                this.addButton({
+                    ...item,
+                    position: 'right',
+                })
+            },
+            showFunc: name => this.showActionItem(name),
+            hideFunc: name => this.hideActionItem(name),
+            enableFunc: name => this.enableButton(name),
+            disableFunc: name => this.disableButton(name),
+        });
     }
 }
 

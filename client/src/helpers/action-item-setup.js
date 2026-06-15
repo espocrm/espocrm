@@ -34,6 +34,9 @@ import Language from 'language';
 
 /** @module helpers/action-item-setup */
 
+/**
+ * @internal
+ */
 class ActionItemSetupHelper {
 
     /**

@@ -544,7 +544,8 @@ class EditModalView extends ModalView {
     }
 
     /**
-     * @private
+     * @protected
+     * @internal
      */
     setupActionItems() {
         const actionItemSetup = new ActionItemSetup();

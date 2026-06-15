@@ -273,6 +273,8 @@ class CalenderEditModalView extends EditModalView {
                 });
         });
     }
+
+    setupActionItems() {}
 }
 
 export default CalenderEditModalView;
