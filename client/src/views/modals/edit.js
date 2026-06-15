@@ -560,7 +560,7 @@ class EditModalView extends ModalView {
 
         actionItemSetup.setup({
             view: this,
-            type: 'recordControls.modelEditSide.buttons',
+            type: 'recordControls.modalEditSide.buttons',
             waitFunc: promise => this.wait(promise),
             addFunc: item => {
                 this.addButton({
