@@ -976,6 +976,17 @@
                 "iconClass": {
                     "type": "string",
                     "description": "A CSS class for the icon. As of v10.0."
+                },
+                "style": {
+                    "enum": [
+                        "default",
+                        "success",
+                        "warning",
+                        "danger",
+                        "info",
+                        "text"
+                    ],
+                    "description": "A style. As of v10.0."
                 }
             }
         },
