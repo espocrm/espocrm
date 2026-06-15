@@ -24,7 +24,13 @@ body {
 }
 
 a {
-    color: @link-color;
+    color: var(--text-link-color);
+
+    &:hover,
+    &:focus {
+        color: var(--text-link-hover-color);
+    }
+
     text-decoration: none;
 
     &:hover {
