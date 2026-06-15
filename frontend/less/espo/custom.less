@@ -2651,6 +2651,15 @@ div[data-scope="ApiUser"] {
         word-wrap: break-word;
     }
 
+    a {
+        color: var(--text-link-color);
+
+        &:hover,
+        &:focus {
+            color: var(--text-link-hover-color);
+        }
+    }
+
     img {
         max-width: 100%;
         max-height: var(--500px);
@@ -2725,15 +2734,6 @@ table.table td.cell .html-container {
     > ol {
         &:first-child {
             margin-top: 0 !important;
-        }
-    }
-
-    a {
-        color: var(--text-link-color);
-
-        &:hover,
-        &:focus {
-            color: var(--text-link-hover-color);
         }
     }
 
