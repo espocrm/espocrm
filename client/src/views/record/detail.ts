@@ -94,6 +94,12 @@ export interface Button {
      */
     title?: string;
     /**
+     * A title translation path.
+     *
+     * @since 10.0.0
+     */
+    titleTranslation?: string;
+    /**
      * Disabled.
      */
     disabled?: boolean;
@@ -145,6 +151,12 @@ export interface DropdownItem {
      * A title (not translatable).
      */
     title?: string;
+    /**
+     * A title translation path.
+     *
+     * @since 10.0.0
+     */
+    titleTranslation?: string;
     /**
      *  Disabled.
      */

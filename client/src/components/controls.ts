@@ -37,6 +37,7 @@ interface ButtonOptions {
     className?: string | null;
     scope?: string | null;
     title?: string | null;
+    titleTranslation?: string | null;
     label?: string | null;
     labelTranslation?: string | null;
     link?: string | null;
@@ -56,6 +57,7 @@ interface DropdownItemOptions {
     className?: string | null;
     scope?: string | null;
     title?: string | null;
+    titleTranslation?: string | null;
     label?: string | null;
     labelTranslation?: string | null;
     link?: string | null;
@@ -112,6 +114,10 @@ export class ButtonComponent {
 
         if (this.options.title) {
             attrs.title = this.options.title;
+        }
+
+        if (!this.options.title && this.options.titleTranslation) {
+            attrs.title = this.language.translatePath(this.options.titleTranslation);
         }
 
         const {content, props} = prepareItemContent(this.options, this.language);
@@ -174,6 +180,10 @@ export class DropdownItemComponent {
 
         if (this.options.title) {
             attrs.title = this.options.title;
+        }
+
+        if (!this.options.title && this.options.titleTranslation) {
+            attrs.title = this.language.translatePath(this.options.titleTranslation);
         }
 
         const {content, props} = prepareItemContent(this.options, this.language, true);

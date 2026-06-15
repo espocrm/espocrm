@@ -91,6 +91,12 @@ interface ActionItem {
      */
     title?: string;
     /**
+     * A title translation path.
+     *
+     * @since 10.0.0
+     */
+    titleTranslation?: string;
+    /**
      * A style.
      */
     style?: 'primary' | 'danger' | 'success' | 'warning' | 'info' | 'text';
@@ -493,6 +499,10 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                 } else {
                     o.text = this.translate(o.name, 'modalActions', this.scope);
                 }
+            }
+
+            if (!o.title && o.titleTranslation) {
+                o.title = this.getLanguage().translatePath(o.titleTranslation);
             }
 
             if (o.iconHtml && !o.html) {

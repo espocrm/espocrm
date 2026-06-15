@@ -929,6 +929,10 @@
                     "type": "string",
                     "description": "A label translation path. As of v10.0."
                 },
+                "titleTranslation": {
+                    "type": "string",
+                    "description": "A title translation path. As of v10.0."
+                },
                 "handler": {
                     "type": "string",
                     "description": "A handler class for the action."
