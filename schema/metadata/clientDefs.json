@@ -766,9 +766,16 @@
             "description": "Record controls. To be used for arbitrary action elements. As of v10.0.",
             "type": "object",
             "propertyNames": {
-                "enum": [
-                    "editSide",
-                    "modelEditSide"
+                "anyOf": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "enum": [
+                            "editSide",
+                            "modalEditSide"
+                        ]
+                    }
                 ]
             },
             "additionalProperties": {
