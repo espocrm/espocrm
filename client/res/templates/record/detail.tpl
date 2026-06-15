@@ -38,6 +38,10 @@
                 class="btn-group actions-btn-group"
                 role="group"
             >{{{editButtons}}}</div>
+            <div
+                class="btn-group pull-right"
+                role="group"
+            >{{{editSideButtons}}}</div>
         </div>
     </div>
     {{/unless}}

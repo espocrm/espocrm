@@ -69,10 +69,16 @@ class ActionItemSetupHelper {
      *     view: import('view').default<any>,
      *     type: string,
      *     waitFunc: (Promise) => void,
-     *     addFunc: (item: import('views/record/detail').DropdownItem) => void,
+     *     addFunc: (
+     *          item: import('views/record/detail').DropdownItem |
+     *              import('views/record/detail').Button
+ *         ) => void,
      *     showFunc: (string) => void,
      *     hideFunc: (string) => void,
+     *     enableFunc?: (string) => void,
+     *     disableFunc?: (string) => void,
      *     listenToViewModelSync?: boolean,
+     *     syncEvent?: 'sync'|'change',
      * }} options
      */
     setup(options) {
@@ -82,7 +88,10 @@ class ActionItemSetupHelper {
         const addFunc = options.addFunc;
         const showFunc = options.showFunc;
         const hideFunc = options.hideFunc;
+        const enableFunc = options.enableFunc ?? (() => {});
+        const disableFunc = options.disableFunc ?? (() => {});
 
+        /** @type {Record[]} */
         const actionList = [];
 
         // noinspection JSUnresolvedReference
@@ -92,13 +101,15 @@ class ActionItemSetupHelper {
             throw new Error();
         }
 
+        const path = type.split('.');
+
         /** @type {({name?: string} & Record | string)[]} */
         const actionDefsListOriginal = [
-            ...this.metadata.get(['clientDefs', 'Global', type]) || [],
-            ...this.metadata.get(['clientDefs', scope, type]) || [],
+            ...this.metadata.get(['clientDefs', 'Global', ...path], []),
+            ...this.metadata.get(['clientDefs', scope, ...path], []),
         ];
 
-        /** @type {({name?: string} & Object.<string, *>)[]} */
+        /** @type {({name?: string} & Record<string, any>)[]} */
         let actionDefsList = actionDefsListOriginal.map(item => {
             if (typeof item === 'string') {
                 return {name: item};
@@ -146,7 +157,7 @@ class ActionItemSetupHelper {
                 return;
             }
 
-            if (!item.initFunction && !item.checkVisibilityFunction) {
+            if (!item.initFunction && !item.checkVisibilityFunction && !item.checkAvailabilityFunction) {
                 return;
             }
 
@@ -166,6 +177,14 @@ class ActionItemSetupHelper {
                         }
                     }
 
+                    if (item?.checkAvailabilityFunction) {
+                        const isNotAvailable = !handler[item.checkAvailabilityFunction].call(handler);
+
+                        if (isNotAvailable) {
+                            disableFunc(item.name);
+                        }
+                    }
+
                     item.handlerInstance = handler;
 
                     resolve();
@@ -177,11 +196,27 @@ class ActionItemSetupHelper {
             return;
         }
 
+        const onChange = () => {
+            actionList.forEach(item => {
+                const handler = item.handlerInstance;
+
+                if (!handler || !item.checkAvailabilityFunction) {
+                    return;
+                }
+                const isAvailable = handler[item.checkAvailabilityFunction].call(handler);
+
+                isAvailable ?
+                    enableFunc(item.name) :
+                    disableFunc(item.name);
+            });
+        }
+
         const onSync = () => {
             actionList.forEach(item => {
-                if (item.handlerInstance && item.checkVisibilityFunction) {
-                    const isNotVisible = !item.handlerInstance[item.checkVisibilityFunction]
-                        .call(item.handlerInstance);
+                const handler = item.handlerInstance;
+
+                if (handler && item.checkVisibilityFunction) {
+                    const isNotVisible = !handler[item.checkVisibilityFunction].call(handler);
 
                     if (isNotVisible) {
                         hideFunc(item.name);
@@ -206,7 +241,8 @@ class ActionItemSetupHelper {
             return;
         }
 
-        view.listenTo(view.model, 'sync', () => onSync());
+        view.listenTo(view.model, 'change', () => onChange());
+        view.listenTo(view.model, options.syncEvent ?? 'sync', () => onSync());
     }
 }
 

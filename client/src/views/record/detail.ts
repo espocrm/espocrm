@@ -101,6 +101,12 @@ export interface Button {
      * A click handler.
      */
     onClick?: () => void;
+    /**
+     * An icon class.
+     *
+     * @since 10.0.0
+     */
+    iconClass?: string;
 }
 
 /**
@@ -496,6 +502,20 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             title: 'Esc',
         },
     ]
+
+    /**
+     * Side buttons for edit mode.
+     *
+     * @since 10.0.0
+     */
+    protected sideButtonList: Button[] = []
+
+    /**
+     * Side buttons for edit mode.
+     *
+     * @since 10.0.0
+     */
+    protected sideButtonEditList: Button[] = []
 
     /**
      * A dropdown item list for edit mode.
@@ -1027,9 +1047,9 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             return;
         }
 
-        if (this.type === this.TYPE_DETAIL) {
-            const actionItemSetup = new ActionItemSetup();
+        const actionItemSetup = new ActionItemSetup();
 
+        if (this.type === this.TYPE_DETAIL) {
             actionItemSetup.setup({
                 view: this,
                 type: 'detailActionList',
@@ -1037,6 +1057,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                 addFunc: item => this.addDropdownItem(item),
                 showFunc: name => this.showActionItem(name),
                 hideFunc: name => this.hideActionItem(name),
+                enableFunc: name => this.enableActionItem(name),
+                disableFunc: name => this.disableActionItem(name),
             });
 
             if (this.saveAndContinueEditingAction) {
@@ -1050,8 +1072,6 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
 
         if (this.type === this.TYPE_EDIT || this.type === this.TYPE_DETAIL) {
-            const actionItemSetup = new ActionItemSetup();
-
             actionItemSetup.setup({
                 view: this,
                 type: 'editActionList',
@@ -1065,6 +1085,25 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                 },
                 showFunc: name => this.showActionItem(name),
                 hideFunc: name => this.hideActionItem(name),
+                enableFunc: name => this.enableActionItem(name),
+                disableFunc: name => this.disableActionItem(name),
+            });
+
+            actionItemSetup.setup({
+                view: this,
+                type: 'recordControls.editSide.buttons',
+                waitFunc: promise => this.wait(promise),
+                addFunc: item => {
+                    if (this.type === this.TYPE_EDIT) {
+                        this.sideButtonList.push(item);
+                    } else {
+                        this.sideButtonEditList.push(item);
+                    }
+                },
+                showFunc: name => this.showActionItem(name),
+                hideFunc: name => this.hideActionItem(name),
+                enableFunc: name => this.enableActionItem(name),
+                disableFunc: name => this.disableActionItem(name),
             });
         }
     }
@@ -1091,43 +1130,15 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     hideActionItem(name: string) {
         let changed = false;
 
-        for (const item of this.buttonList) {
-            if (item.name === name) {
-                changed ||= !item.hidden;
+        for (const list of this.getActionGroups()) {
+            for (const item of list) {
+                if (item.name === name) {
+                    changed ||= !item.hidden;
 
-                item.hidden = true;
+                    item.hidden = true;
 
-                break;
-            }
-        }
-
-        for (const item of this.dropdownItemList) {
-            if (item.name === name) {
-                changed ||= !item.hidden
-
-                item.hidden = true;
-
-                break;
-            }
-        }
-
-        for (const item of this.dropdownEditItemList) {
-            if (item.name === name) {
-                changed ||= !item.hidden
-
-                item.hidden = true;
-
-                break;
-            }
-        }
-
-        for (const item of this.buttonEditList) {
-            if (item.name === name) {
-                changed ||= !item.hidden
-
-                item.hidden = true;
-
-                break;
+                    break;
+                }
             }
         }
 
@@ -1140,6 +1151,17 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         }
     }
 
+    private getActionGroups(): (Button[]|DropdownItem[])[] {
+        return [
+            this.buttonList,
+            this.dropdownItemList,
+            this.dropdownEditItemList,
+            this.buttonEditList,
+            this.sideButtonList,
+            this.sideButtonEditList,
+        ];
+    }
+
     /**
      * Show a button or dropdown action item.
      *
@@ -1148,43 +1170,15 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     showActionItem(name: string) {
         let changed: any = false;
 
-        for (const item of this.buttonList) {
-            if (item.name === name) {
-                changed ||= item.hidden;
+        for (const list of this.getActionGroups()) {
+            for (const item of list) {
+                if (item.name === name) {
+                    changed ||= item.hidden;
 
-                item.hidden = false;
+                    item.hidden = false;
 
-                break;
-            }
-        }
-
-        for (const item of this.dropdownItemList) {
-            if (item.name === name) {
-                changed ||= item.hidden;
-
-                item.hidden = false;
-
-                break;
-            }
-        }
-
-        for (const item of this.dropdownEditItemList) {
-            if (item.name === name) {
-                changed ||= item.hidden;
-
-                item.hidden = false;
-
-                break;
-            }
-        }
-
-        for (const item of this.buttonEditList) {
-            if (item.name === name) {
-                changed ||= item.hidden;
-
-                item.hidden = false;
-
-                break;
+                    break;
+                }
             }
         }
 
@@ -1206,48 +1200,20 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     disableActionItem(name: string) {
         let changed = false;
 
-        for (const item of this.buttonList) {
-            if (item.name === name) {
-                changed ||= !item.disabled;
+        for (const list of this.getActionGroups()) {
+            for (const item of list) {
+                if (item.name === name) {
+                    changed ||= !item.disabled;
 
-                item.disabled = true;
+                    item.disabled = true;
 
-                break;
-            }
-        }
-
-        for (const item of this.dropdownItemList) {
-            if (item.name === name) {
-                changed ||= !item.disabled;
-
-                item.disabled = true;
-
-                break;
-            }
-        }
-
-        for (const item of this.dropdownEditItemList) {
-            if (item.name === name) {
-                changed ||= !item.disabled;
-
-                item.disabled = true;
-
-                break;
-            }
-        }
-
-        for (const item of this.buttonEditList) {
-            if (item.name === name) {
-                changed ||= !item.disabled;
-
-                item.disabled = true;
-
-                break;
+                    break;
+                }
             }
         }
 
         if (!changed) {
-            return false;
+            return;
         }
 
         if (this.isRendered()) {
@@ -1264,48 +1230,20 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     enableActionItem(name: string) {
         let changed: any = false;
 
-        for (const item of this.buttonList) {
-            if (item.name === name) {
-                changed ||= item.disabled;
+        for (const list of this.getActionGroups()) {
+            for (const item of list) {
+                if (item.name === name) {
+                    changed ||= item.disabled;
 
-                item.disabled = false;
+                    item.disabled = false;
 
-                break;
-            }
-        }
-
-        for (const item of this.dropdownItemList) {
-            if (item.name === name) {
-                changed ||= item.disabled;
-
-                item.disabled = false;
-
-                break;
-            }
-        }
-
-        for (const item of this.dropdownEditItemList) {
-            if (item.name === name) {
-                changed ||= item.disabled;
-
-                item.disabled = false;
-
-                break;
-            }
-        }
-
-        for (const item of this.buttonEditList) {
-            if (item.name === name) {
-                changed ||= item.disabled;
-
-                item.disabled = false;
-
-                break;
+                    break;
+                }
             }
         }
 
         if (!changed) {
-            return false;
+            return;
         }
 
         if (this.isRendered()) {
@@ -1323,27 +1261,34 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             return false;
         }
 
-        if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
-            const hasButton = this.buttonEditList
-                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+        let groups: (Button[] | DropdownItem[])[];
 
-            if (hasButton) {
+        if (this.type === this.TYPE_DETAIL && this.mode === this.MODE_EDIT) {
+            groups = [
+                this.buttonEditList,
+                this.dropdownEditItemList,
+                this.sideButtonEditList,
+            ];
+
+        } else {
+            groups = [
+                this.buttonList,
+                this.dropdownItemList,
+                this.sideButtonList,
+            ];
+        }
+
+        for (const list of groups) {
+            const has = list.findIndex((item: Button | DropdownItem) => {
+                return item.name === name && !item.disabled && !item.hidden;
+            }) !== -1
+
+            if (has) {
                 return true;
             }
-
-            return this.dropdownEditItemList
-                .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
         }
 
-        const hasButton = this.buttonList
-            .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
-
-        if (hasButton) {
-            return true;
-        }
-
-        return this.dropdownItemList
-            .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
+        return false;
     }
 
     /**
@@ -1935,6 +1880,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         this.buttonEditList = Utils.cloneDeep(this.buttonEditList);
         this.dropdownItemList = Utils.cloneDeep(this.dropdownItemList);
         this.dropdownEditItemList = Utils.cloneDeep(this.dropdownEditItemList);
+        this.sideButtonList = Utils.cloneDeep(this.sideButtonList);
+        this.sideButtonEditList = Utils.cloneDeep(this.sideButtonEditList);
 
         this.returnAfterCreate = this.options.returnAfterCreate ?? false;
 
@@ -2110,6 +2057,10 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                 actionItems = [...this.buttonList, ...this.dropdownItemList]
             } else if (target.classList.contains('edit-action-item')) {
                 actionItems = [...this.buttonEditList, ...this.dropdownEditItemList];
+            } else if (target.classList.contains('side-action-item')) {
+                actionItems = [...this.sideButtonList];
+            } else if (target.classList.contains('edit-side-action-item')) {
+                actionItems = [...this.sideButtonEditList];
             }
 
             Utils.handleAction(this, event as MouseEvent, target, {actionItems: actionItems});
@@ -3906,6 +3857,36 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             });
 
             this.assignView('editButtons', editButtonsView);
+
+            const editSideButtonsView = new DetailRecordButtonsView({
+                entityType: this.entityType,
+                dataProvider: () => {
+                    return {
+                        buttonList: this.sideButtonEditList,
+                        dropdownItemList: [],
+                        allDisabled: this.allActionItemsDisabled,
+                    };
+                },
+                actionClassName: 'edit-side-action-item',
+            });
+
+            this.assignView('editSideButtons', editSideButtonsView);
+        }
+
+        if (this.type === 'edit') {
+            const sideButtonsView = new DetailRecordButtonsView({
+                entityType: this.entityType,
+                dataProvider: () => {
+                    return {
+                        buttonList: this.sideButtonList,
+                        dropdownItemList: [],
+                        allDisabled: this.allActionItemsDisabled,
+                    };
+                },
+                actionClassName: 'side-action-item',
+            });
+
+            this.assignView('sideButtons', sideButtonsView);
         }
     }
 
@@ -3917,9 +3898,19 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         return this.getView<DetailRecordButtonsView>('editButtons');
     }
 
+    private getSideButtonsView(): DetailRecordButtonsView | null {
+        return this.getView<DetailRecordButtonsView>('sideButtons');
+    }
+
+    private getEditSideButtonsView(): DetailRecordButtonsView | null {
+        return this.getView<DetailRecordButtonsView>('editSideButtons');
+    }
+
     private reRenderButtons() {
         this.getButtonsView()?.reRender({buffer: true});
         this.getEditButtonsView()?.reRender({buffer: true});
+        this.getSideButtonsView()?.reRender({buffer: true});
+        this.getEditSideButtonsView()?.reRender({buffer: true});
     }
 
     /**

@@ -6,6 +6,10 @@
                 class="btn-group actions-btn-group"
                 role="group"
             >{{{buttons}}}</div>
+            <div
+                class="btn-group pull-right"
+                role="group"
+            >{{{sideButtons}}}</div>
         </div>
     </div>
     {{/unless}}

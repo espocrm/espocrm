@@ -556,7 +556,22 @@ class EditModalView extends ModalView {
             addFunc: item => this.addDropdownItem(item),
             showFunc: name => this.showActionItem(name),
             hideFunc: name => this.hideActionItem(name),
-            listenToViewModelSync: true,
+        });
+
+        actionItemSetup.setup({
+            view: this,
+            type: 'recordControls.modelEditSide.buttons',
+            waitFunc: promise => this.wait(promise),
+            addFunc: item => {
+                this.addButton({
+                    ...item,
+                    position: 'right',
+                })
+            },
+            showFunc: name => this.showActionItem(name),
+            hideFunc: name => this.hideActionItem(name),
+            enableFunc: name => this.enableButton(name),
+            disableFunc: name => this.disableButton(name),
         });
     }
 }

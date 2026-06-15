@@ -762,6 +762,31 @@
                 ]
             }
         },
+        "recordControls": {
+            "description": "Record controls. To be used for arbitrary action elements. As of v10.0.",
+            "type": "object",
+            "propertyNames": {
+                "enum": [
+                    "editSide",
+                    "modelEditSide"
+                ]
+            },
+            "additionalProperties": {
+                "type": "object",
+                "propertyNames": {
+                    "enum": ["buttons"]
+                },
+                "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {"enum": ["__APPEND__"]},
+                            {"$ref": "#/definitions/actionDefs"}
+                        ]
+                    }
+                }
+            }
+        },
         "iconClass": {
             "description": "A scope icon CSS class.",
             "type": "string"
@@ -911,7 +936,11 @@
                 },
                 "checkVisibilityFunction": {
                     "type": "string",
-                    "description": "A handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
+                    "description": "A handler function that checks whether the action is visible. Should return a boolean value. Called on model sync."
+                },
+                "checkAvailabilityFunction": {
+                    "type": "string",
+                    "description": "A handler function that checks whether the action is available. Should return a boolean value. As of v10.0."
                 },
                 "configCheck": {
                     "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
