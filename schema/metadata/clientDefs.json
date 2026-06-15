@@ -972,6 +972,10 @@
                     "type": "integer",
                     "minimum": -100,
                     "description": "A group index"
+                },
+                "iconClass": {
+                    "type": "string",
+                    "description": "A CSS class for the icon. As of v10.0."
                 }
             }
         },
