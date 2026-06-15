@@ -496,8 +496,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                     o.text = this.getLanguage().translatePath(o.labelTranslation);
                 } else if ('label' in o) {
                     o.text = this.translate(o.label, 'labels', this.scope);
-                } else {
-                    o.text = this.translate(o.name, 'modalActions', this.scope);
                 }
             }
 
@@ -508,8 +506,14 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
             if (o.iconHtml && !o.html) {
                 o.html = o.iconHtml + '<span>' + this.getHelper().escapeString(o.text as string) + '</span>';
             } else if (o.iconClass && !o.html) {
-                o.html = `<span class="${o.iconClass}"></span>` +
-                    '<span>' + this.getHelper().escapeString(o.text as string) + '</span>';
+                if (o.text) {
+                    o.html = `<span class="${o.iconClass}"></span>` +
+                        '<span>' + this.getHelper().escapeString(o.text as string) + '</span>';
+                } else {
+                    o.html = `<span class="${o.iconClass}"></span>`;
+
+                    o.className = 'btn-icon';
+                }
             }
 
             o.onClick = o.onClick ?? ((_d, event) => {
@@ -550,8 +554,6 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                     o.text = this.getLanguage().translatePath(o.labelTranslation);
                 } else if ('label' in o) {
                     o.text = this.translate(o.label, 'labels', this.scope)
-                } else {
-                    o.text = this.translate(o.name, 'modalActions', this.scope);
                 }
             }
 

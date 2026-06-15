@@ -236,13 +236,13 @@ function prepareItemContent(
             props.innerHTML = options.iconHtml + props.innerHTML;
         }
     } else {
-        const label = options.label ?? options.name;
+        const label = options.label;
 
         let text = options.text ??
             (
                 options.labelTranslation ?
                     language.translatePath(options.labelTranslation) :
-                    language.translate(label ?? '?', 'labels', options.scope)
+                    language.translate(label ?? '', 'labels', options.scope)
             );
 
         let icon = null;
@@ -258,8 +258,10 @@ function prepareItemContent(
 
         if (isDropdownItem) {
             text = h('span', {props: {className: 'item-text'}}, text);
-        } else if (icon) {
-            text = h('span', text);
+        } else {
+            if (icon && text) {
+                text = h('span', text);
+            }
         }
 
         content = icon ?

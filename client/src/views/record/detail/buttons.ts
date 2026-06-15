@@ -51,6 +51,14 @@ export default class DetailRecordButtonsView extends View<{
         const buttons: any[] = [];
 
         data.buttonList.forEach(it => {
+            let className = this.options.actionClassName;
+
+            if (it.iconClass && !(it.label || it.labelTranslation || it.text || it.html)) {
+                className += ' btn-icon';
+            } else {
+                className += ' btn-xs-wide';
+            }
+
             buttons.push(
                 new ButtonComponent({
                     name: it.name,
@@ -62,7 +70,7 @@ export default class DetailRecordButtonsView extends View<{
                     title: it.title,
                     titleTranslation: it.titleTranslation,
                     text: it.text,
-                    className: data.buttonClassName,
+                    className: className,
                     hidden: it.hidden,
                     disabled: it.disabled || data.allDisabled,
                     iconClass: it.iconClass,
@@ -150,7 +158,6 @@ export default class DetailRecordButtonsView extends View<{
             buttonList: data.buttonList.filter(it => !it.hidden),
             dropdownItemList: dropdownItemList,
             entityType: this.options.entityType,
-            buttonClassName: 'btn-xs-wide ' + this.options.actionClassName,
             actionClassName: this.options.actionClassName,
             dropdownEmpty: dropdownEmpty,
             allDisabled: data.allDisabled,
