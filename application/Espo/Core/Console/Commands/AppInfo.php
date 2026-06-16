@@ -35,6 +35,7 @@ use Espo\Core\Console\IO;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
+use Espo\Tools\ConsoleAppInfo\InfoProvider;
 
 /**
  * @noinspection PhpUnused
@@ -57,7 +58,7 @@ class AppInfo implements Command
         );
 
         foreach ($typeList as $type) {
-            if ($params->hasFlag(Util::camelCaseToHyphen($type))) {
+            if ($params->hasFlag($type)) {
                 $this->processType($io, $type, $params);
 
                 return;
@@ -83,17 +84,13 @@ class AppInfo implements Command
 
     protected function processType(IO $io, string $type, Params $params): void
     {
-        /** @var class-string $className */
+        /** @var class-string<InfoProvider> $className */
         $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 
-        $obj = $this->injectableFactory->create($className);
+        $provider = $this->injectableFactory->create($className);
 
-        // @todo Use inteface.
-        assert(method_exists($obj, 'process'));
+        $result = $provider->get($params);
 
-        $result = $obj->process($params);
-
-        $io->writeLine('');
         $io->write($result);
         $io->writeLine("");
     }

@@ -27,39 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\AppInfo;
+namespace Espo\Tools\ConsoleAppInfo;
 
 use Espo\Core\Console\Command\Params;
-use Espo\Core\Utils\ClassFinder;
-use Espo\Core\Job\MetadataProvider;
-use Espo\Tools\ConsoleAppInfo\InfoProvider;
 
-class Jobs implements InfoProvider
+/**
+ * @since 10.0.0
+ */
+interface InfoProvider
 {
-
-    public function __construct(
-        private ClassFinder $classFinder,
-        private MetadataProvider $metadataProvider,
-    ) {}
-
-    public function get(Params $params): string
-    {
-        $result = "Available jobs:\n\n";
-
-        $list = array_map(
-            function ($item) {
-                return ' ' . $item;
-            },
-            array_unique(
-                array_merge(
-                    array_keys($this->classFinder->getMap('Jobs')),
-                    $this->metadataProvider->getScheduledJobNameList()
-                )
-            )
-        );
-
-        asort($list);
-
-        return $result . implode("\n", $list) . "\n";
-    }
+    public function get(Params $params): string;
 }

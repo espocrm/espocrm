@@ -30,36 +30,20 @@
 namespace Espo\Classes\AppInfo;
 
 use Espo\Core\Console\Command\Params;
-use Espo\Core\Utils\ClassFinder;
-use Espo\Core\Job\MetadataProvider;
+use Espo\Core\Upgrades\Migration\VersionDataProvider;
 use Espo\Tools\ConsoleAppInfo\InfoProvider;
 
-class Jobs implements InfoProvider
+/**
+ * @noinspection PhpUnused
+ */
+class CoreVersion implements InfoProvider
 {
-
     public function __construct(
-        private ClassFinder $classFinder,
-        private MetadataProvider $metadataProvider,
+        private VersionDataProvider $versionDataProvider,
     ) {}
 
     public function get(Params $params): string
     {
-        $result = "Available jobs:\n\n";
-
-        $list = array_map(
-            function ($item) {
-                return ' ' . $item;
-            },
-            array_unique(
-                array_merge(
-                    array_keys($this->classFinder->getMap('Jobs')),
-                    $this->metadataProvider->getScheduledJobNameList()
-                )
-            )
-        );
-
-        asort($list);
-
-        return $result . implode("\n", $list) . "\n";
+        return $this->versionDataProvider->getTargetVersion();
     }
 }
