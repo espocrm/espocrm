@@ -99,7 +99,7 @@ interface ActionItem {
     /**
      * A style.
      */
-    style?: 'primary' | 'danger' | 'success' | 'warning' | 'info' | 'text';
+    style?: 'primary' | 'default'| 'danger' | 'success' | 'warning' | 'info' | 'text';
     /**
      * An icon HTML.
      */
