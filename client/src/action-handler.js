@@ -36,7 +36,7 @@ import {View as BullView} from 'bullbone';
 class ActionHandler {
 
     /**
-     * @param {module:view} view A view.
+     * @param {import('view').default} view A view.
      */
     constructor(view) {
         /**
