@@ -58,12 +58,14 @@ export default class ResetFetchDataModalView extends ModalView<{
     protected setup() {
         this.buttonList = [
             {
-                name: 'Reset',
+                name: 'reset',
+                label: 'Reset',
                 style: 'danger',
                 onClick: () => this.processReset(),
             },
             {
-                name: 'Cancel',
+                name: 'cancel',
+                label: 'Cancel',
                 onClick: () => this.close(),
             },
         ];
