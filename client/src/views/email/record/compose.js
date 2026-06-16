@@ -127,6 +127,15 @@ class EmailComposeRecordView extends EditRecordView {
         });
     }
 
+    /**
+     * @param {{
+     *     body: string | null,
+     *     isHtml: boolean,
+     *     subject?: string | null,
+     *     attachmentsIds?: string[],
+     *     attachmentsNames?: Record<string, string>,
+     * }} data
+     */
     insertTemplate(data) {
         let body = data.body;
 
