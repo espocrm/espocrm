@@ -144,11 +144,11 @@ class ActionItemSetupHelper {
                 item.data.handler = handlerName;
             }
 
-            addFunc(item);
-
             if (!Espo.Utils.checkActionAvailability(this.viewHelper, item)) {
                 return;
             }
+
+            addFunc(item);
 
             if (!Espo.Utils.checkActionAccess(this.acl, view.model, item, true)) {
                 item.hidden = true;
