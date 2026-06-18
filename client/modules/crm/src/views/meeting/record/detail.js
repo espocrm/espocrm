@@ -35,7 +35,7 @@ class MeetingDetailRecordView extends DetailRecordView {
     setupActionItems() {
         super.setupActionItems();
 
-        if (!this.getAcl().checkModel(this.model, 'edit')) {
+        if (!this.getAcl().checkScope(this.model.entityType)) {
             return;
         }
 
@@ -86,15 +86,6 @@ class MeetingDetailRecordView extends DetailRecordView {
             owner: this,
             callback: () => control(),
         });
-    }
-
-    manageAccessEdit(second) {
-        super.manageAccessEdit(second);
-
-        if (second && !this.getAcl().checkModel(this.model, 'edit', true)) {
-            this.hideActionItem('setHeld');
-            this.hideActionItem('setNotHeld');
-        }
     }
 
     actionSetHeld() {

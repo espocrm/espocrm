@@ -32,8 +32,10 @@ define('crm:views/task/record/detail', ['views/record/detail'], function (Dep) {
 
         duplicateAction: true,
 
+        // @todo Refactor. The same as in Meeting.
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
+
             if (this.getAcl().checkModel(this.model, 'edit')) {
                 if (
                     !~['Completed', 'Canceled'].indexOf(this.model.get('status')) &&
