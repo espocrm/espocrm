@@ -270,12 +270,16 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
             itemList.forEach(item => {
                 const viewObject = this;
 
+                if (!item.hander && item.data?.handler) {
+                    item.handler = item.data.handler;
+                }
+
                 // @todo Set _reRenderHeaderOnSync to true if `acl` is set `ascScope` is not set?
                 //     Set _reRenderHeaderOnSync in `addMenuItem` method.
 
                 if (
                     (item.initFunction || item.checkVisibilityFunction) &&
-                    (item.handler || item.data && item.data.handler)
+                    item.handler
                 ) {
                     this.wait(new Promise(resolve => {
                         const handler = item.handler || item.data.handler;
