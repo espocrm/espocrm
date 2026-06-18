@@ -26,49 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/record/detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
+import Ui from 'ui';
 
-    return Dep.extend({
+export default class TaskDetailRecordView extends DetailRecordView {
 
-        duplicateAction: true,
+    setupActionItems() {
+        super.setupActionItems();
 
-        // @todo Refactor. The same as in Meeting.
-        setupActionItems: function () {
-            Dep.prototype.setupActionItems.call(this);
+        this.dropdownItemList.push({
+            label: 'Complete',
+            name: 'setCompleted',
+            onClick: () => this.actionSetCompleted(),
+        });
 
-            if (this.getAcl().checkModel(this.model, 'edit')) {
-                if (
-                    !~['Completed', 'Canceled'].indexOf(this.model.get('status')) &&
-                    this.getAcl().checkField(this.entityType, 'status', 'edit')
-                ) {
-                    this.dropdownItemList.push({
-                        'label': 'Complete',
-                        'name': 'setCompleted'
-                    });
-                }
+        const historyStatusList = [
+            ...this.getMetadata().get(`scopes.${this.entityType}.completedStatusList`, []),
+            ...this.getMetadata().get(`scopes.${this.entityType}.canceledStatusList`, []),
+        ]
 
-                this.listenToOnce(this.model, 'sync', function () {
-                    if (~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                        this.removeButton('setCompleted');
-                    }
-                }, this);
+        const control = () => {
+            if (
+                historyStatusList.includes(this.model.attributes.status) ||
+                !this.getAcl().checkModel(this.model, 'edit')
+            ) {
+                this.hideActionItem('setCompleted');
+            } else {
+                this.showActionItem('setCompleted');
             }
-        },
+        };
 
-        manageAccessEdit: function (second) {
-            Dep.prototype.manageAccessEdit.call(this, second);
+        control();
 
-            if (second) {
-                if (!this.getAcl().checkModel(this.model, 'edit', true)) {
-                    this.hideActionItem('setCompleted');
-                }
-            }
-        },
+        this.model.onSync({
+            owner: this,
+            callback: () => control(),
+        });
+    }
 
-        actionSetCompleted: function () {
-            this.model.save({status: 'Completed'}, {patch: true})
-                .then(() => Espo.Ui.success(this.translate('Saved')));
+    async actionSetCompleted() {
+        await this.model.save({status: 'Completed'}, {patch: true});
 
-        },
-    });
-});
+        Ui.success(this.translate('Saved'));
+    }
+}
