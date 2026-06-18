@@ -74,6 +74,7 @@ export default class DetailRecordButtonsView extends View<{
                     hidden: it.hidden,
                     disabled: it.disabled || data.allDisabled,
                     iconClass: it.iconClass,
+                    html: it.html,
                 }).node()
             );
         });
@@ -121,6 +122,7 @@ export default class DetailRecordButtonsView extends View<{
                         className: data.actionClassName,
                         hidden: it.hidden,
                         disabled: it.disabled || data.allDisabled,
+                        html: it.html,
                     }).node()
                 );
             });

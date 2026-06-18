@@ -36,13 +36,13 @@ export default class extends DetailRecordView {
         if (this.getAcl().checkModel(this.model, 'edit')) {
             if (['Held', 'Not Held'].indexOf(this.model.get('status')) === -1) {
                 this.dropdownItemList.push({
-                    html: this.translate('Set Held', 'labels', this.scope),
+                    labelTranslation: `${this.scope}.labels.Set Held`,
                     name: 'setHeld',
                     onClick: () => this.actionSetHeld(),
                 });
 
                 this.dropdownItemList.push({
-                    html: this.translate('Set Not Held', 'labels', this.scope),
+                    labelTranslation: `${this.scope}.labels.Set Not Held`,
                     name: 'setNotHeld',
                     onClick: () => this.actionSetNotHeld(),
                 });
