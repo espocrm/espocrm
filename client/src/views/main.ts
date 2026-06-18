@@ -254,6 +254,8 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
         this._reRenderHeaderOnSync = false;
         this._menuHandlers = {};
 
+        this.menu = menu as any;
+
         this.headerActionItemTypeList.forEach(type => {
             let itemList = (menu[type] ?? []).concat(globalMenu[type] ?? []) as Record<string, any>[];
 
@@ -301,8 +303,6 @@ class MainView<S extends MainViewSchema = MainViewSchema> extends View<S> {
                 }
             });
         });
-
-        this.menu = menu as any;
 
         if (this.model) {
             this.whenReady().then(() => {
