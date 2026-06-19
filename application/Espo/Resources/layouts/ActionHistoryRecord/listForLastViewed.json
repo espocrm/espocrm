@@ -1,5 +1,19 @@
 [
-    {"name":"targetType", "notSortable": true, "width": 22},
-    {"name":"target", "notSortable": true},
-    {"name":"createdAt", "notSortable": true, "width": 20, "align": "right", "view": "views/fields/datetime-short"}
+    {
+        "name": "targetType",
+        "notSortable": true,
+        "width": 22,
+        "view": "views/last-viewed/fields/target-type"
+    },
+    {
+        "name": "target",
+        "notSortable": true
+    },
+    {
+        "name":"createdAt",
+        "notSortable": true,
+        "width": 20,
+        "align": "right",
+        "view": "views/last-viewed/fields/created-at"
+    }
 ]

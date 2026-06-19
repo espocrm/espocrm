@@ -26,13 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import EnumFieldView from 'views/fields/enum';
+import BaseFieldView from 'views/fields/base';
 
-export default class extends EnumFieldView {
+export default class LastViewedTargetTypeFieldView extends BaseFieldView {
 
-    setupOptions() {
-        super.setupOptions();
+    // language=Handlebars
+    templateContent = `
+        <span class="text-soft small">{{value}}</span>
+    `
 
-        this.params.options = this.getMetadata().getScopeEntityList();
+    protected data(): Record<string, any> {
+        const value = this.model.attributes[this.name];
+
+        return {
+            value: this.translate(value, 'scopeNames'),
+        };
     }
 }

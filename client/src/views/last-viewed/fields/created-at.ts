@@ -26,13 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import EnumFieldView from 'views/fields/enum';
+import DatetimeShortFieldView from 'views/fields/datetime-short';
 
-export default class extends EnumFieldView {
+export default class LastViewedCreatedAtFieldView extends DatetimeShortFieldView {
 
-    setupOptions() {
-        super.setupOptions();
+    data(): Record<string, any> {
+        return {
+            ...super.data(),
+            style: 'soft',
+        };
+    }
 
-        this.params.options = this.getMetadata().getScopeEntityList();
+    protected afterRender() {
+        super.afterRender();
+
+        if (this.isListMode()) {
+            this.element.querySelector(':scope > span')?.classList.add('small');
+        }
     }
 }
