@@ -178,7 +178,11 @@ class BeforeUpgrade
             return false;
         }
 
-        return (new ReflectionMethod($child, $method))->getDeclaringClass()->getName() !== $base;
+        $methodRef = new ReflectionMethod($child, $method);
+
+        return
+            $methodRef->getDeclaringClass()->getName() !== $base &&
+            $methodRef->getDeclaringClass()->getName() === $child;
     }
 
     /**
