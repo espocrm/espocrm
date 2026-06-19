@@ -2072,11 +2072,15 @@ textarea.auto-height {
                 background-color: var(--dropdown-bg);
             }
 
-            .show-more a {
-                border-bottom-right-radius: 0;
+            > .list-container {
+                > .list {
+                    > .show-more a {
+                        border-bottom-right-radius: 0;
 
-                @media screen and (max-width: @screen-xs-max) {
-                    border-bottom-left-radius: 0;
+                        @media screen and (max-width: @screen-xs-max) {
+                            border-bottom-left-radius: 0;
+                        }
+                    }
                 }
             }
         }
