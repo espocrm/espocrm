@@ -72,8 +72,14 @@ export default class HeaderButtonsView extends View<{
 
         const elements: any[] = [];
 
+        let lastButtonIsText = false;
+
         buttons.forEach(it => {
             const className = ('btn-xs-wide main-header-manu-action ' + (it.className ?? '')).trim();
+
+            if (!it.hidden) {
+                lastButtonIsText = it.style === 'text';
+            }
 
             elements.push(
                 new ButtonComponent({
@@ -149,7 +155,8 @@ export default class HeaderButtonsView extends View<{
                     key: '_menu-dropdown-button',
                     attrs: {type: 'button'},
                     props: {
-                        className: 'btn btn-default dropdown-toggle',
+                        className: 'btn btn-default dropdown-toggle' +
+                            (lastButtonIsText ? ' radius-left' : ''),
                     },
                     dataset: {toggle: 'dropdown'},
                 },
