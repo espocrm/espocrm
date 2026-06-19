@@ -37,6 +37,12 @@ export default class LastViewedCreatedAtFieldView extends DatetimeShortFieldView
         };
     }
 
+    protected setup() {
+        super.setup();
+
+        this.params.hasSeconds = false;
+    }
+
     protected afterRender() {
         super.afterRender();
 
