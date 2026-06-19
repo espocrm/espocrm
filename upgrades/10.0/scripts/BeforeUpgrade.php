@@ -203,6 +203,10 @@ class BeforeUpgrade
                 continue;
             }
 
+            if (self::toIgnoreFile($file)) {
+                continue;
+            }
+
             if ($file->getExtension() !== 'php') {
                 continue;
             }
@@ -261,5 +265,21 @@ class BeforeUpgrade
         }
 
         return $classes;
+    }
+
+    private static function toIgnoreFile(string $file): bool
+    {
+        $ignorePathRegexList = [
+            '^custom\/Espo\/Modules\/[^\/]+\/vendor',
+            '^custom\/Espo\/Custom\/vendor',
+        ];
+
+        foreach ($ignorePathRegexList as $pattern) {
+            if (preg_match('/' . $pattern . '/', $file)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
