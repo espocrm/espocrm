@@ -57,6 +57,7 @@ class BeforeUpgrade
 
         $this->processCheckExtension('Advanced Pack', '3.13.0', $errorMessageList);
         $this->processCheckExtension('Real Estate', '1.8.5', $errorMessageList);
+        $this->processCheckExtension('VoIP Integration', '2.8.0', $errorMessageList);
 
         if (!count($errorMessageList)) {
             return;
