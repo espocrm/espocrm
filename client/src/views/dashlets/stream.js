@@ -98,7 +98,7 @@ class StreamDashletView extends BaseDashletView {
         this.actionList.unshift({
             name: 'viewList',
             text: this.translate('View'),
-            iconClass: '<span class="fas fa-align-justify',
+            iconClass: 'fas fa-align-justify',
             url: '#Stream',
         });
 
