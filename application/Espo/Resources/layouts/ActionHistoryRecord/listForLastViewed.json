@@ -12,7 +12,7 @@
     {
         "name":"createdAt",
         "notSortable": true,
-        "width": 20,
+        "width": 17,
         "align": "right",
         "view": "views/last-viewed/fields/created-at"
     }
