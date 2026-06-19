@@ -1,6 +1,12 @@
 [
     {"name" :"name", "link": true},
     {"name": "website", "notSortable": true, "width": 25},
+    {
+        "name": "emailAddress",
+        "notSortable": true,
+        "width": 20,
+        "hidden": true
+    },
     {"name": "type", "width": 16},
     {"name": "billingAddressCountry", "width": 18}
 ]
