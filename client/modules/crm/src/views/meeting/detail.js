@@ -57,6 +57,7 @@ class MeetingDetailView extends DetailView {
         this.addMenuItem('buttons', {
             name: 'setAcceptanceStatus',
             text: '',
+            style: 'text',
             hidden: true,
             onClick: () => this.actionSetAcceptanceStatus(),
         });

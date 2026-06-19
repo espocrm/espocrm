@@ -470,7 +470,9 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
         this.addMenuItem('buttons', {
             name: 'unfollow',
             label: 'Followed',
-            style: 'success',
+            style: 'text',
+            iconHtml: '<span class="fas fa-rss fa-sm text-success"></span>',
+            className: 'text-success',
             action: 'unfollow',
             hidden: !isFollowed,
             onClick: () => this.actionUnfollow(),
@@ -479,7 +481,7 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
         this.addMenuItem('buttons', {
             name: 'follow',
             label: 'Follow',
-            style: 'default',
+            style: 'text',
             iconHtml: '<span class="fas fa-rss fa-sm"></span>',
             text: this.translate('Follow'),
             action: 'follow',
