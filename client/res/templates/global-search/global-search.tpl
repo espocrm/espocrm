@@ -12,7 +12,7 @@
             class="btn btn-link global-search-button"
             data-action="search"
             title="{{translate 'Search'}}"
-        ><span class="fas fa-search icon"></span></a>
+        ><span class="fas fa-search fa-sm icon"></span></a>
     </div>
     {{/if}}
 </div>
