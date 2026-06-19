@@ -41,7 +41,7 @@ export default class LastViewedSiteNavbarItemView extends SiteNavbarItemView {
             tabindex="0"
             data-action="showLastViewed"
             title="{{translate 'LastViewed' category='scopeNamesPlural'}}"
-        ><span class="fas fa-clock-rotate-left icon"></span></a>
+        ><span class="fas fa-clock-rotate-left fa-sm icon"></span></a>
         <div class="last-viewed-panel-container"></div>
     `
 
