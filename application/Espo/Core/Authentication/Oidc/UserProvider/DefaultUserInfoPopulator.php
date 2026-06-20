@@ -50,7 +50,7 @@ class DefaultUserInfoPopulator implements UserInfoPopulator
             'phoneNumber' => $userInfo->get('phone_number'),
             'firstName' => $userInfo->get('given_name'),
             'lastName' => $userInfo->get('family_name'),
-            'middle_name' => $userInfo->get('middle_name'),
+            'middleName' => $userInfo->get('middle_name'),
             'gender' =>
                 in_array($userInfo->get('gender'), ['male', 'female']) ?
                     ucfirst($userInfo->get('gender') ?? '') :
