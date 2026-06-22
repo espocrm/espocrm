@@ -784,7 +784,7 @@ class Processor
             $data['subject'] = $noteData->emailName;
         }
 
-        $data['post'] = nl2br($note->get('post'));
+        $data['post'] = Markdown::transform($note->getPost() ?? '');
 
         if (!$parentId || !$parentType) {
             return;
