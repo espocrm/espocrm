@@ -1469,19 +1469,35 @@ section {
             }
         }
 
-        .notification-grouped > .list > .list-group {
-            > li {
-                &:first-child {
-                    //border-top-left-radius: var(--border-radius);
-                    //border-top-right-radius: var(--border-radius);
-                }
+        .notification-grouped > .list {
+            > .show-more {
+                > a {
+                    display: flex;
+                    min-width: var(--100px);
+                    margin: 0 auto;
+                    border-top: 0;
+                    align-items: center;
+                    justify-content: center;
+                    width: fit-content;
+                    border-radius: 0;
+                    font-size: var(--13px);
+                    padding: var(--7px) var(--14px);
+                    background-color: transparent;
 
-                &:last-child {
-                    //border-bottom-left-radius: var(--border-radius);
-                    //border-bottom-right-radius: var(--border-radius);
+                    &:active,
+                    &:focus,
+                    &:hover,
+                    &:hover:active,
+                    &:focus:active {
+                        background-color: transparent;
+                        box-shadow: none;
+
+                        color: var(--btn-text-color);
+                    }
+
+                    color: var(--btn-text-color);
                 }
             }
-
         }
     }
 }
