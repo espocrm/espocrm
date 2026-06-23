@@ -61,6 +61,10 @@ class EntityDuplicator
         $entityDefs = $this->defs->getEntity($entityType);
 
         foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            $this->processIgnoreField($entity, $fieldDefs, $valueMap);
+        }
+
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
             $this->processField($entity, $fieldDefs, $valueMap);
         }
 
@@ -71,7 +75,7 @@ class EntityDuplicator
         return $valueMap;
     }
 
-    private function processField(Entity $entity, FieldDefs $fieldDefs, stdClass $valueMap): void
+    private function processIgnoreField(Entity $entity, FieldDefs $fieldDefs, stdClass $valueMap): void
     {
         $entityType = $entity->getEntityType();
         $field = $fieldDefs->getName();
@@ -82,7 +86,15 @@ class EntityDuplicator
             foreach ($attributeList as $attribute) {
                 unset($valueMap->$attribute);
             }
+        }
+    }
 
+    private function processField(Entity $entity, FieldDefs $fieldDefs, stdClass $valueMap): void
+    {
+        $entityType = $entity->getEntityType();
+        $field = $fieldDefs->getName();
+
+        if ($this->toIgnoreField($entityType, $fieldDefs)) {
             return;
         }
 
