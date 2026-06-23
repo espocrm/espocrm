@@ -74,7 +74,7 @@
     "bullbone": "github:espocrm/bullbone#1.5.5",
     "cronstrue": "^1.114.0",
     "cropper": "^0.7.9",
-    "devbridge-autocomplete": "^1.4.11",
+    "devbridge-autocomplete": "^2.0.0",
     "dompurify": "^3.3.1",
     "espo-funnel-chart": "github:yurikuzn/espo-funnel-chart#1.1.1",
     "exif-js": "^2.3.0",
