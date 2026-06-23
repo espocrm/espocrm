@@ -6,6 +6,7 @@
         value="{{value}}"
         {{#if params.maxLength}}maxlength="{{params.maxLength}}"{{/if}}
         autocomplete="espo-{{name}}"
+        spellcheck="false"
     >
     <span class="btn btn-default input-group-addon"><i></i></span>
 </div>
