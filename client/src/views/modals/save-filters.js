@@ -28,12 +28,33 @@
 
 import ModalView from 'views/modal';
 import Model from 'model';
+import VarcharFieldView from 'views/fields/varchar';
 
 class SaveFiltersModalView extends ModalView {
 
-    template = 'modals/save-filters'
+
+    // language=Handlebars
+    templateContent = `
+        <div class="panel panel-default no-side-margin">
+            <div class="panel-body">
+                <div class="cell form-group" data-name="name">
+                    <label
+                        class="control-label"
+                        data-name="name"
+                    >{{translate 'name' category='fields'}}</label>
+                    <div class="field" data-name="name">{{{nameField}}}</div>
+                </div>
+            </div>
+        </div>
+    `
 
     cssName = 'save-filters'
+
+    /**
+     * @private
+     * @type {VarcharFieldView}
+     */
+    nameFieldView
 
     data() {
         return {
@@ -42,56 +63,71 @@ class SaveFiltersModalView extends ModalView {
     }
 
     setup() {
+        this.shortcutKeys = {
+            'Control+Enter': (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.actionSave();
+            },
+        };
+
         this.buttonList = [
             {
                 name: 'save',
                 label: 'Save',
                 style: 'primary',
+                onClick: () => this.actionSave(),
             },
             {
                 name: 'cancel',
                 label: 'Cancel',
+                onClick: () => this.actionCancel(),
             },
         ];
 
         this.headerText = this.translate('Save Filter');
 
-        const model = new Model();
+        this.formModel = new Model();
 
-        this.createView('name', 'views/fields/varchar', {
-            selector: '.field[data-name="name"]',
-            defs: {
-                name: 'name',
-                params: {
-                    required: true
-                }
+        this.nameFieldView = new VarcharFieldView({
+            name: 'name',
+            params: {
+                required: true
             },
             mode: 'edit',
-            model: model,
+            model: this.formModel,
             labelText: this.translate('name', 'fields'),
-        });
+        })
+
+        this.assignView('nameField', this.nameFieldView);
     }
 
-    /**
-     * @param {string} field
-     * @return {module:views/fields/base}
-     */
-    getFieldView(field) {
-        return this.getView(field);
+    afterRender() {
+        setTimeout(() => {
+            this.nameFieldView.element.querySelector('input')?.focus();
+        }, 1);
     }
 
     actionSave() {
-        const nameView = this.getFieldView('name');
+        this.fetchToModel();
 
-        nameView.fetchToModel();
-
-        if (nameView.validate()) {
+        if (this.nameFieldView.validate()) {
             return;
         }
 
-        this.trigger('save', nameView.model.get('name'));
+        this.trigger('save', this.formModel.attributes.name);
 
         return true;
+    }
+
+    /**
+     * @private
+     */
+    fetchToModel() {
+        this.formModel.setMultiple({
+            ...this.nameFieldView.fetch(),
+        });
     }
 }
 
