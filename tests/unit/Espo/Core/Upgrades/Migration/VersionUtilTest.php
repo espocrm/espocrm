@@ -232,4 +232,40 @@ class VersionUtilTest extends TestCase
             '8.3.0',
         ], $list);
     }
+
+    public function testGetSame1(): void
+    {
+        $list = VersionUtil::extractSteps('8.3.5', '8.3.5', [
+            '7.0',
+            '7.5',
+            '8.0',
+            '8.1',
+            '8.1.4',
+            '8.3',
+            '8.3.2',
+            '8.3.4',
+            '8.3.5',
+            '8.6.1',
+        ]);
+
+        $this->assertEquals([], $list);
+    }
+
+    public function testGetSame2(): void
+    {
+        $list = VersionUtil::extractSteps('8.6.1', '8.6.1', [
+            '7.0',
+            '7.5',
+            '8.0',
+            '8.1',
+            '8.1.4',
+            '8.3',
+            '8.3.2',
+            '8.3.4',
+            '8.3.5',
+            '8.6.1',
+        ]);
+
+        $this->assertEquals([], $list);
+    }
 }
