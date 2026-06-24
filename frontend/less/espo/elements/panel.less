@@ -314,7 +314,8 @@ body {
         var(--panel-bg);
         var(--panel-default-border);
         var(--gray-soft);
-        var(--btn-text-color)
+        var(--btn-text-color);
+        var(--text-emphasis-color)
     );
 
     .panel-styled(
@@ -323,7 +324,8 @@ body {
         var(--panel-bg);
         var(--panel-warning-border);
         var(--panel-warning-text);
-        var(--state-warning-text-10)
+        var(--state-warning-text-10);
+        var(--panel-warning-text);
     );
 
     .panel-styled(
@@ -332,7 +334,8 @@ body {
         var(--panel-bg);
         var(--panel-danger-border);
         var(--panel-danger-text);
-        var(--state-danger-text-10)
+        var(--state-danger-text-10);
+        var(--panel-danger-text);
     );
 
     .panel-styled(
@@ -341,7 +344,8 @@ body {
         var(--panel-bg);
         var(--panel-success-border);
         var(--panel-success-text);
-        var(--state-success-text-10)
+        var(--state-success-text-10);
+        var(--panel-success-text)
     );
 
     .panel-styled(
@@ -350,7 +354,8 @@ body {
         var(--panel-bg);
         var(--panel-info-border);
         var(--panel-info-text);
-        var(--state-info-text-10)
+        var(--state-info-text-10);
+        var(--panel-info-text);
     );
 
     .panel-styled(
@@ -359,7 +364,8 @@ body {
         var(--panel-bg);
         var(--panel-primary-border);
         var(--panel-primary-text);
-        var(--gray-lighter)
+        var(--gray-lighter);
+        var(--panel-primary-text);
     );
 }
 
@@ -453,7 +459,7 @@ body {
     }
 }
 
-.panel-styled(@style; @panel-style-bg; @panel-bg; @panel-style-border; @panel-style-text; @hover-color) {
+.panel-styled(@style; @panel-style-bg; @panel-bg; @panel-style-border; @panel-style-text; @hover-color; @heading-text-color) {
     .panel-@{style} {
         &.headered {
             background: linear-gradient(
@@ -467,7 +473,7 @@ body {
 
         border-color: @panel-style-border;
         > .panel-heading {
-            color: @panel-style-text;
+            color: @heading-text-color;
             background-color: @panel-style-bg;
             border-color: transparent;
             .btn:not(.btn-link),
