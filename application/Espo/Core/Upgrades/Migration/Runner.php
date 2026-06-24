@@ -56,6 +56,12 @@ class Runner
         $version = $this->versionDataProvider->getPreviousVersion();
         $targetVersion = $this->versionDataProvider->getTargetVersion();
 
+        if ($version === $targetVersion) {
+            $io->writeLine("No migrations to run.");
+
+            return;
+        }
+
         $prepareSteps = $this->stepsProvider->getPrepare($version, $targetVersion);
 
         if ($prepareSteps !== []) {
@@ -69,15 +75,13 @@ class Runner
         $afterSteps = $this->stepsProvider->getAfterUpgrade($version, $targetVersion);
 
         if ($afterSteps === []) {
-            $io->writeLine("No migrations to run.");
+            $io->writeLine("No migrations to run. Updating version...");
 
-            if ($version !== $targetVersion) {
-                $this->updateVersion($targetVersion);
-                $this->dataManager->updateAppTimestamp();
-                $this->dataManager->rebuild();
+            $this->updateVersion($targetVersion);
+            $this->dataManager->updateAppTimestamp();
+            $this->dataManager->rebuild();
 
-                $io->writeLine("Completed.");
-            }
+            $io->writeLine("Completed.");
 
             return;
         }
