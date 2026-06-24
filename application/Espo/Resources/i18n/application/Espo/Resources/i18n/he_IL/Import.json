@@ -1,0 +1,113 @@
+{
+    "labels": {
+      "New import with same params": "ייבוא חדש עם אותם פרמטרים",
+      "Revert Import": "ביטול ייבוא",
+      "Return to Import": "חזרה לייבוא",
+      "Run Import": "הפעל ייבוא",
+      "Back": "חזור",
+      "Field Mapping": "מיפוי שדות",
+      "Default Values": "ערכים ברירת מחדל",
+      "Add Field": "הוסף שדה",
+      "Created": "נוצר",
+      "Updated": "עודכן",
+      "Result": "תוצאה",
+      "Show records": "הצג רשומות",
+      "Remove Duplicates": "הסר כפילויות",
+      "importedCount": "יובאו (כמות)",
+      "duplicateCount": "כפילויות (כמות)",
+      "updatedCount": "עודכנו (כמות)",
+      "Create Only": "יצירה בלבד",
+      "Create and Update": "צור ועדכן",
+      "Update Only": "עדכון בלבד",
+      "Update by": "עדכן לפי",
+      "Set as Not Duplicate": "סמן כלא כפול",
+      "File (CSV)": "קובץ (CSV)",
+      "First Row Value": "ערך בשורה הראשונה",
+      "Skip": "דלג",
+      "Header Row Value": "ערך שורת כותרת",
+      "Field": "שדה",
+      "What to Import?": "מה לייבא?",
+      "Entity Type": "סוג ישות",
+      "What to do?": "מה לעשות?",
+      "Properties": "מאפיינים",
+      "Header Row": "שורת כותרת",
+      "Person Name Format": "תבנית שם אדם",
+      "John Smith": "ג'ון סמית",
+      "Smith John": "סמית ג'ון",
+      "Smith, John": "סמית, ג'ון",
+      "Field Delimiter": "תוחם שדות",
+      "Date Format": "תבנית תאריך",
+      "Decimal Mark": "סימן עשרוני",
+      "Text Qualifier": "תוחם טקסט",
+      "Time Format": "תבנית שעה",
+      "Currency": "מטבע",
+      "Preview": "תצוגה מקדימה",
+      "Next": "הבא",
+      "Step 1": "שלב 1",
+      "Step 2": "שלב 2",
+      "Double Quote": "גרשיים",
+      "Single Quote": "גרש",
+      "Imported": "יובא",
+      "Duplicates": "כפילויות",
+      "Skip searching for duplicates": "דלג על חיפוש כפילויות",
+      "Timezone": "אזור זמן",
+      "Remove Import Log": "הסר יומן ייבוא",
+      "New Import": "ייבוא חדש",
+      "Import Results": "תוצאות ייבוא",
+      "Run Manually": "הפעל ידנית",
+      "Silent Mode": "מצב שקט",
+      "Export": "ייצוא"
+    },
+    "messages": {
+      "importRunning": "הייבוא מתבצע...",
+      "noErrors": "אין שגיאות",
+      "utf8": "חייב להיות בקידוד UTF-8",
+      "duplicatesRemoved": "כפילויות הוסרו",
+      "inIdle": "הפעל במצב שקט (לנתונים גדולים; דרך cron)",
+      "revert": "פעולה זו תסיר את כל הרשומות שיובאו לצמיתות.",
+      "removeDuplicates": "פעולה זו תסיר לצמיתות את כל הרשומות הכפולות שיובאו.",
+      "confirmRevert": "פעולה זו תסיר את כל הרשומות שיובאו לצמיתות. האם אתה בטוח?",
+      "confirmRemoveDuplicates": "פעולה זו תסיר לצמיתות את כל הרשומות שהוכרו ככפולות. האם אתה בטוח?",
+      "confirmRemoveImportLog": "פעולה זו תסיר את יומן הייבוא. הרשומות שיובאו יישמרו. לא תוכל לבטל את תוצאות הייבוא. האם אתה בטוח?",
+      "removeImportLog": "פעולה זו תסיר את יומן הייבוא. הרשומות שיובאו יישמרו. השתמש רק אם אתה בטוח שהתהליך הצליח."
+    },
+    "params": {
+      "phoneNumberCountry": "קוד מדינה לטלפון"
+    },
+    "fields": {
+      "file": "קובץ",
+      "entityType": "סוג ישות",
+      "imported": "רשומות שיובאו",
+      "duplicates": "רשומות כפולות",
+      "updated": "רשומות שעודכנו",
+      "status": "סטטוס"
+    },
+    "links": {
+      "errors": "שגיאות"
+    },
+    "options": {
+      "status": {
+        "Failed": "נכשל",
+        "Standby": "ממתין",
+        "Pending": "בהמתנה",
+        "In Process": "בתהליך",
+        "Complete": "הושלם"
+      },
+      "personNameFormat": {
+        "f l": "שם פרטי שם משפחה",
+        "l f": "שם משפחה שם פרטי",
+        "f m l": "שם פרטי אמצעי שם משפחה",
+        "l f m": "שם משפחה שם פרטי אמצעי",
+        "l, f": "שם משפחה, שם פרטי"
+      }
+    },
+    "strings": {
+      "commandToRun": "פקודה להרצה (מהשורת פקודה)",
+      "saveAsDefault": "שמור כברירת מחדל"
+    },
+    "tooltips": {
+      "manualMode": "אם מסומן, תצטרך להריץ את הייבוא ידנית מהשורת פקודה. הפקודה תוצג לאחר ההגדרה.",
+      "silentMode": "רוב הסקריפטים שלאחר שמירה ידולגו, לא יווצרו הערות זרם. הייבוא יתבצע מהר יותר."
+    }
+  }
+  

@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "exportAllFields": "ייצוא כל השדות",
+        "fieldList": "רשימת השדות",
+        "format": "פורמט",
+        "status": "סטטוס",
+        "xlsxLite": "ליט",
+        "xlsxRecordLinks": "קישורי רשומות",
+        "xlsxTitle": "כותרות"
+    },
+    "options": {
+        "format": {
+            "csv": "CSV",
+            "xlsx": "אקסל (Excel)"
+        },
+        "status": {
+            "Pending": "תלוי ועומד",
+            "Running": "ריצה",
+            "Success": "הצליח",
+            "Failed": "נכשל"
+        }
+    },
+    "tooltips": {
+        "xlsxLite": "צורך הרבה פחות זיכרון. מומלץ אם מיוצאים מספר גדול של רשומות.",
+        "xlsxTitle": "הדפס כותרת ותאריך נוכחי בכותרת העליונה"
+    },
+    "messages": {
+        "exportProcessed": "הייצוא הסתיים. הורד את הקובץ [file]({url}).",
+        "infoText": "הייצוא מעובד במצב סרק על ידי cron. ייתכן שיחלוף זמן מה עד שיסתיים. סגירת תיבת דו-שיח מודאלית זו לא תשפיע על תהליך הביצוע."
+    }
+}

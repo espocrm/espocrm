@@ -1,0 +1,14 @@
+{
+    "fields": {
+        "number": "מספר",
+        "data": "נתונים",
+        "target": "יעד",
+        "leadCapture": "לכידת לידים",
+        "createdAt": "הוזן בתאריך",
+        "isCreated": "האם הליד נוצר"
+    },
+    "links": {
+        "leadCapture": "לכידת לידים",
+        "target": "יעד"
+    }
+}

@@ -1,0 +1,64 @@
+{
+    "fields": {
+      "name": "שם",
+      "campaign": "קמפיין",
+      "isActive": "פעיל",
+      "subscribeToTargetList": "הצטרף לרשימת יעד",
+      "subscribeContactToTargetList": "הוסף איש קשר אם קיים",
+      "targetList": "רשימת יעד",
+      "fieldList": "שדות נתונים",
+      "optInConfirmation": "אימות הרשמה כפולה",
+      "optInConfirmationEmailTemplate": "תבנית דוא\"ל לאימות הרשמה",
+      "optInConfirmationLifetime": "משך תוקף לאימות (שעות)",
+      "optInConfirmationSuccessMessage": "הודעה לאחר אישור הרשמה",
+      "leadSource": "מקור ליד",
+      "apiKey": "מפתח API",
+      "targetTeam": "צוות יעד",
+      "exampleRequestMethod": "שיטה",
+      "exampleRequestUrl": "כתובת URL",
+      "exampleRequestPayload": "נתוני בקשה",
+      "exampleRequestHeaders": "כותרות",
+      "createLeadBeforeOptInConfirmation": "צור ליד לפני אישור הרשמה",
+      "skipOptInConfirmationIfSubscribed": "דלג על אישור אם ליד כבר ברשימה",
+      "smtpAccount": "חשבון SMTP",
+      "inboundEmail": "חשבון דוא\"ל קבוצתי",
+      "duplicateCheck": "בדיקת כפילויות",
+      "phoneNumberCountry": "קידומת מדינה לטלפון",
+      "fieldParams": "פרמטרי שדה",
+      "formId": "מזהה טופס",
+      "formEnabled": "טופס אינטרנט",
+      "formUrl": "כתובת URL של הטופס",
+      "formSuccessText": "הודעה לאחר שליחת טופס",
+      "formText": "טקסט בטופס",
+      "formSuccessRedirectUrl": "כתובת להפניה לאחר שליחה",
+      "formLanguage": "שפה בטופס",
+      "formFrameAncestors": "אתרים מותרים להטמעה",
+      "formCaptcha": "השתמש ב-Captcha"
+    },
+    "links": {
+      "targetList": "רשימת יעד",
+      "campaign": "קמפיין",
+      "optInConfirmationEmailTemplate": "תבנית דוא\"ל לאימות",
+      "targetTeam": "צוות יעד",
+      "inboundEmail": "חשבון דוא\"ל קבוצתי",
+      "logRecords": "יומן"
+    },
+    "labels": {
+      "Create LeadCapture": "צור נקודת כניסה",
+      "Generate New API Key": "צור מפתח API חדש",
+      "Request": "בקשה",
+      "Confirm Opt-In": "אשר הרשמה",
+      "Generate New Form ID": "צור מזהה טופס חדש",
+      "Web Form": "טופס אינטרנט"
+    },
+    "messages": {
+      "generateApiKey": "צור מפתח API חדש",
+      "optInConfirmationExpired": "קישור לאימות פג תוקף.",
+      "optInIsConfirmed": "האימות בוצע בהצלחה."
+    },
+    "tooltips": {
+      "formCaptcha": "כדי להשתמש ב-Captcha יש להגדיר אותו תחת **ניהול מערכת** > **אינטגרציות**.",
+      "optInConfirmationSuccessMessage": "Markdown נתמך."
+    }
+  }
+  

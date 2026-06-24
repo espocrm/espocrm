@@ -1,0 +1,23 @@
+{
+    "fields": {
+        "user": "משתמש",
+        "ipAddress": "כתובת IP",
+        "lastAccess": "תאריך גישה אחרון",
+        "createdAt": "תאריך כניסה",
+        "isActive": "פעיל",
+        "portal": "פורטל"
+    },
+    "links": {
+        "actionHistoryRecords": "היסטוריית פעולות"
+    },
+    "presetFilters": {
+        "active": "פעיל",
+        "inactive": "לא פעיל"
+    },
+    "labels": {
+        "Set Inactive": "הגדר כלא פעיל"
+    },
+    "massActions": {
+        "setInactive": "הגדר כלא פעיל"
+    }
+}
