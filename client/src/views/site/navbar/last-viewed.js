@@ -179,7 +179,7 @@ class PanelView extends View {
             </div>
             <a
                 href="#LastViewed"
-                class="text-soft"
+                class="text-solid"
             >{{translate 'LastViewed' category='scopeNamesPlural'}}</a>
             </div>
             <div class="panel-body">

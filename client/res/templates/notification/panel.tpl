@@ -6,7 +6,7 @@
         </div>
         <a
             href="#Notification"
-            class="text-soft"
+            class="text-solid"
             data-action="openNotifications"
         >{{translate 'Notifications'}}</a>
     </div>

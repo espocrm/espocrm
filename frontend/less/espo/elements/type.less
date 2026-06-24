@@ -53,12 +53,20 @@ b, strong {
     color: @gray-soft;
 }
 
+.text-solid {
+    color: var(--text-solid-color);
+}
+
 .text-smaller {
     font-size: calc(var(--font-size-small) + var(--1px));
 }
 
 .text-italic {
     font-style: italic;
+}
+
+.text-medium {
+    font-weight: 500;
 }
 
 .text-bold {
@@ -248,6 +256,20 @@ a.text-soft {
     &:hover,
     &:focus {
         color: var(--gray-soft);
+    }
+
+    &:hover {
+        > .fas,
+        > .far {
+            color: var(--text-gray-color);
+        }
+    }
+}
+
+a.text-solid {
+    &:hover,
+    &:focus {
+        color: var(--text-solid-color);
     }
 
     &:hover {
