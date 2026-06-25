@@ -29,16 +29,10 @@
 
 namespace Espo\Core\Utils\DateTime;
 
-use Espo\Core\Field\DateTime;
-use DateTimeImmutable;
+use Psr\Clock\ClockInterface;
 
 /**
- * @since 9.1.0
+ * @since 10.0.0
  */
-class SystemClock implements Clock
-{
-    public function now(): DateTimeImmutable
-    {
-        return DateTime::createNow()->toDateTime();
-    }
-}
+interface Clock extends ClockInterface
+{}

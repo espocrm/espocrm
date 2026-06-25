@@ -31,6 +31,7 @@ namespace Espo\Core\FieldProcessing\Reminder;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Name\Field;
+use Espo\Core\Utils\DateTime\Clock;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
@@ -42,7 +43,6 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
-
 use stdClass;
 
 /**
@@ -58,7 +58,8 @@ class Saver implements SaverInterface
         private EntityManager $entityManager,
         private RecordIdGenerator $idGenerator,
         private User $user,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private Clock $clock,
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -119,14 +120,12 @@ class Saver implements SaverInterface
                 $this->getPreferencesReminderList($typeList, $userId, $entityType) :
                 $this->getReminderList($entity, $typeList);
 
-            foreach ($reminderList as $item) {
-                $this->createReminder($entity, $userId, $start, $item);
-            }
+            $this->createReminders($reminderList, $entity, $userId, $start);
         }
     }
 
     /**
-     * @return object{seconds: int, type: string}[]
+     * @return array{seconds: int, type: string}[]
      */
     private function getEntityReminderDataList(CoreEntity $entity): array
     {
@@ -146,7 +145,7 @@ class Saver implements SaverInterface
             ->find();
 
         foreach ($collection as $reminder) {
-            $dataList[] = (object) [
+            $dataList[] = [
                 'seconds' => $reminder->getSeconds(),
                 'type' => $reminder->getType(),
             ];
@@ -282,7 +281,7 @@ class Saver implements SaverInterface
 
     /**
      * @param string[] $typeList
-     * @return object{seconds: int, type: string}[]
+     * @return array{seconds: int, type: string}[]
      */
     private function getReminderList(CoreEntity $entity, array $typeList): array
     {
@@ -302,7 +301,7 @@ class Saver implements SaverInterface
 
     /**
      * @param string[] $typeList
-     * @return object{seconds: int, type: string}[]
+     * @return array{seconds: int, type: string}[]
      */
     private function getPreferencesReminderList(array $typeList, string $userId, string $entityType): array
     {
@@ -328,7 +327,7 @@ class Saver implements SaverInterface
     /**
      * @param stdClass[] $list
      * @param string[] $typeList
-     * @return object{seconds: int, type: string}[]
+     * @return array{seconds: int, type: string}[]
      */
     private function sanitizeList(array $list, array $typeList): array
     {
@@ -342,7 +341,7 @@ class Saver implements SaverInterface
                 continue;
             }
 
-            $result[] = (object) [
+            $result[] = [
                 'seconds' => $seconds,
                 'type' => $type,
             ];
@@ -352,22 +351,28 @@ class Saver implements SaverInterface
     }
 
     /**
-     * @param object{seconds: int, type: string} $item
+     * @param array{seconds: int|null, type: string} $item
      */
     private function createReminder(
         CoreEntity $entity,
         string $userId,
         DateTime $start,
-        object $item
-    ): void {
+        array $item,
+    ): bool {
 
-        $seconds = $item->seconds;
-        $type = $item->type;
+        $seconds = $item['seconds'];
+        $type = $item['type'];
 
-        $remindAt = $start->addSeconds(- $seconds);
+        $now = DateTime::fromDateTime($this->clock->now());
 
-        if ($remindAt->isLessThan(DateTime::createNow())) {
-            return;
+        if ($seconds !== null) {
+            $remindAt = $start->addSeconds(- $seconds);
+
+            if ($remindAt->isLessThan($now)) {
+                return false;
+            }
+        } else {
+            $remindAt = $now;
         }
 
         $query = $this->entityManager
@@ -397,6 +402,8 @@ class Saver implements SaverInterface
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($query);
+
+        return true;
     }
 
     private function toRemove(CoreEntity $entity): bool
@@ -434,5 +441,71 @@ class Saver implements SaverInterface
         ];
 
         return in_array($statusFetched, $ignoreStatusList) && !in_array($status, $ignoreStatusList);
+    }
+
+    /**
+     * @param array{seconds: int, type: string}[] $list
+     */
+    private function createReminders(
+        array $list,
+        CoreEntity $entity,
+        string $userId,
+        DateTime $start,
+    ): void {
+
+        if ($list === []) {
+            return;
+        }
+
+        $hasPopup = array_filter($list, fn ($it) => $it['type'] === Reminder::TYPE_POPUP) !== [];
+        $hasEmail = array_filter($list, fn ($it) => $it['type'] === Reminder::TYPE_EMAIL) !== [];
+
+        $hasPopupCreated = false;
+        $hasEmailCreated = false;
+
+        foreach ($list as $item) {
+            $isCreated = $this->createReminder(
+                entity: $entity,
+                userId: $userId,
+                start: $start,
+                item: $item,
+            );
+
+            if (!$isCreated) {
+                continue;
+            }
+
+            if ($item['type'] === Reminder::TYPE_POPUP) {
+                $hasPopupCreated = true;
+            }
+
+            if ($item['type'] === Reminder::TYPE_EMAIL) {
+                $hasEmailCreated = true;
+            }
+        }
+
+        if ($hasPopup && !$hasPopupCreated) {
+            $this->createReminder(
+                entity: $entity,
+                userId: $userId,
+                start: $start,
+                item: [
+                    'type' => Reminder::TYPE_POPUP,
+                    'seconds' => null,
+                ],
+            );
+        }
+
+        if ($hasEmail && !$hasEmailCreated) {
+            $this->createReminder(
+                entity: $entity,
+                userId: $userId,
+                start: $start,
+                item: [
+                    'type' => Reminder::TYPE_EMAIL,
+                    'seconds' => null,
+                ],
+            );
+        }
     }
 }

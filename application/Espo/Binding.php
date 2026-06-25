@@ -270,6 +270,11 @@ class Binding implements BindingProcessor
     private function bindMisc(Binder $binder): void
     {
         $binder->bindImplementation(
+            'Espo\\Core\\Utils\\DateTime\\Clock',
+            'Espo\\Core\\Utils\\DateTime\\SystemClock'
+        );
+
+        $binder->bindImplementation(
             'Espo\\Core\\Utils\\Id\\RecordIdGenerator',
             'Espo\\Core\\Utils\\Id\\DefaultRecordIdGenerator'
         );
