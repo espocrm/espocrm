@@ -2672,11 +2672,13 @@ div[data-scope="ApiUser"] {
     }
 
     a {
-        color: var(--text-link-color);
+        &:not(.text-warning):not(.text-default) {
+            color: var(--text-link-color);
 
-        &:hover,
-        &:focus {
-            color: var(--text-link-hover-color);
+            &:hover,
+            &:focus {
+                color: var(--text-link-hover-color);
+            }
         }
     }
 

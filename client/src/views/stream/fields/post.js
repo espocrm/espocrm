@@ -91,6 +91,8 @@ export default class StreamPostFieldView extends TextFieldView {
             body.querySelectorAll(`a[href="${url}"]`).forEach(a => {
                 if (id === this.getUser().id) {
                     a.classList.add('text-warning');
+                } else {
+                    a.classList.add('text-default');
                 }
 
                 const span = document.createElement('span');
