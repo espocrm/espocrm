@@ -162,7 +162,7 @@ abstract class BaseQueryComposer implements QueryComposer
     protected int $aliasMaxLength = 256;
 
     protected bool $indexHints = true;
-    protected bool $skipForeignIfForUpdate = false;
+    protected bool $skipForeignIfLock = false;
 
     protected Helper $helper;
 
@@ -712,7 +712,11 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     private function skipForeign(array $params): bool
     {
-        return $this->skipForeignIfForUpdate && ($params['forUpdate'] ?? false);
+        return $this->skipForeignIfLock &&
+            (
+                ($params['forUpdate'] ?? false) ||
+                ($params['forShare'] ?? false)
+            );
     }
 
     /**

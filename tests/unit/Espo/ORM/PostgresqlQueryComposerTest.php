@@ -157,6 +157,23 @@ class PostgresqlQueryComposerTest extends TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectForShare()
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->forShare()
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
+            'FROM "comment" WHERE "comment"."deleted" = false FOR SHARE';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testDelete1(): void
     {
         $query = DeleteBuilder::create()

@@ -46,7 +46,7 @@ class PostgresqlQueryComposer extends BaseQueryComposer
 {
     protected string $identifierQuoteCharacter = '"';
     protected bool $indexHints = false;
-    protected bool $skipForeignIfForUpdate = true;
+    protected bool $skipForeignIfLock = true;
     protected int $aliasMaxLength = 128;
 
     /** @var array<string, string> */
