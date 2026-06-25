@@ -49,6 +49,7 @@ class SetConfigParam implements Command
     private const string TYPE_INT = 'int';
     private const string TYPE_FLOAT = 'float';
     private const string TYPE_JSON = 'json';
+    private const string TYPE_AUTO = 'auto';
 
     /** @var string[] */
     private const array ALLOWED_TYPES = [
@@ -57,6 +58,7 @@ class SetConfigParam implements Command
         self::TYPE_INT,
         self::TYPE_FLOAT,
         self::TYPE_JSON,
+        self::TYPE_AUTO,
     ];
 
     public function __construct(
@@ -140,6 +142,32 @@ class SetConfigParam implements Command
 
     private function prepareValue(IO $io, string $value, string $type): mixed
     {
+        if ($type === self::TYPE_AUTO) {
+            $lower = strtolower($value);
+
+            if ($lower === 'true') {
+                return true;
+            }
+
+            if ($lower === 'false') {
+                return false;
+            }
+
+            if ($lower === 'null') {
+                return null;
+            }
+
+            if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+                return (int) $value;
+            }
+
+            if (filter_var($value, FILTER_VALIDATE_FLOAT) !== false) {
+                return (float) $value;
+            }
+
+            return $value;
+        }
+
         if ($type === self::TYPE_JSON) {
             try {
                 return Json::decode($value);

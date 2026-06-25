@@ -364,6 +364,84 @@ class ConfigTest extends TestCase
         );
     }
 
+    public function testSetConfigValueAutoTrue1(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: 'true',
+            valueExpected: true,
+        );
+    }
+
+    public function testSetConfigValueAutoTrue2(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: 'TRUE',
+            valueExpected: true,
+        );
+    }
+
+    public function testSetConfigValueAutoFalse1(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: 'false',
+            valueExpected: false,
+        );
+    }
+
+    public function testSetConfigValueAutoNull1(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: 'null',
+        );
+    }
+
+    public function testSetConfigValueAutoNull2(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: 'NULL',
+        );
+    }
+
+    public function testSetConfigValueAutoInt(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: '2',
+            valueExpected: 2,
+        );
+    }
+
+    public function testSetConfigValueAutoFloat(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: '2.0',
+            valueExpected: 2.0,
+        );
+    }
+
+    public function testSetConfigValueAutoString(): void
+    {
+        $this->internalTestSet(
+            type: 'auto',
+            paramName: 'test',
+            value: 'value',
+            valueExpected: 'value',
+        );
+    }
+
     /**
      * @param (Closure(Config & MockObject): void)|null $hook
      */
