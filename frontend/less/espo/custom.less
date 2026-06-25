@@ -435,7 +435,9 @@ div.list-expanded > ul > li > div.expanded-row {
 
     &:not(.list-selectable):not(.list-tree) {
         a.link {
-            .link-content-color();
+            &:not(.text-warning) {
+                .link-content-color();
+            }
         }
     }
 }
