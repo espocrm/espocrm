@@ -30,6 +30,7 @@ import Utils from 'utils';
 import ModalView from 'views/modal';
 import Collection from 'collection';
 import Ajax from 'ajax';
+import Ui from 'ui';
 
 export default class SendInvitationsModalView extends ModalView {
 
@@ -167,25 +168,45 @@ export default class SendInvitationsModalView extends ModalView {
 
         Espo.Ui.notifyWait();
 
-        const targets = this.getListView().checkedList.map(id => {
-            return {
-                entityType: this.collection.get(id).entityType,
-                id: id,
-            };
-        });
+        const targets = this.getListView().getCheckedIds()
+            .map(id => this.collection.get(id));
 
         Ajax
             .postRequest(`${this.model.entityType}/action/sendInvitations`, {
                 id: this.model.id,
-                targets: targets,
+                targets: targets.map(m => {
+                    return {
+                        entityType: m.entityType,
+                        id: m.id,
+                    }
+                }),
             })
-            .then(result => {
-                result ?
-                    Espo.Ui.success(this.translate('Sent')) :
-                    Espo.Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+            .then(/** {idList: string[]} */result => {
+                if (result.idList.length === 0) {
+                    Ui.warning(this.translate('nothingHasBeenSent', 'messages', 'Meeting'));
+                } else if (result.idList.length === targets.length) {
+                    Ui.success(this.translate('Sent'));
+                } else {
+                    const recipientsString = targets
+                        .filter(m => result.idList.includes(m.id))
+                        .map(m => m.attributes.name ?? m.attributes.id)
+                        .join(', ');
+
+                    const failedRecipientsString = targets
+                        .filter(m => !result.idList.includes(m.id))
+                        .map(m => m.attributes.name ?? m.attributes.id)
+                        .join(', ');
+
+                    const message = this.translate('invitationsSentTo', 'messages', 'Meeting')
+                        .replace('{recipients}', recipientsString)
+                        .replace('{failedRecipients}', failedRecipientsString);
+
+                    Ui.notify(message, 'warning', null, {
+                        closeButton: true,
+                    });
+                }
 
                 this.trigger('sent');
-
                 this.close();
             })
             .catch(() => {
