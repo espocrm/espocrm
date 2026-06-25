@@ -2837,7 +2837,7 @@ abstract class ListBaseRecordView<
             return;
         }
 
-        target ??= this.element.querySelector<HTMLInputElement>(`.record-checkbox[data-id="${id}"]`);
+        target ??= this.element?.querySelector<HTMLInputElement>(`.record-checkbox[data-id="${id}"]`);
 
         if (target) {
             target.checked = true;
@@ -2864,7 +2864,7 @@ abstract class ListBaseRecordView<
     }
 
     private _uncheckRecord(id: string, target: HTMLInputElement | null = null, isSilent: boolean = false) {
-        target ??= this.element.querySelector<HTMLInputElement>(`.record-checkbox[data-id="${id}"]`);
+        target ??= this.element?.querySelector<HTMLInputElement>(`.record-checkbox[data-id="${id}"]`);
 
         if (target) {
             target.checked = false;
@@ -2887,10 +2887,12 @@ abstract class ListBaseRecordView<
             this.hideActions();
         }
 
-        if (this.checkedList.length === this.collection.models.length) {
-            this.$el.find('.select-all').prop('checked', true);
-        } else {
-            this.$el.find('.select-all').prop('checked', false);
+        if (this.element) {
+            if (this.checkedList.length === this.collection.models.length) {
+                this.$el.find('.select-all').prop('checked', true);
+            } else {
+                this.$el.find('.select-all').prop('checked', false);
+            }
         }
 
         if (!isSilent) {
