@@ -91,6 +91,12 @@ class IcsDataLoader implements Loader
             return;
         }
 
+        $method = $ical->cal['VCALENDAR']['METHOD'] ?? null;
+
+        if ($method === 'REPLY') {
+            return;
+        }
+
         $espoEvent = EventFactory::createFromU01jmg3Ical($ical);
 
         $valueMap = (object) [

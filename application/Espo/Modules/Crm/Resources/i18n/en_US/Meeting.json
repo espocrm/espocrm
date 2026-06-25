@@ -59,6 +59,7 @@
         "sendInvitationsToSelectedAttendees": "Invitation emails will be sent to the selected attendees.",
         "sendCancellationsToSelectedAttendees": "Cancellation emails will be sent to the selected attendees.",
         "selectAcceptanceStatus": "Set your acceptance status.",
-        "nothingHasBeenSent": "Nothing were sent"
+        "nothingHasBeenSent": "Nothing were sent",
+        "invitationsSentTo": "Invitation emails has been sent to: {recipients}.\n\nCould not sent to: {failedRecipients}."
     }
 }

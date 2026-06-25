@@ -34,24 +34,28 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
-use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Business\Event\Invitations;
 use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Repository\RDBRelation;
 use Espo\Tools\Email\SendService;
+use LogicException;
 
 /**
  * @since 9.0.0
  */
 class Sender
 {
-    private const TYPE_INVITATION = 'invitation';
-    private const TYPE_CANCELLATION = 'cancellation';
+    private const string TYPE_INVITATION = 'invitation';
+    private const string TYPE_CANCELLATION = 'cancellation';
 
     public function __construct(
         private SendService $sendService,
@@ -60,6 +64,7 @@ class Sender
         private EntityManager $entityManager,
         private Config $config,
         private Metadata $metadata,
+        private Log $log,
     ) {}
 
     /**
@@ -86,29 +91,22 @@ class Sender
         return $this->sendInternal($entity, self::TYPE_CANCELLATION, $targets);
     }
 
-
     /**
      * @param ?Invitee[] $targets
-     * @return Entity[]
-     * @throws SendingError
-     * @throws Forbidden
+     * @return (User|Contact|Lead)[]
      */
-    private function sendInternal(Meeting|Call $entity, string $type, ?array $targets): array
+    private function getRecipients(Meeting|Call $entity, string $type, ?array $targets): array
     {
-        $this->checkStatus($entity, $type);
-
         $linkList = [
             Meeting::LINK_USERS,
             Meeting::LINK_CONTACTS,
             Meeting::LINK_LEADS,
         ];
 
-        $sender = $this->getSender();
-
-        $sentAddressList = [];
-        $resultEntityList = [];
+        $output = [];
 
         foreach ($linkList as $link) {
+            /** @var RDBRelation<User>|RDBRelation<Contact>|RDBRelation<Lead> $builder */
             $builder = $this->entityManager->getRelation($entity, $link);
 
             if ($targets === null && $type === self::TYPE_INVITATION) {
@@ -118,7 +116,7 @@ class Sender
             $collection = $builder->find();
 
             foreach ($collection as $attendee) {
-                $emailAddress = $attendee->get(Field::EMAIL_ADDRESS);
+                $emailAddress = $attendee->getEmailAddress();
 
                 if ($targets) {
                     $target = self::findTarget($attendee, $targets);
@@ -132,10 +130,60 @@ class Sender
                     }
                 }
 
-                if (!$emailAddress || in_array($emailAddress, $sentAddressList)) {
+                if (!$emailAddress) {
                     continue;
                 }
 
+                $output[] = $attendee;
+            }
+        }
+
+        return $output;
+    }
+
+    /**
+     * @param ?Invitee[] $targets
+     * @return Entity[]
+     * @throws SendingError
+     * @throws Forbidden
+     */
+    private function sendInternal(Meeting|Call $entity, string $type, ?array $targets): array
+    {
+        $this->checkStatus($entity, $type);
+
+        $sender = $this->getSender();
+
+        $sentAddressList = [];
+        $resultEntityList = [];
+
+        $recipients = $this->getRecipients($entity, $type, $targets);
+
+        foreach ($recipients as $recipient) {
+            $link = $this->getLinkName($recipient);
+
+            $this->entityManager
+                ->getRelation($entity, $link)
+                ->updateColumns($recipient, ['status' => Meeting::ATTENDEE_STATUS_NONE]);
+        }
+
+        foreach ($recipients as $attendee) {
+            $emailAddress = $attendee->getEmailAddress();
+
+            $link = $this->getLinkName($attendee);
+
+            if ($targets) {
+                $target = self::findTarget($attendee, $targets);
+
+                if ($target?->getEmailAddress()) {
+                    $emailAddress = $target->getEmailAddress();
+                }
+            }
+
+            if (!$emailAddress || in_array($emailAddress, $sentAddressList)) {
+                continue;
+            }
+
+            try {
                 if ($type === self::TYPE_INVITATION) {
                     $sender->sendInvitation($entity, $attendee, $link, $emailAddress);
                 }
@@ -143,14 +191,18 @@ class Sender
                 if ($type === self::TYPE_CANCELLATION) {
                     $sender->sendCancellation($entity, $attendee, $link, $emailAddress);
                 }
+            } catch (SendingError $e) {
+                $this->log->error("Could not send event invitation to {entityType} {id}.", [
+                    'exception' => $e,
+                    'entityType' => $attendee->getEntityType(),
+                    'id' => $attendee->getId(),
+                ]);
 
-                $sentAddressList[] = $emailAddress;
-                $resultEntityList[] = $attendee;
-
-                $this->entityManager
-                    ->getRelation($entity, $link)
-                    ->updateColumns($attendee, ['status' => Meeting::ATTENDEE_STATUS_NONE]);
+                continue;
             }
+
+            $sentAddressList[] = $emailAddress;
+            $resultEntityList[] = $attendee;
         }
 
         return $resultEntityList;
@@ -219,5 +271,16 @@ class Sender
     private function getCanceledStatusList(string $entityType): array
     {
         return $this->metadata->get("scopes.$entityType.canceledStatusList") ?? [];
+    }
+
+    private function getLinkName(User|Contact|Lead $recipient): string
+    {
+        $linkMap = [
+            User::ENTITY_TYPE => Meeting::LINK_USERS,
+            Contact::ENTITY_TYPE => Meeting::LINK_CONTACTS,
+            Lead::ENTITY_TYPE => Meeting::LINK_LEADS,
+        ];
+
+        return $linkMap[$recipient::ENTITY_TYPE] ?? throw new LogicException();
     }
 }

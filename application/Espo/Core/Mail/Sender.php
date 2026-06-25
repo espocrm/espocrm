@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Mail\Exceptions\NoSmtp;
+use Espo\Core\Mail\Sender\AttachmentContainer;
 use Espo\Core\Mail\Sender\MessageContainer;
 use Espo\Core\Mail\Sender\TransportPreparatorFactory;
 use Espo\Core\ORM\Repository\Option\SaveOption;
@@ -67,7 +68,7 @@ class Sender
     /** @var array<string, mixed> */
     private array $overrideParams = [];
     private ?string $envelopeFromAddress = null;
-    /** @var ?iterable<Attachment> */
+    /** @var ?iterable<Attachment|AttachmentContainer> */
     private $attachmentList = null;
     /** @var array{string, string}[] */
     private array $headers = [];
@@ -146,7 +147,7 @@ class Sender
     /**
      * With specific attachments.
      *
-     * @param iterable<Attachment> $attachmentList
+     * @param iterable<Attachment|AttachmentContainer> $attachmentList
      */
     public function withAttachments(iterable $attachmentList): self
     {
@@ -309,18 +310,23 @@ class Sender
             }
         }
 
+        /** @var AttachmentContainer[] $containers */
+        $containers = [];
+
         if ($this->attachmentList !== null) {
             foreach ($this->attachmentList as $attachment) {
-                $collection[] = $attachment;
+                if ($attachment instanceof Attachment) {
+                    $collection[] = $attachment;
+                } else {
+                    $containers[] = $attachment;
+                }
             }
         }
 
         $list = [];
 
         foreach ($collection as $attachment) {
-            $contents = $attachment->has(self::ATTACHMENT_ATTR_CONTENTS) ?
-                $attachment->get(self::ATTACHMENT_ATTR_CONTENTS) :
-                $this->fileStorageManager->getContents($attachment);
+            $contents = $this->getAttachmentContents($attachment);
 
             $part = new DataPart(
                 body: $contents,
@@ -330,6 +336,8 @@ class Sender
 
             $list[] = $part;
         }
+
+        $this->prepareContainerParts($containers, $list);
 
         return $list;
     }
@@ -342,9 +350,7 @@ class Sender
         $list = [];
 
         foreach ($email->getInlineAttachmentList() as $attachment) {
-            $contents = $attachment->has(self::ATTACHMENT_ATTR_CONTENTS) ?
-                $attachment->get(self::ATTACHMENT_ATTR_CONTENTS) :
-                $this->fileStorageManager->getContents($attachment);
+            $contents = $this->getAttachmentContents($attachment);
 
             $part = (new DataPart($contents, null, $attachment->getType()))
                 ->asInline()
@@ -540,5 +546,49 @@ class Sender
         ];
 
         return new Envelope(new Address($this->envelopeFromAddress), $recipients);
+    }
+
+    /**
+     * @todo Use stream.
+     *
+     */
+    private function getAttachmentContents(Attachment $attachment): string
+    {
+        return $attachment->has(self::ATTACHMENT_ATTR_CONTENTS) ?
+            $attachment->get(self::ATTACHMENT_ATTR_CONTENTS) :
+            $this->fileStorageManager->getContents($attachment);
+    }
+
+    /**
+     * @param AttachmentContainer[] $containers
+     * @param DataPart[] $list
+     */
+    private function prepareContainerParts(array $containers, array &$list): void
+    {
+        foreach ($containers as $container) {
+            $attachment = $container->attachment;
+
+            $contents = $this->getAttachmentContents($attachment);
+
+            $part = new DataPart(
+                body: $contents,
+                filename: $attachment->getName() ?? '',
+                contentType: $attachment->getType(),
+            );
+
+            if ($container->inline) {
+                $part->asInline();
+            }
+
+            if ($container->contentTypeParams && $attachment->getType()) {
+                $part->getHeaders()->addParameterizedHeader(
+                    name: 'Content-Type',
+                    value: $attachment->getType(),
+                    params: $container->contentTypeParams,
+                );
+            }
+
+            $list[] = $part;
+        }
     }
 }

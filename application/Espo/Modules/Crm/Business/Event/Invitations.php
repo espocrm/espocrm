@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Business\Event;
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Mail\Sender\AttachmentContainer;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Entities\Attachment;
@@ -166,8 +167,23 @@ class Invitations
             $sender->withSmtpParams($this->smtpParams);
         }
 
+        $method = 'REQUEST';
+
+        if ($type === self::TYPE_CANCELLATION) {
+            $method = 'CANCEL';
+        }
+
+        $container = new AttachmentContainer(
+            attachment: $attachment,
+            inline: true,
+            contentTypeParams: [
+                'charset' => 'utf-8',
+                'method' => $method,
+            ],
+        );
+
         $sender
-            ->withAttachments([$attachment])
+            ->withAttachments([$container])
             ->send($email);
     }
 
@@ -217,9 +233,9 @@ class Invitations
             $organizerName = $user->getName();
             $organizerAddress = $user->getEmailAddress();
 
-            if ($organizerAddress) {
+            /*if ($organizerAddress) {
                 $addressList[] = $organizerAddress;
-            }
+            }*/
         }
 
         $status = $type === self::TYPE_CANCELLATION ?
@@ -292,7 +308,7 @@ class Invitations
 
     /**
      * @param string[] $addressList
-     * @return array{string, ?string}[]
+     * @return array{string, ?string, ?string}[]
      */
     private function getAttendees(Meeting|Call $entity, array $addressList): array
     {
@@ -308,7 +324,7 @@ class Invitations
 
             if ($address && !in_array($address, $addressList)) {
                 $addressList[] = $address;
-                $attendees[] = [$address, $it->getName()];
+                $attendees[] = [$address, $it->getName(), $this->getStatus($it)];
             }
         }
 
@@ -322,7 +338,7 @@ class Invitations
 
             if ($address && !in_array($address, $addressList)) {
                 $addressList[] = $address;
-                $attendees[] = [$address, $it->getName()];
+                $attendees[] = [$address, $it->getName(), $this->getStatus($it)];
             }
         }
 
@@ -336,7 +352,7 @@ class Invitations
 
             if ($address && !in_array($address, $addressList)) {
                 $addressList[] = $address;
-                $attendees[] = [$address, $it->getName()];
+                $attendees[] = [$address, $it->getName(), $this->getStatus($it)];
             }
         }
 
@@ -390,5 +406,17 @@ class Invitations
         $format = $this->applicationConfig->getTimeFormat() . ", " . $format;
 
         return $this->dateTime->convertSystemDateTime($value, $timeZone, $format, $language);
+    }
+
+    private function getStatus(User|Contact|Lead $invitee): ?string
+    {
+        $status = $invitee->get('acceptanceStatus');
+
+        return match ($status) {
+            Meeting::ATTENDEE_STATUS_ACCEPTED => 'ACCEPTED',
+            Meeting::ATTENDEE_STATUS_DECLINED => 'DECLINED',
+            Meeting::ATTENDEE_STATUS_TENTATIVE => 'TENTATIVE',
+            default => null,
+        };
     }
 }
