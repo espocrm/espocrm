@@ -77,7 +77,7 @@ class ReminderTest extends BaseTestCase
         $this->assertEquals(2, count($reminderList));
     }
 
-    public function testFallsToPast(): void
+    public function testFallsInPast(): void
     {
         $clock = $this->createMock(Clock::class);
         $clock->method('now')
@@ -94,8 +94,7 @@ class ReminderTest extends BaseTestCase
                     $binder->bindInstance(Clock::class, $this->clock);
                 }
             },
-            // @todo Need to reset loaded hooks in the HookManager. Bind EventDispatcher to create repositories,
-            //    so that it is available in the HookManager.
+            // @todo Need to reset loaded hooks in the HookManager?
             //reuse: true,
         );
         $this->setApplication($app);
