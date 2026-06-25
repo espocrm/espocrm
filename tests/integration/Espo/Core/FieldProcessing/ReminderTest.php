@@ -29,9 +29,15 @@
 
 namespace tests\integration\Espo\Core\FieldProcessing;
 
+use DateTimeImmutable;
+use Espo\Core\Authentication\Util\DelayUtil;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\DateTime\Clock;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use tests\integration\Core\BaseTestCase;
 
@@ -69,5 +75,66 @@ class ReminderTest extends BaseTestCase
             ->find();
 
         $this->assertEquals(2, count($reminderList));
+    }
+
+    public function testFallsToPast(): void
+    {
+        $clock = $this->createMock(Clock::class);
+        $clock->method('now')
+            ->willReturn(new DateTimeImmutable('2030-01-01 00:00'));
+
+
+        $app = $this->createApplication(
+            binding: new class ($clock) implements BindingProcessor {
+
+                public function __construct(private Clock $clock) {}
+
+                public function process(Binder $binder): void
+                {
+                    $binder->bindInstance(Clock::class, $this->clock);
+                }
+            },
+            // @todo Need to reset loaded hooks in the HookManager. Bind EventDispatcher to create repositories,
+            //    so that it is available in the HookManager.
+            //reuse: true,
+        );
+        $this->setApplication($app);
+
+        $entityManager = $this->getEntityManager();
+
+        $user = $this->getContainer()->getByClass(User::class);
+
+        $meeting = $entityManager->createEntity(Meeting::ENTITY_TYPE, [
+            'dateStart' => DateTime::fromDateTime($clock->now())->modify('+10 minutes')->toString(),
+            'usersIds' => [$user->getId()],
+            'reminders' => [
+                (object) [
+                    'type' => Reminder::TYPE_POPUP,
+                    'seconds' => 60 * 60,
+                ],
+                (object) [
+                    'type' => Reminder::TYPE_POPUP,
+                    'seconds' => 120 * 60,
+                ],
+                (object) [
+                    'type' => Reminder::TYPE_EMAIL,
+                    'seconds' => 60 * 60,
+                ],
+                (object) [
+                    'type' => Reminder::TYPE_EMAIL,
+                    'seconds' => 120 * 60,
+                ],
+            ]
+        ]);
+
+        $reminderList = $entityManager
+            ->getRDBRepositoryByClass(Reminder::class)
+            ->where([
+                'entityId' => $meeting->getId(),
+                'entityType' => $meeting->getEntityType(),
+            ])
+            ->find();
+
+        $this->assertCount(2, $reminderList);
     }
 }
