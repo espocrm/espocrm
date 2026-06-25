@@ -27,35 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace integration\Espo\Commands;
 
-use Espo\Core\Application\Runner;
-use Espo\Core\Job\JobManager;
-use Espo\Core\Utils\Config\SystemConfig;
-use Espo\Core\Utils\Log;
+use Espo\Classes\ConsoleCommands\AppCheck;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use tests\integration\Core\BaseTestCase;
 
-/**
- * Runs Cron.
- */
-class Cron implements Runner
+class AppCheckTest extends BaseTestCase
 {
-    use Cli;
-    use SetupSystemUser;
-
-    public function __construct(
-        private JobManager $jobManager,
-        private SystemConfig $config,
-        private Log $log
-    ) {}
-
-    public function run(): void
+    public function testNotFailed(): void
     {
-        if (!$this->config->isCronEnabled()) {
-            $this->log->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
+        $command = $this->getInjectableFactory()->create(AppCheck::class);
 
-            return;
-        }
+        $params = $this->createMock(Params::class);
+        $io = $this->createMock(IO::class);
 
-        $this->jobManager->process();
+        $io->expects($this->never())
+            ->method('setExitStatus')
+            ->with(1);
+
+        $command->run($params, $io);
+
+        $this->assertEquals(0, $io->getExitStatus());
     }
 }

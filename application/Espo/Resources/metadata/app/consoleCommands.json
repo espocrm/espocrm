@@ -81,6 +81,11 @@
         "listed": true,
         "noSystemUser": true
     },
+    "appCheck": {
+        "className": "Espo\\Classes\\ConsoleCommands\\AppCheck",
+        "listed": true,
+        "noSystemUser": true
+    },
     "migrate": {
         "listed": true,
         "noSystemUser": true

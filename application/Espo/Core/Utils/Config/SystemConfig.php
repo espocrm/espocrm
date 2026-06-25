@@ -60,4 +60,12 @@ class SystemConfig
     {
         return (bool) $this->config->get('restrictedMode');
     }
+
+    /**
+     * @since 10.0.0
+     */
+    public function isCronEnabled(): bool
+    {
+        return !$this->config->get('cronDisabled');
+    }
 }

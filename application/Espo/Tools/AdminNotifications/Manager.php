@@ -70,7 +70,7 @@ class Manager
         }
 
         if ($this->config->get('adminNotificationsCronIsNotConfigured')) {
-            if ($this->config->get('cronDisabled')) {
+            if (!$this->systemConfig->isCronEnabled()) {
                 $notificationList[] = [
                     'id' => 'cronIsDisabled',
                     'type' => 'cronIsDisabled',
