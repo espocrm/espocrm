@@ -57,7 +57,7 @@ class PanelsContainerRecordView extends View {
      * @property {boolean} [sticked] To stick to an upper panel.
      * @property {number} [tabNumber] A tab number.
      * @property {string} [aclScope] A scope to check access to.
-     * @property {Espo.Utils~AccessDefs[]} [accessDataList] Access control defs.
+     * @property {import('util').AccessDefs[]} [accessDataList] Access control defs.
      * @property {Record} [dynamicLogicVisible] Visibility rules.
      * @property {Record} [dynamicLogicStyled] Style rules.
      * @property {Record} [options] Options.
@@ -424,12 +424,10 @@ class PanelsContainerRecordView extends View {
 
                 if (view.titleHtml) {
                     p.titleHtml = view.titleHtml;
-                }
-                else {
+                } else {
                     if (p.label) {
                         p.title = this.translate(p.label, 'labels', this.scope);
-                    }
-                    else {
+                    } else {
                         p.title = view.title;
                     }
                 }

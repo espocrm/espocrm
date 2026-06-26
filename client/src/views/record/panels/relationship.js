@@ -442,16 +442,26 @@ class RelationshipPanelView extends BottomPanelView {
             iconHtml = this.getHelper().getScopeColorIconHtml(this.entityType);
         }
 
-        this.titleHtml = this.title;
+        let titlePart;
 
         if (this.defs.label) {
-            this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.entityType);
+            titlePart = this.translate(this.defs.label, 'labels', this.entityType);
+
+            const parentEntityType = this.model?.entityType;
+
+            if (parentEntityType && this.getLanguage().has(this.defs.label, 'labels', parentEntityType)) {
+                titlePart = this.translate(this.defs.label, 'labels', parentEntityType);
+            }
         } else {
-            this.titleHtml = iconHtml + this.title;
+            titlePart = this.title;
         }
 
+        this.titleHtml = iconHtml + this.getHelper().escapeString(titlePart);
+
         if (this.filter && this.filter !== 'all') {
-            this.titleHtml += ' &middot; ' + this.translateFilter(this.filter);
+            const filterPart = this.getHelper().escapeString(this.translateFilter(this.filter));
+
+            this.titleHtml += ' &middot; ' + filterPart;
         }
     }
 

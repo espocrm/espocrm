@@ -363,12 +363,14 @@ class PanelStreamView extends RelationshipPanelView {
     }
 
     setupTitle() {
-        this.title = this.translate('Stream');
+        this.title = this.getHelper().escapeString(this.translate('Stream'));
 
-        this.titleHtml = this.title;
+        this.titleHtml = this.title
 
         if (this.filter && this.filter !== 'all') {
-            this.titleHtml += ' &middot; ' + this.translate(this.filter, 'filters', 'Note');
+            const filterPart = this.getHelper().escapeString(this.translate(this.filter, 'filters', 'Note'));
+
+            this.titleHtml += ' &middot; ' + filterPart;
         }
     }
 
