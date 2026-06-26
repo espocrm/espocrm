@@ -477,6 +477,9 @@ class Installer
                 $this->createRecord($entityName, $data);
             }
         }
+
+        /** @noinspection PhpInternalEntityUsedInspection */
+        $this->getInjectableFactory()->create(ScheduledJobUtil\Populator::class)->populate();
     }
 
     private function createRecord(string $entityType, array $data): void

@@ -27,14 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return [
-    'EmailTemplate' => [
-        [
-            'name' => 'Case-to-Email auto-reply',
-            'subject' => 'Case has been created',
-            'body' => '<p>{Person.name},</p><p>Case \'{Case.name}\' has been created with number '.
-                '{Case.number} and assigned to {User.name}.</p>',
-            'isHtml ' => '1',
-        ]
-    ],
-];
+namespace Espo\Classes\ConsoleCommands;
+
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\Utils\ScheduledJob\Populator;
+
+/**
+ * @noinspection PhpUnused
+ */
+class PopulateScheduledJobs implements Command
+{
+    public function __construct(
+        private Populator $populator,
+    ) {}
+
+    public function run(Params $params, IO $io): void
+    {
+        $names = $this->populator->populate();
+
+        if ($names === []) {
+            $io->writeLine("Nothing to create.");
+
+            return;
+        }
+
+        $io->writeLine("Created scheduled jobs:");
+
+        foreach ($names as $name) {
+            $io->writeLine(' ' . $name);
+        }
+    }
+}

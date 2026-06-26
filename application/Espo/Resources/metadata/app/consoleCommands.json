@@ -59,6 +59,12 @@
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateNumbers",
         "listed": false
     },
+    "populateScheduledJobs": {
+        "className": "Espo\\Classes\\ConsoleCommands\\PopulateScheduledJobs",
+        "listed": true,
+        "allowedFlags": [],
+        "allowedOptions": []
+    },
     "checkFilePermissions": {
         "className": "Espo\\Classes\\ConsoleCommands\\CheckFilePermissions",
         "listed": true,

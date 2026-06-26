@@ -27,14 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-return [
-    'EmailTemplate' => [
-        [
-            'name' => 'Case-to-Email auto-reply',
-            'subject' => 'Case has been created',
-            'body' => '<p>{Person.name},</p><p>Case \'{Case.name}\' has been created with number '.
-                '{Case.number} and assigned to {User.name}.</p>',
-            'isHtml ' => '1',
-        ]
-    ],
-];
+namespace tests\integration\Espo\Core\Utils\ScheduledJob;
+
+use Espo\Core\Utils\ScheduledJob\Populator;
+use Espo\Entities\ScheduledJob;
+use Espo\ORM\Query\DeleteBuilder;
+use tests\integration\Core\BaseTestCase;
+
+class PopulatorTest extends BaseTestCase
+{
+    public function testPopulate(): void
+    {
+        $deleteQuery = DeleteBuilder::create()
+            ->from(ScheduledJob::ENTITY_TYPE)
+            ->where([
+                ScheduledJob::FIELD_JOB => 'Cleanup',
+            ])
+            ->build();
+
+        $this->getEntityManager()->getQueryExecutor()->execute($deleteQuery);
+
+
+        $this->assertEquals(0, $this->getJobCount());
+
+        $populator = $this->getInjectableFactory()->create(Populator::class);
+
+        $populator->populate();
+
+        $this->assertEquals(1, $this->getJobCount());
+    }
+
+    private function getJobCount(): int
+    {
+        return $this->getEntityManager()
+            ->getRDBRepositoryByClass(ScheduledJob::class)
+            ->where([
+                ScheduledJob::FIELD_JOB => 'Cleanup',
+            ])
+            ->count();
+    }
+}

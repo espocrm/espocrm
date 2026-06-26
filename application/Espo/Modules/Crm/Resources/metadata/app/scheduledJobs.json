@@ -1,0 +1,14 @@
+{
+    "ControlKnowledgeBaseArticleStatus": {
+        "scheduling": "10 1 * * *",
+        "isDefault": true
+    },
+    "SendEmailReminders": {
+        "scheduling": "/2 * * * *",
+        "isDefault": true
+    },
+    "ProcessMassEmail": {
+        "scheduling": "10,30,50 * * * *",
+        "isDefault": true
+    }
+}

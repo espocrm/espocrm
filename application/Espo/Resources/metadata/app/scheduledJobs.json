@@ -48,26 +48,40 @@
         "isSystem": true
     },
     "Cleanup": {
-        "jobClassName": "Espo\\Classes\\Jobs\\Cleanup"
+        "jobClassName": "Espo\\Classes\\Jobs\\Cleanup",
+        "scheduling": "1 1 * * 0",
+        "isDefault": true
     },
     "AuthTokenControl": {
-        "jobClassName": "Espo\\Classes\\Jobs\\AuthTokenControl"
+        "jobClassName": "Espo\\Classes\\Jobs\\AuthTokenControl",
+        "scheduling": "*/6 * * * *",
+        "isDefault": true
     },
     "SendEmailNotifications": {
-        "jobClassName": "Espo\\Classes\\Jobs\\SendEmailNotifications"
+        "jobClassName": "Espo\\Classes\\Jobs\\SendEmailNotifications",
+        "scheduling": "*/2 * * * *",
+        "isDefault": true
     },
     "ProcessWebhookQueue": {
-        "jobClassName": "Espo\\Classes\\Jobs\\ProcessWebhookQueue"
+        "jobClassName": "Espo\\Classes\\Jobs\\ProcessWebhookQueue",
+        "scheduling": "*/2 * * * *",
+        "isDefault": true
     },
     "CheckEmailAccounts": {
         "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckEmailAccounts",
-        "jobClassName": "Espo\\Classes\\Jobs\\CheckEmailAccounts"
+        "jobClassName": "Espo\\Classes\\Jobs\\CheckEmailAccounts",
+        "scheduling": "*/1 * * * *",
+        "isDefault": true
     },
     "CheckInboundEmails": {
         "preparatorClassName": "Espo\\Classes\\JobPreparators\\CheckInboundEmails",
-        "jobClassName": "Espo\\Classes\\Jobs\\CheckInboundEmails"
+        "jobClassName": "Espo\\Classes\\Jobs\\CheckInboundEmails",
+        "scheduling": "*/1 * * * *",
+        "isDefault": true
     },
     "SendScheduledEmails": {
-        "jobClassName": "Espo\\Classes\\Jobs\\SendScheduledEmails"
+        "jobClassName": "Espo\\Classes\\Jobs\\SendScheduledEmails",
+        "scheduling": "*/10 * * * *",
+        "isDefault": true
     }
 }

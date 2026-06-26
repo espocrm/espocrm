@@ -27,6 +27,10 @@
             "preparatorClassName": {
                 "type": "string",
                 "description": "A preparator. Optional. The preparator is called by the application. It serves for creating job records. E.g. for email checking, the preparator creates jobs for each email account. Should implement Espo\\Core\\Job\\Preparator."
+            },
+            "isDefault": {
+                "type": "boolean",
+                "description": "Created upon installation or when running `populate-scheduled-jobs` command. As of v10.0."
             }
         }
     }
