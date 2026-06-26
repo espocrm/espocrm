@@ -466,26 +466,26 @@ class Saver implements SaverInterface
         foreach ($list as $item) {
             $type = $item['type'];
             $hasTypeMap[$type] = true;
-            
+
             $isCreated = $this->createReminder(
                 entity: $entity,
                 userId: $userId,
                 start: $start,
                 item: $item,
             );
-            
+
             if (!$isCreated) {
                 continue;
             }
-            
+
             $createdTypeMap[$type] = true;
         }
-        
+
         foreach (array_keys($hasTypeMap) as $type) {
             if ($createdTypeMap[$type] ?? false) {
                 continue;
             }
-            
+
             $this->createReminder(
                 entity: $entity,
                 userId: $userId,
