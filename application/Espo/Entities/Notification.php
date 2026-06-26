@@ -63,6 +63,10 @@ class Notification extends Entity
     public const string FIELD_MESSAGE = 'message';
     public const string FIELD_TYPE = 'type';
     public const string FIELD_RELATED_PARENT = 'relatedParent';
+    /**
+     * @since 10.0.0
+     */
+    public const string FIELD_RELATED = 'related';
     public const string FIELD_IS_FEATURED = 'isFeatured';
 
     public const string GROUP_TYPE_RECORD = 'Record';

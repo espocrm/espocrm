@@ -269,6 +269,10 @@ class RecordService
         $this->loadNoteFields($note, $entity);
 
         $entity->set('noteData', $note->getValueMap());
+
+        if ($entity->getType() === Notification::TYPE_USER_REACTION) {
+            $entity->loadParentNameField(Notification::FIELD_RELATED_PARENT);
+        }
     }
 
     /**
@@ -370,11 +374,7 @@ class RecordService
 
         if ($parentId && $parentType) {
             if ($notification->getType() !== Notification::TYPE_USER_REACTION) {
-                $parent = $this->entityManager->getEntityById($parentType, $parentId);
-
-                if ($parent) {
-                    $note->set('parentName', $parent->get(Field::NAME));
-                }
+                $note->loadParentNameField(Field::PARENT);
             }
         } else if (!$note->isGlobal()) {
             $targetType = $note->getTargetType();
@@ -396,11 +396,7 @@ class RecordService
         $relatedType = $note->getRelatedType();
 
         if ($relatedId && $relatedType && $notification->getType() !== Notification::TYPE_USER_REACTION) {
-            $related = $this->entityManager->getEntityById($relatedType, $relatedId);
-
-            if ($related) {
-                $note->set('relatedName', $related->get(Field::NAME));
-            }
+            $note->loadParentNameField(Notification::FIELD_RELATED);
         }
 
         if ($notification->getType() !== Notification::TYPE_USER_REACTION) {
