@@ -3223,25 +3223,22 @@ abstract class ListBaseRecordView<
             for (let i = initialCount; i < collection.length; i++) {
                 const model = collection.at(i)!;
 
-                this.buildRow(i, model, view => {
-                    const model = view.model!;
+                const existingRow = this.getDomRowItem(model.id!);
 
-                    const existingRow = this.getDomRowItem(model.id!);
+                if (existingRow) {
+                    existingRow.remove();
+                }
 
-                    if (existingRow) {
-                        existingRow.remove();
+                $list?.append(this.getRowContainerHtml(model.id!));
+
+                this.buildRow(i, model, async view => {
+                    await view.render();
+
+                    rowsReady++;
+
+                    if (rowsReady === rowCount) {
+                        final();
                     }
-
-                    $list?.append(this.getRowContainerHtml(model.id!));
-
-                    view.render()
-                        .then(() => {
-                            rowsReady++;
-
-                            if (rowsReady === rowCount) {
-                                final();
-                            }
-                        });
                 });
             }
 
