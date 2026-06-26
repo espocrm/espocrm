@@ -596,7 +596,13 @@ class RecordService
     private function getNullNoGroupSelections(): array
     {
         return array_map(function ($attribute) {
-            return Selection::create(Expr::value(null), $attribute);
+            $raw = null;
+
+            if ($attribute === Attribute::DELETED) {
+                $raw = false;
+            }
+
+            return Selection::create(Expr::value($raw), $attribute);
         }, $this->noGroupAttributes);
     }
 
@@ -679,7 +685,16 @@ class RecordService
                 Notification::ATTR_RELATED_PARENT_TYPE,
                 Selection::create(
                     Expr::switch(
-                        Expr::greater(Expr::sum(Expr::not(Expr::column(Notification::ATTR_READ))), 0),
+                        Expr::greater(
+                            Expr::sum(
+                                Expr::switch(
+                                    Expr::column(Notification::ATTR_READ),
+                                    Expr::value(0),
+                                    Expr::value(1),
+                                ),
+                            ),
+                            0
+                        ),
                         Expr::value(false),
                         Expr::value(true),
                     ),
@@ -703,10 +718,14 @@ class RecordService
                     Expr::switch(
                         Expr::greater(
                             Expr::sum(
-                                Expr::and(
-                                    Expr::not(Expr::column(Notification::ATTR_READ)),
-                                    Expr::column(Notification::FIELD_IS_FEATURED),
-                                )
+                                Expr::switch(
+                                    Expr::and(
+                                        Expr::not(Expr::column(Notification::ATTR_READ)),
+                                        Expr::column(Notification::FIELD_IS_FEATURED),
+                                    ),
+                                    Expr::value(1),
+                                    Expr::value(0),
+                                ),
                             ),
                             0
                         ),
@@ -791,7 +810,16 @@ class RecordService
                 ),
                 Selection::create(
                     Expr::switch(
-                        Expr::greater(Expr::sum(Expr::not(Expr::column(Notification::ATTR_READ))), 0),
+                        Expr::greater(
+                            Expr::sum(
+                                Expr::switch(
+                                    Expr::column(Notification::ATTR_READ),
+                                    Expr::value(0),
+                                    Expr::value(1),
+                                ),
+                            ),
+                            0
+                        ),
                         Expr::value(false),
                         Expr::value(true),
                     ),
@@ -812,7 +840,7 @@ class RecordService
                     Field::CREATED_AT,
                 ),
                 Selection::create(
-                    Expr::value(null),
+                    Expr::value(false),
                     Notification::FIELD_IS_FEATURED,
                 ),
                 ...$this->getNullNoGroupSelections(),
