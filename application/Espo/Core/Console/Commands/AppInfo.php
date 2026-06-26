@@ -80,6 +80,7 @@ class AppInfo implements Command
         }
 
         $io->writeLine("Not supported flag specified.");
+        $io->setExitStatus(1);
     }
 
     protected function processType(IO $io, string $type, Params $params): void

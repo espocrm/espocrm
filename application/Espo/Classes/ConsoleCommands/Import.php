@@ -55,12 +55,14 @@ class Import implements Command
         if (!$id && $filePath) {
             if (!$paramsId) {
                 $io->writeLine("You need to specify --params-id option.");
+                $io->setExitStatus(1);
 
                 return;
             }
 
             if (!$this->fileManager->isFile($filePath)) {
                 $io->writeLine("File not found.");
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -77,6 +79,7 @@ class Import implements Command
                 $countDuplicate = $result->getCountDuplicate();
             } catch (Throwable $e) {
                 $io->writeLine("Error occurred: " . $e->getMessage());
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -98,6 +101,7 @@ class Import implements Command
                 $this->service->revert($id);
             } catch (Throwable $e) {
                 $io->writeLine("Error occurred: " . $e->getMessage());
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -114,6 +118,7 @@ class Import implements Command
                 $result = $this->service->importById($id, true, $forceResume);
             } catch (Throwable $e) {
                 $io->writeLine("Error occurred: " . $e->getMessage());
+                $io->setExitStatus(1);
 
                 return;
             }
@@ -133,5 +138,6 @@ class Import implements Command
         }
 
         $io->writeLine("Not enough params passed.");
+        $io->setExitStatus(1);
     }
 }
