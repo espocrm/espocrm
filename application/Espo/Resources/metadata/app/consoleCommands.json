@@ -76,6 +76,13 @@
         "allowedOptions": ["type"],
         "noSystemUser": true
     },
+    "config:populate": {
+        "className": "Espo\\Classes\\ConsoleCommands\\ConfigPopulate",
+        "listed": true,
+        "allowedOptions": [],
+        "allowedFlags": [],
+        "noSystemUser": true
+    },
     "db:check": {
         "className": "Espo\\Classes\\ConsoleCommands\\DbCheck",
         "listed": true,
