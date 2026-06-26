@@ -457,52 +457,41 @@ class Saver implements SaverInterface
             return;
         }
 
-        $hasPopup = array_filter($list, fn ($it) => $it['type'] === Reminder::TYPE_POPUP) !== [];
-        $hasEmail = array_filter($list, fn ($it) => $it['type'] === Reminder::TYPE_EMAIL) !== [];
+        /** @var array<string, bool> $hasTypeMap */
+        $hasTypeMap = [];
 
-        $hasPopupCreated = false;
-        $hasEmailCreated = false;
+        /** @var array<string, bool> $createdTypeMap */
+        $createdTypeMap = [];
 
         foreach ($list as $item) {
+            $type = $item['type'];
+            $hasTypeMap[$type] = true;
+            
             $isCreated = $this->createReminder(
                 entity: $entity,
                 userId: $userId,
                 start: $start,
                 item: $item,
             );
-
+            
             if (!$isCreated) {
                 continue;
             }
-
-            if ($item['type'] === Reminder::TYPE_POPUP) {
-                $hasPopupCreated = true;
-            }
-
-            if ($item['type'] === Reminder::TYPE_EMAIL) {
-                $hasEmailCreated = true;
-            }
+            
+            $createdTypeMap[$type] = true;
         }
-
-        if ($hasPopup && !$hasPopupCreated) {
+        
+        foreach (array_keys($hasTypeMap) as $type) {
+            if ($createdTypeMap[$type] ?? false) {
+                continue;
+            }
+            
             $this->createReminder(
                 entity: $entity,
                 userId: $userId,
                 start: $start,
                 item: [
-                    'type' => Reminder::TYPE_POPUP,
-                    'seconds' => null,
-                ],
-            );
-        }
-
-        if ($hasEmail && !$hasEmailCreated) {
-            $this->createReminder(
-                entity: $entity,
-                userId: $userId,
-                start: $start,
-                item: [
-                    'type' => Reminder::TYPE_EMAIL,
+                    'type' => $type,
                     'seconds' => null,
                 ],
             );
