@@ -4,7 +4,7 @@
         "isDefault": true
     },
     "SendEmailReminders": {
-        "scheduling": "/2 * * * *",
+        "scheduling": "*/2 * * * *",
         "isDefault": true
     },
     "ProcessMassEmail": {
