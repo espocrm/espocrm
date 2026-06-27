@@ -49,6 +49,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             label: 'Compose Email',
             acl: 'create',
             aclScope: 'Email',
+            iconClass: 'far fa-envelope',
         },
     ]
 
@@ -231,6 +232,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 data: {},
                 acl: 'create',
                 aclScope: scope,
+                iconClass: 'fas fa-plus',
             };
 
             const link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link']);
@@ -309,6 +311,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 },
                 acl: 'read',
                 aclScope: scope,
+                iconClass: 'fas fa-align-justify',
             };
 
             this.actionList.push(o);

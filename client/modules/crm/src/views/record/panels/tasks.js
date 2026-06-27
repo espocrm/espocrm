@@ -53,7 +53,8 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
     actionList = [
         {
             label: 'View List',
-            action: 'viewRelatedList'
+            action: 'viewRelatedList',
+            iconClass: 'fas fa-align-justify',
         }
     ]
 

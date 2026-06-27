@@ -264,6 +264,7 @@ class RelationshipPanelView extends BottomPanelView {
                 action: this.defs.selectAction || 'selectRelated',
                 data: data,
                 acl: this.defs.selectRequiredAccess || 'edit',
+                iconClass: 'fas fa-angle-up',
             });
         }
 
@@ -271,6 +272,7 @@ class RelationshipPanelView extends BottomPanelView {
             this.actionList.unshift({
                 label: 'View List',
                 action: this.defs.viewAction || 'viewRelatedList',
+                iconClass: 'fas fa-align-justify',
             });
         }
 
@@ -534,7 +536,7 @@ class RelationshipPanelView extends BottomPanelView {
                             .addClass(!selected ? 'hidden' : '')
                     )
                     .append(
-                        $('<div>').text(label)
+                        $('<div class="item-text">').text(label)
                     );
 
             this.actionList.push({

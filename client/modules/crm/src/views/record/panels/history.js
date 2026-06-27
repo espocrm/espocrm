@@ -78,6 +78,7 @@ class HistoryPanelView extends ActivitiesPanelView {
             label: 'Archive Email',
             acl: 'create',
             aclScope: 'Email',
+            iconClass: 'far fa-envelope',
         });
     }
 

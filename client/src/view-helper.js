@@ -463,12 +463,21 @@ class ViewHelper {
             }
 
             if (iconHtml) {
-                html = iconHtml + ' ' + html;
-            }
-            else if (iconClass) {
-                const iconHtml = $('<span>').addClass(iconClass).get(0).outerHTML;
+                html = iconHtml + '' + html;
+            } else if (iconClass) {
+                const iconHtml = $('<span>')
+                    .addClass(iconClass)
+                    .addClass('item-icon')
+                    .get(0)
+                    .outerHTML;
 
-                html = iconHtml + ' ' + html;
+                html = '<span class="item-text">' + html + '</span>';
+
+                html = iconHtml + html;
+            } else {
+                if (!options.hash.html) {
+                    html = '<span class="item-text">' + html + '</span>';
+                }
             }
 
             const $li = $('<li>')

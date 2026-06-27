@@ -31,6 +31,7 @@
                     data=data
                     link=link
                     className='panel-action'
+                    iconClass=iconClass
                 }}
             {{else}}
                 {{#unless @first}}

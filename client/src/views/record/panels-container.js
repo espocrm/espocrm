@@ -94,6 +94,7 @@ class PanelsContainerRecordView extends View {
      * @property {string} [label] A label. Translatable.
      * @property {string} [html] A HTML.
      * @property {string} [text] A text.
+     * @property {string} [iconClass] An icon class. As of v10.0.
      * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
      * @property {string} [handler] A handler.
      * @property {string} [actionFunction] An action function.

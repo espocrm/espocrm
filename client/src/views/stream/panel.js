@@ -816,7 +816,7 @@ class PanelStreamView extends RelationshipPanelView {
                             $('<span>')
                                 .addClass('check-icon fas fa-check pull-right')
                                 .addClass(!selected ? ' hidden' : ''),
-                            $('<div>')
+                            $('<div class="item-text">')
                                 .text(this.translate(item, 'filters', 'Note')),
                         )
                         .get(0).innerHTML,
