@@ -1462,7 +1462,7 @@ class NavbarSiteView extends View {
 
         const part = this.getHelper().escapeString(this.getUser().attributes.name);
 
-        return '<span class="item-user-profile">' + avatarHtml + part + '</span>';
+        return '<span class="item-user-profile text-medium">' + avatarHtml + part + '</span>';
     }
 
     showMoreTabs() {
