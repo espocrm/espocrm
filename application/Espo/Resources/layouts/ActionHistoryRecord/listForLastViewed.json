@@ -7,7 +7,8 @@
     },
     {
         "name": "target",
-        "notSortable": true
+        "notSortable": true,
+        "view": "views/last-viewed/fields/target"
     },
     {
         "name":"createdAt",

@@ -241,6 +241,12 @@ class LinkFieldView<
 
         const createButton = this.createButton && (!this.createDisabled || this.forceCreateButton);
 
+        let linkClass = this.linkClass;
+
+        if (!linkClass && this.isDetailMode()) {
+            linkClass = 'text-record';
+        }
+
         return {
             ...super.data(),
             idName: this.idName,
@@ -252,7 +258,7 @@ class LinkFieldView<
             iconHtml: iconHtml,
             url: this.getUrl(),
             createButton: createButton,
-            linkClass: this.linkClass,
+            linkClass: linkClass,
         };
     }
 

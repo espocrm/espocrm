@@ -19,6 +19,7 @@
         href="#Email/view/{{emailId}}"
         data-id="{{emailId}}"
         data-scope="Email"
+        class="text-record"
     >{{emailName}}</a></span>
 </div>
 

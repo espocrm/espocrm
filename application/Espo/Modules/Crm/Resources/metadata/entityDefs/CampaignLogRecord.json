@@ -38,7 +38,8 @@
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "fieldManagerParamList": []
+            "fieldManagerParamList": [],
+            "view": "views/fields/user"
         },
         "campaign": {
             "type": "link"

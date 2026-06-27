@@ -25,12 +25,14 @@
         "createdBy": {
             "type": "link",
             "readOnly": true,
-            "fieldManagerParamList": []
+            "fieldManagerParamList": [],
+            "view": "views/fields/user"
         },
         "modifiedBy": {
             "type": "link",
             "readOnly": true,
-            "fieldManagerParamList": []
+            "fieldManagerParamList": [],
+            "view": "views/fields/user"
         },
         "order": {
             "type": "int",

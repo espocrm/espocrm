@@ -1,4 +1,4 @@
-{{#if idValue}}{{#if iconHtml}}{{{iconHtml}}}{{/if}}<a href="#{{foreignScope}}/view/{{idValue}}" title="{{translate foreignScope category='scopeNames'}}">{{nameValue}}</a>
+{{#if idValue}}{{#if iconHtml}}{{{iconHtml}}}{{/if}}<a href="#{{foreignScope}}/view/{{idValue}}" title="{{translate foreignScope category='scopeNames'}}" class="{{#if linkClass}}{{linkClass}}{{/if}}">{{nameValue}}</a>
 {{else}}
     {{#if valueIsSet}}
         {{#if displayEntityType}}{{translate typeValue category='scopeNames'}}

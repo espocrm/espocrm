@@ -758,8 +758,8 @@ class LinkMultipleFieldView<
 
         if (this.mode === this.MODE_LIST) {
             $a.addClass('text-default');
-        } else if (this.linkClass) {
-            $a.addClass(this.linkClass);
+        } else {
+            $a.addClass(this.linkClass ?? 'text-record');
         }
 
         if (iconHtml) {

@@ -162,6 +162,8 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
         if (this.mode === this.MODE_LIST) {
             $a.addClass('text-default');
+        } else {
+            $a.addClass(this.linkClass ?? 'text-record');
         }
 
         const $el = $('<div>').append($a);

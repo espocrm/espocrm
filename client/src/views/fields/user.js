@@ -32,7 +32,15 @@ import Autocomplete from 'ui/autocomplete';
 class UserFieldView extends LinkFieldView {
 
     searchTemplate = 'fields/user/search'
-    linkClass = 'text-default'
+
+    setup() {
+        super.setup();
+
+        // noinspection JSUnresolvedReference
+        if (this.options.isInComplexField) {
+            this.linkClass = 'text-default';
+        }
+    }
 
     setupSearch() {
         super.setupSearch();

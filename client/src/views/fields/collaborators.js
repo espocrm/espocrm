@@ -30,8 +30,6 @@ import LinkMultipleFieldView from 'views/fields/link-multiple';
 
 export default class CollaboratorsFieldView extends LinkMultipleFieldView {
 
-    linkClass = 'text-default'
-
     init() {
         this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 

@@ -179,7 +179,7 @@ class LinkParentFieldView<
     private $elementId: JQuery
     private $elementType: JQuery
 
-    protected data() {
+    protected data(): Record<string, any> {
         let nameValue = this.model.get(this.nameName);
 
         if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
@@ -198,6 +198,14 @@ class LinkParentFieldView<
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
+        let linkClass = null;
+
+        if (this.isDetailMode()) {
+            linkClass = 'text-record';
+        } else if (this.isListMode()) {
+            linkClass = 'text-default';
+        }
+
         return {
             ...super.data(),
             idName: this.idName,
@@ -211,6 +219,7 @@ class LinkParentFieldView<
             valueIsSet: this.model.has(this.idName) || this.model.has(this.typeName),
             iconHtml: iconHtml,
             displayEntityType: this.displayEntityType && this.model.get(this.typeName),
+            linkClass: linkClass,
         };
     }
 

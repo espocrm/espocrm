@@ -134,13 +134,19 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             role = '';
         }
 
+        const $a = $('<a>')
+            .attr('href', `#${this.foreignScope}/view/${id}`)
+            .attr('data-id', id)
+            .text(name);
+
+        if (this.mode === this.MODE_LIST) {
+            $a.addClass('text-default');
+        } else {
+            $a.addClass(this.linkClass ?? 'text-record');
+        }
+
         const $el = $('<div>')
-            .append(
-                $('<a>')
-                    .attr('href', '#' + this.foreignScope + '/view/' + id)
-                    .attr('data-id', id)
-                    .text(name)
-            );
+            .append($a);
 
         if (this.isDetailMode()) {
             const iconHtml = this.getIconHtml(id);

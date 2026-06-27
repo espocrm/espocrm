@@ -205,7 +205,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
             }
 
             const title = this.mode === this.MODE_LIST ? name : null;
-            const className = this.mode === this.MODE_LIST ? 'text-default' : null;
+            const className = this.mode === this.MODE_LIST ? 'text-default' : 'text-record';
 
             const $item = $('<div class="email-address-detail-item">')
                 .append(

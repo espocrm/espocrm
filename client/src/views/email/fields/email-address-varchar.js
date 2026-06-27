@@ -610,6 +610,8 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
             }
 
+            const className = this.mode === this.MODE_LIST ? 'text-default' : 'text-record';
+
             return $('<div class="email-address-detail-item">')
                 .append(
                     avatarHtml,
@@ -617,6 +619,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                         .attr('href', `#${entityType}/view/${id}`)
                         .attr('data-scope', entityType)
                         .attr('data-id', id)
+                        .addClass(className)
                         .text(name),
                     ' <span class="text-muted middle-dot"></span> ',
                     $('<span>').text(address)

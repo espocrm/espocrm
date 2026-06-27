@@ -2259,6 +2259,17 @@ td > span.color-icon {
 
     .message {
         a {
+            &[data-scope] {
+                & {
+                    color: var(--link-record-color);
+                }
+
+                &:hover,
+                &:focus {
+                    color: var(--link-record-hover-color);
+                }
+            }
+
             &[data-scope="User"] {
                 &,
                 &:hover,
