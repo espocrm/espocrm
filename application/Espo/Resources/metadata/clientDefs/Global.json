@@ -23,8 +23,7 @@
             "handler": "handlers/record/lock-action",
             "checkVisibilityFunction": "canBeLocked",
             "actionFunction": "actionLock",
-            "groupIndex": 9,
-            "iconClass": "fas fa-lock"
+            "groupIndex": 9
         },
         {
             "name": "unlock",
@@ -33,8 +32,7 @@
             "handler": "handlers/record/lock-action",
             "checkVisibilityFunction": "canBeUnlocked",
             "actionFunction": "actionUnlock",
-            "groupIndex": 9,
-            "iconClass": "fas fa-unlock"
+            "groupIndex": 9
         }
     ],
     "massActionList": [

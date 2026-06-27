@@ -39,6 +39,7 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                 },
                 link: '#' + this.model.entityType + '/view/' + this.model.id,
                 groupIndex: 0,
+                iconClass: Dep.ICON_CLASS_VIEW,
             }];
 
             if (this.options.acl.edit) {
@@ -50,9 +51,11 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                     },
                     link: '#' + this.model.entityType + '/edit/' + this.model.id,
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_EDIT,
                 });
 
-                if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
+                // @todo Refactor.
+                if (!['Completed', 'Canceled'].includes(this.model.get('status'))) {
                     list.push({
                         action: 'Complete',
                         text: this.translate('Complete', 'labels', 'Task'),
@@ -60,6 +63,7 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                             id: this.model.id
                         },
                         groupIndex: 1,
+                        iconClass: 'fas fa-check',
                     });
                 }
             }
@@ -72,6 +76,7 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                         id: this.model.id
                     },
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_REMOVE,
                 });
             }
 

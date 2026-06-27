@@ -39,6 +39,7 @@ class RelationshipRowActionsView extends DefaultRowActionsView {
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
             groupIndex: 0,
+            iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
         }];
 
         if (this.options.acl.edit && !this.options.editDisabled) {
@@ -50,6 +51,7 @@ class RelationshipRowActionsView extends DefaultRowActionsView {
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
             });
         }
 
@@ -60,7 +62,7 @@ class RelationshipRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
-                groupIndex: 0,
+                groupIndex: 1,
             });
         }
 
@@ -74,6 +76,7 @@ class RelationshipRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
             });
         }
 

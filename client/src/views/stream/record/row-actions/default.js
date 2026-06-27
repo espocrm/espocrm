@@ -78,6 +78,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
             });
         }
 
@@ -89,6 +90,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
             });
         }
 
@@ -116,6 +118,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                         id: this.model.id,
                     },
                     groupIndex: 2,
+                    iconClass: 'fas fa-map-pin',
                 });
             }
         }
@@ -204,7 +207,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
             const label = this.getHelper().escapeString(this.translate(type, 'reactions'));
 
             let html = iconClass ?
-                `<span class="${iconClass} text-soft item-icon"></span><span class="item-text">${label}</span>` :
+                `<span class="${iconClass} text-soft item-icon reaction-icon"></span><span class="item-text">${label}</span>` :
                 label;
 
             const reacted = this.isUserReacted(type);

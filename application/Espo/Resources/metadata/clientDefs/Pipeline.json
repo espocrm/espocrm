@@ -15,13 +15,15 @@
             "label": "Move Up",
             "groupIndex": 3,
             "handler": "handlers/pipeline/move-row-action",
-            "acl": "edit"
+            "acl": "edit",
+            "iconClass": "fas fa-arrow-up"
         },
         "moveDown": {
             "label": "Move Down",
             "groupIndex": 3,
             "handler": "handlers/pipeline/move-row-action",
-            "acl": "edit"
+            "acl": "edit",
+            "iconClass": "fas fa-arrow-down"
         }
     },
     "relationshipPanels": {

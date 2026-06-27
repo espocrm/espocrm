@@ -40,6 +40,7 @@ class ViewAndRemoveRowActionsView extends DefaultRowActionsView {
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
             groupIndex: 0,
+            iconClass: 'fas fa-expand',
         }];
 
         if (this.options.acl.delete) {
@@ -50,6 +51,7 @@ class ViewAndRemoveRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: 'fas fa-times',
             });
         }
 

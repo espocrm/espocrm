@@ -39,6 +39,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
             groupIndex: 0,
+            iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
         }];
 
         if (this.options.moveOverRowAction && this.options.statusFieldIsEditable) {
@@ -61,6 +62,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
             });
         }
 
@@ -74,6 +76,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
             });
         }
 

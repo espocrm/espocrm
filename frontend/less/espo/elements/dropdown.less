@@ -152,34 +152,38 @@ ul {
     &.dropdown-menu-with-icons,
     &:has(> li > a > .item-icon) {
         > li {
-            a {
-                padding-left: var(--10px);
-            }
+            &:not(:has(.item-icon-grid)) {
+                a {
+                    padding-left: var(--12px);
+                }
 
-            .fas,
-            .far,
-            .glyphicon,
-            .empty-icon {
-                width: var(--16px);
-                text-align: center;
-                display: inline-block;
-                color: var(--gray-soft);
-            }
+                .fas,
+                .far,
+                .glyphicon,
+                .empty-icon {
+                    width: var(--16px);
+                    text-align: center;
+                    display: inline-block;
+                    color: var(--gray-soft);
+                }
 
-            .item-icon {
-                font-size: var(--12px);
-            }
+                .item-icon {
+                    font-size: var(--12px);
+                }
 
-            .item-text {
-                padding-left: var(--8px);
-                position: static;
+                .item-text {
+                    padding-left: var(--10px);
+                    position: static;
+                }
             }
         }
     }
 
     &:has(> li > a > .item-icon) {
-        > li > a:not(:has(> .item-icon)) {
-            padding-left: var(--26px);
+        > li {
+            > a:not(:has(> .item-icon)):not(:has(* > .item-icon)) {
+                padding-left: var(--28px);
+            }
         }
     }
 }
@@ -188,7 +192,7 @@ ul.dropdown-menu {
     > li {
         a {
             .item-icon + .item-text {
-                padding-left: var(--8px);
+                padding-left: var(--10px);
             }
         }
     }
@@ -207,7 +211,17 @@ ul.dropdown-menu {
                 }
             }
         }
+    }
 
+    > li {
+        > a {
+            &,
+            > div {
+                > .reaction-icon {
+                    font-size: var(--16px) !important;
+                }
+            }
+        }
     }
 }
 

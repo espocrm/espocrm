@@ -39,6 +39,7 @@ class ViewAndEditRowActionsView extends DefaultRowActionsView {
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
             groupIndex: 0,
+            iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
         }];
 
         if (this.options.acl.edit) {
@@ -51,6 +52,7 @@ class ViewAndEditRowActionsView extends DefaultRowActionsView {
                     },
                     link: '#' + this.model.entityType + '/edit/' + this.model.id,
                     groupIndex: 0,
+                    iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
                 }
             ]);
         }

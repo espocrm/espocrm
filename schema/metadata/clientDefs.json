@@ -191,6 +191,10 @@
                         "type": "integer",
                         "minimum": -100,
                         "description": "A group index."
+                    },
+                    "iconClass": {
+                        "type": "string",
+                        "description": "An icon class. As of v10.0."
                     }
                 }
             }

@@ -39,6 +39,7 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                 },
                 link: '#' + this.model.entityType + '/view/' + this.model.id,
                 groupIndex: 0,
+                iconClass: Dep.ICON_CLASS_VIEW,
             }];
 
             if (this.model.entityType === 'Email') {
@@ -49,6 +50,7 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                         id: this.model.id
                     },
                     groupIndex: 1,
+                    iconClass: 'fas fa-reply',
                 });
             }
 
@@ -62,6 +64,7 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                         },
                         link: '#' + this.model.entityType + '/edit/' + this.model.id,
                         groupIndex: 0,
+                        iconClass: Dep.ICON_CLASS_EDIT,
                     },
                 ]);
             }
@@ -74,6 +77,7 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                         id: this.model.id
                     },
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_REMOVE,
                 });
             }
 

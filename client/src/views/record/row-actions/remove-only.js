@@ -40,6 +40,7 @@ class RemoveOnlyRowActionsView extends DefaultRowActionsView {
                         id: this.model.id,
                     },
                     groupIndex: 0,
+                    iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
                 }
             ];
         }

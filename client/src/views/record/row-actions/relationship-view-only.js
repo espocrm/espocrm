@@ -26,9 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import RelationshipActionsView from 'views/record/row-actions/relationship';
+import RelationshipRowActionsView from 'views/record/row-actions/relationship';
 
-class RelationshipViewOnlyActionsView extends RelationshipActionsView {
+class RelationshipViewOnlyActionsView extends RelationshipRowActionsView {
 
     getActionList() {
         return [
@@ -40,6 +40,7 @@ class RelationshipViewOnlyActionsView extends RelationshipActionsView {
                 },
                 link: '#' + this.model.entityType + '/view/' + this.model.id,
                 groupIndex: 0,
+                iconClass: RelationshipRowActionsView.ICON_CLASS_VIEW,
             }
         ];
     }

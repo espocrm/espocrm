@@ -22,7 +22,17 @@
                         {{#each data}}
                             data-{{hyphen @key}}="{{./this}}"
                         {{/each}}
-                    >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
+                    >
+                        {{~#if html~}}
+                            {{{html}}}
+                        {{~else~}}
+                            {{~#if iconClass~}}
+                                <span class="{{iconClass}} item-icon"></span>
+                            {{~/if~}}
+                            <span class="item-text">
+                                {{~#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if~}}
+                            </span>
+                        {{~/if~}}
                     </a>
                 {{/if}}
             </li>

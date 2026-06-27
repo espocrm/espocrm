@@ -22,12 +22,14 @@
         "moveUp": {
             "label": "Move Up",
             "handler": "crm:handlers/knowledge-base-article/move",
-            "acl": "edit"
+            "acl": "edit",
+            "iconClass": "fas fa-arrow-up"
         },
         "moveDown": {
             "label": "Move Down",
             "handler": "crm:handlers/knowledge-base-article/move",
-            "acl": "edit"
+            "acl": "edit",
+            "iconClass": "fas fa-arrow-down"
         },
         "moveToBottom": {
             "labelTranslation": "KnowledgeBaseArticle.labels.Move to Bottom",

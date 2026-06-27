@@ -40,6 +40,7 @@ export default class extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                iconClass: 'fas fa-arrow-down',
             });
 
             list.unshift({
@@ -48,6 +49,8 @@ export default class extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                iconClass: 'fas fa-arrow-up',
+
             });
         }
 

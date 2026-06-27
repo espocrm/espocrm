@@ -42,6 +42,7 @@ import View from 'view';
  *     text?: string,
  *     html?: string,
  *     viewKey?: string,
+ *     iconClass?: string,
  * }} module:views/record/row-actions/actions~item
  */
 
@@ -69,6 +70,10 @@ class DefaultRowActionsView extends View {
      * @type {Object.<string, {isAvailable: function(module:model, string)}>}
      */
     handlers
+
+    static ICON_CLASS_VIEW = 'fas fa-expand';
+    static ICON_CLASS_EDIT= 'fas fa-pen-to-square';
+    static ICON_CLASS_REMOVE = 'fas fa-times';
 
     /**
      * @param {{
@@ -180,6 +185,7 @@ class DefaultRowActionsView extends View {
             },
             link: `#${this.model.entityType}/view/${this.model.id}`,
             groupIndex: 0,
+            iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
         }];
 
         if (this.checkAccess('edit')) {
@@ -191,6 +197,7 @@ class DefaultRowActionsView extends View {
                 },
                 link: `#${this.model.entityType}/edit/${this.model.id}`,
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
             });
         }
 
@@ -204,6 +211,7 @@ class DefaultRowActionsView extends View {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
             });
         }
 
@@ -240,6 +248,7 @@ class DefaultRowActionsView extends View {
                     actualAction: item.name,
                 },
                 groupIndex: item.groupIndex,
+                iconClass: item.iconClass,
             });
         });
 
@@ -294,7 +303,15 @@ class DefaultRowActionsView extends View {
         const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
 
         list.forEach(action => {
-            /** @type {{label?: string, labelTranslation?: string, acl?: string, groupIndex?: number}} */
+            /**
+             * @type {{
+             *     label?: string,
+             *     labelTranslation?: string,
+             *     acl?: string,
+             *     groupIndex?: number,
+             *     iconClass?: string,
+             * }}
+             */
             const itemDefs = defs[action] || {};
 
             const text = itemDefs.labelTranslation ?
@@ -306,6 +323,7 @@ class DefaultRowActionsView extends View {
                 acl:  itemDefs.acl,
                 text: text,
                 groupIndex: itemDefs.groupIndex,
+                iconClass: itemDefs.iconClass,
             });
         });
     }

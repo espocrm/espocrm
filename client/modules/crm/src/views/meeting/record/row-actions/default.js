@@ -51,6 +51,7 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                         scope: this.model.entityType,
                     },
                     groupIndex: 1,
+                    iconClass: 'fas fa-check',
                 });
 
                 actionList.push({
@@ -73,6 +74,7 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                         scope: this.model.entityType,
                     },
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_REMOVE,
                 });
             }
 

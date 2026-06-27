@@ -41,6 +41,7 @@ class RelationshipEditAndRemoveActionsView extends RelationshipActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: RelationshipEditAndRemoveActionsView.ICON_CLASS_EDIT,
             });
         }
 
@@ -52,6 +53,7 @@ class RelationshipEditAndRemoveActionsView extends RelationshipActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
+                iconClass: RelationshipActionsView.ICON_CLASS_REMOVE,
             });
         }
 

@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import RelationshipActionsView from 'views/record/row-actions/relationship';
+import RelationshipRowActionsView from 'views/record/row-actions/relationship';
 
 class RelationshipRemoveOnlyActionsView extends RelationshipActionsView {
 
@@ -40,6 +41,7 @@ class RelationshipRemoveOnlyActionsView extends RelationshipActionsView {
                         id: this.model.id,
                     },
                     groupIndex: 0,
+                    iconClass: RelationshipRowActionsView.ICON_CLASS_REMOVE,
                 },
             ];
         }

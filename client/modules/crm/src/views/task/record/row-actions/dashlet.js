@@ -41,6 +41,7 @@ define('crm:views/task/record/row-actions/dashlet', ['views/record/row-actions/v
                         id: this.model.id
                     },
                     groupIndex: 1,
+                    iconClass: 'fas fa-check',
                 });
             }
 
@@ -53,6 +54,7 @@ define('crm:views/task/record/row-actions/dashlet', ['views/record/row-actions/v
                         scope: this.model.entityType
                     },
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_REMOVE,
                 });
             }
 

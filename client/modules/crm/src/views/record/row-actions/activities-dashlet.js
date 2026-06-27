@@ -49,6 +49,7 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                             id: this.model.id
                         },
                         groupIndex: 1,
+                        iconClass: 'fas fa-check',
                     });
                 }
             } else {
@@ -61,6 +62,7 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                             scope: this.model.entityType
                         },
                         groupIndex: 1,
+                        iconClass: 'fas fa-check',
                     });
                     actionList.push({
                         action: 'setNotHeld',
@@ -83,6 +85,7 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                         scope: this.model.entityType
                     },
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_REMOVE,
                 });
             }
 

@@ -45,6 +45,7 @@ define('crm:views/call/record/row-actions/default', ['views/record/row-actions/v
                         id: this.model.id
                     },
                     groupIndex: 1,
+                    iconClass: 'fas fa-check',
                 });
                 actionList.push({
                     action: 'setNotHeld',
@@ -65,6 +66,7 @@ define('crm:views/call/record/row-actions/default', ['views/record/row-actions/v
                         scope: this.model.entityType
                     },
                     groupIndex: 0,
+                    iconClass: Dep.ICON_CLASS_REMOVE,
                 });
             }
 

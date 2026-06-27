@@ -47,6 +47,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                 id: this.model.id
             },
             groupIndex: 0,
+            iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
         }];
 
         if (
@@ -59,6 +60,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                iconClass: 'far fa-paper-plane',
             });
         }
 
@@ -71,6 +73,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                         id: this.model.id
                     },
                     groupIndex: 0,
+                    iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
                 },
             ]);
         }
@@ -85,6 +88,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                             id: this.model.id
                         },
                         groupIndex: 1,
+                        iconClass: 'far fa-star',
                     });
                 }
             } else {
@@ -130,6 +134,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                         id: this.model.id
                     },
                     groupIndex: 2,
+                    iconClass: 'far fa-trash-alt',
                 });
             } else {
                 list.push({
@@ -150,6 +155,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                         id: this.model.id
                     },
                     groupIndex: 2,
+                    iconClass: 'far fa-caret-square-down',
                 });
             }
 
@@ -160,6 +166,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                     id: this.model.id
                 },
                 groupIndex: 2,
+                iconClass: 'far fa-folder',
             });
         } else if (
             !this.model.attributes.isUsers &&
@@ -173,6 +180,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                     id: this.model.id
                 },
                 groupIndex: 2,
+                iconClass: 'far fa-folder',
             });
         }
 
@@ -184,6 +192,7 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
                     id: this.model.id
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
             });
         }
 

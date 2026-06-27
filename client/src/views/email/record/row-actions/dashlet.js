@@ -46,6 +46,7 @@ export default class extends DefaultRowActionsView {
                 id: this.model.id
             },
             groupIndex: 0,
+            iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
         }];
 
         if (this.options.acl.edit) {
@@ -57,6 +58,7 @@ export default class extends DefaultRowActionsView {
                         id: this.model.id
                     },
                     groupIndex: 0,
+                    iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
                 }
             ]);
         }
@@ -70,6 +72,7 @@ export default class extends DefaultRowActionsView {
                         id: this.model.id
                     },
                     groupIndex: 1,
+                    iconClass: 'far fa-trash-alt'
                 });
             } else {
                 list.push({
@@ -91,6 +94,7 @@ export default class extends DefaultRowActionsView {
                     id: this.model.id
                 },
                 groupIndex: 0,
+                iconClass: DefaultRowActionsView.ICON_CLASS_REMOVE,
             });
         }
 
@@ -103,6 +107,7 @@ export default class extends DefaultRowActionsView {
                         id: this.model.id
                     },
                     groupIndex: 1,
+                    iconClass: 'far fa-star',
                 });
             } else {
                 list.push({

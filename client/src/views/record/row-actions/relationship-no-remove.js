@@ -42,6 +42,7 @@ export default class UserRelationshipNoRemoveRowActionsView extends Relationship
             },
             link: `#${this.model.entityType}/view/${this.model.id}`,
             groupIndex: 0,
+            iconClass: RelationshipRowActionsView.ICON_CLASS_VIEW,
         });
 
         if (this.options.acl.edit) {
@@ -53,6 +54,7 @@ export default class UserRelationshipNoRemoveRowActionsView extends Relationship
                 },
                 link: `#${this.model.entityType}/edit/${this.model.id}`,
                 groupIndex: 0,
+                iconClass: RelationshipRowActionsView.ICON_CLASS_EDIT,
             });
 
             if (!this.options.unlinkDisabled) {
@@ -62,7 +64,7 @@ export default class UserRelationshipNoRemoveRowActionsView extends Relationship
                     data: {
                         id: this.model.id,
                     },
-                    groupIndex: 0,
+                    groupIndex: 1,
                 });
             }
         }
