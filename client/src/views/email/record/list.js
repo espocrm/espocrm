@@ -58,18 +58,19 @@ class EmailListRecordView extends ListRecordView {
         if (this.collection.url === this.entityType) {
             this.addMassAction({name: 'retrieveFromTrash', groupIndex: -6}, false);
 
-            this.addMassAction({name: 'moveToTrash', groupIndex: -5}, false);
-            this.addMassAction({name: 'moveToArchive', groupIndex: -5}, false);
-            this.addMassAction({name: 'moveToFolder', groupIndex: -5}, true);
+            this.addMassAction({name: 'moveToTrash', groupIndex: -5, iconClass: 'far fa-trash-can'}, false);
+            this.addMassAction({name: 'moveToArchive', groupIndex: -5, iconClass: 'far fa-caret-square-down'}, false);
+            this.addMassAction({name: 'moveToFolder', groupIndex: -5, iconClass: 'far fa-folder'}, true);
 
-            this.addMassAction({name: 'markAsImportant', groupIndex: -4}, false);
+            this.addMassAction({name: 'markAsImportant', groupIndex: -4, iconClass: 'far fa-star'}, false);
             this.addMassAction({name: 'markAsNotImportant', groupIndex: -4}, false);
-            this.addMassAction({name: 'markAsRead', groupIndex: -3}, false);
+            this.addMassAction({name: 'markAsRead', groupIndex: -3, iconClass: 'far fa-square-check'}, false);
             this.addMassAction({name: 'markAsNotRead', groupIndex: -3}, false);
 
             this.dropdownItemList.push({
                 name: 'markAllAsRead',
                 label: 'Mark all as read',
+                iconClass: 'far fa-square-check',
             });
 
             this.controlEmailMassActionsVisibility();

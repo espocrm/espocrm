@@ -2319,14 +2319,14 @@ abstract class ListBaseRecordView<
         }
 
         this.massActionDefs = {
-            remove: {groupIndex: 0},
-            merge: {groupIndex: 0},
-            massUpdate: {groupIndex: 0},
-            export: {groupIndex: 2},
-            follow: {groupIndex: 4},
+            remove: {groupIndex: 0, iconClass: 'fas fa-times'},
+            merge: {groupIndex: 0, iconClass: 'fas fa-code-branch fa-flip-vertical'},
+            massUpdate: {groupIndex: 0, iconClass: 'fas fa-pen-to-square'},
+            export: {groupIndex: 2, iconClass: 'fas fa-arrow-up-right-from-square'},
+            follow: {groupIndex: 4, iconClass: 'fas fa-rss'},
             unfollow: {groupIndex: 4},
             convertCurrency: {groupIndex: 6},
-            printPdf: {groupIndex: 8},
+            printPdf: {groupIndex: 8, iconClass: 'far fa-file-pdf'},
             ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
             ...this.getMetadata().get(['clientDefs', this.scope ?? '_', 'massActionDefs']) || {},
         };
@@ -3771,9 +3771,12 @@ abstract class ListBaseRecordView<
                 return false;
             }
 
+            const defs = this.massActionDefs[name] || {};
+
             return {
                 name,
-                hidden: (this.massActionDefs[name] || {}).hidden,
+                hidden: defs.hidden,
+                iconClass: defs.iconClass,
             };
         }) as any[];
     }

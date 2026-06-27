@@ -89,6 +89,12 @@ export interface MassActionItem {
      * Is hidden.
      */
     hidden?: boolean;
+    /**
+     * An icon class.
+     *
+     * @since 10.0.0
+     */
+    iconClass?: string;
 }
 
 /**
@@ -145,6 +151,12 @@ export interface DropdownItem {
      * A click handler.
      */
     onClick?: () => void;
+    /**
+     * An icon class.
+     *
+     * @since 10.0.0
+     */
+    iconClass?: string,
 }
 
 /**
