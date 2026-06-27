@@ -253,7 +253,7 @@ function prepareItemContent(
 
             icon = div.firstElementChild ? toVNode(div.firstElementChild) : null;
         } else if (options.iconClass) {
-            icon = h('span', {props: {className: options.iconClass}});
+            icon = h('span', {props: {className: options.iconClass + ' item-icon'}});
         }
 
         if (isDropdownItem) {

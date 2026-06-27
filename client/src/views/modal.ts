@@ -557,6 +557,8 @@ class ModalView<S extends ViewSchema = ViewSchema> extends View<S> {
                 }
             }
 
+            o.iconCLass = item.iconClass;
+
             o.onClick = o.onClick ?? ((_d, e: any) => {
                 // noinspection ES6ConvertLetToConst
                 let handler = o.handler || (o.data || {}).handler;

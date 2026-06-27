@@ -72,6 +72,7 @@ class MeetingModalDetailView extends DetailModalView {
                 name: 'setHeld',
                 text: this.translate('Set Held', 'labels', this.model.entityType),
                 hidden: true,
+                iconClass: 'fas fa-check',
             });
 
             this.addDropdownItem({
@@ -86,6 +87,8 @@ class MeetingModalDetailView extends DetailModalView {
             text: this.translate('Send Invitations', 'labels', 'Meeting'),
             hidden: !this.isSendInvitationsToBeDisplayed(),
             onClick: () => this.actionSendInvitations(),
+            groupIndex: 10,
+            iconClass: 'far fa-paper-plane',
         });
 
         this.initAcceptanceStatus();

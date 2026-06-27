@@ -82,6 +82,7 @@ export interface DialogButton {
     className?: string;
     title?: string;
     groupIndex?: number;
+    iconClass?: string;
 }
 
 /**
@@ -797,6 +798,7 @@ class FooterComponent {
                 disabled: it.disabled,
                 text: it.text,
                 html: it.html,
+                iconClass: it.iconClass,
                 onClick: event => {
                     if (it.onClick) {
                         it.onClick(this.dialog, event);
@@ -831,6 +833,7 @@ class FooterComponent {
                     disabled: it.disabled,
                     text: it.text,
                     html: it.html,
+                    iconClass: it.iconClass,
                     onClick: event => {
                         if (it.onClick) {
                             it.onClick(this.dialog, event);

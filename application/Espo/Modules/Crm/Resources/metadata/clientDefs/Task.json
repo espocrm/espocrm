@@ -40,7 +40,8 @@
             "acl": "edit",
             "handler": "modules/crm/handlers/task/detail-actions",
             "actionFunction": "complete",
-            "checkVisibilityFunction": "isCompleteAvailable"
+            "checkVisibilityFunction": "isCompleteAvailable",
+            "iconClass": "fas fa-check"
         }
     ],
     "filterList": [

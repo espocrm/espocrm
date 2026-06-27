@@ -38,6 +38,7 @@ export default class TaskDetailRecordView extends DetailRecordView {
             label: 'Complete',
             name: 'setCompleted',
             onClick: () => this.actionSetCompleted(),
+            iconClass: 'fas fa-check',
         });
 
         const historyStatusList = [

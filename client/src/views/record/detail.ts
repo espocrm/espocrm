@@ -169,6 +169,12 @@ export interface DropdownItem {
      * A group index.
      */
     groupIndex?: number;
+    /**
+     * An icon class.
+     *
+     * @since 10.0.0
+     */
+    iconClass?: string;
 }
 
 /**
@@ -493,6 +499,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             name: 'delete',
             label: 'Remove',
             groupIndex: 0,
+            iconClass: 'fas fa-times',
         },
     ]
 
@@ -966,6 +973,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                 label: 'Duplicate',
                 name: 'duplicate',
                 groupIndex: 0,
+                iconClass: 'far fa-copy',
             });
         }
 
@@ -1007,6 +1015,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                     label: 'Print to PDF',
                     name: 'printPdf',
                     groupIndex: 6,
+                    iconClass: 'far fa-file-pdf',
                 });
             }
         }

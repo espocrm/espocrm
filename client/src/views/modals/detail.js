@@ -255,6 +255,7 @@ class DetailModalView extends ModalView {
                 name: 'duplicate',
                 label: 'Duplicate',
                 groupIndex: 0,
+                iconClass: 'far fa-copy',
             });
         }
     }

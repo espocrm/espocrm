@@ -243,9 +243,12 @@ td.cell[data-name="buttons"] > .btn-group {
     left: -10px;
 }
 
-.dropdown-menu-with-icons li .item-text {
-    padding-left: 0;
-    padding-right: 8px;
+ul {
+    &.dropdown-menu-with-icons,
+    &:has( > li > a > .icon-item) {
+        padding-left: 0;
+        padding-right: var(--8px);
+    }
 }
 
 .panel {

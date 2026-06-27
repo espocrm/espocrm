@@ -124,6 +124,7 @@ class EmailDetailRecordView extends DetailRecordView {
                 name: 'markAsImportant',
                 hidden: this.model.get('isImportant'),
                 groupIndex: 1,
+                iconClass: 'far fa-star',
             });
 
             this.addDropdownItem({
@@ -138,6 +139,7 @@ class EmailDetailRecordView extends DetailRecordView {
                 name: 'moveToTrash',
                 hidden: this.isInTrash(),
                 groupIndex: 2,
+                iconClass: 'far fa-trash-can',
             });
 
             this.addDropdownItem({
@@ -153,12 +155,14 @@ class EmailDetailRecordView extends DetailRecordView {
                 groupIndex: 2,
                 hidden: this.isInArchive(),
                 onClick: () => this.actionMoveToArchive(),
+                iconClass: 'far fa-caret-square-down',
             });
 
             this.addDropdownItem({
                 label: 'Move to Folder',
                 name: 'moveToFolder',
                 groupIndex: 2,
+                iconClass: 'far fa-folder',
             });
         } else if (this.model.attributes.groupFolderId) {
             this.addDropdownItem({
@@ -166,6 +170,7 @@ class EmailDetailRecordView extends DetailRecordView {
                 name: 'moveToTrash',
                 hidden: this.isInTrash(),
                 groupIndex: 2,
+                iconClass: 'far fa-trash-can',
             });
 
             this.addDropdownItem({
@@ -181,6 +186,7 @@ class EmailDetailRecordView extends DetailRecordView {
                 groupIndex: 2,
                 hidden: this.isInArchive() || this.isInTrash(),
                 onClick: () => this.actionMoveToArchive(),
+                iconClass: 'far fa-caret-square-down',
             });
 
             this.addDropdownItem({
@@ -188,12 +194,14 @@ class EmailDetailRecordView extends DetailRecordView {
                 name: 'moveToFolder',
                 groupIndex: 2,
                 hidden: this.isInTrash(),
+                iconClass: 'far fa-folder',
             });
         } else {
             this.addDropdownItem({
                 label: 'Move to Folder',
                 name: 'moveToFolder',
                 groupIndex: 2,
+                iconClass: 'far fa-folder',
             });
         }
 

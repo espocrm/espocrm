@@ -52,6 +52,7 @@ export default class extends DetailRecordView {
             'label': 'Set Held',
             'name': 'setHeld',
             onClick: () => this.actionSetHeld(),
+            iconClass: 'fas fa-check',
         });
 
         this.dropdownItemList.push({
