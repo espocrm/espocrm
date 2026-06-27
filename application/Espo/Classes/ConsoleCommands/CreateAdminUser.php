@@ -32,13 +32,15 @@ namespace Espo\Classes\ConsoleCommands;
 use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
-use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class CreateAdminUser implements Command
 {
     public function __construct(
@@ -77,7 +79,7 @@ class CreateAdminUser implements Command
         $repository = $this->entityManager->getRDBRepositoryByClass(User::class);
 
         $existingUser = $repository
-            ->where(['userName' => $userName])
+            ->where([User::FIELD_USER_NAME => $userName])
             ->findOne();
 
         if ($existingUser) {
@@ -89,14 +91,14 @@ class CreateAdminUser implements Command
 
         $user = $repository->getNew();
 
-        $user->set('userName', $userName);
-        $user->set('type', User::TYPE_ADMIN);
-        $user->set(Field::NAME, $userName);
+        $user->setUserName($userName);
+        $user->setType(User::TYPE_ADMIN);
+        $user->setLastName(ucfirst($userName));
 
         $repository->save($user);
 
-        $message = "The user '{$userName}' has been created. " .
-            "Set password with the command: `bin/command set-password {$userName}`.";
+        $message = "The user '$userName' has been created. " .
+            "Set password with the command: `bin/command set-password $userName`.";
 
         $io->writeLine($message);
     }
