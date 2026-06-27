@@ -35,13 +35,15 @@
                 {
                     "isAdminOnly": true
                 }
-            ]
+            ],
+            "iconClass": "fas fa-gear"
         },
         "preferences": {
             "order": 1,
             "groupIndex": 1,
             "link": "#Preferences",
-            "labelTranslation": "Global.labels.Preferences"
+            "labelTranslation": "Global.labels.Preferences",
+            "iconClass": "fas fa-user-gear"
         },
         "about": {
             "order": 0,
@@ -54,7 +56,8 @@
             "groupIndex": 10,
             "labelTranslation": "Global.labels.Log Out",
             "handler": "handlers/navbar-menu",
-            "actionFunction": "logout"
+            "actionFunction": "logout",
+            "iconClass": "fas fa-arrow-right-to-bracket"
         }
     }
 }

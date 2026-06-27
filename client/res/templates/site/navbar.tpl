@@ -209,7 +209,17 @@
                                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                                     tabindex="0"
                                     class="nav-link{{#if handler}} action{{/if}}"
-                                >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                                >
+                                        {{~#if html~}}
+                                            {{{html}}}
+                                        {{~else~}}
+                                            {{~#if iconClass~}}
+                                                <span class="item-icon {{iconClass}}"></span>
+                                            {{~/if~}}
+                                            <span class="item-text">{{label}}</span>
+                                        {{~/if~}}
+                                    </a>
+                                </li>
                             {{else}}
                                 <li class="divider"></li>
                             {{/unless}}

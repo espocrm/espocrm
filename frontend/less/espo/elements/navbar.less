@@ -87,6 +87,20 @@
         }
     }
 
+    .menu-container {
+        > ul.dropdown-menu {
+            > li {
+                > a:has(> .item-user-profile) {
+                    padding-left: var(--10px);
+
+                    .avatar {
+                        margin-right: var(--8px);
+                    }
+                }
+            }
+        }
+    }
+
 
     @media screen and (min-width: @screen-sm-min) {
         .tabs > .more {

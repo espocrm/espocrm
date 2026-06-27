@@ -1367,23 +1367,18 @@ class NavbarSiteView extends View {
      * @property {string} [handler]
      * @property {string} [actionFunction]
      * @property {true} [divider]
+     * @property {string} [iconClass]
      */
 
     /**
      * @private
      */
     setupMenu() {
-        let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
-
-        if (avatarHtml) {
-            avatarHtml += ' ';
-        }
-
         /** @type {MenuDataItem[]} */
         this.menuDataList = [
             {
                 link: `#User/view/${this.getUser().id}`,
-                html: avatarHtml + this.getHelper().escapeString(this.getUser().get('name')),
+                html: this.composeUserMenuItemHtml(),
             },
             {divider: true}
         ];
@@ -1399,6 +1394,7 @@ class NavbarSiteView extends View {
          *     handler?: string,
          *     actionFunction?: string,
          *     accessDataList?: import('utils').AccessDefs[],
+         *     iconClass?: string,
          * }>} items
          */
         const items = this.getMetadata().get('app.clientNavbar.menuItems') || {};
@@ -1452,8 +1448,21 @@ class NavbarSiteView extends View {
                 label: this.getLanguage().translatePath(item.labelTranslation),
                 handler: item.handler,
                 actionFunction: item.actionFunction,
+                iconClass: item.iconClass,
             });
         }
+    }
+
+    /**
+     * @private
+     * @return {string}
+     */
+    composeUserMenuItemHtml() {
+        const avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
+
+        const part = this.getHelper().escapeString(this.getUser().attributes.name);
+
+        return '<span class="item-user-profile">' + avatarHtml + part + '</span>';
     }
 
     showMoreTabs() {
