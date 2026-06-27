@@ -48,14 +48,16 @@
                     "name": "archiveEmail",
                     "label":"Archive Email",
                     "link":"#Email/create",
-                    "acl":"create"
+                    "acl":"create",
+                    "iconClass": "fas fa-plus"
                 },
                 {
                     "name": "importEml",
                     "label": "Import EML",
                     "handler": "handlers/email/list-actions",
                     "checkVisibilityFunction": "checkImportEml",
-                    "actionFunction": "importEml"
+                    "actionFunction": "importEml",
+                    "iconClass": "fas fa-upload"
                 },
                 false,
                 {
@@ -72,7 +74,8 @@
                         {
                             "inPortalDisabled": true
                         }
-                    ]
+                    ],
+                    "iconClass": "far fa-folder"
                 },
                 {
                     "label": "Group Folders",
@@ -85,7 +88,8 @@
                         {
                             "isAdminOnly": true
                         }
-                    ]
+                    ],
+                    "iconClass": "far fa-circle"
                 },
                 {
                     "label":"Filters",
@@ -103,17 +107,20 @@
                 {
                     "label":"Reply",
                     "action":"reply",
-                    "acl":"read"
+                    "acl":"read",
+                    "iconClass": "fas fa-reply"
                 },
                 {
                     "label":"Reply to All",
                     "action":"replyToAll",
-                    "acl":"read"
+                    "acl":"read",
+                    "iconClass": "fas fa-reply-all"
                 },
                 {
                     "label":"Forward",
                     "action":"forward",
-                    "acl":"read"
+                    "acl":"read",
+                    "iconClass": "fas fa-reply fa-flip-horizontal"
                 }
             ]
         }

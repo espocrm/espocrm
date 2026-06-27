@@ -65,6 +65,7 @@ class EmailDetailView extends DetailView {
                         action: 'createLead',
                         acl: 'create',
                         aclScope: 'Lead',
+                        iconClass: 'fas fa-plus',
                     });
 
                     this.addMenuItem('dropdown', {
@@ -72,6 +73,7 @@ class EmailDetailView extends DetailView {
                         action: 'createContact',
                         acl: 'create',
                         aclScope: 'Contact',
+                        iconClass: 'fas fa-plus',
                     });
                 }
             }
@@ -80,7 +82,8 @@ class EmailDetailView extends DetailView {
                 label: 'Create Task',
                 action: 'createTask',
                 acl: 'create',
-                aclScope: 'Task'
+                aclScope: 'Task',
+                iconClass: 'fas fa-plus',
             });
 
             if (this.model.get('parentType') !== 'Case' || !this.model.get('parentId')) {
@@ -88,7 +91,8 @@ class EmailDetailView extends DetailView {
                     label: 'Create Case',
                     action: 'createCase',
                     acl: 'create',
-                    aclScope: 'Case'
+                    aclScope: 'Case',
+                    iconClass: 'fas fa-plus',
                 });
             }
 
@@ -103,6 +107,7 @@ class EmailDetailView extends DetailView {
                         acl: 'create',
                         aclScope: 'Document',
                         hidden: this.model.get('attachmentsIds') === undefined,
+                        iconClass: 'fas fa-plus',
                     });
 
                     if (this.model.get('attachmentsIds') === undefined) {
