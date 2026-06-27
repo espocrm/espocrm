@@ -31,14 +31,12 @@
                           tabindex="0"
                           {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
                         >
-                            {{#if iconHtml}}{{{iconHtml}}}
-                            {{else}}
+                            {{~#if iconHtml}}{{{iconHtml}}}
+                            {{~else~}}
                                 {{~#if iconClass~}}
-                                    <span class="{{iconClass}}"></span>
-                                {{~else~}}
-                                    <span class="empty-icon">&nbsp;</span>
+                                    <span class="{{iconClass}} item-icon"></span>
                                 {{~/if~}}
-                            {{/if}}
+                            {{~/if~}}
                             <span class="item-text">{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</span>
                         </a>
                     </li>
