@@ -534,7 +534,7 @@ class NavbarSiteView extends View {
      * @return {{
      *     view: string,
      *     class: string,
-     *     accessDataList?: module:utils~AccessDefs[],
+     *     accessDataList?: import('utils').AccessDefs[],
      * }}
      */
     getItemDefs(name) {
@@ -1398,7 +1398,7 @@ class NavbarSiteView extends View {
          *     disabled:? boolean,
          *     handler?: string,
          *     actionFunction?: string,
-         *     accessDataList?: module:utils~AccessDefs[],
+         *     accessDataList?: import('utils').AccessDefs[],
          * }>} items
          */
         const items = this.getMetadata().get('app.clientNavbar.menuItems') || {};
