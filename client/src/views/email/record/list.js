@@ -64,13 +64,13 @@ class EmailListRecordView extends ListRecordView {
 
             this.addMassAction({name: 'markAsImportant', groupIndex: -4, iconClass: 'far fa-star'}, false);
             this.addMassAction({name: 'markAsNotImportant', groupIndex: -4}, false);
-            this.addMassAction({name: 'markAsRead', groupIndex: -3, iconClass: 'far fa-square-check'}, false);
+            this.addMassAction({name: 'markAsRead', groupIndex: -3, iconClass: 'far far fa-envelope-open'}, false);
             this.addMassAction({name: 'markAsNotRead', groupIndex: -3}, false);
 
             this.dropdownItemList.push({
                 name: 'markAllAsRead',
                 label: 'Mark all as read',
-                iconClass: 'far fa-square-check',
+                iconClass: 'far fa-envelope-open',
             });
 
             this.controlEmailMassActionsVisibility();

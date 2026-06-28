@@ -201,7 +201,13 @@
                                         role="button"
                                         tabindex="0"
                                         data-action="selectAllResult"
-                                    >{{translate 'Select All Results'}}</a>
+                                    >
+                                        {{~null~}}
+                                        <span class="item-icon far fa-square-check"></span>
+                                        {{~null~}}
+                                        <span class="item-text">{{translate 'Select All Results'}}</span>
+                                        {{~null~}}
+                                    </a>
                                 </li>
                             </ul>
                         </div>
