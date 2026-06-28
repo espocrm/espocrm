@@ -34,16 +34,13 @@ body[data-navbar="top"] {
 }
 
 body {
-    background:
-        repeating-linear-gradient(
-            354deg,
-            var(--body-bg-2) 0px,
-            var(--body-bg) 2000px,
-            var(--body-bg-2) 4000px
-        );
     background-size: 100% 20000px;
-    background-position: top;
-    background-color: var(--body-bg);
+    background: var(--body-bg) repeating-linear-gradient(
+        354deg,
+        var(--body-bg-2) 0px,
+        var(--body-bg) 2000px,
+        var(--body-bg-2) 4000px
+    ) top;
 
     .list-container-panel {
         > .list {
