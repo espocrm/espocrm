@@ -353,6 +353,7 @@ class DetailModalView extends ModalView {
             name: 'remove',
             label: 'Remove',
             groupIndex: 0,
+            iconClass: 'fas fa-times',
         });
     }
 
