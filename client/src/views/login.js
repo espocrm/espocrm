@@ -201,7 +201,7 @@ class LoginView extends View {
         this.handler
             .process()
             .then(headers => {
-                this.proceed(headers);
+                this.proceed(headers, this.options.prefilledUsername);
             })
             .catch(() => {
                 this.undisableForm();
