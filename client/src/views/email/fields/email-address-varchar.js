@@ -499,7 +499,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
     addAddressHtml(address, name) {
         const $container = this.$el.find('.link-container');
 
-        const type = this.typeHash[address];
+        const entityType = this.typeHash[address];
         const id = this.idHash[address];
 
         let avatarHtml = '';
@@ -507,8 +507,10 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         const $text = $('<span>');
 
         if (name) {
-            if (type === 'User' && id) {
+            if (entityType === 'User' && id) {
                 avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            } else {
+                avatarHtml = this.getHelper().getScopeColorIconHtml(entityType);
             }
 
             $text.append(
@@ -608,6 +610,8 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
 
             if (entityType === 'User') {
                 avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+            } else {
+                avatarHtml = this.getHelper().getScopeColorIconHtml(entityType);
             }
 
             const className = this.mode === this.MODE_LIST ? 'text-default' : 'text-record';

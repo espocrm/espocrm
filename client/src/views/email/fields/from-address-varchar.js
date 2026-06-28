@@ -202,6 +202,8 @@ class EmailFromAddressVarchar extends BaseFieldView {
                 const size = this.mode === this.MODE_DETAIL ? 18 : 16;
 
                 avatarHtml = this.getHelper().getAvatarHtml(id, 'small', size, 'avatar-link');
+            } else if (entityType) {
+                avatarHtml = this.getHelper().getScopeColorIconHtml(entityType);
             }
 
             const title = this.mode === this.MODE_LIST ? name : null;
