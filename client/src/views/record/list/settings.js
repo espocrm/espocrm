@@ -56,7 +56,13 @@ class RecordListSettingsView extends View {
                                 tabindex="0"
                                 data-action="toggleColumn"
                                 data-name="{{name}}"
-                            ><span class="check-icon fas fa-check pull-right{{#if hidden}} hidden{{/if}}"></span><div>{{label}}</div></a>
+                            >
+                                {{~null~}}
+                                <span class="check-icon fas fa-check pull-right {{#if hidden}} hidden {{/if}}"></span>
+                                {{~null~}}
+                                <div><span class="item-text">{{label}}</span></div>
+                                {{~null~}}
+                            </a>
                         </li>
                     {{/each}}
                 {{/if}}
@@ -68,8 +74,17 @@ class RecordListSettingsView extends View {
                         tabindex="0"
                         data-action="toggleColumnResize"
                     >
+                        {{~null~}}
                         <span class="check-icon fas fa-check pull-right {{#unless columnResize}} hidden {{/unless}}"></span>
-                        <div>{{translate 'Column Resize'}}</div></a>
+                        {{~null~}}
+                        <div>
+                            {{~null~}}
+                            <span class="item-icon fas fa-arrows-left-right-to-line"></span>
+                            {{~null~}}
+                            <span class="item-text">{{translate 'Column Resize'}}</span>
+                            {{~null~}}
+                        </div>
+                    </a>
                 </li>
             {{/if}}
             {{#if isNotDefault}}
@@ -79,7 +94,13 @@ class RecordListSettingsView extends View {
                         role="button"
                         tabindex="0"
                         data-action="resetToDefault"
-                    >{{translate 'Reset'}}</a>
+                    >
+                        {{~null~}}
+                        <span class="item-icon fas fa-times"></span>
+                        {{~null~}}
+                        <span class="item-text">{{translate 'Reset'}}</span>
+                        {{~null~}}
+                    </a>
                 </li>
             {{/if}}
             </ul>

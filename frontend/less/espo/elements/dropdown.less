@@ -150,7 +150,7 @@ ul.dropdown-menu {
 
 ul {
     &.dropdown-menu-with-icons,
-    &:has(> li > a > .item-icon) {
+    &:has(> li > a span.item-icon) {
         > li {
             &:not(:has(.item-icon-grid)) {
                 a {
@@ -179,9 +179,9 @@ ul {
         }
     }
 
-    &:has(> li > a > .item-icon) {
+    &:has(> li > a span.item-icon) {
         > li {
-            > a:not(:has(> .item-icon)):not(:has(* > .item-icon)) {
+            > a:not(:has(span.item-icon)):not(:has(span.item-icon)) {
                 padding-left: var(--28px);
             }
         }
