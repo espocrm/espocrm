@@ -599,8 +599,8 @@ class EmailDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionPrint() {
-        /** @type {module:views/fields/wysiwyg} */
-        const bodyView = this.getFieldView('body');
+        const bodyView = /** @type {import('views/fields/wysiwyg').default} */
+            this.getFieldView('body');
 
         if (!bodyView) {
             return;
