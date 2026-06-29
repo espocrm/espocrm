@@ -3642,7 +3642,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         this[methodName]();
     }
 
-    private handleShortcutKeyCtrlS(event: KeyboardEvent) {
+    protected handleShortcutKeyCtrlS(event: KeyboardEvent) {
         if (this.inlineEditModeIsOn || this.buttonsDisabled) {
             return;
         }
