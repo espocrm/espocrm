@@ -26,63 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/row-actions/history', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipRowActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+export default class ActivitiesRowActionsView extends RelationshipRowActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+    setup() {
+        super.setup();
+
+        this.options.unlinkDisabled = true;
+    }
+
+    getActionList() {
+        const list = super.getActionList();
+
+        if (this.model.entityType === 'Email' && this.getAcl().checkScope('Email', 'create')) {
+            list.push({
+                action: 'reply',
+                text: this.translate('Reply', 'labels', 'Email'),
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id,
-                groupIndex: 0,
-                iconClass: Dep.ICON_CLASS_VIEW,
-            }];
+                groupIndex: 1,
+                iconClass: 'fas fa-reply',
+            });
+        }
 
-            if (this.model.entityType === 'Email') {
-                list.push({
-                    action: 'reply',
-                    text: this.translate('Reply', 'labels', 'Email'),
-                    data: {
-                        id: this.model.id
-                    },
-                    groupIndex: 1,
-                    iconClass: 'fas fa-reply',
-                });
-            }
-
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        },
-                        link: '#' + this.model.entityType + '/edit/' + this.model.id,
-                        groupIndex: 0,
-                        iconClass: Dep.ICON_CLASS_EDIT,
-                    },
-                ]);
-            }
-
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id
-                    },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
-                });
-            }
-
-            return list;
-        },
-
-    });
-});
+        return list;
+    }
+}

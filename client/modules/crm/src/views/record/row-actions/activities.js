@@ -26,36 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/row-actions/activities', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipRowActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+export default class ActivitiesRowActionsView extends RelationshipRowActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id,
-                },
-                link: '#' + this.model.entityType + '/view/' + this.model.id,
-                groupIndex: 0,
-                iconClass: Dep.ICON_CLASS_VIEW,
-            }];
+    setup() {
+        super.setup();
 
-            if (this.options.acl.edit) {
-                list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id,
-                    },
-                    link: '#' + this.model.entityType + '/edit/' + this.model.id,
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_EDIT,
-                });
+        this.options.unlinkDisabled = true;
+    }
 
-                if (this.model.entityType === 'Meeting' || this.model.entityType === 'Call') {
-                    list.push({
+    getActionList() {
+        const actionList = super.getActionList();
+
+        if (this.options.acl.edit) {
+            if (this.model.entityType === 'Meeting' || this.model.entityType === 'Call') {
+                /** @type {string[]} */
+                const options = this.model.getFieldParam('status', 'options') ?? [];
+
+                const notActualStatuses = [
+                    ...this.getMetadata().get(`scopes.${this.model.entityType}.completedStatusList`, []),
+                    ...this.getMetadata().get(`scopes.${this.model.entityType}.canceledStatusList`, []),
+                ];
+
+                if (options.includes('Held') && !notActualStatuses.includes(this.model.attributes.status)) {
+                    actionList.push({
                         action: 'setHeld',
                         text: this.translate('Set Held', 'labels', 'Meeting'),
                         data: {
@@ -64,8 +59,10 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                         groupIndex: 1,
                         iconClass: 'fas fa-check',
                     });
+                }
 
-                    list.push({
+                if (options.includes('Not Held') && !notActualStatuses.includes(this.model.attributes.status)) {
+                    actionList.push({
                         action: 'setNotHeld',
                         text: this.translate('Set Not Held', 'labels', 'Meeting'),
                         data: {
@@ -75,20 +72,8 @@ define('crm:views/record/row-actions/activities', ['views/record/row-actions/rel
                     });
                 }
             }
+        }
 
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id,
-                    },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
-                });
-            }
-
-            return list;
-        },
-    });
-});
+        return actionList;
+    }
+}

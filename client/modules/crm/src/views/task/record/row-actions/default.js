@@ -26,39 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/record/row-actions/default', ['views/record/row-actions/view-and-edit'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class TaskDefaultRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            var actionList = Dep.prototype.getActionList.call(this);
+    getActionList() {
+        const actionList =  super.getActionList();
 
-            if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                actionList.push({
-                    action: 'setCompleted',
-                    label: 'Complete',
-                    data: {
-                        id: this.model.id
-                    },
-                    groupIndex: 1,
-                    iconClass: 'fas fa-check',
-                });
-            }
+        const historyStatusList = [
+            ...this.getMetadata().get(`scopes.${this.model.entityType}.completedStatusList`, []),
+            ...this.getMetadata().get(`scopes.${this.model.entityType}.canceledStatusList`, []),
+        ];
 
-            if (this.options.acl.delete) {
-                actionList.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.entityType
-                    },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
-                });
-            }
+        /** @type {string[]} */
+        const options = this.model.getFieldParam('status', 'options') ?? [];
 
-            return actionList;
-        },
-    });
-});
+        if (
+            this.options.acl.edit &&
+            options.includes('Completed') &&
+            !historyStatusList.includes(this.model.attributes.status)
+        ) {
+            actionList.push({
+                action: 'setCompleted',
+                label: 'Complete',
+                data: {
+                    id: this.model.id,
+                },
+                groupIndex: 1,
+                iconClass: 'fas fa-check',
+            });
+        }
+
+        return actionList;
+    }
+}

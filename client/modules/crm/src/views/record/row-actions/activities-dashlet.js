@@ -26,70 +26,69 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-actions/view-and-edit'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class ActivitiesDashletRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            var actionList = Dep.prototype.getActionList.call(this);
+    getActionList() {
+        const actionList =  super.getActionList();
 
-            var scope = this.model.entityType;
+        const entityType = this.model.entityType;
 
-            actionList.forEach(function (item) {
-                item.data = item.data || {};
-                item.data.scope = this.model.entityType;
-            }, this);
+        /** @type {string[]} */
+        const options = this.model.getFieldParam('status', 'options') ?? [];
 
-            if (scope === 'Task') {
-                if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                    actionList.push({
-                        action: 'setCompleted',
-                        label: 'Complete',
-                        data: {
-                            id: this.model.id
-                        },
-                        groupIndex: 1,
-                        iconClass: 'fas fa-check',
-                    });
-                }
-            } else {
-                if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                    actionList.push({
-                        action: 'setHeld',
-                        label: 'Set Held',
-                        data: {
-                            id: this.model.id,
-                            scope: this.model.entityType
-                        },
-                        groupIndex: 1,
-                        iconClass: 'fas fa-check',
-                    });
-                    actionList.push({
-                        action: 'setNotHeld',
-                        label: 'Set Not Held',
-                        data: {
-                            id: this.model.id,
-                            scope: this.model.entityType
-                        },
-                        groupIndex: 1,
-                    });
-                }
-            }
+        const notActualStatuses = [
+            ...this.getMetadata().get(`scopes.${this.model.entityType}.completedStatusList`, []),
+            ...this.getMetadata().get(`scopes.${this.model.entityType}.canceledStatusList`, []),
+        ];
 
-            if (this.options.acl.edit) {
+        if (entityType === 'Task') {
+            if (
+                this.options.acl.edit &&
+                options.includes('Completed') &&
+                !notActualStatuses.includes(this.model.attributes.status)
+            ) {
                 actionList.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
+                    action: 'setCompleted',
+                    label: 'Complete',
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 1,
+                    iconClass: 'fas fa-check',
+                });
+            }
+        } else if (
+            this.options.acl.edit &&
+            !notActualStatuses.includes(this.model.attributes.status)
+        ) {
+            if (options.includes('Held')) {
+                actionList.push({
+                    action: 'setHeld',
+                    label: 'Set Held',
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType
                     },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
+                    groupIndex: 1,
+                    iconClass: 'fas fa-check',
                 });
             }
 
-            return actionList;
-        },
-    });
-});
+            if (options.includes('Not Held')) {
+                actionList.push({
+                    action: 'setNotHeld',
+                    label: 'Set Not Held',
+                    data: {
+                        id: this.model.id,
+                        scope: this.model.entityType
+                    },
+                    groupIndex: 1,
+                });
+            }
+        }
+
+        return actionList;
+    }
+}

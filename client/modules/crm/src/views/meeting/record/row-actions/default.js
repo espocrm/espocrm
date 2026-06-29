@@ -26,23 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/record/row-actions/default', ['views/record/row-actions/view-and-edit'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class MeetingDefaultRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            var actionList = Dep.prototype.getActionList.call(this);
+    getActionList() {
+        const actionList = super.getActionList();
 
-            actionList.forEach(item => {
-                item.data = item.data || {};
-                item.data.scope = this.model.entityType;
-            });
+        actionList.forEach(item => {
+            item.data = item.data ?? {};
+            item.data.scope = this.model.entityType;
+        });
 
-            if (
-                this.options.acl.edit &&
-                !['Held', 'Not Held'].includes(this.model.get('status')) &&
-                this.getAcl().checkField(this.model.entityType, 'status', 'edit')
-            ) {
+        if (
+            this.options.acl.edit &&
+            !['Held', 'Not Held'].includes(this.model.attributes.status) &&
+            this.getAcl().checkField(this.model.entityType, 'status', 'edit')
+        ) {
+            /** @type {string[]} */
+            const options = this.model.getFieldParam('status', 'options') ?? [];
+
+            const notActualStatuses = [
+                ...this.getMetadata().get(`scopes.${this.model.entityType}.completedStatusList`, []),
+                ...this.getMetadata().get(`scopes.${this.model.entityType}.canceledStatusList`, []),
+            ];
+
+            if (options.includes('Held') && !notActualStatuses.includes(this.model.attributes.status)) {
                 actionList.push({
                     action: 'setHeld',
                     label: 'Set Held',
@@ -53,7 +62,9 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                     groupIndex: 1,
                     iconClass: 'fas fa-check',
                 });
+            }
 
+            if (options.includes('Not Held') && !notActualStatuses.includes(this.model.attributes.status)) {
                 actionList.push({
                     action: 'setNotHeld',
                     label: 'Set Not Held',
@@ -64,21 +75,9 @@ define('crm:views/meeting/record/row-actions/default', ['views/record/row-action
                     groupIndex: 1,
                 });
             }
-
-            if (this.options.acl.delete) {
-                actionList.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.entityType,
-                    },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
-                });
-            }
-
-            return actionList;
         }
-    });
-});
+
+        return actionList;
+    }
+}
+

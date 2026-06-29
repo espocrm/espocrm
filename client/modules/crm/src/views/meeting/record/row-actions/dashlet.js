@@ -26,59 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-actions/view-and-edit'], function (Dep) {
+import MeetingDefaultRowActionsView from 'modules/crm/views/meeting/record/row-actions/default';
 
-    return Dep.extend({
-
-        getActionList: function () {
-            var actionList = Dep.prototype.getActionList.call(this);
-
-            actionList.forEach(item => {
-                item.data = item.data || {};
-                item.data.scope = this.model.entityType;
-            });
-
-            if (
-                this.options.acl.edit &&
-                !['Held', 'Not Held'].includes(this.model.get('status')) &&
-                this.getAcl().checkField(this.model.entityType, 'status', 'edit')
-            ) {
-                actionList.push({
-                    action: 'setHeld',
-                    label: 'Set Held',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.entityType,
-                    },
-                    groupIndex: 1,
-                    iconClass: 'fas fa-check',
-                });
-
-                actionList.push({
-                    action: 'setNotHeld',
-                    label: 'Set Not Held',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.entityType,
-                    },
-                    groupIndex: 1,
-                });
-            }
-
-            if (this.options.acl.delete) {
-                actionList.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.entityType,
-                    },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
-                });
-            }
-
-            return actionList;
-        }
-    });
-});
+export default class extends MeetingDefaultRowActionsView {}

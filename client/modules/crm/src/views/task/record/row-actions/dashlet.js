@@ -26,39 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/record/row-actions/dashlet', ['views/record/row-actions/view-and-edit'], function (Dep) {
+import TaskDefaultRowActionsView from 'modules/crm/views/task/record/row-actions/default';
 
-    return Dep.extend({
-
-        getActionList: function () {
-            var actionList = Dep.prototype.getActionList.call(this);
-
-            if (this.options.acl.edit && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                actionList.push({
-                    action: 'setCompleted',
-                    label: 'Complete',
-                    data: {
-                        id: this.model.id
-                    },
-                    groupIndex: 1,
-                    iconClass: 'fas fa-check',
-                });
-            }
-
-            if (this.options.acl.delete) {
-                actionList.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id,
-                        scope: this.model.entityType
-                    },
-                    groupIndex: 0,
-                    iconClass: Dep.ICON_CLASS_REMOVE,
-                });
-            }
-
-            return actionList;
-        },
-    });
-});
+export default class extends TaskDefaultRowActionsView {}
