@@ -157,6 +157,8 @@ class Login implements LoginInterface
         $user = $this->userProvider->get($userInfo);
 
         if (!$user) {
+            $this->log->debug("OIDC: User not found.");
+
             return Result::fail(FailReason::USER_NOT_FOUND);
         }
 
