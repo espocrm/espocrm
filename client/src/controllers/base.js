@@ -54,7 +54,9 @@ class BaseController extends Controller {
             const [, scope, key] = name.split('-', 3);
             const actualKey = `mainView-${scope}-${key}`;
 
-            const view = /** @type {module:view} */this.get(actualKey);
+            const view =
+                /** @type {import('view').default} */
+                this.get(actualKey);
 
             if (view) {
                 view.remove(true);
@@ -75,7 +77,9 @@ class BaseController extends Controller {
                 continue;
             }
 
-            const view = /** @type {module:view} */this.get(key);
+            const view =
+                /** @type {import('view').default} */
+                this.get(key);
 
             if (view) {
                 view.remove(true);
