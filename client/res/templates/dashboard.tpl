@@ -12,18 +12,22 @@
                     class="btn btn-text btn-icon dropdown-toggle"
                     data-toggle="dropdown"
                 ><span class="fas fa-ellipsis-h"></span></button>
-                <ul class="dropdown-menu pull-right dropdown-menu-with-icons">
+                <ul class="dropdown-menu pull-right">
                     <li>
                         <a role="button" tabindex="0" data-action="editTabs">
-                            <span class="fas fa-pencil-alt fa-sm"></span>
+                            {{~null~}}
+                            <span class="item-icon fas fa-pencil-alt fa-sm"></span>
                             <span class="item-text">{{translate 'Edit Dashboard'}}</span>
+                            {{~null~}}
                         </a>
                     </li>
                     {{#if hasAdd}}
                     <li>
                         <a role="button" tabindex="0" data-action="addDashlet">
-                            <span class="fas fa-plus"></span>
+                            {{~null~}}
+                            <span class="item-icon far fa-square-plus"></span>
                             <span class="item-text">{{translate 'Add Dashlet'}}</span>
+                            {{~null~}}
                         </a>
                     </li>
                     {{/if}}
