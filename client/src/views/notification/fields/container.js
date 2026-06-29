@@ -325,7 +325,7 @@ class NotificationContainerFieldView extends BaseFieldView {
     }
 
     /**
-     * @private
+     * @internal
      */
     triggerUpdateRead() {
         let viewPointer = this;

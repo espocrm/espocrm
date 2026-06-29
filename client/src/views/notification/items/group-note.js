@@ -27,6 +27,8 @@
  ************************************************************************/
 
 import BaseNotificationItemView from 'views/notification/items/base';
+import Ajax from 'ajax';
+import NotificationContainerFieldView from 'views/notification/fields/container';
 
 // noinspection JSUnusedGlobalSymbols
 export default class GroupNoteNotificationItemView extends BaseNotificationItemView {
@@ -98,5 +100,38 @@ export default class GroupNoteNotificationItemView extends BaseNotificationItemV
         }
 
         this.createMessage();
+
+        this.addHandler('click',
+            '> .stream-head-container > .stream-head-text-container [data-key="entity"] a', () => {
+                this.markGroupRead();
+            });
+    }
+
+    /**
+     * @private
+     */
+    async markGroupRead() {
+        if (this.model.attributes.read) {
+            return;
+        }
+
+        await Ajax.postRequest(`Notification/group/${this.model.id}/markRead`);
+
+        this.model.set('read', true, {sync: true});
+
+        this.triggerUpdateRead();
+    }
+
+    /**
+     * @private
+     */
+    triggerUpdateRead() {
+        const parentView = this.getParentView();
+
+        if (!(parentView instanceof NotificationContainerFieldView)) {
+            return;
+        }
+
+        parentView.triggerUpdateRead();
     }
 }
