@@ -15,7 +15,10 @@
                 "status": "status"
             },
             "view": "crm:views/task/fields/tasks",
-            "customizationDefaultDisabled": true
+            "fieldManagerParamList": [
+                "tooltipText"
+            ],
+            "dynamicLogicDisabled": true
         }
     },
     "links": {

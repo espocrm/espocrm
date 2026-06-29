@@ -246,9 +246,6 @@ class EmailDetailRecordView extends DetailRecordView {
             }
         });
 
-        this.handleTasksField();
-        this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
-
         if (this.getAcl().checkScope('User')) {
             this.addDropdownItem({
                 label: 'View Users',
@@ -657,16 +654,6 @@ class EmailDetailRecordView extends DetailRecordView {
 
         Espo.Ui.error(msg, true);
         console.error(msg);
-    }
-
-    handleTasksField() {
-        if ((this.model.get('tasksIds') || []).length === 0) {
-            this.hideField('tasks');
-
-            return;
-        }
-
-        this.showField('tasks');
     }
 
     /**

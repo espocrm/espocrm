@@ -61,6 +61,19 @@
                     }
                 ]
             }
+        },
+        "tasks": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "tasksIds",
+                        "data": {
+                            "field": "task"
+                        }
+                    }
+                ]
+            }
         }
     },
     "panels": {
