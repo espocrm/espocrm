@@ -3511,6 +3511,19 @@ table.table-admin-panel {
     }
 }
 
+.admin-tables-container {
+
+    table.table-admin-panel {
+         tr.admin-content-row {
+            > td:first-child {
+                a {
+                    .link-content-color();
+                }
+            }
+        }
+    }
+}
+
 .admin-tables-container > div {
     margin-bottom: var(--30px);
     .table-admin-panel {
