@@ -8,12 +8,14 @@
         "moveUp": {
             "label": "Move Up",
             "groupIndex": 3,
-            "handler": "handlers/pipeline-stage/move-row-action"
+            "handler": "handlers/pipeline-stage/move-row-action",
+            "iconClass": "fas fa-arrow-up"
         },
         "moveDown": {
             "label": "Move Down",
             "groupIndex": 3,
-            "handler": "handlers/pipeline-stage/move-row-action"
+            "handler": "handlers/pipeline-stage/move-row-action",
+            "iconClass": "fas fa-arrow-down"
         }
     }
 }
