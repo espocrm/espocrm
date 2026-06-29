@@ -32,15 +32,18 @@ namespace Espo\Controllers;
 use Espo\Core\Api\Request;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Entities\User;
 use Espo\Tools\LabelManager\LabelManager as LabelManagerTool;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class LabelManager
 {
-
     /**
      * @throws Forbidden
      */
@@ -62,28 +65,57 @@ class LabelManager
         return $this->labelManagerTool->getScopeList();
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionGetScopeData(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->scope) || empty($data->language)) {
+        $language = $data->language ?? null;
+        $scope = $data->scope ?? null;
+
+        if (!$scope || !$language) {
             throw new BadRequest();
         }
 
-        return $this->labelManagerTool->getScopeData($data->language, $data->scope);
+        if (!is_string($scope) || !is_string($language)) {
+            throw new BadRequest();
+        }
+
+        if (basename($scope) !== $scope || basename($language) !== $language) {
+            throw new BadRequest();
+        }
+
+        return $this->labelManagerTool->getScopeData($language, $scope);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionSaveLabels(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->scope) || empty($data->language) || !isset($data->labels)) {
+        $language = $data->language ?? null;
+        $scope = $data->scope ?? null;
+
+        if (!$scope || !$language || !isset($data->labels)) {
+            throw new BadRequest();
+        }
+
+        if (!is_string($scope) || !is_string($language)) {
+            throw new BadRequest();
+        }
+
+        if (basename($scope) !== $scope || basename($language) !== $language) {
             throw new BadRequest();
         }
 
         $labels = get_object_vars($data->labels);
 
-        $returnData = $this->labelManagerTool->saveLabels($data->language, $data->scope, $labels);
+        $returnData = $this->labelManagerTool->saveLabels($language, $scope, $labels);
 
         $this->dataManager->clearCache();
 
