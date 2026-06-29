@@ -22,7 +22,7 @@
                                 role="button"
                                 data-name=""
                                 data-action="selectPreset"
-                            ><div>{{translate 'all' category='presetFilters' scope=entityType}}</div></a>
+                            ><div class="item-text">{{translate 'all' category='presetFilters' scope=entityType}}</div></a>
                         </li>
                         {{#each presetFilterList}}
                         <li>
@@ -33,7 +33,7 @@
                                 data-name="{{name}}"
                                 data-action="selectPreset"
                             >
-                                <div class="{{#if style}}text-{{style}}{{/if}}">
+                                <div class="item-text {{#if style}} text-{{style}} {{/if}}">
                                 {{~#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../entityType}}{{/if~}}
                                 </div>
                             </a>
@@ -42,10 +42,22 @@
                         <li class="divider preset-control hidden"></li>
 
                         <li class="preset-control remove-preset hidden">
-                            <a tabindex="0" role="button" data-action="removePreset">{{translate 'Remove Filter'}}</a>
+                            <a tabindex="0" role="button" data-action="removePreset">
+                                {{~null~}}
+                                <span class="item-icon fas fa-times"></span>
+                                {{~null~}}
+                                <span class="item-text">{{translate 'Remove Filter'}}</span>
+                                {{~null~}}
+                            </a>
                         </li>
                         <li class="preset-control save-preset hidden">
-                            <a tabindex="0" role="button" data-action="savePreset">{{translate 'Save Filter'}}</a>
+                            <a tabindex="0" role="button" data-action="savePreset">
+                                {{~null~}}
+                                <span class="item-icon far fa-floppy-disk"></span>
+                                {{~null~}}
+                                <span class="item-text">{{translate 'Save Filter'}}</span>
+                                {{~null~}}
+                            </a>
                         </li>
 
                         {{#if boolFilterList.length}}
@@ -56,13 +68,15 @@
                     {{#each boolFilterList}}
                         <li class="checkbox">
                             <label>
+                                {{~null~}}
                                 <input
                                     type="checkbox"
                                     data-role="boolFilterCheckbox"
                                     data-name="{{./this}}"
                                     class="form-checkbox form-checkbox-small"
                                     {{#ifPropEquals ../bool this true}}checked{{/ifPropEquals}}
-                                > {{translate this scope=../entityType category='boolFilters'}}
+                                ><span class="checkbox-text">{{translate this scope=../entityType category='boolFilters'}}</span>
+                                {{~null~}}
                             </label></li>
                     {{/each}}
                 </ul>

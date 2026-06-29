@@ -73,7 +73,11 @@ ul.dropdown-menu > li.checkbox {
     margin-left: 0;
     margin-top: 0;
     margin-bottom: 0;
-    padding: var(--4px) 0 var(--4px) var(--20px);
+    padding: var(--4px) 0 var(--4px) var(--14px);
+
+    .checkbox-text {
+        padding-left: var(--2px);
+    }
 
     user-select: none;
 
@@ -150,7 +154,7 @@ ul.dropdown-menu {
 
 ul {
     &.dropdown-menu-with-icons,
-    &:has(> li > a span.item-icon) {
+    &:has(> li:not(.hidden) > a span.item-icon) {
         > li {
             &:not(:has(.item-icon-grid)) {
                 a {
@@ -179,7 +183,7 @@ ul {
         }
     }
 
-    &:has(> li > a span.item-icon) {
+    &:has(> li:not(.hidden) > a span.item-icon) {
         > li {
             > a:not(:has(span.item-icon)):not(:has(span.item-icon)) {
                 padding-left: var(--28px);
