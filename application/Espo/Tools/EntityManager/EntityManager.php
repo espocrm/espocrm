@@ -768,6 +768,7 @@ class EntityManager
 
         $this->language->delete('Global', 'scopeNames', $name);
         $this->language->delete('Global', 'scopeNamesPlural', $name);
+        $this->language->delete($name, 'labels', 'Create ' . $name);
         $this->language->save();
 
         $entityTypeParams = new Params($name, $type, $this->getCurrentParams($name));
