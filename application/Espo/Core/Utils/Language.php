@@ -65,7 +65,6 @@ class Language
         private bool $noFallback = false,
     ) {
         $this->currentLanguage = $language ?? $this->defaultLanguage;
-
     }
 
     public function getLanguage(): string
@@ -99,7 +98,9 @@ class Language
 
     private function getCacheKey(?string $language = null): string
     {
-        return 'languages/' . ($language ?? $this->currentLanguage);
+        $language ??= $this->currentLanguage;
+
+        return 'languages/' . $language;
     }
 
     /**
@@ -226,7 +227,10 @@ class Language
      */
     public function getScopeCustom(string $scope): ?stdClass
     {
-        $path = str_replace('{language}', $this->currentLanguage, $this->customPath) . "/$scope.json";
+        $language = basename($this->currentLanguage);
+        $scope = basename($scope);
+
+        $path = str_replace('{language}', $language, $this->customPath) . "/$scope.json";
 
         if (!$this->fileManager->isFile($path)) {
             return null;
@@ -242,7 +246,10 @@ class Language
      */
     public function saveScopeCustom(string $scope, stdClass $data): void
     {
-        $path = str_replace('{language}', $this->currentLanguage, $this->customPath) . "/$scope.json";
+        $language = basename($this->currentLanguage);
+        $scope = basename($scope);
+
+        $path = str_replace('{language}', $language, $this->customPath) . "/$scope.json";
 
         foreach (get_object_vars($data) as $key => $item) {
             if (
@@ -265,7 +272,9 @@ class Language
      */
     public function save(): bool
     {
-        $path = str_replace('{language}', $this->currentLanguage, $this->customPath);
+        $language = basename($this->currentLanguage);
+
+        $path = str_replace('{language}', $language, $this->customPath);
 
         $result = true;
 
@@ -274,6 +283,8 @@ class Language
                 if (empty($data)) {
                     continue;
                 }
+
+                $scope = basename($scope);
 
                 $result &= $this->fileManager->mergeJsonContents($path . "/$scope.json", $data);
             }
@@ -284,6 +295,8 @@ class Language
                 if (empty($unsetData)) {
                     continue;
                 }
+
+                $scope = basename($scope);
 
                 $result &= $this->fileManager->unsetJsonContents($path . "/$scope.json", $unsetData);
             }
