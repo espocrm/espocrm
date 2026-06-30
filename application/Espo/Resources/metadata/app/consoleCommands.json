@@ -99,6 +99,11 @@
         "listed": true,
         "noSystemUser": true
     },
+    "customizationCheck": {
+        "className": "Espo\\Classes\\ConsoleCommands\\CustomizationCheck",
+        "listed": true,
+        "noSystemUser": true
+    },
     "migrate": {
         "listed": true,
         "noSystemUser": true
