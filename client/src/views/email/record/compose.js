@@ -157,14 +157,17 @@ class EmailComposeRecordView extends EditRecordView {
             body += initialBody;
         }
 
-        this.model.set('isHtml', data.isHtml);
+        // @todo Revise.
+        this.model.set('body', '');
+
+        const attributes = {
+            isHtml: data.isHtml,
+            body: body,
+        };
 
         if (data.subject) {
-            this.model.set('name', data.subject);
+            attributes.name = data.subject;
         }
-
-        this.model.set('body', '');
-        this.model.set('body', body);
 
         if (!this.options.removeAttachmentsOnSelectTemplate) {
             this.initialAttachmentsIds.forEach((id) => {
@@ -178,10 +181,15 @@ class EmailComposeRecordView extends EditRecordView {
             });
         }
 
-        this.model.set({
-            attachmentsIds: data.attachmentsIds,
-            attachmentsNames: data.attachmentsNames
-        });
+        // Prevents highlight.
+        const skipAttachments = !data.attachmentsIds?.length && !this.model.attributes.attachmentsIds?.length;
+
+        if (!skipAttachments) {
+            attributes.attachmentsIds = data.attachmentsIds;
+            attributes.attachmentsNames = data.attachmentsNames;
+        }
+
+        this.model.setMultiple(attributes, {highlight: true});
 
         this.isBodyChanged = false;
     }
