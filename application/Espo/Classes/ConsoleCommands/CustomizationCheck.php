@@ -78,35 +78,52 @@ class CustomizationCheck implements Command
 
     private function loadCustomizations(): bool
     {
-        foreach (self::getFiles(self::CUSTOMIZATION_DIR) as $file) {
-            $script = 'include \'bootstrap.php\';' .
-                ' $app = new \Espo\Core\Application();' .
-                ' require_once ' . var_export($file, true) . ';';
+        $files = self::getFiles(self::CUSTOMIZATION_DIR);
 
-            $process = proc_open(
-                [PHP_BINARY, '-r', $script],
-                [1 => ['file', '/dev/null', 'w'], 2 => ['pipe', 'w']],
-                $pipes
+        if ($files === []) {
+            return true;
+        }
+
+        $lines = [
+            '<?php',
+            "include 'bootstrap.php';",
+            'new \\Espo\\Core\\Application();'
+        ];
+
+        foreach ($files as $file) {
+            $lines[] = 'require_once ' . var_export($file, true) . ';';
+        }
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'espo_check_');
+
+        file_put_contents($tmpFile, implode("\n", $lines));
+
+        $process = proc_open(
+            [PHP_BINARY, '-f', $tmpFile],
+            [1 => ['file', '/dev/null', 'w'], 2 => ['pipe', 'w']],
+            $pipes
+        );
+
+        if ($process === false) {
+            unlink($tmpFile);
+
+            return false;
+        }
+
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[2]);
+
+        unlink($tmpFile);
+
+        $exitCode = proc_close($process);
+
+        if ($exitCode !== 0) {
+            $this->log->error(
+                'Customization check FAILED.' .
+                ($error !== '' && $error !== false ? ' ' . trim($error) : '')
             );
 
-            if ($process === false) {
-                return false;
-            }
-
-            $error = stream_get_contents($pipes[2]);
-
-            fclose($pipes[2]);
-
-            $exitCode = proc_close($process);
-
-            if ($exitCode !== 0) {
-                $this->log->error(
-                    "CustomizationCheck: class file '$file' failed." .
-                    ($error !== '' && $error !== false ? ' ' . trim($error) : '')
-                );
-
-                return false;
-            }
+            return false;
         }
 
         return true;
