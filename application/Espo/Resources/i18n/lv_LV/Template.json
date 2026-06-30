@@ -20,14 +20,18 @@
     "headerPosition": "Virsraksta pozīcija",
     "printHeader": "Drukāt galveni",
     "title": "Nosaukums",
-    "style": "Stils"
+    "style": "Stils",
+    "status": "Statuss",
+    "filename": "Datnes nosaukums"
   },
   "labels": {
     "Create Template": "Izveidot veidni"
   },
   "tooltips": {
     "footer": "Drukājot lappuses numuru, izmantot {pageNumber}.",
-    "variables": "Kopēt un ielīmēt nepieciešamo vietturi virsrakstā, pamattekstā vai kājenē."
+    "variables": "Kopēt un ielīmēt nepieciešamo vietturi virsrakstā, pamattekstā vai kājenē.",
+    "filename": "Fakultatīvs faila nosaukums. Entitāšu atribūtus var izmantot kā vietzīmes.\n\nPapildu vietas turētājs:\n- `{{{todienas}}`\n\nPiemērs:\n`Document_{{today}}_{{name}}`",
+    "body": "Skatīt [dokumentāciju](https://docs.espocrm.com/user-guide/printing-to-pdf/#templates).\n\nPrecīzai atzīmējumu rediģēšanai izmantojiet koda skatu.\n\nPapildu tagu atribūti:\n- `x-if`\n- `iterate`"
   },
   "options": {
     "pageOrientation": {
@@ -41,6 +45,10 @@
     },
     "pageFormat": {
       "Custom": "Pielāgots"
+    },
+    "status": {
+      "Active": "Aktīvais",
+      "Inactive": "Neaktīvs"
     }
   }
 }

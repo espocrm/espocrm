@@ -60,7 +60,8 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mėnesiai",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mėnesių",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mėnesių",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 metai"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 metai",
+      "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 dienų"
     },
     "barcodeType": {
       "pharmacode": "Farmakodas",
@@ -103,7 +104,9 @@
     "linkReadOnly": "Naudotojas negali nurodyti lauko reikšmės. Tačiau ją galima apskaičiuoti pagal formulę.\n\nTaip pat bus išjungta galimybė sukurti susijusį įrašą iš ryšių skydelių.",
     "relateOnImport": "Importuojant su šiuo lauku, įrašas automatiškai susiejamas su atitinkamu užsienio įrašu. Šią funkciją naudokite tik tuo atveju, jei užsienio laukas laikomas unikaliu.",
     "preview": "Rodyti peržiūros mygtuką. Taikoma, jei įjungta funkcija Markdown.",
-    "seeMoreDisabled": "Jeigu nepažymėta, ilgi tekstai bus sutrumpinti"
+    "itemsEditable": "Elementus galima redaguoti. Taikoma tik tuo atveju, jei nenurodytos jokios parinktys.",
+    "seeMoreDisabled": "Jeigu nepažymėta, ilgi tekstai bus sutrumpinti",
+    "imageCapture": "Nurodo, kuri kamera turi būti naudojama vaizdo duomenims užfiksuoti."
   },
   "fieldParts": {
     "address": {
@@ -156,7 +159,8 @@
     "link": "Įrašas, susijęs per ryšį \"Priklauso-tam\" (daug-prieš-vieną arba vienas-prieš-vieną).",
     "linkParent": "Įrašas, susijęs per \"priklauso tėvams\" ryšį. Gali būti skirtingų tipų.",
     "linkMultiple": "Įrašų rinkinys, susijęs Has-Many (daugelio su daugeliu arba vieno su daugeliu) ryšiu. Ne visi ryšiai turi savo nuorodų daugybinius laukus. Juos turi tik tie, kuriuose įjungtas (-i) parametras (-ai) Link-Multiple.",
-    "urlMultiple": "Kelios nuorodos."
+    "urlMultiple": "Kelios nuorodos.",
+    "decimal": "Dešimtainis skaičius fiksuoto kablelio tikslumu."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Lauko pavadinimas \"{field}\" neleidžiamas.",

@@ -16,7 +16,9 @@
     "dateStartDate": "Дата начала (весь день)",
     "dateEndDate": "Дата окончания (весь день)",
     "isAllDay": "Весь день",
-    "sourceEmail": "Электронная почта источника"
+    "sourceEmail": "Электронная почта источника",
+    "joinUrl": "Присоединиться URL",
+    "externalService": "Местоположение в Интернете"
   },
   "options": {
     "status": {

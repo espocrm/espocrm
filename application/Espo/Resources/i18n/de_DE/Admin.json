@@ -43,8 +43,8 @@
     "Uninstalled": "Deinstalliert",
     "Create Entity": "Entität erstellen",
     "Edit Entity": "Entität bearbeiten",
-    "Create Link": "Relation erstellen",
-    "Edit Link": "Relation bearbeiten",
+    "Create Link": "Verknüpfung erstellen",
+    "Edit Link": "Verknüpfung bearbeiten",
     "Notifications": "Benachrichtigungen",
     "Reset to Default": "Zurücksetzen auf Standard",
     "Email Filters": "E-Mail Filter",
@@ -221,7 +221,13 @@
     "attachmentField": "Feld für Anhänge",
     "dynamicLogicReadOnlySaved": "Gespeicherte Zustandsbedingungen, die das Feld schreibgeschützt machen",
     "notStorable": "Nicht speicherbar",
-    "itemsEditable": "Element bearbeitbar"
+    "itemsEditable": "Element bearbeitbar",
+    "dynamicLogicCascading": "Kaskadierende Auswahl",
+    "capture": "Erfassen",
+    "openInNewTab": "Im neuen Tab öffnen",
+    "notLockable": "Nicht sperrbar",
+    "protocolRequired": "Protokoll erforderlich",
+    "cascadeRemoval": "Kaskadierende Löschung"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -245,7 +251,8 @@
     "formulaFunctions": "Weitere Funktionen finden Sie in [documentation]({documentationUrl}).",
     "rebuildRequired": "Sie müssen Rebuild aus CLI ausführen.",
     "cronIsDisabled": "Cron ist deaktiviert, die Anwendung ist nicht voll funktionsfähig. Aktivieren Sie Cron in den [Einstellungen](#Admin/settings).",
-    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [Einstellungen](#Admin/settings)."
+    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [Einstellungen](#Admin/settings).",
+    "noPipelinesEnabled": "Für keine Entitätstypen sind Pipelines aktiviert."
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",
@@ -273,7 +280,7 @@
     "notifications": "In-App und E-Mail Benachrichtigungseinstellungen.",
     "inboundEmails": "Einstellungen für eingehende E-Mails.",
     "portalUsers": "Benutzer des Portals",
-    "entityManager": "Neue Entitäten selbst erstellen und bestehende bearbeiten. Felder und Relationen verwalten.",
+    "entityManager": "Neue Entitäten selbst erstellen und bestehende bearbeiten. Felder und Beziehungen verwalten.",
     "emailFilters": "E-Mails, auf die die angegebenen Filter zutreffen, werden nicht importiert.",
     "actionHistory": "Protokoll der Benutzeraktionen.",
     "labelManager": "Bezeichnungen der Applikation anpassen",
@@ -299,7 +306,8 @@
     "addressCountries": "Verfügbare Länder für Adressfelder.",
     "appSecrets": "Speichert sensible Informationen wie API-Schlüssel, Kennwörter und andere Geheimnisse.",
     "leadCapture": "Endpunkte zur Interessenten-Erfassung und Webformulare.",
-    "oAuthProviders": "OAuth-Anbieter für Integrationen."
+    "oAuthProviders": "OAuth-Anbieter für Integrationen.",
+    "pipelines": "Konfigurieren Sie mehrere Pipelines."
   },
   "options": {
     "previewSize": {
@@ -312,6 +320,10 @@
     "labelType": {
       "state": "Zustand",
       "regular": "Normalerweise"
+    },
+    "capture": {
+      "user": "Benutzer",
+      "environment": "Umgebung"
     }
   },
   "systemRequirements": {

@@ -1,1 +1,13 @@
-{}
+{
+  "fields": {
+    "event": "Pasākums",
+    "target": "Mērķis",
+    "data": "Dati",
+    "isProcessed": "Vai tiek apstrādāts",
+    "user": "Lietotājs"
+  },
+  "links": {
+    "target": "Mērķis",
+    "user": "Lietotājs"
+  }
+}

@@ -106,5 +106,16 @@
     "shippingAddressState": "Estado (Envio)",
     "shippingAddressPostalCode": "CEP (Envio)",
     "shippingAddressMap": "Mapa (Envio)"
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} adicionou você a {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} aceitou a participação em {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} recusou a participação em {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} está hesitante em participar de {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} aceitou a participação",
+    "eventConfirmationDeclinedThis": "{invitee} recusou a participação",
+    "eventConfirmationTentativeThis": "{invitee} está hesitante sobre a participação"
   }
 }

@@ -11,6 +11,7 @@
     "Install": "Встановити"
   },
   "messages": {
-    "uninstalled": "Розширення {name} видалено"
+    "uninstalled": "Розширення {name} видалено",
+    "fileExceedsMaxUploadSize": "Розмір файлу перевищує максимальний розмір завантаження {maxSize}. Подумайте про збільшення `post_max_size` або встановіть розширення через CLI."
   }
 }

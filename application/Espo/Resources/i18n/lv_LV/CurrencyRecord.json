@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "code": "Kods",
+    "status": "Stāvoklis",
+    "label": "Etiķete",
+    "symbol": "Simbols",
+    "isBase": "Vai „Base“",
+    "rate": "Vērtējums",
+    "rateDate": "Likme Datums"
+  },
+  "links": {
+    "rates": "Cenas"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktīvs",
+      "Inactive": "Neaktīvs"
+    }
+  }
+}

@@ -23,7 +23,8 @@
     "useImap": "Tikrinti paštą",
     "smtpAuthMechanism": "SMTP autentifikavimo mechanizmas",
     "security": "Apsauga",
-    "connectedAt": "Prijungtas prie"
+    "connectedAt": "Prijungtas prie",
+    "folderMap": "Aplankų atvaizdavimas"
   },
   "links": {
     "filters": "Filtrai",
@@ -47,7 +48,9 @@
   "messages": {
     "couldNotConnectToImap": "Nepavyko prisijungti prie IMAP serverio",
     "connectionIsOk": "Geras ryšys",
-    "imapNotConnected": "Nepavyko prisijungti prie [IMAP paskyros](#EmailAccount/view/{id})."
+    "imapNotConnected": "Nepavyko prisijungti prie [IMAP paskyros](#EmailAccount/view/{id}).",
+    "noFolder": "Prisegtas aplankas neegzistuoja.",
+    "resetFetchData": "El. laiškai bus iš naujo atsisiųsti nuo nurodytos datos. Esami el. laiškai nebus dubliuojami."
   },
   "tooltips": {
     "storeSentEmails": "Siunčiami el. aiškai bus saugomi IMAP serveryje. El pašto adreso laukelis turi atitikti el pašto adresą, iš kurio bus siunčiamas laiškas",

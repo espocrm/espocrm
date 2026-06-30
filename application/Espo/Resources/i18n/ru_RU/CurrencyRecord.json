@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "code": "Код",
+    "status": "Статус",
+    "label": "Этикетка",
+    "symbol": "Символ",
+    "rate": "Оценить",
+    "rateDate": "Дата расчета"
+  },
+  "links": {
+    "rates": "Тарифы"
+  },
+  "options": {
+    "status": {
+      "Active": "Активный",
+      "Inactive": "Неактивный"
+    }
+  }
+}

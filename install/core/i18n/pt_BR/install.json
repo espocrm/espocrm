@@ -22,7 +22,6 @@
     "Re-check": "Verificar novamente",
     "Test settings": "Testar Conexão",
     "phpVersion": "Versão do PHP",
-    "requiredMysqlVersion": "Versão do MySQL",
     "dbHostName": "Nome de anfitrião",
     "dbName": "Nome do banco de dados",
     "SetupConfirmation page title": "Requisitos de sistema",
@@ -35,7 +34,10 @@
     "extension is missing": "faltando extensão",
     "headerTitle": "Instalação EspoCRM",
     "Crontab setup instructions": "Sem executar os trabalhos agendados de emails de entrada as notificações e lembretes não funcionarão. Aqui você pode ler {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "instruções de configuração"
+    "Setup instructions": "instruções de configuração",
+    "requiredMysqlVersion": "Versão do MySQL",
+    "requiredMariadbVersion": "Versão do MariaDB",
+    "requiredPostgresqlVersion": "Versão do PostgreSQL "
   },
   "fields": {
     "Choose your language": "Escolha seu idioma",
@@ -88,6 +90,7 @@
     "host": "Nome de anfitrião",
     "dbname": "Nome do banco de dados",
     "user": "Nome de Usuário",
+    "writable": "Gravável",
     "readable": "Permite Leitura",
     "requiredMariadbVersion": "Versão MariaDB"
   },

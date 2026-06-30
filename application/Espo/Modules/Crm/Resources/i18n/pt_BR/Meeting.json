@@ -14,7 +14,6 @@
     "dateStartDate": "Data de Início (dia todo)",
     "dateEndDate": "Data Final (dia todo)",
     "isAllDay": "É o Dia Todo",
-    "Acceptance": "Aceitação",
     "sourceEmail": "E-mail de origem"
   },
   "options": {
@@ -41,7 +40,8 @@
     "Send Invitations": "Enviar convites",
     "on time": "na hora",
     "before": "antes",
-    "All-Day": "Dia Todo"
+    "All-Day": "Dia Todo",
+    "Send Cancellation": "Enviar Cancelamento"
   },
   "presetFilters": {
     "planned": "Planejada",
@@ -50,6 +50,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nada foi enviado",
-    "selectAcceptanceStatus": "Defina seu status de aceitação."
+    "selectAcceptanceStatus": "Defina seu status de aceitação.",
+    "sendInvitationsToSelectedAttendees": "E-mails de convite serão enviados aos participantes selecionados.",
+    "sendCancellationsToSelectedAttendees": "E-mails de cancelamento serão enviados aos participantes selecionados."
   }
 }

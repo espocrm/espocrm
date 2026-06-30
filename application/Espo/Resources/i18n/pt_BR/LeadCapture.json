@@ -14,7 +14,9 @@
     "duplicateCheck": "Verificar Duplicados",
     "skipOptInConfirmationIfSubscribed": "Pule a confirmação se o lead já estiver na lista de destino",
     "smtpAccount": "Conta SMTP",
-    "inboundEmail": "Conta de Email do Grupo"
+    "inboundEmail": "Conta de Email do Grupo",
+    "exampleRequestHeaders": "Cabeçalhos",
+    "phoneNumberCountry": "DDI"
   },
   "links": {
     "targetList": "Lista de Alvo",
@@ -28,7 +30,8 @@
     "Request": "Solicitação"
   },
   "messages": {
-    "generateApiKey": "Criar Nova Chave de API"
+    "generateApiKey": "Criar Nova Chave de API",
+    "optInIsConfirmed": "Inscrição confirmada"
   },
   "tooltips": {
     "optInConfirmationSuccessMessage": "Markdown é suportado."

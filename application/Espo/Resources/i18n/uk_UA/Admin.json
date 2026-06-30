@@ -83,7 +83,8 @@
     "Formula Sandbox": "Пісочниця формул",
     "Working Time Calendars": "Календарі робочого часу",
     "Group Email Folders": "Групові папки ел. пошти",
-    "Authentication Providers": "Провайдери автентифікації"
+    "Authentication Providers": "Провайдери автентифікації",
+    "Setup": "Налаштування"
   },
   "layouts": {
     "list": "Список",
@@ -151,7 +152,8 @@
     "datetimeOptional": "Дата/Дата-час",
     "checklist": "Контрольний список",
     "linkOne": "Зв'язок (Один)",
-    "barcode": "Штрих-код"
+    "barcode": "Штрих-код",
+    "urlMultiple": "Кілька URL-адрес"
   },
   "fields": {
     "type": "Тип",
@@ -179,7 +181,6 @@
     "minHeight": "Мінімальна висота (px)",
     "provider": "Провайдер",
     "typeList": "Список типів",
-    "rows": "Кількість рядків текстового поля",
     "lengthOfCut": "Довжина зрізу",
     "sourceList": "Список джерел",
     "tooltipText": "Текст підсказки",
@@ -212,14 +213,22 @@
     "viewMap": "Кнопка перегляду карти",
     "codeType": "Тип коду",
     "lastChar": "Останній знак",
-    "listPreviewSize": "Розмір попереднього перегляду у List View",
+    "listPreviewSize": "Розмір попереднього перегляду у вигляді списку",
     "onlyDefaultCurrency": "Тільки валюта за замовчуванням",
     "dynamicLogicInvalid": "Умови, що роблять поле недійсним",
     "conversionDisabled": "Вимкнути конвертацію",
     "decimalPlaces": "Знаки після коми",
     "pattern": "Шаблон",
     "globalRestrictions": "Глобальні обмеження",
-    "decimal": "Десятковий"
+    "decimal": "Десятковий",
+    "optionsReference": "Посилання на опції",
+    "copyToClipboard": "Кнопка для копіювання в буфер обміну",
+    "rows": "Максимальна кількість рядків",
+    "readOnlyAfterCreate": "Тільки для читання після створення",
+    "createButton": "Кнопка створення",
+    "autocompleteOnEmpty": "Автодоповнення при порожньому введенні",
+    "relateOnImport": "Створювати зв'язок при імпорті",
+    "onlyAdmin": "Лише для адміністратора"
   },
   "messages": {
     "selectEntityType": "Оберіть тип сутності у меню ліворуч.",
@@ -241,7 +250,8 @@
     "upgradeRecommendation": "Такий спосіб оновлення не рекомендовано. Краще оновлювати через CLI.",
     "newVersionIsAvailable": "Доступна нова версія EspoCRM {latestVersion}. Будь ласка дотримуйтесь [інструкцій](https://www.espocrm.com/documentation/administration/upgrading/) для оновлення свого примірника.",
     "formulaFunctions": "Більше функцій можна знайти в [документації]({documentationUrl}).",
-    "rebuildRequired": "Ви повинні перебудувати з командної стрічки."
+    "rebuildRequired": "Ви повинні перебудувати з командної стрічки.",
+    "cronIsDisabled": "Cron вимкнено, програма не повністю функціональна. Увімкніть cron у [налаштуваннях](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Системні налаштування додатку.",
@@ -274,7 +284,6 @@
     "actionHistory": "Журнал дій користуча.",
     "labelManager": "Налаштування міток програми.",
     "authLog": "Історія входу.",
-    "leadCapture": "Точки входу API для Web-to-Lead.",
     "attachments": "Всі файли вкладень зберігаються в системі.",
     "templateManager": "Налаштуйте макет повідомлення.",
     "systemRequirements": "Системні вимоги EspoCRM.",
@@ -291,7 +300,8 @@
     "formulaSandbox": "Написання та тестування скриптів формул.",
     "workingTimeCalendars": "Графік роботи.",
     "groupEmailFolders": "Папка з електронними листами, спільна для команд.",
-    "authenticationProviders": "Додаткові провайдери автентифікації для порталів."
+    "authenticationProviders": "Додаткові провайдери автентифікації для порталів.",
+    "addressCountries": "Країни, доступні для полів адреси."
   },
   "options": {
     "previewSize": {
@@ -315,7 +325,8 @@
     "user": "Ім'я користувача БД",
     "writable": "Запис",
     "readable": "Читання",
-    "requiredMariadbVersion": "Версія MariaDB"
+    "requiredMariadbVersion": "Версія MariaDB",
+    "requiredPostgresqlVersion": "Версія PostgreSQL"
   },
   "templates": {
     "accessInfo": "Інформація про доступ",

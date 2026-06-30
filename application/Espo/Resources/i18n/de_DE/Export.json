@@ -11,6 +11,9 @@
       "Running": "In Bearbeitung",
       "Success": "Erfolgreich",
       "Failed": "Fehlgeschlagen"
+    },
+    "format": {
+      "xlsx": "XLSX · Tabelle"
     }
   },
   "messages": {

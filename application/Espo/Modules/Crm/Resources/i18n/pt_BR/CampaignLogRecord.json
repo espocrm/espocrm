@@ -7,11 +7,13 @@
     "parent": "Alvo",
     "object": "Objeto",
     "application": "Aplicação",
+    "queueItem": "Item da fila",
     "stringData": "Dados String",
     "stringAdditionalData": "Dados Adicionais String",
     "isTest": "É Teste"
   },
   "links": {
+    "queueItem": "Item da fila",
     "object": "Assunto",
     "campaign": "Campanha"
   },
@@ -21,7 +23,8 @@
       "Opened": "Aberto",
       "Opted Out": "Cancelado",
       "Clicked": "Clicado",
-      "Lead Created": "Lead Criado"
+      "Lead Created": "Lead Criado",
+      "Opted In": "Inscrito"
     }
   },
   "labels": {
@@ -32,6 +35,7 @@
     "opened": "Aberto",
     "optedOut": "Cancelado",
     "clicked": "Clicado",
-    "leadCreated": "Lead criado"
+    "leadCreated": "Lead criado",
+    "optedIn": "Inscrito"
   }
 }

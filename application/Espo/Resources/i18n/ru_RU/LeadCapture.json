@@ -21,7 +21,20 @@
     "skipOptInConfirmationIfSubscribed": "Пропустить подтверждение, если кандидат уже в списке целей",
     "smtpAccount": "SMTP-аккаунт",
     "inboundEmail": "Учетная запись эл. почты группы",
-    "exampleRequestHeaders": "Заголовки"
+    "exampleRequestHeaders": "Заголовки",
+    "phoneNumberCountry": "Код страны телефона",
+    "fieldParams": "Параметры поля",
+    "formId": "Идентификатор формы",
+    "formEnabled": "Веб-форма",
+    "formUrl": "URL-адрес формы",
+    "formSuccessText": "Текст для отображения после отправки формы",
+    "formText": "Текст для отображения на форме",
+    "formSuccessRedirectUrl": "URL-адрес для перенаправления после отправки формы",
+    "formLanguage": "Язык, используемый в бланке",
+    "formFrameAncestors": "Разрешенные хосты для встраивания форм",
+    "formCaptcha": "Используйте капчу",
+    "formTitle": "Название формы",
+    "formTheme": "Форма Тема"
   },
   "links": {
     "targetList": "Список целей",
@@ -35,7 +48,9 @@
     "Create LeadCapture": "Создать точку входа",
     "Generate New API Key": "Сгенерировать новый ключ API",
     "Request": "Запрос",
-    "Confirm Opt-In": "Подтвердить подписку"
+    "Confirm Opt-In": "Подтвердить подписку",
+    "Generate New Form ID": "Создать новый идентификатор формы",
+    "Web Form": "Веб-форма"
   },
   "messages": {
     "generateApiKey": "Создать новый ключ API",
@@ -43,6 +58,7 @@
     "optInIsConfirmed": "Подписку подтверждено."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown поддерживается."
+    "optInConfirmationSuccessMessage": "Markdown поддерживается.",
+    "formCaptcha": "Чтобы иметь возможность использовать Captcha, вам необходимо настроить ее в разделе **Администрирование** > **Интеграции**."
   }
 }

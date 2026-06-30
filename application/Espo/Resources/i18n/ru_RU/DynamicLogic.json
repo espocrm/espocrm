@@ -27,5 +27,10 @@
   },
   "labels": {
     "Field": "Поле"
+  },
+  "fields": {
+    "localField": "Местное поле",
+    "foreignField": "Зарубежное поле",
+    "matchRequired": "Требуется совпадение"
   }
 }

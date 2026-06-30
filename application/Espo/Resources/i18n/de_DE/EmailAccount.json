@@ -42,7 +42,8 @@
     "couldNotConnectToImap": "Kann keine Verbindung zum IMAP-Server herstellen",
     "connectionIsOk": "Verbindung ist in Ordnung",
     "imapNotConnected": "Konnte keine Verbindung zu [IMAP account](#EmailAccount/view/{id}) herstellen.",
-    "noFolder": "Der zugeordnete Ordner existiert nicht."
+    "noFolder": "Der zugeordnete Ordner existiert nicht.",
+    "resetFetchData": "E-Mails werden ab dem angegebenen Datum erneut abgerufen. Bereits vorhandene E-Mails werden nicht doppelt erfasst."
   },
   "tooltips": {
     "storeSentEmails": "Gesendete E-Mail werden auf einem IMAP Server gespeichert. Die E-Mail Adresse muss jene sein, von der die E-Mail gesendet wurde.",

@@ -4,5 +4,8 @@
     "Connected": "Подключено",
     "Disconnect": "Отключить",
     "Disconnected": "Отключено"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Внешняя учетная запись для интеграции '{интеграция}' была отключена из-за невозможности подключения."
   }
 }

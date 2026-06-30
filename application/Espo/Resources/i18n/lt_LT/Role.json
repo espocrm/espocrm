@@ -15,7 +15,8 @@
     "messagePermission": "Pranešimo leidimas",
     "auditPermission": "Audito leidimas",
     "mentionPermission": "Paminėti leidimą",
-    "userCalendarPermission": "Naudotojo kalendoriaus leidimas"
+    "userCalendarPermission": "Naudotojo kalendoriaus leidimas",
+    "lockPermission": "Užrakinti leidimą"
   },
   "links": {
     "users": "Vartotojai",
@@ -25,7 +26,8 @@
     "Access": "Prieiga",
     "Create Role": "Sukurti rolę",
     "Scope Level": "Taikymo lygis",
-    "Field Level": "Laukelių lygis"
+    "Field Level": "Laukelių lygis",
+    "Baseline": "Bazinis"
   },
   "options": {
     "accessList": {
@@ -66,6 +68,7 @@
     "auditPermission": "Leidžia peržiūrėti audito žurnalą.",
     "mentionPermission": "Leidžia paminėti kitus naudotojus sraute.\n\n* visi - galima paminėti visus\n* komanda - galima paminėti tik komandos narius\n* ne - negalima paminėti",
     "userPermission": "Leidžia peržiūrėti kitų naudotojų srautą. Leidžia naudotojams peržiūrėti kitų naudotojų prieigos lygius prie konkrečių įrašų.",
-    "userCalendarPermission": "Leidžia peržiūrėti kitų naudotojų kalendorius."
+    "userCalendarPermission": "Leidžia peržiūrėti kitų naudotojų kalendorius.",
+    "lockPermission": "Leidžia užrakinti ir atrakinti įrašus."
   }
 }

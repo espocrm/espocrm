@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "label": "Etiket",
+    "symbol": "Symbool",
+    "rate": "Tarief",
+    "rateDate": "Rentevoet Datum"
+  },
+  "links": {
+    "rates": "Tarieven"
+  },
+  "options": {
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
+    }
+  }
+}

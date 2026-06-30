@@ -26,5 +26,10 @@
   },
   "labels": {
     "Field": "Veld"
+  },
+  "fields": {
+    "localField": "Lokaal veld",
+    "foreignField": "Buitenland",
+    "matchRequired": "Overeenkomst vereist"
   }
 }

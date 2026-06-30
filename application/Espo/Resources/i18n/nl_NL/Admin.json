@@ -80,7 +80,8 @@
     "Group Email Folders": "Groep e-mailmappen",
     "Authentication Providers": "Authenticatieproviders",
     "Address Countries": "Landen",
-    "App Secrets": "App geheimen"
+    "App Secrets": "App geheimen",
+    "Pipelines": "Pijpleidingen"
   },
   "layouts": {
     "list": "Lijst",
@@ -215,7 +216,13 @@
     "attachmentField": "Bijlage veld",
     "dynamicLogicReadOnlySaved": "Opgeslagen voorwaarden waardoor veld alleen-lezen is",
     "notStorable": "Niet op te slaan",
-    "itemsEditable": "Items bewerkbaar"
+    "itemsEditable": "Items bewerkbaar",
+    "dynamicLogicCascading": "Cascaderende keuzelijst",
+    "capture": "Vastleggen",
+    "openInNewTab": "In een nieuw tabblad openen",
+    "notLockable": "Geen vergrendeling",
+    "protocolRequired": "Protocol vereist",
+    "cascadeRemoval": "Cascade verwijderen"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
@@ -239,7 +246,8 @@
     "formulaFunctions": "Meer functies zijn te vinden in [documentation]({documentationUrl}).",
     "rebuildRequired": "Je moet de heropbouw via CLI uitvoeren.",
     "cronIsDisabled": "Als cron is uitgeschakeld, werkt de toepassing niet volledig. Schakel cron in bij [instellingen](#Admin/instellingen).",
-    "cacheIsDisabled": "Als cache is uitgeschakeld, zal de applicatie traag werken. Schakel cache in bij [instellingen](#Admin/instellingen)."
+    "cacheIsDisabled": "Als cache is uitgeschakeld, zal de applicatie traag werken. Schakel cache in bij [instellingen](#Admin/instellingen).",
+    "noPipelinesEnabled": "Voor geen enkel entiteitstype zijn pijplijnen ingeschakeld."
   },
   "descriptions": {
     "settings": "Systeeminstellingen van de applicatie.",
@@ -292,7 +300,8 @@
     "addressCountries": "Landen beschikbaar voor adresvelden.",
     "appSecrets": "Sla gevoelige informatie op zoals API-sleutels, wachtwoorden en andere geheimen.",
     "leadCapture": "Webformulieren voor het vastleggen van leads.",
-    "oAuthProviders": "OAuth providers voor integraties."
+    "oAuthProviders": "OAuth providers voor integraties.",
+    "pipelines": "Configureer meerdere pijplijnen."
   },
   "options": {
     "previewSize": {
@@ -304,6 +313,10 @@
     "labelType": {
       "state": "Provincie",
       "regular": "Regulier"
+    },
+    "capture": {
+      "user": "Gebruiker",
+      "environment": "Milieu"
     }
   },
   "logicalOperators": {

@@ -19,7 +19,8 @@
     "body": "Тело",
     "categories": "Категории",
     "language": "Язык",
-    "portals": "Порталы"
+    "portals": "Порталы",
+    "bodyPlain": "Тело простое"
   },
   "links": {
     "cases": "Обращения",

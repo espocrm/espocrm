@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "event": "Evento",
+    "target": "Alvo",
+    "data": "Dado",
+    "attempts": "Tentativas"
+  },
+  "options": {
+    "status": {
+      "Pending": "Pendente",
+      "Success": "Sucesso",
+      "Failed": "Falha"
+    }
+  }
+}

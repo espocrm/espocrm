@@ -58,7 +58,8 @@
     "sendAt": "Siųsti adresu",
     "toEmailAddresses": "Į el. pašto adresus",
     "bccEmailAddresses": "BCC el. pašto adresai",
-    "replyToEmailAddresses": "Atsakyti į el. pašto adresus"
+    "replyToEmailAddresses": "Atsakyti į el. pašto adresus",
+    "isAutoReply": "Ar automatinis atsakymas"
   },
   "links": {
     "replied": "Atsakyta",

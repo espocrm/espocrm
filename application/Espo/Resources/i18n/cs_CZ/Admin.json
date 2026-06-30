@@ -248,7 +248,7 @@
     "userHasNoEmailAddress": "Uživatel nemá emailovou adresu.",
     "uninstallConfirmation": "Opravdu odinstalovat vybrané rozšíření?",
     "cronIsNotConfigured": "Naplánované úlohy nejsou spuštěny. Příchozí e-maily, oznámení a připomenutí proto nefungují. Postupujte podle [pokynů](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) k nastavení úlohy cron.",
-    "newExtensionVersionIsAvailable": "Je k dispozici nová verze {latestName} {latestVersion}.",
+    "newExtensionVersionIsAvailable": "Je k dispozici nová verze {extensionName} {latestVersion}.",
     "upgradeVersion": "EspoCRM bude upgradováno na verzi <strong>{version}</strong>. Toto může chvíli trvat.",
     "upgradeDone": "EspoCRM bylo upgradováno na verzi <strong>{version}</strong>.",
     "downloadUpgradePackage": "Stáhnout upgradovací balíčky na [tomto]({url}) odkaze.",

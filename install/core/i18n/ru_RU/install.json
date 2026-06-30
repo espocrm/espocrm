@@ -49,7 +49,10 @@
     "extension is missing": "расширение отсутствует",
     "headerTitle": "Установка EspoCRM",
     "Crontab setup instructions": "Без запущеного планировщика заданий входящие электронные письма, уведомления и напоминания не будут работать. Здесь вы можете прочитать {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "инструкции по настройке"
+    "Setup instructions": "инструкции по настройке",
+    "requiredMysqlVersion": "Версия MySQL",
+    "requiredMariadbVersion": "Версия MariaDB",
+    "requiredPostgresqlVersion": "Версия PostgreSQL"
   },
   "fields": {
     "Choose your language": "Выберите ваш язык",

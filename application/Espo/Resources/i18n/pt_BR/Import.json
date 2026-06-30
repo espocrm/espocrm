@@ -28,7 +28,6 @@
     "What to Import?": "O que Importar?",
     "Entity Type": "Tipo de Entidade",
     "What to do?": "O que fazer?",
-    "Properties": "Propriedades",
     "Header Row": "Linha do Cabeçalho",
     "Person Name Format": "Formato Nome da Pessoa",
     "John Smith": "João Silva",
@@ -55,7 +54,8 @@
     "Import Results": "Resultados da Importação",
     "Silent Mode": "Modo silencioso",
     "New import with same params": "Nova importação com os mesmos parâmetros",
-    "Run Manually": "Executar Manualmente"
+    "Run Manually": "Executar Manualmente",
+    "Export": "Exportar"
   },
   "messages": {
     "utf8": "Deve estar codificado com UTF-8",
@@ -66,7 +66,9 @@
     "confirmRevert": "Isso removerá todos os registros importados permanentemente. Tem certeza?",
     "confirmRemoveDuplicates": "Isso removerá permanentemente todos os registros importados que foram reconhecidos como duplicados. Tem certeza?",
     "removeImportLog": "Isso removerá o log de importação. Todos os registros importados serão mantidos. Use-o se tiver certeza de que a importação está correta.",
-    "confirmRemoveImportLog": "Isso removerá o log de importação. Todos os registros importados serão mantidos. Você não poderá reverter os resultados da importação. Tem certeza?"
+    "confirmRemoveImportLog": "Isso removerá o log de importação. Todos os registros importados serão mantidos. Você não poderá reverter os resultados da importação. Tem certeza?",
+    "importRunning": "Importar em execução...",
+    "noErrors": "Sem erros"
   },
   "fields": {
     "file": "Arquivo",
@@ -98,5 +100,11 @@
   "tooltips": {
     "manualMode": "Se marcado, você precisará executar a importação manualmente da CLI. O comando será mostrado após configurar a importação.",
     "silentMode": "A maioria dos scripts pós-salvamento será ignorada, as notas de transmissão não serão criadas. A importação será executada mais rapidamente."
+  },
+  "links": {
+    "errors": "Erros"
+  },
+  "params": {
+    "phoneNumberCountry": "DDI"
   }
 }

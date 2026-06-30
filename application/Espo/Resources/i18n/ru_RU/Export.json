@@ -11,7 +11,7 @@
   "options": {
     "format": {
       "csv": "CSV-файл текстового формата",
-      "xlsx": "XLSX (Excel)- формат Эксель"
+      "xlsx": "XLSX · Таблица"
     },
     "status": {
       "Pending": "В ожидании",

@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Створити календар",
-    "Ranges": "Діапазони"
+    "Create WorkingTimeCalendar": "Створити календар"
   },
   "fields": {
     "timeZone": "Часовий пояс",
@@ -22,6 +21,6 @@
     "weekday6TimeRanges": "Розклад Сб"
   },
   "links": {
-    "ranges": "Діапазони"
+    "ranges": "Виключення"
   }
 }

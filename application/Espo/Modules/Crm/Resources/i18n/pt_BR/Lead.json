@@ -26,8 +26,10 @@
     "industry": "Ramo de Atividade",
     "acceptanceStatus": "Status de Aceitação",
     "opportunityAmountCurrency": "Moeda do Valor da Oportunidade",
+    "acceptanceStatusMeetings": "Status de Aceitação (Reuniões)",
     "acceptanceStatusCalls": "Status de Aceitação (Ligações)",
-    "convertedAt": "Convertido Em"
+    "convertedAt": "Convertido Em",
+    "originalEmail": "Email Original"
   },
   "links": {
     "targetLists": "Lista de Alvos",
@@ -61,7 +63,6 @@
   },
   "presetFilters": {
     "active": "Ativo",
-    "actual": "Atual",
     "converted": "Convertido"
   }
 }

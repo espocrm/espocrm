@@ -57,7 +57,10 @@
     "OAuthProvider": "OAuth-Anbieter",
     "OAuthAccount": "OAuth-Konto",
     "WebhookEventQueueItem": "Webhook-Ereigniswarteschlange-Element",
-    "Template": "PDF-Vorlage"
+    "Template": "PDF-Vorlage",
+    "CurrencyRecord": "Währungsdatensatz",
+    "CurrencyRecordRate": "Wechselkurs",
+    "PipelineStage": "Pipeline-Phase"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -108,7 +111,10 @@
     "OAuthProvider": "OAuth-Anbieter",
     "OAuthAccount": "OAuth-Konten",
     "WebhookEventQueueItem": "Webhook-Ereigniswarteschlange-Elemente",
-    "Template": "PDF-Vorlagen"
+    "Template": "PDF-Vorlagen",
+    "CurrencyRecord": "Währungen",
+    "CurrencyRecordRate": "Wechselkurse",
+    "PipelineStage": "Pipeline-Phasen"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -183,7 +189,7 @@
     "View": "Ansehen",
     "Cancel": "Abbrechen",
     "Apply": "Anwenden",
-    "Unlink": "Link entfernen",
+    "Unlink": "Verknüpfung entfernen",
     "Mass Update": "Massenänderung",
     "Export": "Exportieren",
     "No Data": "Keine Daten",
@@ -222,7 +228,7 @@
     "Current version": "Aktuelle Version",
     "List View": "Listenansicht",
     "Tree View": "Baumansicht",
-    "Unlink All": "Alle Links entfernen",
+    "Unlink All": "Alle Verknüpfungen entfernen",
     "Total": "Gesamt",
     "Print to PDF": "Als PDF drucken",
     "Default": "Standard",
@@ -302,7 +308,15 @@
     "Reaction Removed": "Reaktion entfernt",
     "Reactions": "Reaktionen",
     "Network error": "Netzwerkfehler",
-    "Edit Item": "Element editieren"
+    "Edit Item": "Element editieren",
+    "Bad request": "Ungültige Anfrage",
+    "Conflict": "Konflikt",
+    "Internal server error": "Interner Serverfehler",
+    "Mark read": "Als gelesen markieren",
+    "Lock": "Sperren",
+    "Unlock": "Entsperren",
+    "Assigned": "Zugewiesen",
+    "Notification": "Benachrichtigung"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -355,10 +369,10 @@
     "saving": "Speichere...",
     "fieldMaxFileSizeError": "Die Datei soll nicht größer als {max} Mb sein",
     "fieldIsUploading": "Hochladen läuft",
-    "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
+    "erasePersonalDataConfirmation": "Die markierten Felder werden dauerhaft gelöscht. Sind Sie sicher?",
     "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden.",
     "fieldValueDuplicate": "Doppelter Wert",
-    "unlinkSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die Beziehungen zu ausgewählten Datensätzen  entfernen möchten?",
+    "unlinkSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die Beziehungen zu ausgewählten Datensätzen entfernen möchten?",
     "recalculateFormulaConfirmation": "Sind Sie sicher, dass Sie Formel für ausgewählte Datensätze neu berechnen möchten?",
     "fieldExceedsMaxCount": "Anzahl überschreitet die maximal zulässige Anzahl {maxCount}",
     "notUpdated": "Nicht aktualisiert",
@@ -419,7 +433,18 @@
     "arrayInputNotEmpty": "Artikel wird eingegeben, aber nicht hinzugefügt",
     "error403": "Sie haben keinen Zugang zu diesem Bereich.",
     "sameRecordIsAlreadyBeingEdited": "Der Datensatz wird bereits bearbeitet.",
-    "changesLossConfirmation": "Nicht gespeicherte Änderungen gehen verloren. Sind Sie sicher?"
+    "changesLossConfirmation": "Nicht gespeicherte Änderungen gehen verloren. Sind Sie sicher?",
+    "cannotRemoveUsed": "Der Datensatz kann nicht entfernt werden, da er verwendet wird.",
+    "checkLogsForDetails": "Weitere Informationen finden Sie in den Protokollen.",
+    "confirmMassLock": "Möchten Sie die ausgewählten Datensätze wirklich sperren?",
+    "confirmMassUnlock": "Möchten Sie die ausgewählten Datensätze wirklich entsperren?",
+    "locked": "Datensatz ist gesperrt",
+    "unlocked": "Datensatz ist entsperrt",
+    "massLockDone": "{count} gesperrt",
+    "massUnlockDone": "{count} entsperrt",
+    "cannotModifyLockedRecord": "Das Feld *{field}* kann nicht geändert werden. Der Datensatz ist gesperrt.",
+    "cannotRemoveLockedRecord": "Ein gesperrter Datensatz kann nicht entfernt werden.",
+    "noPipeline": "Keine Pipeline."
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
@@ -442,10 +467,12 @@
     "unfollow": "Nicht mehr abonnieren",
     "convertCurrency": "Währung umrechnen",
     "printPdf": "Als PDF drucken",
-    "unlink": "Link entfernen",
+    "unlink": "Verknüpfung entfernen",
     "recalculateFormula": "Formel neu berechnen",
     "update": "Aktualisieren",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "lock": "Sperren",
+    "unlock": "Entsperren"
   },
   "fields": {
     "firstName": "Vorname",
@@ -484,7 +511,10 @@
     "users": "Benutzer",
     "childList": "Untergeordnete Liste",
     "collaborators": "Mitarbeiter",
-    "streamUpdatedAt": "Ereignisverlauf aktualisiert um"
+    "streamUpdatedAt": "Ereignisverlauf aktualisiert um",
+    "category": "Kategorie",
+    "isLocked": "Entsperren",
+    "pipelineStage": "Pipeline-Phase"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -495,7 +525,9 @@
     "parent": "Bezieht sich auf",
     "children": "Kinder",
     "assignedUsers": "Zugewiesene Benutzer",
-    "collaborators": "Mitarbeiter"
+    "collaborators": "Mitarbeiter",
+    "category": "Kategorie",
+    "pipelineStage": "Pipeline-Phase"
   },
   "dashlets": {
     "Stream": "Ereignisse",
@@ -509,7 +541,11 @@
     "emailInbox": "{user} hat E-Mail {entity} zu Ihrem Posteingang hinzugefügt",
     "userPostReaction": "{user} reagierte auf Ihre {post}",
     "userPostInParentReaction": "{user} reagierte auf Ihre {post} in {entityType} {entity}",
-    "addedToCollaborators": "{user} hat Sie als Mitwirkenden zu {entityType} {entity} hinzugefügt"
+    "addedToCollaborators": "{user} hat Sie als Mitwirkenden zu {entityType} {entity} hinzugefügt",
+    "groupUpdatesMultiple": "{entityType} {entity} – {number} neue Aktivitäten",
+    "groupUpdatesOne": "{entityType} {entity} – neue Aktivität",
+    "groupEmailsReceivedNew": "Eingegangene E-Mails – {number} neue",
+    "groupEmailsReceived": "Eingegangene E-Mails"
   },
   "streamMessages": {
     "post": "{user} hat zu {entityType} {entity} notiert",
@@ -543,8 +579,8 @@
     "updateThis": "{user} hat diese(s/n) {entityType} aktualisiert",
     "createRelatedThis": "{user} hat {relatedEntityType} {relatedEntity} verbunden mit dieser/m {entityType} erstellt",
     "createRelated": "{user} hat {relatedEntityType} {relatedEntity} verbunden mit {entityType} {entity} erstellt",
-    "relate": "{user} hat {relatedEntityType} {relatedEntity} mit {entityType} {entity} verbunden",
-    "relateThis": "{user} hat {relatedEntityType} {relatedEntity} mit diese/r/m {entityType} verbunden",
+    "relate": "{user} hat {relatedEntityType} {relatedEntity} mit {entityType} {entity} verknüpft",
+    "relateThis": "{user} hat {relatedEntityType} {relatedEntity} mit diese/r/m {entityType} verknüpft",
     "emailReceivedFromThis": "E-Mail empfangen von {from}",
     "emailReceivedInitialFromThis": "E-Mail empfangen von {from}, ein(e) {entityType} wurde erstellt",
     "emailReceivedThis": "E-Mail empfangen",

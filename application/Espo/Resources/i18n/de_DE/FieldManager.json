@@ -59,7 +59,8 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 Monate",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 Monate",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 Monate",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 Jahr"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 Jahr",
+      "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 Tage"
     },
     "barcodeType": {
       "QRcode": "QR Code"
@@ -102,7 +103,8 @@
     "relateOnImport": "Beim Importieren mit diesem Feld wird automatisch ein Datensatz mit einem passenden Fremddatensatz verknüpft. Verwenden Sie diese Funktion nur, wenn das Fremdfeld als eindeutig angesehen wird.",
     "preview": "Die Schaltfläche Vorschau anzeigen. Anwendbar, wenn Markdown aktiviert ist.",
     "itemsEditable": "Elemente können bearbeitet werden. Gilt nur, wenn keine Optionen angegeben sind.",
-    "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt."
+    "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt.",
+    "imageCapture": "Legt fest, welche Kamera für die Erfassung von Bilddaten verwendet werden soll."
   },
   "fieldParts": {
     "address": {
@@ -152,9 +154,9 @@
     "email": "Eine Reihe von E-Mail-Adressen mit ihren Parametern: Opted-Out, Ungültig, Primär.",
     "phone": "Eine Reihe von Telefonnummern mit ihren Parametern: Typ, Opted-Out, Ungültig, Primär.",
     "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt.",
-    "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Viele-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
+    "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Viele-zu-Eins- oder Eins-zu-Eins-Beziehung) verknüpft ist.",
     "linkParent": "Ein Datensatz, der über eine „Belongs-To-Parent”-Beziehung verknüpft ist. Kann von verschiedenen Entitätstypen sein.",
-    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder 1:n) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verknüpfen\" aktiviert ist.",
+    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder 1:n) verknüpft sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verknüpfen\" aktiviert ist.",
     "urlMultiple": "Mehrere Weblinks.",
     "decimal": "Eine Dezimalzahl mit Festkomma-Genauigkeit."
   },

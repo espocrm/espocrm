@@ -16,6 +16,8 @@
     "time": "время",
     "User List": "Список пользователей",
     "View Calendar": "Просмотреть календарь",
-    "Create Shared View": "Создать общий просмотр"
+    "Create Shared View": "Создать общий просмотр",
+    "Edit Shared View": "Редактирование общего вида",
+    "Shared Mode Options": "Параметры общего режима"
   }
 }

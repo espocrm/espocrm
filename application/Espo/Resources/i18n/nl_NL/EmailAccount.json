@@ -43,7 +43,8 @@
     "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
     "connectionIsOk": "Verbinding is Ok",
     "imapNotConnected": "Kan geen verbinding maken met [IMAP-account](#EmailAccount/view/{id}).",
-    "noFolder": "De toegewezen map bestaat niet."
+    "noFolder": "De toegewezen map bestaat niet.",
+    "resetFetchData": "E-mails worden vanaf de opgegeven datum opnieuw opgehaald. Bestaande e-mails worden niet gedupliceerd."
   },
   "links": {
     "emails": "E-mails"

@@ -14,9 +14,14 @@
     "weekday3TimeRanges": "Wed grafiks",
     "weekday4TimeRanges": "Cet grafiks",
     "weekday5TimeRanges": "Fri grafiks",
-    "weekday6TimeRanges": "Sat grafiks"
+    "weekday6TimeRanges": "Sat grafiks",
+    "isDefault": "Vai tas ir noklusējums?"
   },
   "links": {
-    "ranges": "Izņēmumi"
+    "ranges": "Izņēmumi",
+    "users": "Lietotāji"
+  },
+  "tooltips": {
+    "isDefault": "Norāda, vai šis kalendārs ir sistēmas noklusējuma kalendārs. Noklusējuma darba laika kalendāru var konfigurēt sadaļā: Administrācija > Iestatījumi > Darba laika kalendārs."
   }
 }

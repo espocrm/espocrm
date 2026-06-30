@@ -86,7 +86,8 @@
     "App Log": "Lietojumprogrammu žurnāls",
     "Address Countries": "Adrese Valstis",
     "App Secrets": "Lietotņu noslēpumi",
-    "OAuth Providers": "OAuth nodrošinātāji"
+    "OAuth Providers": "OAuth nodrošinātāji",
+    "Pipelines": "Cauruļvadi"
   },
   "layouts": {
     "list": "Saraksts",
@@ -156,7 +157,8 @@
     "linkOne": "Pirmā saite",
     "barcode": "Svītrkods",
     "urlMultiple": "Url numurs Vairāki",
-    "base": "Bāze"
+    "base": "Bāze",
+    "decimal": "Decimālskaitļi"
   },
   "fields": {
     "type": "Tips",
@@ -238,7 +240,14 @@
     "preview": "Priekšskatījums",
     "attachmentField": "Pielikuma lauks",
     "dynamicLogicReadOnlySaved": "Saglabātie stāvokļa nosacījumi, padarot lauku tikai lasāmo",
-    "notStorable": "Nav uzglabājams"
+    "notStorable": "Nav uzglabājams",
+    "itemsEditable": "Rediģējamie priekšmeti",
+    "dynamicLogicCascading": "Kaskādes izvēlne",
+    "capture": "Uztveršana",
+    "openInNewTab": "Atvērt jaunā cilnē",
+    "notLockable": "Nav aizslēdzams",
+    "protocolRequired": "Nepieciešams protokols",
+    "cascadeRemoval": "Kaskādes noņemšana"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
@@ -262,7 +271,8 @@
     "formulaFunctions": "Vairāk funkciju var atrast [documentation]({documentationUrl}).",
     "rebuildRequired": "Pārbūve ir jāveic no CLI.",
     "cronIsDisabled": "Cron ir atspējots, lietojumprogramma nav pilnībā funkcionāla. Iespējot cron [iestatījumi](#Admin/settings).",
-    "cacheIsDisabled": "Kešatmiņa ir atspējota, lietojumprogramma darbosies lēni. Atļaujiet kešatmiņu [iestatījumos](#Admin/settings)."
+    "cacheIsDisabled": "Kešatmiņa ir atspējota, lietojumprogramma darbosies lēni. Atļaujiet kešatmiņu [iestatījumos](#Admin/settings).",
+    "noPipelinesEnabled": "Nevienam entītijas tipam nav ieslēgtas cauruļvadu funkcijas."
   },
   "descriptions": {
     "settings": "Lietotnes sistēmas iestatījumi.",
@@ -316,7 +326,8 @@
     "addressCountries": "Adreses laukiem pieejamās valstis.",
     "appSecrets": "Uzglabāt sensitīvu informāciju, piemēram, API atslēgas, paroles un citus noslēpumus.",
     "leadCapture": "Vadītāju piesaistes galapunkti un tīmekļa veidlapas.",
-    "oAuthProviders": "OAuth pakalpojumu sniedzēji integrācijām."
+    "oAuthProviders": "OAuth pakalpojumu sniedzēji integrācijām.",
+    "pipelines": "Konfigurējiet vairākus procesa posmus."
   },
   "options": {
     "previewSize": {
@@ -329,6 +340,10 @@
     "labelType": {
       "state": "Valsts",
       "regular": "Regulāri"
+    },
+    "capture": {
+      "user": "Lietotājs",
+      "environment": "Vide"
     }
   },
   "logicalOperators": {

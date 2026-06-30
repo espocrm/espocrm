@@ -6,7 +6,8 @@
   },
   "fields": {
     "optOut": "Izslēgts",
-    "invalid": "Nederīgs"
+    "invalid": "Nederīgs",
+    "lower": "Nosaukums ar mazajiem burtiem"
   },
   "presetFilters": {
     "orphan": "Bāreņi"

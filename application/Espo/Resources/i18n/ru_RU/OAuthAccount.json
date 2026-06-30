@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create OAuthAccount": "Создание учетной записи OAuth",
+    "Connection": "Соединение"
+  },
+  "fields": {
+    "provider": "Поставщик",
+    "hasAccessToken": "Имеет токен доступа",
+    "user": "Пользователь",
+    "providerIsActive": "Провайдер активен",
+    "data": "Данные"
+  },
+  "links": {
+    "provider": "Поставщик"
+  }
+}

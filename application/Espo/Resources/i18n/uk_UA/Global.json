@@ -15,7 +15,6 @@
     "InboundEmail": "Групова поштова скринька",
     "Stream": "Потік",
     "Import": "Імпорт",
-    "Template": "Шаблон",
     "Job": "Завдання",
     "EmailFilter": "Фільтр пошти",
     "Portal": "Портал",
@@ -57,9 +56,9 @@
     "Note": "Примітка",
     "ImportError": "Помилка імпорту",
     "WorkingTimeCalendar": "Календар робочого часу",
-    "WorkingTimeRange": "Діапазон робочого часу",
     "GroupEmailFolder": "Групова папка ел. пошти",
-    "AuthenticationProvider": "Провайдер автентифікації"
+    "AuthenticationProvider": "Провайдер автентифікації",
+    "GlobalStream": "Глобальний потік"
   },
   "scopeNamesPlural": {
     "Email": "Електронні листи",
@@ -76,7 +75,6 @@
     "Dashboard": "Панель дашлетів",
     "InboundEmail": "Групові поштові скриньки",
     "Stream": "Потік",
-    "Template": "Шаблони",
     "Job": "Завдання",
     "EmailFilter": "Фільтри пошти",
     "Portal": "Портали",
@@ -107,9 +105,9 @@
     "Note": "Примітки",
     "ImportError": "Помилки імпорту",
     "WorkingTimeCalendar": "Календарі робочого часу",
-    "WorkingTimeRange": "Діапазони робочого часу",
     "GroupEmailFolder": "Групові папки ел. пошти",
-    "AuthenticationProvider": "Провайдери автентифікації"
+    "AuthenticationProvider": "Провайдери автентифікації",
+    "GlobalStream": "Глобальний потік"
   },
   "labels": {
     "Misc": "Різне",
@@ -227,6 +225,8 @@
     "No": "Немає",
     "Value": "Значення",
     "Current version": "Поточна версія",
+    "List View": "Вигляд списку",
+    "Tree View": "Деревовидний перегляд",
     "Unlink All": "Від’єднати всі",
     "Total": "Загальний",
     "Print to PDF": "Друк в PDF",
@@ -276,12 +276,19 @@
     "Log in as": "Увійти в систему як",
     "Sign in": "Увійти",
     "Global Search": "Глобальний пошук",
-    "Show Navigation Panel": "Показати панель навігації",
-    "Hide Navigation Panel": "Приховати панель навігації"
+    "Navigation Panel": "Показати панель навігації",
+    "Print": "Друк",
+    "Copy to Clipboard": "Скопіювати в буфер обміну",
+    "Copied to clipboard": "Скопійовано в буфер обміну",
+    "Audit Log": "Аудит лог",
+    "View Audit Log": "Переглянути аудит лог",
+    "Previous Page": "Попередня сторінка",
+    "Next Page": "Наступна сторінка",
+    "First Page": "Перша сторінка",
+    "Last Page": "Остання сторінка"
   },
   "messages": {
     "pleaseWait": "Будь ласка, зачекайте...",
-    "posting": "Постимо...",
     "confirmLeaveOutMessage": "Ви впевнені, що бажаєте залишити форму?",
     "notModified": "Ви не внесли змін до запису",
     "fieldIsRequired": "{field} обов'язкове",
@@ -340,6 +347,7 @@
     "notUpdated": "Не оновлено",
     "maintenanceMode": "Зараз програма перебуває в режимі обслуговування. Тільки адміністратори мають доступ.\n\nРежим обслуговування можна відключити в Адміністрування → Налаштування.",
     "fieldInvalid": "{field} недійсне",
+    "fieldPhoneInvalid": "{field} недійсне",
     "resolveSaveConflict": "Запис змінено. Перш ніж зберегти запис, потрібно вирішити конфлікт.",
     "massActionProcessed": "Масову дію опрацьовано.",
     "fieldUrlExceedsMaxLength": "Закодована URL перевищує максимальну довжину {maxLength}",
@@ -356,7 +364,6 @@
     "validationFailure": "Помилка перевірки бекенда.\n\nПоле: `{field}`\nВалідація: `{type}`",
     "confirmAppRefresh": "Додаток оновлено. Рекомендується оновити сторінку, щоб забезпечити коректну роботу.",
     "error404": "Запитану Вами URL неможливо обробити.",
-    "error403": "Ви не маєте доступу до цієї області.",
     "extensionLicenseInvalid": "Недійсна ліцензія розширення '{name}'.",
     "extensionLicenseExpired": "Підписка на ліцензію розширення '{name}' закінчилася.",
     "extensionLicenseSoftExpired": "Підписка на ліцензію розширення '{name}' закінчилася.",
@@ -365,11 +372,23 @@
     "noAccessToForeignRecord": "Операція потребує доступу `{action}` до зовнішнього запису.",
     "fieldShouldBeNumber": "{field} має бути дійсним числом",
     "maintenanceModeError": "Зараз програма перебуває в режимі обслуговування.",
-    "noLinkAccess": "Немає доступу до операції пов'язування для певного запису.",
     "cannotRelateNonExisting": "Неможливо пов’язати з неіснуючим записом {foreignEntityType}.",
     "cannotRelateForbidden": "Неможливо пов’язати із забороненим записом {foreignEntityType}. Потрібен доступ `{action}`.",
     "cannotRelateForbiddenLink": "Немає доступу до пов'язування '{link}'.",
-    "emptyMassUpdate": "Немає доступних полів для масового оновлення."
+    "emptyMassUpdate": "Немає доступних полів для масового оновлення.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} має бути дійсною URL-адресою",
+    "fieldShouldBeLess": "{field} не повинно бути більшим за {value}",
+    "fieldShouldBeGreater": "{field} не повинно бути меншим за {value}",
+    "cannotUnrelateRequiredLink": "Не вдається від'єднати потрібне посилання.",
+    "fieldPhoneInvalidCode": "Неправильний код країни",
+    "fieldPhoneTooShort": "{field} занадто коротке",
+    "fieldPhoneTooLong": "{field} занадто довге",
+    "barcodeInvalid": "{field} не є дійсним {type}",
+    "noLinkAccess": "Неможливо зв'язатися із записом {foreignEntityType} через посилання '{link}'. Немає доступу.",
+    "attemptIntervalFailure": "Операція не дозволена протягом певного часового інтервалу. Зачекайте деякий час до наступної спроби.",
+    "cannotLinkAlreadyLinked": "Неможливо зв’язати вже зв’язаний запис.",
+    "starsLimitExceeded": "Кількість зірок перевищила ліміт.",
+    "duplicateConflict": "Запис вже існує."
   },
   "boolFilters": {
     "onlyMy": "Тільки моє",
@@ -424,7 +443,9 @@
     "types": "Типи",
     "middleName": "По батькові",
     "emailAddressIsInvalid": "Електронна адреса недійсна",
-    "phoneNumberIsInvalid": "Номер телефону недійсний"
+    "phoneNumberIsInvalid": "Номер телефону недійсний",
+    "users": "Користувачі",
+    "childList": "Дочірні записи"
   },
   "links": {
     "assignedUser": "Відповідальний",
@@ -440,7 +461,8 @@
   "dashlets": {
     "Stream": "Потік",
     "Emails": "Мої вхідні",
-    "Records": "Список записів"
+    "Records": "Список записів",
+    "Memo": "Пам'ятка"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} призначено на Вас",
@@ -472,6 +494,7 @@
     "createAssigned": "{user} створив {entityType} {entity}, призначену {assignee}",
     "assign": "{user} призначив {entityType} {entity} на {assignee}",
     "assignThis": "{user} призначив {entityType} на {assignee}",
+    "assignMultiAddThis": "{user} призначив {entityType} на {assignee}",
     "postThis": "{user} опублікував",
     "attachThis": "{user} прикріпив",
     "statusThis": "{user} оновив {field}",
@@ -735,8 +758,6 @@
       "color": {
         "recent": "Останній колір",
         "more": "Ще кольори",
-        "background": "Колір тла",
-        "foreground": "Колір шрифту",
         "transparent": "Прозорий",
         "setTransparent": "Установити прозорим",
         "reset": "Скинути",
@@ -777,7 +798,8 @@
     "Sakura": "Сакура",
     "Violet": "Фіолетова",
     "Hazyblue": "Сіро-блакитна",
-    "Glass": "Скло"
+    "Glass": "Скло",
+    "Light": "Світло"
   },
   "themeNavbars": {
     "side": "Бічна панель навігації",
@@ -792,7 +814,6 @@
     "phoneNumber": "Дійсний номер телефону",
     "array": "Масив",
     "arrayOfString": "Масив рядків",
-    "valid": "Дійсний",
     "noEmptyString": "Немає порожнього рядка",
     "max": "Максимальне значення",
     "min": "Мінімальне значення"
@@ -804,10 +825,24 @@
     "varchar_pattern": "Ймовірно, значення містить недозволені символи.",
     "email_emailAddress": "Недійсне значення електронної адреси.",
     "phone_phoneNumber": "Недійсне значення номера телефону.",
-    "dateTimeOptional_valid": "Недійсне значення дати-часу.",
-    "dateTime_valid": "Недійсне значення дати-часу.",
+    "datetimeOptional_valid": "Недійсне значення дати-часу.",
+    "datetime_valid": "Недійсне значення дати-часу.",
     "date_valid": "Недійсне значення дати.",
     "enum_valid": "Недійсне значення списку. Значення має бути одним із визначених опцій списку. Порожнє значення допускається, лише якщо в полі є порожня опція.",
-    "multiEnum_valid": "Недійсне значення множинного списку. Значення мають бути одним із визначених опцій поля."
+    "multiEnum_valid": "Недійсне значення множинного списку. Значення мають бути одним із визначених опцій поля.",
+    "int_valid": "Неправильне значення цілого числа.",
+    "float_valid": "Неправильне значення числа.",
+    "valid": "Недійсне значення.",
+    "maxLength": "Довжина значення перевищує максимальне значення.",
+    "phone_valid": "Номер телефону недійсний. Можливо, це пов’язано з неправильним або порожнім кодом країни."
+  },
+  "navbarTabs": {
+    "Business": "Бізнес",
+    "Marketing": "Маркетинг",
+    "Support": "Підтримка",
+    "Activities": "Активність"
+  },
+  "wysiwygLabels": {
+    "backgroundColor": "Колір фону"
   }
 }

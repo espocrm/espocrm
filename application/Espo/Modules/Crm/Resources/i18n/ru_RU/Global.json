@@ -13,7 +13,9 @@
     "documents": "Документы",
     "account": "Контрагент",
     "opportunity": "Cделка",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "meetingsChildren": "Встречи с детьми",
+    "callsChildren": "Вызывает детей"
   },
   "scopeNames": {
     "Account": "Контрагент",
@@ -36,7 +38,8 @@
     "Activities": "Деятельность",
     "KnowledgeBaseArticle": "Статья базы знаний",
     "KnowledgeBaseCategory": "Категория базы знаний",
-    "CampaignLogRecord": "Запись журнала Кампании"
+    "CampaignLogRecord": "Запись журнала Кампании",
+    "TargetListCategory": "Категория целевого списка"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенты",
@@ -59,7 +62,8 @@
     "Activities": "Деятельность",
     "KnowledgeBaseArticle": "Статьи базы знаний",
     "KnowledgeBaseCategory": "Категории базы знаний",
-    "CampaignLogRecord": "Записи журнала Кампании"
+    "CampaignLogRecord": "Записи журнала Кампании",
+    "TargetListCategory": "Категории целевого списка"
   },
   "dashlets": {
     "Leads": "Мои лиды",

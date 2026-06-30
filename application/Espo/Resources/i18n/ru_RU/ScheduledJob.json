@@ -21,7 +21,8 @@
       "AuthTokenControl": "Контроль за токенами аутентификации",
       "SendEmailNotifications": "Отправить оповещения на эл. почту",
       "CheckNewVersion": "Проверить наличие новой версии",
-      "ProcessWebhookQueue": "Обработка Webhook очереди"
+      "ProcessWebhookQueue": "Обработка Webhook очереди",
+      "SendScheduledEmails": "Отправка запланированных писем"
     },
     "cronSetup": {
       "linux": "Заметка: Добавьте эту строку в crontab для запуска планировщика заданий Espo:",

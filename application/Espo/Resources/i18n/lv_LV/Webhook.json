@@ -8,9 +8,14 @@
     "user": "API lietotājs",
     "entityType": "Vienības veids",
     "field": "Laukums",
-    "secretKey": "Slepenā atslēga"
+    "secretKey": "Slepenā atslēga",
+    "skipOwn": "Izlaist savu"
   },
   "links": {
-    "user": "Lietotājs"
+    "user": "Lietotājs",
+    "queueItems": "Rindas elementi"
+  },
+  "tooltips": {
+    "skipOwn": "Nesūtīt, ja notikumu ir iniciējis lietotājs, kuram pieder tīmekļa āķis."
   }
 }

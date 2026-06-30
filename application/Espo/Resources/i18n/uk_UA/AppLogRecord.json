@@ -1,0 +1,12 @@
+{
+  "fields": {
+    "message": "Повідомлення",
+    "code": "Код",
+    "level": "Рівень",
+    "file": "Файл",
+    "line": "Рядок"
+  },
+  "presetFilters": {
+    "errors": "Помилки"
+  }
+}

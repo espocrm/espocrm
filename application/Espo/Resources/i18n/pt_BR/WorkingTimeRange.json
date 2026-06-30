@@ -1,1 +1,26 @@
-{}
+{
+  "labels": {
+    "Calendars": "Calendários"
+  },
+  "fields": {
+    "timeRanges": "Programação",
+    "dateStart": "Data de Início",
+    "dateEnd": "Data de Fim",
+    "type": "Tipo",
+    "calendars": "Calendários",
+    "users": "Usuários"
+  },
+  "links": {
+    "calendars": "Calendários",
+    "users": "Usuários"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Não Trabalhando",
+      "Working": "Trabalhando"
+    }
+  },
+  "presetFilters": {
+    "actual": "Real"
+  }
+}

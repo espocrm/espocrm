@@ -8,9 +8,14 @@
     "user": "API naudotojas",
     "entityType": "Subjekto tipas",
     "field": "Laukas",
-    "secretKey": "Slaptasis raktas"
+    "secretKey": "Slaptasis raktas",
+    "skipOwn": "Praleisti savo"
   },
   "links": {
-    "user": "Vartotojas"
+    "user": "Vartotojas",
+    "queueItems": "Eilės elementai"
+  },
+  "tooltips": {
+    "skipOwn": "Nesiųsti, jei įvykį inicijavo naudotojas, kuriam priklauso webhook."
   }
 }

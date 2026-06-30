@@ -53,7 +53,15 @@
     "createdEvent": "Созданное событие",
     "event": "Событие",
     "icsEventDateStart": "Дата начала мероприятия ICS",
-    "groupFolder": "Групповая папка"
+    "groupFolder": "Групповая папка",
+    "isUsersSent": "Отправлено пользователем",
+    "inArchive": "В архиве",
+    "groupStatusFolder": "Папка состояния группы",
+    "sendAt": "Отправить по адресу",
+    "toEmailAddresses": "На адреса электронной почты",
+    "bccEmailAddresses": "Адреса электронной почты BCC",
+    "replyToEmailAddresses": "Адреса электронной почты для ответа на сообщения",
+    "isAutoReply": "Автоответчик"
   },
   "links": {
     "replied": "Ответили",
@@ -64,7 +72,12 @@
     "sentBy": "Отправлено (кем)",
     "attachments": "Вложения",
     "fromEmailAddress": "Адрес эл. почты отправителя",
-    "groupFolder": "Групповая папка"
+    "groupFolder": "Групповая папка",
+    "createdEvent": "Созданное событие",
+    "toEmailAddresses": "На адреса электронной почты",
+    "ccEmailAddresses": "Адреса электронной почты CC",
+    "bccEmailAddresses": "Адреса электронной почты BCC",
+    "replyToEmailAddresses": "Адреса электронной почты для ответа на сообщения"
   },
   "options": {
     "status": {
@@ -72,7 +85,12 @@
       "Sending": "Отправляется",
       "Sent": "Отправлено",
       "Received": "Получено",
-      "Failed": "Сбой"
+      "Failed": "Сбой",
+      "Archived": "Импортировано"
+    },
+    "groupStatusFolder": {
+      "Archive": "Архив",
+      "Trash": "Мусор"
     }
   },
   "labels": {
@@ -106,7 +124,14 @@
     "No Subject": "Без темы",
     "Insert Field": "Вставить поле",
     "Event": "Событие",
-    "Group Folders": "Групповые папки"
+    "Group Folders": "Групповые папки",
+    "View Attachments": "Посмотреть вложения",
+    "Import EML": "Импорт EML",
+    "Moved to Archive": "Перемещено в архив",
+    "Moved to Trash": "Перемещено в корзину",
+    "Retrieved from Trash": "Извлечено из корзины",
+    "No Records Moved": "Записи не перемещены",
+    "Schedule Send": "Расписание Отправить"
   },
   "messages": {
     "testEmailSent": "Тестовое эл. письмо было отправлено",
@@ -117,14 +142,27 @@
     "confirmSend": "Отправить письмо?",
     "sendConfirm": "Отправить письмо?",
     "removeSelectedRecordsConfirmation": "Вы действительно хотите удалить выбранные электронные письма?\n\nОни будут удалены и для других пользователей.",
-    "removeRecordConfirmation": "Вы уверены, что хотите удалить письмо?\n\nОн будет удален и для других пользователей."
+    "removeRecordConfirmation": "Вы уверены, что хотите удалить письмо?\n\nОн будет удален и для других пользователей.",
+    "invalidCredentials": "Неверные учетные данные.",
+    "unknownError": "Неизвестная ошибка.",
+    "recipientAddressRejected": "Адрес получателя отклонен.",
+    "alreadyImported": "Имя [email]({ссылка}) уже существует в системе.",
+    "couldNotSentScheduledEmail": "Не удалось отправить запланированный [email]({ссылка})",
+    "notEditAccess": "Нет доступа к редактированию электронной почты.",
+    "groupFolderNoAccess": "Нет доступа к папке группы.",
+    "groupMoveOutNoEditAccess": "Невозможно переместить из групповой папки. Нет доступа к редактированию электронной почты.",
+    "groupMoveToNoEditAccess": "Невозможно переместить в групповую папку. Нет доступа к редактированию электронной почты.",
+    "groupMoveToTrashNoEditAccess": "Невозможно переместить электронную почту из папки \"Группа\" в \"Корзину\". Нет доступа к редактированию электронной почты.",
+    "groupMoveToArchiveNoEditAccess": "Невозможно переместить из групповой папки в архив. Нет доступа к редактированию электронной почты."
   },
   "presetFilters": {
     "sent": "Отправленные",
     "inbox": "Входящие",
     "drafts": "Черновики",
     "trash": "Корзина",
-    "important": "Важное"
+    "important": "Важное",
+    "archived": "Импортировано",
+    "archive": "Архив"
   },
   "massActions": {
     "markAsRead": "Пометить как прочитанное",
@@ -133,9 +171,17 @@
     "markAsNotImportant": "Снять пометку важности",
     "moveToTrash": "Переместить в корзину",
     "moveToFolder": "Переместить в папку",
-    "retrieveFromTrash": "Восстановить из корзины"
+    "retrieveFromTrash": "Восстановить из корзины",
+    "moveToArchive": "Архив"
   },
   "strings": {
-    "sendingFailed": "Ошибка отправки электронной почты"
+    "sendingFailed": "Ошибка отправки электронной почты",
+    "group": "Группа"
+  },
+  "actions": {
+    "moveToArchive": "Архив"
+  },
+  "otherFields": {
+    "file": "Файл"
   }
 }

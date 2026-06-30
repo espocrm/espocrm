@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create CurrencyRecordRate": "Sukurti valiutos kursą"
+  },
+  "fields": {
+    "record": "Valiuta",
+    "baseCode": "Pagrindas",
+    "date": "Data",
+    "rate": "Įvertinti",
+    "number": "Skaičius"
+  },
+  "links": {
+    "record": "Valiuta"
+  }
+}

@@ -10,14 +10,17 @@
     "excludingActionList": "Исключая",
     "optedOutCount": "Количество пользователей, которые сняли подписку",
     "targetStatus": "Статус цели",
-    "isOptedOut": "Отписалось"
+    "isOptedOut": "Отписалось",
+    "sourceCampaign": "Кампания \"Источник",
+    "category": "Категория"
   },
   "links": {
     "accounts": "Контрагенты",
     "contacts": "Контакты",
     "leads": "Лиды",
     "campaigns": "Кампании",
-    "massEmails": "Массовые рассылки эл. писем"
+    "massEmails": "Массовые рассылки эл. писем",
+    "category": "Категория"
   },
   "options": {
     "type": {

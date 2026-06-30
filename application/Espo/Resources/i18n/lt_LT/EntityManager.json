@@ -54,7 +54,11 @@
     "aclContactLink": "ACL kontaktinė nuoroda",
     "aclAccountLink": "ACL paskyros nuoroda",
     "sortBy": "Numatytojo užsakymo laukas",
-    "sortDirection": "Numatytoji užsakymo kryptis"
+    "sortDirection": "Numatytoji užsakymo kryptis",
+    "categories": "Kategorijos",
+    "lockable": "Užrakinamas",
+    "transactionalSave": "Sandorio išsaugojimas",
+    "pipelines": "Vamzdynai"
   },
   "options": {
     "type": {
@@ -86,7 +90,7 @@
   "messages": {
     "entityCreated": "Įrašas buvo sukurtas",
     "linkAlreadyExists": "Sąsajos pavadinimo konfliktas.",
-    "linkConflict": "Vardas konfliktas: nuoroda ar laukas su tuo pačiu pavadinimu jau egzistuoja.",
+    "linkConflict": "Pavadinimo konfliktas: nuoroda ar laukas su tuo pačiu pavadinimu jau egzistuoja.",
     "confirmRemove": "Ar tikrai norite ištrinti subjekto tipą iš sistemos?",
     "beforeSaveCustomScript": "Skriptas, iškviečiamas kiekvieną kartą prieš išsaugant esybę. Naudojamas apskaičiuotiems laukams nustatyti.",
     "beforeSaveApiScript": "Skriptas, iškviečiamas kuriant ir atnaujinant API užklausas prieš išsaugant esybę. Naudokite pasirinktiniam patvirtinimui ir dublikatų tikrinimui.",
@@ -94,7 +98,9 @@
     "nameIsNotAllowed": "Vardas '{name}' yra neleistinas.",
     "nameIsTooLong": "Vardas yra per ilgas.",
     "confirmRemoveLink": "Ar tikrai norite pašalinti ryšį *{link}*?",
-    "urlHashCopiedToClipboard": "Į iškarpinę nukopijuojamas *{pavadinimas}* filtro URL fragmentas. Jį galite įtraukti į naršymo juostą."
+    "urlHashCopiedToClipboard": "Į iškarpinę nukopijuojamas *{pavadinimas}* filtro URL fragmentas. Jį galite įtraukti į naršymo juostą.",
+    "cannotEnablePipelinesWithNoStatusField": "„Pipelines“ funkcijos neįmanoma įjungti, nes objekto tipas neturi būsenos lauko. Jei reikia, sukurkite „Enum“ tipo lauką būsenai, tada pasirinkite jį parametrą „Status Field“.",
+    "cannotEnableCategoriesWithKanbanViewMode": "Kategorijos nesuderinamos su „Kanban“ peržiūros režimu. Išjunkite vieną iš jų."
   },
   "tooltips": {
     "statusField": "Šio lauko atnaujinimai įrašomi sraute.",
@@ -116,6 +122,17 @@
     "assignedUsers": "Galimybė priskirti kelis naudotojus prie įrašo.\n\nAtkreipkite dėmesį, kad įjungus šį parametrą, esami priskirti naudotojai nebus perkeliami į naująjį lauką *Priteisti naudotojai*.",
     "preserveAuditLog": "Išjungiamas audito žurnalo valymas. Šis parametras taikomas tik tuo atveju, jei parametras Stream yra išjungtas. Jei srautas įjungtas, audito žurnalo įrašai netrinami.",
     "stream": "Ar subjektas turi \"Stream\".",
-    "linkParamReadOnly": "Nuorodos, skirtos tik skaitymui, negalima redaguoti naudojant API užklausas *link* ir *unlink*. Susieti ir panaikinti įrašų nebus galima per ryšių skydelį. Vis dar bus galima redaguoti tik skaitymui skirtas nuorodas per nuorodų ir nuorodų daugybinių laukų laukus."
+    "linkParamReadOnly": "Nuorodos, skirtos tik skaitymui, negalima redaguoti naudojant API užklausas *link* ir *unlink*. Susieti ir panaikinti įrašų nebus galima per ryšių skydelį. Vis dar bus galima redaguoti tik skaitymui skirtas nuorodas per nuorodų ir nuorodų daugybinių laukų laukus.",
+    "pipelines": "Įgalina naudoti kelis procesų srautus. Procesų srautus galima konfigūruoti meniu „Administravimas“ > „Procesų srautai“.",
+    "transactionalSave": "Įrašų išsaugojimai ir pašalinimai bus įtraukti į duomenų bazės sandorius.",
+    "lockable": "Įjungia įrašų užrakinimo funkciją.",
+    "categories": "Įjunkite kategorijų medžio funkciją. Įrašus galima suskirstyti į kategorijas.",
+    "linkParamCascadeRemoval": "Jei ši funkcija įjungta, pašalinus pagrindinį įrašą, bus pašalinti ir su juo susiję įrašai."
+  },
+  "entityNameParts": {
+    "Category": "Kategorija"
+  },
+  "entityNamePartsPlural": {
+    "Category": "Kategorijos"
   }
 }

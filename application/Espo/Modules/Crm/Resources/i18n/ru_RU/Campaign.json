@@ -50,7 +50,8 @@
       "Television": "Телевидение",
       "Radio": "Радио",
       "Newsletter": "Информационный бюллетень",
-      "Mail": "Письмо"
+      "Mail": "Письмо",
+      "Informational Email": "Информационное письмо"
     },
     "status": {
       "Planning": "Запланирована",
@@ -79,7 +80,8 @@
   },
   "messages": {
     "unsubscribed": "Вы были удалены из нашего списка рассылки.",
-    "subscribedAgain": "Вы снова подписаны."
+    "subscribedAgain": "Вы снова подписаны.",
+    "cannotChangeType": "Невозможно изменить тип."
   },
   "tooltips": {
     "targetLists": "Цели которые должны получить сообщения.",

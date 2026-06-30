@@ -21,7 +21,7 @@
     "budget": "Biudžetas",
     "budgetConverted": "Biudžetas (kovertuotas)",
     "contactsTemplate": "Kontaktai šablonas",
-    "leadsTemplate": "Pasiunčia šabloną",
+    "leadsTemplate": "Potencialių klientų šablonas",
     "accountsTemplate": "Sąskaitų šablonas",
     "usersTemplate": "Vartotojų šablonas",
     "mailMergeOnlyWithAddress": "Praleisti įrašus be užpildyto adreso",
@@ -38,7 +38,7 @@
     "massEmails": "Masiniai el. laiškai",
     "trackingUrls": "Stebėjimo URL",
     "contactsTemplate": "Kontaktai šablonas",
-    "leadsTemplate": "Pasiunčia šabloną",
+    "leadsTemplate": "Potencialių klientų šablonas",
     "accountsTemplate": "Sąskaitų šablonas",
     "usersTemplate": "Vartotojų šablonas"
   },

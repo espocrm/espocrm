@@ -145,5 +145,8 @@
     "YER": "Jemenitische Rial",
     "ZAR": "Zuid-Afrikaanse Rand",
     "ZMW": "Zambiaanse Kwacha"
+  },
+  "messages": {
+    "rateOnDateAlreadyExists": "Er bestaat al een tarief voor deze datum."
   }
 }

@@ -32,7 +32,6 @@
     "Install": "Установити",
     "Configuration Instructions": "Інструкції конфіґурування",
     "phpVersion": "Версія PHP",
-    "requiredMysqlVersion": "Версія MySQL",
     "dbHostName": "Ім'я хоста",
     "dbName": "Ім'я бази даних",
     "dbUserName": "Ім'я користувача бази даних",
@@ -47,7 +46,10 @@
     "extension is missing": "розширення відсутнє",
     "headerTitle": "Установка EspoCRM",
     "Crontab setup instructions": "Без запуску запланованих завдань вхідні електронні листи, сповіщення та нагадування не працюватимуть. Тут ви можете прочитати {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "інструкції з налаштування"
+    "Setup instructions": "інструкції з налаштування",
+    "requiredMysqlVersion": "Версія MySQL",
+    "requiredMariadbVersion": "Версія MariaDB",
+    "requiredPostgresqlVersion": "Версія PostgreSQL"
   },
   "fields": {
     "Choose your language": "Оберіть Вашу мову",
@@ -78,7 +80,8 @@
     "smtpAuth": "Авторизація",
     "smtpSecurity": "Безпека",
     "smtpUsername": "Ім'я користувача",
-    "emailAddress": "Електронна пошта"
+    "emailAddress": "Електронна пошта",
+    "Platform": "Платформа"
   },
   "messages": {
     "1045": "Доступ заборонений для користувача",

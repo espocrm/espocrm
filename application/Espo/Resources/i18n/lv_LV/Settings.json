@@ -50,7 +50,6 @@
     "siteUrl": "Vietnes URL",
     "addressPreview": "Adreses priekšskatījums",
     "addressFormat": "Adreses formāts",
-    "notificationSoundsDisabled": "Izslēgt paziņojumu skaņas",
     "applicationName": "Lietotnes nosaukums",
     "ldapUsername": "Pilns lietotāja DN",
     "ldapBindRequiresDn": "Sasaistei nepieciešams DN",
@@ -171,7 +170,9 @@
     "passwordStrengthSpecialCharacterCount": "Parolē nepieciešamo īpašo rakstzīmju skaits",
     "availableReactions": "Pieejamās reakcijas",
     "outboundEmailFromAddress": "Sistēmas e-pasta adrese",
-    "oidcUserInfoEndpoint": "OIDC UserInfo galapunkts"
+    "oidcUserInfoEndpoint": "OIDC UserInfo galapunkts",
+    "baselineRole": "Pamata loma",
+    "oidcAuthorizationPkce": "OIDC izmanto PKCE"
   },
   "tooltips": {
     "recordsPerPage": "Saraksta skatījumos sākotnēji parādāmo ierakstu skaits.",
@@ -232,6 +233,7 @@
     "authIpAddressWhitelist": "IP adrešu vai diapazonu saraksts CIDR notācijā.\n\nIerobežojums neattiecas uz portāliem.",
     "oidcGroupClaim": "Pretenzija, ko izmantot komandas kartēšanai.",
     "outboundEmailFromAddress": "No šīs e-pasta adreses tiks nosūtīti sistēmas e-pasta ziņojumi. Lai varētu sūtīt e-pasta vēstules, ir jāizveido un pareizi jākonfigurē [grupas e-pasta konts](#InboundEmail) ar to pašu e-pasta adresi.",
+    "baselineRole": "Noklusējuma loma, ko piemēro visiem lietotājiem. Jebkuras lietotājam piešķirtās papildu lomas piešķir atļaujas papildus šai pamatlīnijai.\n\n**Svarīgi**. Šīs lomas maiņa ietekmē visus lietotājus - rūpīgi pārskatiet izmaiņas, lai nepiešķirtu neparedzētas atļaujas.",
     "displayListViewRecordCount": "Saraksta skatā tiks parādīts kopējais ierakstu skaits.",
     "currencyList": "Kādas valūtas būs pieejamas sistēmā.",
     "activitiesEntityList": "Kādi ieraksti būs pieejami panelī Darbības.",
@@ -291,7 +293,8 @@
     "Scheduled Send": "Plānotā sūtīšana"
   },
   "messages": {
-    "ldapTestConnection": "Savienojums sekmīgi izveidots."
+    "ldapTestConnection": "Savienojums sekmīgi izveidots.",
+    "confirmBaselineRoleChange": "Vai esat pārliecināts, ka vēlaties mainīt bāzes lomu? Nepārdomātas izmaiņas var piešķirt neparedzētas atļaujas visiem lietotājiem."
   },
   "options": {
     "streamEmailNotificationsTypeList": {

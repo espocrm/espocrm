@@ -83,7 +83,13 @@
     "Formula Sandbox": "Песочница скриптов",
     "Working Time Calendars": "Календари рабочего времени",
     "Group Email Folders": "Групповые папки эл. почты",
-    "Authentication Providers": "Поставщики аутентификации"
+    "Authentication Providers": "Поставщики аутентификации",
+    "Setup": "Настройка",
+    "App Log": "Журнал приложений",
+    "Address Countries": "Страны адреса",
+    "App Secrets": "Секреты приложений",
+    "OAuth Providers": "Провайдеры OAuth",
+    "Pipelines": "Трубопроводы"
   },
   "layouts": {
     "list": "Список",
@@ -151,7 +157,9 @@
     "datetimeOptional": "Дата/Дата-время",
     "checklist": "Контрольный список",
     "linkOne": "Связь (Один)",
-    "barcode": "Штрих-код"
+    "barcode": "Штрих-код",
+    "base": "База",
+    "decimal": "Десятичные"
   },
   "fields": {
     "type": "Тип",
@@ -220,7 +228,27 @@
     "globalRestrictions": "Глобальные ограничения",
     "decimal": "Десятичная дробь",
     "optionsReference": "Справочник по опциям",
-    "copyToClipboard": "Кнопка копирования в буфер обмена"
+    "copyToClipboard": "Кнопка копирования в буфер обмена",
+    "rows": "Максимальное количество строк",
+    "readOnlyAfterCreate": "Только для чтения После создания",
+    "createButton": "Создать кнопку",
+    "autocompleteOnEmpty": "Автозаполнение при пустом вводе",
+    "relateOnImport": "Относиться к импорту",
+    "aclScope": "Область применения ACL",
+    "onlyAdmin": "Только для администратора",
+    "activeOptions": "Активные опции",
+    "labelType": "Тип этикетки",
+    "preview": "Предварительный просмотр",
+    "attachmentField": "Поле прикрепления",
+    "dynamicLogicReadOnlySaved": "Условия сохраненного состояния, делающие поле доступным только для чтения",
+    "notStorable": "Не подлежит хранению",
+    "itemsEditable": "Редактируемые элементы",
+    "dynamicLogicCascading": "Каскадный выпадающий список",
+    "capture": "Захват",
+    "openInNewTab": "Открыть в новой вкладке",
+    "notLockable": "Не запирается",
+    "protocolRequired": "Требуется протокол",
+    "cascadeRemoval": "Удаление каскада"
   },
   "messages": {
     "selectEntityType": "Выберите тип объекта в левом меню.",
@@ -242,7 +270,10 @@
     "upgradeRecommendation": "Этот способ обновления не рекомендуется. Лучше обновлять с CLI.",
     "newVersionIsAvailable": "Доступна новая версия EspoCRM {latestVersion}. Пожалуйста, следуйте [инструкциям](https://www.espocrm.com/documentation/administration/upgrading/), чтобы обновить ваш экземпляр.",
     "formulaFunctions": "Дополнительные функции можно найти в [документации] ({documentationUrl}).",
-    "rebuildRequired": "Вам нужно перезапуститься из командной строки."
+    "rebuildRequired": "Вам нужно перезапуститься из командной строки.",
+    "cronIsDisabled": "Cron отключен, приложение работает не полностью. Включите cron в [настройках](#Admin/settings).",
+    "cacheIsDisabled": "Если кэш отключен, приложение будет работать медленно. Включите кэш в [настройках](#Admin/settings).",
+    "noPipelinesEnabled": "Для всех типов объектов функция «Конвейеры» отключена."
   },
   "descriptions": {
     "settings": "Системные настройки.",
@@ -291,7 +322,13 @@
     "formulaSandbox": "Написание и тестирование скриптов формул.",
     "workingTimeCalendars": "График работы.",
     "groupEmailFolders": "Общие папки эл. писем для групп.",
-    "authenticationProviders": "Дополнительные поставщики аутентификации для порталов."
+    "authenticationProviders": "Дополнительные поставщики аутентификации для порталов.",
+    "appLog": "Журнал регистрации заявок.",
+    "addressCountries": "Страны, доступные для полей адреса.",
+    "appSecrets": "Храните конфиденциальную информацию, например ключи API, пароли и другие секреты.",
+    "leadCapture": "Конечные точки сбора данных и веб-формы.",
+    "oAuthProviders": "Провайдеры OAuth для интеграций.",
+    "pipelines": "Настройте несколько конвейеров."
   },
   "options": {
     "previewSize": {
@@ -300,6 +337,14 @@
       "medium": "Средний",
       "large": "Большой",
       "": "По умончанию"
+    },
+    "labelType": {
+      "state": "Государство",
+      "regular": "Обычный"
+    },
+    "capture": {
+      "user": "Пользователь",
+      "environment": "Окружающая среда"
     }
   },
   "logicalOperators": {
@@ -344,6 +389,12 @@
     "templateManager": "уведомления",
     "jobs": "Планировщик заданий",
     "authentication": "пароль, безопасность, ldap",
-    "labelManager": "язык, перевод"
+    "labelManager": "язык, перевод",
+    "appSecrets": "ключ, ключи, пароль",
+    "leadCapture": "веб-формы"
+  },
+  "tooltips": {
+    "tabUrl": "Может начинаться с `#` для перехода на страницу приложения.",
+    "tabUrlAclScope": "Вкладка будет доступна пользователям, имеющим доступ к указанной области."
   }
 }

@@ -64,6 +64,12 @@
     "barcodeType": {
       "pharmacode": "Código Farmacêutico",
       "QRcode": "Código QR"
+    },
+    "globalRestrictions": {
+      "forbidden": "Proibido",
+      "internal": "Interno",
+      "onlyAdmin": "Somente Admin",
+      "readOnly": "Somente Leitura"
     }
   },
   "tooltips": {
@@ -72,7 +78,6 @@
     "default": "O valor será definido por padrão na criação.",
     "min": "Valor mínimo aceitável.",
     "max": "Valor máximo aceitável.",
-    "seeMoreDisabled": "Se não estiver marcado, os textos longos serão encurtados.",
     "lengthOfCut": "Qual o tamanho do texto antes de ser cortado.",
     "maxLength": "Comprimento máximo aceitável do texto.",
     "before": "O valor de data deve ser anterior ao valor de data do campo especificado.",
@@ -81,7 +86,16 @@
     "maxFileSize": "Se vazio ou 0, não há limite.",
     "fileAccept": "Quais tipos de arquivo aceitar. É possível adicionar itens personalizados.",
     "barcodeLastChar": "Para o tipo EAN-13",
-    "conversionDisabled": "A ação de conversão de moeda não será aplicada a este campo."
+    "conversionDisabled": "A ação de conversão de moeda não será aplicada a este campo.",
+    "cutHeight": "Um texto maior que um valor especificado será cortado com um botão 'mostrar mais'.",
+    "pattern": "Uma expressão regular para verificar um valor de campo. Defina uma expressão ou selecione uma predefinida.",
+    "options": "Uma lista de valores possíveis e seus rótulos.",
+    "optionsArray": "Uma lista de valores possíveis e seus rótulos. Se for vazio, o campo permitirá a inserção de valores personalizados.",
+    "maxCount": "Número máximo de itens permitidos para serem selecionados.",
+    "displayAsList": "Cada item em uma nova linha.",
+    "optionsVarchar": "Uma lista de valores de preenchimento automático.",
+    "currencyDecimal": "Use o tipo DB decimal. No aplicativo, os valores serão representados como strings. Marque este parâmetro se a precisão for necessária.",
+    "optionsReference": "Reutilize opções de outro campo."
   },
   "fieldParts": {
     "address": {
@@ -118,6 +132,7 @@
     "bool": "Um checkbox. Dois valores possíveis: verdadeiro e falso.",
     "multiEnum": "Uma lista de valores, vários valores podem ser selecionados. A lista está ordenada.",
     "checklist": "Uma lista de checkboxes.",
+    "array": "Uma lista de valores, semelhante ao campo Multi-Enum.",
     "address": "Um endereço com rua, cidade, estado, código postal e país.",
     "url": "Para armazenar links.",
     "wysiwyg": "Um texto com suporte HTML.",
@@ -128,6 +143,7 @@
     "autoincrement": "Um número inteiro de incremento automático gerado somente leitura.",
     "barcode": "Um código de barras. Pode ser impresso em PDF.",
     "foreign": "Um campo de um registro relacionado. Somente leitura.",
-    "linkMultiple": "Um conjunto de registros relacionados por meio do relacionamento Has-Many (many-to-many ou one-to-manys). Nem todos os relacionamentos têm seus campos de links múltiplos. Somente aqueles fazem isso, onde o(s) parâmetro(s) Link-Multiple está(ão) habilitado(s)."
+    "linkMultiple": "Um conjunto de registros relacionados por meio do relacionamento Has-Many (many-to-many ou one-to-manys). Nem todos os relacionamentos têm seus campos de links múltiplos. Somente aqueles fazem isso, onde o(s) parâmetro(s) Link-Multiple está(ão) habilitado(s).",
+    "urlMultiple": "Múltiplos links."
   }
 }

@@ -2,7 +2,8 @@
   "fields": {
     "type": "Тип",
     "optOut": "Не звонить",
-    "invalid": "Неверный номер"
+    "invalid": "Неверный номер",
+    "numeric": "Числовое значение"
   },
   "presetFilters": {
     "orphan": "Сирота"

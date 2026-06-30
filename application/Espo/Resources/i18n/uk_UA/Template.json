@@ -19,7 +19,8 @@
     "pageHeight": "Висота сторінки (мм)",
     "headerPosition": "Позиція заголовка",
     "printHeader": "Друкований заголовок",
-    "title": "Заголовок"
+    "title": "Заголовок",
+    "style": "Стиль"
   },
   "labels": {
     "Create Template": "Створити шаблон"

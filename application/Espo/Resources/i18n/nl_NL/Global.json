@@ -61,7 +61,11 @@
     "AppSecret": "App Geheim",
     "OAuthAccount": "OAuth account",
     "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitem",
-    "Template": "PDF-sjabloon"
+    "Template": "PDF-sjabloon",
+    "CurrencyRecord": "Valuta-overzicht",
+    "CurrencyRecordRate": "Wisselkoers",
+    "Pipeline": "Pijpleiding",
+    "PipelineStage": "Pijplijnfase"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -113,7 +117,11 @@
     "AppSecret": "App Geheimen",
     "OAuthAccount": "OAuth accounts",
     "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitems",
-    "Template": "PDF-sjablonen"
+    "Template": "PDF-sjablonen",
+    "CurrencyRecord": "Valuta’s",
+    "CurrencyRecordRate": "Wisselkoersen",
+    "Pipeline": "Pijpleidingen",
+    "PipelineStage": "Fasen van de pijpleiding"
   },
   "labels": {
     "Misc": "Overig",
@@ -298,7 +306,14 @@
     "Reaction Removed": "Reactie verwijderd",
     "Reactions": "Reacties",
     "Network error": "Netwerk error",
-    "Edit Item": "Item bewerken"
+    "Edit Item": "Item bewerken",
+    "Bad request": "Ongeldig verzoek",
+    "Internal server error": "Interne serverfout",
+    "Mark read": "Mark las",
+    "Lock": "Vergrendelen",
+    "Unlock": "Ontgrendelen",
+    "Assigned": "Toegewezen",
+    "Notification": "Kennisgeving"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -415,7 +430,18 @@
     "arrayInputNotEmpty": "Item is ingevoerd maar niet toegevoegd",
     "error403": "Je hebt geen toegang tot dit deel.",
     "sameRecordIsAlreadyBeingEdited": "Het record wordt al bewerkt.",
-    "changesLossConfirmation": "Niet opgeslagen wijzigingen gaan verloren. Weet u het zeker?"
+    "changesLossConfirmation": "Niet opgeslagen wijzigingen gaan verloren. Weet u het zeker?",
+    "cannotRemoveUsed": "Het record kan niet worden verwijderd omdat het in gebruik is.",
+    "checkLogsForDetails": "Raadpleeg de logbestanden voor meer informatie.",
+    "confirmMassLock": "Weet u zeker dat u de geselecteerde records wilt vergrendelen?",
+    "confirmMassUnlock": "Weet u zeker dat u de geselecteerde records wilt ontgrendelen?",
+    "locked": "Het record is vergrendeld",
+    "unlocked": "Het record is ontgrendeld",
+    "massLockDone": "{count} vergrendeld",
+    "massUnlockDone": "{count} ontgrendeld",
+    "cannotModifyLockedRecord": "Het veld *{field}* kan niet worden gewijzigd. Het record is vergrendeld.",
+    "cannotRemoveLockedRecord": "Een vergrendeld record kan niet worden verwijderd.",
+    "noPipeline": "Geen pijpleiding."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -440,7 +466,9 @@
     "printPdf": "Print als PDF",
     "unlink": "Ontkoppel",
     "recalculateFormula": "Formule herberekenen",
-    "delete": "Verwijder"
+    "delete": "Verwijder",
+    "lock": "Vergrendelen",
+    "unlock": "Ontgrendelen"
   },
   "fields": {
     "name": "Naam",
@@ -480,7 +508,11 @@
     "users": "Gebruikers",
     "childList": "Sublijst",
     "collaborators": "Medewerkers",
-    "streamUpdatedAt": "Stream bijgewerkt op"
+    "streamUpdatedAt": "Stream bijgewerkt op",
+    "category": "Categorie",
+    "isLocked": "Vergrendeld",
+    "pipeline": "Pijpleiding",
+    "pipelineStage": "Pijplijnfase"
   },
   "links": {
     "assignedUser": "Toegewezen gebruiker",
@@ -493,7 +525,10 @@
     "parent": "Behorende bij",
     "children": "Onderliggend",
     "assignedUsers": "Toegewezen gebruikers",
-    "collaborators": "Medewerkers"
+    "collaborators": "Medewerkers",
+    "category": "Categorie",
+    "pipeline": "Pijpleiding",
+    "pipelineStage": "Pijplijnfase"
   },
   "dashlets": {
     "Emails": "Mijn inbox",
@@ -506,7 +541,11 @@
     "emailInbox": "{user} voegde e-mail {entiteit} toe aan je inbox",
     "userPostReaction": "{user} reageerde op je {post}",
     "userPostInParentReaction": "{user} reageerde op je {post} in {entityType} {entity}",
-    "addedToCollaborators": "{user} heeft je toegevoegd als medewerker aan {entityType} {entity}"
+    "addedToCollaborators": "{user} heeft je toegevoegd als medewerker aan {entityType} {entity}",
+    "groupUpdatesMultiple": "{entityType} {entity} – {number} nieuwe activiteiten",
+    "groupUpdatesOne": "{entityType} {entity} – nieuwe activiteit",
+    "groupEmailsReceivedNew": "Ontvangen e-mails – {aantal} nieuwe",
+    "groupEmailsReceived": "Ontvangen e-mails"
   },
   "streamMessages": {
     "post": "{user} geplaatst op {entityType} {entity}",

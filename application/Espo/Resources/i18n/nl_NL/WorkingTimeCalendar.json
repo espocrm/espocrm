@@ -18,9 +18,14 @@
     "weekday3TimeRanges": "Woe Schema",
     "weekday4TimeRanges": "Do Schema",
     "weekday5TimeRanges": "Vr Schema",
-    "weekday6TimeRanges": "Zat Schema"
+    "weekday6TimeRanges": "Zat Schema",
+    "isDefault": "Is standaard"
   },
   "links": {
-    "ranges": "Uitzonderingen"
+    "ranges": "Uitzonderingen",
+    "users": "Gebruikers"
+  },
+  "tooltips": {
+    "isDefault": "Geeft aan of deze kalender de standaardkalender van het systeem is. De standaard werktijdkalender kan worden geconfigureerd via: Beheer > Instellingen > Werktijdkalender."
   }
 }

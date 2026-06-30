@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Criar calendário"
+  },
+  "fields": {
+    "timeZone": "Fuso horário",
+    "timeRanges": "Horário de trabalho",
+    "weekday0": "Dom",
+    "weekday1": "Seg",
+    "weekday2": "Ter",
+    "weekday3": "Qua",
+    "weekday4": "Qui",
+    "weekday5": "Sex",
+    "weekday6": "Sab",
+    "weekday0TimeRanges": "Programação de domingo",
+    "weekday1TimeRanges": "Programação de segunda-feira",
+    "weekday2TimeRanges": "Programação de terça-feira",
+    "weekday3TimeRanges": "Programação de quarta-feira",
+    "weekday4TimeRanges": "Programação de quinta-feira",
+    "weekday5TimeRanges": "Programação de sexta-feira",
+    "weekday6TimeRanges": "Programação de sábado"
+  }
+}

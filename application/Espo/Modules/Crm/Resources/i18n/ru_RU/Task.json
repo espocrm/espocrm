@@ -14,7 +14,8 @@
     "dateCompleted": "Дата завершения",
     "attachments": "Вложения",
     "reminders": "Напоминания",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "originalEmail": "Оригинальное электронное письмо"
   },
   "links": {
     "attachments": "Вложения",
@@ -46,7 +47,8 @@
     "completed": "Завершенные",
     "todays": "На сегодня",
     "overdue": "Просроченные",
-    "deferred": "Отложенные"
+    "deferred": "Отложенные",
+    "actual": "Открыть"
   },
   "nameOptions": {
     "replyToEmail": "Ответить на электронное письмо"

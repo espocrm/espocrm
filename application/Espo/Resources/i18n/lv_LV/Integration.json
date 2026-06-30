@@ -7,7 +7,8 @@
     "apiKey": "API atslēga",
     "siteKey": "Vietnes atslēga",
     "secretKey": "Slepenā atslēga",
-    "scoreThreshold": "Rezultātu slieksnis"
+    "scoreThreshold": "Rezultātu slieksnis",
+    "mapId": "Kartes ID"
   },
   "messages": {
     "selectIntegration": "Atlasīt integrāciju no izvēlnes.",

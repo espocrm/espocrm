@@ -1,6 +1,5 @@
 {
   "fields": {
-    "width": "Largura (%)",
     "notSortable": "Não Classificável",
     "align": "Alinhar",
     "panelName": "Nome do Painel",
@@ -8,7 +7,9 @@
     "isLarge": "Tamanho de fonte grande",
     "dynamicLogicVisible": "Condições que tornam o painel visível",
     "hidden": "Oculto",
-    "dynamicLogicStyled": "Condições que fazem o estilo aplicado"
+    "dynamicLogicStyled": "Condições que fazem o estilo aplicado",
+    "noLabel": "Sem Rótulo",
+    "width": "Comprimento"
   },
   "options": {
     "align": {
@@ -32,7 +33,9 @@
     "sticked": "O painel será colado no painel acima. Sem folga entre os painéis.",
     "panelStyle": "Uma cor do painel.",
     "dynamicLogicVisible": "Se definido, o painel ficará oculto, a menos que a condição seja atendida.",
-    "dynamicLogicStyled": "Uma cor será aplicada se uma condição específica for atendida. A cor é definida pelo parâmetro *Estilo*."
+    "dynamicLogicStyled": "Uma cor será aplicada se uma condição específica for atendida. A cor é definida pelo parâmetro *Estilo*.",
+    "noLabel": "Não exiba um rótulo de coluna no cabeçalho.",
+    "notSortable": "Desativa a capacidade de classificar pela coluna."
   },
   "messages": {
     "cantBeEmpty": "O layout não pode estar vazio.",

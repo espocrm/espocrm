@@ -48,7 +48,6 @@
     "siteUrl": "Tinklapio adresas",
     "addressPreview": "Adreso peržiūra",
     "addressFormat": "Adreso formatas",
-    "notificationSoundsDisabled": "Išjungti prenešimų garsus",
     "applicationName": "Aplikacijos pavadinimas",
     "ldapUsername": "Pilnas vartotojo DN",
     "ldapBaseDn": "Bazė DN",
@@ -70,8 +69,8 @@
     "calendarEntityList": "Kalendoriaus vedinių sąrašas",
     "mentionEmailNotifications": "Siųskite el. Paštu pranešimus apie paminimus pranešimuose",
     "massEmailDisableMandatoryOptOutLink": "Išjungti privalomą atsisakymo nuorodą",
-    "activitiesEntityList": "Veiklos subjektų sąrašas",
-    "historyEntityList": "Istorijos subjektų sąrašas",
+    "activitiesEntityList": "Veiklų objektų sąrašas",
+    "historyEntityList": "Istorijos objektų sąrašas",
     "currencyFormat": "Valiutos formatas",
     "currencyDecimalPlaces": "Valiutos dešimtainiai skaičiai",
     "followCreatedEntities": "Sekti sukurtus įrašus",
@@ -168,7 +167,9 @@
     "passwordStrengthSpecialCharacterCount": "Specialiųjų ženklų, kurių reikalaujama slaptažodyje, skaičius",
     "availableReactions": "Galimos reakcijos",
     "outboundEmailFromAddress": "Sistemos el. pašto adresas",
-    "oidcUserInfoEndpoint": "OIDC UserInfo galinis taškas"
+    "oidcUserInfoEndpoint": "OIDC UserInfo galinis taškas",
+    "baselineRole": "Bazinis vaidmuo",
+    "oidcAuthorizationPkce": "OIDC naudoja PKCE"
   },
   "tooltips": {
     "recordsPerPage": "Iš pradžių rodomas įrašų skaičius sąrašo rodinyje.",
@@ -229,6 +230,7 @@
     "authIpAddressWhitelist": "IP adresų arba diapazonų sąrašas CIDR užrašu.\n\nApribojimas netaikomas portalams.",
     "oidcGroupClaim": "Teiginys, kurį galima naudoti komandos žemėlapiui sudaryti.",
     "outboundEmailFromAddress": "Iš šio el. pašto adreso bus siunčiami sisteminiai el. laiškai. Turi būti sukurta [grupės el. pašto paskyra](#InboundEmail) su tuo pačiu el. pašto adresu ir tinkamai sukonfigūruota, kad būtų galima siųsti el. laiškus.",
+    "baselineRole": "Numatytasis vaidmuo, taikomas visiems naudotojams. Bet kokie papildomi naudotojui priskirti vaidmenys suteikia leidimus virš šio pagrindinio vaidmens.\n\n**Svarbu**. Šio vaidmens keitimas turi įtakos visiems naudotojams - atidžiai peržiūrėkite pakeitimą, kad išvengtumėte nenumatytų leidimų suteikimo.",
     "displayListViewRecordCount": "Sąrašo rodinyje bus rodomas bendras įrašų skaičius.",
     "currencyList": "Kokiomis valiutomis bus galima naudotis sistemoje.",
     "activitiesEntityList": "Kokius įrašus bus galima rasti skydelyje Veikla.",
@@ -287,7 +289,8 @@
     "Scheduled Send": "Suplanuotas siuntimas"
   },
   "messages": {
-    "ldapTestConnection": "Prisijungėte sėkmingai. Ryšys veikia."
+    "ldapTestConnection": "Prisijungėte sėkmingai. Ryšys veikia.",
+    "confirmBaselineRoleChange": "Ar tikrai norite pakeisti bazinį vaidmenį? Neapgalvotas pakeitimas gali suteikti nenumatytas teises visiems naudotojams."
   },
   "options": {
     "streamEmailNotificationsTypeList": {

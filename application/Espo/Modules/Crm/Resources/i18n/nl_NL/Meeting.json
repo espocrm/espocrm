@@ -15,7 +15,8 @@
     "dateEndDate": "Datum einde (hele dag)",
     "isAllDay": "Is de hele dag",
     "sourceEmail": "Bron E-mail",
-    "joinUrl": "Aanmeld URL"
+    "joinUrl": "Aanmeld URL",
+    "externalService": "Online locatie"
   },
   "options": {
     "status": {

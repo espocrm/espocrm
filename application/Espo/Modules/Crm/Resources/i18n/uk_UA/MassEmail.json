@@ -52,7 +52,6 @@
     "storeSentEmails": "Електронні листи будуть зберігатися в CRM."
   },
   "presetFilters": {
-    "actual": "Актуальні",
     "complete": "Виконані"
   }
 }

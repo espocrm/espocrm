@@ -46,7 +46,6 @@
     "dashboardLayout": "Dashboard lay-out (standaard)",
     "addressPreview": "Adres voorbeeld",
     "addressFormat": "Adresformaat",
-    "notificationSoundsDisabled": "Stop notificatiegeluiden",
     "applicationName": "Applicatie naam",
     "ldapUsername": "Gebruikersnaam",
     "ldapBindRequiresDn": "Bind vereist DN",
@@ -164,7 +163,8 @@
     "availableReactions": "Beschikbare reacties",
     "outboundEmailFromAddress": "E-mailadres systeem",
     "oidcUserInfoEndpoint": "OIDC UserInfo Eindpunt",
-    "baselineRole": "Basisrol"
+    "baselineRole": "Basisrol",
+    "oidcAuthorizationPkce": "OIDC: gebruik PKCE"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",

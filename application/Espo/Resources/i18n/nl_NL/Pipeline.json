@@ -1,0 +1,21 @@
+{
+  "labels": {
+    "Create Pipeline": "Pijplijn aanmaken"
+  },
+  "fields": {
+    "order": "Bestelling",
+    "entityType": "Entiteitstype",
+    "field": "Veld",
+    "isAvailableForAll": "Voor iedereen beschikbaar",
+    "color": "Kleur"
+  },
+  "links": {
+    "stages": "Fasen"
+  },
+  "options": {
+    "status": {
+      "Active": "Actief",
+      "Inactive": "Inactief"
+    }
+  }
+}

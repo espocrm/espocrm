@@ -25,5 +25,10 @@
   },
   "labels": {
     "Field": "Feld"
+  },
+  "fields": {
+    "localField": "Lokales Feld",
+    "foreignField": "Fremdfeld",
+    "matchRequired": "Übereinstimmung erforderlich"
   }
 }

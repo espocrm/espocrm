@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create PipelineStage": "Sukurti sceną"
+  },
+  "fields": {
+    "order": "Užsakymas",
+    "pipeline": "Dujotiekis",
+    "mappedStatus": "Atvaizduotas statusas"
+  },
+  "links": {
+    "pipeline": "Dujotiekis"
+  }
+}

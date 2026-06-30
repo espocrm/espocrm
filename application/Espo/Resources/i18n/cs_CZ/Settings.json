@@ -49,7 +49,6 @@
     "siteUrl": "URL stránky",
     "addressPreview": "Náhled adresy",
     "addressFormat": "Formát adresy",
-    "notificationSoundsDisabled": "Zakázat zvuky oznámení",
     "applicationName": "Název aplikace",
     "ldapUsername": "Uživatelské jméno",
     "ldapBindRequiresDn": "Přiřazení vyžaduje Dn",

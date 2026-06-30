@@ -2,7 +2,8 @@
   "fields": {
     "type": "Тип",
     "optOut": "Не дзвонити",
-    "invalid": "Недійсний"
+    "invalid": "Недійсний",
+    "numeric": "Числове значення"
   },
   "presetFilters": {
     "orphan": "Сироти"

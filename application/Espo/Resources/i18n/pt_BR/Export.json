@@ -2,7 +2,8 @@
   "fields": {
     "fieldList": "Lista de Campos",
     "exportAllFields": "Exportar todos os campos",
-    "format": "Formato"
+    "format": "Formato",
+    "xlsxTitle": "Título"
   },
   "options": {
     "status": {
@@ -15,5 +16,9 @@
   "messages": {
     "exportProcessed": "A exportação foi processada. Baixe o  [file]({url}).",
     "infoText": "A exportação está sendo processada em modo inativo pelo cron. Pode levar algum tempo para terminar. Fechar esta caixa de diálogo modal não afetará o processo de execução."
+  },
+  "tooltips": {
+    "xlsxLite": "Consome muito menos memória. Recomendado se um grande número de registros for exportado.",
+    "xlsxTitle": "Imprima um título e a data atual no cabeçalho."
   }
 }

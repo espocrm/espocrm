@@ -18,9 +18,14 @@
     "weekday3TimeRanges": "Trečiadienio tvarkaraštis",
     "weekday4TimeRanges": "Ketvirtadienio tvarkaraštis",
     "weekday5TimeRanges": "Penktadienio tvarkaraštis",
-    "weekday6TimeRanges": "Šeštadienio tvarkaraštis"
+    "weekday6TimeRanges": "Šeštadienio tvarkaraštis",
+    "isDefault": "Ar tai numatytasis nustatymas"
   },
   "links": {
-    "ranges": "Išimtys"
+    "ranges": "Išimtys",
+    "users": "Vartotojai"
+  },
+  "tooltips": {
+    "isDefault": "Nurodo, ar šis kalendorius yra numatytasis sistemos kalendorius. Numatytąjį darbo laiko kalendorių galima konfigūruoti meniu: „Administravimas“ > „Nustatymai“ > „Darbo laiko kalendorius“."
   }
 }

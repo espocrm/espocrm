@@ -43,11 +43,11 @@
     "overdue": "прострочений"
   },
   "presetFilters": {
-    "actual": "Актуальні",
     "completed": "Завершені",
     "todays": "Сьогоднішні",
     "overdue": "Прострочені",
-    "deferred": "Відкладено"
+    "deferred": "Відкладено",
+    "actual": "Відкриті"
   },
   "nameOptions": {
     "replyToEmail": "Відповісти на електронну пошту"

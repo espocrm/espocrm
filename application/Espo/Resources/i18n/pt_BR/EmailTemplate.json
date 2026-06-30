@@ -1,10 +1,10 @@
 {
   "fields": {
     "name": "Nome",
-    "isHtml": "Html",
     "body": "Conteúdo",
     "subject": "Assunto",
     "attachments": "Anexos",
+    "oneOff": "Único",
     "category": "Categorias",
     "insertField": "Espaços Reservados"
   },
@@ -14,9 +14,6 @@
   },
   "tooltips": {
     "oneOff": "Verifique se você vai usar este template apenas uma vez. Ex: para e-mail em massa."
-  },
-  "presetFilters": {
-    "actual": "Atual"
   },
   "placeholderTexts": {
     "optOutLink": "link de cancelamento de inscrição",

@@ -27,6 +27,7 @@
     "isReplied": "Є відповідь",
     "isNotReplied": "Без відповіді",
     "folder": "Папка",
+    "folderString": "Папка",
     "inboundEmails": "Групові облікові записи",
     "emailAccounts": "Особисті облікові записи",
     "hasAttachment": "Має вкладення",
@@ -40,9 +41,6 @@
     "fromName": "Ім'я відправника",
     "fromString": "Рядок Від",
     "isSystem": "Системний",
-    "toEmailAddresses": "Електронні адреси отримувачів",
-    "bccEmailAddresses": "BCC Електронні адреси",
-    "replyToEmailAddresses": "Відповідь на адреси",
     "personStringData": "Дані особи у форматі string",
     "fromEmailAddress": "З адреси (посилання)",
     "replyToName": "Ім'я для відповіді",
@@ -64,10 +62,6 @@
     "sentBy": "Надіслав (Користувач)",
     "attachments": "Вкладення",
     "fromEmailAddress": "Електронна адреса відправника",
-    "toEmailAddresses": "Електронні адреси отримувачів",
-    "ccEmailAddresses": "CC Електронні адреси",
-    "bccEmailAddresses": "BCC Електронні адреси",
-    "replyToEmailAddresses": "Відповідь на адреси",
     "groupFolder": "Групова папка"
   },
   "options": {
@@ -75,7 +69,6 @@
       "Draft": "Чернетка",
       "Sending": "Надсилається",
       "Sent": "Надіслано",
-      "Archived": "В архіві",
       "Received": "Отримано",
       "Failed": "Невдало"
     }
@@ -111,8 +104,11 @@
     "No Subject": "Без теми",
     "Insert Field": "Вставити поле",
     "Event": "Подія",
-    "Moving to folder": "Переміщення в папку",
-    "Group Folders": "Групові папки"
+    "Group Folders": "Групові папки",
+    "Moved to Archive": "Переміщено до архіву",
+    "Moved to Trash": "Переміщено в кошик",
+    "Retrieved from Trash": "Отримано з кошика",
+    "Schedule Send": "Запланувати надсилання"
   },
   "messages": {
     "testEmailSent": "Тестовий лист надіслано",
@@ -120,17 +116,21 @@
     "savedAsDraft": "Збережено як чернетку",
     "confirmInsertTemplate": "Тіло електронного листа буде втрачено. Ви впевнені, що хочете вставити шаблон?",
     "noSmtpSetup": "SMTP не налаштовано: {link}",
+    "confirmSend": "Надіслати емейл?",
     "sendConfirm": "Надіслати емейл?",
     "removeSelectedRecordsConfirmation": "Ви впевнені, що хочете видалити вибрані електронні листи?\n\nВони також будуть видалені для інших користувачів.",
-    "removeRecordConfirmation": "Ви впевнені, що хочете видалити електронний лист?\n\nВін також буде видалений для інших користувачів."
+    "removeRecordConfirmation": "Ви впевнені, що хочете видалити електронний лист?\n\nВін також буде видалений для інших користувачів.",
+    "invalidCredentials": "Невірні облікові дані.",
+    "unknownError": "Невідома помилка.",
+    "recipientAddressRejected": "Адреса одержувача відхилена."
   },
   "presetFilters": {
     "sent": "Відправлено",
-    "archived": "В архіві",
     "inbox": "Вхідні",
     "drafts": "Чернетки",
     "trash": "Кошик",
-    "important": "Важливо"
+    "important": "Важливо",
+    "archived": "Імпортовано"
   },
   "massActions": {
     "markAsRead": "Позначити прочитаним",
@@ -143,5 +143,8 @@
   },
   "strings": {
     "sendingFailed": "Не вдалося надіслати електронний лист"
+  },
+  "otherFields": {
+    "file": "Файл"
   }
 }

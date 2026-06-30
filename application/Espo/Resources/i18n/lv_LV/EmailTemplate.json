@@ -26,5 +26,14 @@
   },
   "messages": {
     "infoText": "Pieejamās vietzīmes:\n\nTālrunis URL norakstīšanās saitei;\n\n{optOutLink} &#8211; norakstīšanās saite."
+  },
+  "options": {
+    "status": {
+      "Active": "Aktīvais",
+      "Inactive": "Neaktīvs"
+    }
+  },
+  "presetFilters": {
+    "actual": "Aktīvais"
   }
 }

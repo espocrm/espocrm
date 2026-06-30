@@ -60,7 +60,8 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 mēneši",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mēneši",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mēneši",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 gads"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 gads",
+      "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 dienas"
     },
     "barcodeType": {
       "pharmacode": "Farmakodekss",
@@ -103,7 +104,9 @@
     "linkReadOnly": "Lauka vērtību lietotājs nevar norādīt. Bet to var aprēķināt pēc formulas.\n\nTas arī atslēgs iespēju izveidot saistītu ierakstu no attiecību paneļiem.",
     "relateOnImport": "Importējot ar šo lauku, ieraksts automātiski tiks saistīts ar atbilstošu ārējo ierakstu. Šo funkcionalitāti izmantojiet tikai tad, ja ārējais lauks tiek uzskatīts par unikālu.",
     "preview": "Rādīt priekšskatījuma pogu. Piemērojams, ja ir iespējota funkcija Markdown.",
-    "seeMoreDisabled": "Neatzīmējot šo izvēli, gari teksti tiks īsināti."
+    "itemsEditable": "Vienumus var rediģēt. Piemērojams tikai tad, ja nav norādītas opcijas.",
+    "seeMoreDisabled": "Neatzīmējot šo izvēli, gari teksti tiks īsināti.",
+    "imageCapture": "Nosaka, kuru kameru izmantot attēla datu uzņemšanai."
   },
   "fieldParts": {
     "address": {
@@ -155,7 +158,8 @@
     "link": "Ieraksts, kas saistīts ar pieder vienam vai vienam ar otru (daudzi ar vienu vai viens ar vienu).",
     "linkParent": "Ieraksts, kas saistīts ar pieder vecākiem. Var būt dažādu tipu vienības.",
     "linkMultiple": "Ierakstu kopa, kas saistīta ar Has-Many (daudz-daudz vai viens-daudz) attiecībām. Ne visām attiecībām ir saite-daudzveidība lauki. Tie ir tikai tie, kuros ir iespējots(-i) parametrs(-i) Link-Multiple.",
-    "urlMultiple": "Vairākas saites."
+    "urlMultiple": "Vairākas saites.",
+    "decimal": "Decimālskaitlis ar fiksētu komata precizitāti."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Lauka nosaukums '{field}' nav atļauts.",

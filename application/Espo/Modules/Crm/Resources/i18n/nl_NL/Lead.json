@@ -28,7 +28,8 @@
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
     "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
     "convertedAt": "Geconverteerd op",
-    "originalEmail": "Originele e-mail"
+    "originalEmail": "Originele e-mail",
+    "pipeline": "Pijpleiding"
   },
   "links": {
     "targetLists": "Doellijsten",
@@ -37,7 +38,8 @@
     "createdAccount": "Relatie",
     "createdOpportunity": "Kans",
     "cases": "Tickets",
-    "documents": "Documenten"
+    "documents": "Documenten",
+    "pipeline": "Pijpleiding"
   },
   "options": {
     "status": {

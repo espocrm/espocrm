@@ -37,7 +37,11 @@
     "defaultRemindersTask": "Numatytuosius užduočių priminimus",
     "addCustomTabs": "Pridėti pasirinktinius skirtukus",
     "reactionNotifications": "Programėlės pranešimai apie reakcijas",
-    "pageContentWidth": "Turinio plotis"
+    "pageContentWidth": "Turinio plotis",
+    "reactionNotificationsNotFollowed": "Pranešimai apie reakcijas į nesekamus įrašus",
+    "followAsCollaborator": "Automatinis sekimas, kai pridedamas kaip bendradarbis",
+    "notificationGrouping": "Grupiniai pranešimai",
+    "notificationSound": "Pranešimo garsas"
   },
   "options": {
     "weekStart": {

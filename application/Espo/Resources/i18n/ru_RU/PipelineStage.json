@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create PipelineStage": "Создать сцену"
+  },
+  "fields": {
+    "order": "Заказ",
+    "pipeline": "Трубопровод",
+    "mappedStatus": "Состояние на карте"
+  },
+  "links": {
+    "pipeline": "Трубопровод"
+  }
+}

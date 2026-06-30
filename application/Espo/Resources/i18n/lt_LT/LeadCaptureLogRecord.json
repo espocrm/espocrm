@@ -2,13 +2,13 @@
   "fields": {
     "number": "Numeris",
     "data": "Duomenys",
-    "target": "Tikslinė",
-    "leadCapture": "\"Lead Capture\"",
-    "createdAt": "Įeina į",
-    "isCreated": "Sukurtas švinas"
+    "target": "Tikslinis objektas",
+    "leadCapture": "Potencialių klientų rinkimas",
+    "createdAt": "Pakliuvo per",
+    "isCreated": "Ar potencialus klientas sukurtas"
   },
   "links": {
-    "leadCapture": "\"Lead Capture\"",
-    "target": "Tikslinė"
+    "leadCapture": "Potencialių klientų rinkimas",
+    "target": "Tikslinis objektas"
   }
 }

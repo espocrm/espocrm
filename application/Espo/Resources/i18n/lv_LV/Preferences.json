@@ -37,7 +37,11 @@
     "defaultRemindersTask": "Uzdevumu noklusējuma atgādinājumi",
     "addCustomTabs": "Pievienot pielāgotas cilnes",
     "reactionNotifications": "Aplikācijā pieejamie paziņojumi par reakcijām",
-    "pageContentWidth": "Satura platums"
+    "pageContentWidth": "Satura platums",
+    "reactionNotificationsNotFollowed": "Paziņojumi par reakcijām attiecībā uz nesekojošiem ierakstiem",
+    "followAsCollaborator": "Automātiska sekošana, kad esat pievienots kā sadarbības partneris",
+    "notificationGrouping": "Grupu paziņojumi",
+    "notificationSound": "Paziņojuma skaņa"
   },
   "options": {
     "weekStart": {

@@ -1,5 +1,6 @@
 {
   "labels": {
-    "Create ApiUser": "API-Benutzer erstellen"
+    "Create ApiUser": "API-Benutzer erstellen",
+    "OpenAPI spec": "OpenAPI-Spezifikation"
   }
 }

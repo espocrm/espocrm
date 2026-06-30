@@ -36,7 +36,7 @@
     "Field Delimiter": "Laukelių atskyrimas",
     "Date Format": "Datos formatas",
     "Decimal Mark": "Dešimtainis ženklas",
-    "Text Qualifier": "Teksto kvalifikacija",
+    "Text Qualifier": "Teksto kvalifikatorius",
     "Time Format": "Laiko formatas",
     "Currency": "Valiuta",
     "Preview": "Peržiūra",
@@ -55,7 +55,8 @@
     "Silent Mode": "Tylusis režimas",
     "New import with same params": "Naujas importas su tais pačiais parametrais",
     "Run Manually": "Paleisti rankiniu būdu",
-    "Export": "Eksportuoti"
+    "Export": "Eksportuoti",
+    "Parameters": "Parametrai"
   },
   "messages": {
     "utf8": "Turėtų būti užkoduotas UTF-8",

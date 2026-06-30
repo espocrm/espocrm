@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Status de Atividade",
+    "historyStatusList": "Status de Histórico",
+    "completedStatusList": "Status de Concluído",
+    "canceledStatusList": "Status Cancelados"
+  },
+  "tooltips": {
+    "activityStatusList": "Valores de status que determinam que um registro de atividade deve ser exibido no painel Atividade e considerado como real.",
+    "historyStatusList": "Valores de status que determinam que um registro de atividade deve ser exibido no painel Histórico.",
+    "completedStatusList": "Valores de status que determinam que uma atividade foi concluída.",
+    "canceledStatusList": "Valores de status que determinam que uma atividade é cancelada e não serão consideradas nas faixas de livre/ocupado."
+  }
+}

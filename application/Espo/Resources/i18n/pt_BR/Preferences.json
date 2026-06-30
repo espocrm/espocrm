@@ -23,11 +23,15 @@
     "autoFollowEntityTypeList": "Auto-Seguir",
     "emailReplyToAllByDefault": "Resposta por Email para todos por padrão",
     "doNotFillAssignedUserIfNotRequired": "Não preencha previamente o usuário designado na criação do registro",
+    "followEntityOnStreamPost": "Seguir automaticamente a publicação após postar no Stream",
     "followCreatedEntities": "Seguir automaticamente registros criados",
+    "followCreatedEntityTypeList": "Seguir automaticamente registros criados de tipos de entidade específicas",
     "emailUseExternalClient": "Use um cliente de email externo",
-    "scopeColorsDisabled": "Desativar cores do escopo",
     "assignmentNotificationsIgnoreEntityTypeList": "Notificações de Atribuição no Aplicativo",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificações de atribuição de email"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notificações de atribuição de email",
+    "dashboardLocked": "Bloquear Dashboard",
+    "textSearchStoringDisabled": "Desativar armazenamento de filtro de texto",
+    "addCustomTabs": "Adicionar guias personalizadas"
   },
   "options": {
     "weekStart": {
@@ -42,9 +46,10 @@
     "Reset Dashboard to Default": "Redefinir Dashboard para o padrão"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações.",
-    "doNotFillAssignedUserIfNotRequired": "Ao criar o registro, o usuário desginado não será preenchido com o próprio usuário, a menos que o campo seja obrigatório.",
-    "followCreatedEntities": "Ao criar novos registros, eles serão seguidos automaticamente mesmo que atribuídos a outro usuário.",
-    "followCreatedEntityTypeList": "Ao criar novos registros de tipos de entidade selecionados, eles serão seguidos automaticamente mesmo se atribuídos a outro usuário."
+    "autoFollowEntityTypeList": "O usuário seguirá automaticamente todos os novos registros das entidades selecionadas, verá informações no fluxo e receberá notificações."
+  },
+  "tabFields": {
+    "iconClass": "Ícone",
+    "color": "Cor"
   }
 }

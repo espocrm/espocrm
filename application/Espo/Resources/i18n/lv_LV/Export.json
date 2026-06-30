@@ -12,6 +12,9 @@
       "Pending": "Gaida",
       "Success": "Panākumi",
       "Failed": "Neveiksmīgs"
+    },
+    "format": {
+      "xlsx": "XLSX · Izklājlapa"
     }
   },
   "messages": {

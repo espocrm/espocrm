@@ -54,7 +54,11 @@
     "aclContactLink": "ACL Kontaktinformācija Saite",
     "aclAccountLink": "ACL konta saite",
     "sortBy": "Noklusējuma pasūtījuma lauks",
-    "sortDirection": "Noklusējuma pasūtījuma virziens"
+    "sortDirection": "Noklusējuma pasūtījuma virziens",
+    "categories": "Kategorijas",
+    "lockable": "Aizslēdzams",
+    "transactionalSave": "Darbības saglabāšana",
+    "pipelines": "Cauruļvadi"
   },
   "options": {
     "type": {
@@ -94,7 +98,9 @@
     "nameIsNotAllowed": "Vārds '{vārds}' nav atļauts.",
     "nameIsTooLong": "Nosaukums ir pārāk garš.",
     "confirmRemoveLink": "Vai esat pārliecināts, ka vēlaties dzēst *{link}* attiecības?",
-    "urlHashCopiedToClipboard": "Uz starpliktuvi tiek kopēts URL fragments *{nosaukums}* filtram. To var pievienot navigācijas joslai."
+    "urlHashCopiedToClipboard": "Uz starpliktuvi tiek kopēts URL fragments *{nosaukums}* filtram. To var pievienot navigācijas joslai.",
+    "cannotEnablePipelinesWithNoStatusField": "Caurvadu funkciju nevar aktivizēt, jo entītijas tipam nav statusa lauka. Vajadzības gadījumā izveidojiet statusa Enum lauku, pēc tam izvēlieties to parametrā „Status Field”.",
+    "cannotEnableCategoriesWithKanbanViewMode": "Kategorijas nav saderīgas ar Kanban skatu. Atvienojiet vienu vai otru."
   },
   "tooltips": {
     "statusField": "Šī lauka atjauninājumi ir reģistrēti straumēšanā.",
@@ -116,6 +122,17 @@
     "assignedUsers": "Iespēja ierakstam piešķirt vairākus lietotājus.\n\nŅemiet vērā, ka pēc parametra iespējošanas esošie piešķirtie lietotāji netiks pārnesti uz jauno lauku *Piešķirti lietotāji*.",
     "preserveAuditLog": "Aizliedz revīzijas žurnāla tīrīšanu. Šis parametrs ir piemērojams tikai tad, ja ir atspējota funkcija Stream. Ja Stream ir iespējots, audita žurnāla ieraksti netiek dzēsti.",
     "stream": "Vai vienībai ir Stream.",
-    "linkParamReadOnly": "Saiti, kas paredzēta tikai lasīšanai, nevar rediģēt, izmantojot API pieprasījumus *link* un *unlink*. Nebūs iespējams saistīt un atcelt ierakstus, izmantojot attiecību paneli. Joprojām ir iespējams rediģēt tikai lasāmās saites, izmantojot saites un saites-daudzkārtējo lauku."
+    "linkParamReadOnly": "Saiti, kas paredzēta tikai lasīšanai, nevar rediģēt, izmantojot API pieprasījumus *link* un *unlink*. Nebūs iespējams saistīt un atcelt ierakstus, izmantojot attiecību paneli. Joprojām ir iespējams rediģēt tikai lasāmās saites, izmantojot saites un saites-daudzkārtējo lauku.",
+    "pipelines": "Ļauj izmantot vairākus procesa posmus. Procesu posmus var konfigurēt sadaļā „Administrācija > Procesu posmi”.",
+    "transactionalSave": "Ierakstu saglabāšana un dzēšana tiks iekļauta datubāzes transakcijās.",
+    "lockable": "Ļauj bloķēt ierakstus.",
+    "categories": "Ieslēdziet kategoriju koka funkciju. Ierakstus var iedalīt kategorijās.",
+    "linkParamCascadeRemoval": "Ja šī funkcija ir ieslēgta, tad, izdzēšot galveno ierakstu, tiks izdzēsti arī ar to saistītie ieraksti."
+  },
+  "entityNameParts": {
+    "Category": "Kategorija"
+  },
+  "entityNamePartsPlural": {
+    "Category": "Kategorijas"
   }
 }

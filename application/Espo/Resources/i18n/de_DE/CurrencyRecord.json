@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "label": "Beschriftung",
+    "isBase": "Ist Basis",
+    "rate": "Kurs",
+    "rateDate": "Kursdatum"
+  },
+  "links": {
+    "rates": "Kurse"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create PipelineStage": "Izveidot posmu"
+  },
+  "fields": {
+    "order": "Pasūtījums",
+    "pipeline": "Caurule",
+    "mappedStatus": "Kartē atspoguļotais statuss"
+  },
+  "links": {
+    "pipeline": "Caurule"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create Pipeline": "Создать конвейер"
+  },
+  "fields": {
+    "order": "Заказ",
+    "status": "Статус",
+    "entityType": "Тип объекта",
+    "field": "Поле",
+    "isAvailableForAll": "Доступно для всех",
+    "color": "Цвет"
+  },
+  "links": {
+    "stages": "Этапы"
+  },
+  "options": {
+    "status": {
+      "Active": "Активный",
+      "Inactive": "Неактивный"
+    }
+  }
+}

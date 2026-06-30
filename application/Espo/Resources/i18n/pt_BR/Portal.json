@@ -16,17 +16,18 @@
     "defaultCurrency": "Moeda Padrão",
     "customUrl": "URL Personalizada",
     "customId": "ID Personalizada",
-    "layoutSet": "Conjunto de Layout"
+    "layoutSet": "Conjunto de Layout",
+    "authenticationProvider": "Provedor de Autenticação"
   },
   "links": {
     "users": "Usuários",
     "portalRoles": "Regras",
     "notes": "Notas",
-    "layoutSet": "Conjunto de Layout"
+    "layoutSet": "Conjunto de Layout",
+    "authenticationProvider": "Provedor de Autenticação"
   },
   "tooltips": {
-    "portalRoles": "As Regras de Portal especificadas serão aplicadas a todos os usuários deste portal.",
-    "layoutSet": "Fornece a capacidade de ter layouts que diferem dos padrões."
+    "portalRoles": "As Regras de Portal especificadas serão aplicadas a todos os usuários deste portal."
   },
   "labels": {
     "Create Portal": "Criar portal",

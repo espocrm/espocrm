@@ -1,24 +1,24 @@
 {
   "fields": {
-    "name": "vardas",
+    "name": "Pavadinimas",
     "campaign": "Kampanija",
     "isActive": "Yra aktyvus",
-    "subscribeToTargetList": "Prenumeruoti tikslinius sąrašus",
-    "subscribeContactToTargetList": "Prenumeruoti, jei yra",
+    "subscribeToTargetList": "Įtraukti į tikslinį sąrašą",
+    "subscribeContactToTargetList": "Įtraukti kontaktą, jei yra",
     "targetList": "Tikslinis sąrašas",
     "fieldList": "Išlaidų laukai",
     "optInConfirmation": "Dvigubas opt-in",
-    "optInConfirmationEmailTemplate": "Atsisakyti patvirtinimo el. Laiško šablono",
-    "optInConfirmationLifetime": "Parinkimo patvirtinimo galiojimo laikas (valandos)",
+    "optInConfirmationEmailTemplate": "Sutikimo patvirtinimo el. laiško šablonas",
+    "optInConfirmationLifetime": "Sutikimo patvirtinimo galiojimo laikas (valandos)",
     "optInConfirmationSuccessMessage": "Tekstas rodomas po patvirtinimo patvirtinimo",
     "leadSource": "Švino šaltinis",
     "apiKey": "API raktas",
     "targetTeam": "Tikslinė komanda",
     "exampleRequestMethod": "Metodas",
     "exampleRequestPayload": "Naudingoji apkrova",
-    "createLeadBeforeOptInConfirmation": "Sukurti švino prieš patvirtinimą",
+    "createLeadBeforeOptInConfirmation": "Sukurti potencialų klientą prieš patvirtinimą",
     "duplicateCheck": "Dublikatų tikrinimas",
-    "skipOptInConfirmationIfSubscribed": "Praleisti patvirtinimą, jei vadovas jau yra tiksliniame sąraše",
+    "skipOptInConfirmationIfSubscribed": "Praleisti patvirtinimą, jei potencialus klientas jau įtrauktas į tikslinį sąrašą",
     "smtpAccount": "SMTP paskyra",
     "inboundEmail": "Grupės el. pašto paskyra",
     "exampleRequestHeaders": "Antraštės",
@@ -30,8 +30,8 @@
     "formSuccessText": "Tekstas, rodomas pateikus formą",
     "formText": "Formoje rodomas tekstas",
     "formSuccessRedirectUrl": "URL, į kurį nukreipiama pateikus formą",
-    "formLanguage": "Formoje vartojama kalba",
-    "formFrameAncestors": "Leidžiami formos įterpimo prieglobsčio serveriai",
+    "formLanguage": "Formoje naudojama kalba",
+    "formFrameAncestors": "Leidžiami domenai formos įterpimui",
     "formCaptcha": "Naudokite Captcha",
     "formTitle": "Formos pavadinimas",
     "formTheme": "Formos tema"
@@ -47,18 +47,18 @@
   "labels": {
     "Create LeadCapture": "Sukurkite atvykimo tašką",
     "Generate New API Key": "Sukurti naują API raktą",
-    "Request": "Prašymas",
+    "Request": "Užklausa",
     "Confirm Opt-In": "Patvirtinkite pasirinkimą",
     "Generate New Form ID": "Sukurti naujos formos ID",
     "Web Form": "Interneto forma"
   },
   "messages": {
     "generateApiKey": "Sukurkite naują API raktą",
-    "optInConfirmationExpired": "Prisijungimo patvirtinimo nuoroda baigėsi.",
-    "optInIsConfirmed": "Atsisakymas patvirtintas."
+    "optInConfirmationExpired": "Prisijungimo patvirtinimo nuoroda nebegalioja.",
+    "optInIsConfirmed": "Sutikimas patvirtintas."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Žymėjimas yra palaikomas.",
+    "optInConfirmationSuccessMessage": "Palaikomas „Markdown“ formatas.",
     "formCaptcha": "Kad galėtumėte naudoti Captcha, turite ją sukonfigūruoti skiltyje **Administravimas** > **Susiejimai**."
   }
 }

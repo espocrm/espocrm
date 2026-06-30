@@ -1,1 +1,24 @@
-{}
+{
+  "labels": {
+    "Create OAuthProvider": "Создание поставщика OAuth"
+  },
+  "fields": {
+    "isActive": "Активен",
+    "clientId": "Идентификатор клиента",
+    "clientSecret": "Секрет клиента",
+    "authorizationEndpoint": "Конечная точка авторизации",
+    "tokenEndpoint": "Конечная точка токена",
+    "authorizationRedirectUri": "URI перенаправления авторизации",
+    "scopes": "Прицелы",
+    "scopeSeparator": "Разделитель диапазонов",
+    "hasAccessToken": "Имеет токен доступа",
+    "authorizationPrompt": "Подсказка авторизации",
+    "authorizationParams": "Параметры авторизации"
+  },
+  "links": {
+    "accounts": "Счета"
+  },
+  "tooltips": {
+    "authorizationParams": "Дополнительные параметры запроса, отправляемые конечной точке авторизации. Указываются в формате JSON."
+  }
+}

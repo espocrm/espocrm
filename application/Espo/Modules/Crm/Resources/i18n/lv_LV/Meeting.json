@@ -17,7 +17,8 @@
     "dateEndDate": "Beigu datums (visu dienu)",
     "isAllDay": "Vai ir visas dienas",
     "sourceEmail": "Avots E-pasts",
-    "joinUrl": "Pievienoties URL"
+    "joinUrl": "Pievienoties URL",
+    "externalService": "Atrašanās vieta internetā"
   },
   "options": {
     "status": {

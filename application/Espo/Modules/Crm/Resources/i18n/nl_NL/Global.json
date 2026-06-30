@@ -11,7 +11,9 @@
     "cases": "Tickets",
     "documents": "Documenten",
     "account": "Relatie",
-    "opportunity": "Kans"
+    "opportunity": "Kans",
+    "meetingsChildren": "Bijeenkomsten voor kinderen",
+    "callsChildren": "Bel kinderen"
   },
   "scopeNames": {
     "Account": "Relatie",

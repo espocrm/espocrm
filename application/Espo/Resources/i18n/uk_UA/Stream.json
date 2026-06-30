@@ -10,7 +10,6 @@
     "strongText": "жирний текст",
     "emphasizedText": "підкреслений текст",
     "deletedText": "закреслений текст",
-    "blockquote": "блок цитування",
-    "link": "посилання"
+    "blockquote": "блок цитування"
   }
 }

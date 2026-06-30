@@ -6,7 +6,6 @@
     "to": "Para",
     "replyTo": "Responder Para",
     "replyToString": "Responder Para (String)",
-    "isHtml": "Html",
     "body": "Corpo",
     "subject": "Assunto",
     "attachments": "Anexos",
@@ -27,6 +26,7 @@
     "isReplied": "Foi Respondido",
     "isNotReplied": "Não Foi Respondido",
     "folder": "Pasta",
+    "folderString": "Pasta",
     "inboundEmails": "Contas de Grupo",
     "emailAccounts": "Contas Pessoais",
     "hasAttachment": "Tem anexo",
@@ -42,9 +42,12 @@
     "isSystem": "É Sistema",
     "personStringData": "Dados do String da Pessoa",
     "fromEmailAddress": "Do Endereço (link)",
+    "replyToName": "Nome para Resposta",
+    "replyToAddress": "Endereço de Resposta",
     "createdEvent": "Evento criado",
     "event": "Evento",
-    "icsEventDateStart": "Data de Início do Evento ICS"
+    "icsEventDateStart": "Data de Início do Evento ICS",
+    "groupFolder": "Pasta de Grupo"
   },
   "links": {
     "replied": "Respondido",
@@ -54,14 +57,14 @@
     "assignedUsers": "Usuários Designados",
     "sentBy": "Enviado Por",
     "attachments": "Anexos",
-    "fromEmailAddress": "Do Endereço de Email"
+    "fromEmailAddress": "Do Endereço de Email",
+    "groupFolder": "Pasta de Grupo"
   },
   "options": {
     "status": {
       "Draft": "Rascunho",
       "Sending": "Enviando",
       "Sent": "Enviado",
-      "Archived": "Arquivado",
       "Received": "Recebido",
       "Failed": "Falhado"
     }
@@ -96,7 +99,8 @@
     "View Users": "Visualizar Usuários",
     "No Subject": "Sem Assunto",
     "Insert Field": "Inserir Campo",
-    "Event": "Evento"
+    "Event": "Evento",
+    "Group Folders": "Pastas de Grupo"
   },
   "messages": {
     "testEmailSent": "O e-mail de teste enviado",
@@ -104,13 +108,13 @@
     "savedAsDraft": "Salvar como rascunho",
     "confirmInsertTemplate": "O corpo do e-mail será perdido. Tem certeza de que deseja inserir o modelo?",
     "noSmtpSetup": "SMTP não está configurado: {link}",
+    "confirmSend": "Enviar o e-mail?",
     "sendConfirm": "Enviar o e-mail?",
     "removeSelectedRecordsConfirmation": "Tem certeza de que deseja remover os emails selecionados?\n\nEles serão removidos para outros usuários também.",
     "removeRecordConfirmation": "Tem certeza de que deseja remover o email?\n\nEle será removido para outros usuários também."
   },
   "presetFilters": {
     "sent": "Enviado",
-    "archived": "Arquivado",
     "inbox": "Caixa de entrada",
     "drafts": "Rascunhos",
     "trash": "Lixo",

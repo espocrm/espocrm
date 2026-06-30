@@ -12,7 +12,9 @@
     "documents": "Dokumente",
     "account": "Firma",
     "opportunity": "Verkaufschance",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "meetingsChildren": "Meetings - Kinder",
+    "callsChildren": "Anrufe - Kinder"
   },
   "scopeNames": {
     "Account": "Firma",
@@ -85,7 +87,7 @@
     "Archive Email": "E-Mail archivieren",
     "Create Task": "Neue Aufgabe",
     "Tasks": "Aufgaben",
-    "Schedule": "Zeitplan"
+    "Schedule": "Planen"
   },
   "fields": {
     "billingAddressCity": "Ort",

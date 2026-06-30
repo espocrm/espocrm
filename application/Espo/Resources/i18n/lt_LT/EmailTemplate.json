@@ -26,5 +26,14 @@
   },
   "messages": {
     "infoText": "Galimos vietos žymos:\n\n{optOutUrl} &#8211; Atsisakymo nuorodos URL;\n\n{optOutLink} &#8211; prenumeratos atsisakymo nuoroda."
+  },
+  "options": {
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    }
+  },
+  "presetFilters": {
+    "actual": "Aktyvus"
   }
 }

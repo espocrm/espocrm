@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create CurrencyRecordRate": "Wechselkurs erstellen"
+  },
+  "fields": {
+    "record": "Währung",
+    "baseCode": "Basis",
+    "date": "Datum",
+    "rate": "Kurs",
+    "number": "Zahl"
+  },
+  "links": {
+    "record": "Währung"
+  }
+}

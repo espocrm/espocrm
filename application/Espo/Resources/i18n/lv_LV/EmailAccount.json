@@ -23,7 +23,8 @@
     "useImap": "Ienest e-pastus",
     "smtpAuthMechanism": "SMTP autentificēšanas mehānisms",
     "security": "Drošība",
-    "connectedAt": "Savienots ar"
+    "connectedAt": "Savienots ar",
+    "folderMap": "Mapes kartēšana"
   },
   "links": {
     "filters": "Filtri",
@@ -44,7 +45,9 @@
   "messages": {
     "couldNotConnectToImap": "Nevarēja savienoties ar IMAP serveri",
     "connectionIsOk": "Savienojums izveidots",
-    "imapNotConnected": "Nevar izveidot savienojumu ar [IMAP kontu](#EmailAccount/view/{id})."
+    "imapNotConnected": "Nevar izveidot savienojumu ar [IMAP kontu](#EmailAccount/view/{id}).",
+    "noFolder": "Kartētā mape neeksistē.",
+    "resetFetchData": "E-pasti tiks atkārtoti lejupielādēti, sākot no norādītās dienas. Esošie e-pasti netiks dublēti."
   },
   "tooltips": {
     "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī. E-pasta adreses laukam jāatbilst adresei, no kurienes e-pasti tiks nosūtīti.",

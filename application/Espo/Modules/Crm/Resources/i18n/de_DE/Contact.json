@@ -51,6 +51,6 @@
   "presetFilters": {
     "portalUsers": "Portalbenutzer",
     "notPortalUsers": "Keine Portalbenutzer",
-    "accountActive": "Aktiv"
+    "accountActive": "Aktive Beziehung"
   }
 }

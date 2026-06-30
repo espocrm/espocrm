@@ -1,5 +1,6 @@
 {
   "fields": {
+    "username": "nome de usuário",
     "ipAddress": "Endereço IP",
     "requestTime": "Hora da Solicitação",
     "createdAt": "Requisitado Em",

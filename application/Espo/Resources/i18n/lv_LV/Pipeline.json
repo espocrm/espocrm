@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create Pipeline": "Izveidot cauruļvadu"
+  },
+  "fields": {
+    "order": "Pasūtījums",
+    "status": "Stāvoklis",
+    "entityType": "Objekta tips",
+    "field": "Lauciņš",
+    "isAvailableForAll": "Pieejams visiem",
+    "color": "Krāsa"
+  },
+  "links": {
+    "stages": "Posmi"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktīvs",
+      "Inactive": "Neaktīvs"
+    }
+  }
+}

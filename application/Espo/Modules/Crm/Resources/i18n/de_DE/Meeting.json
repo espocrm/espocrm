@@ -15,7 +15,8 @@
     "dateEndDate": "Enddatum (ganztägig)",
     "isAllDay": "Ist ganztägig",
     "sourceEmail": "Quell E-Mail",
-    "joinUrl": "Teilnahme-URL"
+    "joinUrl": "Teilnahme-URL",
+    "externalService": "Online-Standort"
   },
   "options": {
     "status": {

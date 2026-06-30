@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "Create PipelineStage": "Phase erstellen"
+  },
+  "fields": {
+    "order": "Reihenfolge",
+    "mappedStatus": "Zugeordneter Status"
+  }
+}

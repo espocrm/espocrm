@@ -47,7 +47,13 @@
     "DashboardTemplate": "Modelo de Dashboard",
     "Currency": "Moeda",
     "LayoutSet": "Conjunto de layout",
-    "Mass Action": "Ação em massa"
+    "Mass Action": "Ação em massa",
+    "Note": "Nota",
+    "ImportError": "Erro de importação",
+    "WorkingTimeCalendar": "Calendário de Horário de Trabalho",
+    "GroupEmailFolder": "Pasta de Email do Grupo",
+    "AuthenticationProvider": "Provedor de Autenticação",
+    "AddressCountry": "País"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -88,7 +94,12 @@
     "EmailAddress": "Endereços de E-mail",
     "PhoneNumber": "Números de Telefone",
     "Currency": "Moeda",
-    "LayoutSet": "Conjunto de Layouts"
+    "LayoutSet": "Conjunto de Layouts",
+    "Note": "Notas",
+    "ImportError": "Erros de Importação",
+    "WorkingTimeCalendar": "Calendários de Horário de Trabalho",
+    "GroupEmailFolder": "Pastas de e-mail de grupo",
+    "AuthenticationProvider": "Provedores de autenticação"
   },
   "labels": {
     "Merge": "Mesclar",
@@ -104,7 +115,6 @@
     "Loading...": "Carregando...",
     "Uploading...": "Enviando...",
     "Sending...": "Enviando...",
-    "Merging...": "Mesclando...",
     "Merged": "Mesclado",
     "Removed": "Removido",
     "Posted": "Postado",
@@ -118,14 +128,10 @@
     "Record has been removed": "Registro removido",
     "Wrong username/password": "Usuário/senha incorretos",
     "Post cannot be empty": "A postagem não pode estar vazia",
-    "Removing...": "Removendo...",
-    "Unlinking...": "Removendo relacionamento...",
-    "Posting...": "Postando...",
     "Username can not be empty!": "O nome de usuário não pode estar vazio!",
     "Cache is not enabled": "O cache não está habilitado",
     "Cache has been cleared": "Cache limpo",
     "Rebuild has been done": "Reconstrução concluída",
-    "Saving...": "Salvando...",
     "Modified": "Modificado",
     "Created": "Criado",
     "Create": "Criar",
@@ -223,6 +229,8 @@
     "Skip": "Pular",
     "Attribute": "Atributo",
     "Function": "Função",
+    "Self-Assign": "Autoatribuir",
+    "Self-Assigned": "Autoatribuído",
     "Return to Application": "Retornar para Aplicação",
     "Select All Results": "Selecionar todos",
     "Expand": "Expandir",
@@ -248,11 +256,21 @@
     "Save & New": "Salvar e Novo",
     "Field": "Campo",
     "Resolution": "Resolução",
-    "Resolve Conflict": "Resolver Conflito"
+    "Resolve Conflict": "Resolver Conflito",
+    "Sort": "Ordenar",
+    "Log in": "Entrar",
+    "Log in as": "Entrar como",
+    "Sign in": "Assinar",
+    "Global Search": "Pesquisa global",
+    "Navigation Panel": "Mostrar Painel de Navegação",
+    "Print": "Imprimir",
+    "Copy to Clipboard": "Copiar para Clipboard",
+    "Copied to clipboard": "Copiado para clipboard",
+    "Next Page": "Próxima Página",
+    "First Page": "Primeira Página"
   },
   "messages": {
     "pleaseWait": "Por favor aguarde...",
-    "posting": "Postando...",
     "confirmLeaveOutMessage": "Você tem certeza que quer abandonar o formulário?",
     "notModified": "Você não modificou o registro",
     "fieldIsRequired": "{field} é obrigatório",
@@ -301,8 +319,6 @@
     "loading": "Carregando...",
     "saving": "Salvando...",
     "fieldMaxFileSizeError": "O arquivo não deve exceder {max} Mb",
-    "fieldShouldBeLess": "{field} deve ser menos que {value}",
-    "fieldShouldBeGreater": "{field} deve ser maior que {value}",
     "fieldIsUploading": "Upload em andamento",
     "erasePersonalDataConfirmation": "Os campos marcados serão apagados permanentemente. Tem certeza?",
     "massPrintPdfMaxCountError": "Não é possível imprimir mais de {maxCount} registros.",
@@ -313,8 +329,45 @@
     "notUpdated": "Não atualizado",
     "maintenanceMode": "O aplicativo está atualmente em modo de manutenção. Somente usuários administradores têm acesso.\n\nO modo de manutenção pode ser desabilitado em Administração → Configurações.",
     "fieldInvalid": "{field} é inválido",
+    "fieldPhoneInvalid": "{field} é inválido",
     "resolveSaveConflict": "O registro foi modificado. Você precisa resolver o conflito antes de salvar o registro.",
-    "massActionProcessed": "Ação em massa foi processada."
+    "massActionProcessed": "Ação em massa foi processada.",
+    "fieldUrlExceedsMaxLength": "O URL codificado excede o comprimento máximo de {maxLength}",
+    "fieldNotMatchingPattern": "{field} não corresponde ao padrão `{pattern}`",
+    "fieldNotMatchingPattern$noBadCharacters": "{field} contém caracteres não permitidos",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} não deve conter caracteres especiais ASCII",
+    "fieldNotMatchingPattern$latinLetters": "{field} pode conter apenas letras latinas",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} pode conter apenas letras e dígitos latinos",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} pode conter apenas letras latinas, dígitos e espaços em branco",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} pode conter apenas letras latinas e espaços em branco",
+    "fieldNotMatchingPattern$digits": "{field} pode conter apenas dígitos",
+    "fieldPhoneInvalidCharacters": "Apenas dígitos, letras latinas e caracteres `-+_@:#().` são permitidos",
+    "arrayItemMaxLength": "O item não deve ter mais de {max} caracteres",
+    "validationFailure": "Falha na validação de backend.\n\nCampo: `{field}`\nValidação: `{type}`",
+    "confirmAppRefresh": "O aplicativo foi atualizado. Recomenda-se atualizar a página para garantir o funcionamento correto.",
+    "error404": "A URL que você solicitou não pode ser tratada.",
+    "extensionLicenseInvalid": "Licença de extensão '{name}' inválida.",
+    "extensionLicenseExpired": "A assinatura da licença de extensão '{name}' expirou.",
+    "extensionLicenseSoftExpired": "A assinatura da licença de extensão '{name}' expirou.",
+    "loggedOutLeaveOut": "Desconectado. A sessão está inativa. Você pode perder dados de formulário não salvos após a atualização da página. Pode ser necessário fazer uma cópia.",
+    "noAccessToRecord": "A operação requer acesso `{action}` para gravar.",
+    "noAccessToForeignRecord": "A operação requer acesso `{action}` ao registro estrangeiro.",
+    "fieldShouldBeNumber": "{field} deve ser um número válido",
+    "maintenanceModeError": "O aplicativo está atualmente em modo de manutenção.",
+    "cannotRelateNonExisting": "Não é possível relacionar com o registro {foreignEntityType} inexistente.",
+    "cannotRelateForbidden": "Não é possível relacionar com o registro {foreignEntityType} proibido. acesso `{action}` necessário.",
+    "cannotRelateForbiddenLink": "Sem acesso ao link '{link}'.",
+    "emptyMassUpdate": "Nenhum campo disponível para Atualização em Massa.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} deve ser um URL válido",
+    "fieldShouldBeLess": "{field} não deve ser maior que {value}",
+    "fieldShouldBeGreater": "{field} não deve ser menor que {value}",
+    "fieldPhoneTooShort": "{field} é muito curto",
+    "fieldPhoneTooLong": "\n{field} é muito longo",
+    "cannotLinkAlreadyLinked": "Não é possível vincular um registro que já esteja vinculado.",
+    "select2OrMoreRecords": "Selecione 2 ou mais registros",
+    "selectNotMoreThanNumberRecords": "Selecione no máximo {number} registros",
+    "selectAtLeastOneRecord": "Selecione pelo menos um registro",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} contém caracteres não permitidos em um número de telefone"
   },
   "boolFilters": {
     "onlyMy": "Meus",
@@ -336,7 +389,8 @@
     "printPdf": "Imprimir para PDF",
     "unlink": "Desvincular",
     "recalculateFormula": "Recalcular Fórmula",
-    "update": "Atualizar"
+    "update": "Atualizar",
+    "delete": "Excluir"
   },
   "fields": {
     "name": "Nome",
@@ -366,10 +420,15 @@
     "emailAddressData": "Dados de Endereço de Email",
     "phoneNumberData": "Dados do Número de Telefone",
     "names": "Nomes",
+    "emailAddressIsOptedOut": "O endereço de e-mail foi cancelado",
     "targetListIsOptedOut": "É Cancelado (Lista de Alvo)",
     "type": "Tipo",
+    "phoneNumberIsOptedOut": "O número de telefone está desativado",
     "types": "Tipos",
-    "middleName": "Nome do Meio"
+    "middleName": "Nome do Meio",
+    "emailAddressIsInvalid": "Endereço de Email Inválido",
+    "phoneNumberIsInvalid": "Número de Telefone Inválido",
+    "users": "Usuários"
   },
   "links": {
     "assignedUser": "Usuário Designado",
@@ -390,7 +449,9 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} foi atribuído à você",
     "emailReceived": "Email recebido de {from}",
-    "entityRemoved": "{user} removido {entityType} {entity}"
+    "entityRemoved": "{user} removido {entityType} {entity}",
+    "emailInbox": "{user} adicionou email {entity} em sua caixa de entrada",
+    "userPostReaction": "{user} reagiu a seu {post}"
   },
   "streamMessages": {
     "post": "{user} postou em {entityType} {entity}",
@@ -417,6 +478,7 @@
     "createAssigned": "{user} criou {entityType} {entity} atribuído a {assignee}",
     "assign": "{user} atribuiu {entityType} {entity} a {assignee}",
     "assignThis": "{user} atribuiu {entityType} a {assignee}",
+    "assignMultiAddThis": "{user} atribuiu {entityType} a {assignee}",
     "postThis": "{user} postou",
     "attachThis": "{user} anexou",
     "statusThis": "{user} atualizou {field}",
@@ -655,6 +717,7 @@
       },
       "paragraph": {
         "paragraph": "Parágrafo",
+        "indent": "Indentar",
         "left": "Alinhar à esquerda",
         "center": "Alinhar ao centro",
         "right": "Alinhar à direita"
@@ -662,8 +725,6 @@
       "color": {
         "recent": "Cor recente",
         "more": "Mais cores",
-        "background": "Fundo",
-        "foreground": "Fonte",
         "transparent": "Transparente",
         "setTransparent": "Fundo transparente",
         "reset": "Restaurar",
@@ -696,5 +757,52 @@
     "Dark": "Escuro",
     "Violet": "Violeta",
     "Hazyblue": "Azul Nebuloso"
+  },
+  "themeNavbars": {
+    "side": "Barra de navegação lateral",
+    "top": "Barra de navegação superior"
+  },
+  "fieldValidations": {
+    "required": "Requerido",
+    "maxLength": "Comprimento máximo",
+    "pattern": "Correspondência de Padrões",
+    "emailAddress": "Endereço de Email Válido",
+    "phoneNumber": "Número de telefone válido",
+    "arrayOfString": "Array de Strings",
+    "noEmptyString": "Sem String Vazias",
+    "max": "Valor Máximo",
+    "min": "Valor Mínimo",
+    "valid": "Validade"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Valor de URL inválido.",
+    "currency_valid": "Valor de quantidade inválido.",
+    "currency_validCurrency": "O valor do código da moeda é inválido ou não é permitido.",
+    "varchar_pattern": "Provavelmente, o valor contém caracteres não permitidos.",
+    "phone_phoneNumber": "Valor de número de telefone inválido.",
+    "datetimeOptional_valid": "Valor de data-hora inválido.",
+    "datetime_valid": "Valor de data-hora inválido.",
+    "date_valid": "Valor de data inválido.",
+    "enum_valid": "Valor enum inválido. O valor deve ser uma das opções enum definidas. Um valor vazio é permitido somente se o campo tiver uma opção vazia.",
+    "multiEnum_valid": "Valor multienum inválido. Os valores devem ser uma das opções de campo definidas.",
+    "valid": "Valor inválido",
+    "maxLength": "O comprimento do valor excede o valor máximo."
+  },
+  "navbarTabs": {
+    "Business": "Negócios",
+    "Support": "Suporte",
+    "Activities": "Atividades"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Esquerda",
+      "center": "Centro",
+      "right": "Direita"
+    },
+    "verticalAlign": {
+      "top": "Superior",
+      "middle": "Meio",
+      "bottom": "Inferior"
+    }
   }
 }

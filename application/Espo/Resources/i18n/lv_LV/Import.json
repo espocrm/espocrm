@@ -55,7 +55,8 @@
     "Silent Mode": "Klusais režīms",
     "New import with same params": "Jauns imports ar tiem pašiem parametriem",
     "Run Manually": "Palaist manuāli",
-    "Export": "Eksportēt"
+    "Export": "Eksportēt",
+    "Parameters": "Parametri"
   },
   "messages": {
     "utf8": "Jābūt UTF-8 kodējumā",

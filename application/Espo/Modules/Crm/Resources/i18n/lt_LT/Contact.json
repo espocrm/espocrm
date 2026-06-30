@@ -52,6 +52,6 @@
   "presetFilters": {
     "portalUsers": "Portalo vartotojai",
     "notPortalUsers": "Ne portalo vartotojas",
-    "accountActive": "Aktyvus"
+    "accountActive": "Aktyvus ryšys"
   }
 }

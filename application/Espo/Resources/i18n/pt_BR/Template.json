@@ -19,7 +19,9 @@
     "pageHeight": "Altura da Página (mm)",
     "headerPosition": "Posição do Cabeçalho",
     "printHeader": "Cabeçalho de Impressão",
-    "title": "Título"
+    "title": "Título",
+    "style": "Estilo",
+    "filename": "Nome do arquivo"
   },
   "labels": {
     "Create Template": "Criar template"

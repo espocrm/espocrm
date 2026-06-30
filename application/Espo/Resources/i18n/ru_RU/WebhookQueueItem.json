@@ -1,1 +1,18 @@
-{}
+{
+  "fields": {
+    "event": "Событие",
+    "target": "Цель",
+    "data": "Данные",
+    "status": "Статус",
+    "processedAt": "Обработано в",
+    "attempts": "Попытки",
+    "processAt": "Процесс на"
+  },
+  "options": {
+    "status": {
+      "Pending": "В ожидании",
+      "Success": "Успех",
+      "Failed": "Не удалось"
+    }
+  }
+}

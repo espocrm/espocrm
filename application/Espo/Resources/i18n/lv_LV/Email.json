@@ -60,7 +60,8 @@
     "sendAt": "Sūtīt pie",
     "toEmailAddresses": "Uz e-pasta adresēm",
     "bccEmailAddresses": "BCC e-pasta adreses",
-    "replyToEmailAddresses": "Atbildes e-pasta adreses"
+    "replyToEmailAddresses": "Atbildes e-pasta adreses",
+    "isAutoReply": "Vai automātiskā atbilde"
   },
   "links": {
     "replied": "Atbildēts",

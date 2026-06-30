@@ -15,7 +15,6 @@
     "InboundEmail": "Учетная запись эл. почты группы",
     "Stream": "Лента",
     "Import": "Импортировать",
-    "Template": "Шаблон",
     "Job": "Задание",
     "EmailFilter": "Фильтр эл. почты",
     "Portal": "Портал",
@@ -58,7 +57,20 @@
     "ImportError": "Ошибка импорта",
     "WorkingTimeCalendar": "Календарь рабочего времени",
     "GroupEmailFolder": "Папка групповой эл. почты",
-    "AuthenticationProvider": "Поставщик аутентификации"
+    "AuthenticationProvider": "Поставщик аутентификации",
+    "GlobalStream": "Глобальный поток",
+    "WebhookQueueItem": "Элемент очереди вебхуков",
+    "AppLogRecord": "Запись журнала приложений",
+    "WorkingTimeRange": "Исключение по рабочему времени",
+    "AddressCountry": "Адрес Страна",
+    "OAuthProvider": "Поставщик OAuth",
+    "OAuthAccount": "Учетная запись OAuth",
+    "WebhookEventQueueItem": "Элемент очереди событий Webhook",
+    "Template": "Шаблон PDF",
+    "CurrencyRecord": "Отчет по валютам",
+    "CurrencyRecordRate": "Курс валюты",
+    "Pipeline": "Трубопровод",
+    "PipelineStage": "Этап «Трубопровод»"
   },
   "scopeNamesPlural": {
     "Email": "Эл. письма",
@@ -75,7 +87,6 @@
     "Dashboard": "Панели виджетов",
     "InboundEmail": "Учетные записи эл. почты групп",
     "Stream": "Ленты",
-    "Template": "Шаблоны",
     "Job": "Задания",
     "EmailFilter": "Фильтры эл. почты",
     "Portal": "Порталы",
@@ -107,7 +118,21 @@
     "ImportError": "Ошибки импорта",
     "WorkingTimeCalendar": "Календари рабочего времени",
     "GroupEmailFolder": "Групповые папки эл. почты",
-    "AuthenticationProvider": "Поставщики аутентификации"
+    "AuthenticationProvider": "Поставщики аутентификации",
+    "GlobalStream": "Глобальный поток",
+    "WebhookQueueItem": "Элементы очереди вебхуков",
+    "AppLogRecord": "Журнал приложений",
+    "WorkingTimeRange": "Исключения из рабочего времени",
+    "AddressCountry": "Страны адреса",
+    "AppSecret": "Секреты приложений",
+    "OAuthProvider": "Провайдеры OAuth",
+    "OAuthAccount": "Учетные записи OAuth",
+    "WebhookEventQueueItem": "Элементы очереди событий Webhook",
+    "Template": "Шаблоны PDF",
+    "CurrencyRecord": "Валюты",
+    "CurrencyRecordRate": "Курсы валют",
+    "Pipeline": "Трубопроводы",
+    "PipelineStage": "Этапы прокладки трубопровода"
   },
   "labels": {
     "Misc": "Разное",
@@ -280,7 +305,43 @@
     "Navigation Panel": "Показать панель навигации",
     "Print": "Печать",
     "Copy to Clipboard": "Копирование в буфер обмена",
-    "Copied to clipboard": "Копируется в буфер обмена"
+    "Copied to clipboard": "Копируется в буфер обмена",
+    "Audit Log": "Журнал аудита",
+    "View Audit Log": "Просмотр журнала аудита",
+    "Previous Page": "Предыдущая страница",
+    "Next Page": "Следующая страница",
+    "First Page": "Первая страница",
+    "Last Page": "Последняя страница",
+    "Page": "Страница",
+    "Star": "Звезда",
+    "Starred": "В главной роли",
+    "Remove Filter": "Удалить фильтр",
+    "Ready": "Готовые",
+    "Column Resize": "Изменение размера столбцов",
+    "General": "Общие сведения",
+    "Send": "Отправить",
+    "Timeout": "Тайм-аут",
+    "No internet": "Нет интернета",
+    "Scheduled": "Запланировано",
+    "Now": "Сейчас",
+    "Expanded": "Расширенный",
+    "Collapsed": "Разрушенный",
+    "Top Level": "Верхний уровень",
+    "Fields": "Поля",
+    "View User Access": "Просмотр доступа пользователей",
+    "Reacted": "Реакция",
+    "Reaction Removed": "Реакция устранена",
+    "Reactions": "Отклики",
+    "Network error": "Ошибка сети",
+    "Edit Item": "Редактировать элемент",
+    "Bad request": "Неверный запрос",
+    "Conflict": "Конфликт",
+    "Internal server error": "Внутренняя ошибка сервера",
+    "Mark read": "Марк прочитал",
+    "Lock": "Блокировка",
+    "Unlock": "Разблокировать",
+    "Assigned": "Назначено",
+    "Notification": "Уведомление"
   },
   "messages": {
     "pleaseWait": "Пожалуйста, подождите...",
@@ -374,16 +435,53 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{поле} должно быть действительным URL",
     "fieldShouldBeLess": "{поле} не должно быть больше {значения}",
     "fieldShouldBeGreater": "{поле} не должно быть меньше {значения}",
-    "cannotUnrelateRequiredLink": "Не удается удалить требуемую ссылку."
+    "cannotUnrelateRequiredLink": "Не удается удалить требуемую ссылку.",
+    "fieldPhoneInvalidCode": "Неверный код страны",
+    "fieldPhoneTooShort": "{Поле} слишком короткое",
+    "fieldPhoneTooLong": "{Поле} слишком длинное",
+    "barcodeInvalid": "{поле} недействительно {тип}",
+    "noLinkAccess": "Невозможно связаться с записью {foreignEntityType} по ссылке '{link}'. Нет доступа.",
+    "attemptIntervalFailure": "Операция запрещена в течение определенного временного интервала. Подождите некоторое время перед следующей попыткой.",
+    "confirmRestoreFromAudit": "Предыдущие значения будут установлены в форме. Затем вы можете сохранить запись, чтобы восстановить прежние значения.",
+    "pageNumberIsOutOfBound": "Номер страницы не совпадает",
+    "fieldPhoneExtensionTooLong": "Расширение не должно быть длиннее {maxLength}.",
+    "cannotLinkAlreadyLinked": "Невозможно связать уже связанную запись.",
+    "starsLimitExceeded": "Количество звезд превысило лимит.",
+    "select2OrMoreRecords": "Выберите 2 или более записей",
+    "selectNotMoreThanNumberRecords": "Выберите не более {количество} записей",
+    "selectAtLeastOneRecord": "Выберите хотя бы одну запись",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{поле} содержит символы, недопустимые в телефонном номере",
+    "duplicateConflict": "Запись уже существует.",
+    "confirmMassUpdate": "Вы уверены, что хотите массово обновить выбранные записи?",
+    "cannotRemoveCategoryWithChildCategory": "Невозможно удалить категорию, у которой есть дочерняя категория.",
+    "cannotRemoveNotEmptyCategory": "Невозможно удалить непустую категорию.",
+    "arrayInputNotEmpty": "Элемент введен, но не добавлен",
+    "error403": "У вас нет доступа к этой области.",
+    "sameRecordIsAlreadyBeingEdited": "Запись уже редактируется.",
+    "changesLossConfirmation": "Несохраненные изменения будут потеряны. Вы уверены?",
+    "cannotRemoveUsed": "Невозможно удалить запись, так как она используется.",
+    "checkLogsForDetails": "Подробности см. в журналах.",
+    "confirmMassLock": "Вы уверены, что хотите заблокировать выбранные записи?",
+    "confirmMassUnlock": "Вы уверены, что хотите разблокировать выбранные записи?",
+    "locked": "Запись заблокирована",
+    "unlocked": "Запись разблокирована",
+    "massLockDone": "{count} заблокировано",
+    "massUnlockDone": "{count} разблокировано",
+    "cannotModifyLockedRecord": "Невозможно изменить поле *{field}*. Запись заблокирована.",
+    "cannotRemoveLockedRecord": "Не удается удалить заблокированную запись.",
+    "noPipeline": "Трубопровода нет."
   },
   "boolFilters": {
     "onlyMy": "Только мои",
     "followed": "Вы подписаны",
-    "onlyMyTeam": "Моя группа"
+    "onlyMyTeam": "Моя группа",
+    "shared": "Общий"
   },
   "presetFilters": {
     "followed": "Вы подписаны",
-    "all": "Все"
+    "all": "Все",
+    "starred": "В главной роли",
+    "active": "Активный"
   },
   "massActions": {
     "remove": "Удалить",
@@ -397,7 +495,9 @@
     "unlink": "Убрать ссылку",
     "recalculateFormula": "Пересчитать формулу",
     "update": "Обновить",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "lock": "Блокировка",
+    "unlock": "Разблокировать"
   },
   "fields": {
     "name": "Название",
@@ -436,7 +536,15 @@
     "types": "Типы",
     "middleName": "Отчество",
     "emailAddressIsInvalid": "Адрес электронной почты недействителен",
-    "phoneNumberIsInvalid": "Номер телефона недействителен"
+    "phoneNumberIsInvalid": "Номер телефона недействителен",
+    "users": "Пользователи",
+    "childList": "Список детей",
+    "collaborators": "Сотрудники",
+    "streamUpdatedAt": "Обновленный поток на",
+    "category": "Категория",
+    "isLocked": "Заблокировано",
+    "pipeline": "Трубопровод",
+    "pipelineStage": "Этап прокладки трубопровода"
   },
   "links": {
     "assignedUser": "Ответственный",
@@ -447,7 +555,12 @@
     "teams": "Группы",
     "users": "Пользователи",
     "parent": "Источник",
-    "children": "Потомок"
+    "children": "Потомок",
+    "assignedUsers": "Назначенные пользователи",
+    "collaborators": "Сотрудники",
+    "category": "Категория",
+    "pipeline": "Трубопровод",
+    "pipelineStage": "Этап прокладки трубопровода"
   },
   "dashlets": {
     "Stream": "Лента",
@@ -459,7 +572,15 @@
   "notificationMessages": {
     "assign": "Вам было назначено {entityType} {entity}",
     "emailReceived": "Получено эл. письмо от {from}",
-    "entityRemoved": "{user} удалил {entityType} {entity}"
+    "entityRemoved": "{user} удалил {entityType} {entity}",
+    "emailInbox": "{пользователь} добавил письмо {сущность} в ваш почтовый ящик",
+    "userPostReaction": "{пользователь} отреагировал на ваше {пост}",
+    "userPostInParentReaction": "{user} отреагировал на ваш {пост} в {entityType} {entity}",
+    "addedToCollaborators": "{пользователь} добавил вас в качестве соавтора в {entityType} {entity}",
+    "groupUpdatesMultiple": "{entityType} {entity} – {number} новых мероприятий",
+    "groupUpdatesOne": "{entityType} {entity} — новое мероприятие",
+    "groupEmailsReceivedNew": "Полученные электронные письма — {число} новых",
+    "groupEmailsReceived": "Полученные электронные письма"
   },
   "streamMessages": {
     "post": "{user} оставил примечание к {entityType} {entity}",
@@ -517,7 +638,12 @@
     "assignThisSelf": "{user} назначил {entityType} на себя",
     "assignSelf": "{user} назначил {entityType} {entity} на себя",
     "unrelate": "{user} отсоединил {relatedEntityType} {relatedEntity} от {entityType} {entity}",
-    "unrelateThis": "{user} отсоединил {relatedEntityType} {relatedEntity} от этого {entityType}"
+    "unrelateThis": "{user} отсоединил {relatedEntityType} {relatedEntity} от этого {entityType}",
+    "assignMultiAdd": "{пользователь} назначил {субъект} {получателю}",
+    "assignMultiRemove": "{user} отменил назначение {entity} от {removedAssignee}",
+    "assignMultiAddRemove": "{пользователь} назначил {сущность} {назначаемому} и отменил назначение у {удаленного получателя}",
+    "assignMultiRemoveThis": "{пользователь} отменил назначение этого {entityType} у {removedAssignee}",
+    "assignMultiAddRemoveThis": "{пользователь} назначил этот {entityType} {назначаемому} и отменил назначение у {удаленного получателя}."
   },
   "lists": {
     "monthNames": [
@@ -634,7 +760,9 @@
       "isNotEmpty": "Не пусто",
       "notLike": "не как (%)",
       "notContains": "Не включает в себя",
-      "notEquals": "Не равен"
+      "notEquals": "Не равен",
+      "anyOf": "Любой из",
+      "noneOf": "Ни один из"
     },
     "intSearchRanges": {
       "equals": "Равняется",
@@ -753,7 +881,9 @@
         "transparent": "Прозрачный",
         "setTransparent": "Сделать прозрачным",
         "reset": "Сбросить",
-        "resetToDefault": "Восстановить умолчания"
+        "resetToDefault": "Восстановить умолчания",
+        "background": "Цвет спины",
+        "foreground": "Цвет шрифта"
       },
       "shortcut": {
         "shortcuts": "Сочетания клавиш",
@@ -808,7 +938,8 @@
     "arrayOfString": "Массив строк",
     "noEmptyString": "Нет пустой строки",
     "max": "Максимальное значение",
-    "min": "Минимальное значение"
+    "min": "Минимальное значение",
+    "valid": "Валидность"
   },
   "fieldValidationExplanations": {
     "url_valid": "Недопустимое значение URL.",
@@ -823,12 +954,63 @@
     "enum_valid": "Недопустимое значение перечисления. Значение должно быть одним из определенных параметров перечисления. Пустое значение допускается только в том случае, если поле имеет пустую опцию.",
     "multiEnum_valid": "Недопустимое значение множественного перечисления. Значения должны быть одним из определенных параметров поля.",
     "int_valid": "Недопустимое значение целого числа.",
-    "float_valid": "Недопустимое значение числа."
+    "float_valid": "Недопустимое значение числа.",
+    "valid": "Недопустимое значение.",
+    "maxLength": "Длина значения превышает максимальное значение.",
+    "phone_valid": "Номер телефона недействителен. Причиной может быть неправильный или пустой код страны."
   },
   "navbarTabs": {
     "Business": "Бизнес",
     "Marketing": "Маркетинг",
     "Support": "Поддержка",
     "Activities": "Деятельность"
+  },
+  "wysiwygLabels": {
+    "cell": "Клетка",
+    "align": "Выровнять",
+    "width": "Ширина",
+    "height": "Высота",
+    "borderWidth": "Ширина границы",
+    "borderColor": "Цвет границы",
+    "cellPadding": "Набивка ячеек",
+    "backgroundColor": "Цвет фона",
+    "verticalAlign": "Выравнивание по вертикали"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Слева",
+      "center": "Центр",
+      "right": "Справа"
+    },
+    "verticalAlign": {
+      "top": "Топ",
+      "middle": "Средняя",
+      "bottom": "Дно"
+    }
+  },
+  "detailViewModes": {
+    "detail": "Деталь"
+  },
+  "strings": {
+    "yesterdayShort": "Йест"
+  },
+  "reactions": {
+    "Smile": "Улыбка",
+    "Surprise": "Сюрприз",
+    "Laugh": "Смех",
+    "Sad": "Грусть",
+    "Love": "Любовь",
+    "Like": "Например,",
+    "Dislike": "Не нравится"
+  },
+  "recordActions": {
+    "create": "Создать",
+    "read": "Читать",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "stream": "Поток"
+  },
+  "tabs": {
+    "Stream": "Поток"
   }
 }

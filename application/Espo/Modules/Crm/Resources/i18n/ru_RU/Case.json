@@ -11,7 +11,9 @@
     "description": "Описание",
     "lead": "Лид",
     "attachments": "Вложения",
-    "inboundEmail": "Учетная запись эл. почты группы"
+    "inboundEmail": "Учетная запись эл. почты группы",
+    "originalEmail": "Оригинальное электронное письмо",
+    "isInternal": "Скрыто от портала"
   },
   "links": {
     "account": "Контрагент",

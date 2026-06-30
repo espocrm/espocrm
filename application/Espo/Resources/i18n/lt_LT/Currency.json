@@ -158,5 +158,8 @@
     "ZAR": "Pietų Afrikos randas",
     "ZMW": "Zambijos kavača",
     "ZWL": "Zimbabvės doleris"
+  },
+  "messages": {
+    "rateOnDateAlreadyExists": "Šios dienos kursas jau yra nustatytas."
   }
 }

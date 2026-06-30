@@ -37,12 +37,11 @@
     "useImap": "Buscar emails",
     "keepFetchedEmailsUnread": "Manter Emails Buscados Não Lidos",
     "smtpAuthMechanism": "Mecanismo de autenticação SMTP",
-    "security": "Segurança"
+    "security": "Segurança",
+    "groupEmailFolder": "Pasta de Email do Grupo"
   },
   "tooltips": {
     "reply": "Notificar rementente que seus e-mails foram recebidos.",
-    "createCase": "Criar automaticamente um atendimento para os e-mais recebidos.",
-    "replyToAddress": "Especifique o endereço de e-mail desta caixa postal para que as respostas cheguem aqui.",
     "caseDistribution": "Como os atendimentos serão distribuídos. Assinados diretamente ao usuário ou entregues ao time.",
     "assignToUser": "Usuário responsável pelos e-mails/atendimentos.",
     "team": "Time que será relacionado aos e-mails/atendimentos.",
@@ -50,14 +49,14 @@
     "addAllTeamUsers": "Os emails aparecerão na caixa de entrada de todos os usuários dos times especificados.",
     "targetUserPosition": "Define a posição dos usuários para quem serão distribuídos os atendimentos.",
     "monitoredFolders": "Várias pastas devem ser separadas por vírgula.",
-    "smtpIsShared": "Se marcado, os usuários poderão enviar e-mails usando este SMTP. A disponibilidade é controlada por Regras por meio da permissão Conta de Email do Grupo.",
-    "smtpIsForMassEmail": "Se marcado, o SMTP estará disponível para email em massa.",
     "storeSentEmails": "Os emails enviados serão armazenados no servidor IMAP.",
-    "useSmtp": "A capacidade de enviar e-mails."
+    "useSmtp": "A capacidade de enviar e-mails.",
+    "groupEmailFolder": "Coloque os e-mails recebidos em uma pasta de grupo."
   },
   "links": {
     "filters": "Filtros",
-    "assignToUser": "Atribuir ao Usuário"
+    "assignToUser": "Atribuir ao Usuário",
+    "groupEmailFolder": "Pasta de Email do Grupo"
   },
   "options": {
     "status": {

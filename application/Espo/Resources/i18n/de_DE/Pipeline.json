@@ -1,0 +1,21 @@
+{
+  "labels": {
+    "Create Pipeline": "Pipeline erstellen"
+  },
+  "fields": {
+    "order": "Reihenfolge",
+    "entityType": "Entitätstyp",
+    "field": "Feld",
+    "isAvailableForAll": "Für alle verfügbar",
+    "color": "Farbe"
+  },
+  "links": {
+    "stages": "Phasen"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    }
+  }
+}

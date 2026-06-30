@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create Pipeline": "Sukurti procesą"
+  },
+  "fields": {
+    "order": "Užsakymas",
+    "status": "Būklė",
+    "entityType": "Objekto tipas",
+    "field": "Laukas",
+    "isAvailableForAll": "Prieinama visiems",
+    "color": "Spalva"
+  },
+  "links": {
+    "stages": "Etapai"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    }
+  }
+}

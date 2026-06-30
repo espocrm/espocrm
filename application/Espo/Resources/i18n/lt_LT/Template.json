@@ -20,14 +20,18 @@
     "headerPosition": "Antraštės padėtis",
     "printHeader": "Spausdinti antraštę",
     "title": "Pavadinimas",
-    "style": "Stilius"
+    "style": "Stilius",
+    "status": "Statusas",
+    "filename": "Failo pavadinimas"
   },
   "labels": {
     "Create Template": "Sukurti šabloną"
   },
   "tooltips": {
     "footer": "Naudokite {page Number}, jei norite spausdinti puslapio numerį.",
-    "variables": "Kopijavimui reikia įterpti žymeklį į antraštę, kūną arba poraštę."
+    "variables": "Kopijavimui reikia įterpti žymeklį į antraštę, kūną arba poraštę.",
+    "filename": "Neprivalomas failo vardas. Subjekto atributai gali būti naudojami kaip žymekliai.\n\nPapildomas vietos žymuo:\n- `{{dienos}}``\n\nPavyzdys:\n`Document_{{today}}_{{name}}`",
+    "body": "Žiūrėkite [dokumentaciją](https://docs.espocrm.com/user-guide/printing-to-pdf/#templates).\n\nTiksliam žymių redagavimui naudokite kodo peržiūros režimą.\n\nPapildomi žymių atributai:\n- `x-if`\n- `iterate`"
   },
   "options": {
     "pageOrientation": {
@@ -41,6 +45,10 @@
     },
     "pageFormat": {
       "Custom": "Pasirinktinis"
+    },
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
     }
   }
 }

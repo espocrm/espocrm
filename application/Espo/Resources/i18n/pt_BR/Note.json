@@ -16,24 +16,28 @@
   },
   "filters": {
     "all": "Todos",
-    "updates": "Atualizações"
+    "updates": "Atualizações",
+    "activity": "Atividade"
   },
   "messages": {
     "writeMessage": "Escreva sua mensagem aqui"
   },
   "options": {
-    "targetType": {
-      "self": "para mim",
-      "users": "para determinado(s) usuário(s)",
-      "teams": "para determinado(s) time(s)",
-      "all": "para todos os usuários internos",
-      "portals": "para usuários do portal"
-    },
     "type": {
-      "Post": "Postagem"
+      "Post": "Postagem",
+      "Create": "Criar",
+      "Update": "Atualizar",
+      "EmailReceived": "Email recebido",
+      "EmailSent": "Email enviado"
     }
   },
   "links": {
-    "related": "Relacionado"
+    "related": "Relacionado",
+    "portals": "Portais",
+    "attachments": "Anexos"
+  },
+  "labels": {
+    "View Posts": "Ver Postagens",
+    "View Activity": "Ver atividade"
   }
 }

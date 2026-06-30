@@ -46,7 +46,11 @@
     "collaborators": "Medewerkers",
     "aclContactLink": "ACL contact link",
     "sortBy": "Standaard sorteer veld",
-    "sortDirection": "Standaard sorteer richting"
+    "sortDirection": "Standaard sorteer richting",
+    "categories": "Categorieën",
+    "lockable": "vergrendelbaar",
+    "transactionalSave": "Transactie opslaan",
+    "pipelines": "Pijpleidingen"
   },
   "options": {
     "type": {
@@ -86,7 +90,9 @@
     "nameIsNotAllowed": "Naam '{name}' is niet toegestaan.",
     "nameIsTooLong": "Naam is te lang.",
     "confirmRemoveLink": "Weet je zeker dat je de *{link}* relatie wilt verwijderen?",
-    "urlHashCopiedToClipboard": "Een URL-fragment voor de *{name}* filter wordt gekopieerd naar het klembord. Je kunt het toevoegen aan de navigatiebalk."
+    "urlHashCopiedToClipboard": "Een URL-fragment voor de *{name}* filter wordt gekopieerd naar het klembord. Je kunt het toevoegen aan de navigatiebalk.",
+    "cannotEnablePipelinesWithNoStatusField": "Pijplijnen kunnen niet worden ingeschakeld omdat het entiteitstype geen statusveld heeft. Maak indien nodig een Enum-veld voor de status aan en selecteer dit vervolgens in de parameter ‘Statusveld’.",
+    "cannotEnableCategoriesWithKanbanViewMode": "De categorieën zijn niet compatibel met de Kanban-weergave. Schakel de ene of de andere uit."
   },
   "tooltips": {
     "statusField": "Updates van dit veld zijn gelogd in stream.",
@@ -108,6 +114,17 @@
     "assignedUsers": "De mogelijkheid om meerdere gebruikers aan een record toe te wijzen.\n\nMerk op dat na het inschakelen van de parameter, bestaande toegewezen gebruikers niet worden overgezet naar het nieuwe veld *Toegewezen gebruikers*.",
     "preserveAuditLog": "Schakelt het opschonen van het auditlogboek uit. Deze parameter is alleen van toepassing als Stream is uitgeschakeld. Als Stream is ingeschakeld, worden audit log records niet verwijderd.",
     "stream": "Of de entiteit de Stream heeft.",
-    "linkParamReadOnly": "Een alleen-lezen link kan niet worden bewerkt via de *link* en *unlink* API-verzoeken. Het zal niet mogelijk zijn om records te relateren en te unrelateren via het relatiepaneel. Het is nog steeds mogelijk om alleen-lezen links te bewerken via link en link-multiple velden."
+    "linkParamReadOnly": "Een alleen-lezen link kan niet worden bewerkt via de *link* en *unlink* API-verzoeken. Het zal niet mogelijk zijn om records te relateren en te unrelateren via het relatiepaneel. Het is nog steeds mogelijk om alleen-lezen links te bewerken via link en link-multiple velden.",
+    "pipelines": "Maakt het gebruik van meerdere pijplijnen mogelijk. Pijplijnen kunnen worden geconfigureerd via Beheer > Pijplijnen.",
+    "transactionalSave": "Het vastleggen van opslag- en verwijderingsbewerkingen wordt verpakt in DB-transacties.",
+    "lockable": "Hiermee kun je records vergrendelen.",
+    "categories": "Schakel de categorieboomfunctie in. Records kunnen in categorieën worden ondergebracht.",
+    "linkParamCascadeRemoval": "Indien deze optie is ingeschakeld, worden bij het verwijderen van een bovenliggend record ook de bijbehorende gerelateerde records verwijderd."
+  },
+  "entityNameParts": {
+    "Category": "Categorie"
+  },
+  "entityNamePartsPlural": {
+    "Category": "Categorieën"
   }
 }

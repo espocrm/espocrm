@@ -24,6 +24,7 @@
     "accountsTemplate": "Modelo de Contas",
     "usersTemplate": "Modelo de Usuários",
     "mailMergeOnlyWithAddress": "Pular registros sem endereço preenchido",
+    "optedInCount": "Inscrito",
     "budgetCurrency": "Moeda do Budget"
   },
   "links": {

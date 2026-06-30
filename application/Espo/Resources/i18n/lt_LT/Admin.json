@@ -58,7 +58,7 @@
     "Action History": "Veiksmų istorija",
     "Label Manager": "Etikečių tvarkyklė",
     "Auth Log": "Auth Prisijungti",
-    "Lead Capture": "\"Lead Capture\"",
+    "Lead Capture": "Potencialių klientų rinkimas",
     "Attachments": "Priedai",
     "API Users": "API Vartotojai",
     "Template Manager": "Šablonų tvarkyklė",
@@ -87,7 +87,8 @@
     "App Log": "Programos žurnalas",
     "Address Countries": "Adresas Šalys",
     "App Secrets": "Programėlių paslaptys",
-    "OAuth Providers": "OAuth teikėjai"
+    "OAuth Providers": "OAuth teikėjai",
+    "Pipelines": "Vamzdynai"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -150,7 +151,8 @@
     "linkOne": "Pirmoji sąsaja",
     "barcode": "Brūkšninis kodas",
     "urlMultiple": "Keli URL adresai",
-    "base": "Bazinis"
+    "base": "Bazinis",
+    "decimal": "Dešimtainis"
   },
   "fields": {
     "type": "Tipas",
@@ -230,7 +232,14 @@
     "preview": "Peržiūra",
     "attachmentField": "Priedo laukas",
     "dynamicLogicReadOnlySaved": "Išsaugotos būsenos sąlygos, dėl kurių laukas yra tik skaitomas",
-    "notStorable": "Nesaugomas"
+    "notStorable": "Nesaugomas",
+    "itemsEditable": "Redaguojami elementai",
+    "dynamicLogicCascading": "Kaskadinis pasirinkimas",
+    "capture": "Užfiksuoti",
+    "openInNewTab": "Atidaryti naujame skirtuke",
+    "notLockable": "Negalima užrakinti",
+    "protocolRequired": "Reikalaujamas protokolas",
+    "cascadeRemoval": "Kaskados pašalinimas"
   },
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
@@ -254,7 +263,8 @@
     "formulaFunctions": "Daugiau funkcijų rasite [dokumentacija]({documentationUrl}).",
     "rebuildRequired": "Reikia paleisti atkūrimą iš CLI.",
     "cronIsDisabled": "\"Cron\" yra išjungtas, programa neveikia iki galo. Įjunkite \"cron\" [nustatymuose] (#Admin/settings).",
-    "cacheIsDisabled": "Išjungus spartinančiąją atmintinę, programa veiks lėtai. Įjunkite talpyklą [nustatymuose] (#Admin/settings)."
+    "cacheIsDisabled": "Išjungus spartinančiąją atmintinę, programa veiks lėtai. Įjunkite talpyklą [nustatymuose] (#Admin/settings).",
+    "noPipelinesEnabled": "Nė vienam objektų tipui nėra įjungti dujotiekiai."
   },
   "descriptions": {
     "settings": "Sistemos programos nustatymai.",
@@ -308,7 +318,8 @@
     "addressCountries": "Šalys, kuriose galima naudoti adreso laukus.",
     "appSecrets": "saugokite slaptą informaciją, pavyzdžiui, API raktus, slaptažodžius ir kitas paslaptis.",
     "leadCapture": "Galutiniai lyderių surinkimo taškai ir žiniatinklio formos.",
-    "oAuthProviders": "\"OAuth\" teikėjai, skirti integracijai."
+    "oAuthProviders": "\"OAuth\" teikėjai, skirti integracijai.",
+    "pipelines": "Nustatykite kelis procesų srautus."
   },
   "options": {
     "previewSize": {
@@ -321,6 +332,10 @@
     "labelType": {
       "state": "Valstybė",
       "regular": "Įprasta"
+    },
+    "capture": {
+      "user": "Vartotojas",
+      "environment": "Aplinka"
     }
   },
   "logicalOperators": {

@@ -4,6 +4,7 @@
   },
   "fields": {
     "acceptanceStatus": "Status de Aceitação",
+    "acceptanceStatusMeetings": "Status de Aceitação (Reuniões)",
     "acceptanceStatusCalls": "Status de Aceitação (Ligações)"
   }
 }

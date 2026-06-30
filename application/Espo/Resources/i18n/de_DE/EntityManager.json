@@ -12,7 +12,7 @@
     "labelPlural": "Bezeichnung Mehrzahl",
     "stream": "Ereignisse",
     "label": "Bezeichnung",
-    "linkType": "Relationstyp",
+    "linkType": "Verknüpfungstyp",
     "entityForeign": "Fremdentität",
     "linkForeign": "Fremdrelation",
     "labelForeign": "Fremdbezeichnung",
@@ -21,7 +21,7 @@
     "linkMultipleFieldForeign": "Fremdlink mehrere Felder",
     "disabled": "Inaktiv",
     "textFilterFields": "Textfilter Felder",
-    "audited": "überprüft",
+    "audited": "Auditiert",
     "auditedForeign": "fremd geprüft",
     "statusField": "Status Feld",
     "beforeSaveCustomScript": "vor dem Speichern benutzerdefiniertes Script",
@@ -48,7 +48,10 @@
     "aclContactLink": "ACL-Kontakt-Link",
     "aclAccountLink": "ACL-Konto-Link",
     "sortBy": "Standardsortierung nach Feld",
-    "sortDirection": "Standard-Sortierrichtung"
+    "sortDirection": "Standard-Sortierrichtung",
+    "categories": "Kategorien",
+    "lockable": "Sperrbar",
+    "transactionalSave": "Transaktionales Speichern"
   },
   "options": {
     "type": {
@@ -77,8 +80,8 @@
   },
   "messages": {
     "entityCreated": "Entität wurde erstellt",
-    "linkAlreadyExists": "Relationsnamenkonflikt",
-    "linkConflict": "Eine Relation mit diesem Namen existiert bereits",
+    "linkAlreadyExists": "Konflikt mit Verknüpfungsnamen.",
+    "linkConflict": "Namenskonflikt: Eine Verknüpfung oder ein Feld mit demselben Namen ist bereits vorhanden.",
     "confirmRemove": "Sind Sie sicher, dass Sie den Entitätstyp aus dem System entfernen möchten?",
     "beforeSaveCustomScript": "Ein Skript, das jedes Mal aufgerufen wird, bevor eine Entität gespeichert wird. Wird zum Setzen von berechneten Feldern verwenden.",
     "beforeSaveApiScript": "Ein Skript, das bei API-Anfragen zum Erstellen und Aktualisieren aufgerufen wird, bevor eine Entität gespeichert wird. Verwenden Sie es für die benutzerdefinierte Validierung und die Überprüfung von Duplikaten.",
@@ -86,15 +89,17 @@
     "nameIsNotAllowed": "Name '{name}' ist nicht erlaubt.",
     "nameIsTooLong": "Der Name ist zu lang.",
     "confirmRemoveLink": "Sind Sie sicher, dass Sie die *{link}*-Beziehung entfernen wollen?",
-    "urlHashCopiedToClipboard": "Ein URL-Fragment für den Filter *{name}* wird in die Zwischenablage kopiert. Sie können es der Navigationsleiste hinzufügen."
+    "urlHashCopiedToClipboard": "Ein URL-Fragment für den Filter *{name}* wird in die Zwischenablage kopiert. Sie können es der Navigationsleiste hinzufügen.",
+    "cannotEnablePipelinesWithNoStatusField": "Pipelines können nicht aktiviert werden, da der Entitätstyp kein Statusfeld enthält. Erstellen Sie bei Bedarf ein Einfachauswahl-Feld für den Status und wählen Sie dieses anschließend im Parameter „Statusfeld“ aus.",
+    "cannotEnableCategoriesWithKanbanViewMode": "„Kategorien“ ist nicht mit der Kanban-Ansicht kompatibel. Deaktivieren Sie entweder das eine oder das andere."
   },
   "tooltips": {
     "statusField": "Änderungen dieses Feldes werden im Ereignisverlauf protokolliert.",
     "textFilterFields": "Von der Textsuche verwendete Felder.",
     "disabled": "Überprüfen Sie, ob Sie diese Entität nicht in Ihrem System benötigen.",
-    "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird in Ereignisverlauf protokolliert.",
+    "linkAudited": "Das Erstellen eines verknüpften Datensatzes und das Verknüpfen mit dem vorhandenen Datensatz wird im Ereignisverlauf protokolliert.",
     "linkMultipleField": "Mehrere Felder verknüpfen bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Verwenden Sie es nicht, wenn Sie eine große Anzahl von Verknüpfungen haben.",
-    "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
+    "entityType": "Basis Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
     "fullTextSearch": "Ausführung des Neuaufbaus ist erforderlich.",
     "countDisabled": "Die Gesamtzahl wird in der Listenansicht nicht angezeigt. Dies verringert die Ladezeit, wenn die DB-Tabelle sehr groß ist.",
     "optimisticConcurrencyControl": "Verhindert Schreibkonflikte.",
@@ -108,6 +113,17 @@
     "assignedUsers": "Die Möglichkeit, einem Datensatz mehrere Benutzer zuzuweisen.\n\nBeachten Sie, dass nach der Aktivierung des Parameters vorhandene zugewiesene Benutzer nicht in das neue Feld *Zugewiesene Benutzer* übertragen werden.",
     "preserveAuditLog": "Deaktiviert die Bereinigung des Audit-Protokolls. Dieser Parameter ist nur anwendbar, wenn Ereignisse deaktiviert sind. Wenn Ereignisse aktiviert sind, werden die Audit-Protokollsätze nicht gelöscht.",
     "stream": "Ob die Entität über einen Ereignisverlauf verfügt.",
-    "linkParamReadOnly": "Eine schreibgeschützte Verknüpfung kann nicht über die API-Anfragen *verknüpfen* und *entknüpfen* bearbeitet werden. Es wird nicht möglich sein, Datensätze über das Beziehungspanel zu verknüpfen und zu entverknüpfen. Es ist weiterhin möglich, schreibgeschützte Verknüpfungen über Verknüpfungs- und Mehrfachlinks-Felder zu bearbeiten."
+    "linkParamReadOnly": "Eine schreibgeschützte Verknüpfung kann nicht über die API-Anfragen *verknüpfen* und *entknüpfen* bearbeitet werden. Es wird nicht möglich sein, Datensätze über das Beziehungspanel zu verknüpfen und zu entverknüpfen. Es ist weiterhin möglich, schreibgeschützte Verknüpfungen über Verknüpfungs- und Mehrfachlinks-Felder zu bearbeiten.",
+    "pipelines": "Ermöglicht die Verwendung mehrerer Pipelines. Pipelines können unter „Administration > Pipelines“ konfiguriert werden.",
+    "transactionalSave": "Das Speichern und Löschen von Datensätzen wird in Datenbanktransaktionen eingebunden.",
+    "lockable": "Ermöglicht das Sperren von Datensätzen.",
+    "categories": "Aktivieren Sie die Kategoriebaum-Funktion. Datensätze können in Kategorien eingeordnet werden.",
+    "linkParamCascadeRemoval": "Wenn diese Option aktiviert ist, werden beim Löschen eines übergeordneten Datensatzes auch die zugehörigen untergeordneten Datensätze gelöscht."
+  },
+  "entityNameParts": {
+    "Category": "Kategorie"
+  },
+  "entityNamePartsPlural": {
+    "Category": "Kategorien"
   }
 }

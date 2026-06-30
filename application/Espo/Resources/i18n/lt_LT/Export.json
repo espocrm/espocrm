@@ -13,6 +13,9 @@
       "Running": "Bėgimas",
       "Success": "Sėkmė",
       "Failed": "Nepavyko"
+    },
+    "format": {
+      "xlsx": "XLSX · Skaičiuoklė"
     }
   },
   "messages": {

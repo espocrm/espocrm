@@ -1,7 +1,7 @@
 {
   "fields": {
     "parent": "Bezieht sich auf",
-    "dateSent": "Sendedatum",
+    "dateSent": "Gesendet",
     "from": "Von",
     "to": "An",
     "replyTo": "Antwort an",
@@ -52,7 +52,7 @@
     "isUsersSent": "Ist Benutzer gesendet",
     "inArchive": "Im Archiv",
     "groupStatusFolder": "Gruppenstatus-Ordner",
-    "sendAt": "Senden um",
+    "sendAt": "Senden geplant",
     "toEmailAddresses": "An E-Mail-Adressen",
     "bccEmailAddresses": "BCC E-Mail-Adressen",
     "replyToEmailAddresses": "Antwort-an-E-Mail-Adressen",

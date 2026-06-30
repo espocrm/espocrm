@@ -29,7 +29,8 @@
   "tooltips": {
     "footer": "Gebruik {pageNumber} om het paginanummer af te drukken.",
     "variables": "Kopieer en plak de benodigde aanduiding naar koptekst, hoofdtekst of voettekst.",
-    "filename": "Een optionele bestandsnaam. Entiteitsattributen kunnen worden gebruikt als plaatshouders.\n\nExtra plaatshouder:\n- `{{today}}`\n\nVoorbeeld:\n`Document_{{today}}_{{name}}`"
+    "filename": "Een optionele bestandsnaam. Entiteitsattributen kunnen worden gebruikt als plaatshouders.\n\nExtra plaatshouder:\n- `{{today}}`\n\nVoorbeeld:\n`Document_{{today}}_{{name}}`",
+    "body": "Raadpleeg de [documentatie](https://docs.espocrm.com/user-guide/printing-to-pdf/#templates).\n\nGebruik de codeweergave om de opmaak nauwkeurig te bewerken.\n\nExtra tagattributen:\n- `x-if`\n- `iterate`"
   },
   "options": {
     "pageOrientation": {

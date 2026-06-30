@@ -1,1 +1,15 @@
-{}
+{
+  "fields": {
+    "message": "Сообщение",
+    "code": "Код",
+    "level": "Уровень",
+    "exceptionClass": "Класс исключений",
+    "file": "Файл",
+    "line": "Линия",
+    "requestMethod": "Метод запроса",
+    "requestResourcePath": "Запрос пути к ресурсам"
+  },
+  "presetFilters": {
+    "errors": "Ошибки"
+  }
+}

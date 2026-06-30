@@ -43,8 +43,8 @@
     "AuthLogRecord": "Auth žurnalo įrašas",
     "AuthFailLogRecord": "Atvykti failų žurnalo įrašą",
     "EmailTemplateCategory": "Laiškų šablonų kategorijos",
-    "LeadCapture": "\"Lead Capture Entry Point\"",
-    "LeadCaptureLogRecord": "Švino surinkimo žurnalo įrašas",
+    "LeadCapture": "Potencialių klientų rinkimo taškas",
+    "LeadCaptureLogRecord": "Potencialių klientų rinkimo žurnalo įrašas",
     "ArrayValue": "Masyvo vertė",
     "ApiUser": "API naudotojas",
     "DashboardTemplate": "Prietaisų skydelio šablonas",
@@ -64,7 +64,12 @@
     "AppSecret": "Programėlės paslaptis",
     "OAuthProvider": "OAuth teikėjas",
     "OAuthAccount": "\"OAuth\" paskyra",
-    "Template": "Šablonas"
+    "WebhookEventQueueItem": "\"Webhook\" įvykių eilės elementas",
+    "Template": "Šablonas",
+    "CurrencyRecord": "Valiutos įrašas",
+    "CurrencyRecordRate": "Valiutos kursas",
+    "Pipeline": "Dujotiekis",
+    "PipelineStage": "Duotiekio etapas"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -98,8 +103,8 @@
     "AuthFailLogRecord": "Atvykti failų žurnalas",
     "EmailTemplateCategory": "Laiškų šablonų kategorijos ",
     "Import": "Importuoti",
-    "LeadCapture": "\"Lead Capture\"",
-    "LeadCaptureLogRecord": "Švino surinkimo žurnalas",
+    "LeadCapture": "Potencialių klientų rinkimas",
+    "LeadCaptureLogRecord": "Potencialių klientų rinkimo žurnalai",
     "ArrayValue": "Masyvo reikšmės",
     "ApiUser": "API naudotojai",
     "DashboardTemplate": "Prietaisų skydelio šablonai",
@@ -120,7 +125,12 @@
     "AppSecret": "Programėlių paslaptys",
     "OAuthProvider": "OAuth teikėjai",
     "OAuthAccount": "\"OAuth\" paskyros",
-    "Template": "Šablonai"
+    "WebhookEventQueueItem": "\"Webhook\" įvykių eilės elementai",
+    "Template": "Šablonai",
+    "CurrencyRecord": "Valiutos",
+    "CurrencyRecordRate": "Valiutų kursai",
+    "Pipeline": "Vamzdynai",
+    "PipelineStage": "Dujotiekio etapai"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -318,7 +328,17 @@
     "View User Access": "Peržiūrėti naudotojo prieigą",
     "Reacted": "Reagavo",
     "Reaction Removed": "Pašalinta reakcija",
-    "Reactions": "Reakcijos"
+    "Reactions": "Reakcijos",
+    "Network error": "Tinklo klaida",
+    "Edit Item": "Redaguoti elementą",
+    "Bad request": "Neteisingas užklausimas",
+    "Conflict": "Konfliktas",
+    "Internal server error": "Vidinė serverio klaida",
+    "Mark read": "Markas perskaitė",
+    "Lock": "Užraktas",
+    "Unlock": "Atrakinti",
+    "Assigned": "Paskirtas",
+    "Notification": "Pranešimas"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -434,7 +454,19 @@
     "cannotRemoveNotEmptyCategory": "Negalima pašalinti netuščios kategorijos.",
     "arrayInputNotEmpty": "Elementas įvestas, bet nepridėtas",
     "error403": "Jūs neturite prieigos prie šios srities.",
-    "sameRecordIsAlreadyBeingEdited": "Įrašas jau redaguojamas."
+    "sameRecordIsAlreadyBeingEdited": "Įrašas jau redaguojamas.",
+    "changesLossConfirmation": "Neišsaugoti pakeitimai bus prarasti. Ar esate tikri?",
+    "cannotRemoveUsed": "Įrašo negalima pašalinti, nes jis yra naudojamas.",
+    "checkLogsForDetails": "Išsamią informaciją rasite žurnaluose.",
+    "confirmMassLock": "Ar tikrai norite užrakinti pasirinktus įrašus?",
+    "confirmMassUnlock": "Ar tikrai norite atrakinti pasirinktus įrašus?",
+    "locked": "Įrašas užrakintas",
+    "unlocked": "Įrašas yra atrakintas",
+    "massLockDone": "{count} užrakinta",
+    "massUnlockDone": "{count} atrakinta",
+    "cannotModifyLockedRecord": "Negaliu pakeisti lauko *{field}*. Įrašas užrakintas.",
+    "cannotRemoveLockedRecord": "Užrakinto įrašo pašalinti negalima.",
+    "noPipeline": "Nėra vamzdyno."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
@@ -445,7 +477,8 @@
   "presetFilters": {
     "followed": "Stebimas",
     "all": "Visi",
-    "starred": "Žvaigždė"
+    "starred": "Žvaigždė",
+    "active": "Aktyvus"
   },
   "massActions": {
     "remove": "Ištrinti",
@@ -459,7 +492,9 @@
     "unlink": "Atsieti",
     "recalculateFormula": "Perskaičiuoti formulę",
     "update": "Atnaujinti",
-    "delete": "Ištrinti"
+    "delete": "Ištrinti",
+    "lock": "Užraktas",
+    "unlock": "Atrakinti"
   },
   "fields": {
     "name": "Vardas",
@@ -501,7 +536,11 @@
     "users": "Vartotojai",
     "childList": "Vaikų sąrašas",
     "collaborators": "Bendradarbiai",
-    "streamUpdatedAt": "Srautas atnaujintas"
+    "streamUpdatedAt": "Srautas atnaujintas",
+    "category": "Kategorija",
+    "isLocked": "Užrakinta",
+    "pipeline": "Dujotiekis",
+    "pipelineStage": "Duotiekio etapas"
   },
   "links": {
     "assignedUser": "Priskirtas darbuotojas",
@@ -514,7 +553,10 @@
     "parent": "Pagrindinis",
     "children": "Antrinis",
     "assignedUsers": "Priskirti naudotojai",
-    "collaborators": "Bendradarbiai"
+    "collaborators": "Bendradarbiai",
+    "category": "Kategorija",
+    "pipeline": "Dujotiekis",
+    "pipelineStage": "Duotiekio etapas"
   },
   "dashlets": {
     "Stream": "Srautas",
@@ -528,7 +570,12 @@
     "entityRemoved": "{user} ištrynė {entityType} {entity}",
     "emailInbox": "{naudotojas} pridėjo el. laišką {entity} į savo pašto dėžutę",
     "userPostReaction": "{user} sureagavo į tavo {post}",
-    "userPostInParentReaction": "{user} sureagavo į tavo {post} įraše {entityType} {entitetas}"
+    "userPostInParentReaction": "{user} sureagavo į tavo {post} įraše {entityType} {entitetas}",
+    "addedToCollaborators": "{naudotojas} pridėjo jus kaip bendradarbį prie {įstaigos tipo} {entity}",
+    "groupUpdatesMultiple": "{entityType} {entity} – {number} naujų veiklų",
+    "groupUpdatesOne": "{entityType} {entity} – nauja veikla",
+    "groupEmailsReceivedNew": "Gauti el. laiškai – {skaičius} naujų",
+    "groupEmailsReceived": "Gauti el. laiškai"
   },
   "streamMessages": {
     "post": "{user} paskelbė {entityType} {entity}",

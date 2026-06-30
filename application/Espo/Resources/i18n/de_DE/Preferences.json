@@ -38,7 +38,9 @@
     "reactionNotifications": "In-App-Benachrichtigungen über Reaktionen",
     "pageContentWidth": "Inhaltsbreite",
     "reactionNotificationsNotFollowed": "Benachrichtigungen über Reaktionen auf nicht verfolgte Datensätze",
-    "followAsCollaborator": "Automatisches Folgen, wenn als Mitwirkender hinzugefügt"
+    "followAsCollaborator": "Automatisches Folgen, wenn als Mitwirkender hinzugefügt",
+    "notificationGrouping": "Gruppenbenachrichtigungen",
+    "notificationSound": "Benachrichtigungston"
   },
   "options": {
     "weekStart": {

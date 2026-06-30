@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create CurrencyRecordRate": "Izveidot valūtas kursu"
+  },
+  "fields": {
+    "record": "Valūta",
+    "baseCode": "Bāze",
+    "date": "Datums",
+    "rate": "Vērtējums",
+    "number": "Skaitlis"
+  },
+  "links": {
+    "record": "Valūta"
+  }
+}

@@ -14,7 +14,8 @@
     "messagePermission": "Berechtigung: Nachrichten",
     "auditPermission": "Berechtigung: Audit",
     "mentionPermission": "Berechtigung: Erwähnungen",
-    "userCalendarPermission": "Berechtigung: Benutzerkalender"
+    "userCalendarPermission": "Berechtigung: Benutzerkalender",
+    "lockPermission": "Berechtigung: Sperren"
   },
   "links": {
     "users": "Benutzer"
@@ -64,6 +65,7 @@
     "auditPermission": "Gewährt die Ansicht des Audit-Protokolls.",
     "mentionPermission": "Ermöglicht die Erwähnung anderer Benutzer in Ereignissen.\n\n* Alle - kann alle erwähnen\n* Team - kann nur Teammitglieder erwähnen\n* Nein - kann nicht erwähnen",
     "userPermission": "Ermöglicht die Ansicht der Ereignisse anderer Benutzer. Ermöglicht es Benutzern, die Zugriffsberechtigungen anderer Benutzer für bestimmte Datensätze zu sehen.",
-    "userCalendarPermission": "Ermöglicht die Anzeige der Kalender anderer Benutzer."
+    "userCalendarPermission": "Ermöglicht die Anzeige der Kalender anderer Benutzer.",
+    "lockPermission": "Ermöglicht das Sperren und Entsperren von Datensätzen."
   }
 }

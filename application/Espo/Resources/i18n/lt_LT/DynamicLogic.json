@@ -27,5 +27,10 @@
   },
   "labels": {
     "Field": "Laukelis"
+  },
+  "fields": {
+    "localField": "Vietinis laukas",
+    "foreignField": "Užsienio sritis",
+    "matchRequired": "Reikalingas atitikimas"
   }
 }

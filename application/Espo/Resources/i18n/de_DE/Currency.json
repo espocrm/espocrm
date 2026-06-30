@@ -155,5 +155,8 @@
     "ZAR": "Südafrikanischer Rand",
     "ZMW": "Sambisches Kwacha",
     "ZWL": "Simbabwe-Dollar"
+  },
+  "messages": {
+    "rateOnDateAlreadyExists": "Ein Kurs für dieses Datum ist bereits vorhanden."
   }
 }

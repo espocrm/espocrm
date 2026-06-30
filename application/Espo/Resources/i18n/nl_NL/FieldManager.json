@@ -56,7 +56,8 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 maanden",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 maanden",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 maanden",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+ 1 jaar"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+ 1 jaar",
+      "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 dagen"
     },
     "globalRestrictions": {
       "forbidden": "Verboden",
@@ -96,7 +97,8 @@
     "relateOnImport": "Als je importeert met dit veld, wordt automatisch een record gekoppeld aan een overeenkomend buitenlands record. Gebruik deze functionaliteit alleen als het vreemde veld als uniek wordt beschouwd.",
     "preview": "Toon de voorbeeldknop. Van toepassing als Markdown is ingeschakeld.",
     "itemsEditable": "Items kunnen worden bewerkt. Alleen van toepassing als er geen opties zijn opgegeven.",
-    "seeMoreDisabled": "Als dit niet wordt gecontroleerd, worden lange teksten ingekort."
+    "seeMoreDisabled": "Als dit niet wordt gecontroleerd, worden lange teksten ingekort.",
+    "imageCapture": "Hiermee wordt aangegeven welke camera moet worden gebruikt voor het vastleggen van beeldgegevens."
   },
   "fieldParts": {
     "address": {

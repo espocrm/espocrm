@@ -12,10 +12,10 @@
     "entityType": "Tipo da Entidade",
     "primaryFilter": "Filtro Primário",
     "boolFilterList": "Filtros Adicionais",
-    "sortBy": "Ordem (campo)",
-    "sortDirection": "Ordem (direção)",
     "dateFilter": "Filtro por Data",
-    "skipOwn": "Não mostrar os próprios registros"
+    "skipOwn": "Não mostrar os próprios registros",
+    "text": "Texto",
+    "folder": "Pasta"
   },
   "options": {
     "mode": {

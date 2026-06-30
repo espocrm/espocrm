@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "code": "Kodas",
+    "status": "Būklė",
+    "label": "Etiketė",
+    "symbol": "Simbolis",
+    "isBase": "Ar „Base“",
+    "rate": "Įvertinti",
+    "rateDate": "Palūkanų norma Data"
+  },
+  "links": {
+    "rates": "Kainos"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktyvus",
+      "Inactive": "Neaktyvus"
+    }
+  }
+}

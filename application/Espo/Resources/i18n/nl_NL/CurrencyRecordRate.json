@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create CurrencyRecordRate": "Wisselkoers aanmaken"
+  },
+  "fields": {
+    "record": "Valuta",
+    "baseCode": "Basis",
+    "date": "Datum",
+    "rate": "Tarief",
+    "number": "Aantal"
+  },
+  "links": {
+    "record": "Valuta"
+  }
+}
