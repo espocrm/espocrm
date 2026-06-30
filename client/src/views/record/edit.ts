@@ -186,6 +186,7 @@ class EditRecordView<S extends EditRecordViewSchema = EditRecordViewSchema> exte
                 label: 'Save & Continue Editing',
                 title: 'Ctrl+S',
                 groupIndex: 0,
+                iconClass: 'far fa-floppy-disk',
             });
         }
 
