@@ -781,7 +781,7 @@ class PanelStreamView extends RelationshipPanelView {
             action: 'viewPostList',
             text: this.translate('View Posts', 'labels', 'Note'),
             onClick: () => this.actionViewPostList(),
-            iconClass: 'fas fa-align-justify',
+            iconClass: 'far fa-comments',
         });
 
         if (this.model.entityType !== 'User') {
@@ -789,6 +789,7 @@ class PanelStreamView extends RelationshipPanelView {
                 action: 'viewAttachmentList',
                 text: this.translate('View Attachments', 'labels', 'Note'),
                 onClick: () => this.actionViewAttachmentList(),
+                iconClass: 'fas fa-paperclip',
             });
         }
 
