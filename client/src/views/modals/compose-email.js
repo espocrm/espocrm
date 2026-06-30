@@ -107,6 +107,7 @@ class ComposeEmailModalView extends EditModalView {
             name: 'scheduleSend',
             text: this.translate('Schedule Send', 'labels', 'Email'),
             onClick: () => this.actionScheduleSend(),
+            iconClass: 'far fa-clock',
         });
 
         this.$header = $('<a>')
