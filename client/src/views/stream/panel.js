@@ -781,6 +781,7 @@ class PanelStreamView extends RelationshipPanelView {
             action: 'viewPostList',
             text: this.translate('View Posts', 'labels', 'Note'),
             onClick: () => this.actionViewPostList(),
+            iconClass: 'fas fa-align-justify',
         });
 
         if (this.model.entityType !== 'User') {
