@@ -228,7 +228,7 @@ class ComposeEmailModalView extends EditModalView {
     }
 
     /**
-     * @param {module:views/record/base~saveOptions} [options] Options.
+     * @param {import('views/record/base').SaveOptions} [options] Options.
      * @return {Promise}
      */
     actionSaveDraft(options) {
