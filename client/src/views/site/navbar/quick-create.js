@@ -31,6 +31,7 @@ import RecordModal from 'helpers/record-modal';
 
 class QuickCreateNavbarView extends View {
 
+    // language=Handlebars
     templateContent = `
         <a
             id="nav-quick-create-dropdown"
@@ -44,17 +45,32 @@ class QuickCreateNavbarView extends View {
             <li class="dropdown-header">{{translate 'Create'}}</li>
             {{#each list}}
                 <li><a
-                    href="#{{./this}}/create"
-                    data-name="{{./this}}"
+                    href="#{{name}}/create"
+                    data-name="{{name}}"
                     data-action="quickCreate"
-                >{{translate this category='scopeNames'}}</a></li>
+                >
+                    {{~#if iconClass~}}
+                        <span
+                            class="item-icon {{iconClass}}"
+                            style="{{#if color}}color: {{color}};{{/if}}"
+                        ></span>
+                    {{~/if~}}
+                    <span class="item-text">{{translate name category='scopeNames'}}</span>
+                    {{~null~}}
+                </a></li>
             {{/each}}
         </ul>
     `
 
     data() {
         return {
-            list: this.list,
+            list: this.list.map(it => {
+                return {
+                    name: it,
+                    iconClass: this.getMetadata().get(`clientDefs.${it}.iconClass`),
+                    color: this.getMetadata().get(`clientDefs.${it}.color`),
+                };
+            }),
         };
     }
 
