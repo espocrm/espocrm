@@ -55,6 +55,7 @@
     "nothingHasBeenSent": "Es wurde nicht gesendet",
     "selectAcceptanceStatus": "Setzen Sie Ihren Annahmestatus.",
     "sendInvitationsToSelectedAttendees": "Die ausgewählten Teilnehmer erhalten eine Einladungs-E-Mail.",
-    "sendCancellationsToSelectedAttendees": "Die ausgewählten Teilnehmer erhalten eine Stornierungs-E-Mail."
+    "sendCancellationsToSelectedAttendees": "Die ausgewählten Teilnehmer erhalten eine Stornierungs-E-Mail.",
+    "invitationsSentTo": "Einladungs-E-Mails wurden an folgende Empfänger gesendet: {recipients}.\n\nAn folgende Empfänger konnten keine E-Mails gesendet werden: {failedRecipients}."
   }
 }
