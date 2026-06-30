@@ -78,7 +78,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                     id: this.model.id,
                 },
                 groupIndex: 0,
-                iconClass: DefaultRowActionsView.ICON_CLASS_VIEW,
+                iconClass: DefaultRowActionsView.ICON_CLASS_EDIT,
             });
         }
 
