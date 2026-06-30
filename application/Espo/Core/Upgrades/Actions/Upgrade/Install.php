@@ -61,6 +61,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     protected function finalize(): void
     {
         $configWriter = $this->createConfigWriter();
+        $configWriter->set('prevVersion', $this->getConfig()->get('version'));
         $configWriter->set('version', $this->getTargetVersion());
         $configWriter->save();
     }

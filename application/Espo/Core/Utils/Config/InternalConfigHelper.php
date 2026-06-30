@@ -39,6 +39,7 @@ class InternalConfigHelper
         'appTimestamp',
         'cacheTimestamp',
         'version',
+        'prevVersion',
         'latestVersion',
         'latestExtensionVersions',
         'currencyRates',

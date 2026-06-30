@@ -77,7 +77,7 @@ class Runner
         if ($afterSteps === []) {
             $io->writeLine("No migrations to run. Updating version...");
 
-            $this->updateVersion($targetVersion);
+            $this->updateVersion($version, $targetVersion);
             $this->dataManager->updateAppTimestamp();
             $this->dataManager->rebuild();
 
@@ -90,10 +90,10 @@ class Runner
 
         foreach ($afterSteps as $step) {
             $this->runAfterUpgradeStep($io, $step);
-            $this->updateVersion(VersionUtil::stepToVersion($step));
+            $this->updateVersion($version, VersionUtil::stepToVersion($step));
         }
 
-        $this->updateVersion($targetVersion);
+        $this->updateVersion($version, $targetVersion);
         $this->dataManager->updateAppTimestamp();
 
         $io->writeLine("Completed.");
@@ -131,8 +131,9 @@ class Runner
         $io->writeLine(" DONE");
     }
 
-    private function updateVersion(string $targetVersion): void
+    private function updateVersion(string $version, string $targetVersion): void
     {
+        $this->configWriter->set('prevVersion', $version);
         $this->configWriter->set('version', $targetVersion);
         $this->configWriter->save();
     }
