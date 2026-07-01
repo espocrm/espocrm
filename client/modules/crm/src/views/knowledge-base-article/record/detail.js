@@ -44,6 +44,7 @@ class KnowledgeBaseRecordDetailView extends DetailRecordView {
             this.dropdownItemList.push({
                 'label': 'Send in Email',
                 'name': 'sendInEmail',
+                iconClass: 'far fa-paper-plane',
             });
         }
 

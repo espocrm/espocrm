@@ -38,7 +38,8 @@
         },
         "sendInEmail": {
             "label": "Send in Email",
-            "handler": "crm:handlers/knowledge-base-article/send-in-email"
+            "handler": "crm:handlers/knowledge-base-article/send-in-email",
+            "iconClass": "far fa-paper-plane"
         }
     },
     "rowActionList": [
