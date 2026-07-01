@@ -6,7 +6,8 @@
 It provides a wide range of tools to store, organize, and manage leads, contacts, sales opportunities, marketing campaigns,
 support cases, and more – all business information in a simple and intuitive interface.
 
-![Screenshot](https://github.com/user-attachments/assets/73c79cea-269d-404e-9c7f-50d1f602ecb7)
+![Screenshot](https://github.com/user-attachments/assets/d0806394-3691-43a1-83a5-16ad2e7314e2)
+
 
 ### Architecture
 
