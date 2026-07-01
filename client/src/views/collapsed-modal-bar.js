@@ -255,6 +255,12 @@ class CollapsedModalBarView extends View {
             this.reRender();
         }
 
+        const view = this.getCollapsedModalViewByNumber(number);
+
+        if (view?.modalView) {
+            this.getRouter().removeWindowLeaveOutObject(view.modalView);
+        }
+
         this.clearView(key);
     }
 
