@@ -594,6 +594,9 @@ class DetailModalView extends ModalView {
 
             collection.fetch()
                 .then(() => {
+                    // Restore as it can be removed by fetch.
+                    this.model.collection = collection;
+
                     const indexOfRecord = collection.length - 1;
 
                     if (indexOfRecord < 0) {

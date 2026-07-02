@@ -2420,6 +2420,9 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
             collection.fetch()
                 .then(() => {
+                    // Restore as it's removed by fetch.
+                    this.model.collection = collection;
+
                     const indexOfRecord = collection.length - 1;
 
                     if (indexOfRecord < 0) {
