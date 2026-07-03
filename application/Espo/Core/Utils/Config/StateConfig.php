@@ -27,13 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Utils\Config;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Utils\Config;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+/**
+ * @since 10.1.0
+ */
+class StateConfig
 {
-    protected string $queue = QueueName::Q0;
+    public function __construct(
+        private Config $config,
+    ) {}
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    public function getCacheTimestamp(): int
+    {
+        return $this->config->get('cacheTimestamp') ?? 0;
+    }
 }

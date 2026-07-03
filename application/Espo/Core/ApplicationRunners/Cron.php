@@ -33,6 +33,7 @@ use Espo\Core\Application\Exceptions\RunnerException;
 use Espo\Core\Application\Runner;
 use Espo\Core\Job\Exceptions\TooFrequentRun;
 use Espo\Core\Job\JobManager;
+use Espo\Core\Job\PrepareProcessor;
 use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\Log;
 
@@ -45,9 +46,10 @@ class Cron implements Runner
     use SetupSystemUser;
 
     public function __construct(
+        private PrepareProcessor $prepareProcessor,
         private JobManager $jobManager,
         private SystemConfig $config,
-        private Log $log
+        private Log $log,
     ) {}
 
     public function run(): void
@@ -59,7 +61,7 @@ class Cron implements Runner
         }
 
         try {
-            $this->jobManager->prepare();
+            $this->prepareProcessor->process();
         } catch (TooFrequentRun $e) {
             throw new RunnerException('Too frequent run.', previous: $e);
         }

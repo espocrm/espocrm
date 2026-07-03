@@ -27,13 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Job\Processing\Consumer\Params;
+use Espo\Core\Job\Processing\Util\ExitSetup;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+/**
+ * @since 10.1.0
+ * @internal
+ */
+class WorkerDaemon
 {
-    protected string $queue = QueueName::Q0;
+    public function __construct(
+        private Consumer $consumer,
+        private ExitSetup $exitSetup,
+    ) {}
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    public function run(WorkerDaemon\Params $params): void
+    {
+        $consumerParams = $this->prepareParams($params);
+
+        $this->setupExit();
+
+        $this->consumer->start($consumerParams);
+    }
+
+    private function setupExit(): void
+    {
+        $this->exitSetup->setup(fn () => $this->consumer->stop());
+    }
+
+    private function prepareParams(WorkerDaemon\Params $params): Params
+    {
+        return new Params(
+            limit: $params->limit,
+            queue: $params->queue,
+        );
+    }
 }

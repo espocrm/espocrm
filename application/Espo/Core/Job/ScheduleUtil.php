@@ -29,14 +29,22 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Job\Job\Jobs\ProcessJobQueueE0;
+use Espo\Core\Job\Job\Jobs\ProcessJobQueueQ0;
+use Espo\Core\Job\Job\Jobs\ProcessJobQueueQ1;
+use Espo\Core\Job\ScheduleProcessor\Params;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
-use Espo\Entities\ScheduledJob as ScheduledJobEntity;
+use Espo\Entities\ScheduledJob;
 use Espo\Entities\ScheduledJobLogRecord as ScheduledJobLogRecordEntity;
 use Espo\ORM\Name\Attribute;
 
+/**
+ * @internal
+ */
 class ScheduleUtil
 {
     public function __construct(private EntityManager $entityManager)
@@ -45,23 +53,32 @@ class ScheduleUtil
     /**
      * Get active scheduled job list.
      *
-     * @return Collection<ScheduledJobEntity>
+     * @return Collection<ScheduledJob>
      */
-    public function getActiveScheduledJobList(): Collection
+    public function getActiveScheduledJobs(Params $params): Collection
     {
-        /** @var Collection<ScheduledJobEntity> $collection */
         $collection = $this->entityManager
-            ->getRDBRepository(ScheduledJobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(ScheduledJob::class)
             ->select([
                 Attribute::ID,
-                'scheduling',
-                'job',
-                'name',
+                ScheduledJob::FIELD_SCHEDULING,
+                ScheduledJob::FIELD_JOB,
+                Field::NAME,
             ])
             ->where([
-                'status' => ScheduledJobEntity::STATUS_ACTIVE,
+                ScheduledJob::FIELD_STATUS => ScheduledJob::STATUS_ACTIVE,
             ])
             ->find();
+
+        if ($params->skipQueues) {
+            $collection = $collection->filter(function (ScheduledJob $entity) {
+                return !in_array($entity->getJob(), [
+                    ProcessJobQueueE0::NAME,
+                    ProcessJobQueueQ0::NAME,
+                    ProcessJobQueueQ1::NAME,
+                ]);
+            });
+        }
 
         return $collection;
     }
@@ -81,8 +98,8 @@ class ScheduleUtil
             $runTime = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
-        /** @var ScheduledJobEntity|null $scheduledJob */
-        $scheduledJob = $this->entityManager->getEntityById(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
+        /** @var ScheduledJob|null $scheduledJob */
+        $scheduledJob = $this->entityManager->getEntityById(ScheduledJob::ENTITY_TYPE, $scheduledJobId);
 
         if (!$scheduledJob) {
             return;
@@ -94,7 +111,7 @@ class ScheduleUtil
 
         $scheduledJobLog = $this->entityManager->getNewEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
 
-        $scheduledJobLog->set([
+        $scheduledJobLog->setMultiple([
             'scheduledJobId' => $scheduledJobId,
             'name' => $scheduledJob->getName(),
             'status' => $status,

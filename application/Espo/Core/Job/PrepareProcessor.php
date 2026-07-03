@@ -27,13 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Job\Exceptions\TooFrequentRun;
+use Espo\Core\Job\PrepareProcessor\Params;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+/**
+ * @since 10.1.0
+ */
+class PrepareProcessor
 {
-    protected string $queue = QueueName::Q0;
+    public function __construct(
+        private QueueUtil $queueUtil,
+        private ScheduleProcessor $scheduleProcessor,
+        private CronUtil $cronUtil,
+    ) {}
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    /**
+     * Jobs are be created according scheduling of scheduled jobs.
+     * This method is meant to be called on every Cron run or loop iteration of the Daemon.
+     *
+     * @throws TooFrequentRun
+     */
+    public function process(Params $params = new Params()): void
+    {
+        if (!$this->cronUtil->checkLastRunTime()) {
+            throw new TooFrequentRun('JobManager: Skip job processing. Too frequent execution.');
+        }
+
+        $this->cronUtil->updateLastRunTime();
+
+        $this->processPrepare($params);
+    }
+
+    private function processPrepare(Params $params): void
+    {
+        $scheduleParams = new ScheduleProcessor\Params(
+            skipQueues: $params->skipQueues,
+        );
+
+        $this->queueUtil->markJobsFailed();
+        $this->queueUtil->updateFailedJobAttempts();
+        $this->scheduleProcessor->process($scheduleParams);
+        $this->queueUtil->removePendingJobDuplicates();
+    }
 }

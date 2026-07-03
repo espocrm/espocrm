@@ -27,13 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing\Util;
 
-use Espo\Core\Job\QueueName;
+use Closure;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+class ExitSetup
 {
-    protected string $queue = QueueName::Q0;
+    public function setup(Closure $handler): void
+    {
+        if (!extension_loaded('pcntl')) {
+            return;
+        }
 
-    public const string NAME = 'ProcessJobQueueQ0';
+        pcntl_async_signals(true);
+        pcntl_signal(SIGTERM, fn () => $handler());
+        pcntl_signal(SIGINT, fn () => $handler());
+    }
 }

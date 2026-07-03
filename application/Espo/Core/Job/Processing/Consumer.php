@@ -27,13 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Job\Processing\Consumer\Params;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+/**
+ * @since 10.1.0
+ */
+interface Consumer
 {
-    protected string $queue = QueueName::Q0;
+    public function start(Params $params): void;
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    public function stop(): void;
 }

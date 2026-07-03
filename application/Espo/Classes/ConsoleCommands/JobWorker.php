@@ -27,13 +27,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Classes\ConsoleCommands;
 
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\Exceptions\InvalidArgument;
+use Espo\Core\Console\IO;
+use Espo\Core\Job\Processing\WorkerDaemon;
 use Espo\Core\Job\QueueName;
+use RuntimeException;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+/**
+ * @noinspection PhpUnused
+ */
+class JobWorker implements Command
 {
-    protected string $queue = QueueName::Q0;
+    public function __construct(
+        private WorkerDaemon $workerDaemon,
+    ) {}
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    public function run(Params $params, IO $io): void
+    {
+        $daemonParams = $this->prepareParams($params);
+
+        $this->workerDaemon->run($daemonParams);
+    }
+
+    private function prepareParams(Params $params): WorkerDaemon\Params
+    {
+        $limit = $this->getLimit($params);
+
+        $queue = $params->getOption('queue');
+
+        if ($queue === QueueName::M0) {
+            throw new InvalidArgument("Queue 'm0' is not allowed. It is processed in the main queue.");
+        }
+
+        return new WorkerDaemon\Params(
+            limit: $limit,
+            queue: $queue,
+        );
+    }
+
+    private function getLimit(Params $params): ?int
+    {
+        $limitString = $params->getOption('limit');
+
+        if ($limitString === null) {
+            return null;
+        }
+
+        if (filter_var($limitString, FILTER_VALIDATE_INT) !== false) {
+            return (int) $limitString;
+        }
+
+        throw new RuntimeException("Bad limit.");
+    }
 }

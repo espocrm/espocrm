@@ -27,13 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing\RabbitMq;
 
-use Espo\Core\Job\QueueName;
-
-class ProcessJobQueueQ0 extends AbstractQueueJob
+class Util
 {
-    protected string $queue = QueueName::Q0;
+    public static function composeQueueName(?string $queue): string
+    {
+        $name = Publisher::QUEUE;
 
-    public const string NAME = 'ProcessJobQueueQ0';
+        if ($queue !== null) {
+            $name .= '.' . $queue;
+        }
+
+        return $name;
+    }
 }

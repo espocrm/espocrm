@@ -27,13 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing\RabbitMq;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Utils\Config;
+use Exception;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use RuntimeException;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+class ConnectionFactory
 {
-    protected string $queue = QueueName::Q0;
+    public function __construct(
+        private Config $config,
+    ) {}
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    public function create(): AMQPStreamConnection
+    {
+        $host = $this->config->get('rabbitMq.host');
+        $port = $this->config->get('rabbitMq.port');
+        $user = $this->config->get('rabbitMq.user');
+        $password = $this->config->get('rabbitMq.password');
+
+        try {
+            $connection = new AMQPStreamConnection($host, $port, $user, $password);
+        } catch (Exception $e) {
+            throw new RuntimeException("Connection error.", previous: $e);
+        }
+
+        return $connection;
+    }
 }

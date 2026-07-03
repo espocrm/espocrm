@@ -106,5 +106,36 @@
     "migrationVersionStep": {
         "listed": false,
         "noSystemUser": true
+    },
+    "job:prepare": {
+        "className": "Espo\\Classes\\ConsoleCommands\\JobPrepare",
+        "listed": false,
+        "allowedFlags": [
+            "sq"
+        ],
+        "allowedOptions": [
+            "interval",
+            "limit"
+        ]
+    },
+    "job:enqueue": {
+        "className": "Espo\\Classes\\ConsoleCommands\\JobEnqueue",
+        "listed": false,
+        "allowedFlags": [],
+        "allowedOptions": [
+            "interval",
+            "limit",
+            "portion",
+            "queue"
+        ]
+    },
+    "job:worker": {
+        "className": "Espo\\Classes\\ConsoleCommands\\JobWorker",
+        "listed": false,
+        "allowedFlags": [],
+        "allowedOptions": [
+            "limit",
+            "queue"
+        ]
     }
 }

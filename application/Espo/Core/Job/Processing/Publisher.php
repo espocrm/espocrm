@@ -27,13 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Job\Processing\Publisher\Params;
+use Espo\Entities\Job;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+/**
+ * @since 10.1.0
+ */
+interface Publisher
 {
-    protected string $queue = QueueName::Q0;
+    public function initialize(Params $params): void;
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    public function publish(Job $job): void;
+
+    public function close(): void;
 }

@@ -39,6 +39,15 @@ class ScheduledJob extends Entity
     public const string STATUS_ACTIVE = 'Active';
 
     /**
+     * @since 10.1.0
+     */
+    public const string FIELD_SCHEDULING = 'scheduling';
+    /**
+     * @since 10.1.0
+     */
+    public const string FIELD_STATUS = 'status';
+
+    /**
      * @since 10.0.0
      */
     public const string FIELD_JOB = 'job';
@@ -50,7 +59,7 @@ class ScheduledJob extends Entity
 
     public function getScheduling(): ?string
     {
-        return $this->get('scheduling');
+        return $this->get(self::FIELD_SCHEDULING);
     }
 
     public function getJob(): ?string
@@ -63,7 +72,7 @@ class ScheduledJob extends Entity
      */
     public function setActive(): self
     {
-        return $this->set('status', self::STATUS_ACTIVE);
+        return $this->set(self::FIELD_STATUS, self::STATUS_ACTIVE);
     }
 
     /**
@@ -79,7 +88,7 @@ class ScheduledJob extends Entity
      */
     public function setScheduling(string $scheduling): self
     {
-        return $this->set('scheduling', $scheduling);
+        return $this->set(self::FIELD_SCHEDULING, $scheduling);
     }
 
     /**

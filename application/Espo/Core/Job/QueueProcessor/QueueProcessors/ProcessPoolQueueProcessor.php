@@ -108,6 +108,7 @@ class ProcessPoolQueueProcessor implements QueueProcessor
     private function prepareJob(Job $job): void
     {
         $job
+            // Needed for failing not started.
             ->setStartedAtNow()
             ->setStatus(Status::READY);
 

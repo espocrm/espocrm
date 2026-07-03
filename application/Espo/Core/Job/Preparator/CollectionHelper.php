@@ -66,11 +66,13 @@ class CollectionHelper
     private function prepareItem(Entity $entity, Data $data, DateTimeImmutable $executeTime): void
     {
         $running = $this->entityManager
-            ->getRDBRepository(Job::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Job::class)
+            // Reduces the chance of race condition.
+            ->forUpdate()
             ->select(Attribute::ID)
             ->where([
                 'scheduledJobId' => $data->getId(),
-                'status' => [
+                Job::FIELD_STATUS => [
                     Status::RUNNING,
                     Status::READY,
                 ],
@@ -84,10 +86,10 @@ class CollectionHelper
         }
 
         $countPending = $this->entityManager
-            ->getRDBRepository(Job::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Job::class)
             ->where([
                 'scheduledJobId' => $data->getId(),
-                'status' => Status::PENDING,
+                Job::FIELD_STATUS => Status::PENDING,
                 'targetType' => $entity->getEntityType(),
                 'targetId' => $entity->getId(),
             ])
@@ -97,9 +99,9 @@ class CollectionHelper
             return;
         }
 
-        $job = $this->entityManager->getNewEntity(Job::ENTITY_TYPE);
+        $job = $this->entityManager->getRDBRepositoryByClass(Job::class)->getNew();
 
-        $job->set([
+        $job->setMultiple([
             'name' => $data->getName(),
             'scheduledJobId' => $data->getId(),
             'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),

@@ -46,7 +46,7 @@ use LogicException;
 class QueueUtil
 {
     private const int NOT_EXISTING_PROCESS_PERIOD = 300;
-    private const int READY_NOT_STARTED_PERIOD = 60;
+    private const int READY_NOT_STARTED_PERIOD = 600;
 
     public function __construct(
         private Config $config,
@@ -476,7 +476,7 @@ class QueueUtil
             ])
             ->find();
 
-         foreach ($jobCollection as $job) {
+        foreach ($jobCollection as $job) {
             $failedAttempts = $job->getFailedAttempts();
             $attempts = $job->getAttempts();
 

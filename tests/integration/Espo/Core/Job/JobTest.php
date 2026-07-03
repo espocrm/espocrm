@@ -33,6 +33,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Job\Job\Status;
 use Espo\Core\Job\JobManager;
 use Espo\Core\Job\JobSchedulerFactory;
+use Espo\Core\Job\PrepareProcessor;
 use Espo\Core\Job\QueueName;
 
 use Espo\Entities\Job as JobEntity;
@@ -56,11 +57,14 @@ class JobTest extends BaseTestCase
      */
     private $schedulerFactory;
 
+    private ?PrepareProcessor $prepareProcessor = null;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->jobManager = $this->getContainer()->get('jobManager');
+        $this->jobManager = $this->getContainer()->getByClass(JobManager::class);
+        $this->prepareProcessor = $this->getInjectableFactory()->create(PrepareProcessor::class);
 
         $this->entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
@@ -124,7 +128,7 @@ class JobTest extends BaseTestCase
         ]);
 
 
-        $this->jobManager->prepare();
+        $this->prepareProcessor->process();
         $this->jobManager->processMainQueue();
 
         $job1Reloaded = $this->entityManager->getEntityById('Job', $job1->getId());

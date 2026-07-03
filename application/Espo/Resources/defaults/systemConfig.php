@@ -120,6 +120,7 @@ return [
         'passwordRecoveryInternalIntervalPeriod',
         'cleanupAppLog',
         'cleanupAppLogPeriod',
+        'rabbitMq',
     ],
     'adminItems' => [
         'devMode',

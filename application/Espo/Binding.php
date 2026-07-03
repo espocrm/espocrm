@@ -272,6 +272,20 @@ class Binding implements BindingProcessor
                 'Espo\\Core\\Job\\QueueProcessor\\QueueProcessors\\DefaultQueueProcessor',
             );
         });
+
+        $binder->inContext('Espo\\Core\\Job\\Processing\\EnqueueDaemon', function ($binder) {
+            $binder->bindImplementation(
+                'Espo\\Core\\Job\\Processing\\Publisher',
+                'Espo\\Core\\Job\\Processing\\RabbitMq\\Publisher',
+            );
+        });
+
+        $binder->inContext('Espo\\Core\\Job\\Processing\\WorkerDaemon', function ($binder) {
+            $binder->bindImplementation(
+                'Espo\\Core\\Job\\Processing\\Consumer',
+                'Espo\\Core\\Job\\Processing\\RabbitMq\\Consumer',
+            );
+        });
     }
 
     private function bindMisc(Binder $binder): void

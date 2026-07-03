@@ -27,13 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job\Job\Jobs;
+namespace Espo\Core\Job\Processing;
 
-use Espo\Core\Job\QueueName;
+use Espo\Core\Job\Job\Status;
+use Espo\Entities\Job;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
+use Exception;
 
-class ProcessJobQueueQ0 extends AbstractQueueJob
+class JobProvider
 {
-    protected string $queue = QueueName::Q0;
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
-    public const string NAME = 'ProcessJobQueueQ0';
+    /**
+     * @throws Exception
+     */
+    public function get(string $id): Job
+    {
+        $job = $this->entityManager
+            ->getRDBRepositoryByClass(Job::class)
+            ->forUpdate()
+            ->where([Attribute::ID => $id])
+            ->findOne();
+
+        if (!$job) {
+            throw new Exception("Job $id not found.");
+        }
+
+        if ($job->getStatus() !== Status::READY) {
+            throw new Exception("Job $id is not in status Ready.");
+        }
+
+        return $job;
+    }
 }

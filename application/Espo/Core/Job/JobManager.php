@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Job\Exceptions\TooFrequentRun;
 use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\Job\QueueProcessor\QueueProcessors\SequentialQueueProcessor;
 use Espo\Entities\Job as JobEntity;
@@ -43,30 +42,10 @@ class JobManager
 {
     public function __construct(
         private JobRunner $jobRunner,
-        private ScheduleProcessor $scheduleProcessor,
-        private QueueUtil $queueUtil,
         private QueueProcessor $queueProcessor,
         private ConfigDataProvider $configDataProvider,
         private SequentialQueueProcessor $sequentialQueueProcessor,
-        private CronUtil $cronUtil,
     ) {}
-
-    /**
-     * Jobs are be created according scheduling of scheduled jobs.
-     * This method is meant to be called on every Cron run or loop iteration of the Daemon.
-     *
-     * @throws TooFrequentRun
-     */
-    public function prepare(): void
-    {
-        if (!$this->cronUtil->checkLastRunTime()) {
-            throw new TooFrequentRun('JobManager: Skip job processing. Too frequent execution.');
-        }
-
-        $this->cronUtil->updateLastRunTime();
-
-        $this->processPrepare();
-    }
 
     /**
      * Process pending jobs from a specific queue. Jobs within a queue are processed one by one.
@@ -126,13 +105,5 @@ class JobManager
     public function runJob(JobEntity $job): void
     {
         $this->jobRunner->runThrowingException($job);
-    }
-
-    private function processPrepare(): void
-    {
-        $this->queueUtil->markJobsFailed();
-        $this->queueUtil->updateFailedJobAttempts();
-        $this->scheduleProcessor->process();
-        $this->queueUtil->removePendingJobDuplicates();
     }
 }

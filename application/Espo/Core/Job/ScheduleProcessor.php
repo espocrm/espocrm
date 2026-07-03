@@ -31,6 +31,7 @@ namespace Espo\Core\Job;
 
 use DateTimeZone;
 use Espo\Core\Job\Preparator\Data as PreparatorData;
+use Espo\Core\Job\ScheduleProcessor\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
@@ -66,15 +67,15 @@ class ScheduleProcessor
         private ScheduleUtil $scheduleUtil,
         private PreparatorFactory $preparatorFactory,
         private MetadataProvider $metadataProvider,
-        private ConfigDataProvider $configDataProvider
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
-    public function process(): void
+    public function process(Params $params = new Params()): void
     {
-        $activeScheduledJobList = $this->scheduleUtil->getActiveScheduledJobList();
+        $activeScheduledJobs = $this->scheduleUtil->getActiveScheduledJobs($params);
         $runningScheduledJobIdList = $this->queueUtil->getRunningScheduledJobIdList();
 
-        foreach ($activeScheduledJobList as $scheduledJob) {
+        foreach ($activeScheduledJobs as $scheduledJob) {
             try {
                 $isRunning = in_array($scheduledJob->getId(), $runningScheduledJobIdList);
 

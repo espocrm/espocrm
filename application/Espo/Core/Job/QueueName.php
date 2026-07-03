@@ -32,19 +32,19 @@ namespace Espo\Core\Job;
 class QueueName
 {
     /**
-     * Executes as soon as possible. Non-parallel.
+     * Executes as soon as possible. Non-parallel by default.
      */
-    public const Q0 = 'q0';
+    public const string Q0 = 'q0';
 
     /**
-     * Executes every minute. Non-parallel.
+     * Executes every minute. Non-parallel by default.
      */
-    public const Q1 = 'q1';
+    public const string Q1 = 'q1';
 
     /**
-     * Executes as soon as possible. For email processing. Non-parallel.
+     * Executes as soon as possible. For email processing. Non-parallel by default.
      */
-    public const E0 = 'e0';
+    public const string E0 = 'e0';
 
     /**
      * Executes in the main queue pool in parallel. Along with jobs without specified queue.
@@ -54,5 +54,5 @@ class QueueName
      *
      * @since 9.2.0
      */
-    const M0 = 'm0';
+    const string M0 = 'm0';
 }
