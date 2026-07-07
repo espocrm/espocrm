@@ -39,6 +39,34 @@ class EnumIntFieldView extends EnumFieldView {
 
     validations = []
 
+    setup() {
+        super.setup();
+
+        this.setupNumericTranslatedOptionsFallback();
+    }
+
+    setupNumericTranslatedOptionsFallback() {
+        if (this.translatedOptions !== null) {
+            return;
+        }
+
+        this.translatedOptions = {};
+
+        (this.params.options || []).forEach(value => {
+            if (
+                value === undefined ||
+                value === null ||
+                value === ''
+            ) {
+                return;
+            }
+
+            const valueStr = String(value);
+
+            this.translatedOptions[valueStr] = valueStr;
+        });
+    }
+
     fetch() {
         const raw = this.$element.val();
 
