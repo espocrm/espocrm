@@ -60,6 +60,10 @@ See installation instructions:
 * [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
 * [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
 
+Or deploy a fully managed instance in one click, no server required:
+
+[![Deploy with Zenith](https://cdn.zenith.hosting/buttons/deploy-with-zenith.svg)](https://zenith.hosting/host/espocrm)
+
 ### Bug reporting
 
 Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
