@@ -544,7 +544,7 @@ class Expression implements WhereItem
      *
      * @since 10.0.0
      */
-    public function timestampDiffDay(Expression $from, Expression $to): self
+    public static function timestampDiffDay(Expression $from, Expression $to): self
     {
         return self::composeFunction('TIMESTAMPDIFF_DAY', $from, $to);
     }
@@ -554,7 +554,7 @@ class Expression implements WhereItem
      *
      * @since 10.0.0
      */
-    public function timestampDiffHour(Expression $from, Expression $to): self
+    public static function timestampDiffHour(Expression $from, Expression $to): self
     {
         return self::composeFunction('TIMESTAMPDIFF_HOUR', $from, $to);
     }
@@ -564,7 +564,7 @@ class Expression implements WhereItem
      *
      * @since 10.0.0
      */
-    public function timestampDiffMinute(Expression $from, Expression $to): self
+    public static function timestampDiffMinute(Expression $from, Expression $to): self
     {
         return self::composeFunction('TIMESTAMPDIFF_MINUTE', $from, $to);
     }
@@ -574,7 +574,7 @@ class Expression implements WhereItem
      *
      * @since 10.0.0
      */
-    public function timestampDiffSecond(Expression $from, Expression $to): self
+    public static function timestampDiffSecond(Expression $from, Expression $to): self
     {
         return self::composeFunction('TIMESTAMPDIFF_SECOND', $from, $to);
     }
