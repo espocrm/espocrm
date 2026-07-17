@@ -1769,7 +1769,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
 }
 
 .show-more > .btn-block {
-    text-align: left;
+    text-align: start;
     padding: var(--7px) var(--10px) var(--7px) var(--panel-padding);
 
     &,
@@ -2461,7 +2461,7 @@ div.field,
 
 td.cell {
     > img.avatar-link {
-        margin-right: var(--6px);
+        margin-inline-end: var(--6px);
     }
 }
 
@@ -3742,7 +3742,7 @@ table.table-admin-panel {
 
 @media screen and (min-width: @screen-sm-min) {
     .search-container .view-mode-switcher-buttons-group {
-        float: right;
+        float: inline-end;
     }
 }
 
@@ -3901,7 +3901,7 @@ a.field-info > span.fa-info-circle {
 
 .btn:not(.btn-icon) > .far:first-child:has(+ span),
 .btn:not(.btn-icon) > .fas:first-child:has(+ span) {
-    padding-right: var(--5px);
+    padding-inline-end: var(--5px);
 
     &.fas,
     &.far {
@@ -4426,12 +4426,12 @@ body > .autocomplete-suggestions.text-search-suggestions {
     position: relative;
 
     input {
-        padding-right: var(--32px);
+        padding-inline-end: var(--32px);
     }
 
     a[data-action="toggleShowPassword"] {
         position: absolute;
-        right: var(--8px);
+        inset-inline-end: var(--8px);
         top: var(--8px);
         user-select: none;
         width: var(--22px);
