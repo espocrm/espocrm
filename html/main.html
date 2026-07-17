@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html dir="{{direction}}">
     <head>
         <title>{{applicationName}}</title>
         <script type="application/json" data-name="loader-params">{{loaderParams}}</script>{{scriptsHtml}}
@@ -51,7 +51,7 @@
             });
         </script>
     </head>
-    <body data-id="{{applicationId}}">
+    <body data-id="{{applicationId}}" data-direction="{{direction}}">
         <div class="container content"></div>
         <footer>
             <p class="credit small">&copy; 2026

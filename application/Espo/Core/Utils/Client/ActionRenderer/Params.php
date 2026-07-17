@@ -45,6 +45,7 @@ class Params
     private array $scripts = [];
     private ?string $pageTitle = null;
     private ?string $theme = null;
+    private ?string $direction = null;
 
     /**
      * @param ?array<string, mixed> $data
@@ -130,6 +131,14 @@ class Params
         return $obj;
     }
 
+    public function withDirection(?string $direction): self
+    {
+        $obj = clone $this;
+        $obj->direction = $direction;
+
+        return $obj;
+    }
+
     public function getController(): string
     {
         return $this->controller;
@@ -185,5 +194,10 @@ class Params
     public function getTheme(): ?string
     {
         return $this->theme;
+    }
+
+    public function getDirection(): ?string
+    {
+        return $this->direction;
     }
 }

@@ -177,6 +177,17 @@ class ThemeManager {
     }
 
     /**
+     * Get the normalized document direction.
+     *
+     * @returns {'ltr'|'rtl'}
+     */
+    getDirection() {
+        const direction = this.getParam('direction');
+
+        return direction === 'rtl' ? 'rtl' : 'ltr';
+    }
+
+    /**
      * Get a theme parameter.
      *
      * @param {string} name A parameter name.
@@ -228,10 +239,15 @@ class ThemeManager {
 
         if (
             this.useConfig &&
-            !this.config.get('userThemesDisabled') &&
-            this.preferences.get('theme')
-        ) {
-            values = this.preferences.get('themeParams');
+            !this.config.get('userThemesDisabled')) {
+            const preferenceValues = this.preferences.get('themeParams');
+
+            if (
+                this.preferences.get('theme') ||
+                (preferenceValues && name in preferenceValues)
+            ) {
+                values = preferenceValues;
+            }
         }
 
         if (!values && this.useConfig) {

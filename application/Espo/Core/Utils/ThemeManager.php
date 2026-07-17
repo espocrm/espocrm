@@ -53,6 +53,19 @@ class ThemeManager
         return $this->metadataProvider->getStylesheet($this->getName());
     }
 
+    public function getDirection(): string
+    {
+        $direction = $this->config->get('themeParams.direction');
+
+        if (in_array($direction, ['ltr', 'rtl'], true)) {
+            return $direction;
+        }
+
+        $direction = $this->metadata->get(['themes', $this->getName(), 'params', 'direction', 'default']);
+
+        return in_array($direction, ['ltr', 'rtl'], true) ? $direction : 'ltr';
+    }
+
     public function getLogoSrc(): string
     {
         return $this->metadata->get(['themes', $this->getName(), 'logo']) ?? $this->defaultLogoSrc;

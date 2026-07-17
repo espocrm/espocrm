@@ -487,6 +487,7 @@ class App {
             this.loadStylesheet();
         }
 
+        this.applyThemeDirection();
         this.applyUserStyle();
 
         if (this.anotherUser) {
@@ -966,6 +967,8 @@ class App {
         this.preferences.clear();
         this.acl.clear();
 
+        this.applyThemeDirection();
+
         if (!silent) {
             this.storage.clear('user', 'auth');
             this.storage.clear('user', 'anotherUser');
@@ -1021,6 +1024,16 @@ class App {
         }
 
         element.setAttribute('href', path);
+    }
+
+    /**
+     * @private
+     */
+    applyThemeDirection() {
+        const direction = this.themeManager.getDirection();
+
+        document.documentElement.dir = direction;
+        document.body.dataset.direction = direction;
     }
 
     /**

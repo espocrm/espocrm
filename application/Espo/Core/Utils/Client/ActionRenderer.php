@@ -56,6 +56,7 @@ class ActionRenderer
             scripts: $params->getScripts(),
             pageTitle: $params->getPageTitle(),
             theme: $params->getTheme(),
+            direction: $params->getDirection(),
         );
 
         $securityParams = new SecurityParams(
@@ -78,6 +79,7 @@ class ActionRenderer
         array $scripts,
         ?string $pageTitle,
         ?string $theme,
+        ?string $direction,
     ): string {
 
         $encodedData = Json::encode($data);
@@ -99,6 +101,7 @@ class ActionRenderer
             scripts: $scripts,
             pageTitle: $pageTitle,
             theme: $theme,
+            direction: $direction,
         );
 
         return $this->clientManager->render($params);

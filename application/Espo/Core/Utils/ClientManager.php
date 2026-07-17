@@ -179,6 +179,7 @@ class ClientManager
             additionalScripts: $params->scripts,
             pageTitle: $params->pageTitle,
             theme: $params->theme,
+            direction: $params->direction,
         );
     }
 
@@ -193,6 +194,7 @@ class ClientManager
         array $additionalScripts = [],
         ?string $pageTitle = null,
         ?string $theme = null,
+        ?string $direction = null,
     ): string {
 
         $runScript ??= $this->runScript;
@@ -248,6 +250,10 @@ class ClientManager
             $this->themeMetadataProvider->getStylesheet($theme) :
             $this->themeManager->getStylesheet();
 
+        $direction = in_array($direction, ['ltr', 'rtl'], true) ?
+            $direction :
+            $this->themeManager->getDirection();
+
         $data = [
             'applicationId' => $this->applicationId,
             'apiUrl' => $this->apiUrl,
@@ -256,6 +262,7 @@ class ClientManager
             'appTimestamp' => $appTimestamp,
             'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),
             'stylesheet' => $stylesheet,
+            'direction' => $direction,
             'theme' => Json::encode($theme),
             'runScript' => $runScript,
             'basePath' => $this->basePath,
