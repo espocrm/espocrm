@@ -1,0 +1,444 @@
+// Compact Bootstrap 3 RTL adjustments used by EspoCRM.
+// Native `dir=rtl` handles inline flow; physical Bootstrap declarations are
+// corrected here without changing the shared LTR styles.
+
+span,
+a,
+label,
+strong,
+small {
+    unicode-bidi: isolate;
+}
+
+[class^="col-xs-"],
+[class*=" col-xs-"] {
+    float: right;
+}
+
+@media (min-width: @screen-sm-min) {
+    [class^="col-sm-"],
+    [class*=" col-sm-"] {
+        float: right;
+    }
+
+    .col-sm-offset-2 {
+        margin-left: 0;
+        margin-right: percentage((2 / @grid-columns));
+    }
+
+    .form-horizontal .control-label {
+        text-align: left;
+    }
+
+    .navbar-header,
+    .navbar-brand,
+    .navbar-nav,
+    .navbar-nav > li {
+        float: right;
+    }
+
+    .navbar-right {
+        float: left !important;
+        margin-left: calc(var(--grid-gutter-width-half) * -1);
+        margin-right: 0;
+
+        .dropdown-menu {
+            left: 0;
+            right: auto;
+        }
+    }
+
+    .navbar-left {
+        float: right !important;
+    }
+}
+
+@media (min-width: @screen-md-min) {
+    [class^="col-md-"],
+    [class*=" col-md-"] {
+        float: right;
+    }
+}
+
+@media (min-width: @screen-lg-min) {
+    [class^="col-lg-"],
+    [class*=" col-lg-"] {
+        float: right;
+    }
+}
+
+.nav-tabs > li,
+.btn-group > .btn,
+.pagination > li > a,
+.pagination > li > span {
+    float: right;
+}
+
+.btn-toolbar .btn,
+.btn-toolbar .btn-group,
+.btn-toolbar .input-group,
+.btn-group > .btn-group,
+.input-group .form-control,
+.progress-bar {
+    float: right;
+}
+
+.btn-toolbar {
+    margin-left: 0;
+    margin-right: var(--minus-5px);
+
+    > .btn,
+    > .btn-group,
+    > .input-group {
+        margin-left: 0;
+        margin-right: var(--5px);
+    }
+}
+
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle),
+.input-group .form-control:first-child,
+.input-group-addon:first-child,
+.input-group-btn:first-child > .btn,
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child),
+.input-group .form-control:last-child,
+.input-group-addon:last-child,
+.input-group-btn:last-child > .btn,
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+    border-bottom-left-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+    border-bottom-left-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.input-group-addon:first-child {
+    border-left: 0;
+    border-right: var(--input-border-width) solid var(--input-border);
+}
+
+.input-group-addon:last-child {
+    border-left: var(--input-border-width) solid var(--input-border);
+    border-right: 0;
+}
+
+.input-group-btn {
+    > .btn + .btn {
+        margin-left: 0;
+        margin-right: var(--minus-1px);
+    }
+
+    &:first-child > .btn,
+    &:first-child > .btn-group {
+        margin-left: var(--minus-1px);
+        margin-right: 0;
+    }
+
+    &:last-child > .btn,
+    &:last-child > .btn-group {
+        margin-left: 0;
+        margin-right: var(--minus-1px);
+    }
+}
+
+.caret {
+    margin-left: 0;
+    margin-right: var(--2px);
+}
+
+.dropdown-menu {
+    text-align: right;
+
+    &.pull-right {
+        left: 0;
+        right: auto;
+    }
+}
+
+.nav,
+.list-group {
+    padding-left: initial;
+    padding-right: 0;
+}
+
+.nav-tabs > li > a {
+    margin-left: auto;
+    margin-right: var(--minus-2px);
+}
+
+.radio,
+.checkbox {
+    label {
+        padding-left: 0;
+        padding-right: var(--20px);
+    }
+}
+
+.radio input[type="radio"],
+.checkbox input[type="checkbox"] {
+    margin-left: auto;
+    margin-right: calc(var(--20px) * -1);
+}
+
+.has-feedback .form-control {
+    padding-left: calc(var(--input-height-base) * 1.25);
+    padding-right: var(--12px);
+}
+
+.form-control-feedback {
+    left: 0;
+    right: auto;
+}
+
+.form-horizontal .has-feedback .form-control-feedback {
+    left: var(--grid-gutter-width-half);
+    right: auto;
+}
+
+caption,
+th {
+    text-align: right;
+}
+
+blockquote {
+    border-left: 0;
+    border-right: var(--3px) solid var(--blockquote-border-color);
+}
+
+.navbar-toggle {
+    float: left;
+    margin-left: var(--15px);
+    margin-right: 0;
+}
+
+.media-left {
+    padding-left: var(--10px);
+    padding-right: 0;
+}
+
+.media-right {
+    padding-left: 0;
+    padding-right: var(--10px);
+}
+
+.list-group-item > .badge,
+.close {
+    float: left;
+}
+
+.list-group-item > .badge + .badge {
+    margin-left: var(--5px);
+    margin-right: 0;
+}
+
+.pager .previous > a,
+.pager .previous > span {
+    float: right;
+}
+
+.pager .next > a,
+.pager .next > span {
+    float: left;
+}
+
+// Typography
+
+.list-unstyled,
+.list-inline {
+    padding-right: 0;
+}
+
+.list-inline {
+    margin-right: var(--minus-5px);
+    margin-left: 0;
+}
+
+dd {
+    margin-right: 0;
+}
+
+.blockquote-reverse {
+    padding-left: var(--15px);
+    padding-right: 0;
+    border-left: var(--5px) solid var(--blockquote-border-color);
+    border-right: 0;
+    text-align: left;
+}
+
+// Tables
+
+.table-responsive {
+    @media screen and (max-width: @screen-xs-max) {
+        > .table-bordered > :is(thead, tbody, tfoot) > tr {
+            > :is(th, td):first-child:not(:last-child) {
+                border-left: var(--1px) solid @table-border-color;
+                border-right: 0;
+            }
+
+            > :is(th, td):last-child:not(:first-child) {
+                border-left: 0;
+                border-right: var(--1px) solid @table-border-color;
+            }
+        }
+    }
+}
+
+// Forms
+
+.radio-inline,
+.checkbox-inline {
+    padding-left: 0;
+    padding-right: var(--20px);
+}
+
+.radio-inline input[type="radio"],
+.checkbox-inline input[type="checkbox"] {
+    margin-left: auto;
+    margin-right: calc(var(--20px) * -1);
+}
+
+.radio-inline + .radio-inline,
+.checkbox-inline + .checkbox-inline {
+    margin-left: 0;
+    margin-right: var(--10px);
+}
+
+// Button groups
+
+.btn-group {
+    .btn + .btn,
+    .btn + .btn-group,
+    .btn-group + .btn,
+    .btn-group + .btn-group {
+        margin-left: 0;
+        margin-right: var(--minus-1px);
+    }
+}
+
+.btn-group.btn-group-justified > .btn,
+.btn-group.btn-group-justified > .btn-group {
+    float: none;
+}
+
+.btn .caret {
+    margin-right: 0;
+}
+
+// Input groups
+
+.input-group-btn:first-child > .btn-group > .btn,
+.input-group-btn:first-child > .dropdown-toggle,
+.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
+.input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.input-group-btn:last-child > .btn-group > .btn,
+.input-group-btn:last-child > .dropdown-toggle,
+.input-group-btn:first-child > .btn:not(:first-child),
+.input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
+    border-bottom-left-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+// Navs
+
+.nav-justified > li {
+    float: none;
+}
+
+.nav-tabs-justified > li > a {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+// Navbar
+
+.navbar-brand {
+    float: right;
+}
+
+@media (max-width: @grid-float-breakpoint-max) {
+    .navbar-nav .open .dropdown-menu {
+        > li > a,
+        .dropdown-header {
+            padding: var(--5px) var(--25px) var(--5px) var(--15px);
+        }
+    }
+}
+
+// Badges
+
+.nav-pills > li > a > .badge {
+    margin-left: 0;
+    margin-right: var(--3px);
+}
+
+// Media objects
+
+.media-list {
+    padding-right: 0;
+}
+
+// Panels
+
+.panel {
+    > .table-bordered,
+    > .table-responsive > .table-bordered {
+        > :is(thead, tbody, tfoot) > tr {
+            > :is(th, td):first-child:not(:last-child) {
+                border-left: var(--1px) solid @table-border-color;
+                border-right: 0;
+            }
+
+            > :is(th, td):last-child:not(:first-child) {
+                border-left: 0;
+                border-right: var(--1px) solid @table-border-color;
+            }
+        }
+    }
+}
+
+// Modals
+
+.modal-footer {
+    text-align: left;
+
+    .btn + .btn {
+        margin-left: 0;
+        margin-right: var(--5px);
+    }
+
+    .btn-group .btn + .btn {
+        margin-left: 0;
+        margin-right: var(--minus-1px);
+    }
+}

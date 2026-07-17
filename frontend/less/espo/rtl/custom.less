@@ -1,5 +1,5 @@
 .dropdown-menu {
-    left:  auto;
+    left: auto;
     right: 0;
 }
 
@@ -13,21 +13,38 @@
     right: 0;
 }
 
+body > .alert.alert-closable {
+    .message {
+        float: right;
+    }
+
+    .close-container {
+        float: left;
+    }
+}
+
 .list .checkbox-dropdown {
-    margin-left: -0;
-    margin-right: 0;
-    right: 16px;
+    margin-right: var(--2px);
+    margin-left: 0;
 }
 
 .list-buttons-container > div {
-    float: right;
-    margin-left: var(--panel-padding);
-    margin-right: 0;
+    &.settings-container.pull-right {
+        float: left !important;
+    }
+
+    &.pagination {
+        float: left;
+    }
 }
 
 .list-buttons-container > div.total-count {
     float: left;
     padding: 6px 0;
+}
+
+.btn-group > a.pagination-btn {
+    float: left;
 }
 
 li .preset .pull-right {
@@ -53,12 +70,21 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .modal-body > div > .list > table td:first-child,
-.modal-body > div > .list > table th:first-child {
-     padding-right: var(--panel-padding);
-     padding-left: var(--table-cell-padding-half);
+.modal-body > div > .list > table th:first-child,
+#main > .list-container > .list > table td:first-child,
+#main > .list-container > .list > table th:first-child,
+.panel-body .no-side-margin > table td:first-child,
+.panel-body .no-side-margin > table th:first-child {
+    padding-right: var(--panel-padding);
+    padding-left: var(--table-cell-padding-half);
 }
+
 .modal-body > div > .list > table td:last-child,
-.modal-body > div > .list > table th:last-child {
+.modal-body > div > .list > table th:last-child,
+#main > .list-container > .list > table td:last-child,
+#main > .list-container > .list > table th:last-child,
+.panel-body .no-side-margin > table td:last-child,
+.panel-body .no-side-margin > table th:last-child {
     padding-left: var(--panel-padding);
     padding-right: var(--table-cell-padding-half);
 }
@@ -66,30 +92,6 @@ ul.dropdown-menu > li.checkbox {
 #main > .list-container > .list {
     margin-left: calc(var(--container-padding) * -1);
     margin-right: calc(var(--container-padding) * -1);
-}
-#main > .list-container > .list > table td:first-child,
-#main > .list-container > .list > table th:first-child {
-     padding-right: var(--panel-padding);
-     padding-left: var(--table-cell-padding-half);
-}
-#main > .list-container > .list > table td:last-child,
-#main > .list-container > .list > table th:last-child {
-    padding-left: var(--panel-padding);
-    padding-right: var(--table-cell-padding-half);
-}
-
-.panel-body .no-side-margin {
-    > table td:first-child,
-    > table th:first-child {
-        padding-right: var(--panel-padding);
-        padding-left: var(--table-cell-padding-half);
-    }
-
-    > table td:last-child,
-    > table th:last-child {
-        padding-left: var(--panel-padding);
-        padding-right: var(--table-cell-padding-half);
-    }
 }
 
 .panel > .panel-heading > .btn-group {
@@ -101,11 +103,8 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .detail-button-container > .pull-right,
-.edit-button-container > .pull-right
-{
-    float: left !important;
-}
-
+.edit-button-container > .pull-right,
+.layout-container > [data-role="layoutRow"] > .btn-group.pull-right,
 .header-buttons.pull-right {
     float: left !important;
 }
@@ -114,20 +113,14 @@ ul.dropdown-menu > li.checkbox {
     float: right !important;
 }
 
-.calendar-container .range-switch-group .btn {
-    direction: ltr;
-}
-
-.calendar-container .button-container > div > div.pull-right {
-    float: left !important;
-}
-
 .dropdown-menu > li > a > span.pull-right {
     float: left !important;
 }
 
-.panel > .panel-heading > .pull-right.btn-group {
+.panel > .panel-heading > .pull-right.btn-group,
+.panel > .panel-heading > .pull-right.dropdown {
     float: left !important;
+
     .dropdown-menu {
         left: 0;
         right: auto;
@@ -140,21 +133,17 @@ ul.dropdown-menu > li.checkbox {
 }
 
 .panel > .panel-heading > .pull-right.dropdown {
-    float: left !important;
     right: 0;
     margin-left: -11px;
-    .dropdown-menu {
-        left: 0;
-        right: auto;
-    }
 }
 
-.panel .panel-heading > a.pull-right {
-    float: left !important;
-}
-
+.panel .panel-heading > a.pull-right,
 .cell > a.pull-right {
     float: left !important;
+}
+
+.cell:has(> .inline-edit-link):has(> .field) .control-label {
+    float: right;
 }
 
 .inline-save-link {
@@ -165,6 +154,20 @@ ul.dropdown-menu > li.checkbox {
     margin-left: 0;
 }
 
+.cell {
+    .inline-save-link {
+        float: left;
+        margin-left: 0;
+        margin-right: var(--8px);
+    }
+
+    .inline-cancel-link {
+        float: left;
+        margin-left: 0;
+        margin-right: var(--26px);
+    }
+}
+
 td.cell[data-name="buttons"] > .btn-group {
     margin-right: -17px;
 }
@@ -173,20 +176,21 @@ td.cell[data-name="buttons"] > .btn-group {
     margin-right: -14px;
 }
 
-.list-expanded > .list-group > .list-group-item > .pull-right {
+.list-expanded > .list-group > .list-group-item > .pull-right,
+.list-expanded > .list-group > .list-group-item > .pull-right > .list-row-buttons {
     float: left !important;
 }
 
 .list-expanded > .list-group > .list-group-item > .pull-right > .list-row-buttons {
-    float: left !important;
     margin-right: 0;
     margin-left: -16px;
 }
 
-.link-container > .list-group-item > .pull-right {
+[data-action="showMore"] .more-count {
     float: left !important;
 }
 
+.link-container > .list-group-item > .pull-right,
 .link-container > .list-group-item > .pull-left > .pull-right {
     float: left !important;
 }
@@ -200,14 +204,19 @@ td.cell[data-name="buttons"] > .btn-group {
 }
 
 #global-search-panel,
-#last-viewed-panel {
-    left: 35px;
-    right: auto;
-}
-
+#last-viewed-panel,
 #notifications-panel {
     left: 0;
     right: auto;
+}
+
+#last-viewed-panel > .panel,
+#notifications-panel > .panel {
+    border-top-left-radius: 0;
+    border-top-right-radius: var(--panel-border-radius);
+}
+
+#notifications-panel {
     .panel .panel-heading .pull-right {
         float: left !important;
     }
@@ -225,22 +234,10 @@ td.cell[data-name="buttons"] > .btn-group {
     direction: rtl;
 }
 
-.dynamic-logic-expression-container {
-    .pull-right {
-        float: left !important;
-    }
-}
-
-#fields-panel .cell .field {
-    .pull-right {
-        float: left !important;
-    }
-}
-
-.gray-box {
-    .pull-right {
-        float: left !important;
-    }
+.dynamic-logic-expression-container .pull-right,
+#fields-panel .cell .field .pull-right,
+.gray-box .pull-right {
+    float: left !important;
 }
 
 .panel.dashlet > .panel-heading > .btn-group {
@@ -254,6 +251,33 @@ ul {
         padding-left: 0;
         padding-right: var(--8px);
     }
+
+    &.dropdown-menu-with-icons,
+    &:has(> li:not(.hidden) > a span.item-icon) {
+        > li:not(:has(.item-icon-grid)) {
+            a {
+                padding-left: var(--20px);
+                padding-right: var(--12px);
+            }
+
+            .item-text {
+                padding-left: 0;
+                padding-right: var(--10px);
+            }
+        }
+    }
+
+    &:has(> li:not(.hidden) > a span.item-icon) {
+        > li > a:not(:has(span.item-icon)) {
+            padding-right: var(--28px);
+            padding-left: var(--20px);
+        }
+    }
+
+    &.dropdown-menu > li > a > .check-icon + div {
+        padding-right: 0;
+        padding-left: var(--26px);
+    }
 }
 
 .panel {
@@ -263,14 +287,17 @@ ul {
             > a {
                 padding-right: 20px;
             }
+
             float: left;
         }
     }
 }
 
-.dropdown-menu-with-icons li a {
-    padding-right: 10px;
-    padding-left: 20px;
+#navbar .navbar .menu-container {
+    > ul.dropdown-menu > li > a:has(> .item-user-profile) .avatar {
+        margin-left: var(--8px);
+        margin-right: 0;
+    }
 }
 
 .post-container {
@@ -280,16 +307,14 @@ ul {
     }
 }
 
-.link-multiple-item {
-    .link-multiple-item-icon {
-        margin-left: 4px;
-        margin-right: 0;
-    }
-}
-
+.link-multiple-item .link-multiple-item-icon,
 .link-field-icon {
     margin-left: 4px;
     margin-right: 0;
+}
+
+.stream-details-container .fa-arrow-right {
+    transform: scaleX(-1);
 }
 
 .array-add-list-group > li {
@@ -306,6 +331,10 @@ ul {
 }
 
 div.list-kanban > div > table {
+    .item .panel .item-menu-container {
+        float: left !important;
+    }
+
     th.group-header {
         > div {
             .create-button {
@@ -339,22 +368,25 @@ div.list-kanban > div > table {
     padding: 5px 12px 5px 0;
 }
 
+.list-group-tree > li {
+    padding: 0 var(--panel-padding) 0 0;
+}
+
 .list > table th.action-cell {
     a {
-     left: 11px;
-     right: auto;
+        left: 11px;
+        right: auto;
     }
 }
 
 #main > .list-container > .list > table th.action-cell {
     a {
-     left: 9px;
-     right: auto;
+        left: 9px;
+        right: auto;
 
-     @media screen and (max-width: @screen-xs-max) {
-         right: auto;
-         left: 5px;
-     }
+        @media screen and (max-width: @screen-xs-max) {
+            left: 5px;
+        }
     }
 }
 
@@ -363,13 +395,7 @@ table.table-admin-panel tr > td:first-child > div > a {
     padding-left: 10px;
 }
 
-.input-group > .input-group-btn:not(:first-child) > .btn:first-child {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-top-left-radius: var(--border-radius) !important;
-    border-bottom-left-radius: var(--border-radius) !important;
-}
-
+.input-group > .input-group-btn:not(:first-child) > .btn:first-child,
 .input-group > .input-group-btn:last-child > .form-control:last-child {
     border-top-left-radius: var(--border-radius) !important;
     border-bottom-left-radius: var(--border-radius) !important;
@@ -379,11 +405,6 @@ table.table-admin-panel tr > td:first-child > div > a {
 
 .field .input-group > .input-group-btn > button.btn.btn-icon:not(:last-child, .radius-right) {
     border-radius: 0 !important;
-}
-
-.field .input-group > .input-group-btn > button.btn.btn-icon:last-child {
-    border-top-left-radius: 5px !important;
-    border-bottom-left-radius: 5px !important;
 }
 
 .field .input-group > input.main-element.form-control:first-child {
@@ -428,6 +449,7 @@ table.table-admin-panel tr > td:first-child > div > a {
     &.radius-right {
         border-top-left-radius: var(--border-radius) !important;
         border-bottom-left-radius: var(--border-radius) !important;
+
         &:not(.radius-left) {
             .border-right-radius(0) !important;
         }
@@ -436,6 +458,7 @@ table.table-admin-panel tr > td:first-child > div > a {
     &.radius-left {
         border-top-right-radius: var(--border-radius) !important;
         border-bottom-right-radius: var(--border-radius) !important;
+
         &:not(.radius-right) {
             .border-left-radius(0) !important;
         }
@@ -456,20 +479,24 @@ table.table-admin-panel tr > td:first-child > div > a {
     > thead,
     > tbody {
         > tr {
-        > th:first-child,
-        > td:first-child {
-            padding-right: var(--padding-base-horizontal);
+            > th:first-child,
+            > td:first-child {
+                padding-right: var(--padding-base-horizontal);
+            }
+
+            > th:last-child,
+            > td:last-child {
+                padding-left: var(--padding-base-horizontal);
+            }
 
             @media screen and (max-width: @screen-xs-max) {
-                padding-right: var(--table-cell-padding);
-            }
-        }
+                > th:first-child,
+                > td:first-child {
+                    padding-right: var(--table-cell-padding);
+                }
 
-        > th:last-child,
-        > td:last-child {
-            padding-left: var(--padding-base-horizontal);
-
-                @media screen and (max-width: @screen-xs-max) {
+                > th:last-child,
+                > td:last-child {
                     padding-left: var(--table-cell-padding);
                 }
             }
@@ -493,28 +520,15 @@ table.table-admin-panel tr > td:first-child > div > a {
             }
         }
     }
-}
 
-@media screen and (min-width: @screen-sm-min) {
     .folders-container.sticked {
         left: unset;
         right: 15px;
-
-        .list-group-side {
-            > li {
-                //margin-left: -15px;
-                //margin-right: 0;
-            }
-        }
     }
 }
 
 .list > table th[data-name="r-checkbox"] .select-all-container {
     float: right;
-}
-
-.list .checkbox-dropdown {
-    right: 4px;
 }
 
 .checkbox input[type="checkbox"].form-checkbox {
