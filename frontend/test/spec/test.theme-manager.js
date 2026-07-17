@@ -55,6 +55,14 @@ describe('theme-manager', () => {
                                     "side",
                                     "top"
                                 ]
+                            },
+                            "direction": {
+                                "type": "enum",
+                                "default": "ltr",
+                                "options": [
+                                    "ltr",
+                                    "rtl"
+                                ]
                             }
                         },
                         "mappedParams": {
@@ -147,6 +155,44 @@ describe('theme-manager', () => {
         });
 
         expect(themeManager.getParam('navbar')).toBe('top');
+    });
+
+    it('direction default', () => {
+        spyOn(preferences, 'get').and.callFake(name => {
+            if (name === 'theme') {
+                return 'Espo';
+            }
+        });
+
+        expect(themeManager.getDirection()).toBe('ltr');
+    });
+
+    it('direction from preferences', () => {
+        spyOn(preferences, 'get').and.callFake(name => {
+            if (name === 'themeParams') {
+                return {
+                    direction: 'rtl',
+                };
+            }
+        });
+
+        expect(themeManager.getDirection()).toBe('rtl');
+    });
+
+    it('invalid direction', () => {
+        spyOn(preferences, 'get').and.callFake(name => {
+            if (name === 'theme') {
+                return 'Espo';
+            }
+
+            if (name === 'themeParams') {
+                return {
+                    direction: 'invalid',
+                };
+            }
+        });
+
+        expect(themeManager.getDirection()).toBe('ltr');
     });
 
     it('mapped param 1', () => {
