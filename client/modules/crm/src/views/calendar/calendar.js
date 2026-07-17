@@ -896,6 +896,7 @@ class CalendarView extends View {
 
         /** @type {CalendarOptions & Object.<string, *>} */
         const options = {
+            direction: this.getThemeManager().getDirection(),
             scrollTime: this.scrollHour + ':00',
             headerToolbar: false,
             slotLabelFormat: slotLabelFormat,

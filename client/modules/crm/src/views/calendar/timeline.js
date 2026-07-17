@@ -595,6 +595,7 @@ class TimelineView extends View {
             const itemsDataSet = new DataSet(eventList);
 
             this.timeline = new Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
+                rtl: this.getThemeManager().getDirection() === 'rtl',
                 dataAttributes: 'all',
                 start: this.start.toDate(),
                 end: this.end.toDate(),

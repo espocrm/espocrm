@@ -113,8 +113,18 @@ ul.dropdown-menu > li.checkbox {
     float: right !important;
 }
 
+.calendar-container .range-switch-group .btn {
+    direction: ltr;
+}
+
+.calendar-container .button-container > div > div.pull-right,
 .dropdown-menu > li > a > span.pull-right {
     float: left !important;
+}
+
+.button-container [data-action="previous"],
+.button-container [data-action="next"] {
+    transform: scaleX(-1);
 }
 
 .panel > .panel-heading > .pull-right.btn-group,
