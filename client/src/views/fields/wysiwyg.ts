@@ -455,7 +455,8 @@ class WysiwygFieldView <
         }
 
         // noinspection HtmlRequiredTitleElement
-        const documentHtml = `<head>${headHtml}</head><body>${bodyHtml}</body>`
+        const direction = this.getThemeManager().getDirection();
+        const documentHtml = `<html dir="${direction}"><head>${headHtml}</head><body>${bodyHtml}</body></html>`
 
         // @ts-ignore
         documentElement.write(documentHtml);
