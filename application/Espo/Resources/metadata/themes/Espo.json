@@ -10,6 +10,14 @@
                 "side",
                 "top"
             ]
+        },
+        "direction": {
+            "type": "enum",
+            "default": "ltr",
+            "options": [
+                "ltr",
+                "rtl"
+            ]
         }
     },
     "mappedParams": {

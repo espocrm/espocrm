@@ -191,7 +191,10 @@ return [
     'b2cMode' => false,
     'restrictedMode' => false,
     'theme' => 'Espo',
-    'themeParams' => (object) ['navbar' => 'side'],
+    'themeParams' => (object) [
+        'navbar' => 'side',
+        'direction' => 'ltr',
+    ],
     'massEmailMaxPerHourCount' => 100,
     'massEmailMaxPerBatchCount' => null,
     'massEmailVerp' => false,
