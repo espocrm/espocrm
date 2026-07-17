@@ -32,14 +32,9 @@ export default class FormThemeFieldView extends EnumFieldView {
 
     setupOptions() {
         const list = Object.keys(this.getMetadata().get('themes') || {})
-            .sort((v1, v2) => {
-                if (v2 === 'EspoRtl') {
-                    return -1;
-                }
-
-                return this.translate(v1, 'theme')
-                    .localeCompare(this.translate(v2, 'theme'));
-            });
+            .sort(
+                (v1, v2) => this.translate(v1, 'theme').localeCompare(this.translate(v2, 'theme'))
+            );
 
         this.params.options = ['', ...list];
     }
