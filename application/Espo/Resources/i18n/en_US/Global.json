@@ -978,7 +978,6 @@
         "Dark": "Dark",
         "Light": "Light",
         "Espo": "Espo",
-        "EspoRtl": "RTL",
         "Sakura": "Sakura",
         "Violet": "Violet",
         "Hazyblue": "Hazyblue",
@@ -987,6 +986,10 @@
     "themeNavbars": {
         "side": "Side Navbar",
         "top": "Top Navbar"
+    },
+    "themeDirections": {
+        "ltr": "LTR",
+        "rtl": "RTL"
     },
     "fieldValidations": {
         "required": "Required",

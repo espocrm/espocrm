@@ -41,9 +41,13 @@ export default class extends SettingsEditRecordView {
         this.listenTo(this.model, 'change:scopeColorsDisabled', () => this.controlColorsField());
 
         this.on('save', initialAttributes => {
+            const themeParams = this.model.get('themeParams') || {};
+            const initialThemeParams = initialAttributes.themeParams || {};
+
             if (
                 this.model.get('theme') !== initialAttributes.theme ||
-                (this.model.get('themeParams').navbar || {}) !== (initialAttributes.themeParams).navbar
+                themeParams.navbar !== initialThemeParams.navbar ||
+                themeParams.direction !== initialThemeParams.direction
             ) {
                 this.setConfirmLeaveOut(false);
 

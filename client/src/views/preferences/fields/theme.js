@@ -32,13 +32,7 @@ export default class extends ThemeSettingsFieldView {
 
     setupOptions() {
         this.params.options = Object.keys(this.getMetadata().get('themes') || {})
-            .sort((v1, v2) => {
-                if (v2 === 'EspoRtl') {
-                    return -1;
-                }
-
-                return this.translate(v1, 'themes').localeCompare(this.translate(v2, 'themes'));
-            });
+            .sort((v1, v2) => this.translate(v1, 'themes').localeCompare(this.translate(v2, 'themes')));
 
         this.params.options.unshift('');
     }
@@ -56,8 +50,16 @@ export default class extends ThemeSettingsFieldView {
 
     afterRenderDetail() {
         const navbar = this.getNavbarValue() || this.getDefaultNavbar();
+        const direction = this.getDirectionValue() || this.getDefaultDirection();
 
-        if (navbar) {
+        [
+            [navbar, 'themeNavbars'],
+            [direction, 'themeDirections'],
+        ].forEach(([value, category]) => {
+            if (!value) {
+                return;
+            }
+
             this.$el
                 .append(' ')
                 .append(
@@ -65,8 +67,8 @@ export default class extends ThemeSettingsFieldView {
                 )
                 .append(' ')
                 .append(
-                    $('<span>').text(this.translate(navbar, 'themeNavbars'))
+                    $('<span>').text(this.translate(value, category))
                 )
-        }
+        });
     }
 }
