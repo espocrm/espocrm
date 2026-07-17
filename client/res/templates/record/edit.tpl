@@ -7,7 +7,7 @@
                 role="group"
             >{{{buttons}}}</div>
             <div
-                class="btn-group pull-right"
+                class="btn-group pull-end"
                 role="group"
             >{{{sideButtons}}}</div>
         </div>

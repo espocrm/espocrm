@@ -7,7 +7,7 @@
                 role="group"
             >{{{buttons}}}</div>
             {{#if navigateButtonsEnabled}}
-                <div class="pull-right">
+                <div class="pull-end">
                     <div class="btn-group" role="group">
                         <button
                             type="button"
@@ -39,7 +39,7 @@
                 role="group"
             >{{{editButtons}}}</div>
             <div
-                class="btn-group pull-right"
+                class="btn-group pull-end"
                 role="group"
             >{{{editSideButtons}}}</div>
         </div>
