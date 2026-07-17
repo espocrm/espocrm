@@ -32,6 +32,7 @@ namespace Espo\Core\Upgrades\Migrations\V10_1;
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Theme\Direction;
 use Espo\Entities\LeadCapture;
 use Espo\Entities\Portal;
 use Espo\Entities\Preferences;
@@ -139,7 +140,7 @@ class AfterUpgrade implements Script
         }
 
         $themeParams['navbar'] ??= 'top';
-        $themeParams['direction'] = 'rtl';
+        $themeParams['direction'] = Direction::Rtl->value;
 
         return (object) $themeParams;
     }

@@ -36,6 +36,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Theme\Direction;
 use Espo\Core\Utils\Theme\MetadataProvider as ThemeMetadataProvider;
 use Espo\Core\Utils\ThemeManager;
 use Espo\Entities\Integration;
@@ -82,12 +83,12 @@ class FormService
         return [$leadCapture, $data, $captchaScript];
     }
 
-    public function getDirection(LeadCapture $leadCapture): string
+    public function getDirection(LeadCapture $leadCapture): Direction
     {
         $language = $leadCapture->getFormLanguage() ?? $this->config->get('language') ?? 'en_US';
         $languageCode = strtolower(substr($language, 0, 2));
 
-        return in_array($languageCode, self::RTL_LANGUAGE_CODE_LIST, true) ? 'rtl' : 'ltr';
+        return in_array($languageCode, self::RTL_LANGUAGE_CODE_LIST, true) ? Direction::Rtl : Direction::Ltr;
     }
 
     /**

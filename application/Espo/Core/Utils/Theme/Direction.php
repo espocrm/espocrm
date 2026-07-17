@@ -27,24 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Client;
+namespace Espo\Core\Utils\Theme;
 
-use Espo\Core\Utils\Theme\Direction;
-
-readonly class RenderParams
+enum Direction: string
 {
-    /**
-     * @param ?string $runScript A JS run-script.
-     * @param Script[] $scripts Scripts to include on the page.
-     * @param ?string $pageTitle A page title. Since 9.1.0.
-     * @param ?string $theme A page theme name.
-     * @param ?Direction $direction A document direction.
-     */
-    public function __construct(
-        public ?string $runScript = null,
-        public array $scripts = [],
-        public ?string $pageTitle = null,
-        public ?string $theme = null,
-        public ?Direction $direction = null,
-    ) {}
+    case Ltr = 'ltr';
+    case Rtl = 'rtl';
 }

@@ -33,6 +33,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\Utils\Client\ActionRenderer\Params;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Theme\Direction;
 
 /**
  * Renders a front-end page that executes a controller action. Utilized by entry points.
@@ -79,7 +80,7 @@ class ActionRenderer
         array $scripts,
         ?string $pageTitle,
         ?string $theme,
-        ?string $direction,
+        ?Direction $direction,
     ): string {
 
         $encodedData = Json::encode($data);

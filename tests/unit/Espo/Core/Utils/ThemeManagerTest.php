@@ -4,6 +4,7 @@ namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Theme\Direction;
 use Espo\Core\Utils\Theme\MetadataProvider;
 use Espo\Core\Utils\ThemeManager;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +20,7 @@ class ThemeManagerTest extends TestCase
             ],
         );
 
-        $this->assertSame('rtl', $manager->getDirection());
+        $this->assertSame(Direction::Rtl, $manager->getDirection());
     }
 
     public function testDirectionFromThemeDefault(): void
@@ -34,7 +35,7 @@ class ThemeManagerTest extends TestCase
             ],
         );
 
-        $this->assertSame('rtl', $manager->getDirection());
+        $this->assertSame(Direction::Rtl, $manager->getDirection());
     }
 
     public function testInvalidDirectionFallsBackToLtr(): void
@@ -49,7 +50,7 @@ class ThemeManagerTest extends TestCase
             ],
         );
 
-        $this->assertSame('ltr', $manager->getDirection());
+        $this->assertSame(Direction::Ltr, $manager->getDirection());
     }
 
     /**
