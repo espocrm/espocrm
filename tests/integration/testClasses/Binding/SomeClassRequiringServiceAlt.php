@@ -29,17 +29,18 @@
 
 namespace tests\integration\testClasses\Binding;
 
-class SomeClass
+use Espo\Core\Binding\Attributes\Qualify;
+
+class SomeClassRequiringServiceAlt
 {
-    private SomeInterface $someImplementation;
+    public function __construct(
+        #[Qualify('alt')]
+        private SomeService $service,
+    ) {}
 
-    public function __construct(SomeInterface $someImplementation)
+    public function getService(): SomeService
     {
-        $this->someImplementation = $someImplementation;
-    }
-
-    public function get(): SomeInterface
-    {
-        return $this->someImplementation;
+        return $this->service;
     }
 }
+

@@ -27,19 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\testClasses\Binding;
+namespace Espo\Core\Binding\Attributes;
 
-class SomeClass
+use Attribute;
+
+/**
+ * Assigns a qualifier to a constructor parameter.
+ *
+ * @since 10.1.0
+ */
+#[Attribute(Attribute::TARGET_PARAMETER)]
+readonly class Qualify
 {
-    private SomeInterface $someImplementation;
-
-    public function __construct(SomeInterface $someImplementation)
-    {
-        $this->someImplementation = $someImplementation;
-    }
-
-    public function get(): SomeInterface
-    {
-        return $this->someImplementation;
-    }
+    public function __construct(
+        public string $qualifier,
+    ) {}
 }

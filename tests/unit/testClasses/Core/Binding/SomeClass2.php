@@ -30,6 +30,4 @@
 namespace tests\unit\testClasses\Core\Binding;
 
 class SomeClass2 implements SomeInterface2
-{
-
-}
+{}

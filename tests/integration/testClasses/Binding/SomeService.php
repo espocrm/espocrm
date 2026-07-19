@@ -29,7 +29,9 @@
 
 namespace tests\integration\testClasses\Binding;
 
-class SomeService
+readonly class SomeService
 {
-
+    public function __construct(
+        public ?string $name = 'default',
+    ) {}
 }

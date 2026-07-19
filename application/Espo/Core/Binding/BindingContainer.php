@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Binding;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionNamedType;
@@ -117,6 +118,18 @@ class BindingContainer
             return null;
         }
 
+        $qualifiedName = $this->getQualifiedName($param);
+
+        if ($qualifiedName) {
+            $keyQualified = $paramClassName . ' #' . $qualifiedName;
+
+            $binding = $this->getInternalByClassNameKey($class?->getName(), $keyQualified);
+
+            if ($binding) {
+                return $binding;
+            }
+        }
+
         $keyWithName = $paramClassName . ' $' . $param->getName();
 
         $binding = $this->getInternalByClassNameKey($class?->getName(), $keyWithName);
@@ -134,6 +147,19 @@ class BindingContainer
         }
 
         return null;
+    }
+
+    private function getQualifiedName(ReflectionParameter $param): ?string
+    {
+        $qualifierClass = $param->getAttributes(Qualify::class)[0] ?? null;
+
+        if (!$qualifierClass) {
+            return null;
+        }
+
+        $qualifier = $qualifierClass->newInstance();
+
+        return $qualifier->qualifier;
     }
 
     /**

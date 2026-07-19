@@ -31,14 +31,11 @@ namespace tests\integration\testClasses\Binding;
 
 class SomeClassRequiringService
 {
-    private $service;
+    public function __construct(
+        private SomeService $service
+    ) {}
 
-    public function __construct(SomeService $service)
-    {
-        $this->service = $service;
-    }
-
-    public function getService() : SomeService
+    public function getService(): SomeService
     {
         return $this->service;
     }

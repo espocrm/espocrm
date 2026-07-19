@@ -27,19 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\testClasses\Binding;
+namespace tests\unit\testClasses\Core\Binding;
 
-class SomeClass
+class SomeClass1Alt implements SomeInterface1
 {
-    private SomeInterface $someImplementation;
-
-    public function __construct(SomeInterface $someImplementation)
-    {
-        $this->someImplementation = $someImplementation;
-    }
-
-    public function get(): SomeInterface
-    {
-        return $this->someImplementation;
-    }
+    public function __construct(public SomeInterface2 $dep)
+    {}
 }

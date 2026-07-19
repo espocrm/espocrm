@@ -31,6 +31,7 @@ namespace Espo\Core\Binding;
 
 use Closure;
 use Espo\Core\Binding\Key\NamedClassKey;
+use Espo\Core\Binding\Key\QualifiedClassKey;
 
 class BindingContainerBuilder
 {
@@ -47,10 +48,11 @@ class BindingContainerBuilder
      * Bind an interface to an implementation.
      *
      * @template T of object
-     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T>|NamedClassKey<T>|QualifiedClassKey<T> $key
+     *     An interface, an interface with a parameter name or an interface with a qualifier.
      * @param class-string<T> $implementationClassName An implementation class name.
      */
-    public function bindImplementation(string|NamedClassKey $key, string $implementationClassName): self
+    public function bindImplementation(string|NamedClassKey|QualifiedClassKey $key, string $implementationClassName): self
     {
         $this->binder->bindImplementation($key, $implementationClassName);
 
@@ -60,11 +62,12 @@ class BindingContainerBuilder
     /**
      * Bind an interface to a specific service.
      *
-     * @param class-string<object>|NamedClassKey<object> $key An interface or interface with a parameter name.
+     * @param class-string<object>|NamedClassKey<object>|QualifiedClassKey<object> $key
+     *     An interface, an interface with a parameter name or an interface with a qualifier.
      * @param string $serviceName A service name.
      * @noinspection PhpUnused
      */
-    public function bindService(string|NamedClassKey $key, string $serviceName): self
+    public function bindService(string|NamedClassKey|QualifiedClassKey $key, string $serviceName): self
     {
         $this->binder->bindService($key, $serviceName);
 
@@ -75,12 +78,13 @@ class BindingContainerBuilder
      * Bind an interface to a callback.
      *
      * @template T of object
-     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T>|NamedClassKey<T>|QualifiedClassKey<T> $key
+     *     An interface, an interface with a parameter name or an interface with a qualifier.
      * @param Closure $callback A callback that will resolve a dependency.
      * @todo Change to Closure(...): T Once https://github.com/phpstan/phpstan/issues/8214 is implemented.
      * @noinspection PhpUnused
      */
-    public function bindCallback(string|NamedClassKey $key, Closure $callback): self
+    public function bindCallback(string|NamedClassKey|QualifiedClassKey $key, Closure $callback): self
     {
         $this->binder->bindCallback($key, $callback);
 
@@ -91,11 +95,11 @@ class BindingContainerBuilder
      * Bind an interface to a specific instance.
      *
      * @template T of object
-     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T>|NamedClassKey<T>|QualifiedClassKey<T> $key
+     *     An interface, an interface with a parameter name or an interface with a qualifier.
      * @param T $instance An instance.
-     * @noinspection PhpDocSignatureInspection
      */
-    public function bindInstance(string|NamedClassKey $key, object $instance): self
+    public function bindInstance(string|NamedClassKey|QualifiedClassKey $key, object $instance): self
     {
         $this->binder->bindInstance($key, $instance);
 
@@ -106,11 +110,12 @@ class BindingContainerBuilder
      * Bind an interface to a factory.
      *
      * @template T of object
-     * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
+     * @param class-string<T>|NamedClassKey<T>|QualifiedClassKey<T> $key
+     *    An interface, an interface with a parameter name or an interface with a qualifier.
      * @param class-string<Factory<T>> $factoryClassName A factory class name.
      * @noinspection PhpUnused
      */
-    public function bindFactory(string|NamedClassKey $key, string $factoryClassName): self
+    public function bindFactory(string|NamedClassKey|QualifiedClassKey $key, string $factoryClassName): self
     {
         $this->binder->bindFactory($key, $factoryClassName);
 

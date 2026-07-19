@@ -39,6 +39,7 @@ use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Binding\Key\NamedClassKey;
 use Espo\Core\Binding\Key\NamedKey;
 
+use Espo\Core\Binding\Key\QualifiedClassKey;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionParameter;
@@ -46,6 +47,8 @@ use ReflectionNamedType;
 
 use tests\unit\testClasses\Core\Binding\Class0;
 use tests\unit\testClasses\Core\Binding\Class1;
+use tests\unit\testClasses\Core\Binding\SomeClass1Alt;
+use tests\unit\testClasses\Core\Binding\SomeClass2Alt;
 use tests\unit\testClasses\Core\Binding\SomeInterface1;
 use tests\unit\testClasses\Core\Binding\SomeInterface2;
 use tests\unit\testClasses\Core\Binding\SomeClass1;
@@ -53,9 +56,8 @@ use tests\unit\testClasses\Core\Binding\SomeClass2;
 
 class BindingContainerTest extends TestCase
 {
-    /** @var Binder */
-    private $binder;
-    private $loader;
+    private ?Binder $binder = null;
+    private ?BindingLoader $loader = null;
 
     protected function setUp(): void
     {
@@ -71,7 +73,7 @@ class BindingContainerTest extends TestCase
             ->willReturn($data);
     }
 
-    protected function createClassMock(string $className) : ReflectionClass
+    private function createClassMock(string $className): ReflectionClass
     {
         $class = $this->createMock(ReflectionClass::class);
 
@@ -83,7 +85,7 @@ class BindingContainerTest extends TestCase
         return $class;
     }
 
-    protected function createParamMock(string $name, ?string $className = null) : ReflectionParameter
+    private function createParamMock(string $name, ?string $className = null, ?string $qualifier = null): ReflectionParameter
     {
         $param = $this->createMock(ReflectionParameter::class);
 
@@ -125,6 +127,17 @@ class BindingContainerTest extends TestCase
             ->method('getClass')
             ->willReturn($class);
 
+        if ($qualifier) {
+            $attribute = $this->createMock(ReflectionClass::class);
+
+            $param
+                ->method('getAttributes')
+                ->willReturn([$attribute]);
+
+            $attribute->method('newInstance')
+                ->willReturn((object) ['qualifier' => $qualifier]);
+        }
+
         return $param;
     }
 
@@ -133,7 +146,7 @@ class BindingContainerTest extends TestCase
         return new BindingContainer($this->loader->load());
     }
 
-    public function testHasTrue()
+    public function testHasTrue(): void
     {
         $this->binder->bindService('Espo\\Test', 'test');
 
@@ -146,7 +159,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasNoContextTrue()
+    public function testHasNoContextTrue(): void
     {
         $this->binder->bindService('Espo\\Test', 'test');
 
@@ -157,7 +170,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasFalse()
+    public function testHasFalse(): void
     {
         $this->binder->bindService('Espo\\Test', 'test');
 
@@ -170,7 +183,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasNoContextFalse()
+    public function testHasNoContextFalse(): void
     {
         $this->binder->bindService('Espo\\Test', 'test');
 
@@ -181,7 +194,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextTrue0()
+    public function testHasContextTrue0(): void
     {
         $this->binder
             ->inContext('Espo\\Context', function (ContextualBinder $binder): void {
@@ -197,7 +210,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextTrue1()
+    public function testHasContextTrue1(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -212,7 +225,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextTrue2()
+    public function testHasContextTrue2(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -227,7 +240,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextTrue3()
+    public function testHasContextTrue3(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -242,7 +255,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextTrue4()
+    public function testHasContextTrue4(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -256,7 +269,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextFalse1()
+    public function testHasContextFalse1(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -270,7 +283,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextFalse2()
+    public function testHasContextFalse2(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -285,7 +298,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testHasContextFalse3()
+    public function testHasContextFalse3(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -326,7 +339,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('Espo\\TestFactory', $binding->getValue());
     }
 
-    public function testGetService()
+    public function testGetService(): void
     {
         $this->binder->bindService('Espo\\Test', 'test');
 
@@ -341,7 +354,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('test', $binding->getValue());
     }
 
-    public function testGetCallback()
+    public function testGetCallback(): void
     {
         $this->binder->bindCallback(
             'Espo\\Test',
@@ -361,7 +374,7 @@ class BindingContainerTest extends TestCase
         $this->assertIsCallable($binding->getValue());
     }
 
-    public function testBindInstance()
+    public function testBindInstance(): void
     {
         $className = 'Espo\\Core\\Application';
 
@@ -378,7 +391,7 @@ class BindingContainerTest extends TestCase
         $this->assertSame($instance, $binding->getValue());
     }
 
-    public function testContextBindInstance()
+    public function testContextBindInstance(): void
     {
         $className = 'Espo\\Core\\Application';
 
@@ -399,7 +412,7 @@ class BindingContainerTest extends TestCase
         $this->assertSame($instance, $binding->getValue());
     }
 
-    public function testContextGetCallback()
+    public function testContextGetCallback(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -421,7 +434,7 @@ class BindingContainerTest extends TestCase
         $this->assertIsCallable($binding->getValue());
     }
 
-    public function testRebindGlobal()
+    public function testRebindGlobal(): void
     {
         $this->binder->bindService('Espo\\Test', 'test');
 
@@ -438,7 +451,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('testHello', $binding->getValue());
     }
 
-    public function testBindInterfaceWithParamNameGlobal()
+    public function testBindInterfaceWithParamNameGlobal(): void
     {
         $this->binder->bindService('Espo\\Test $name', 'testName');
 
@@ -495,7 +508,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('Espo\\TestFactory', $binding->getValue());
     }
 
-    public function testNoContextClassName()
+    public function testNoContextClassName(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -510,7 +523,7 @@ class BindingContainerTest extends TestCase
         );
     }
 
-    public function testBindContextInterfaceWithParamNameGlobal()
+    public function testBindContextInterfaceWithParamNameGlobal(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -537,7 +550,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('test', $binding->getValue());
     }
 
-    public function testGetContextParamValue()
+    public function testGetContextParamValue(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -554,7 +567,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('Test Value', $binding->getValue());
     }
 
-    public function testGetContextInterfaceValue1()
+    public function testGetContextInterfaceValue1(): void
     {
         $instance = (object) [];
 
@@ -571,7 +584,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals($instance, $binding->getValue());
     }
 
-    public function testGetContextInterfaceValue2()
+    public function testGetContextInterfaceValue2(): void
     {
         $instance = (object) [];
 
@@ -588,7 +601,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals($instance, $binding->getValue());
     }
 
-    public function testGetContextService()
+    public function testGetContextService(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -605,7 +618,7 @@ class BindingContainerTest extends TestCase
         $this->assertEquals('test', $binding->getValue());
     }
 
-    public function testRebindContextService()
+    public function testRebindContextService(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -667,7 +680,7 @@ class BindingContainerTest extends TestCase
     {
         $container = BindingContainerBuilder::create()
             ->inContext(Class0::class, function (ContextualBinder $binder): void {
-                $binder->bindValue('$dep', new Class1());
+                $binder->bindValue(NamedKey::create('dep'), new Class1());
             })
             ->build();
 
@@ -681,5 +694,55 @@ class BindingContainerTest extends TestCase
 
         $this->assertEquals(Binding::VALUE, $binding->getType());
         $this->assertInstanceOf(Class1::class, $binding->getValue());
+    }
+
+    public function testBindingQualified(): void
+    {
+        $container = BindingContainerBuilder::create()
+            ->bindImplementation(SomeInterface1::class, SomeClass1::class)
+            ->bindImplementation(QualifiedClassKey::create(SomeInterface1::class, 'q1'), SomeClass1Alt::class)
+            ->bindImplementation(QualifiedClassKey::create(SomeInterface2::class, 'q3'), SomeClass2Alt::class)
+            ->inContext(SomeClass1::class, function (ContextualBinder $binder): void {
+                $binder->bindImplementation(SomeInterface2::class, SomeClass2::class);
+                $binder->bindImplementation(QualifiedClassKey::create(SomeInterface2::class, 'q2'), SomeClass2Alt::class);
+            })
+            ->build();
+
+        $param1 = $this->createParamMock('test', SomeInterface1::class, 'q1');
+        $this->assertTrue($container->hasByParam(null, $param1));
+        $binding = $container->getByParam(null, $param1);
+        $this->assertEquals(SomeClass1Alt::class, $binding->getValue());
+
+        //
+
+        $param2 = $this->createParamMock('test', SomeInterface1::class);
+        $this->assertTrue($container->hasByParam(null, $param2));
+        $binding = $container->getByParam(null, $param2);
+        $this->assertEquals(SomeClass1::class, $binding->getValue());
+
+        //
+
+        $contextClass = $this->createClassMock(SomeClass1::class);
+
+        //
+
+        $param3 = $this->createParamMock('test', SomeInterface2::class, 'q2');
+        $this->assertTrue($container->hasByParam($contextClass, $param3));
+        $binding = $container->getByParam($contextClass, $param3);
+        $this->assertEquals(SomeClass2Alt::class, $binding->getValue());
+
+        //
+
+        $param4 = $this->createParamMock('test', SomeInterface2::class);
+        $this->assertTrue($container->hasByParam($contextClass, $param4));
+        $binding = $container->getByParam($contextClass, $param4);
+        $this->assertEquals(SomeClass2::class, $binding->getValue());
+
+        //
+
+        $param3 = $this->createParamMock('test', SomeInterface2::class, 'q3');
+        $this->assertTrue($container->hasByParam($contextClass, $param3));
+        $binding = $container->getByParam($contextClass, $param3);
+        $this->assertEquals(SomeClass2Alt::class, $binding->getValue());
     }
 }

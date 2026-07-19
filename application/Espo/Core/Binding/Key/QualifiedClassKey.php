@@ -27,19 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\testClasses\Binding;
+namespace Espo\Core\Binding\Key;
 
-class SomeClass
+/**
+ * A key for a class-type-hinted constructor parameter with a qualifier.
+ * Use it to bind to qualified constructor parameters. For example, one interface
+ * can be used with a qualifier and without it. In the latter case,
+ * the default binding it applied. While in the formed case, a special binding is applied.
+ * For example, a caching pool interface may be bound to two different services:
+ * core cache and application cache.
+ *
+ * @since 10.1.0
+ *
+ * @template-covariant T of object
+ */
+class QualifiedClassKey
 {
-    private SomeInterface $someImplementation;
+    /**
+     * @param class-string<T> $className
+     */
+    private function __construct(private string $className, private string $qualifier)
+    {}
 
-    public function __construct(SomeInterface $someImplementation)
+    /**
+     * Create.
+     *
+     * @template TC of object
+     * @param class-string<TC> $className An interface.
+     * @param string $qualifier A qualification name.
+     * @return self<TC>
+     */
+    public static function create(string $className, string $qualifier): self
     {
-        $this->someImplementation = $someImplementation;
+        return new self($className, $qualifier);
     }
 
-    public function get(): SomeInterface
+    public function toString(): string
     {
-        return $this->someImplementation;
+        return $this->className . ' #' . $this->qualifier;
     }
 }

@@ -31,10 +31,6 @@ namespace tests\unit\testClasses\Core\Binding;
 
 class SomeClass1 implements SomeInterface1
 {
-    private $dep;
-
-    public function __construct(SomeInterface2 $dep)
-    {
-        $this->dep = $dep;
-    }
+    public function __construct(public SomeInterface2 $dep)
+    {}
 }
