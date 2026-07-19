@@ -33,20 +33,17 @@ use LogicException;
 
 class Binding
 {
-    public const IMPLEMENTATION_CLASS_NAME = 1;
-    public const CONTAINER_SERVICE = 2;
-    public const VALUE = 3;
-    public const CALLBACK = 4;
-    public const FACTORY_CLASS_NAME = 5;
+    public const int IMPLEMENTATION_CLASS_NAME = 1;
+    public const int CONTAINER_SERVICE = 2;
+    public const int VALUE = 3;
+    public const int CALLBACK = 4;
+    public const int FACTORY_CLASS_NAME = 5;
 
     private int $type;
-    /** @var mixed */
-    private $value;
 
-    /**
-     * @param mixed $value
-     */
-    private function __construct(int $type, $value)
+    private mixed $value;
+
+    private function __construct(int $type, mixed $value)
     {
         $this->type = $type;
         $this->value = $value;
@@ -57,10 +54,7 @@ class Binding
         return $this->type;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }

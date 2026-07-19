@@ -37,6 +37,7 @@ use LogicException;
 class ContextualBinder
 {
     private BindingData $data;
+
     /** @var class-string<object> */
     private string $className;
 
@@ -61,11 +62,9 @@ class ContextualBinder
         $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
-        $this->data->addContext(
-            $this->className,
-            $key,
-            Binding::createFromImplementationClassName($implementationClassName)
-        );
+        $binding = Binding::createFromImplementationClassName($implementationClassName);
+
+        $this->data->addContext($this->className, $key, $binding);
 
         return $this;
     }
@@ -82,11 +81,7 @@ class ContextualBinder
         $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
-        $this->data->addContext(
-            $this->className,
-            $key,
-            Binding::createFromServiceName($serviceName)
-        );
+        $this->data->addContext($this->className, $key, Binding::createFromServiceName($serviceName));
 
         return $this;
     }
@@ -102,11 +97,7 @@ class ContextualBinder
         $key = self::keyToString($key);
         $this->validateBindingKeyParameterName($key);
 
-        $this->data->addContext(
-            $this->className,
-            $key,
-            Binding::createFromValue($value)
-        );
+        $this->data->addContext($this->className, $key, Binding::createFromValue($value));
 
         return $this;
     }
@@ -117,18 +108,13 @@ class ContextualBinder
      * @template T of object
      * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
      * @param T $instance An instance.
-     * @noinspection PhpDocSignatureInspection
      */
     public function bindInstance(string|NamedClassKey $key, object $instance): self
     {
         $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
-        $this->data->addContext(
-            $this->className,
-            $key,
-            Binding::createFromValue($instance)
-        );
+        $this->data->addContext($this->className, $key, Binding::createFromValue($instance));
 
         return $this;
     }
@@ -145,11 +131,7 @@ class ContextualBinder
         $key = self::keyToString($key);
         $this->validateBinding($key);
 
-        $this->data->addContext(
-            $this->className,
-            $key,
-            Binding::createFromCallback($callback)
-        );
+        $this->data->addContext($this->className, $key, Binding::createFromCallback($callback));
 
         return $this;
     }
@@ -166,11 +148,7 @@ class ContextualBinder
         $key = self::keyToString($key);
         $this->validateBindingKeyNoParameterName($key);
 
-        $this->data->addContext(
-            $this->className,
-            $key,
-            Binding::createFromFactoryClassName($factoryClassName)
-        );
+        $this->data->addContext($this->className, $key, Binding::createFromFactoryClassName($factoryClassName));
 
         return $this;
     }

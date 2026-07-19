@@ -50,10 +50,7 @@ class Binder
         $key = self::keyToString($key);
         $this->validateBindingKey($key);
 
-        $this->data->addGlobal(
-            $key,
-            Binding::createFromImplementationClassName($implementationClassName)
-        );
+        $this->data->addGlobal($key, Binding::createFromImplementationClassName($implementationClassName));
 
         return $this;
     }
@@ -69,10 +66,7 @@ class Binder
         $key = self::keyToString($key);
         $this->validateBindingKey($key);
 
-        $this->data->addGlobal(
-            $key,
-            Binding::createFromServiceName($serviceName)
-        );
+        $this->data->addGlobal($key, Binding::createFromServiceName($serviceName));
 
         return $this;
     }
@@ -90,10 +84,7 @@ class Binder
         $key = self::keyToString($key);
         $this->validateBindingKey($key);
 
-        $this->data->addGlobal(
-            $key,
-            Binding::createFromCallback($callback)
-        );
+        $this->data->addGlobal($key, Binding::createFromCallback($callback));
 
         return $this;
     }
@@ -104,17 +95,13 @@ class Binder
      * @template T of object
      * @param class-string<T>|NamedClassKey<T> $key An interface or interface with a parameter name.
      * @param T $instance An instance.
-     * @noinspection PhpDocSignatureInspection
      */
     public function bindInstance(string|NamedClassKey $key, object $instance): self
     {
         $key = self::keyToString($key);
         $this->validateBindingKey($key);
 
-        $this->data->addGlobal(
-            $key,
-            Binding::createFromValue($instance)
-        );
+        $this->data->addGlobal($key, Binding::createFromValue($instance));
 
         return $this;
     }
@@ -131,10 +118,7 @@ class Binder
         $key = self::keyToString($key);
         $this->validateBindingKey($key);
 
-        $this->data->addGlobal(
-            $key,
-            Binding::createFromFactoryClassName($factoryClassName)
-        );
+        $this->data->addGlobal($key, Binding::createFromFactoryClassName($factoryClassName));
 
         return $this;
     }
