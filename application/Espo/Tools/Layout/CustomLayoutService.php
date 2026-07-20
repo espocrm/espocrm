@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Layout;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -46,6 +47,7 @@ class CustomLayoutService
     public function __construct(
         private Metadata $metadata,
         private FileManager $fileManager,
+        #[Qualify(Language::QUALIFIER_BASE)]
         private Language $baseLanguage,
         private LayoutProvider $layoutProvider,
         private DataManager $dataManager
