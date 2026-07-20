@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Headers;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Mail\ConfigDataProvider;
@@ -73,6 +74,7 @@ class SendingProcessor
     public function __construct(
         private Config $config,
         private EntityManager $entityManager,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private EmailSender $emailSender,
         private Log $log,

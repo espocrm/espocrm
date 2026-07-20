@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -63,6 +64,7 @@ class CategoriesUpdateHook implements UpdateHook
 
     public function __construct(
         private InjectableFactory $injectableFactory,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private Metadata $metadata,
         private DataManager $dataManager,

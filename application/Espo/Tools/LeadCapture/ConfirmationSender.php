@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
 use Espo\Core\Mail\EmailSender;
@@ -54,6 +55,7 @@ class ConfirmationSender
 
     public function __construct(
         private EntityManager $entityManager,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private EmailSender $emailSender,
         private AccountFactory $accountFactory,

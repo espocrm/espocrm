@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\FieldManager;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Language;
@@ -65,6 +66,7 @@ class FieldManager
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
         private Language $language,
+        #[Qualify(Language::QUALIFIER_BASE)]
         private Language $baseLanguage,
         private MetadataHelper $metadataHelper,
         private NameUtil $nameUtil

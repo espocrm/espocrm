@@ -31,6 +31,7 @@ namespace Espo\Tools\Pdf;
 
 use DateTime;
 use Espo\Core\Acl;
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -66,6 +67,7 @@ class MassService
         private DataLoaderManager $dataLoaderManager,
         private SelectBuilderFactory $selectBuilderFactory,
         private Builder $builder,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private JobSchedulerFactory $jobSchedulerFactory,
         private FileStorageManager $fileStorageManager,

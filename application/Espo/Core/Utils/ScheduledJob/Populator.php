@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\ScheduledJob;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\ScheduledJob;
@@ -43,6 +44,7 @@ class Populator
     public function __construct(
         private EntityManager $entityManager,
         private Metadata $metadata,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
     ) {}
 

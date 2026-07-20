@@ -29,6 +29,7 @@
 
 namespace Espo\Hooks\Pipeline;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Hook\Hook\AfterSave;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Language;
@@ -47,6 +48,7 @@ class CreateStages implements AfterSave
 {
     public function __construct(
         private EntityManager $entityManager,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private Defs $defs,
         private EnumOptionsProvider $enumOptionsProvider,

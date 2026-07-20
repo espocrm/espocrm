@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
@@ -67,7 +68,9 @@ class EntityManager
 
     public function __construct(
         private Metadata $metadata,
+        #[Qualify(Language::QUALIFIER_USER)]
         private Language $language,
+        #[Qualify(Language::QUALIFIER_BASE)]
         private Language $baseLanguage,
         private FileManager $fileManager,
         private Config $config,

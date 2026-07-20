@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LinkManager;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
@@ -69,6 +70,7 @@ class LinkManager
     public function __construct(
         private Metadata $metadata,
         private Language $language,
+        #[Qualify(Language::QUALIFIER_BASE)]
         private Language $baseLanguage,
         private DataManager $dataManager,
         private LinkHookProcessor $linkHookProcessor,

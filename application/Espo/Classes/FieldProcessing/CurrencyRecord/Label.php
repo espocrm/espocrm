@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\FieldProcessing\CurrencyRecord;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\Utils\Language;
@@ -42,7 +43,8 @@ use ValueError;
 class Label implements Loader
 {
     public function __construct(
-        private Language $defaultLanguage
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
+        private Language $defaultLanguage,
     ) {}
 
     public function process(Entity $entity, Params $params): void

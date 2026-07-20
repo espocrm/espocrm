@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager\Hook\Hooks;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Templates\Entities\Event;
 use Espo\Core\Utils\Language;
 use Espo\Tools\EntityManager\Hook\CreateHook;
@@ -37,6 +38,7 @@ use Espo\Tools\EntityManager\Params;
 class EventCreateHook implements CreateHook
 {
     public function __construct(
+        #[Qualify(Language::QUALIFIER_BASE)]
         private Language $baseLanguage,
         private Language $language
     ) {}

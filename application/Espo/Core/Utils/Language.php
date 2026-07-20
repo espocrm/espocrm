@@ -39,6 +39,27 @@ use stdClass;
 
 class Language
 {
+    /**
+     * DI qualifier. The language selected as the system default.
+     *
+     * @since 10.1.0
+     */
+    public const string QUALIFIER_DEFAULT = 'default';
+
+    /**
+     * DI qualifier. The base language, en_US.
+     *
+     * @since 10.1.0
+     */
+    public const string QUALIFIER_BASE = 'base';
+
+    /**
+     * DI qualifier. The language selected in the current user's preferences.
+     *
+     * @since 10.1.0
+     */
+    public const string QUALIFIER_USER = 'user';
+
     /** @var array<string, array<string, mixed>> */
     private $data = [];
     /** @var array<string, array<string, mixed>> */

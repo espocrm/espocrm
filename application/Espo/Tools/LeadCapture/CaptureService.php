@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\Link;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
@@ -70,6 +71,7 @@ class CaptureService
     public function __construct(
         private EntityManager $entityManager,
         private FieldUtil $fieldUtil,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private HookManager $hookManager,
         private Log $log,

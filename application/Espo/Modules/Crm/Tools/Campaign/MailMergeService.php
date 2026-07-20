@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\Campaign;
 
 use Espo\Core\Acl;
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -61,22 +62,13 @@ class MailMergeService
         'users',
     ];
 
-    private EntityManager $entityManager;
-    private Acl $acl;
-    private Language $defaultLanguage;
-    private MailMergeGenerator $generator;
-
     public function __construct(
-        EntityManager $entityManager,
-        Acl $acl,
-        Language $defaultLanguage,
-        MailMergeGenerator $generator
-    ) {
-        $this->entityManager = $entityManager;
-        $this->acl = $acl;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->generator = $generator;
-    }
+        private EntityManager $entityManager,
+        private Acl $acl,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
+        private Language $defaultLanguage,
+        private MailMergeGenerator $generator,
+    ) {}
 
     /**
      * @return string An attachment ID.

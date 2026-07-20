@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\Ldap;
 
 use Espo\Core\Api\Util;
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
@@ -73,6 +74,7 @@ class LdapLogin implements Login
         private Config $config,
         private EntityManager $entityManager,
         private PasswordHash $passwordHash,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         Language $defaultLanguage,
         private Log $log,
         private Espo $baseLogin,

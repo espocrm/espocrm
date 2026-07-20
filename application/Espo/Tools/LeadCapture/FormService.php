@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Binding\Attributes\Qualify;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Address\CountryDataProvider;
@@ -54,6 +55,7 @@ class FormService
         private EntityManager $entityManager,
         private Config $config,
         private Metadata $metadata,
+        #[Qualify(Language::QUALIFIER_DEFAULT)]
         private Language $defaultLanguage,
         private CountryDataProvider $countryDataProvider,
         private LanguageService $languageService,
