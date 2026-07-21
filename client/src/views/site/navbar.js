@@ -648,6 +648,7 @@ class NavbarSiteView extends View {
         };
 
         const $navbar = $('#navbar .navbar');
+        const navbarRightElement = this.$navbarRight.get(0);
 
         if (window.innerWidth >= smallScreenWidth) {
             $tabs.children('li').each(() => {
@@ -657,8 +658,6 @@ class NavbarSiteView extends View {
             $navbar.css('max-height', 'unset');
             $navbar.css('overflow', 'visible');
         }
-
-        const navbarBaseWidth = this.navbarHeaderElement.clientWidth + this.$navbarRight.width();
 
         const tabCount = this.tabList.length;
 
@@ -672,6 +671,7 @@ class NavbarSiteView extends View {
         const updateWidth = () => {
             const windowWidth = window.innerWidth;
             const moreWidth = $moreLi.width();
+            const navbarRightWidth = navbarRightElement.offsetWidth;
 
             $more.children('li.not-in-more').each(() => {
                 unhideOneTab();
@@ -687,6 +687,8 @@ class NavbarSiteView extends View {
             $more.parent().addClass('hidden');
 
             const headerWidth = this.$el.width();
+            const navbarBaseWidth =
+                this.navbarHeaderElement.clientWidth + navbarRightWidth;
 
             const maxWidth = headerWidth - navbarBaseWidth - moreWidth;
             let width = $tabs.width();
