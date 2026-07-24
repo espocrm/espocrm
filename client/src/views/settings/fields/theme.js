@@ -232,7 +232,7 @@ export default class ThemeSettingsFieldView extends EnumFieldView {
      * @private
      */
     initThemeManager() {
-        const theme = this.model.get('theme') || this.getConfig().get('theme');
+        const theme = this.model.get('theme');
 
         if (!theme) {
             this.themeManager = null;

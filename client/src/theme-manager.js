@@ -239,15 +239,10 @@ class ThemeManager {
 
         if (
             this.useConfig &&
-            !this.config.get('userThemesDisabled')) {
-            const preferenceValues = this.preferences.get('themeParams');
-
-            if (
-                this.preferences.get('theme') ||
-                (preferenceValues && name in preferenceValues)
-            ) {
-                values = preferenceValues;
-            }
+            !this.config.get('userThemesDisabled') &&
+            this.preferences.get('theme')
+        ) {
+            values = this.preferences.get('themeParams');
         }
 
         if (!values && this.useConfig) {

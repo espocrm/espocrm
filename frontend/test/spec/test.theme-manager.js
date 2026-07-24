@@ -169,6 +169,10 @@ describe('theme-manager', () => {
 
     it('direction from preferences', () => {
         spyOn(preferences, 'get').and.callFake(name => {
+            if (name === 'theme') {
+                return 'Espo';
+            }
+
             if (name === 'themeParams') {
                 return {
                     direction: 'rtl',
