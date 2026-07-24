@@ -156,7 +156,7 @@ body:not([data-navbar="side"]) {
                     height: var(--38px);
 
                     > span.full-label {
-                        padding-left: var(--30px);
+                        padding-inline-start: var(--30px);
                         position: static;
                     }
 
@@ -265,10 +265,10 @@ body:not([data-navbar="side"]) {
             ul.tabs {
                 > li > a > span.short-label {
                     display: block;
-                    float: left;
+                    float: inline-start;
                     position: relative;
-                    left: calc(var(--4px) * -1);
-                    margin-right: var(--4px);
+                    inset-inline-start: calc(var(--4px) * -1);
+                    margin-inline-end: var(--4px);
                 }
 
                 li.more > li > a {
@@ -284,10 +284,10 @@ body:not([data-navbar="side"]) {
             }
 
             ul.dropdown-menu > li.tab > a {
-                border-left-width: 0;
-                border-left-style: solid;
+                border-inline-start-width: 0;
+                border-inline-start-style: solid;
                 border-color: transparent;
-                padding-left: calc(1rem - var(--1px));
+                padding-inline-start: calc(1rem - var(--1px));
             }
 
             .nav > li.more > .dropdown-menu > li.tab-group > ul.dropdown-menu,
@@ -301,13 +301,13 @@ body:not([data-navbar="side"]) {
 
             .nav li.tab-group {
                 span.full-label {
-                    padding-right: var(--8px);
+                    padding-inline-end: var(--8px);
                 }
             }
 
             ul.nav > li.tab-group > a {
                 > span.full-label {
-                    padding-right: var(--10px);
+                    padding-inline-end: var(--10px);
                 }
 
                 > span.group-caret {
