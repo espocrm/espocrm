@@ -507,13 +507,17 @@ class Import
             }
         }
 
-        $this->processAdditionalAccessCheck(
-            entity: $entity,
-            import: $import,
-            row: $row,
-            index: $index,
-            errorIndex: $errorIndex,
-        );
+        try {
+            $this->processAdditionalAccessCheck(
+                entity: $entity,
+                import: $import,
+                row: $row,
+                index: $index,
+                errorIndex: $errorIndex,
+            );
+        } catch (Forbidden) {
+            return ['isError' => true];
+        }
 
         $defaultCurrency = $params->getCurrency() ?? $this->currencyConfig->getDefaultCurrency();
 
@@ -1455,6 +1459,7 @@ class Import
 
     /**
      * @param string[] $row
+     * @throws Forbidden
      */
     private function processAdditionalAccessCheck(
         CoreEntity $entity,
@@ -1484,6 +1489,8 @@ class Import
             import: $import,
             errorIndex: $errorIndex,
         );
+
+        throw new Forbidden();
     }
 
     /**
