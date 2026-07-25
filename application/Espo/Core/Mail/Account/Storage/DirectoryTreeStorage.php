@@ -49,7 +49,6 @@ class DirectoryTreeStorage implements Storage
     ) {}
 
     /**
-     * @todo Test.
      * @inheritDoc
      * @noinspection PhpRedundantCatchClauseInspection
      */
@@ -172,7 +171,6 @@ class DirectoryTreeStorage implements Storage
     }
 
     /**
-     * @todo Test.
      * @inheritDoc
      * @noinspection PhpRedundantCatchClauseInspection
      */
