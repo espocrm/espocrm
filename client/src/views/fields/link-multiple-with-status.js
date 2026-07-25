@@ -86,7 +86,10 @@ class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
             iconStyle = `fas fa-times text-${style} small`;
         }
 
-        return `<span class="${iconStyle}" style="display: inline-block; min-width: 12px"></span> ` +
+        const space = '<span style="user-select: none;">&nbsp;</span>'
+
+        return `<span class="${iconStyle}" style="display: inline-block; min-width: var(--12px);"></span>` +
+            space +
             super.getDetailLinkHtml(id, name);
     }
 }
