@@ -79,10 +79,16 @@ class OnlyTeam implements Filter
             $key1 = $relationDefs->getMidKey();
             $key2 = $relationDefs->getForeignMidKey();
 
-            $subQueryBuilder->leftJoin($middleEntityType, 'assignedUsersMiddle', [
+            $midConditions = [
                 "assignedUsersMiddle.$key1:" => Attribute::ID,
                 'assignedUsersMiddle.deleted' => false,
-            ]);
+            ];
+
+            foreach ($relationDefs->getConditions() as $key => $value) {
+                $midConditions["assignedUsersMiddle.$key"] = $value;
+            }
+
+            $subQueryBuilder->leftJoin($middleEntityType, 'assignedUsersMiddle', $midConditions);
 
             $orGroup["assignedUsersMiddle.$key2"] = $this->user->getId();
         } else if ($this->fieldHelper->hasAssignedUserField()) {
@@ -100,10 +106,16 @@ class OnlyTeam implements Filter
             $key1 = $relationDefs->getMidKey();
             $key2 = $relationDefs->getForeignMidKey();
 
-            $subQueryBuilder->leftJoin($middleEntityType, 'collaboratorsMiddle', [
+            $midConditions = [
                 "collaboratorsMiddle.$key1:" => Attribute::ID,
                 'collaboratorsMiddle.deleted' => false,
-            ]);
+            ];
+
+            foreach ($relationDefs->getConditions() as $key => $value) {
+                $midConditions["collaboratorsMiddle.$key"] = $value;
+            }
+
+            $subQueryBuilder->leftJoin($middleEntityType, 'collaboratorsMiddle', $midConditions);
 
             $orGroup["collaboratorsMiddle.$key2"] = $this->user->getId();
         }
