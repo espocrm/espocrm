@@ -1,21 +1,15 @@
-// Form control sizing
-//
-// Relative text size, padding, and border-radii changes for form controls. For
-// horizontal sizing, wrap controls in the predefined grid classes. `<select>`
-// element gets special love because it's special, and that's a fact!
 .input-size(@input-height; @padding-vertical; @padding-horizontal; @font-size; @line-height) {
-  //height: @input-height;
-  padding: @padding-vertical @padding-horizontal;
-  font-size: @font-size;
-  line-height: @line-height;
+    padding: @padding-vertical @padding-horizontal;
+    font-size: @font-size;
+    line-height: @line-height;
 
-  select& {
-    height: @input-height;
-    line-height: @input-height;
-  }
+    select& {
+        height: @input-height;
+        line-height: @input-height;
+    }
 
-  textarea&,
-  select[multiple]& {
-    height: auto;
-  }
+    textarea&,
+    select[multiple]& {
+        height: auto;
+    }
 }

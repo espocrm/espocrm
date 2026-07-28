@@ -48,8 +48,12 @@
   z-index: @zindex-modal-background;
   background-color: var(--modal-backdrop-bg);
 
-  &.fade { .opacity(0); }
-  &.in { .opacity(@modal-backdrop-opacity); }
+    &.fade {
+        opacity: 0;
+    }
+    &.in {
+        opacity: @modal-backdrop-opacity;
+    }
 }
 
 .modal-header {

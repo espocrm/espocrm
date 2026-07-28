@@ -2,21 +2,23 @@
 
 // Base class
 .tooltip {
-  position: absolute;
-  z-index: @zindex-tooltip;
-  display: block;
-  // Our parent element can be arbitrary since tooltips are by default inserted as a sibling of their target element.
-  // So reset our font and text properties to avoid inheriting weird values.
-  .reset-text();
-  font-size: var(--font-size-small);
+    position: absolute;
+    z-index: @zindex-tooltip;
+    display: block;
+    // Our parent element can be arbitrary since tooltips are by default inserted as a sibling of their target element.
+    // So reset our font and text properties to avoid inheriting weird values.
+    .reset-text();
+    font-size: var(--font-size-small);
 
-  .opacity(0);
+    opacity: 0;
 
-  &.in     { .opacity(@tooltip-opacity); }
-  &.top    { margin-top: var(--minus-3px); padding: @tooltip-arrow-width 0; }
-  &.right  { margin-left:  var(--3px); padding: 0 @tooltip-arrow-width; }
-  &.bottom { margin-top: var(--3px); padding: @tooltip-arrow-width 0; }
-  &.left   { margin-left: var(--minus-3px); padding: 0 @tooltip-arrow-width; }
+    &.in {
+        opacity: @tooltip-opacity;
+    }
+    &.top { margin-top: var(--minus-3px); padding: @tooltip-arrow-width 0; }
+    &.right { margin-left:  var(--3px); padding: 0 @tooltip-arrow-width; }
+    &.bottom { margin-top: var(--3px); padding: @tooltip-arrow-width 0; }
+    &.left { margin-left: var(--minus-3px); padding: 0 @tooltip-arrow-width; }
 
     transition: none;
 }
@@ -34,11 +36,11 @@
 
 // Arrows
 .tooltip-arrow {
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
 }
 // Note: Deprecated .top-left, .top-right, .bottom-left, and .bottom-right as of v3.3.1
 .tooltip {

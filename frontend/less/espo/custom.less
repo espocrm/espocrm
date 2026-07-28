@@ -938,9 +938,9 @@ input.global-search-input {
     > .label-md {
         max-width: ~"calc(100%)";
         display: inline-block;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+
+        .text-overflow();
+
         vertical-align: top;
         // Fix the label making the list row higher.
         margin-top: calc(var(--1px) * -1);
@@ -1378,9 +1378,8 @@ section {
 }
 
 .expanded-row {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    .text-overflow();
+
     margin-bottom: var(--2px);
 
     &:last-child {
@@ -2595,9 +2594,7 @@ div[data-scope="ApiUser"] {
     }
 
     td.flotr-legend-label {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        .text-overflow();
         user-select: none;
     }
 

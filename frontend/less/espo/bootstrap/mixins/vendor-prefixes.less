@@ -1,52 +1,7 @@
-// Vendor Prefixes
-//
-// All vendor mixins are deprecated as of v3.2.0 due to the introduction of
-// Autoprefixer in our Gruntfile. They have been removed in v4.
-
-// - Animations
-// - Backface visibility
-// - Box shadow
-// - Box sizing
-// - Content columns
-// - Hyphens
-// - Placeholder text
-// - Transformations
-// - Transitions
-// - User Select
-
 
 // Animations
 .animation(@animation) {
-          animation: @animation;
-}
-.animation-name(@name) {
-          animation-name: @name;
-}
-.animation-duration(@duration) {
-          animation-duration: @duration;
-}
-.animation-timing-function(@timing-function) {
-          animation-timing-function: @timing-function;
-}
-.animation-delay(@delay) {
-          animation-delay: @delay;
-}
-.animation-iteration-count(@iteration-count) {
-          animation-iteration-count: @iteration-count;
-}
-.animation-direction(@direction) {
-          animation-direction: @direction;
-}
-.animation-fill-mode(@fill-mode) {
-          animation-fill-mode: @fill-mode;
-}
-
-// Backface visibility
-// Prevent browsers from flickering when using CSS 3D transforms.
-// Default value is `visible`, but can be changed to `hidden`
-
-.backface-visibility(@visibility) {
-          backface-visibility: @visibility;
+    animation: @animation;
 }
 
 .box-shadow(@shadow) {
@@ -57,85 +12,24 @@
     box-sizing: @boxmodel;
 }
 
-// CSS3 Content Columns
-.content-columns(@column-count) {
-          column-count: @column-count;
-          column-gap: var(--grid-gutter-width);
-}
-
-// Optional hyphenation
-.hyphens(@mode: auto) {
-  word-wrap: break-word;
-  hyphens: @mode;
-}
-
 .placeholder(@color: @input-color-placeholder) {
     &::placeholder {
         color: @color;
     }
 }
 
-.scale(@ratio) {
-          transform: scale(@ratio);
-}
-.scale(@ratioX; @ratioY) {
-          transform: scale(@ratioX, @ratioY);
-}
-.scaleX(@ratio) {
-          transform: scaleX(@ratio);
-}
-.scaleY(@ratio) {
-          transform: scaleY(@ratio);
-}
-.skew(@x; @y) {
-          transform: skewX(@x) skewY(@y);
-}
-.translate(@x; @y) {
-          transform: translate(@x, @y);
-}
-.translate3d(@x; @y; @z) {
-          transform: translate3d(@x, @y, @z);
-}
-.rotate(@degrees) {
-          transform: rotate(@degrees);
-}
-.rotateX(@degrees) {
-          transform: rotateX(@degrees);
-}
-.rotateY(@degrees) {
-          transform: rotateY(@degrees);
-}
-.perspective(@perspective) {
-          perspective: @perspective;
-}
-.perspective-origin(@perspective) {
-          perspective-origin: @perspective;
-}
-.transform-origin(@origin) {
-          transform-origin: @origin;
-}
-
-
 .transition(@transition) {
-          transition: @transition;
+    transition: @transition;
 }
 .transition-property(@transition-property) {
-          transition-property: @transition-property;
+    transition-property: @transition-property;
 }
 .transition-delay(@transition-delay) {
-          transition-delay: @transition-delay;
+    transition-delay: @transition-delay;
 }
 .transition-duration(@transition-duration) {
-          transition-duration: @transition-duration;
+    transition-duration: @transition-duration;
 }
 .transition-timing-function(@timing-function) {
-          transition-timing-function: @timing-function;
-}
-.transition-transform(@transition) {
-          transition: transform @transition;
-}
-
-
-.user-select(@select) {
-    user-select: @select;
+    transition-timing-function: @timing-function;
 }

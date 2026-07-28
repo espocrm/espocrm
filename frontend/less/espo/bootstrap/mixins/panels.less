@@ -1,22 +1,22 @@
-// Panels
-
 .panel-variant(@border; @heading-text-color; @heading-border) {
-  border-color: @border;
+    border-color: @border;
 
-  & > .panel-heading {
-    color: @heading-text-color;
-    border-color: @heading-border;
+    & > .panel-heading {
+        color: @heading-text-color;
+        border-color: @heading-border;
 
-    + .panel-collapse > .panel-body {
-      border-top-color: @border;
+        + .panel-collapse > .panel-body {
+            border-top-color: @border;
+        }
+
+        .badge {
+            background-color: @heading-text-color;
+        }
     }
-    .badge {
-      background-color: @heading-text-color;
+
+    & > .panel-footer {
+        + .panel-collapse > .panel-body {
+            border-bottom-color: @border;
+        }
     }
-  }
-  & > .panel-footer {
-    + .panel-collapse > .panel-body {
-      border-bottom-color: @border;
-    }
-  }
 }
