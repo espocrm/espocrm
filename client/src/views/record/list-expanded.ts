@@ -243,6 +243,10 @@ class ListExpandedRecordView<
         li.dataset.id = id;
         li.className = 'list-group-item list-row';
 
+        if (this.isRecordStared(id)) {
+            li.classList.add('starred');
+        }
+
         return li.outerHTML;
     }
 

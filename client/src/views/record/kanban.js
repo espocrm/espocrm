@@ -1377,10 +1377,15 @@ class KanbanRecordView extends ListRecordView {
     }
 
     getRowContainerHtml(id) {
-        return $('<div>')
-            .attr('data-id', id)
-            .addClass('item')
-            .get(0).outerHTML;
+        const div = document.createElement('div');
+        div.dataset.id = id;
+        div.classList.add('item');
+
+        if (this.isRecordStared(id)) {
+            div.classList.add('starred');
+        }
+
+        return div.outerHTML;
     }
 
     // noinspection JSUnusedGlobalSymbols

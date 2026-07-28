@@ -810,9 +810,7 @@ abstract class ListBaseRecordView<
             this.rowList.map(id => {
                 return {
                     id: id,
-                    isStarred: this.hasStars && this.collection.get(id) ?
-                        this.collection.get(id)?.attributes[this.starredAttribute] :
-                        false,
+                    isStarred: this.isRecordStared(id),
                 };
             }) : [];
 
@@ -847,6 +845,15 @@ abstract class ListBaseRecordView<
             hasStickyBar: hasStickyBar,
             selectable: this.selectable,
         };
+    }
+
+    /**
+     * @since 10.0.4
+     */
+    protected isRecordStared(id: string): boolean {
+        return this.hasStars && this.collection.get(id) ?
+            this.collection.get(id)?.attributes[this.starredAttribute] :
+            false;
     }
 
     protected init() {
@@ -3278,6 +3285,10 @@ abstract class ListBaseRecordView<
         const tr = document.createElement('tr');
         tr.dataset.id = id;
         tr.classList.add('list-row');
+
+        if (this.isRecordStared(id)) {
+            tr.classList.add('starred');
+        }
 
         return tr.outerHTML;
     }
