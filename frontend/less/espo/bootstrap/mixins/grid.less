@@ -1,7 +1,3 @@
-// Grid system
-//
-// Generate semantic grid columns with these mixins.
-
 // Centered container element
 .container-fixed() {
     margin-right: auto;
@@ -30,13 +26,13 @@
     padding-right: var(--grid-gutter-width-half);
 }
 .make-xs-column-offset(@columns) {
-  margin-left: percentage((@columns / @grid-columns));
+    margin-left: percentage((@columns / @grid-columns));
 }
 .make-xs-column-push(@columns) {
-  left: percentage((@columns / @grid-columns));
+    left: percentage((@columns / @grid-columns));
 }
 .make-xs-column-pull(@columns) {
-  right: percentage((@columns / @grid-columns));
+    right: percentage((@columns / @grid-columns));
 }
 
 // Generate the small columns
@@ -46,25 +42,25 @@
     padding-left: var(--grid-gutter-width-half);
     padding-right: var(--grid-gutter-width-half);
 
-  @media (min-width: @screen-sm-min) {
-    float: left;
-    width: percentage((@columns / @grid-columns));
-  }
+    @media (min-width: @screen-sm-min) {
+        float: left;
+        width: percentage((@columns / @grid-columns));
+    }
 }
 .make-sm-column-offset(@columns) {
-  @media (min-width: @screen-sm-min) {
-    margin-left: percentage((@columns / @grid-columns));
-  }
+    @media (min-width: @screen-sm-min) {
+        margin-left: percentage((@columns / @grid-columns));
+    }
 }
 .make-sm-column-push(@columns) {
-  @media (min-width: @screen-sm-min) {
-    left: percentage((@columns / @grid-columns));
-  }
+    @media (min-width: @screen-sm-min) {
+        left: percentage((@columns / @grid-columns));
+    }
 }
 .make-sm-column-pull(@columns) {
-  @media (min-width: @screen-sm-min) {
-    right: percentage((@columns / @grid-columns));
-  }
+    @media (min-width: @screen-sm-min) {
+     right: percentage((@columns / @grid-columns));
+    }
 }
 
 // Generate the medium columns

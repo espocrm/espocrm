@@ -1,54 +1,45 @@
-// Progress bars
-
-
 @keyframes progress-bar-stripes {
-  from  { background-position: var(--40px) 0; }
-  to    { background-position: 0 0; }
+    from { background-position: var(--40px) 0; }
+    to { background-position: 0 0; }
 }
 
 .progress {
-  overflow: hidden;
-  height: var(--line-height-computed);
-  margin-bottom: var(--line-height-computed);
-  background-color: var(--default-heading-bg-color);
+    overflow: hidden;
+    height: var(--line-height-computed);
+    margin-bottom: var(--line-height-computed);
+    background-color: var(--default-heading-bg-color);
 }
 
 // Bar of progress
 .progress-bar {
-  float: left;
-  width: 0;
-  height: 100%;
-  font-size: var(--font-size-small);
-  line-height: var(--line-height-computed);
-  color: var(--white-color);
-  text-align: center;
-  background-color: var(--brand-primary);
-  .transition(width .6s ease);
-}
-
-.progress-striped .progress-bar,
-.progress-bar-striped {
-  #gradient > .striped();
-  background-size: var(--40px) var(--40px);
+    float: left;
+    width: 0;
+    height: 100%;
+    font-size: var(--font-size-small);
+    line-height: var(--line-height-computed);
+    color: var(--white-color);
+    text-align: center;
+    background-color: var(--brand-primary);
+    .transition(width .6s ease);
 }
 
 .progress.active .progress-bar,
 .progress-bar.active {
-  .animation(progress-bar-stripes 2s linear infinite);
+    .animation(progress-bar-stripes 2s linear infinite);
 }
 
 .progress-bar-success {
-  .progress-bar-variant(var(--brand-success));
+    .progress-bar-variant(var(--brand-success));
 }
 
 .progress-bar-info {
-  .progress-bar-variant(var(--brand-info));
+    .progress-bar-variant(var(--brand-info));
 }
 
 .progress-bar-warning {
-  .progress-bar-variant(var(--brand-warning));
+    .progress-bar-variant(var(--brand-warning));
 }
 
 .progress-bar-danger {
-  .progress-bar-variant(var(--brand-danger));
+    .progress-bar-variant(var(--brand-danger));
 }
