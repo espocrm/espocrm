@@ -1525,6 +1525,10 @@
                 "apiSpecDisabled": {
                     "type": "boolean",
                     "description": "Do not print the link in the API specification. As of v9.3."
+                },
+                "customizationDisabled": {
+                    "type": "boolean",
+                    "description": "Disables the ability to customize the link in the Entity Manager tool."
                 }
             },
             "allOf": [
