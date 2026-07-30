@@ -51,6 +51,10 @@ class User extends Person
     public const string FIELD_PASSWORD_VERSION = 'passwordVersion';
     /** @since 10.0.0 */
     public const string FIELD_TYPE = 'type';
+    /** @since 10.0.4 */
+    public const string FIELD_API_KEY = 'apiKey';
+    /** @since 10.0.4 */
+    public const string FIELD_AUTH_METHOD = 'authMethod';
 
     public const LINK_ACCOUNTS = 'accounts';
     public const LINK_CONTACT = 'contact';
@@ -70,7 +74,8 @@ class User extends Person
     public const RELATIONSHIP_ENTITY_USER = 'EntityUser';
     public const RELATIONSHIP_ENTITY_COLLABORATOR = 'EntityCollaborator';
 
-
+    /** @since 10.0.4 */
+    public const string AUTH_METHOD_API_KEY = 'ApiKey';
 
     public function get(string $attribute): mixed
     {
