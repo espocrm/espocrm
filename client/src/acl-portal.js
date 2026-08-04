@@ -108,8 +108,6 @@ class AclPortal extends Acl {
         let result = false;
 
         if (value === 'account') {
-            result = inAccount;
-
             if (inAccount === null) {
                 if (!precise) {
                     return true;
@@ -120,24 +118,18 @@ class AclPortal extends Acl {
                 return true;
             }
 
-            if (!result) {
-                result = isOwnContact;
-
-                if (isOwnContact === null) {
-                    if (!precise) {
-                        return true;
-                    }
-
-                    result = null;
-                } else if (isOwnContact) {
+            if (isOwnContact === null) {
+                if (!precise) {
                     return true;
                 }
+
+                result = null;
+            } else if (isOwnContact) {
+                return true;
             }
         }
 
         if (value === 'contact') {
-            result = isOwnContact;
-
             if (isOwnContact === null) {
                 if (!precise) {
                     return true;
