@@ -38,12 +38,12 @@ class TestCiEvent1 implements CrossInstanceEvent
         public string $value,
     ) {}
 
-    public static function fromRaw(stdClass $payload): self
+    public static function fromPayload(stdClass $payload): self
     {
         return new self($payload->value ?? '');
     }
 
-    public function toRaw(): stdClass
+    public function toPayload(): stdClass
     {
         return (object) [
             'value' => $this->value,

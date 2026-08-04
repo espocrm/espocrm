@@ -37,12 +37,12 @@ use stdClass;
  */
 readonly class CurrencyRateUpdate implements CrossInstanceEvent
 {
-    public function toRaw(): stdClass
+    public function toPayload(): stdClass
     {
         return (object) [];
     }
 
-    public static function fromRaw(stdClass $payload): self
+    public static function fromPayload(stdClass $payload): self
     {
         return new self();
     }

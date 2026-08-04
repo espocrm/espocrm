@@ -34,12 +34,12 @@ use stdClass;
 
 class UpdateGlobal implements CrossInstanceEvent
 {
-    public static function fromRaw(stdClass $payload): CrossInstanceEvent
+    public static function fromPayload(stdClass $payload): CrossInstanceEvent
     {
         return new self();
     }
 
-    public function toRaw(): stdClass
+    public function toPayload(): stdClass
     {
         return (object) [];
     }

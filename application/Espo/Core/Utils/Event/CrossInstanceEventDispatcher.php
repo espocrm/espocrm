@@ -84,7 +84,7 @@ class CrossInstanceEventDispatcher
     {
         $envelope = new Envelope(
             eventClassName: $event::class,
-            payload: $event->toRaw(),
+            payload: $event->toPayload(),
             origin: $this->originProvider->get(),
         );
 
@@ -121,7 +121,7 @@ class CrossInstanceEventDispatcher
         }
 
         try {
-            $event = $className::fromRaw($envelope->payload);
+            $event = $className::fromPayload($envelope->payload);
         } catch (Throwable $e) {
             throw new RuntimeException("Could not hydrate event '$className'.", previous: $e);
         }

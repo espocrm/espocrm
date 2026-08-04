@@ -43,7 +43,7 @@ class PortalUserRoleUpdate implements CrossInstanceEvent
         public string $portalId,
     ) {}
 
-    public static function fromRaw(stdClass $payload): self
+    public static function fromPayload(stdClass $payload): self
     {
         $userId = $payload->userId ?? null;
 
@@ -63,7 +63,7 @@ class PortalUserRoleUpdate implements CrossInstanceEvent
         );
     }
 
-    public function toRaw(): stdClass
+    public function toPayload(): stdClass
     {
         return (object) [
             'userId' => $this->userId,
