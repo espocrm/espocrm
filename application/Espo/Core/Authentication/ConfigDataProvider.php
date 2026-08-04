@@ -121,6 +121,16 @@ class ConfigDataProvider
     }
 
     /**
+     * Whether 2FA is enabled in portals.
+     *
+     * @since 10.0.4
+     */
+    public function isTwoFactorInPortalEnabled(): bool
+    {
+        return (bool) $this->config->get('auth2FAInPortal');
+    }
+
+    /**
      * Allowed methods of 2FA.
      *
      * @return array<int, string>

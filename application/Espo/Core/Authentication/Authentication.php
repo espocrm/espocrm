@@ -237,7 +237,7 @@ class Authentication
             !$result->bypassSecondStep() &&
             !$result->isSecondStepRequired() &&
             !$authToken &&
-            $this->configDataProvider->isTwoFactorEnabled()
+            $this->getTwoFactorEnabled()
         ) {
             $result = $this->processTwoFactor($result, $request);
 
@@ -832,5 +832,14 @@ class Authentication
         }
 
         return $this->processFail($result, $data, $request);
+    }
+
+    private function getTwoFactorEnabled(): bool
+    {
+        if ($this->isPortal() && !$this->configDataProvider->isTwoFactorInPortalEnabled()) {
+            return false;
+        }
+
+        return $this->configDataProvider->isTwoFactorEnabled();
     }
 }

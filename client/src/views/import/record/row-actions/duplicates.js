@@ -35,7 +35,7 @@ class ImportDuplicatesRowActionsView extends DefaultRowActionsView {
 
         list.push({
             action: 'unmarkAsDuplicate',
-            label: 'Set as Not Duplicate',
+            text: this.getLanguage().translatePath('Import.labels.Set as Not Duplicate'),
             data: {
                 id: this.model.id,
                 type: this.model.entityType,
