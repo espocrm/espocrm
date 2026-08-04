@@ -66,11 +66,13 @@ use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 
 use DateTime;
 use Exception;
+use PDOException;
 
 class DefaultImporter implements Importer
 {
     private const SUBJECT_MAX_LENGTH = 255;
     private const PROCESS_ACL_DELAY_PERIOD = '5 seconds';
+    private const int SAVE_RETRY_COUNT = 2;
 
     /** @var AssignmentNotificator<Email>  */
     private AssignmentNotificator $notificator;
@@ -593,17 +595,34 @@ class DefaultImporter implements Importer
 
     private function processFinalTransactionalSave(Email $email): void
     {
-        $this->entityManager->getTransactionManager()->start();
+        for ($i = 0; $i < self::SAVE_RETRY_COUNT; $i ++) {
+            try {
+                $this->processFinalTransactionalSaveInternal($email);
+            } catch (PDOException $e) {
+                $code = (int) ($e->errorInfo[1] ?? '0');
 
-        $this->entityManager
-            ->getRDBRepositoryByClass(Email::class)
-            ->forUpdate()
-            ->where([Attribute::ID => $email->getId()])
-            ->findOne();
+                // Handles a snapshot isolation conflict.
+                if ($code === 1020) {
+                    continue;
+                }
 
-        $this->entityManager->saveEntity($email, [Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
+                throw $e;
+            }
+        }
+    }
 
-        $this->entityManager->getTransactionManager()->commit();
+    private function processFinalTransactionalSaveInternal(Email $email): void
+    {
+        $this->entityManager->getTransactionManager()->run(function () use ($email) {
+            $this->entityManager
+                ->getRDBRepositoryByClass(Email::class)
+                ->forUpdate()
+                ->select(Attribute::ID)
+                ->where([Attribute::ID => $email->getId()])
+                ->findOne();
+
+            $this->entityManager->saveEntity($email, [Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
+        });
     }
 
     /**
