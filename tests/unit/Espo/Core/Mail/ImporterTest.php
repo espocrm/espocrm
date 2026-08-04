@@ -168,7 +168,7 @@ class ImporterTest extends TestCase
             ->willReturnMap($this->repositoryMap);
 
         $entityManager
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('saveEntity')
             ->with($this->isInstanceOf(Email::class))
             ->willReturnCallback(function (Email $entity) {
@@ -189,6 +189,13 @@ class ImporterTest extends TestCase
                 ]
             );
 
+        $saver = $this->createMock(Importer\EmailSaver::class);
+
+        $saver
+            ->expects($this->exactly(1))
+            ->method('save')
+            ->with($this->isInstanceOf(Email::class));
+
         $contents = file_get_contents('tests/unit/testData/Core/Mail/test_email_1.eml');
 
         $importer = new Importer\DefaultImporter(
@@ -201,6 +208,7 @@ class ImporterTest extends TestCase
             jobSchedulerFactory: $this->jobSchedulerFactory,
             parentFinder: $this->parentFinder,
             autoReplyDetector: $this->createMock(Importer\AutoReplyDetector::class),
+            emailSaver: $saver,
         );
 
         $message = new MessageWrapper(0, null, null, $contents);
