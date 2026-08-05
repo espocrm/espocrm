@@ -60,6 +60,8 @@ class EmailSaver
 
                 throw $e;
             }
+
+            break;
         }
     }
 
