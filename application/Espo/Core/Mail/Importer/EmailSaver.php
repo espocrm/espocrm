@@ -55,6 +55,10 @@ class EmailSaver
 
                 // Handles a snapshot isolation conflict.
                 if ($code === 1020) {
+                    if ($i === self::SAVE_RETRY_COUNT - 1) {
+                        throw $e;
+                    }
+
                     continue;
                 }
 
