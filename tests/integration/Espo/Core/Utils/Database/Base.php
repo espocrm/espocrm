@@ -66,7 +66,7 @@ abstract class Base extends BaseTestCase
         return $sth->fetch(\PDO::FETCH_ASSOC);
     }
 
-    protected function updateDefs($entityName, $fieldName, array $fieldDefs = [], array $linkDefs = null)
+    protected function updateDefs($entityName, $fieldName, array $fieldDefs = [], ?array $linkDefs = null)
     {
         $metadata = $this->getContainer()->getByClass(Metadata::class);
 
