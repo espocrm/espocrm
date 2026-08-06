@@ -39,6 +39,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Cache\DataCacheServiceName as CacheServiceName;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
@@ -379,5 +380,17 @@ abstract class BaseTestCase extends TestCase
 
             $this->transactionManager->start();
         }
+    }
+
+    /**
+     * Set and save config parameters.
+     *
+     * @param array<string, mixed> $params
+     */
+    protected function setConfigParams(array $params): void
+    {
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->setMultiple($params);
+        $configWriter->save();
     }
 }
