@@ -115,7 +115,6 @@ class Processor
                 user: $user,
                 skipAcl: !$params->applyAcl(),
                 isHtml: $template->isHtml(),
-
             );
         }
 
