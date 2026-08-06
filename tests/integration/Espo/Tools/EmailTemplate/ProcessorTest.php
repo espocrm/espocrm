@@ -29,8 +29,12 @@
 
 namespace integration\Espo\Tools\EmailTemplate;
 
+use DateTimeImmutable;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Utils\DateTime\Clock;
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\Team;
 use Espo\Entities\User;
@@ -148,6 +152,31 @@ class ProcessorTest extends BaseTestCase
 
     public function testProcessAndCleanup(): void
     {
+        $this->setConfigParams([
+            'dateFormat' => 'MM/DD/YYYY',
+        ]);
+
+        $clock = $this->createMock(Clock::class);
+        $clock->method('now')
+            ->willReturn(new DateTimeImmutable('2030-01-02 00:00'));
+
+        $this->setApplication(
+            $this->createApplication(
+                binding: new class ($clock) implements BindingProcessor {
+
+                    public function __construct(private Clock $clock) {}
+
+                    public function process(Binder $binder): void
+                    {
+                        $binder->bindInstance(Clock::class, $this->clock);
+                    }
+                },
+                reuse: true,
+            )
+        );
+
+        //
+
         $em = $this->getEntityManager();
 
         $account = $em->getRDBRepositoryByClass(Account::class)->getNew();
@@ -162,7 +191,7 @@ class ProcessorTest extends BaseTestCase
         $template1 = $em->getRDBRepositoryByClass(EmailTemplate::class)->getNew();
         $template1->setMultiple([
             'subject' => 'Test {Person.firstName} test {Account.name}',
-            'body' => 'Test {Person.name} test {Account.name}.',
+            'body' => 'Test {Person.name} test {Account.name} {today}.',
         ]);
         $em->saveEntity($template1);
 
@@ -185,7 +214,7 @@ class ProcessorTest extends BaseTestCase
         );
 
         $this->assertEquals(
-            'Test  test Account 1.',
+            'Test  test Account 1 01/02/2030.',
             $emailData1->getBody(),
         );
 
@@ -199,7 +228,7 @@ class ProcessorTest extends BaseTestCase
         );
 
         $this->assertEquals(
-            'Test One test {Account.name}.',
+            'Test One test {Account.name} 01/02/2030.',
             $emailData2->getBody(),
         );
     }

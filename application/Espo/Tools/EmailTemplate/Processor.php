@@ -104,14 +104,18 @@ class Processor
             }
         }
 
+        $pairs = [];
+
         foreach ($entityHash as $type => $entity) {
             $subject = $this->processText(
                 type: $type,
                 entity: $entity,
                 text: $subject,
+                pairs: $pairs,
                 user: $user,
                 skipAcl: !$params->applyAcl(),
                 isHtml: $template->isHtml(),
+
             );
         }
 
@@ -120,11 +124,15 @@ class Processor
                 type: $type,
                 entity: $entity,
                 text: $body,
+                pairs: $pairs,
                 user: $user,
                 skipAcl: !$params->applyAcl(),
                 isHtml: $template->isHtml(),
             );
         }
+
+        $subject = strtr($subject, $pairs);
+        $body = strtr($body, $pairs);
 
         $subject = $this->processPlaceholders($subject, $data);
         $body = $this->processPlaceholders($body, $data);
@@ -145,19 +153,25 @@ class Processor
 
     private function processPlaceholders(string $text, Data $data): string
     {
-        foreach ($this->placeholdersProvider->get() as [$key, $placeholder]) {
-            $value = $placeholder->get($data);
+        $pairs = [];
 
-            $text = str_replace('{' . $key . '}', $value, $text);
+        foreach ($this->placeholdersProvider->get() as [$key, $placeholder]) {
+            $from = '{' . $key . '}';
+
+            $pairs[$from] = $placeholder->get($data);
         }
 
-        return $text;
+        return strtr($text, $pairs);
     }
 
+    /**
+     * @param array<string, string> $pairs
+     */
     private function processText(
         string $type,
         Entity $entity,
         string $text,
+        array &$pairs,
         User $user,
         bool $skipLinks = false,
         ?string $prefixLink = null,
@@ -208,7 +222,13 @@ class Processor
                 $variableName = "$prefixLink.$attribute";
             }
 
-            $text = str_replace("{{$type}.$variableName}", $value, $text);
+            $placeholder = "{{$type}.$variableName}";
+
+            if (array_key_exists($placeholder, $pairs)) {
+                continue;
+            }
+
+            $pairs[$placeholder] = $value;
         }
 
         if (!$skipLinks && $entity->hasId()) {
@@ -216,6 +236,7 @@ class Processor
                 type: $type,
                 entity: $entity,
                 text: $text,
+                pairs: $pairs,
                 user: $user,
                 skipAcl: $skipAcl,
                 isHtml: $isHtml,
@@ -225,10 +246,14 @@ class Processor
         return $text;
     }
 
+    /**
+     * @param array<string, string> $pairs
+     */
     private function processLinks(
         string $type,
         Entity $entity,
         string $text,
+        array &$pairs,
         User $user,
         bool $skipAcl,
         bool $isHtml,
@@ -292,6 +317,7 @@ class Processor
                 type: $type,
                 entity: $relatedEntity,
                 text: $text,
+                pairs: $pairs,
                 user: $user,
                 skipLinks: true,
                 prefixLink: $relation,
