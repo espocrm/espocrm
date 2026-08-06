@@ -130,14 +130,11 @@ class Processor
             );
         }
 
+        $this->processPlaceholders($pairs, $data);
+        $this->processCleanup($pairs);
+
         $subject = strtr($subject, $pairs);
         $body = strtr($body, $pairs);
-
-        $subject = $this->processPlaceholders($subject, $data);
-        $body = $this->processPlaceholders($body, $data);
-
-        $subject = $this->processCleanup($subject);
-        $body = $this->processCleanup($body);
 
         $attachmentList = $params->copyAttachments() ?
             $this->copyAttachments($template) : [];
@@ -149,18 +146,17 @@ class Processor
             attachmentList: $attachmentList,
         );
     }
+    /**
+     * @param array<string, string> $pairs
+     */
 
-    private function processPlaceholders(string $text, Data $data): string
+    private function processPlaceholders(array &$pairs, Data $data): void
     {
-        $pairs = [];
-
         foreach ($this->placeholdersProvider->get() as [$key, $placeholder]) {
             $from = '{' . $key . '}';
 
             $pairs[$from] = $placeholder->get($data);
         }
-
-        return strtr($text, $pairs);
     }
 
     /**
@@ -489,14 +485,17 @@ class Processor
         return [$entityHash, $data];
     }
 
-    private function processCleanup(string $text): string
+    /**
+     * @param array<string, string> $pairs
+     */
+    private function processCleanup(array &$pairs): void
     {
-        $pairs = [];
-
         foreach ($this->stripPlaceholderList as $item) {
+            if (array_key_exists($item, $pairs)) {
+                continue;
+            }
+
             $pairs[$item] = '';
         }
-
-        return strtr($text, $pairs);
     }
 }
