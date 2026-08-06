@@ -55,6 +55,14 @@ class Processor
 {
     private const string KEY_PARENT = 'Parent';
 
+    /** @var string[] */
+    private array $stripPlaceholderList = [
+        '{Person.firstName}',
+        '{Person.lastName}',
+        '{Person.name}',
+        '{Person.salutationName}',
+    ];
+
     public function __construct(
         private Formatter $formatter,
         private EntityManager $entityManager,
@@ -120,6 +128,9 @@ class Processor
 
         $subject = $this->processPlaceholders($subject, $data);
         $body = $this->processPlaceholders($body, $data);
+
+        $subject = $this->processCleanup($subject);
+        $body = $this->processCleanup($body);
 
         $attachmentList = $params->copyAttachments() ?
             $this->copyAttachments($template) : [];
@@ -451,5 +462,16 @@ class Processor
         }
 
         return [$entityHash, $data];
+    }
+
+    private function processCleanup(string $text): string
+    {
+        $pairs = [];
+
+        foreach ($this->stripPlaceholderList as $item) {
+            $pairs[$item] = '';
+        }
+
+        return strtr($text, $pairs);
     }
 }
