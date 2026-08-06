@@ -51,7 +51,7 @@ class Manager
     protected const GET_SAFE_CONTENTS_RETRY_NUMBER = 10;
     protected const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
 
-    private const RESERVED_CUSTOM_PATH_LIST = [
+    private const array RESERVED_CUSTOM_PATH_LIST = [
         'custom/Espo/Custom',
         'custom/Espo/Modules',
         'client/custom/modules',
@@ -1173,16 +1173,8 @@ class Manager
 
     private function isReservedCustomPath(string $path): bool
     {
-        $normalizedPath = trim($path, '/');
+        $normalizedPath = rtrim($path, '/');
 
-        foreach (self::RESERVED_CUSTOM_PATH_LIST as $ignoredPath) {
-            $normalizedIgnoredPath = trim($ignoredPath, '/');
-
-            if ($normalizedPath === $normalizedIgnoredPath) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($normalizedPath, self::RESERVED_CUSTOM_PATH_LIST, true);
     }
 }
