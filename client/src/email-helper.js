@@ -97,6 +97,7 @@ class EmailHelper {
         const replyToAddressString = model.attributes.replyTo || null;
         const replyToString = model.attributes.replyToString || null;
         const userEmailAddressList = this.user.attributes.emailAddressList || [];
+        const lcUserEmailAddressList = userEmailAddressList.map(it => it.toLowerCase());
         const idHash = model.attributes.idHash || {};
         const typeHash = model.attributes.typeHash || {};
 
@@ -130,7 +131,7 @@ class EmailHelper {
             (!to || !to.includes('@')) &&
             model.attributes.from
         ) {
-            if (!userEmailAddressList.includes(model.attributes.from)) {
+            if (!lcUserEmailAddressList.includes(model.attributes.from.toLowerCase())) {
                 to = model.attributes.from;
 
                 if (!nameHash[to]) {
@@ -251,15 +252,36 @@ class EmailHelper {
         attributes.repliedId = model.id;
         attributes.inReplyTo = model.get('messageId');
 
-        /** @type {string[]} */
-        const lcToAddresses = (model.attributes.to || '').split(';').map(it => it.toLowerCase());
+        // Pre-select the address the original email was sent to (or sent from, when replying
+        // on a sent email) as a from-address. Both personal and group addresses are considered,
+        // as long as the user can send from them. Recipients are checked in their original order.
+        if (isReplyOnSent) {
+            attributes.from = model.attributes.from;
+        }
+        else {
+            const toAddresses = (model.attributes.to || '')
+                .split(';')
+                .map(it => it.trim())
+                .filter(it => it !== '');
 
-        for (const address of personalAddresses) {
-            if (lcToAddresses.includes(address.toLowerCase())) {
-                attributes.from = address;
+            for (const address of toAddresses) {
+                const index = lcUserEmailAddressList.indexOf(address.toLowerCase());
 
-                break;
+                if (index !== -1) {
+                    attributes.from = userEmailAddressList[index];
+
+                    break;
+                }
             }
+        }
+
+        if (attributes.from && attributes.cc) {
+            const lcFrom = attributes.from.toLowerCase();
+
+            attributes.cc = attributes.cc
+                .split(';')
+                .filter(item => item.trim().toLowerCase() !== lcFrom)
+                .join(';');
         }
 
         this.addReplyBodyAttributes(model, attributes);
