@@ -15,7 +15,8 @@
             "duplicateIgnore": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\User\\UserName\\Valid"
-            ]
+            ],
+            "audited": true
         },
         "name": {
             "type": "personName",
@@ -23,7 +24,8 @@
             "dependeeAttributeList": [
                 "userName"
             ],
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "audited": true
         },
         "type": {
             "type": "enum",
@@ -43,7 +45,8 @@
             "massUpdateDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "audited": true
         },
         "password": {
             "type": "password",
@@ -149,7 +152,8 @@
             "maxLength": 100,
             "pattern": "$noBadCharacters",
             "customizationAuditedDisabled": true,
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "audited": true
         },
         "position": {
             "type": "varchar",
@@ -265,13 +269,15 @@
             "type": "email",
             "required": false,
             "layoutMassUpdateDisabled": true,
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "audited": true
         },
         "phoneNumber": {
             "type": "phone",
             "typeList": ["Mobile", "Office", "Home", "Fax", "Other"],
             "defaultType": "Mobile",
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "audited": true
         },
         "token": {
             "type": "varchar",
@@ -315,7 +321,8 @@
                 "tooltipText",
                 "readOnly",
                 "autocompleteOnEmpty"
-            ]
+            ],
+            "audited": true
         },
         "acceptanceStatus": {
             "type": "varchar",
