@@ -505,14 +505,16 @@
             "type": "link",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "customizationAuditedDisabled": true
+            "customizationAuditedDisabled": true,
+            "audited": true
         },
         "layoutSet": {
             "type": "link",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "customizationAuditedDisabled": true,
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "auth2FA": {
             "type": "foreign",
