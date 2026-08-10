@@ -44,7 +44,10 @@ export default class LayoutPanelAttributesView extends ModalView {
     shortcutKeys = {
         /** @this LayoutPanelAttributesView */
         'Control+Enter': function (e) {
-            if (document.activeElement instanceof HTMLInputElement) {
+            if (
+                document.activeElement instanceof HTMLInputElement ||
+                document.activeElement instanceof HTMLTextAreaElement
+            ) {
                 document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
             }
 
