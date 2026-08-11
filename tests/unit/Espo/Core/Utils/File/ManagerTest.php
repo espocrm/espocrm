@@ -532,4 +532,27 @@ class ManagerTest extends TestCase
             $this->fileManager->getRelativePath($path, $basePath, $dirSeparator)
         );
     }
+
+    public static function reservedCustomPathData(): array
+    {
+        return [
+            ['custom/Espo/Custom', true],
+            ['custom/Espo/Modules', true],
+            ['client/custom/modules', true],
+            ['client/custom/modules/', true],
+            ['custom/Espo/Custom/Resources', false],
+            ['custom/Espo/Modules/Test', false],
+            ['client/custom/modules/test', false],
+            ['application/Espo/Core', false],
+        ];
+    }
+
+    #[DataProvider('reservedCustomPathData')]
+    public function testIsReservedCustomPath(string $path, bool $expectedResult): void
+    {
+        $this->assertEquals(
+            $expectedResult,
+            $this->reflection->invokeMethod('isReservedCustomPath', [$path])
+        );
+    }
 }

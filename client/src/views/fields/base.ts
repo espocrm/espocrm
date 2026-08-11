@@ -1421,7 +1421,10 @@ export default class BaseFieldView<
             if (key === 'Control+Enter') {
                 e.stopPropagation();
 
-                if (document.activeElement instanceof HTMLInputElement) {
+                if (
+                    document.activeElement instanceof HTMLInputElement ||
+                    document.activeElement instanceof HTMLTextAreaElement
+                ) {
                     // Fields may need to fetch data first.
                     document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
                 }

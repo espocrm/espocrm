@@ -3635,7 +3635,10 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         event.preventDefault();
         event.stopPropagation();
 
-        if (document.activeElement instanceof HTMLInputElement) {
+        if (
+            document.activeElement instanceof HTMLInputElement ||
+            document.activeElement instanceof HTMLTextAreaElement
+        ) {
             // Fields may need to fetch data first.
             document.activeElement.dispatchEvent(new Event('change', {bubbles: true}));
         }
