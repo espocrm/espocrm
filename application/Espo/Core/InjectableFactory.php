@@ -34,6 +34,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
+use Espo\Core\Container\Container;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
