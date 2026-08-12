@@ -54,7 +54,8 @@
     "Silent Mode": "Тих режим",
     "New import with same params": "Ново импортиране със същите настройки",
     "Run Manually": "Ръчно стартиране",
-    "Export": "Експортиране"
+    "Export": "Експортиране",
+    "Parameters": "Параметри"
   },
   "messages": {
     "utf8": "Трябва да е UTF-8 енкодинг",

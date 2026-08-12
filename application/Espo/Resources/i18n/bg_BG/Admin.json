@@ -87,7 +87,8 @@
     "App Log": "Логове на приложението",
     "Address Countries": "Списък с държави",
     "App Secrets": "API кодове в приложението",
-    "OAuth Providers": "Доставчици на OAuth"
+    "OAuth Providers": "Доставчици на OAuth",
+    "Pipelines": "Пайплайни"
   },
   "layouts": {
     "list": "Лист",
@@ -134,7 +135,8 @@
     "checklist": "Чеклист",
     "barcode": "Баркод",
     "urlMultiple": "Множество URL адреси",
-    "base": "Базово"
+    "base": "Базово",
+    "decimal": "Десетично число"
   },
   "fields": {
     "type": "Тип",
@@ -215,7 +217,13 @@
     "preview": "Преглед",
     "attachmentField": "Поле за прикачени файлове",
     "dynamicLogicReadOnlySaved": "Условия за запазено състояние, които правят полето само за четене",
-    "itemsEditable": "Редактируеми елементи"
+    "itemsEditable": "Редактируеми елементи",
+    "dynamicLogicCascading": "Каскаден избор",
+    "capture": "Заснемане",
+    "openInNewTab": "Отваряне в нов раздел",
+    "notLockable": "Не подлежи на заключване",
+    "protocolRequired": "Изисква се протокол",
+    "cascadeRemoval": "Каскадно изтриване"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",
@@ -239,7 +247,8 @@
     "formulaFunctions": "Още функции можете да намерите в [документацията]({documentationUrl}).",
     "rebuildRequired": "Трябва да регенерирате кеша на системата от CLI.",
     "cronIsDisabled": "Cron е деактивиран, приложението не работи напълно. Активирайте cron в [настройки](#Admin/settings).",
-    "cacheIsDisabled": "Кешът е деактивиран, приложението ще работи по-бавно. Активирайте кеша в [настройки](#Admin/settings)."
+    "cacheIsDisabled": "Кешът е деактивиран, приложението ще работи по-бавно. Активирайте кеша в [настройки](#Admin/settings).",
+    "noPipelinesEnabled": "Няма типове обекти с активирани пайплайни."
   },
   "descriptions": {
     "settings": "Системни настройки на платформата.",
@@ -293,7 +302,8 @@
     "addressCountries": "Държави, налични в адресни полета.",
     "appSecrets": "Съхранявайте чувствителна информация като API ключове, пароли и други тайни.",
     "leadCapture": "Линкове за получаване на потенциални клиенти и уеб форми.",
-    "oAuthProviders": "OAuth доставчици за интеграции."
+    "oAuthProviders": "OAuth доставчици за интеграции.",
+    "pipelines": "Конфигуриране на множество пайплайни."
   },
   "options": {
     "previewSize": {
@@ -306,6 +316,10 @@
     "labelType": {
       "state": "Област",
       "regular": "Основен"
+    },
+    "capture": {
+      "user": "Предна камера",
+      "environment": "Задна камера"
     }
   },
   "logicalOperators": {

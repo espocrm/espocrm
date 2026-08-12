@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create PipelineStage": "Създаване на етап"
+  },
+  "fields": {
+    "order": "Подредба",
+    "pipeline": "Пайплайн",
+    "mappedStatus": "Съпоставен статус"
+  },
+  "links": {
+    "pipeline": "Пайплайн"
+  }
+}

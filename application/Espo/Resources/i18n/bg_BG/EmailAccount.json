@@ -23,7 +23,8 @@
     "useImap": "Прихващане на имейли",
     "smtpAuthMechanism": "Механизъм за SMTP удостоверяване",
     "security": "Сигурност",
-    "connectedAt": "Свързано с"
+    "connectedAt": "Свързано с",
+    "folderMap": "Мапване на папки"
   },
   "links": {
     "filters": "Филтри",
@@ -44,7 +45,9 @@
   "messages": {
     "couldNotConnectToImap": "Не може да се свърже с IMAP сървъра",
     "connectionIsOk": "Връзката е ОК",
-    "imapNotConnected": "Не можа да се свърже с [IMAP акаунт](#EmailAccount/view/{id})."
+    "imapNotConnected": "Не можа да се свърже с [IMAP акаунт](#EmailAccount/view/{id}).",
+    "noFolder": "Мапнатата карта не съществува.",
+    "resetFetchData": "Имейлите ще бъдат изтеглени повторно, считано от посочената дата. Съществуващите имейли няма да бъдат дублирани."
   },
   "tooltips": {
     "storeSentEmails": "Изпратените имейли ще се съхраняват на IMAP сървъра. Полето за имейл адрес трябва да съвпада с адреса, от който ще бъдат изпращани имейлите.",

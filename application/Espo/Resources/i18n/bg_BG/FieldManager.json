@@ -59,7 +59,8 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 месеца",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 месеца",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 месеца",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 година"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 година",
+      "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 дни"
     },
     "barcodeType": {
       "UPC": "UPC (А)",
@@ -104,7 +105,8 @@
     "relateOnImport": "Когато импортирате с това поле, то автоматично ще свърже запис със съответстващ чужд запис. Използвайте тази функционалност само ако чуждото поле се счита за уникално.",
     "preview": "Показване на бутона за Markdown визуализация. Приложимо, ако Markdown е активиран.",
     "itemsEditable": "Елементите могат да се редактират. Приложимо само ако не са зададени опции.",
-    "seeMoreDisabled": "Ако не е отметнато, дългите текстове ще бъдат съкратени."
+    "seeMoreDisabled": "Ако не е отметнато, дългите текстове ще бъдат съкратени.",
+    "imageCapture": "Указва коя камера да се използва за заснемане на изображения."
   },
   "fieldParts": {
     "address": {
@@ -157,7 +159,8 @@
     "link": "Запис, свързан чрез връзка „Принадлежи към (много към един или един към един).",
     "linkParent": "Запис, свързан чрез връзката „Принадлежи на родител“. Може да бъде от различни типове обекти.",
     "linkMultiple": "Набор от записи, свързани чрез релация Има-много (много към много или един към много). Не всички релации имат своите полета с множество връзки. Правят го само тези, при които е разрешен параметър(и) за връзка с множество.",
-    "urlMultiple": "Множество линкове"
+    "urlMultiple": "Множество линкове",
+    "decimal": "Десетично число с фиксирана точност."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Името на полето '{field}' не е разрешено.",

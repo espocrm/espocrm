@@ -66,7 +66,11 @@
     "OAuthProvider": "OAuth доставчик",
     "OAuthAccount": "OAuth акаунт",
     "WebhookEventQueueItem": "Елемент от опашката за webhooks",
-    "Template": "Шаблон"
+    "Template": "Шаблон",
+    "CurrencyRecord": "Валута",
+    "CurrencyRecordRate": "Валутен курс",
+    "Pipeline": "Пайплайн",
+    "PipelineStage": "Етап на пайплайна"
   },
   "scopeNamesPlural": {
     "Email": "Имейли",
@@ -122,7 +126,11 @@
     "OAuthProvider": "OAuth доставчици",
     "OAuthAccount": "OAuth акаунти",
     "WebhookEventQueueItem": "Елементи от опашката за webhooks",
-    "Template": "Шаблони"
+    "Template": "Шаблони",
+    "CurrencyRecord": "Валути",
+    "CurrencyRecordRate": "Валутни курсове",
+    "Pipeline": "Пайплайни",
+    "PipelineStage": "Етапи на пайплайна"
   },
   "labels": {
     "Misc": "Разни",
@@ -323,7 +331,15 @@
     "Reaction Removed": "Реакцията е премахната",
     "Reactions": "Реакции",
     "Network error": "Проблем с мрежата",
-    "Edit Item": "Редактиране"
+    "Edit Item": "Редактиране",
+    "Bad request": "Невалидна заявка",
+    "Conflict": "Конфликт",
+    "Internal server error": "Вътрешна сървърна грешка",
+    "Mark read": "Маркиране като прочетено",
+    "Lock": "Заключване",
+    "Unlock": "Отключване",
+    "Assigned": "Възложено",
+    "Notification": "Известие"
   },
   "messages": {
     "pleaseWait": "Моля изчакайте...",
@@ -440,7 +456,18 @@
     "arrayInputNotEmpty": "Елементът е въведен, но не е добавен",
     "error403": "Нямате достъп до този модул.",
     "sameRecordIsAlreadyBeingEdited": "Записът вече се редактира от друг потребител.",
-    "changesLossConfirmation": "Незапазените промени ще бъдат загубени. Сигурни ли сте?"
+    "changesLossConfirmation": "Незапазените промени ще бъдат загубени. Сигурни ли сте?",
+    "cannotRemoveUsed": "Записът не може да бъде изтрит, тъй като се използва.",
+    "checkLogsForDetails": "Проверете логовете за подробности.",
+    "confirmMassLock": "Сигурни ли сте, че искате да заключите избраните записи?",
+    "confirmMassUnlock": "Сигурни ли сте, че искате да отключите избраните записи?",
+    "locked": "Записът е заключен",
+    "unlocked": "Записът е отключен",
+    "massLockDone": "{count} заключени",
+    "massUnlockDone": "{count} отключени",
+    "cannotModifyLockedRecord": "Полето *{field}* не може да бъде променено. Записът е заключен.",
+    "cannotRemoveLockedRecord": "Заключен запис не може да бъде изтрит.",
+    "noPipeline": "Няма пайплайн."
   },
   "boolFilters": {
     "onlyMy": "Само мои",
@@ -466,7 +493,9 @@
     "unlink": "Отсвързване",
     "recalculateFormula": "Преизчисляване на формули",
     "update": "Обновяване",
-    "delete": "Изтриване"
+    "delete": "Изтриване",
+    "lock": "Заключване",
+    "unlock": "Отключване"
   },
   "fields": {
     "name": "Име",
@@ -508,7 +537,11 @@
     "users": "Потребители",
     "childList": "Дъщерен списък",
     "collaborators": "Сътрудници",
-    "streamUpdatedAt": "Потокът е актуализиран на"
+    "streamUpdatedAt": "Потокът е актуализиран на",
+    "category": "Категория",
+    "isLocked": "Заключен",
+    "pipeline": "Пайплайн",
+    "pipelineStage": "Етап на пайплайна"
   },
   "links": {
     "assignedUser": "Назначен потребител",
@@ -521,7 +554,10 @@
     "parent": "Родител",
     "children": "Деца",
     "assignedUsers": "Назначени потребители",
-    "collaborators": "Сътрудници"
+    "collaborators": "Сътрудници",
+    "category": "Категория",
+    "pipeline": "Пайплайн",
+    "pipelineStage": "Етап на пайплайна"
   },
   "dashlets": {
     "Stream": "Дейности",
@@ -535,7 +571,12 @@
     "entityRemoved": "{user} премахна {entityType} {entity}",
     "emailInbox": "{user} добави имейл {entity} към пощенската ви кутия",
     "userPostReaction": "{user} реагира на вашия запис {post}",
-    "userPostInParentReaction": "{user} реагира на вашия запис {post} в {entityType} {entity}"
+    "userPostInParentReaction": "{user} реагира на вашия запис {post} в {entityType} {entity}",
+    "addedToCollaborators": "{user} ви добави като сътрудник към {entityType} {entity}",
+    "groupUpdatesMultiple": "{entityType} {entity} – {number} нови активности",
+    "groupUpdatesOne": "{entityType} {entity} – нова активност",
+    "groupEmailsReceivedNew": "Получени имейли – {number} нови",
+    "groupEmailsReceived": "Получени имейли"
   },
   "streamMessages": {
     "post": "{user} публикува в {entityType} {entity}",

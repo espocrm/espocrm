@@ -37,7 +37,11 @@
     "defaultRemindersTask": "Напомняния по подразбиране за задачи",
     "addCustomTabs": "Добавете персонализирани табове",
     "reactionNotifications": "Известия в приложението за реакции",
-    "pageContentWidth": "Ширина на екрана"
+    "pageContentWidth": "Ширина на екрана",
+    "reactionNotificationsNotFollowed": "Уведомления за реакции за записи, които не се следят",
+    "followAsCollaborator": "Автоматично последване при добавяне като сътрудник",
+    "notificationGrouping": "Групиране на известията",
+    "notificationSound": "Звук за известия"
   },
   "options": {
     "weekStart": {
