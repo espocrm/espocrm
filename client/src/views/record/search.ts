@@ -913,7 +913,9 @@ class SearchView extends View<ViewSchema> {
         $(parent).on('hide.bs.dropdown', () => {
             this.resetFieldFilterQuickSearch();
 
-            this.fieldQuickSearchInput!.style.minWidth = '';
+            if (this.fieldQuickSearchInput) {
+                this.fieldQuickSearchInput.style.minWidth = '';
+            }
         });
     }
 
