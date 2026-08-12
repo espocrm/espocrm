@@ -87,9 +87,30 @@ class Type
     public const ARRAY_ALL_OF = 'arrayAllOf';
     public const ARRAY_IS_EMPTY = 'arrayIsEmpty';
     public const ARRAY_IS_NOT_EMPTY = 'arrayIsNotEmpty';
-    public const IS_LINKED_WITH = 'linkedWith';
-    public const IS_NOT_LINKED_WITH = 'notLinkedWith';
-    public const IS_LINKED_WITH_ALL = 'linkedWithAll';
-    public const IS_LINKED_WITH_ANY = 'isLinked';
-    public const IS_LINKED_WITH_NONE = 'isNotLinked';
+
+    /**
+     * Is linked with at least one of provided values (Any Of).
+     */
+    public const string IS_LINKED_WITH = 'linkedWith';
+
+    /**
+     * Is not linked with any of provided values (None Of).
+     */
+    public const string IS_NOT_LINKED_WITH = 'notLinkedWith';
+
+    /**
+     * Is linked with all of provided values (All Of).
+     */
+    public const string IS_LINKED_WITH_ALL = 'linkedWithAll';
+
+    /**
+     * Is linked with anything (Is Not Empty).
+     */
+    public const string IS_LINKED_WITH_ANY = 'isLinked';
+
+
+    /**
+     * Is not linked with anything (Is Empty).
+     */
+    public const string IS_LINKED_WITH_NONE = 'isNotLinked';
 }
