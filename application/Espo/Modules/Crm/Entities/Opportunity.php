@@ -104,9 +104,9 @@ class Opportunity extends Entity
         return $this->get(self::FIELD_STAGE);
     }
 
-    public function setStage(?string $stage): void
+    public function setStage(?string $stage): self
     {
-        $this->set(self::FIELD_STAGE, $stage);
+        return $this->set(self::FIELD_STAGE, $stage);
     }
 
     public function getLastStage(): ?string
@@ -114,9 +114,9 @@ class Opportunity extends Entity
         return $this->get('lastStage');
     }
 
-    public function setLastStage(?string $lastStage): void
+    public function setLastStage(?string $lastStage): self
     {
-        $this->set('lastStage', $lastStage);
+        return $this->set('lastStage', $lastStage);
     }
 
     public function getProbability(): ?int
@@ -124,9 +124,9 @@ class Opportunity extends Entity
         return $this->get('probability');
     }
 
-    public function setProbability(?int $probability): void
+    public function setProbability(?int $probability): self
     {
-        $this->set('probability', $probability);
+        return $this->set('probability', $probability);
     }
 
     public function getAccount(): ?Account
