@@ -44,7 +44,6 @@
     "siteUrl": "URL на системата",
     "addressPreview": "Предварителен изглед на адресите",
     "addressFormat": "Формат на адресите",
-    "notificationSoundsDisabled": "Изключване на звуците от известията",
     "applicationName": "Име на системата",
     "ldapUserTeams": "Екипи на потребителя",
     "ldapUserDefaultTeam": "Екип по подразбиране",
@@ -133,7 +132,8 @@
     "passwordStrengthSpecialCharacterCount": "Брой специални символи, необходими в паролата",
     "availableReactions": "Налични реакции",
     "outboundEmailFromAddress": "Системен имейл адрес",
-    "baselineRole": "Роля по подразбиране"
+    "baselineRole": "Роля по подразбиране",
+    "oidcAuthorizationPkce": "OIDC използване на PKCE"
   },
   "tooltips": {
     "recordsPerPage": "Брой записи, които да се показват в лист UI",

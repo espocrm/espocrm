@@ -157,7 +157,7 @@ class PipelineTest extends BaseTestCase
             Field::NAME => 'Opp 1',
             Field::PIPELINE . 'Id' => $pipeline1->getId(),
             Field::PIPELINE_STAGE . 'Id' => $pipeline1->getStages()[0]->getId(),
-            Opportunity::FIELD_CLOSED_DATE => Date::fromString('2026-01-01')->toString(),
+            Opportunity::FIELD_CLOSE_DATE => Date::fromString('2026-01-01')->toString(),
             Opportunity::FIELD_AMOUNT => 1000,
         ], CreateParams::create())->getEntity();
 
@@ -174,7 +174,7 @@ class PipelineTest extends BaseTestCase
             Field::NAME => 'Opp 2',
             Field::PIPELINE . 'Id' => $pipeline1->getId(),
             Field::PIPELINE_STAGE . 'Id' => $pipeline1->getStages()[4]->getId(),
-            Opportunity::FIELD_CLOSED_DATE => Date::fromString('2026-01-01')->toString(),
+            Opportunity::FIELD_CLOSE_DATE => Date::fromString('2026-01-01')->toString(),
             Opportunity::FIELD_AMOUNT => 1000,
         ], CreateParams::create())->getEntity();
 
@@ -184,7 +184,7 @@ class PipelineTest extends BaseTestCase
 
         $opp = $oppService->create((object) [
             Field::NAME => 'Opp 3',
-            Opportunity::FIELD_CLOSED_DATE => Date::fromString('2026-01-01')->toString(),
+            Opportunity::FIELD_CLOSE_DATE => Date::fromString('2026-01-01')->toString(),
             Opportunity::FIELD_AMOUNT => 1000,
         ], CreateParams::create());
 

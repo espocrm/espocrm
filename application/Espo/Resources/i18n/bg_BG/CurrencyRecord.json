@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "code": "Код",
+    "status": "Статус",
+    "label": "Етикет",
+    "symbol": "Символ",
+    "isBase": "Базова",
+    "rate": "Курс",
+    "rateDate": "Дата на курса"
+  },
+  "links": {
+    "rates": "Курсове"
+  },
+  "options": {
+    "status": {
+      "Active": "Активна",
+      "Inactive": "Неактивна"
+    }
+  }
+}

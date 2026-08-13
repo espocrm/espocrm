@@ -81,9 +81,9 @@ class Task extends Entity
         return $this->getValueObject('dateStart');
     }
 
-    public function setDateStart(?DateTimeOptional $dateStart): void
+    public function setDateStart(?DateTimeOptional $dateStart): self
     {
-        $this->setValueObject('dateStart', $dateStart);
+        return $this->setValueObject('dateStart', $dateStart);
     }
 
     public function getDateEnd(): ?DateTimeOptional
@@ -92,9 +92,9 @@ class Task extends Entity
         return $this->getValueObject('dateEnd');
     }
 
-    public function setDateEnd(?DateTimeOptional $dateEnd): void
+    public function setDateEnd(?DateTimeOptional $dateEnd): self
     {
-        $this->setValueObject('dateEnd', $dateEnd);
+        return $this->setValueObject('dateEnd', $dateEnd);
     }
 
     public function getAssignedUser(): ?Link

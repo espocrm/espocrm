@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create Pipeline": "Създаване на пайплайн"
+  },
+  "fields": {
+    "order": "Подредба",
+    "status": "Статус",
+    "entityType": "Тип обект",
+    "field": "Поле",
+    "isAvailableForAll": "Достъпен за всички",
+    "color": "Цвят"
+  },
+  "links": {
+    "stages": "Етапи"
+  },
+  "options": {
+    "status": {
+      "Active": "Активен",
+      "Inactive": "Неактивен"
+    }
+  }
+}
