@@ -36,9 +36,10 @@ jobs:
         ref: ${{ matrix.branches }}
 
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: 16.x
+        node-version: '24'
+        cache: 'npm'
 
     - name: Setup PHP with Composer
       uses: shivammathur/setup-php@v2
