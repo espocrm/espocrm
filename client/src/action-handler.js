@@ -32,6 +32,7 @@ import {View as BullView} from 'bullbone';
 
 /**
  * An action handler. To be extended by specific action handlers.
+ * @todo Use template of TView. Convert to TS.
  */
 class ActionHandler {
 
