@@ -49,7 +49,7 @@ export default class extends ListRecordView {
         /** @var string[]*/
         const completedStatusList = this.getMetadata().get(`scopes.Task.completedStatusList`, []);
 
-        const status = completedStatusList[0] ?? null;;
+        const status = completedStatusList[0] ?? null;
 
         Ui.notify(this.translate('saving', 'messages'));
 
