@@ -69,6 +69,9 @@ class DetailActions extends ActionHandler {
 
         await model.save({status: this.completedStatusValue}, {patch: true});
 
+        // Needed for calendar update.
+        this.view.trigger('after:save', model);
+
         Ui.success(this.view.getLanguage().translateOption('Completed', 'status', 'Task'));
     }
 
