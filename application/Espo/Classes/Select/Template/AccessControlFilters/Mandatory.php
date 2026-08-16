@@ -58,7 +58,9 @@ class Mandatory implements Filter
                 if (!$this->aclManager->checkScope($this->user, $entityType)) {
                     $forbiddenEntityTypeList[] = $entityType;
                 }
-            } catch (NotImplemented $e) {}
+            } catch (NotImplemented) {
+                // Skip intentionally. Not a security issue.
+            }
         }
 
         if (empty($forbiddenEntityTypeList)) {
