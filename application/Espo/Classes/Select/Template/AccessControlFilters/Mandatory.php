@@ -31,7 +31,6 @@ namespace Espo\Classes\Select\Template\AccessControlFilters;
 
 use Espo\ORM\Defs;
 use Espo\ORM\Query\SelectBuilder;
-use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\AclManager;
 use Espo\Core\Select\AccessControl\Filter;
 
@@ -54,12 +53,8 @@ class Mandatory implements Filter
         $forbiddenEntityTypeList = [];
 
         foreach ($this->defs->getEntityTypeList() as $entityType) {
-            try {
-                if (!$this->aclManager->checkScope($this->user, $entityType)) {
-                    $forbiddenEntityTypeList[] = $entityType;
-                }
-            } catch (NotImplemented) {
-                // Skip intentionally. Not a security issue.
+            if (!$this->aclManager->tryCheck($this->user, $entityType)) {
+                $forbiddenEntityTypeList[] = $entityType;
             }
         }
 
