@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import ListRecordView from 'views/record/list';
+import Ui from 'ui';
 
 export default class extends ListRecordView {
 
@@ -45,10 +46,15 @@ export default class extends ListRecordView {
             return;
         }
 
-        Espo.Ui.notify(this.translate('saving', 'messages'));
+        /** @var string[]*/
+        const completedStatusList = this.getMetadata().get(`scopes.Task.completedStatusList`, []);
 
-        model.save({status: 'Completed'}, {patch: true}).then(() => {
-            Espo.Ui.success(this.translate('Saved'));
+        const status = completedStatusList[0] ?? null;;
+
+        Ui.notify(this.translate('saving', 'messages'));
+
+        model.save({status: status}, {patch: true}).then(() => {
+            Ui.success(this.translate('Saved'));
 
             this.collection.fetch();
         });
