@@ -82,8 +82,6 @@ class DetailActions extends ActionHandler {
     isCompleteAvailable() {
         const status = this.view.model.attributes.status;
 
-        const view = /** @type {import('views/detail').default} */this.view;
-
         return !this.historyStatusList.includes(status);
     }
 }
