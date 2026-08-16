@@ -27,47 +27,5 @@
  ************************************************************************/
 
 import DetailRecordView from 'views/record/detail';
-import Ui from 'ui';
 
-export default class TaskDetailRecordView extends DetailRecordView {
-
-    setupActionItems() {
-        super.setupActionItems();
-
-        this.dropdownItemList.push({
-            label: 'Complete',
-            name: 'setCompleted',
-            onClick: () => this.actionSetCompleted(),
-            iconClass: 'fas fa-check',
-        });
-
-        const historyStatusList = [
-            ...this.getMetadata().get(`scopes.${this.entityType}.completedStatusList`, []),
-            ...this.getMetadata().get(`scopes.${this.entityType}.canceledStatusList`, []),
-        ]
-
-        const control = () => {
-            if (
-                historyStatusList.includes(this.model.attributes.status) ||
-                !this.getAcl().checkModel(this.model, 'edit')
-            ) {
-                this.hideActionItem('setCompleted');
-            } else {
-                this.showActionItem('setCompleted');
-            }
-        };
-
-        control();
-
-        this.model.onSync({
-            owner: this,
-            callback: () => control(),
-        });
-    }
-
-    async actionSetCompleted() {
-        await this.model.save({status: 'Completed'}, {patch: true});
-
-        Ui.success(this.translate('Saved'));
-    }
-}
+export default class TaskDetailRecordView extends DetailRecordView {}

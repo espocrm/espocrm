@@ -26,13 +26,24 @@
                     "name": "setCompletedMain",
                     "iconHtml": "<span class=\"fas fa-check fa-sm\"></span>",
                     "acl": "edit",
-                    "handler": "crm:handlers/task/menu",
+                    "handler": "modules/crm/handlers/task/menu",
                     "actionFunction": "complete",
                     "checkVisibilityFunction": "isCompleteAvailable"
                 }
             ]
         }
     },
+    "detailActionList": [
+        {
+            "name": "complete",
+            "labelTranslation": "Task.labels.Complete",
+            "acl": "edit",
+            "handler": "modules/crm/handlers/task/detail-actions",
+            "actionFunction": "complete",
+            "checkVisibilityFunction": "isCompleteAvailable",
+            "iconClass": "fas fa-check"
+        }
+    ],
     "modalDetailActionList": [
         {
             "name": "complete",
