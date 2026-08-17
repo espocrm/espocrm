@@ -111,6 +111,13 @@ class Service
         if ($params->getId()) {
             $account = $this->accountFactory->create($params->getId());
 
+            if (
+                !$this->user->isAdmin() &&
+                $account->getUser()->getId() !== $this->user->getId()
+            ) {
+                throw new Forbidden();
+            }
+
             $params = $params
                 ->withPassword($this->getPassword($params, $account))
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
