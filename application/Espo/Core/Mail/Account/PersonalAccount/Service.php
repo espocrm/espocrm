@@ -100,8 +100,7 @@ class Service
                 'exception' => $e,
             ]);
 
-            $message = $e instanceof ImapError ?
-                $e->getMessage() : '';
+            $message = $e instanceof ImapError ? $e->getMessage() : '';
 
             throw new ErrorSilent($message);
         }
@@ -124,8 +123,7 @@ class Service
                 'exception' => $e,
             ]);
 
-            $message = $e instanceof ImapError ?
-                $e->getMessage() : '';
+            $message = $e instanceof ImapError ? $e->getMessage() : '';
 
             throw new ErrorSilent($message);
         }
@@ -166,8 +164,6 @@ class Service
     }
 
     /**
-     * @param Params $params
-     * @return Params
      * @throws Error
      * @throws Forbidden
      */
