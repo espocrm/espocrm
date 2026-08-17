@@ -27,45 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Exceptions;
+namespace Espo\Core\Record\Exceptions;
 
-use Espo\Core\Exceptions\Error\Body;
-use Exception;
-use Throwable;
+use Espo\Core\Exceptions\ConflictSilent;
+use Espo\ORM\Collection;
+use Espo\Core\Utils\Json;
+use Espo\ORM\Entity;
+use UnexpectedValueException;
 
 /**
- * A conflict exception. Main purpose is for the 409 Conflict HTTP error.
- * If uncaught within an API request, the message will be printed to the X-Status-Reason header.
+ * @since 10.0.5
  */
-class Conflict extends Exception implements HasBody
+class DuplicateConflict extends ConflictSilent
 {
-    /** @var int */
-    protected $code = 409;
-    private ?string $body = null;
+    /**
+     * @var ?Collection<Entity>
+     */
+    private ?Collection $duplicates = null;
 
-    final public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
+    /**
+     * Important. Use `prepareEntityForOutput` on entities before passing the collection.
+     *
+     * @param Collection<Entity> $duplicates
+     */
+    public static function create(Collection $duplicates): self
     {
-        parent::__construct($message, $code, $previous);
+        $object = DuplicateConflict::createWithBody('duplicate', Json::encode($duplicates->getValueMapList()));
+
+        $object->duplicates = $duplicates;
+
+        return $object;
     }
 
     /**
-     * Create with a body (supposed to be sent to the frontend).
-     * Body object is supported since v8.1.
+     * @return Collection<Entity>
      */
-    public static function createWithBody(string $reason, string|Body $body): static
+    public function getDuplicates(): Collection
     {
-        if ($body instanceof Body) {
-            $body = $body->encode();
-        }
-
-        $exception = new static($reason);
-        $exception->body = $body;
-
-        return $exception;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
+        return $this->duplicates ?? throw new UnexpectedValueException("No collection.");
     }
 }
