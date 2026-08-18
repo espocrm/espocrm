@@ -911,6 +911,11 @@ class Htmlizer
         $forbiddenAttributeList = $this->getForbiddenAttributes($entity->getEntityType());
 
         foreach ($entity->getAttributeList() as $attribute) {
+            // Should be before unsetting. Additional data is already applied to the data.
+            if ($additionalData && array_key_exists($attribute, $additionalData)) {
+                continue;
+            }
+
             if (in_array($attribute, $forbiddenAttributeList)) {
                 unset($data[$attribute]);
 
@@ -918,10 +923,6 @@ class Htmlizer
             }
 
             if (in_array($attribute, $skipAttributeList)) {
-                continue;
-            }
-
-            if ($additionalData && array_key_exists($attribute, $additionalData)) {
                 continue;
             }
 

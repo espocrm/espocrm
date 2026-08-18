@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,37 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import ListRecordView from 'views/record/list';
-import Ui from 'ui';
+namespace Espo\Core\Record\Exceptions;
 
-export default class extends ListRecordView {
+use Espo\Core\Exceptions\ConflictSilent;
+use Espo\ORM\Collection;
+use Espo\Core\Utils\Json;
+use Espo\ORM\Entity;
+use UnexpectedValueException;
 
-    rowActionsView = 'crm:views/task/record/row-actions/default'
+/**
+ * @since 10.0.5
+ */
+class DuplicateConflict extends ConflictSilent
+{
+    /**
+     * @var ?Collection<Entity>
+     */
+    private ?Collection $duplicates = null;
 
-    actionSetCompleted(data) {
-        const id = data.id;
+    /**
+     * Important. Use `prepareEntityForOutput` on entities before passing the collection.
+     *
+     * @param Collection<Entity> $duplicates
+     */
+    public static function create(Collection $duplicates): self
+    {
+        $object = DuplicateConflict::createWithBody('duplicate', Json::encode($duplicates->getValueMapList()));
 
-        if (!id) {
-            return;
-        }
+        $object->duplicates = $duplicates;
 
-        const model = this.collection.get(id);
+        return $object;
+    }
 
-        if (!model) {
-            return;
-        }
-
-        /** @var string[]*/
-        const completedStatusList = this.getMetadata().get(`scopes.Task.completedStatusList`, []);
-
-        const status = completedStatusList[0] ?? null;
-
-        Ui.notify(this.translate('saving', 'messages'));
-
-        model.save({status: status}, {patch: true}).then(() => {
-            Ui.success(this.translate('Saved'));
-
-            this.collection.fetch();
-        });
+    /**
+     * @return Collection<Entity>
+     */
+    public function getDuplicates(): Collection
+    {
+        return $this->duplicates ?? throw new UnexpectedValueException("No collection.");
     }
 }
