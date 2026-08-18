@@ -94,7 +94,13 @@ class HtmlizerTest extends TestCase
 
         $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kyiv');
         $this->number = new NumberUtil('.', ',');
-        $this->htmlizer = new Htmlizer(
+
+        $this->htmlizer = $this->createHtmlizer();
+    }
+
+    private function createHtmlizer(?AclManager $aclManager = null)
+    {
+        return new Htmlizer(
             dateTime: $this->dateTime,
             number: $this->number,
             selectBuilderFactory: $this->createMock(SelectBuilderFactory::class),
@@ -106,7 +112,7 @@ class HtmlizerTest extends TestCase
             log: $this->createMock(Log::class),
             injectableFactory: $this->createMock(InjectableFactory::class),
             precisionProvider: $this->createMock(PrecisionProvider::class),
-            aclManager: $this->createMock(AclManager::class),
+            aclManager: $aclManager ?? $this->createMock(AclManager::class),
         );
     }
 
@@ -281,5 +287,44 @@ class HtmlizerTest extends TestCase
         $expected = "<ul><li>1</li><li>true</li></ul>";
 
         $this->assertEquals($expected, $html);
+    }
+
+    public function testAdditionalData(): void
+    {
+        $aclManager = $this->createMock(AclManager::class);
+
+        $aclManager->method('getScopeRestrictedAttributeList')
+            ->willReturn(['int', 'float']);
+
+        $htmlizer = $this->createHtmlizer(
+            aclManager: $aclManager,
+        );
+
+        $entity = new Entity(
+            entityType: 'Test',
+            defs: [
+                'attributes' => $this->entityAttributes,
+            ],
+            entityManager: $this->entityManager,
+        );
+
+        $entity->setMultiple([
+            'name' => 'test',
+            'date' => '2030-09-15',
+            'int' => 1,
+            'float' => 2.0,
+        ]);
+
+        $additionalData = [
+            'date' => 't1',
+            'p1' => 'v1',
+            'int' => 'v2',
+        ];
+
+        $template = "{{name}} {{date}} {{p1}} {{int}} {{float}}";
+
+        $html = $htmlizer->render($entity, $template, $additionalData);
+
+        $this->assertEquals('test t1 v1 v2 ', $html);
     }
 }
