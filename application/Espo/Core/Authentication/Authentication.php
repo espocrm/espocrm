@@ -231,7 +231,9 @@ class Authentication
             return $this->processFail(Result::fail($anotherUserFailReason), $data, $request);
         }
 
-        $this->applicationUser->setUser($loggedUser);
+        if ($result->isSuccess()) {
+            $this->applicationUser->setUser($loggedUser);
+        }
 
         if (
             !$result->bypassSecondStep() &&
