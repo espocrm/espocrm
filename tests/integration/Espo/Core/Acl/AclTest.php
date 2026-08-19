@@ -191,6 +191,15 @@ class AclTest extends BaseTestCase
             'Account' => [
                 Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_NO,
             ],
+            'Meeting' => [
+                Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_YES,
+                Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_NO,
+                Acl\Table::ACTION_STREAM => Acl\Table::LEVEL_NO,
+            ],
+            'Call' => [
+                Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_NO,
+                Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_ALL,
+            ],
         ]);
         $em->saveEntity($role1);
 
@@ -203,6 +212,15 @@ class AclTest extends BaseTestCase
                 Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_YES,
             ],
             'Account' => [
+                Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_NO,
+            ],
+            'Meeting' => [
+                Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_NO,
+                Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_ALL,
+                Acl\Table::ACTION_STREAM => Acl\Table::LEVEL_NO,
+            ],
+            'Call' => [
+                Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_YES,
                 Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_NO,
             ],
         ]);
@@ -223,5 +241,10 @@ class AclTest extends BaseTestCase
         $this->assertFalse($aclManager->checkScope($user, 'Account', Acl\Table::ACTION_CREATE));
         $this->assertFalse($aclManager->checkScope($user, 'Opportunity', Acl\Table::ACTION_EDIT));
         $this->assertFalse($aclManager->checkScope($user, 'Account', Acl\Table::ACTION_EDIT));
+        $this->assertTrue($aclManager->checkScope($user, 'Meeting', Acl\Table::ACTION_CREATE));
+        $this->assertTrue($aclManager->checkScope($user, 'Meeting', Acl\Table::ACTION_EDIT));
+        $this->assertFalse($aclManager->checkScope($user, 'Meeting', Acl\Table::ACTION_STREAM));
+        $this->assertTrue($aclManager->checkScope($user, 'Call', Acl\Table::ACTION_CREATE));
+        $this->assertTrue($aclManager->checkScope($user, 'Call', Acl\Table::ACTION_EDIT));
     }
 }
