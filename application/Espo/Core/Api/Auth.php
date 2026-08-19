@@ -137,7 +137,7 @@ class Auth
             return AuthResult::createNotResolved();
         }
 
-        if (!$result->isFail()) {
+        if ($result->isSuccess()) {
             return AuthResult::createResolved();
         }
 
