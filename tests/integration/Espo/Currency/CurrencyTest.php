@@ -201,7 +201,9 @@ class CurrencyTest extends BaseTestCase
             'USD' => 0.5,
         ], 'EUR'));
 
-        $this->getDataManager()->rebuild([]);
+        // Full rebuild caused a problem with the test transaction in PG.
+        $this->getDataManager()->rebuildMetadata();
+
         $this->reCreateApplication(reuse: true);
 
         $em = $this->getEntityManager();
@@ -243,7 +245,9 @@ class CurrencyTest extends BaseTestCase
             'USD' => 0.5,
         ], 'EUR'));
 
-        $this->getDataManager()->rebuild([]);
+        // Full rebuild caused a problem with the test transaction in PG.
+        $this->getDataManager()->rebuildMetadata();
+
         $this->reCreateApplication(reuse: true);
 
         $em = $this->getEntityManager();
