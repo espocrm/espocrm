@@ -1,0 +1,22 @@
+{
+    "fields": {
+        "read": "Read",
+        "message": "Message",
+        "related": "Related",
+        "relatedParent": "Related Parent"
+    },
+    "options": {
+        "type": {
+            "Assign": "Assignment",
+            "Collaborating": "Collaboration",
+            "EntityRemoved": "Record Removed",
+            "Note": "Stream Update",
+            "MentionInPost": "Mention in Post",
+            "UserReaction": "Reaction",
+            "EmailReceived": "Email Received",
+            "EmailInbox": "Email in Inbox",
+            "Message": "Message",
+            "System": "System"
+        }
+    }
+}
