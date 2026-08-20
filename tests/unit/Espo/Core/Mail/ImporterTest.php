@@ -228,6 +228,9 @@ class ImporterTest extends TestCase
         $this->assertStringContainsString('<br>Admin Test', $email->get('body'));
         $this->assertStringContainsString('Admin Test', $email->get('bodyPlain'));
 
-        $this->assertEquals('<e558c4dfc2a0f0d60f5ebff474c97ffc/1466410740/1950@espo>', $email->get('messageId'));
+        $messageId = '<e558c4dfc2a0f0d60f5ebff474c97ffc/1466410740/1950@espo>';
+
+        $this->assertEquals($messageId, $email->get('messageId'));
+        $this->assertEquals($messageId . '-r@test.com', $email->get('messageIdInternal'));
     }
 }

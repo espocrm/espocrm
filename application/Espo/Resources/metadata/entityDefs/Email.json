@@ -296,7 +296,7 @@
         },
         "messageId": {
             "type": "varchar",
-            "maxLength": 255,
+            "maxLength": 500,
             "readOnly": true,
             "index": true,
             "textFilterDisabled": true,
@@ -304,7 +304,7 @@
         },
         "messageIdInternal": {
             "type": "varchar",
-            "maxLength": 300,
+            "maxLength": 500,
             "readOnly": true,
             "textFilterDisabled": true,
             "customizationDisabled": true,

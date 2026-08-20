@@ -56,6 +56,7 @@ use Espo\Entities\EmailFilter;
 use Espo\Entities\GroupEmailFolder;
 use Espo\Entities\Team;
 use Espo\Entities\User;
+use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
@@ -483,7 +484,15 @@ class DefaultImporter implements Importer
         if ($parser->hasHeader($message, 'delivered-To')) {
             $deliveredTo = $parser->getHeader($message, 'delivered-To') ?? '';
 
-            $email->set('messageIdInternal', "$messageId-$deliveredTo");
+            $messageIdInternal = "$messageId-$deliveredTo";
+
+            $messageIdInternalMaxLength = $email->getAttributeParam('messageIdInternal', AttributeParam::LEN);
+
+            if ($messageIdInternalMaxLength) {
+                $messageIdInternal = mb_substr($messageIdInternal, 0, $messageIdInternalMaxLength);
+            }
+
+            $email->set('messageIdInternal', $messageIdInternal);
         }
 
         if (stripos($messageId, '@espo-system') !== false) {

@@ -499,8 +499,7 @@ class EditModalView extends ModalView {
                 router.dispatch(this.scope, 'create', options);
                 router.navigate(url, {trigger: false});
             }, 10);
-        }
-        else {
+        } else {
             url = this.options.fullFormUrl || `#${this.scope}/edit/${this.id}`;
 
             attributes = this.getRecordView().fetch();
@@ -526,8 +525,15 @@ class EditModalView extends ModalView {
             }, 10);
         }
 
+        const isChanged = this.getRecordView().hasChanged();
+
         this.trigger('leave');
         this.dialog.close();
+
+        if (isChanged) {
+            // Establish for the full-form view.
+            this.getRouter().confirmLeaveOut = true;
+        }
     }
 
     async beforeCollapse() {

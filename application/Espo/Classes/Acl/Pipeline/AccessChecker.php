@@ -91,7 +91,7 @@ class AccessChecker implements AccessEntityCREDChecker
             return true;
         }
 
-        if (!$data->isFalse()) {
+        if (!$data->isTrue()) {
             return false;
         }
 

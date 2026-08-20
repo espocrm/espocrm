@@ -566,6 +566,7 @@ class Import
             }
 
             if ($entity->hasId()) {
+                // A trade-off. Users with access to the Import scope are considered privileged.
                 $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
                     ->deleteFromDb($entity->getId(), true);

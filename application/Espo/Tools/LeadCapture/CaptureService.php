@@ -129,6 +129,8 @@ class CaptureService
     {
         $leadCapture = $this->getLeadCapture($apiKey);
 
+        $this->filterData($leadCapture, $data);
+
         if (!$leadCapture->optInConfirmation()) {
             $this->proceed($leadCapture, $data);
 
@@ -799,5 +801,24 @@ class CaptureService
 
         $lead->set(Field::PIPELINE_STAGE . 'Id', $firstStage->getId());
         $lead->set(Field::PIPELINE_STAGE . 'Name', $firstStage->getName());
+    }
+
+    private function filterData(LeadCapture $leadCapture, stdClass $data): void
+    {
+        $fieldList = $leadCapture->getFieldList();
+
+        $attributeList = [];
+
+        foreach ($fieldList as $field) {
+            $fieldAttributeList = $this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field);
+
+            $attributeList = array_merge($attributeList, $fieldAttributeList);
+        }
+
+        foreach (array_keys(get_object_vars($data)) as $k) {
+            if (!in_array($k, $attributeList)) {
+                unset($data->$k);
+            }
+        }
     }
 }
