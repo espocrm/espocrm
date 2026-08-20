@@ -97,6 +97,7 @@ class KanbanService
      * @throws Forbidden
      * @throws Error
      * @throws NotFound
+     * @throws BadRequest
      */
     public function order(string $entityType, string $group, array $ids): void
     {
