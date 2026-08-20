@@ -41,6 +41,12 @@ class JsonObjectFieldView extends BaseFieldView {
         data.valueIsSet = this.model.has(this.name);
         data.isNotEmpty = !!this.model.get(this.name);
 
+        data.displayValue = null;
+
+        if (data.value != null) {
+            data.displayValue = '```\n' + data.value + '\n```';
+        }
+
         return data;
     }
 
@@ -51,8 +57,7 @@ class JsonObjectFieldView extends BaseFieldView {
             return null;
         }
 
-        return JSON.stringify(value, null, 2)
-            .replace(/(\r\n|\n|\r)/gm, '<br>').replace(/\s/g, '&nbsp;');
+        return JSON.stringify(value, null, 2);
     }
 }
 
