@@ -40,6 +40,7 @@
         "odp": ["application/vnd.oasis.opendocument.presentation"],
         "ods": ["application/vnd.oasis.opendocument.spreadsheet"],
         "odt": ["application/vnd.oasis.opendocument.text"],
+        "ogg": ["audio/ogg", "video/ogg"],
         "oga": ["audio/ogg"],
         "ogv": ["video/ogg"],
         "ogx": ["application/ogg"],
