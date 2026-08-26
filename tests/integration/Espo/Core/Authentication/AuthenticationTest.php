@@ -175,6 +175,38 @@ class AuthenticationTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    public function testLoginBasicFailInactiveUser(): void
+    {
+        $username = 'test';
+        $password = 'hello';
+
+        $this->createUser([
+            User::FIELD_USER_NAME => $username,
+            User::FIELD_PASSWORD => $password,
+            User::FIELD_IS_ACTIVE => false,
+        ]);
+
+        $applicationUser = $this->createMock(ApplicationUser::class);
+
+        $applicationUser
+            ->expects(self::never())
+            ->method('setUser');
+
+        $result = $this->createAuthentication($applicationUser)->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertFalse($result->isSuccess());
+        $this->assertTrue($result->isFail());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testLoginAuthTokenSuccess(): void
     {
         $username = 'test';

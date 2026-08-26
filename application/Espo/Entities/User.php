@@ -61,6 +61,9 @@ class User extends Person
      */
     public const string ATTR_AUTH_LOG_RECORD_ID = 'authLogRecordId';
 
+    /** @since 10.1.0 */
+    public const string FIELD_IS_ACTIVE= 'isActive';
+
     /** @since 10.0.0 */
     public const string FIELD_USER_NAME = 'userName';
     /** @since 10.0.0 */
