@@ -185,29 +185,7 @@ class AuthenticationTest extends BaseTestCase
             User::FIELD_PASSWORD => $password,
         ]);
 
-        $result = $this->createAuthentication()->login(
-            data: AuthenticationData::create()
-                ->withUsername($username)
-                ->withPassword($password),
-            request: $this->createSimpleGetRequest(
-                headers: [
-                    HeaderKey::AUTHORIZATION => 'any',
-                ],
-            ),
-            response: $this->createMock(Response::class),
-        );
-
-        $this->assertTrue($result->isSuccess());
-
-        $token = $result->getUser()->get(User::FIELD_TOKEN);
-
-        $this->assertNotNull($token);
-
-        //
-
-        $secret = $this->getTokenSecret($token);
-
-        $this->assertNotNull($secret);
+        [$token, $secret] = $this->processLogIn($username, $password);
 
         $secondResult = $this->createAuthentication()->login(
             data: AuthenticationData::create()
@@ -237,25 +215,7 @@ class AuthenticationTest extends BaseTestCase
             User::FIELD_PASSWORD => $password,
         ]);
 
-        $result = $this->createAuthentication()->login(
-            data: AuthenticationData::create()
-                ->withUsername($username)
-                ->withPassword($password),
-            request: $this->createSimpleGetRequest(
-                headers: [
-                    HeaderKey::AUTHORIZATION => 'any',
-                ],
-            ),
-            response: $this->createMock(Response::class),
-        );
-
-        $this->assertTrue($result->isSuccess());
-
-        $token = $result->getUser()->get(User::FIELD_TOKEN);
-
-        $this->assertNotNull($token);
-
-        //
+        [$token] = $this->processLogIn($username, $password);
 
         $secondResult = $this->createAuthentication()->login(
             data: AuthenticationData::create()
@@ -270,6 +230,38 @@ class AuthenticationTest extends BaseTestCase
         );
 
         $this->assertFalse($secondResult->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testLoginAuthTokenOnlySuccess(): void
+    {
+        $username = 'test';
+        $password = 'hello';
+
+        $this->createUser([
+            User::FIELD_USER_NAME => $username,
+            User::FIELD_PASSWORD => $password,
+        ]);
+
+        [$token, $secret] = $this->processLogIn($username, $password);
+
+        $this->assertNotNull($secret);
+
+        $secondResult = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withByTokenOnly(true)
+                ->withPassword($token),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret,
+                ]
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertTrue($secondResult->isSuccess());
     }
 
     private function createAuthentication(?ApplicationUser $applicationUser = null): Authentication
@@ -291,6 +283,7 @@ class AuthenticationTest extends BaseTestCase
         array $headers = [],
         array $cookieParams = [],
     ): RequestWrapper {
+
         return $this->createRequest(
             method: Method::GET,
             headers: [
@@ -309,5 +302,36 @@ class AuthenticationTest extends BaseTestCase
             ->findOne();
 
         return $authToken?->getSecret();
+    }
+
+    /**
+     * @return array{string, string}
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function processLogIn(string $username, string $password): array
+    {
+        $result = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    HeaderKey::AUTHORIZATION => 'any',
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertTrue($result->isSuccess());
+
+        $token = $result->getUser()->get(User::FIELD_TOKEN);
+
+        $this->assertNotNull($token);
+
+        $secret = $this->getTokenSecret($token);
+
+        $this->assertNotNull($secret);
+
+        return [$token, $secret];
     }
 }
