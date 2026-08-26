@@ -35,6 +35,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
+use Espo\Core\Authentication\AuthToken\Manager;
 use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Entities\AuthToken;
@@ -50,13 +51,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginBasicSuccess(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [$username, $password] = $this->prepareTestUser();
 
         $applicationUser = $this->createMock(ApplicationUser::class);
 
@@ -86,13 +81,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginBasicFailPassword(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [$username] = $this->prepareTestUser();
 
         $applicationUser = $this->createMock(ApplicationUser::class);
 
@@ -117,13 +106,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginBasicFailUsername(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [, $password] = $this->prepareTestUser();
 
         $applicationUser = $this->createMock(ApplicationUser::class);
 
@@ -148,13 +131,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginBasicFailNoPassword(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [$username,] = $this->prepareTestUser();
 
         $applicationUser = $this->createMock(ApplicationUser::class);
 
@@ -177,14 +154,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginBasicFailInactiveUser(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-            User::FIELD_IS_ACTIVE => false,
-        ]);
+        [$username, $password] = $this->prepareTestUser(isActive: false);
 
         $applicationUser = $this->createMock(ApplicationUser::class);
 
@@ -209,13 +179,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginAuthTokenSuccess(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [$username, $password] = $this->prepareTestUser();
 
         [$token, $secret] = $this->processLogIn($username, $password);
 
@@ -226,7 +190,7 @@ class AuthenticationTest extends BaseTestCase
             request: $this->createSimpleGetRequest(
                 cookieParams: [
                     self::COOKIE_AUTH_TOKEN_SECRET => $secret,
-                ]
+                ],
             ),
             response: $this->createMock(Response::class),
         );
@@ -239,13 +203,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginAuthTokenFailWrongSecret(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [$username, $password] = $this->prepareTestUser();
 
         [$token] = $this->processLogIn($username, $password);
 
@@ -256,7 +214,7 @@ class AuthenticationTest extends BaseTestCase
             request: $this->createSimpleGetRequest(
                 cookieParams: [
                     self::COOKIE_AUTH_TOKEN_SECRET => 'wrong',
-                ]
+                ],
             ),
             response: $this->createMock(Response::class),
         );
@@ -267,15 +225,153 @@ class AuthenticationTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    public function testLoginAuthTokenFailWrongToken(): void
+    {
+        [$username, $password] = $this->prepareTestUser();
+
+        [, $secret] = $this->processLogIn($username, $password);
+
+        $secondResult = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword('wrong'),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret,
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertFalse($secondResult->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testLoginAuthTokenFailInactiveToken(): void
+    {
+        [$username, $password] = $this->prepareTestUser();
+
+        [$token, $secret] = $this->processLogIn($username, $password);
+
+        $authToken = $this->getAuthTokenManager()->get($token);
+
+        $this->assertNotNull($authToken);
+
+        $this->getAuthTokenManager()->inactivate($authToken);
+
+        $secondResult = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($token),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret,
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertFalse($secondResult->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testLoginAuthTokenSuccessConcurrent(): void
+    {
+        [$username, $password] = $this->prepareTestUser();
+
+        [$token1, $secret1] = $this->processLogIn($username, $password);
+        [$token2, $secret2] = $this->processLogIn($username, $password);
+
+        //
+
+        $result1 = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($token1),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret1,
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertTrue($result1->isSuccess());
+
+        //
+
+        $result2 = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($token2),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret2,
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertTrue($result2->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testLoginAuthTokenFailConcurrent(): void
+    {
+        $this->setConfigParams([
+            'authTokenPreventConcurrent' => true,
+        ]);
+
+        [$username, $password] = $this->prepareTestUser();
+
+        [$token1, $secret1] = $this->processLogIn($username, $password);
+        [$token2, $secret2] = $this->processLogIn($username, $password);
+
+        //
+
+        $result2 = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($token2),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret2,
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertTrue($result2->isSuccess());
+
+        //
+
+        $result1 = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($token1),
+            request: $this->createSimpleGetRequest(
+                cookieParams: [
+                    self::COOKIE_AUTH_TOKEN_SECRET => $secret1,
+                ],
+            ),
+            response: $this->createMock(Response::class),
+        );
+
+        $this->assertFalse($result1->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testLoginAuthTokenOnlySuccess(): void
     {
-        $username = 'test';
-        $password = 'hello';
-
-        $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-        ]);
+        [$username, $password] = $this->prepareTestUser();
 
         [$token, $secret] = $this->processLogIn($username, $password);
 
@@ -365,5 +461,38 @@ class AuthenticationTest extends BaseTestCase
         $this->assertNotNull($secret);
 
         return [$token, $secret];
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function prepareUsernamePassword(): array
+    {
+        $username = 'test';
+        $password = 'hello';
+
+        return [$username, $password];
+    }
+
+
+    private function getAuthTokenManager(): Manager
+    {
+        return $this->getContainer()->getByClass(Manager::class);
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function prepareTestUser(bool $isActive = true): array
+    {
+        [$username, $password] = $this->prepareUsernamePassword();
+
+        $this->createUser([
+            User::FIELD_USER_NAME => $username,
+            User::FIELD_PASSWORD => $password,
+            User::FIELD_IS_ACTIVE => $isActive,
+        ]);
+
+        return [$username, $password];
     }
 }
