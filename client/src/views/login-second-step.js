@@ -154,7 +154,7 @@ class LoginSecondStepView extends View {
                 this.triggerLogin(userName, data);
             })
             .catch(xhr => {
-                this.undisableForm();
+                this.enableForm();
 
 
                 if (xhr.status === 401) {
@@ -226,7 +226,8 @@ class LoginSecondStepView extends View {
     }
 
     /**
-     * @private */
+     * @private
+     */
     onFail(message) {
         const cellElement = this.element.querySelector('#login .form-group');
 
@@ -271,7 +272,7 @@ class LoginSecondStepView extends View {
     /**
      * @private
      */
-    undisableForm() {
+    enableForm() {
         this.submitElement.classList.remove('disabled');
         this.submitElement.removeAttribute('disabled');
     }

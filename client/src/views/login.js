@@ -26,18 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module views/login */
-
 import View from 'view';
 import Base64 from 'js-base64';
-import $ from 'jquery';
+import Utils from 'utils';
+import Ui from 'ui';
+import Ajax from 'ajax';
 
 class LoginView extends View {
 
-    /** @inheritDoc */
     template = 'login'
 
-    /** @inheritDoc */
     views = {
         footer: {
             fullSelector: 'body > footer',
@@ -51,7 +49,9 @@ class LoginView extends View {
      */
     anotherUser = null
 
-    /** @private */
+    /**
+     * @private
+     */
     isPopoverDestroyed = false
 
     /**
@@ -72,46 +72,36 @@ class LoginView extends View {
      */
     method = null
 
-    /** @inheritDoc */
-    events = {
-        /** @this LoginView */
-        'submit #login-form': function (e) {
-            e.preventDefault();
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    usernameElement
 
-            this.login();
-        },
-        /** @this LoginView */
-        'click #sign-in': function () {
-            this.signIn();
-        },
-        /** @this LoginView */
-        'click a[data-action="passwordChangeRequest"]': function () {
-            this.showPasswordChangeRequest();
-        },
-        /** @this LoginView */
-        'click a[data-action="showFallback"]': function () {
-            this.showFallback();
-        },
-        /** @this LoginView */
-        'keydown': function (e) {
-            if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
-                e.preventDefault();
+    /**
+     * @private
+     * @type {HTMLInputElement}
+     */
+    passwordElement
 
-                if (
-                    this.handler &&
-                    (!this.fallback || !this.$username.val())
-                ) {
-                    this.signIn();
+    /**
+     * @private
+     * @type {HTMLButtonElement}
+     */
+    submitElement
 
-                    return;
-                }
+    /**
+     * @private
+     * @type {HTMLButtonElement|null}
+     */
+    signInElement
 
-                this.login();
-            }
-        },
-    }
+    /**
+     * @private
+     * @type {HTMLButtonElement|null}
+     */
+    showFallbackElement
 
-    /** @inheritDoc */
     data() {
         return {
             logoSrc: this.getLogoSrc(),
@@ -125,8 +115,30 @@ class LoginView extends View {
         };
     }
 
-    /** @inheritDoc */
     setup() {
+        this.addHandler('submit', '#login-form', e => {
+            e.preventDefault();
+
+            this.login();
+        });
+
+        this.addHandler('keydown', '', e => {
+            if (Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                e.preventDefault();
+
+                if (this.handler && (!this.fallback || !this.usernameElement.value)) {
+                    this.signIn();
+
+                    return;
+                }
+
+                this.login();
+            }
+        });
+
+        this.addHandler('click', '#sign-in', () => this.signIn());
+        this.addActionHandler('passwordChangeRequest', () => this.showPasswordChangeRequest());
+        this.addActionHandler('showFallback', () => this.showFallback());
         this.addActionHandler('toggleShowPassword', () => this.toggleShowPassword());
 
         this.anotherUser = this.options.anotherUser || null;
@@ -138,8 +150,7 @@ class LoginView extends View {
 
         if (loginData.handler) {
             this.wait(
-                Espo.loader
-                    .requirePromise(loginData.handler)
+                Espo.loader.requirePromise(loginData.handler)
                     .then(Handler => {
                         this.handler = new Handler(this, loginData.data || {});
                     })
@@ -176,51 +187,53 @@ class LoginView extends View {
         return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId;
     }
 
-    /** @inheritDoc */
     afterRender() {
-        this.$submit = this.$el.find('#btn-login');
-        this.$signIn = this.$el.find('#sign-in');
-        this.$username = this.$el.find('#field-userName');
-        this.$password = this.$el.find('#field-password');
+        this.submitElement = this.element.querySelector('#btn-login');
+        this.signInElement = this.element.querySelector('#sign-in');
+        this.usernameElement = this.element.querySelector('#field-userName');
+        this.passwordElement = this.element.querySelector('#field-password');
+        this.showFallbackElement = this.element.querySelector('[data-action="showFallback"]');
 
         if (this.options.prefilledUsername) {
-            this.$username.val(this.options.prefilledUsername);
+            this.usernameElement.value = this.options.prefilledUsername;
         }
 
         if (this.handler) {
-            this.$username.closest('.cell').addClass('hidden');
-            this.$password.closest('.cell').addClass('hidden');
-            this.$submit.closest('.cell').addClass('hidden');
+            this.usernameElement.closest('.cell').classList.add('hidden');
+            this.passwordElement.closest('.cell').classList.add('hidden');
+            this.submitElement.closest('.cell').classList.add('hidden');
         }
     }
 
-    /** @private */
-    signIn() {
+    /**
+     * @private
+     */
+    async signIn() {
         this.disableForm();
 
-        this.handler
-            .process()
-            .then(headers => {
-                this.proceed(headers, this.options.prefilledUsername);
-            })
-            .catch(() => {
-                this.undisableForm();
-            })
+        let headers;
+
+        try {
+            headers = await this.handler.process();
+        } catch (e) {
+            this.enableForm();
+
+            return;
+        }
+
+        await this.proceed(headers, this.options.prefilledUsername);
     }
 
-    /** @private */
+    /**
+     * @private
+     */
     login() {
         let authString;
-        let userName = this.$username.val();
-        const password = this.$password.val();
 
-        const trimmedUserName = userName.trim();
+        const userName = this.usernameElement.value.trim();
+        const password = this.passwordElement.value;
 
-        if (trimmedUserName !== userName) {
-            this.$username.val(trimmedUserName);
-
-            userName = trimmedUserName;
-        }
+        this.usernameElement.value = userName;
 
         if (userName === '') {
             this.processEmptyUsername();
@@ -231,12 +244,11 @@ class LoginView extends View {
         this.disableForm();
 
         try {
-            authString = Base64.encode(userName  + ':' + password);
-        }
-        catch (e) {
-            Espo.Ui.error(this.translate('Error') + ': ' + e.message, true);
+            authString = Base64.encode(userName + ':' + password);
+        } catch (e) {
+            Ui.error(this.translate('Error') + ': ' + e.message, true);
 
-            this.undisableForm();
+            this.enableForm();
 
             throw e;
         }
@@ -255,7 +267,7 @@ class LoginView extends View {
      * @param {string} [userName]
      * @param {string} [password]
      */
-    proceed(headers, userName, password) {
+    async proceed(headers, userName, password) {
         headers = Espo.Utils.clone(headers);
 
         const initialHeaders = Espo.Utils.clone(headers);
@@ -267,41 +279,44 @@ class LoginView extends View {
             headers['X-Another-User'] = this.anotherUser;
         }
 
-        this.notifyLoading();
+        Ui.notifyWait();
 
-        Espo.Ajax
-            .getRequest('App/user', null, {
+        let data;
+
+        try {
+            data = await Ajax.getRequest('App/user', null, {
                 login: true,
                 headers: headers,
-            })
-            .then(data => {
-                Espo.Ui.notify(false);
-
-                this.triggerLogin(userName, data);
-            })
-            .catch(xhr => {
-                this.undisableForm();
-
-                if (xhr.status === 401) {
-                    const data = xhr.responseJSON || {};
-                    const statusReason = xhr.getResponseHeader('X-Status-Reason');
-
-                    if (statusReason === 'second-step-required') {
-                        xhr.errorIsHandled = true;
-                        this.onSecondStepRequired(initialHeaders, userName, password, data);
-
-                        return;
-                    }
-
-                    if (statusReason === 'error') {
-                        this.onError();
-
-                        return;
-                    }
-
-                    this.onWrongCredentials();
-                }
             });
+        } catch (xhr) {
+            this.enableForm();
+
+            if (xhr.status === 401) {
+                const data = xhr.responseJSON || {};
+                const statusReason = xhr.getResponseHeader('X-Status-Reason');
+
+                if (statusReason === 'second-step-required') {
+                    xhr.errorIsHandled = true;
+                    this.onSecondStepRequired(initialHeaders, userName, password, data);
+
+                    return;
+                }
+
+                if (statusReason === 'error') {
+                    this.onError();
+
+                    return;
+                }
+
+                this.onWrongCredentials();
+            }
+
+            return;
+        }
+
+        Ui.notify();
+
+        this.triggerLogin(userName, data);
     }
 
     /**
@@ -323,50 +338,62 @@ class LoginView extends View {
         this.trigger('login', userName, data);
     }
 
-    /** @private */
+    /**
+     * @private
+     */
     processEmptyUsername() {
         this.isPopoverDestroyed = false;
 
-        const $el = this.$username;
-
         const message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
-        $el
-            .popover({
-                placement: 'bottom',
-                container: 'body',
-                content: message,
-                trigger: 'manual',
-            })
-            .popover('show');
+        const popover = Ui.popover(this.usernameElement, {
+            placement: 'bottom',
+            container: 'body',
+            content: message,
+            trigger: 'manual',
+            noToggleInit: true,
+        }, this);
 
-        const $cell = $el.closest('.form-group');
+        popover.show();
 
-        $cell.addClass('has-error');
+        const cellElement = this.usernameElement.closest('.form-group');
 
-        $el.one('mousedown click', () => {
-            $cell.removeClass('has-error');
+        cellElement.classList.add('has-error');
+
+        cellElement.addEventListener('mousedown', () => {
+            cellElement.classList.remove('has-error');
 
             if (this.isPopoverDestroyed) {
                 return;
             }
 
-            $el.popover('destroy');
+            popover.destroy();
 
             this.isPopoverDestroyed = true;
-        });
+        }, {once: true});
     }
 
-    /** @private */
+    /**
+     * @private
+     */
     disableForm() {
-        this.$submit.addClass('disabled').attr('disabled', 'disabled');
-        this.$signIn.addClass('disabled').attr('disabled', 'disabled');
+        this.submitElement.classList.add('disabled');
+        this.submitElement.setAttribute('disabled', 'disabled');
+
+
+        this.signInElement?.classList.add('disabled');
+        this.signInElement?.setAttribute('disabled', 'disabled');
     }
 
-    /** @private */
-    undisableForm() {
-        this.$submit.removeClass('disabled').removeAttr('disabled');
-        this.$signIn.removeClass('disabled').removeAttr('disabled');
+    /**
+     * @private
+     */
+    enableForm() {
+        this.submitElement.classList.remove('disabled');
+        this.submitElement.removeAttribute('disabled');
+
+        this.signInElement?.classList.remove('disabled');
+        this.signInElement?.removeAttribute('disabled');
     }
 
     /**
@@ -377,17 +404,21 @@ class LoginView extends View {
      * @param {Object.<string, *>} data
      */
     onSecondStepRequired(headers, userName, password, data) {
-        const view = data.view || 'views/login-second-step';
+        const view = data.view ?? 'views/login-second-step';
 
         this.trigger('redirect', view, headers, userName, password, data);
     }
 
-    /** @private */
+    /**
+     * @private
+     */
     onError() {
         this.onFail('loginError');
     }
 
-    /** @private */
+    /**
+     * @private
+     */
     onWrongCredentials() {
         const msg = this.handler ?
             'failedToLogIn' :
@@ -396,46 +427,46 @@ class LoginView extends View {
         this.onFail(msg);
     }
 
-    /** @private */
-    onFail(msg) {
-        const $cell = $('#login .form-group');
+    /**
+     * @private
+     */
+    onFail(message) {
+        const cellElement = this.element.querySelector('#login .form-group');
 
-        $cell.addClass('has-error');
+        cellElement.classList.add('has-error');
 
-        this.$el.one('mousedown click', () => {
-            $cell.removeClass('has-error');
-        });
+        cellElement.addEventListener('mousedown', () => {
+            cellElement.classList.remove('has-error');
+        }, {once: true});
 
-        Espo.Ui.error(this.translate(msg, 'messages', 'User'));
+        Ui.error(this.translate(message, 'messages', 'User'));
     }
 
-    /** @private */
+    /**
+     * @private
+     */
     showFallback() {
-        this.$el.find('[data-action="showFallback"]').addClass('hidden');
+        this.showFallbackElement.classList.add('hidden');
+        this.element.querySelector('.panel-body').classList.add('fallback-shown');
 
-        this.$el.find('.panel-body').addClass('fallback-shown');
-
-        this.$username.closest('.cell').removeClass('hidden');
-        this.$password.closest('.cell').removeClass('hidden');
-        this.$submit.closest('.cell').removeClass('hidden');
+        this.usernameElement.closest('.cell').classList.remove('hidden');
+        this.passwordElement.closest('.cell').classList.remove('hidden');
+        this.submitElement.closest('.cell').classList.remove('hidden');
     }
 
-    /** @private */
-    notifyLoading() {
-        Espo.Ui.notifyWait();
-    }
+    /**
+     * @private
+     */
+    async showPasswordChangeRequest() {
+        Ui.notifyWait();
 
-    /** @private */
-    showPasswordChangeRequest() {
-        this.notifyLoading();
-
-        this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
+        const view = await this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
             url: window.location.href,
-        }, view => {
-            view.render();
-
-            Espo.Ui.notify(false);
         });
+
+        await view.render();
+
+        Ui.notify();
     }
 
     /**
@@ -453,16 +484,10 @@ class LoginView extends View {
         if (input.type === 'password') {
             input.type = 'text';
 
-            //button.classList.remove('text-soft');
-            //button.classList.add('text-primary');
-
             icon.classList.remove('fa-eye');
             icon.classList.add('fa-eye-slash');
         } else {
             input.type = 'password';
-
-            //button.classList.remove('text-primary');
-            //button.classList.add('text-soft');
 
             icon.classList.remove('fa-eye-slash');
             icon.classList.add('fa-eye');

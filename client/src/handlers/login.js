@@ -36,14 +36,14 @@
 class LoginHandler {
 
     /**
-     * @param {module:views/login} loginView A login view.
+     * @param {import('views/login').default} loginView A login view.
      * @param {Object.<string, *>} data Additional metadata.
      */
     constructor(loginView, data) {
         /**
          * A login view.
          * @protected
-         * @type {module:views/login}
+         * @type {import('views/login').default}
          */
         this.loginView = loginView;
 
