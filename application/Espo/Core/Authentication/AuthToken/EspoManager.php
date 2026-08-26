@@ -30,11 +30,12 @@
 namespace Espo\Core\Authentication\AuthToken;
 
 use Espo\Core\Name\Field;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\Entities\AuthToken as AuthTokenEntity;
-
+use Random\RandomException;
 use RuntimeException;
 
 /**
@@ -44,7 +45,7 @@ use RuntimeException;
  * multiple Espo replicas (for scalability purposes).
  * Defined at metadata > app > containerServices > authTokenManager.
  *
- * @noinspection PhpUnused
+ * @implements Manager<AuthTokenEntity>
  */
 class EspoManager implements Manager
 {
@@ -101,13 +102,11 @@ class EspoManager implements Manager
         return $authToken;
     }
 
+    /**
+     * @param AuthTokenEntity $authToken
+     */
     public function inactivate(AuthToken $authToken): void
     {
-        /** @noinspection PhpConditionAlreadyCheckedInspection */
-        if (!$authToken instanceof AuthTokenEntity) {
-            throw new RuntimeException();
-        }
-
         $this->validateNotChanged($authToken);
 
         $authToken->setIsActive(false);
@@ -117,11 +116,6 @@ class EspoManager implements Manager
 
     public function renew(AuthToken $authToken): void
     {
-        /** @noinspection PhpConditionAlreadyCheckedInspection */
-        if (!$authToken instanceof AuthTokenEntity) {
-            throw new RuntimeException();
-        }
-
         $this->validateNotChanged($authToken);
 
         if ($authToken->isNew()) {
@@ -131,6 +125,13 @@ class EspoManager implements Manager
         $authToken->setLastAccessNow();
 
         $this->repository->save($authToken);
+    }
+
+    public function inactiveOther(AuthToken $authToken): void
+    {
+        foreach ($this->findConcurrent($authToken) as $other) {
+            $this->inactivate($other);
+        }
     }
 
     private function validate(AuthToken $authToken): void
@@ -161,6 +162,25 @@ class EspoManager implements Manager
     {
         $length = self::TOKEN_RANDOM_LENGTH;
 
-        return bin2hex(random_bytes($length));
+        try {
+            return bin2hex(random_bytes($length));
+        } catch (RandomException $e) {
+            throw new RuntimeException(previous: $e);
+        }
+    }
+
+    /**
+     * @return EntityCollection<AuthTokenEntity>
+     */
+    private function findConcurrent(AuthTokenEntity $authToken): EntityCollection
+    {
+        return $this->repository
+            ->select([Attribute::ID])
+            ->where([
+                AuthTokenEntity::ATTR_USER_ID => $authToken->getUserId(),
+                AuthTokenEntity::FIELD_IS_ACTIVE => true,
+                Attribute::ID . '!=' => $authToken->getId(),
+            ])
+            ->find();
     }
 }

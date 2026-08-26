@@ -211,7 +211,6 @@ class Auth
             'status' => $result->getStatus(),
             'message' => $result->getMessage(),
             'view' => $result->getView(),
-            'token' => $result->getToken(),
             'data' => $result->getData(),
         ];
 

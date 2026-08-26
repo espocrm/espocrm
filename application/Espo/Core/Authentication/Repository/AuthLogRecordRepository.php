@@ -27,32 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\User;
+namespace Espo\Core\Authentication\Repository;
 
 use Espo\Core\ORM\EntityManagerProxy;
-use Espo\Entities\UserData;
-use Espo\Repositories\UserData as UserDataRepository;
-use RuntimeException;
+use Espo\Entities\AuthLogRecord;
 
-class UserDataProvider
+class AuthLogRecordRepository
 {
     public function __construct(
         private EntityManagerProxy $entityManager,
     ) {}
 
-    public function get(string $userId): ?UserData
+    /**
+     * @param ?string[] $select
+     */
+    public function findOneByAuthTokenId(string $authTokenId, ?array $select = null): ?AuthLogRecord
     {
-        return $this->getRepository()->getByUserId($userId);
-    }
+        $builder = $this->entityManager
+            ->getRDBRepositoryByClass(AuthLogRecord::class);
 
-    private function getRepository(): UserDataRepository
-    {
-        $repository = $this->entityManager->getRepository(UserData::ENTITY_TYPE);
-
-        if (!$repository instanceof UserDataRepository) {
-            throw new RuntimeException();
+        if ($select) {
+            $builder->select($select);
         }
 
-        return $repository;
+        return $builder
+            ->where([AuthLogRecord::ATTR_AUTH_TOKEN_ID => $authTokenId])
+            ->order(AuthLogRecord::FIELD_REQUEST_TIME, true)
+            ->findOne();
     }
 }

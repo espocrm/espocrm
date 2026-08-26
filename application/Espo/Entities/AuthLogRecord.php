@@ -44,6 +44,9 @@ class AuthLogRecord extends Entity
     public const DENIAL_REASON_IS_SYSTEM_USER = 'IS_SYSTEM_USER';
     public const DENIAL_REASON_FORBIDDEN = 'FORBIDDEN';
 
+    public const string ATTR_AUTH_TOKEN_ID = 'authTokenId';
+    public const string FIELD_REQUEST_TIME = 'requestTime';
+
     public function setUsername(?string $username): self
     {
         $this->set('username', $username);

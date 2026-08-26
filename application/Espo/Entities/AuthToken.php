@@ -40,14 +40,23 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
     /** @since 10.0.0 */
     public const string FIELD_PASSWORD_VERSION = 'passwordVersion';
 
+    /** @since 10.1.0 */
+    public const string FIELD_IS_ACTIVE = 'isActive';
+
+    /** @since 10.1.0 */
+    public const string FIELD_TOKEN = 'token';
+
+    /** @since 10.1.0 */
+    public const string ATTR_USER_ID = 'userId';
+
     public function getToken(): string
     {
-        return $this->get('token');
+        return $this->get(self::FIELD_TOKEN);
     }
 
     public function getUserId(): string
     {
-        return $this->get('userId');
+        return $this->get(self::ATTR_USER_ID);
     }
 
     public function getPortalId(): ?string
@@ -62,7 +71,7 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
 
     public function isActive(): bool
     {
-        return $this->get('isActive');
+        return $this->get(self::FIELD_IS_ACTIVE);
     }
 
     public function getPasswordVersion(): ?int
@@ -82,14 +91,14 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
 
     public function setIsActive(bool $isActive): self
     {
-        $this->set('isActive', $isActive);
+        $this->set(self::FIELD_IS_ACTIVE, $isActive);
 
         return $this;
     }
 
     public function setUserId(string $userId): self
     {
-        $this->set('userId', $userId);
+        $this->set(self::ATTR_USER_ID, $userId);
 
         return $this;
     }
@@ -103,7 +112,7 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
 
     public function setToken(string $token): self
     {
-        $this->set('token', $token);
+        $this->set(self::FIELD_TOKEN, $token);
 
         return $this;
     }

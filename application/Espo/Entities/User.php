@@ -43,6 +43,24 @@ class User extends Person
     public const ATTR_TYPE = 'type';
     public const ATTR_IS_ACTIVE = 'isActive';
 
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string ATTR_PORTAL_ID = 'portalId';
+
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string ATTR_AUTH_TOKEN_ID = 'authTokenId';
+
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string ATTR_AUTH_LOG_RECORD_ID = 'authLogRecordId';
+
     /** @since 10.0.0 */
     public const string FIELD_USER_NAME = 'userName';
     /** @since 10.0.0 */
@@ -55,6 +73,18 @@ class User extends Person
     public const string FIELD_API_KEY = 'apiKey';
     /** @since 10.0.4 */
     public const string FIELD_AUTH_METHOD = 'authMethod';
+
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string FIELD_TOKEN = 'token';
+
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string FIELD_IP_ADDRESS = 'ipAddress';
 
     public const LINK_ACCOUNTS = 'accounts';
     public const LINK_CONTACT = 'contact';

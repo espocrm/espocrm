@@ -29,17 +29,16 @@
 
 namespace Espo\Core\Authentication;
 
+use Espo\Core\Authentication\Repository\UserRepository;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Language\LanguageProxy;
 use Espo\ORM\Name\Attribute;
-use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\Entities\AuthLogRecord;
 use Espo\Entities\AuthToken as AuthTokenEntity;
-use Espo\Entities\UserData;
 use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Authentication\Logout\Params as LogoutParams;
 use Espo\Core\Authentication\Util\MethodProvider;
@@ -58,7 +57,8 @@ use Espo\Core\Api\Util;
 use Espo\Core\Utils\Log;
 use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Exceptions\ServiceUnavailable;
-
+use Espo\Core\Authentication\Repository\AuthLogRecordRepository;
+use Espo\Tools\User\UserDataProvider;
 use LogicException;
 use RuntimeException;
 
@@ -69,7 +69,6 @@ class Authentication
 {
     private const string LOGOUT_USERNAME = '**logout';
 
-    private const string HEADER_CREATE_TOKEN_SECRET = 'Espo-Authorization-Create-Token-Secret';
     private const string HEADER_ANOTHER_USER = 'X-Another-User';
     private const string HEADER_LOGOUT_REDIRECT_URL = 'X-Logout-Redirect-Url';
 
@@ -89,6 +88,9 @@ class Authentication
         private MethodProvider $methodProvider,
         private Util $util,
         private LanguageProxy $language,
+        private UserDataProvider $userDataProvider,
+        private UserRepository $userRepository,
+        private AuthLogRecordRepository $authLogRecordRepository,
     ) {}
 
     /**
@@ -101,78 +103,36 @@ class Authentication
     {
         $username = $data->getUsername();
         $password = $data->getPassword();
-        $method = $data->getMethod();
         $byTokenOnly = $data->byTokenOnly();
 
-        if (
-            $method &&
-            !$this->configDataProvider->authenticationMethodIsApi($method)
-        ) {
-            $this->log->warning("Auth: Trying to use not allowed authentication method '{method}'.", [
-                'method' => $method,
-            ]);
-
-            return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
+        if ($failResult = $this->processMethodCheck($data, $request)) {
+            return $failResult;
         }
 
-        try {
-            $this->hookManager->processBeforeLogin($data, $request);
-        } catch (Forbidden $e) {
-            $this->processForbidden($e);
+        $this->processBeforeLoginHook($data, $request);
+
+        if ($failResult = $this->processHasPasswordCheck($data)) {
+            return $failResult;
         }
 
-        if (!$method && $password === null) {
-            $this->log->error("Auth: Trying to login w/o password.");
+        [$authToken, $authTokenIsFound] = $this->getAuthToken($data->getMethod(), $password, $request);
 
-            return Result::fail(FailReason::NO_PASSWORD);
+        if ($authToken && !$this->processAuthTokenCheck($authToken)) {
+            return Result::fail(FailReason::DENIED);
         }
 
-        $authToken = null;
-
-        if (!$method) {
-            $authToken = $this->authTokenManager->get($password);
-        }
-
-        if ($authToken && $authToken->getSecret()) {
-            $sentSecret = $request->getCookieParam(self::COOKIE_AUTH_TOKEN_SECRET);
-
-            if ($sentSecret !== $authToken->getSecret()) {
-                $authToken = null;
-            }
-        }
-
-        $authTokenIsFound = $authToken !== null;
-
-        if ($authToken && !$authToken->isActive()) {
-            $authToken = null;
-        }
-
-        if ($authToken) {
-            $authTokenCheckResult = $this->processAuthTokenCheck($authToken);
-
-            if (!$authTokenCheckResult) {
-                return Result::fail(FailReason::DENIED);
-            }
-        }
-
-        $byTokenAndUsername = $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
-
-        if ($method && $byTokenAndUsername) {
+        if ($data->getMethod() && $this->isByTokenAndUsername($request)) {
             return Result::fail(FailReason::DISCREPANT_DATA);
         }
 
-        if (($byTokenAndUsername || $byTokenOnly) && !$authToken) {
-            if ($username) {
-                $this->log->info("Auth: Trying to login as user '{username}' by token but token is not found.", [
-                    'username' => $username,
-                ]);
-            }
-
-            return $this->processFail(Result::fail(FailReason::TOKEN_NOT_FOUND), $data, $request);
+        if ($failResult = $this->processAuthTokenNotFoundCheck($data, $request, $authToken)) {
+            return $failResult;
         }
 
         if ($byTokenOnly) {
-            assert($authToken !== null);
+            if ($authToken === null) {
+                throw new LogicException();
+            }
 
             $username = $this->getUsernameByAuthToken($authToken);
 
@@ -181,24 +141,20 @@ class Authentication
             }
         }
 
-        $method ??= $this->methodProvider->get();
+        $method = $data->getMethod() ?? $this->methodProvider->get();
 
-        $login = $this->loginFactory->create($method, $this->isPortal());
-
-        $loginData = LoginData
-            ::createBuilder()
-            ->setUsername($username)
-            ->setPassword($password)
-            ->setAuthToken($authToken)
-            ->build();
-
-        $result = $login->login($loginData, $request);
+        $result = $this->processLogin(
+            method: $method,
+            username: $username,
+            password: $password,
+            authToken: $authToken,
+            request: $request,
+        );
 
         $user = $result->getUser();
 
         $authLogRecord = !$authTokenIsFound ?
-            $this->createAuthLogRecord($username, $user, $request, $method) :
-            null;
+            $this->createAuthLogRecord($username, $user, $request, $method) : null;
 
         if ($result->isFail()) {
             return $this->processFail($result, $data, $request);
@@ -210,11 +166,7 @@ class Authentication
         }
 
         if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
-            throw ServiceUnavailable::createWithBody(
-                "Application is in maintenance mode.",
-                Body::create()
-                    ->withMessage($this->language->translateLabel('maintenanceModeError', 'messages'))
-            );
+            $this->throwMaintenanceModeException();
         }
 
         if (!$this->processUserCheck($user, $authLogRecord)) {
@@ -235,12 +187,7 @@ class Authentication
             $this->applicationUser->setUser($loggedUser);
         }
 
-        if (
-            !$result->bypassSecondStep() &&
-            !$result->isSecondStepRequired() &&
-            !$authToken &&
-            $this->getTwoFactorEnabled()
-        ) {
+        if ($this->toProcessTwoFactor($result, $authToken)) {
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
@@ -254,17 +201,14 @@ class Authentication
             $this->processForbidden($e, $authLogRecord);
         }
 
-        if (
-            !$result->isSecondStepRequired() &&
-            $request->getHeader(HeaderKey::AUTHORIZATION)
-        ) {
+        if (!$result->isSecondStepRequired() && $request->getHeader(HeaderKey::AUTHORIZATION)) {
             $authToken = $this->processAuthTokenFinal(
-                $authToken,
-                $authLogRecord,
-                $user,
-                $loggedUser,
-                $request,
-                $response
+                authToken: $authToken,
+                authLogRecord: $authLogRecord,
+                user: $user,
+                loggedUser: $loggedUser,
+                request: $request,
+                response: $response,
             );
         }
 
@@ -287,7 +231,7 @@ class Authentication
         User $user,
         User $loggedUser,
         Request $request,
-        Response $response
+        Response $response,
     ): AuthToken {
 
         if ($authToken) {
@@ -304,8 +248,8 @@ class Authentication
             $authTokenId = $authToken->hasId() ? $authToken->getId() : null;
         }
 
-        $loggedUser->set('token', $authToken->getToken());
-        $loggedUser->set('authTokenId', $authTokenId);
+        $loggedUser->set(User::FIELD_TOKEN, $authToken->getToken());
+        $loggedUser->set(User::ATTR_AUTH_TOKEN_ID, $authTokenId);
 
         $authLogRecord?->setAuthTokenId($authTokenId);
 
@@ -315,7 +259,7 @@ class Authentication
     private function processAuthLogRecord(
         ?AuthLogRecord $authLogRecord,
         ?AuthToken $authToken,
-        User $loggedUser
+        User $loggedUser,
     ): void {
 
         if ($authLogRecord) {
@@ -327,16 +271,11 @@ class Authentication
             $authToken instanceof AuthTokenEntity &&
             $authToken->hasId()
         ) {
-            $authLogRecord = $this->entityManager
-                ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
-                ->select([Attribute::ID])
-                ->where(['authTokenId' => $authToken->getId()])
-                ->order('requestTime', true)
-                ->findOne();
+            $authLogRecord = $this->authLogRecordRepository->findOneByAuthTokenId($authToken->getId(), [Attribute::ID]);
         }
 
         if ($authLogRecord) {
-            $loggedUser->set('authLogRecordId', $authLogRecord->getId());
+            $loggedUser->set(User::ATTR_AUTH_LOG_RECORD_ID, $authLogRecord->getId());
         }
     }
 
@@ -353,13 +292,13 @@ class Authentication
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->getId()) {
-            $this->log->info("Auth: Trying to login to portal with a token not related to portal.");
+            $this->log->info("Auth: Trying to log in to portal with a token not related to portal.");
 
             return false;
         }
 
         if (!$this->isPortal() && $authToken->getPortalId()) {
-            $this->log->info("Auth: Trying to login to crm with a token related to portal.");
+            $this->log->info("Auth: Trying to log in to crm with a token related to portal.");
 
             return false;
         }
@@ -370,7 +309,7 @@ class Authentication
     private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord): bool
     {
         if (!$user->isActive()) {
-            $this->log->info("Auth: Trying to login as user '{username}' which is not active.", [
+            $this->log->info("Auth: Trying to log in as user '{username}' which is not active.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -380,7 +319,7 @@ class Authentication
         }
 
         if ($user->isSystem()) {
-            $this->log->info("Auth: Trying to login to crm as a system user '{username}'.", [
+            $this->log->info("Auth: Trying to log in to crm as a system user '{username}'.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -390,7 +329,7 @@ class Authentication
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
-            $this->log->info("Auth: Trying to login to crm as a portal user '{username}'.", [
+            $this->log->info("Auth: Trying to log in to crm as a portal user '{username}'.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -400,7 +339,7 @@ class Authentication
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
-            $this->log->info("Auth: Trying to login to portal as user '{username}' which is not portal user.", [
+            $this->log->info("Auth: Trying to log in to portal as user '{username}' which is not portal user.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -410,18 +349,13 @@ class Authentication
         }
 
         if ($this->isPortal()) {
-            $isPortalRelatedToUser = $this->entityManager
-                ->getRDBRepository(Portal::ENTITY_TYPE)
-                ->getRelation($this->getPortal(), 'users')
-                ->isRelated($user);
+            $isUserInPortal = $user->getPortals()->hasId($this->getPortal()->getId());
 
-            if (!$isPortalRelatedToUser) {
-                $msg = "Auth: Trying to login to portal as user '{username}' " .
+            if (!$isUserInPortal) {
+                $message = "Auth: Trying to log in to portal as user '{username}' " .
                     "which is portal user but does not belong to portal.";
 
-                $this->log->info($msg, [
-                    'username' => $user->getUserName(),
-                ]);
+                $this->log->info($message, ['username' => $user->getUserName()]);
 
                 $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_USER_IS_NOT_IN_PORTAL);
 
@@ -453,7 +387,7 @@ class Authentication
 
     private function getUser2FAMethod(User $user): ?string
     {
-        $userData = $this->getUserDataRepository()->getByUserId($user->getId());
+        $userData = $this->userDataProvider->get($user->getId());
 
         if (!$userData) {
             return null;
@@ -479,7 +413,7 @@ class Authentication
     private function createAuthToken(User $user, Request $request, Response $response): AuthToken
     {
         $createSecret =
-            $request->getHeader(self::HEADER_CREATE_TOKEN_SECRET) === 'true' &&
+            $request->getHeader(HeaderKey::CREATE_TOKEN_SECRET) === 'true' &&
             !$this->configDataProvider->isAuthTokenSecretDisabled();
 
         $ipAddress = $this->util->obtainIpFromRequest($request);
@@ -498,26 +432,8 @@ class Authentication
             $this->setSecretInCookie($authToken->getSecret(), $response, $request);
         }
 
-        /** @noinspection PhpConditionAlreadyCheckedInspection */
-        if (
-            $this->configDataProvider->preventConcurrentAuthToken() &&
-            $authToken instanceof AuthTokenEntity
-        ) {
-            $concurrentAuthTokenList = $this->entityManager
-                ->getRDBRepository(AuthTokenEntity::ENTITY_TYPE)
-                ->select([Attribute::ID])
-                ->where([
-                    'userId' => $user->getId(),
-                    'isActive' => true,
-                    'id!=' => $authToken->getId(),
-                ])
-                ->find();
-
-            foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
-                $concurrentAuthToken->set('isActive', false);
-
-                $this->entityManager->saveEntity($concurrentAuthToken);
-            }
+        if ($this->configDataProvider->preventConcurrentAuthToken()) {
+            $this->authTokenManager->inactiveOther($authToken);
         }
 
         return $authToken;
@@ -586,7 +502,7 @@ class Authentication
         ?string $username,
         ?User $user,
         Request $request,
-        ?string $method = null
+        ?string $method = null,
     ): ?AuthLogRecord {
 
         if ($username === self::LOGOUT_USERNAME) {
@@ -704,7 +620,7 @@ class Authentication
         Result $result,
         AuthenticationData $data,
         Request $request,
-        bool $byToken
+        bool $byToken,
     ): Result {
 
         if ($byToken) {
@@ -721,7 +637,7 @@ class Authentication
     private function processSecondStepRequired(
         Result $result,
         AuthenticationData $data,
-        Request $request
+        Request $request,
     ): Result {
 
         $this->hookManager->processOnSecondStepRequired($result, $data, $request);
@@ -729,19 +645,9 @@ class Authentication
         return $result;
     }
 
-    private function getUserDataRepository(): UserDataRepository
-    {
-        /** @var UserDataRepository */
-        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
-    }
-
     private function getUsernameByAuthToken(AuthToken $authToken): ?string
     {
-        $user = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->select([User::FIELD_USER_NAME])
-            ->where([Attribute::ID => $authToken->getUserId()])
-            ->findOne();
+        $user = $this->userRepository->findOneById($authToken->getUserId(), [User::FIELD_USER_NAME]);
 
         return $user?->getUserName();
     }
@@ -766,10 +672,7 @@ class Authentication
             return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
         }
 
-        $loggedUser = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->where([User::FIELD_USER_NAME => $username])
-            ->findOne();
+        $loggedUser = $this->userRepository->findOneByUsername($username);
 
         if (!$loggedUser) {
             return [null, FailReason::ANOTHER_USER_NOT_FOUND];
@@ -787,14 +690,14 @@ class Authentication
     private function prepareUser(User $user, Request $request): void
     {
         if ($this->isPortal()) {
-            $user->set('portalId', $this->getPortal()->getId());
+            $user->set(User::ATTR_PORTAL_ID, $this->getPortal()->getId());
         }
 
         if (!$this->isPortal()) {
             $user->loadLinkMultipleField(Field::TEAMS);
         }
 
-        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
+        $user->set(User::FIELD_IP_ADDRESS, $this->util->obtainIpFromRequest($request));
     }
 
     /**
@@ -843,5 +746,147 @@ class Authentication
         }
 
         return $this->configDataProvider->isTwoFactorEnabled();
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws ServiceUnavailable
+     */
+    private function processBeforeLoginHook(AuthenticationData $data, Request $request): void
+    {
+        try {
+            $this->hookManager->processBeforeLogin($data, $request);
+        } catch (Forbidden $e) {
+            $this->processForbidden($e);
+        }
+    }
+
+    private function toProcessTwoFactor(Result $result, ?AuthToken $authToken): bool
+    {
+        return
+            !$result->bypassSecondStep() &&
+            !$result->isSecondStepRequired() &&
+            !$authToken &&
+            $this->getTwoFactorEnabled();
+    }
+
+    /**
+     * @throws ServiceUnavailable
+     */
+    private function throwMaintenanceModeException(): never
+    {
+        throw ServiceUnavailable::createWithBody(
+            "Application is in maintenance mode.",
+            Body::create()
+                ->withMessage($this->language->translateLabel('maintenanceModeError', 'messages'))
+        );
+    }
+
+    private function processLogin(
+        string $method,
+        ?string $username,
+        ?string $password,
+        ?AuthToken $authToken,
+        Request $request,
+    ): Result {
+
+        $login = $this->loginFactory->create($method, $this->isPortal());
+
+        $loginData = LoginData::createBuilder()
+            ->setUsername($username)
+            ->setPassword($password)
+            ->setAuthToken($authToken)
+            ->build();
+
+        return $login->login($loginData, $request);
+    }
+
+    private function processMethodCheck(AuthenticationData $data, Request $request): ?Result
+    {
+        $method = $data->getMethod();
+
+        if ($method && !$this->configDataProvider->authenticationMethodIsApi($method)) {
+            $this->log->warning("Auth: Trying to use not allowed authentication method '{method}'.", [
+                'method' => $method,
+            ]);
+
+            return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
+        }
+
+        return null;
+    }
+
+    private function processHasPasswordCheck(AuthenticationData $data): ?Result
+    {
+        $password = $data->getPassword();
+        $method = $data->getMethod();
+
+        if (!$method && $password === null) {
+            $this->log->error("Auth: Trying to log in w/o password.");
+
+            return Result::fail(FailReason::NO_PASSWORD);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array{?AuthToken, bool}
+     */
+    private function getAuthToken(?string $method, ?string $password, Request $request): array
+    {
+        $authToken = null;
+
+        if (!$method) {
+            if ($password === null) {
+                throw new LogicException();
+            }
+
+            $authToken = $this->authTokenManager->get($password);
+        }
+
+        if ($authToken && $authToken->getSecret()) {
+            $sentSecret = $request->getCookieParam(self::COOKIE_AUTH_TOKEN_SECRET);
+
+            if ($sentSecret !== $authToken->getSecret()) {
+                $authToken = null;
+            }
+        }
+
+        $authTokenIsFound = $authToken !== null;
+
+        if ($authToken && !$authToken->isActive()) {
+            $authToken = null;
+        }
+
+        return [$authToken, $authTokenIsFound];
+    }
+
+    private function processAuthTokenNotFoundCheck(
+        AuthenticationData $data,
+        Request $request,
+        ?AuthToken $authToken,
+    ): ?Result {
+
+        if ($authToken) {
+            return null;
+        }
+
+        if ($this->isByTokenAndUsername($request) || $data->byTokenOnly()) {
+            if ($data->getUsername()) {
+                $this->log->info("Auth: Trying to log in as user '{username}' by token but token is not found.", [
+                    'username' => $data->getUsername(),
+                ]);
+            }
+
+            return $this->processFail(Result::fail(FailReason::TOKEN_NOT_FOUND), $data, $request);
+        }
+
+        return null;
+    }
+
+    private function isByTokenAndUsername(Request $request): bool
+    {
+        return $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
     }
 }

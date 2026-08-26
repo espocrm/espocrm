@@ -50,6 +50,7 @@ use Exception;
 use integration\Core\NoTransaction;
 use PHPUnit\Framework\TestCase;
 
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -316,7 +317,9 @@ abstract class BaseTestCase extends TestCase
     {}
 
     /**
-     * @param array<string, mixed> $queryParams
+     * @param array<string, string> $headers
+     * @param array<string, string> $queryParams
+     * @param array<string, string> $cookieParams
      */
     protected function createRequest(
         string $method,
@@ -324,10 +327,17 @@ abstract class BaseTestCase extends TestCase
         array $headers = [],
         ?string $body = null,
         array $routeParams = [],
+        array $cookieParams = [],
     ): RequestWrapper {
 
         $request = (new RequestFactory())
             ->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
+
+        if (!$request instanceof ServerRequestInterface) {
+            throw new RuntimeException();
+        }
+
+        $request = $request->withCookieParams($cookieParams);
 
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);

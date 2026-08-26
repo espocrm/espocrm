@@ -31,7 +31,8 @@ namespace Espo\Core\Authentication;
 
 class HeaderKey
 {
-    public const AUTHORIZATION_BY_TOKEN = 'Espo-Authorization-By-Token';
-    public const AUTHORIZATION_CODE = 'Espo-Authorization-Code';
-    public const AUTHORIZATION = 'Espo-Authorization';
+    public const string AUTHORIZATION_BY_TOKEN = 'Espo-Authorization-By-Token';
+    public const string AUTHORIZATION_CODE = 'Espo-Authorization-Code';
+    public const string AUTHORIZATION = 'Espo-Authorization';
+    public const string CREATE_TOKEN_SECRET = 'Espo-Authorization-Create-Token-Secret';
 }

@@ -43,7 +43,6 @@ class Data
     private function __construct(
         private ?string $message = null,
         private ?string $failReason = null,
-        private ?string $token = null,
         private ?string $view = null
     ) {}
 
@@ -72,11 +71,6 @@ class Data
         return $this->message;
     }
 
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
     public function getFailReason(): ?string
     {
         return $this->failReason;
@@ -100,15 +94,6 @@ class Data
     {
         $obj = clone $this;
         $obj->failReason = $failReason;
-
-        return $obj;
-    }
-
-    /** @noinspection PhpUnused */
-    public function withToken(?string $token): self
-    {
-        $obj = clone $this;
-        $obj->token = $token;
 
         return $obj;
     }

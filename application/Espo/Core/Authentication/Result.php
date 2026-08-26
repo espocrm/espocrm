@@ -41,14 +41,13 @@ use stdClass;
  */
 class Result
 {
-    public const STATUS_SUCCESS = 'success';
-    public const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
-    public const STATUS_FAIL = 'fail';
+    public const string STATUS_SUCCESS = 'success';
+    public const string STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
+    public const string STATUS_FAIL = 'fail';
 
     private ?User $user;
     private string $status;
     private ?string $message = null;
-    private ?string $token = null;
     private ?string $view = null;
     private ?string $failReason = null;
     private bool $bypassSecondStep = false;
@@ -63,7 +62,6 @@ class Result
 
         if ($data) {
             $this->message = $data->getMessage();
-            $this->token = $data->getToken();
             $this->view = $data->getView();
             $this->failReason = $data->getFailReason();
         }
@@ -172,15 +170,7 @@ class Result
     }
 
     /**
-     * A token can be returned to a client to be used instead of password in a request for a second step.
-     */
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    /**
-     * Additional data that can be needed for a second step.
+     * Additional data that can be needed for the second step.
      */
     public function getData(): ?stdClass
     {

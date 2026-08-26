@@ -35,7 +35,7 @@ use Espo\Repositories\Portal as PortalRepository;
 
 class Portal extends Entity
 {
-    public const ENTITY_TYPE = 'Portal';
+    public const string ENTITY_TYPE = 'Portal';
 
     /**
      * @var string[]
@@ -56,6 +56,8 @@ class Portal extends Entity
         'weekStart',
         'defaultCurrency',
     ];
+
+    public const string LINK_USERS = 'users';
 
     /**
      * @return string[]
