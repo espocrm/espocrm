@@ -75,7 +75,6 @@ class MassUnfollow implements MassAction
         foreach ($collection as $entity) {
             $this->streamService->unfollowEntity($entity, $userId);
 
-            /** @var string $id */
             $id = $entity->getId();
 
             $ids[] = $id;
