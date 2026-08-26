@@ -29,7 +29,6 @@
 
 namespace integration\Espo\Core\Authentication;
 
-use Closure;
 use Espo\Core\Api\Method;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\Response;
