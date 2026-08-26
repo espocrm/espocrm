@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication;
 
 use Espo\Core\Authentication\Repository\UserRepository;
+use Espo\Core\Authentication\TwoFactor\MethodProvider as TwoFactorMethodProvider;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Name\Field;
@@ -58,7 +59,6 @@ use Espo\Core\Utils\Log;
 use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Authentication\Repository\AuthLogRecordRepository;
-use Espo\Tools\User\UserDataProvider;
 use LogicException;
 use RuntimeException;
 
@@ -88,7 +88,7 @@ class Authentication
         private MethodProvider $methodProvider,
         private Util $util,
         private LanguageProxy $language,
-        private UserDataProvider $userDataProvider,
+        private TwoFactorMethodProvider $twoFactorMethodProvider,
         private UserRepository $userRepository,
         private AuthLogRecordRepository $authLogRecordRepository,
     ) {}
@@ -183,16 +183,16 @@ class Authentication
             return $this->processFail(Result::fail($anotherUserFailReason), $data, $request);
         }
 
-        if ($result->isSuccess()) {
-            $this->applicationUser->setUser($loggedUser);
-        }
-
         if ($this->toProcessTwoFactor($result, $authToken)) {
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
                 return $this->processTwoFactorFail($result, $data, $request, $authLogRecord);
             }
+        }
+
+        if ($result->isSuccess()) {
+            $this->applicationUser->setUser($loggedUser);
         }
 
         try {
@@ -374,7 +374,7 @@ class Authentication
             throw new RuntimeException("No user.");
         }
 
-        $method = $this->getUser2FAMethod($user);
+        $method = $this->twoFactorMethodProvider->get($user->getId());
 
         if (!$method) {
             return $result;
@@ -383,31 +383,6 @@ class Authentication
         $login = $this->twoFactorLoginFactory->create($method);
 
         return $login->login($result, $request);
-    }
-
-    private function getUser2FAMethod(User $user): ?string
-    {
-        $userData = $this->userDataProvider->get($user->getId());
-
-        if (!$userData) {
-            return null;
-        }
-
-        if (!$userData->getAuth2FA()) {
-            return null;
-        }
-
-        $method = $userData->getAuth2FAMethod();
-
-        if (!$method) {
-            return null;
-        }
-
-        if (!in_array($method, $this->configDataProvider->getTwoFactorMethodList())) {
-            return null;
-        }
-
-        return $method;
     }
 
     private function createAuthToken(User $user, Request $request, Response $response): AuthToken

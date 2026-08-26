@@ -29,6 +29,7 @@
 
 namespace integration\Espo\Core\Authentication;
 
+use Closure;
 use Espo\Core\Api\Method;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\Response;
@@ -37,6 +38,10 @@ use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\AuthToken\Manager;
 use Espo\Core\Authentication\HeaderKey;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Authentication\TwoFactor\Login;
+use Espo\Core\Authentication\TwoFactor\LoginFactory as TwoFactorLoginFactory;
+use Espo\Core\Authentication\TwoFactor\MethodProvider as TwoFactorMethodProvider;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Entities\AuthToken;
 use Espo\Entities\User;
@@ -392,16 +397,145 @@ class AuthenticationTest extends BaseTestCase
         $this->assertTrue($secondResult->isSuccess());
     }
 
-    private function createAuthentication(?ApplicationUser $applicationUser = null): Authentication
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testLogin2Fa(): void
     {
+        $this->setConfigParams([
+            'auth2FA' => true,
+            'auth2FAMethodList' => ['TestMethod'],
+        ]);
+
+        [$username, $password, $user] = $this->prepareTestUser();
+
+        $applicationUser = $this->createMock(ApplicationUser::class);
+
+        $applicationUser
+            ->expects(self::never())
+            ->method('setUser');
+
+        $twoFactorLogin = $this->createMock(Login::class);
+
+        $twoFactorLogin
+            ->expects(self::once())
+            ->method('login')
+            ->with(
+                $this->callback(function (Result $result) use ($user) {
+                    return $result->getUser()->getId() === $user->getId();
+                })
+            )
+            ->willReturn(
+                Result::secondStepRequired(
+                    user: $user,
+                    data: Result\Data::create(),
+                )
+            );
+
+        $authentication = $this->createAuthentication(
+            applicationUser: $applicationUser,
+            twoFactorLogin: $twoFactorLogin,
+            twoFactorMethod: 'TestMethod',
+            userId: $user->getId(),
+        );
+
+        $result = $authentication->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+        $this->assertFalse($result->isFail());
+        $this->assertTrue($result->isSecondStepRequired());
+
+        $this->assertNull(
+            $this->getEntityManager()
+                ->getRDBRepositoryByClass(AuthToken::class)
+                ->where([AuthToken::ATTR_USER_ID => $user->getId()])
+                ->findOne()
+        );
+
+        //
+
+        $applicationUser = $this->createMock(ApplicationUser::class);
+
+        $applicationUser
+            ->expects(self::once())
+            ->method('setUser');
+
+        $twoFactorLogin = $this->createMock(Login::class);
+
+        $twoFactorLogin
+            ->expects(self::once())
+            ->method('login')
+            ->with(
+                $this->callback(function (Result $result) use ($user) {
+                    return $result->getUser()->getId() === $user->getId();
+                })
+            )
+            ->willReturnCallback(function (Result $result) {
+                return $result;
+            });
+
+        $authentication = $this->createAuthentication(
+            applicationUser: $applicationUser,
+            twoFactorLogin: $twoFactorLogin,
+            twoFactorMethod: 'TestMethod',
+            userId: $user->getId(),
+        );
+
+        $result = $authentication->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertTrue($result->isSuccess());
+        $this->assertFalse($result->isSecondStepRequired());
+    }
+
+    private function createAuthentication(
+        ?ApplicationUser $applicationUser = null,
+        ?Login $twoFactorLogin = null,
+        ?string $twoFactorMethod = null,
+        ?string $userId = null,
+    ): Authentication {
+
         $applicationUser ??= $this->createMock(ApplicationUser::class);
 
-        return $this->getInjectableFactory()->createWithBinding(
-            Authentication::class,
-            BindingContainerBuilder::create()
-                ->bindInstance(ApplicationUser::class, $applicationUser)
-                ->build(),
-        );
+        $builder = BindingContainerBuilder::create()
+            ->bindInstance(ApplicationUser::class, $applicationUser);
+
+        if ($twoFactorLogin) {
+            $twoFactorLoginFactory = $this->createMock(TwoFactorLoginFactory::class);
+
+            $twoFactorLoginFactory
+                ->expects(self::once())
+                ->method('create')
+                ->with($twoFactorMethod)
+                ->willReturn($twoFactorLogin);
+
+            $builder->bindInstance(TwoFactorLoginFactory::class, $twoFactorLoginFactory);
+        }
+
+        if ($userId && $twoFactorMethod) {
+            $twoFactorMethodProvider = $this->createMock(TwoFactorMethodProvider::class);
+
+            $twoFactorMethodProvider
+                ->expects(self::once())
+                ->method('get')
+                ->with($userId)
+                ->willReturn($twoFactorMethod);
+
+            $builder->bindInstance(TwoFactorMethodProvider::class, $twoFactorMethodProvider);
+        }
+
+        return $this->getInjectableFactory()->createWithBinding(Authentication::class, $builder->build());
     }
 
     /**
@@ -481,18 +615,18 @@ class AuthenticationTest extends BaseTestCase
     }
 
     /**
-     * @return array{string, string}
+     * @return array{string, string, User}
      */
     private function prepareTestUser(bool $isActive = true): array
     {
         [$username, $password] = $this->prepareUsernamePassword();
 
-        $this->createUser([
+        $user = $this->createUser([
             User::FIELD_USER_NAME => $username,
             User::FIELD_PASSWORD => $password,
             User::FIELD_IS_ACTIVE => $isActive,
         ]);
 
-        return [$username, $password];
+        return [$username, $password, $user];
     }
 }
