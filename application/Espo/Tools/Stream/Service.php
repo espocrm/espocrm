@@ -272,6 +272,9 @@ class Service
         return true;
     }
 
+    /**
+     * No stream check access intentionally.
+     */
     public function unfollowEntity(Entity $entity, string $userId): bool
     {
         if (!$this->checkIsEnabled($entity->getEntityType())) {
