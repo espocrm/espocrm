@@ -110,4 +110,9 @@ class OAuthProvider extends Entity
     {
         return $this->get('authorizationParams') ?? null;
     }
+
+    public function useAuthorizationPkce(): bool
+    {
+        return $this->get('authorizationPkce') ?? false;
+    }
 }

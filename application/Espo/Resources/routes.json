@@ -538,6 +538,11 @@
     },
     {
         "method": "get",
+        "route": "/OAuth/:id/authorizationData",
+        "actionClassName": "Espo\\Tools\\OAuth\\Api\\GetAuthorizationData"
+    },
+    {
+        "method": "get",
         "route": "/OpenApi",
         "actionClassName": "Espo\\Tools\\OpenApi\\Api\\GetSpec"
     },

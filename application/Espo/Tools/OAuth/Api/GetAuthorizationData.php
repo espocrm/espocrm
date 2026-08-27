@@ -27,46 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\FieldProcessing\OAuthAccount;
+namespace Espo\Tools\OAuth\Api;
 
-use Espo\Core\FieldProcessing\Loader;
-use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\EntityProvider;
 use Espo\Entities\OAuthAccount;
-use Espo\ORM\Entity;
-use Espo\Tools\OAuth\ConfigDataProvider;
+use Espo\Tools\OAuth\ConnectionService;
 
 /**
- * @implements Loader<OAuthAccount>
+ * @noinspection PhpUnused
  */
-class DataLoader implements Loader
+class GetAuthorizationData implements Action
 {
     public function __construct(
-        private ConfigDataProvider $configDataProvider,
+        private ConnectionService $service,
+        private EntityProvider $entityProvider,
     ) {}
 
-    public function process(Entity $entity, Params $params): void
+    public function process(Request $request): Response
     {
-        if (!$entity->get('providerId')) {
-            return;
-        }
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
 
-        $provider = $entity->getProvider();
+        $account = $this->entityProvider->getByClass(OAuthAccount::class, $id);
 
-        $scope = null;
+        $data = $this->service->getAuthorizationData($account);
 
-        if ($provider->getScopes()) {
-            $scope = implode($provider->getScopeSeparator() ?? ' ', $provider->getScopes());
-        }
-
-        $data = [
-            'endpoint' => $provider->getAuthorizationEndpoint(),
-            'clientId' => $provider->getClientId(),
-            'redirectUri' => $this->configDataProvider->getRedirectUri(),
-            'scope' => $scope,
-            'prompt' => $provider->getAuthorizationPrompt(),
-            'params' => $provider->getAuthorizationParams(),
-        ];
-
-        $entity->set('data', $data);
+        return ResponseComposer::json($data);
     }
 }

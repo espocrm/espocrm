@@ -29,12 +29,6 @@
             "link": "provider",
             "field": "isActive"
         },
-        "data": {
-            "type": "jsonObject",
-            "notStorable": true,
-            "directAccessDisabled": true,
-            "readOnly": true
-        },
         "accessToken": {
             "type": "password",
             "readOnly": true,

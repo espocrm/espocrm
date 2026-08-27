@@ -22,13 +22,15 @@
             "type": "url",
             "maxLength": 512,
             "dbType": "text",
-            "strip": false
+            "strip": false,
+            "protocolRequired": true
         },
         "tokenEndpoint": {
             "type": "url",
             "maxLength": 512,
             "dbType": "text",
-            "strip": false
+            "strip": false,
+            "protocolRequired": true
         },
         "authorizationRedirectUri": {
             "type": "url",
@@ -47,6 +49,9 @@
                 "select_account"
             ],
             "maxLength": 14
+        },
+        "authorizationPkce": {
+            "type": "bool"
         },
         "scopes": {
             "type": "array",

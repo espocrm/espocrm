@@ -15,7 +15,8 @@
         "rows": [
             [{"name": "scopes"}],
             [{"name": "scopeSeparator"}, false],
-            [{"name": "authorizationParams"}, {"name": "authorizationPrompt"}]
+            [{"name": "authorizationParams"}, {"name": "authorizationPrompt"}],
+            [{"name": "authorizationPkce"}, false]
         ]
     },
     {

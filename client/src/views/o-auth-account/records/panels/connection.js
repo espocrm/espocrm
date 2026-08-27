@@ -27,6 +27,8 @@
  ************************************************************************/
 
 import SidePanelView from 'views/record/panels/side';
+import Ajax from 'ajax';
+import Ui from 'ui';
 
 export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
@@ -100,13 +102,13 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
         await this.reRender();
 
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
-        await Espo.Ajax.deleteRequest(`OAuth/${this.model.id}/connection`);
+        await Ajax.deleteRequest(`OAuth/${this.model.id}/connection`);
 
         await this.model.fetch();
 
-        Espo.Ui.notify();
+        Ui.notify();
 
         this.inProcess = false;
 
@@ -117,37 +119,52 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
      * @private
      */
     async actionConnect() {
-        const data = this.model.attributes.data || {};
+        this.inProcess = true;
+        await this.reRender()
 
-        const endpoint = data.endpoint;
-        const redirectUri = data.redirectUri;
-        const clientId = data.clientId;
-        const scope = data.scope;
-        const prompt = data.prompt;
-        const params = data.params;
+        /**
+         * @type {{
+         *     endpoint: string,
+         *     clientId: string,
+         *     redirectUri: string,
+         *     scope: string|null,
+         *     prompt: string,
+         *     params: Record|null,
+         *     codeChallenge: string|null,
+         *     codeChallengeMethod: string|null,
+         * }}
+         */
+        let data;
+
+        try {
+            data = await Ajax.getRequest(`OAuth/${this.model.id}/authorizationData`);
+        } catch (e) {
+            this.inProcess = false;
+            await this.reRender();
+
+            return;
+        }
 
         const proxy = window.open('about:blank', 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
 
-        const info = await this.processWithData({
-            endpoint,
-            redirectUri,
-            clientId,
-            scope,
-            prompt,
-            params,
-        }, proxy);
-
-        this.inProcess = true;
-
-        await this.reRender()
-
-        Espo.Ui.notifyWait();
+        let info
 
         try {
-            await Espo.Ajax.postRequest(`OAuth/${this.model.id}/connection`, {code: info.code});
+            info = await this.processWithData(data, proxy);
         } catch (e) {
             this.inProcess = false;
+            await this.reRender();
 
+            return;
+        }
+
+
+        Ui.notifyWait();
+
+        try {
+            await Ajax.postRequest(`OAuth/${this.model.id}/connection`, {code: info.code});
+        } catch (e) {
+            this.inProcess = false;
             await this.reRender();
 
             return;
@@ -155,10 +172,9 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
         await this.model.fetch();
 
-        Espo.Ui.notify();
+        Ui.notify();
 
         this.inProcess = false;
-
         await this.reRender();
     }
 
@@ -171,6 +187,8 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
      *     scope: string|null,
      *     prompt: string,
      *     params: Record|null,
+     *     codeChallenge: string|null,
+     *     codeChallengeMethod: string|null,
      * }} data
      * @param {WindowProxy} proxy
      * @return {Promise<{code: string}>}
@@ -187,6 +205,11 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
         if (data.scope) {
             params.scope = data.scope;
+        }
+
+        if (data.codeChallenge && data.codeChallengeMethod) {
+            params.code_challenge = data.codeChallenge;
+            params.code_challenge_method = data.codeChallengeMethod;
         }
 
         if (data.params) {
@@ -249,21 +272,39 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
 
                 if (!parsedData) {
                     fail();
-                    Espo.Ui.error('Could not parse URL', true);
+                    Ui.error('Could not parse URL', true);
 
                     return;
                 }
 
                 if ((parsedData.error || parsedData.code) && state && parsedData.state !== state) {
                     fail();
-                    Espo.Ui.error('State mismatch', true);
+                    Ui.error('State mismatch', true);
 
                     return;
                 }
 
                 if (parsedData.error) {
+                    let message = parsedData.errorDescription ?? '';
+
+                    if (message) {
+                        message += '\n\n';
+                    }
+
+                    if (parsedData.error) {
+                        message += '`' + parsedData.error + '`';
+                    }
+
+                    if (parsedData.code) {
+                        if (parsedData.error) {
+                            message += ' ';
+                        }
+
+                        message += parsedData.code;
+                    }
+
                     fail();
-                    Espo.Ui.error(parsedData.errorDescription || this.translate('Error'), true);
+                    Ui.error(message, true);
 
                     return;
                 }
@@ -298,7 +339,7 @@ export default class OAuthAccountConnectionPanelView extends SidePanelView {
                 code: params.get('code'),
                 state: params.get('state'),
                 error: params.get('error'),
-                errorDescription: params.get('errorDescription'),
+                errorDescription: params.get('errorDescription') ?? params.get('error_description'),
             };
         } catch (e) {
             return null;
