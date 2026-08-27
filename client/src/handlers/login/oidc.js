@@ -228,7 +228,7 @@ class OidcLoginHandler extends LoginHandler {
                 code: params.get('code'),
                 state: params.get('state'),
                 error: params.get('error'),
-                errorDescription: params.get('errorDescription'),
+                errorDescription: params.get('errorDescription') ?? params.get('error_description'),
             };
         }
         catch (e) {
