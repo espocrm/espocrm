@@ -108,12 +108,10 @@ class BeforeCreate implements SaveHook
             return;
         }
 
-        $entity->set('apiKey', Util::generateApiKey());
+        $entity->setApiKey(Util::generateApiKey());
 
         if ($entity->getAuthMethod() === Hmac::NAME) {
-            $secretKey = Util::generateSecretKey();
-
-            $entity->set('secretKey', $secretKey);
+            $entity->setSecretKey(Util::generateSecretKey());
         }
     }
 

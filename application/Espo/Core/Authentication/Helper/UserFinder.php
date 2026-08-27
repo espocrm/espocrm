@@ -84,8 +84,8 @@ class UserFinder
             ->getRDBRepositoryByClass(User::class)
             ->where([
                 User::FIELD_TYPE => User::TYPE_API,
-                'apiKey' => $apiKey,
-                'authMethod' => Hmac::NAME,
+                User::FIELD_API_KEY => $apiKey,
+                User::FIELD_AUTH_METHOD => Hmac::NAME,
             ])
             ->findOne();
     }
@@ -96,8 +96,8 @@ class UserFinder
             ->getRDBRepositoryByClass(User::class)
             ->where([
                 User::FIELD_TYPE => User::TYPE_API,
-                'apiKey' => $apiKey,
-                'authMethod' => ApiKey::NAME,
+                User::FIELD_API_KEY => $apiKey,
+                User::FIELD_AUTH_METHOD => ApiKey::NAME,
             ])
             ->findOne();
     }

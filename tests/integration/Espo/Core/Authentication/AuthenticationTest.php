@@ -32,17 +32,22 @@ namespace integration\Espo\Core\Authentication;
 use Espo\Core\Api\Method;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\Response;
+use Espo\Core\ApplicationState;
 use Espo\Core\ApplicationUser;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\AuthToken\Manager;
 use Espo\Core\Authentication\HeaderKey;
+use Espo\Core\Authentication\Logins\ApiKey;
+use Espo\Core\Authentication\Logins\Hmac;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\TwoFactor\Login;
 use Espo\Core\Authentication\TwoFactor\LoginFactory as TwoFactorLoginFactory;
 use Espo\Core\Authentication\TwoFactor\MethodProvider as TwoFactorMethodProvider;
 use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Utils\Util;
 use Espo\Entities\AuthToken;
+use Espo\Entities\Portal;
 use Espo\Entities\User;
 use tests\integration\Core\BaseTestCase;
 
@@ -55,7 +60,7 @@ class AuthenticationTest extends BaseTestCase
      */
     public function testLoginBasicSuccess(): void
     {
-        [$username, $password] = $this->prepareTestUser();
+        [$username, $password, $user] = $this->prepareTestUser();
 
         $applicationUser = $this->createMock(ApplicationUser::class);
 
@@ -78,6 +83,7 @@ class AuthenticationTest extends BaseTestCase
 
         $this->assertTrue($result->isSuccess());
         $this->assertFalse($result->isFail());
+        $this->assertEquals($user->getId(), $result->getUser()->getId());
     }
 
     /**
@@ -498,11 +504,352 @@ class AuthenticationTest extends BaseTestCase
         $this->assertFalse($result->isSecondStepRequired());
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testPortalBasicSuccess(): void
+    {
+        $em = $this->getEntityManager();
+
+        $portal = $em->getRDBRepositoryByClass(Portal::class)->getNew();
+        $portal->setName('Test');
+        $em->saveEntity($portal);
+
+        [$username, $password] = $this->prepareTestUser(
+            isPortal: true,
+            portalIds: [$portal->getId()],
+        );
+
+        $applicationUser = $this->createMock(ApplicationUser::class);
+
+        $applicationUser
+            ->expects(self::once())
+            ->method('setUser')
+            ->with(
+                $this->callback(function (User $user) use ($username) {
+                    return $user->getUserName() === $username;
+                })
+            );
+
+        $authentication = $this->createAuthentication($applicationUser, portal: $portal);
+
+        $result = $authentication->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertTrue($result->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testPortalFailNonPortalUser(): void
+    {
+        $em = $this->getEntityManager();
+
+        $portal = $em->getRDBRepositoryByClass(Portal::class)->getNew();
+        $portal->setName('Test');
+        $em->saveEntity($portal);
+
+        [$username, $password] = $this->prepareTestUser();
+
+        $authentication = $this->createAuthentication(portal: $portal);
+
+        $result = $authentication->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testPortalFailWrongPortal(): void
+    {
+        $em = $this->getEntityManager();
+
+        $portal = $em->getRDBRepositoryByClass(Portal::class)->getNew();
+        $portal->setName('Test');
+        $em->saveEntity($portal);
+
+        $portalAnother = $em->getRDBRepositoryByClass(Portal::class)->getNew();
+        $portalAnother->setName('Test Another');
+        $em->saveEntity($portalAnother);
+
+        [$username, $password] = $this->prepareTestUser(
+            isPortal: true,
+            portalIds: [$portal->getId()],
+        );
+
+        $authentication = $this->createAuthentication(portal: $portalAnother);
+
+        $result = $authentication->login(
+            data: AuthenticationData::create()
+                ->withUsername($username)
+                ->withPassword($password),
+            request: $this->createSimpleGetRequest(),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testApiKeySuccess(): void
+    {
+        $username = 'test';
+
+        $em = $this->getEntityManager();
+
+        $apiKey = Util::generateApiKey();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user
+            ->setType(User::TYPE_API)
+            ->setUserName($username)
+            ->setApiKey($apiKey)
+            ->setAuthMethod(ApiKey::NAME);
+        $em->saveEntity($user);
+
+        $applicationUser = $this->createMock(ApplicationUser::class);
+
+        $applicationUser
+            ->expects(self::once())
+            ->method('setUser')
+            ->with(
+                $this->callback(function (User $user) use ($username) {
+                    return $user->getUserName() === $username;
+                })
+            );
+
+        $result = $this->createAuthentication($applicationUser)->login(
+            data: AuthenticationData::create()
+                ->withMethod(ApiKey::NAME),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    ApiKey::HEADER_API_KEY => $apiKey,
+                ],
+            ),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertTrue($result->isSuccess());
+
+        $this->assertNull(
+            $em->getRDBRepositoryByClass(AuthToken::class)
+                ->where([
+                    AuthToken::ATTR_USER_ID => $user->getId(),
+                ])
+                ->findOne()
+        );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testApiKeyFailWrongApiKey(): void
+    {
+        $username = 'test';
+
+        $em = $this->getEntityManager();
+
+        $apiKey = Util::generateApiKey();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user
+            ->setType(User::TYPE_API)
+            ->setUserName($username)
+            ->setApiKey($apiKey)
+            ->setAuthMethod(ApiKey::NAME);
+        $em->saveEntity($user);
+
+        $result = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withMethod(ApiKey::NAME),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    ApiKey::HEADER_API_KEY => 'wrong',
+                ],
+            ),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testApiKeyFailWrongMethod(): void
+    {
+        $username = 'test';
+
+        $em = $this->getEntityManager();
+
+        $apiKey = Util::generateApiKey();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user
+            ->setType(User::TYPE_API)
+            ->setUserName($username)
+            ->setApiKey($apiKey)
+            ->setSecretKey(Util::generateApiKey())
+            ->setAuthMethod(Hmac::NAME);
+        $em->saveEntity($user);
+
+        $result = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withMethod(ApiKey::NAME),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    ApiKey::HEADER_API_KEY => $apiKey,
+                ],
+            ),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testHmacSuccess(): void
+    {
+        $username = 'test';
+
+        $em = $this->getEntityManager();
+
+        $apiKey = Util::generateApiKey();
+        $secretKey = Util::generateSecretKey();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user
+            ->setType(User::TYPE_API)
+            ->setUserName($username)
+            ->setApiKey($apiKey)
+            ->setSecretKey($secretKey)
+            ->setAuthMethod(Hmac::NAME);
+        $em->saveEntity($user);
+
+        $resourcePath = '/api/v1/Test';
+
+        $string = Method::GET . ' ' . $resourcePath;
+        $authorizationHeader = base64_encode($apiKey . ':' . hash_hmac('sha256', $string, $secretKey));
+
+        $result = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withMethod(Hmac::NAME),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    Hmac::HEADER_HMAC_AUTHORIZATION => $authorizationHeader,
+                ],
+                resourcePath: $resourcePath,
+            ),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertTrue($result->isSuccess());
+        $this->assertEquals($user->getId(), $result->getUser()->getId());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testHmacFailWrongSecret(): void
+    {
+        $username = 'test';
+
+        $em = $this->getEntityManager();
+
+        $apiKey = Util::generateApiKey();
+        $secretKey = Util::generateSecretKey();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user
+            ->setType(User::TYPE_API)
+            ->setUserName($username)
+            ->setApiKey($apiKey)
+            ->setSecretKey($secretKey)
+            ->setAuthMethod(Hmac::NAME);
+        $em->saveEntity($user);
+
+        $resourcePath = '/api/v1/Test';
+
+        $string = Method::GET . ' ' . $resourcePath;
+        $authorizationHeader = base64_encode($apiKey . ':' . hash_hmac('sha256', $string, 'wrong'));
+
+        $result = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withMethod(Hmac::NAME),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    Hmac::HEADER_HMAC_AUTHORIZATION => $authorizationHeader,
+                ],
+                resourcePath: $resourcePath,
+            ),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testHmacFailWrongResourcePath(): void
+    {
+        $username = 'test';
+
+        $em = $this->getEntityManager();
+
+        $apiKey = Util::generateApiKey();
+        $secretKey = Util::generateSecretKey();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew();
+        $user
+            ->setType(User::TYPE_API)
+            ->setUserName($username)
+            ->setApiKey($apiKey)
+            ->setSecretKey($secretKey)
+            ->setAuthMethod(Hmac::NAME);
+        $em->saveEntity($user);
+
+        $string = Method::GET . ' ' . '/Wrong';
+        $authorizationHeader = base64_encode($apiKey . ':' . hash_hmac('sha256', $string, $secretKey));
+
+        $result = $this->createAuthentication()->login(
+            data: AuthenticationData::create()
+                ->withMethod(Hmac::NAME),
+            request: $this->createSimpleGetRequest(
+                headers: [
+                    Hmac::HEADER_HMAC_AUTHORIZATION => $authorizationHeader,
+                ],
+                resourcePath: '/api/v1',
+            ),
+            response: $this->createMock(Response::class)
+        );
+
+        $this->assertFalse($result->isSuccess());
+    }
+
     private function createAuthentication(
         ?ApplicationUser $applicationUser = null,
         ?Login $twoFactorLogin = null,
         ?string $twoFactorMethod = null,
         ?string $userId = null,
+        ?Portal $portal = null,
     ): Authentication {
 
         $applicationUser ??= $this->createMock(ApplicationUser::class);
@@ -534,6 +881,22 @@ class AuthenticationTest extends BaseTestCase
             $builder->bindInstance(TwoFactorMethodProvider::class, $twoFactorMethodProvider);
         }
 
+        if ($portal) {
+            $applicationState = $this->createMock(ApplicationState::class);
+
+            $applicationState
+                ->expects(self::any())
+                ->method('isPortal')
+                ->willReturn(true);
+
+            $applicationState
+                ->expects(self::any())
+                ->method('getPortal')
+                ->willReturn($portal);
+
+            $builder->bindInstance(ApplicationState::class, $applicationState);
+        }
+
         return $this->getInjectableFactory()->createWithBinding(Authentication::class, $builder->build());
     }
 
@@ -543,6 +906,7 @@ class AuthenticationTest extends BaseTestCase
     private function createSimpleGetRequest(
         array $headers = [],
         array $cookieParams = [],
+        string $resourcePath = '',
     ): RequestWrapper {
 
         return $this->createRequest(
@@ -552,6 +916,7 @@ class AuthenticationTest extends BaseTestCase
                 ...$headers,
             ],
             cookieParams: $cookieParams,
+            resourcePath: $resourcePath,
         );
     }
 
@@ -607,7 +972,6 @@ class AuthenticationTest extends BaseTestCase
         return [$username, $password];
     }
 
-
     private function getAuthTokenManager(): Manager
     {
         return $this->getContainer()->getByClass(Manager::class);
@@ -616,15 +980,23 @@ class AuthenticationTest extends BaseTestCase
     /**
      * @return array{string, string, User}
      */
-    private function prepareTestUser(bool $isActive = true): array
-    {
+    private function prepareTestUser(
+        bool $isActive = true,
+        bool $isPortal = false,
+        array $portalIds = [],
+    ): array {
+
         [$username, $password] = $this->prepareUsernamePassword();
 
-        $user = $this->createUser([
-            User::FIELD_USER_NAME => $username,
-            User::FIELD_PASSWORD => $password,
-            User::FIELD_IS_ACTIVE => $isActive,
-        ]);
+        $user = $this->createUser(
+            [
+                User::FIELD_USER_NAME => $username,
+                User::FIELD_PASSWORD => $password,
+                User::FIELD_IS_ACTIVE => $isActive,
+                User::LINK_PORTALS . 'Ids' => $portalIds,
+            ],
+            isPortal: $isPortal,
+        );
 
         return [$username, $password, $user];
     }

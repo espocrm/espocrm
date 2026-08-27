@@ -328,10 +328,15 @@ abstract class BaseTestCase extends TestCase
         ?string $body = null,
         array $routeParams = [],
         array $cookieParams = [],
+        string $resourcePath = '',
     ): RequestWrapper {
 
+        if (!str_starts_with($resourcePath, '/')) {
+            $resourcePath = '/' . $resourcePath;
+        }
+
         $request = (new RequestFactory())
-            ->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
+            ->createRequest($method, "http://localhost$resourcePath?" . http_build_query($queryParams));
 
         if (!$request instanceof ServerRequestInterface) {
             throw new RuntimeException();

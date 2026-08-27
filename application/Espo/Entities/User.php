@@ -74,6 +74,8 @@ class User extends Person
     public const string FIELD_TYPE = 'type';
     /** @since 10.0.4 */
     public const string FIELD_API_KEY = 'apiKey';
+    /** @since 10.1.0 */
+    public const string FIELD_SECRET_KEY = 'secretKey';
     /** @since 10.0.4 */
     public const string FIELD_AUTH_METHOD = 'authMethod';
 
@@ -364,6 +366,46 @@ class User extends Person
     public function getPassword(): string
     {
         return $this->get(self::FIELD_PASSWORD) ?? '';
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function setAuthMethod(?string $method): self
+    {
+        return $this->set(self::FIELD_AUTH_METHOD, $method);
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function getApiKey(): ?string
+    {
+        return $this->get(self::FIELD_API_KEY);
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function setApiKey(?string $apiKey): self
+    {
+        return $this->set(self::FIELD_API_KEY, $apiKey);
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function getSecretKey(): ?string
+    {
+        return $this->get(self::FIELD_SECRET_KEY);
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function setSecretKey(?string $secretKey): self
+    {
+        return $this->set(self::FIELD_SECRET_KEY, $secretKey);
     }
 
     private function getNameInternal(): ?string
