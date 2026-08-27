@@ -53,11 +53,44 @@ class UrlMultipleFieldView<
     protected displayAsList = true
     protected defaultProtocol = 'https:'
 
+    protected optionalProtocol: boolean = true
+
     protected setup() {
         super.setup();
 
         this.noEmptyString = true;
-        this.params.pattern = '$uriOptionalProtocol';
+
+        if (this.params.protocolRequired) {
+            this.optionalProtocol = false;
+        }
+    }
+
+    private isValidUrl(value: string): boolean {
+        if (!this.optionalProtocol) {
+            try {
+                new URL(value);
+
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        try {
+            new URL(value);
+
+            return true;
+        } catch (e) {}
+
+        const pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']) as string;
+
+        const regExp = new RegExp('^' + pattern + '$');
+
+        if (regExp.test(value)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected addValueFromUi(value: string) {
@@ -74,6 +107,16 @@ class UrlMultipleFieldView<
         } catch (e) {
             console.warn(`Malformed URI ${value}.`);
         }
+
+        if (!this.isValidUrl(value)) {
+            const message = this.translate('fieldNotMatchingPattern$uriOptionalProtocol', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            setTimeout(() => this.showValidationMessage(message, 'input.select'), 10);
+
+            return;
+        }
+
 
         super.addValueFromUi(value);
     }

@@ -18,6 +18,10 @@
             "tooltip": "urlStrip"
         },
         {
+            "name": "protocolRequired",
+            "type": "bool"
+        },
+        {
             "name": "audited",
             "type": "bool"
         },

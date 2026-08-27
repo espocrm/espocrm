@@ -47,6 +47,22 @@ class UrlMultipleType extends ArrayType
 
     public function checkPattern(Entity $entity, string $field, ?string $validationValue): bool
     {
+        $value = $entity->get($field);
+
+        if (is_array($value)) {
+            $allValid = true;
+
+            foreach ($value as $it) {
+                if (is_string($it) && filter_var($it, FILTER_VALIDATE_URL) === false) {
+                    $allValid = false;
+                }
+            }
+
+            if ($allValid) {
+                return true;
+            }
+        }
+
         /** @var string $pattern */
         $pattern = $this->metadata->get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
 

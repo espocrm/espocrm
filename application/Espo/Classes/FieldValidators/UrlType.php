@@ -69,6 +69,10 @@ class UrlType
             return filter_var($value, FILTER_VALIDATE_URL) !== false;
         }
 
+        if (filter_var($value, FILTER_VALIDATE_URL) !== false) {
+            return true;
+        }
+
         /** @var string $pattern */
         $pattern = $this->metadata->get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
 

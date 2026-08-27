@@ -214,6 +214,12 @@ class UrlFieldView<
             }
         }
 
+        try {
+            new URL(value);
+
+            return true;
+        } catch (e) {}
+
         const pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']) as string;
 
         const regExp = new RegExp('^' + pattern + '$');
