@@ -495,7 +495,23 @@
                             "copyToClipboard": {
                                 "type": "boolean",
                                 "description": "Display 'Copy to Clipboard' button."
-                            },
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "url"},
+                                    {"const": "urlMultiple"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
                             "protocolRequired": {
                                 "type": "boolean",
                                 "description": "Require protocol. As of v10.0."
