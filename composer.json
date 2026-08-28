@@ -59,7 +59,8 @@
         "devtheorem/php-handlebars": "^1.0",
         "php-amqplib/php-amqplib": "^3.7",
         "predis/predis": "^3.5",
-        "psr/cache": "^3.0"
+        "psr/cache": "^3.0",
+        "league/oauth2-server": "^8.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
