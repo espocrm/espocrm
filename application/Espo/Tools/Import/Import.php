@@ -42,6 +42,7 @@ use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Defs\Params\RelationParam;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Type\AttributeType;
 use Espo\Tools\Import\Jobs\RunIdle;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
@@ -1502,13 +1503,26 @@ class Import
     {
         $entityType = $this->entityType ?? throw new LogicException();
 
+        $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
+
         $forbiddenAttributeList =
             $this->aclManager->getScopeForbiddenAttributeList($this->user, $entityType, Table::ACTION_EDIT);
 
         foreach ($attributeList as $k => $attribute) {
-            if (in_array($attribute, $forbiddenAttributeList)) {
-                unset($attributeList[$k]);
+            if (!in_array($attribute, $forbiddenAttributeList)) {
+                continue;
             }
+
+            $attributeDefs = $entityDefs->tryGetAttribute($attribute);
+
+            if (
+                $attributeDefs?->getType() === AttributeType::FOREIGN &&
+                $entityDefs->tryGetField($attribute)?->getParam('relateOnImport')
+            ) {
+                continue;
+            }
+
+            unset($attributeList[$k]);
         }
 
         if ($entityType === User::ENTITY_TYPE) {
