@@ -42,6 +42,11 @@ class Account extends Entity
 {
     public const ENTITY_TYPE = 'Account';
 
+    /**
+     * @since 10.0.7
+     */
+    public const string FILED_TYPE = 'type';
+
     public const TYPE_CUSTOMER = 'Customer';
     public const TYPE_PARTNER = 'Partner';
     public const TYPE_RESELLER = 'Reseller';
@@ -147,5 +152,21 @@ class Account extends Entity
     public function getDescription(): ?string
     {
         return $this->get('description');
+    }
+
+    /**
+     * @since 10.0.7
+     */
+    public function setType(?string $type): self
+    {
+        return $this->set(self::FILED_TYPE, $type);
+    }
+
+    /**
+     * @since 10.0.7
+     */
+    public function getType(): ?string
+    {
+        return $this->get(self::FILED_TYPE);
     }
 }
