@@ -1517,7 +1517,8 @@ class Import
 
             if (
                 $attributeDefs?->getType() === AttributeType::FOREIGN &&
-                $entityDefs->tryGetField($attribute)?->getParam('relateOnImport')
+                $entityDefs->tryGetField($attribute)?->getParam('relateOnImport') &&
+                $this->aclManager->checkField($this->user, $entityType, $attribute)
             ) {
                 continue;
             }
