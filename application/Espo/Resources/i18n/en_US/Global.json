@@ -72,7 +72,9 @@
         "CurrencyRecord": "Currency Record",
         "CurrencyRecordRate": "Currency Rate",
         "Pipeline": "Pipeline",
-        "PipelineStage": "Pipeline Stage"
+        "PipelineStage": "Pipeline Stage",
+        "ApiApp": "API App",
+        "ApiAppClientSecret": "API App Client Secret"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -135,7 +137,9 @@
         "CurrencyRecord": "Currencies",
         "CurrencyRecordRate": "Currency Rates",
         "Pipeline": "Pipelines",
-        "PipelineStage": "Pipeline Stages"
+        "PipelineStage": "Pipeline Stages",
+        "ApiApp": "API Apps",
+        "ApiAppClientSecret": "API App Client Secrets"
     },
     "labels": {
         "Previous Page": "Previous Page",

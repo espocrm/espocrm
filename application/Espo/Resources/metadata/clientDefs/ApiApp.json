@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "relationshipPanels": {
+        "clientSecrets": {
+            "filterList": [
+                "all",
+                "active"
+            ],
+            "layout": "listForApp"
+        }
+    }
+}

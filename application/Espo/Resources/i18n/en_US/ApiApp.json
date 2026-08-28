@@ -1,0 +1,25 @@
+{
+    "labels": {
+        "Create ApiApp": "Register API App"
+    },
+    "fields": {
+        "status": "Status",
+        "clientType": "Client Type",
+        "clientId": "Client ID",
+        "redirectUrls": "Redirect URLs",
+        "scopes": "Scopes"
+    },
+    "links": {
+        "clientSecrets": "Client Secrets"
+    },
+    "options": {
+        "clientType": {
+            "Confidential": "Confidential",
+            "Public": "Public"
+        },
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    }
+}

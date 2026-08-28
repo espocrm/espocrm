@@ -332,7 +332,8 @@
         "formulaSandbox": "Write and test formula scripts.",
         "addressCountries": "Countries available for address fields.",
         "oAuthProviders": "OAuth providers for integrations.",
-        "pipelines": "Configure multiple pipelines."
+        "pipelines": "Configure multiple pipelines.",
+        "apiApps": "Register applications for API access via OAuth."
     },
     "keywords": {
         "settings": "system",
@@ -347,7 +348,8 @@
         "jobs": "cron",
         "labelManager": "language,translation",
         "appSecrets": "key,keys,password",
-        "leadCapture": "web forms"
+        "leadCapture": "web forms",
+        "apiApps": "oauth,api,authentication"
     },
     "options": {
         "previewSize": {

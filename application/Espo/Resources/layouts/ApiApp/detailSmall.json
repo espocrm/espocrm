@@ -1,0 +1,35 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "status"
+                }
+            ],
+            [
+                {
+                    "name": "clientType"
+                },
+                {
+                    "name": "clientId"
+                }
+            ],
+            [
+                {
+                    "name": "redirectUrls"
+                },
+                {
+                    "name": "scopes"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ]
+    }
+]

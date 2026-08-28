@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\Date;
 use Espo\Core\ORM\Entity;
 use UnexpectedValueException;
 
@@ -74,5 +75,16 @@ class ApiAppClientSecret extends Entity
     public function setExpired(): self
     {
         return $this->set(self::FIELD_STATUS, self::STATUS_EXPIRED);
+    }
+
+    public function getExpirationData(): ?Date
+    {
+        /** @var ?Date */
+        return $this->getValueObject(self::FIELD_EXPIRATION_DATE);
+    }
+
+    public function setExpirationData(?Date $date): self
+    {
+        return $this->setValueObject(self::FIELD_EXPIRATION_DATE, $date);
     }
 }

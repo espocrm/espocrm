@@ -310,6 +310,12 @@
                 "label": "Authentication Providers",
                 "iconClass": "fas fa-sign-in-alt",
                 "description": "authenticationProviders"
+            },
+            {
+                "url": "#Admin/apiApps",
+                "labelTranslation": "Global.scopeNamesPlural.ApiApp",
+                "iconClass": "fas fa-user-lock",
+                "description": "apiApps"
             }
         ],
         "order": 24

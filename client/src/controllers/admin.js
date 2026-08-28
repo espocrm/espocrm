@@ -245,6 +245,11 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    actionApiApps() {
+        this.getRouter().dispatch('ApiApp', 'list', {fromAdmin: true});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     actionAddressCountries() {
         this.getRouter().dispatch('AddressCountry', 'list', {fromAdmin: true});
     }

@@ -1,0 +1,19 @@
+[
+    {
+        "name": "name",
+        "label": "value",
+        "link": true
+    },
+    {
+        "name": "app",
+        "width": 25
+    },
+    {
+        "name": "status",
+        "width": 20
+    },
+    {
+        "name": "expirationDate",
+        "width": 20
+    }
+]

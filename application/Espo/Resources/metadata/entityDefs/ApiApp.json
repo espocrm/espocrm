@@ -17,7 +17,8 @@
             "maxLength": 8,
             "style": {
                 "Inactive": "info"
-            }
+            },
+            "duplicateIgnore": true
         },
         "clientType": {
             "type": "enum",
@@ -33,7 +34,9 @@
             "type": "varchar",
             "readOnly": true,
             "maxLength": 36,
-            "audited": true
+            "audited": true,
+            "copyToClipboard": true,
+            "duplicateIgnore": true
         },
         "redirectUrls": {
             "type": "urlMultiple",
@@ -43,7 +46,8 @@
         "scopes": {
             "type": "multiEnum",
             "audited": true,
-            "displayAsList": true
+            "displayAsList": true,
+            "required": true
         },
         "description": {
             "type": "text"
@@ -71,7 +75,8 @@
             "entity": "ApiAppClientSecret",
             "foreign": "app",
             "orderBy": "createdAt",
-            "order": "desc"
+            "order": "desc",
+            "readOnly": true
         },
         "createdBy": {
             "type": "belongsTo",
