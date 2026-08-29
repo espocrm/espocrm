@@ -76,15 +76,15 @@ class AddressService
     public function searchInEntityType(string $entityType, string $query, int $limit): array
     {
         if (!in_array($entityType, $this->getHavingEmailAddressEntityTypeList())) {
-            throw new NotFound("No 'email' field.");
+            throw new NotFound("Entity type without Email Address field.");
         }
 
         if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_READ)) {
             throw new Forbidden("No access to $entityType.");
         }
 
-        if (!$this->acl->checkField($entityType, 'email')) {
-            throw new Forbidden("No access to field 'email' in $entityType.");
+        if (!$this->acl->checkField($entityType, Field::EMAIL_ADDRESS)) {
+            throw new Forbidden("No access to field 'emailAddress' in $entityType.");
         }
 
         $result = [];
