@@ -484,7 +484,7 @@ class Import
 
         $isNew = $entity->isNew();
 
-        $entity->setMultiple($params->getDefaultValues());
+        $entity->setMultiple($this->filterValuesMap($params->getDefaultValues()));
 
         // Values are not supposed to be sanitized with the field Sanitizer.
         $valueMap = $this->prepareRowValueMap($attributeList, $row);
@@ -1556,5 +1556,32 @@ class Import
         foreach ($restrictedAttributes as $attribute) {
             unset($attributeList[$attribute]);
         }
+    }
+
+    private function filterValuesMap(stdClass $values): stdClass
+    {
+        $forbiddenAttributeList = $this->getEditForbiddenAttributeList();
+
+        $output = (object) [];
+
+        foreach (get_object_vars($values) as $attribute => $value) {
+            if (in_array($attribute, $forbiddenAttributeList)) {
+                continue;
+            }
+
+            $output->$attribute = $value;
+        }
+
+        return $output;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getEditForbiddenAttributeList(): array
+    {
+        $entityType = $this->entityType ?? throw new LogicException();
+
+        return $this->aclManager->getScopeForbiddenAttributeList($this->user, $entityType, Table::ACTION_EDIT);
     }
 }

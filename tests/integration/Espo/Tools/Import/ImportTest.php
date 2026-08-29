@@ -177,4 +177,76 @@ class ImportTest extends BaseTestCase
         $this->assertNotNull($contact);
         $this->assertEquals($account->getId(), $contact->getAccount()?->getId());
     }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDefaultValues(): void
+    {
+        $this->createUser('test', [
+            Role::FIELD_DATA => [
+                'Import' => true,
+                Account::ENTITY_TYPE => [
+                    Table::ACTION_CREATE => Table::LEVEL_YES,
+                    Table::ACTION_READ => Table::LEVEL_ALL,
+                ],
+            ],
+            Role::FIELD_FIELD_DATA => [
+                Account::ENTITY_TYPE => [
+                    'type' => [
+                        Table::ACTION_READ => Table::LEVEL_YES,
+                        Table::ACTION_EDIT => Table::LEVEL_NO,
+                    ],
+                ]
+            ]
+        ]);
+
+        $this->authenticate('test');
+
+        $em = $this->getEntityManager();
+
+        //
+
+        $attachment = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $attachment
+            ->setName('test.csv')
+            ->setType('text/csv')
+            ->setContents(
+                <<<'EOT'
+                name
+                Test
+                ```
+                EOT
+            );
+        $em->saveEntity($attachment);
+
+        $account = $em->getRDBRepositoryByClass(Account::class)->getNew();
+        $account->setType(Account::TYPE_PARTNER);
+        $em->saveEntity($account);
+
+        $import = $this->getInjectableFactory()->create(Import::class);
+
+        $import
+            ->setEntityType(Account::ENTITY_TYPE)
+            ->setParams(
+                Params::create()->withDefaultValues([
+                    'type' => Account::TYPE_PARTNER,
+                    'description' => 'Test.',
+                ])
+            )
+            ->setAttachmentId($attachment->getId())
+            ->setAttributeList(['name']);
+
+        $import->run();
+
+        //
+
+        $account = $em->getRDBRepositoryByClass(Account::class)
+            ->where(['name' => 'Test'])
+            ->findOne();
+
+        $this->assertNotNull($account);
+        $this->assertNull($account->getType());
+        $this->assertEquals('Test.', $account->getDescription());
+    }
 }
