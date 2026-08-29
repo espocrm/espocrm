@@ -346,7 +346,7 @@
                 const exports = args[indexOfExports];
 
                 // noinspection JSUnresolvedReference
-                value = ('default' in exports) ? exports.default : exports;
+                value = ('default' in exports && Object.keys(exports).length === 1) ? exports.default : exports;
             }
 
             if (!id) {
