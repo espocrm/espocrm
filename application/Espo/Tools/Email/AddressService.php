@@ -114,6 +114,10 @@ class AddressService
                 continue;
             }
 
+            if (!$this->acl->checkField($entityType, Field::EMAIL_ADDRESS)) {
+                continue;
+            }
+
             $this->findInAddressBookByEntityType($query, $limit, $entityType, $result, $onlyActual);
         }
 
