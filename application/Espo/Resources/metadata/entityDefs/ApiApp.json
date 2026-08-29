@@ -28,6 +28,7 @@
             ],
             "default": "Confidential",
             "maxLength": 12,
+            "readOnlyAfterCreate": true,
             "audited": true
         },
         "clientId": {
@@ -47,7 +48,11 @@
             "type": "multiEnum",
             "audited": true,
             "displayAsList": true,
-            "required": true
+            "required": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\ApiApp\\Scopes\\Valid"
+            ],
+            "view": "views/api-app/fields/scopes"
         },
         "description": {
             "type": "text"

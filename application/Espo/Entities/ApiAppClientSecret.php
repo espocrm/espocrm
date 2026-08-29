@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\Date;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use UnexpectedValueException;
 
@@ -38,28 +39,28 @@ class ApiAppClientSecret extends Entity
     public const string ENTITY_TYPE = 'ApiAppClientSecret';
 
     public const string FIELD_STATUS = 'status';
-    public const string FIELD_VALUE = 'value';
+    public const string FIELD_HASH = 'hash';
     public const string FIELD_APP = 'app';
     public const string FIELD_EXPIRATION_DATE = 'expirationDate';
+    public const string FIELD_VALUE = 'value';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_REVOKED = 'Revoked';
     public const string STATUS_EXPIRED = 'Expired';
 
-    /**
-     * Set an encrypted value.
-     */
-    public function setValue(string $value): self
+    public function setName(string $name): self
     {
-        return $this->set(self::FIELD_VALUE, $value);
+        return $this->set(Field::NAME, $name);
     }
 
-    /**
-     * Get an encrypted value.
-     */
-    public function getValue(): string
+    public function getName(): ?string
     {
-        return $this->get(self::FIELD_VALUE) ?? throw new UnexpectedValueException("No value.");
+        return $this->get(Field::NAME);
+    }
+
+    public function setHash(string $value): self
+    {
+        return $this->set(self::FIELD_HASH, $value);
     }
 
     public function isActive(): bool
@@ -86,5 +87,26 @@ class ApiAppClientSecret extends Entity
     public function setExpirationData(?Date $date): self
     {
         return $this->setValueObject(self::FIELD_EXPIRATION_DATE, $date);
+    }
+
+    public function getApp(): ApiApp
+    {
+        $app = $this->relations->getOne(self::FIELD_APP);
+
+        if (!$app instanceof ApiApp) {
+            throw new UnexpectedValueException("No app.");
+        }
+
+        return $app;
+    }
+
+    public function setApp(ApiApp $app): self
+    {
+        return $this->setRelatedLinkOrEntity(self::FIELD_APP, $app);
+    }
+
+    public function setValue(string $value): self
+    {
+        return $this->set(self::FIELD_VALUE, $value);
     }
 }

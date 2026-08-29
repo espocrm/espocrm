@@ -1,7 +1,6 @@
 [
     {
-        "name": "name",
-        "label": "value",
+        "name": "value",
         "link": true
     },
     {

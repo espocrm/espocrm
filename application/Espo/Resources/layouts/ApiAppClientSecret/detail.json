@@ -3,7 +3,7 @@
         "rows": [
             [
                 {
-                    "name": "name"
+                    "name": "value"
                 },
                 {
                     "name": "status"

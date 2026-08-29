@@ -6,7 +6,9 @@
                 "all",
                 "active"
             ],
-            "layout": "listForApp"
+            "layout": "listForApp",
+            "orderBy": "createdAt",
+            "orderDirection": "desc"
         }
     }
 }
