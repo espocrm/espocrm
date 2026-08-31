@@ -1,0 +1,22 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "client",
+        "width": 20
+    },
+    {
+        "name": "status",
+        "width": 15
+    },
+    {
+        "name": "user",
+        "width": 20
+    },
+    {
+        "name": "expiresAt",
+        "width": 15
+    }
+]

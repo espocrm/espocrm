@@ -74,7 +74,10 @@
         "Pipeline": "Pipeline",
         "PipelineStage": "Pipeline Stage",
         "OAuthClient": "OAuth Client",
-        "OAuthClientSecret": "OAuth Client Secret"
+        "OAuthClientSecret": "OAuth Client Secret",
+        "OAuthAuthorizationCode": "OAuth Authorization Code",
+        "OAuthAccessToken": "OAuth Access Token",
+        "OAuthRefreshToken": "OAuth Refresh Token"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -139,7 +142,10 @@
         "Pipeline": "Pipelines",
         "PipelineStage": "Pipeline Stages",
         "OAuthClient": "OAuth Clients",
-        "OAuthClientSecret": "OAuth Client Secrets"
+        "OAuthClientSecret": "OAuth Client Secrets",
+        "OAuthAuthorizationCode": "OAuth Authorization Codes",
+        "OAuthAccessToken": "OAuth Access Tokens",
+        "OAuthRefreshToken": "OAuth Refresh Tokens"
     },
     "labels": {
         "Previous Page": "Previous Page",

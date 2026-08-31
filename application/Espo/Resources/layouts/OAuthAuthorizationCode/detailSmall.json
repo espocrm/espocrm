@@ -1,0 +1,33 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "status"
+                }
+            ],
+            [
+                {
+                    "name": "client"
+                },
+                {
+                    "name": "expiresAt"
+                }
+            ],
+            [
+                {
+                    "name": "user"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ]
+    }
+]

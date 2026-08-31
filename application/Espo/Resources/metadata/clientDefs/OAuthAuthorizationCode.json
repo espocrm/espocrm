@@ -1,0 +1,19 @@
+{
+    "controller": "controllers/record",
+    "textFilterDisabled": true,
+    "createDisabled": true,
+    "editDisabled": true,
+    "massUpdateDisabled": true,
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "name": "oAuthClients",
+                    "labelTranslation": "Global.scopeNamesPlural.OAuthClient",
+                    "aclScope": "OAuthClient",
+                    "link": "#Admin/oAuthClients"
+                }
+            ]
+        }
+    }
+}

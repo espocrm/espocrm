@@ -10,5 +10,29 @@
             "orderBy": "createdAt",
             "orderDirection": "desc"
         }
+    },
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "name": "authorizationCodes",
+                    "labelTranslation": "Global.scopeNamesPlural.OAuthAuthorizationCode",
+                    "aclScope": "OAuthAuthorizationCode",
+                    "link": "#OAuthAuthorizationCode"
+                },
+                {
+                    "name": "accessToken",
+                    "labelTranslation": "Global.scopeNamesPlural.OAuthAccessToken",
+                    "aclScope": "OAuthAccessToken",
+                    "link": "#OAuthAccessToken"
+                },
+                {
+                    "name": "refreshTokens",
+                    "labelTranslation": "Global.scopeNamesPlural.OAuthRefreshToken",
+                    "aclScope": "OAuthRefreshToken",
+                    "link": "#OAuthRefreshToken"
+                }
+            ]
+        }
     }
 }

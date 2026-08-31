@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "identifier": "Identifier",
+        "status": "Status",
+        "client": "Client",
+        "user": "User",
+        "expiresAt": "Expires At",
+        "scopes": "Scopes"
+    },
+    "links": {
+        "client": "Client",
+        "user": "User"
+    },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Revoked": "Revoked",
+            "Expired": "Expired"
+        }
+    }
+}

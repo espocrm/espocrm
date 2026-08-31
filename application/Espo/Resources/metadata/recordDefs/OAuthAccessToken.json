@@ -1,8 +1,5 @@
 {
     "massActions": {
-        "update": {
-            "allowed": false
-        },
         "delete": {
             "allowed": true
         }
