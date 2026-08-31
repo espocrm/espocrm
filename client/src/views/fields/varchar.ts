@@ -143,10 +143,8 @@ class VarcharFieldView<
             this.setOptionList(this.options.customOptionList);
         }
 
-        if (this.mode === this.MODE_DETAIL) {
-            if (this.params.copyToClipboard) {
-                this.events['click [data-action="copyToClipboard"]'] = () => this.copyToClipboard();
-            }
+        if (this.isReadMode() && this.params.copyToClipboard) {
+            this.addActionHandler('copyToClipboard', () => this.copyToClipboard());
         }
 
         this.on('remove', () => {
