@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\OAuthClient\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
-use Espo\Entities\OAuthClient;
+use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\ORM\Query\SelectBuilder;
 
 class Active implements Filter
@@ -38,7 +38,7 @@ class Active implements Filter
     public function apply(SelectBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            OAuthClient::FIELD_STATUS => OAuthClient::STATUS_ACTIVE,
+            Client::FIELD_STATUS => Client::STATUS_ACTIVE,
         ]);
     }
 }

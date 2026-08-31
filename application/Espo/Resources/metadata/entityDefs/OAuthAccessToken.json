@@ -21,13 +21,6 @@
                 "Expired": "info"
             }
         },
-        "redirectUri": {
-            "type": "varchar",
-            "dbType": "text",
-            "maxLength": 1500,
-            "readOnly": true,
-            "required": true
-        },
         "expiresAt": {
             "type": "datetime",
             "readOnly": true,
@@ -84,5 +77,5 @@
             ]
         }
     },
-    "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\AuthorizationCode"
+    "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\AccessToken"
 }

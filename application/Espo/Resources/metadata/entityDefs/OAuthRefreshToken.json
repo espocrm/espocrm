@@ -21,29 +21,20 @@
                 "Expired": "info"
             }
         },
-        "redirectUri": {
-            "type": "varchar",
-            "dbType": "text",
-            "maxLength": 1500,
-            "readOnly": true,
-            "required": true
-        },
         "expiresAt": {
             "type": "datetime",
             "readOnly": true,
             "required": true
-        },
-        "scopes": {
-            "type": "multiEnum",
-            "readOnly": true,
-            "displayAsList": true,
-            "storeArrayValues": false
         },
         "user": {
             "type": "link",
             "readOnly": true
         },
         "client": {
+            "type": "link",
+            "readOnly": true
+        },
+        "accessToken": {
             "type": "link",
             "readOnly": true
         },
@@ -64,6 +55,10 @@
         "client": {
             "type": "belongsTo",
             "entity": "OAuthClient"
+        },
+        "accessToken": {
+            "type": "belongsTo",
+            "entity": "OAuthAccessToken"
         }
     },
     "collection": {
@@ -84,5 +79,5 @@
             ]
         }
     },
-    "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\AuthorizationCode"
+    "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\RefreshToken"
 }

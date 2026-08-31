@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Tools\OAuthServer\Entities;
 
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use Espo\Tools\OAuthServer\ClientType;
 use UnexpectedValueException;
 
-class OAuthClient extends Entity
+class Client extends Entity
 {
     public const string ENTITY_TYPE = 'OAuthClient';
 

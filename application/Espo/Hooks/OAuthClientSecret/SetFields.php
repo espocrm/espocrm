@@ -32,14 +32,14 @@ namespace Espo\Hooks\OAuthClientSecret;
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
-use Espo\Entities\OAuthClientSecret;
+use Espo\Tools\OAuthServer\Entities\ClientSecret;
 use Espo\ORM\Entity;
 use Espo\ORM\Exceptions\PersistenceException;
 use Espo\ORM\Repository\Option\SaveOptions;
 use Espo\Tools\OAuthServer\ClientType;
 
 /**
- * @implements BeforeSave<OAuthClientSecret>
+ * @implements BeforeSave<ClientSecret>
  */
 class SetFields implements BeforeSave
 {
@@ -60,7 +60,7 @@ class SetFields implements BeforeSave
         return '...' . substr($secret, - 6);
     }
 
-    private function setForNew(OAuthClientSecret $entity): void
+    private function setForNew(ClientSecret $entity): void
     {
         if ($entity->getClient()->getClientType() !== ClientType::Confidential) {
             throw new PersistenceException("Cannot create secret for Confidential client.");

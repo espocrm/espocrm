@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Tools\OAuthServer\Entities;
 
 use Espo\Core\Field\Date;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
 use UnexpectedValueException;
 
-class OAuthClientSecret extends Entity
+class ClientSecret extends Entity
 {
     public const string ENTITY_TYPE = 'OAuthClientSecret';
 
@@ -89,20 +89,20 @@ class OAuthClientSecret extends Entity
         return $this->setValueObject(self::FIELD_EXPIRATION_DATE, $date);
     }
 
-    public function getClient(): OAuthClient
+    public function getClient(): Client
     {
-        $app = $this->relations->getOne(self::FILED_CLIENT);
+        $client = $this->relations->getOne(self::FILED_CLIENT);
 
-        if (!$app instanceof OAuthClient) {
+        if (!$client instanceof Client) {
             throw new UnexpectedValueException("No client.");
         }
 
-        return $app;
+        return $client;
     }
 
-    public function setClient(OAuthClient $app): self
+    public function setClient(Client $client): self
     {
-        return $this->setRelatedLinkOrEntity(self::FILED_CLIENT, $app);
+        return $this->setRelatedLinkOrEntity(self::FILED_CLIENT, $client);
     }
 
     public function setValue(string $value): self

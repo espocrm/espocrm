@@ -35,4 +35,9 @@ use Espo\Core\Controllers\Record;
  * @noinspection PhpUnused
  */
 class OAuthClient extends Record
-{}
+{
+    protected function checkAccess(): bool
+    {
+        return $this->user->isAdmin();
+    }
+}

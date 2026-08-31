@@ -32,12 +32,12 @@ namespace Espo\Classes\FieldValidators\OAuthClient\Scopes;
 use Espo\Core\FieldValidation\Validator;
 use Espo\Core\FieldValidation\Validator\Data;
 use Espo\Core\FieldValidation\Validator\Failure;
-use Espo\Entities\OAuthClient;
+use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\ORM\Entity;
 use Espo\Tools\OAuthServer\ScopesProvider;
 
 /**
- * @implements Validator<OAuthClient>
+ * @implements Validator<Client>
  */
 class Valid implements Validator
 {

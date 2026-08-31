@@ -44,7 +44,7 @@
             "protocolRequired": true,
             "audited": true,
             "maxItemLength": 1500,
-            "doNotStoreArrayValues": true
+            "storeArrayValues": false
         },
         "scopes": {
             "type": "multiEnum",
@@ -100,5 +100,6 @@
         "textFilterFields": [
             "name"
         ]
-    }
+    },
+    "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\Client"
 }

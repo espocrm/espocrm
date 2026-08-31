@@ -30,13 +30,13 @@
 namespace Espo\Hooks\OAuthClient;
 
 use Espo\Core\Utils\Util;
-use Espo\Entities\OAuthClient;
+use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @implements BeforeSave<OAuthClient>
+ * @implements BeforeSave<Client>
  */
 class SetFields implements BeforeSave
 {

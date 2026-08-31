@@ -29,15 +29,24 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Exceptions\Forbidden;
+use stdClass;
 
 /**
  * @noinspection PhpUnused
  */
-class OAuthClientSecret extends RecordBase
+class OAuthAccessToken extends RecordBase
 {
     protected function checkAccess(): bool
     {
         return $this->user->isAdmin();
+    }
+
+    public function postActionCreate(Request $request, Response $response): stdClass
+    {
+        throw new Forbidden();
     }
 }

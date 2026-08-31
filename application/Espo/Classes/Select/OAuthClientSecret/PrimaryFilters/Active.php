@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\OAuthClientSecret\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
-use Espo\Entities\OAuthClientSecret;
+use Espo\Tools\OAuthServer\Entities\ClientSecret;
 use Espo\ORM\Query\SelectBuilder;
 
 class Active implements Filter
@@ -38,7 +38,7 @@ class Active implements Filter
     public function apply(SelectBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            OAuthClientSecret::FIELD_STATUS => OAuthClientSecret::STATUS_ACTIVE,
+            ClientSecret::FIELD_STATUS => ClientSecret::STATUS_ACTIVE,
         ]);
     }
 }

@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "identifier": {
+            "forbidden": true
+        }
+    }
+}
