@@ -36,11 +36,38 @@ export default class ApiAppClientSecretValueField extends VarcharFieldView<{
     }>
 }> {
 
+    // noinspection JSUnusedGlobalSymbols
+    protected listLinkTemplateContent = `
+        {{~#if copyToClipboard~}}
+            <a
+                role="button"
+                data-action="copyToClipboard"
+                class="pull-right text-soft"
+                title="{{translate 'Copy to Clipboard'}}"
+            ><span class="far fa-copy"></span></a>
+        {{~/if~}}
+        <a
+            href="#{{scope}}/view/{{model.id}}"
+            class="link"
+            data-id="{{model.id}}"
+            title="{{value}}"
+        >{{#if value}}{{value}}{{else}}{{translate 'None'}}{{/if}}</a>
+    `
     protected getAttributeList(): string[] {
         return [
             ...super.getAttributeList(),
             'name',
         ];
+    }
+
+    protected data() {
+        const data = super.data();
+
+        return {
+            ...data,
+            isNotEmpty: data.isNotEmpty || this.model.attributes.name != null,
+            valueIsSet: data.valueIsSet || this.model.attributes.name != null,
+        };
     }
 
     protected setup() {
