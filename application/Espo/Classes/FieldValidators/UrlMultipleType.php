@@ -42,7 +42,7 @@ class UrlMultipleType extends ArrayType
 
     public function checkMaxItemLength(Entity $entity, string $field, ?int $validationValue): bool
     {
-        return parent::checkMaxItemLength($entity, $field, self::MAX_ITEM_LENGTH);
+        return parent::checkMaxItemLength($entity, $field, $validationValue ?? self::MAX_ITEM_LENGTH);
     }
 
     public function checkPattern(Entity $entity, string $field, ?string $validationValue): bool
