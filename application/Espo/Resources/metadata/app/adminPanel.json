@@ -312,10 +312,10 @@
                 "description": "authenticationProviders"
             },
             {
-                "url": "#Admin/apiApps",
-                "labelTranslation": "Global.scopeNamesPlural.ApiApp",
+                "url": "#Admin/oAuthClients",
+                "labelTranslation": "Global.scopeNamesPlural.OAuthClient",
                 "iconClass": "fas fa-user-lock",
-                "description": "apiApps"
+                "description": "oAuthClients"
             }
         ],
         "order": 24

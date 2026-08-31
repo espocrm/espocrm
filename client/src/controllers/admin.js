@@ -245,8 +245,8 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    actionApiApps() {
-        this.getRouter().dispatch('ApiApp', 'list', {fromAdmin: true});
+    actionOAuthClients() {
+        this.getRouter().dispatch('OAuthClient', 'list', {fromAdmin: true});
     }
 
     // noinspection JSUnusedGlobalSymbols

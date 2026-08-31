@@ -42,7 +42,7 @@
             "type": "link",
             "readOnly": true
         },
-        "app": {
+        "client": {
             "type": "link",
             "readOnly": true
         },
@@ -60,9 +60,9 @@
             "type": "belongsTo",
             "entity": "User"
         },
-        "app": {
+        "client": {
             "type": "belongsTo",
-            "entity": "ApiApp"
+            "entity": "OAuthClient"
         }
     },
     "collection": {

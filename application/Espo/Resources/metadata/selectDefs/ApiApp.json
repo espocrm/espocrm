@@ -1,5 +1,0 @@
-{
-    "primaryFilterClassNameMap": {
-        "active": "Espo\\Classes\\Select\\ApiApp\\PrimaryFilters\\Active"
-    }
-}

@@ -333,7 +333,7 @@
         "addressCountries": "Countries available for address fields.",
         "oAuthProviders": "OAuth providers for integrations.",
         "pipelines": "Configure multiple pipelines.",
-        "apiApps": "Register applications for API access via OAuth."
+        "oAuthClients": "Register applications for API access via OAuth."
     },
     "keywords": {
         "settings": "system",
@@ -349,7 +349,7 @@
         "labelManager": "language,translation",
         "appSecrets": "key,keys,password",
         "leadCapture": "web forms",
-        "apiApps": "oauth,api,authentication"
+        "oauthClients": "oauth,api,authentication"
     },
     "options": {
         "previewSize": {

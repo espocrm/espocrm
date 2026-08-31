@@ -1,0 +1,25 @@
+{
+    "labels": {
+        "Create OAuthClient": "Register OAuth Client"
+    },
+    "fields": {
+        "status": "Status",
+        "clientType": "Client Type",
+        "clientId": "Client ID",
+        "redirectUris": "Redirect URIs",
+        "scopes": "Scopes"
+    },
+    "links": {
+        "clientSecrets": "Client Secrets"
+    },
+    "options": {
+        "clientType": {
+            "Confidential": "Confidential",
+            "Public": "Public"
+        },
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    }
+}

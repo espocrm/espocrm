@@ -1,0 +1,104 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "maxLength": 100,
+            "required": true,
+            "index": true,
+            "audited": true
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Inactive"
+            ],
+            "default": "Active",
+            "maxLength": 8,
+            "style": {
+                "Inactive": "info"
+            },
+            "duplicateIgnore": true
+        },
+        "clientType": {
+            "type": "enum",
+            "options": [
+                "Confidential",
+                "Public"
+            ],
+            "default": "Confidential",
+            "maxLength": 12,
+            "readOnlyAfterCreate": true,
+            "audited": true
+        },
+        "clientId": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 36,
+            "audited": true,
+            "copyToClipboard": true,
+            "duplicateIgnore": true
+        },
+        "redirectUris": {
+            "type": "urlMultiple",
+            "protocolRequired": true,
+            "audited": true,
+            "maxItemLength": 1500,
+            "doNotStoreArrayValues": true
+        },
+        "scopes": {
+            "type": "multiEnum",
+            "audited": true,
+            "displayAsList": true,
+            "required": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\OAuthClient\\Scopes\\Valid"
+            ],
+            "view": "views/o-auth-client/fields/scopes"
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "clientSecrets": {
+            "type": "hasMany",
+            "entity": "OAuthClientSecret",
+            "foreign": "client",
+            "orderBy": "createdAt",
+            "order": "desc",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "name",
+        "order": "asc",
+        "textFilterFields": [
+            "name"
+        ]
+    }
+}
