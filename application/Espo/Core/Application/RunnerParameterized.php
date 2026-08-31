@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Application;
 
+use Espo\Core\Application\Exceptions\RunnerException;
 use Espo\Core\Application\Runner\Params;
 
 /**
@@ -36,5 +37,8 @@ use Espo\Core\Application\Runner\Params;
  */
 interface RunnerParameterized
 {
+    /**
+     * @throws RunnerException
+     */
     public function run(Params $params): void;
 }

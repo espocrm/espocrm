@@ -37,5 +37,5 @@ $app = new Application();
 
 $app->run(
     EntryPoint::class,
-    Params::create()->with('entryPoint', 'oauthCallback')
+    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oauthCallback')
 );

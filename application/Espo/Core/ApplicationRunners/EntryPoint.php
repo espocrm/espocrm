@@ -29,23 +29,77 @@
 
 namespace Espo\Core\ApplicationRunners;
 
+use Espo\Core\Application\Exceptions\RunnerException;
 use Espo\Core\Application\RunnerParameterized;
 use Espo\Core\Application\Runner\Params;
+use Espo\Core\EntryPoint\Params as EntryPointParams;
 use Espo\Core\EntryPoint\Starter;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use RuntimeException;
 
 /**
  * Runs an entry point.
  */
 class EntryPoint implements RunnerParameterized
 {
+    public const string PARAM_ENTRY_POINT = 'entryPoint';
+    public const string PARAM_FINAL = 'final';
+    public const string PARAM_ALLOWED_METHODS = 'allowedMethods';
+
     public function __construct(private Starter $starter)
     {}
 
     public function run(Params $params): void
     {
-        $this->starter->start(
-            $params->get('entryPoint'),
-            $params->get('final') ?? false
+        $entryPointParams = new EntryPointParams(
+            name: $this->getName($params),
+            allowedMethods: $this->getAllowedMethods($params),
+            final: $params->get(self::PARAM_FINAL) === true,
         );
+
+        try {
+            $this->starter->start($entryPointParams);
+        } catch (BadRequest|Forbidden|NotFound $e) {
+            $message = $e->getMessage();
+
+            throw new RunnerException($message, previous: $e);
+        }
+    }
+
+    private function getName(Params $params): ?string
+    {
+        $name = $params->get(self::PARAM_ENTRY_POINT);
+
+        if ($name !== null && !is_string($name)) {
+            throw new RuntimeException("Bad 'entryPoint' value.");
+        }
+
+        return $name;
+    }
+
+    /**
+     * @return ?string[]
+     */
+    private function getAllowedMethods(Params $params): ?array
+    {
+        $value = $params->get(self::PARAM_ALLOWED_METHODS);
+
+        if ($value === null) {
+            return null;
+        }
+
+        if (!is_array($value)) {
+            throw new RuntimeException("Bad 'allowedMethods' value.");
+        }
+
+        foreach ($value as $it) {
+            if (!is_string($it)) {
+                throw new RuntimeException("Bad 'allowedMethods' item value.");
+            }
+        }
+
+        return $value;
     }
 }

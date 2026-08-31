@@ -27,15 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "../bootstrap.php";
+namespace Espo\Core\EntryPoint;
 
-use Espo\Core\Application;
-use Espo\Core\Application\Runner\Params;
-use Espo\Core\ApplicationRunners\EntryPoint;
-
-$app = new Application();
-
-$app->run(
-    EntryPoint::class,
-    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oauthCallback')
-);
+/**
+ * @since 10.1.0
+ */
+readonly class Params
+{
+    /**
+     * @param string[] $allowedMethods
+     */
+    public function __construct(
+        public ?string $name = null,
+        public ?array $allowedMethods = null,
+        public bool $final = false,
+    ) {}
+}
