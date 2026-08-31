@@ -39,10 +39,12 @@
             "copyToClipboard": true,
             "duplicateIgnore": true
         },
-        "redirectUrls": {
+        "redirectUris": {
             "type": "urlMultiple",
             "protocolRequired": true,
-            "audited": true
+            "audited": true,
+            "maxItemLength": 1500,
+            "doNotStoreArrayValues": true
         },
         "scopes": {
             "type": "multiEnum",

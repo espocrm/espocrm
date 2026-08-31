@@ -19,7 +19,7 @@
             ],
             [
                 {
-                    "name": "redirectUrls"
+                    "name": "redirectUris"
                 },
                 {
                     "name": "scopes"

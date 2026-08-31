@@ -42,7 +42,7 @@ class ApiApp extends Entity
     public const string FIELD_CLIENT_ID = 'clientId';
     public const string FIELD_CLIENT_TYPE = 'clientType';
     public const string FIELD_SCOPES = 'scopes';
-    public const string FIELD_REDIRECT_URLS = 'redirectUrls';
+    public const string FIELD_REDIRECT_URIS = 'redirectUris';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_INACTIVE = 'Inactive';
@@ -113,16 +113,16 @@ class ApiApp extends Entity
     /**
      * @return string[]
      */
-    public function getRedirectUrls(): array
+    public function getRedirectUris(): array
     {
-        return $this->get(self::FIELD_REDIRECT_URLS) ?? [];
+        return $this->get(self::FIELD_REDIRECT_URIS) ?? [];
     }
 
     /**
-     * @param string[] $redirectUrls
+     * @param string[] $redirectUris
      */
-    public function setRedirectUrls(array $redirectUrls): self
+    public function setRedirectUris(array $redirectUris): self
     {
-        return $this->set(self::FIELD_REDIRECT_URLS, $redirectUrls);
+        return $this->set(self::FIELD_REDIRECT_URIS, $redirectUris);
     }
 }

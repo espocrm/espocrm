@@ -1,0 +1,86 @@
+{
+    "fields": {
+        "identifier": {
+            "type": "varchar",
+            "maxLength": 80,
+            "readOnly": true,
+            "required": true
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Revoked",
+                "Expired"
+            ],
+            "default": "Active",
+            "maxLength": 7,
+            "readOnly": true,
+            "style": {
+                "Revoked": "info",
+                "Expired": "info"
+            }
+        },
+        "redirectUri": {
+            "type": "varchar",
+            "dbType": "text",
+            "maxLength": 1500,
+            "required": true
+        },
+        "expiresAt": {
+            "type": "datetime",
+            "readOnly": true,
+            "required": true
+        },
+        "scopes": {
+            "type": "multiEnum",
+            "readOnly": true,
+            "required": true,
+            "displayAsList": true
+        },
+        "user": {
+            "type": "link",
+            "readOnly": true
+        },
+        "app": {
+            "type": "link",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "app": {
+            "type": "belongsTo",
+            "entity": "ApiApp"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": []
+    },
+    "indexes": {
+        "createdAt": {
+            "columns": [
+                "createdAt"
+            ]
+        },
+        "expiresAtStatus": {
+            "columns": [
+                "expiresAt",
+                "status"
+            ]
+        }
+    }
+}
