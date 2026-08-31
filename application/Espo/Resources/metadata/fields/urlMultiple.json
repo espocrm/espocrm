@@ -32,6 +32,11 @@
         {
             "name": "readOnlyAfterCreate",
             "type": "bool"
+        },
+        {
+            "name": "maxItemLength",
+            "type": "int",
+            "hidden": true
         }
     ],
     "validationList": [
