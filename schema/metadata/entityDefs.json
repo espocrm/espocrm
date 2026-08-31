@@ -261,7 +261,9 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
-                                    {"const": "array"}
+                                    {"const": "array"},
+                                    {"const": "multiEnum"},
+                                    {"const": "urlMultiple"}
                                 ]
                             }
                         }
