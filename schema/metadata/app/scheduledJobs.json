@@ -5,7 +5,7 @@
     "description": "Scheduled jobs definitions. Defined scheduled job will be available for the admin when creating a scheduled job.",
     "type": "object",
     "additionalProperties": {
-        "description": "A job name. Should start with the upper case letter.",
+        "description": "A job name. Should start with an upper case letter.",
         "type": "object",
         "properties": {
             "name": {
