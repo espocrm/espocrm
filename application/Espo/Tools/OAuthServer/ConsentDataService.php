@@ -27,38 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+namespace Espo\Tools\OAuthServer;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Entities\User;
+use Espo\Tools\OAuthServer\Repository\ClientRepository;
+use stdClass;
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
+class ConsentDataService
 {
     public function __construct(
-        private ActionRenderer $actionRenderer,
+        private ClientRepository $clientRepository,
+        private User $user,
     ) {}
 
-    public function run(Request $request, Response $response): void
+    /**
+     * @throws NotFound
+     */
+    public function getData(string $clientId): stdClass
     {
-        $clientId = $request->getQueryParam('client_id');
+        $client = $this->getClient($clientId);
+
+        // @todo Check user is associated.
+
+        $scopes = $client->getScopes();
+
+        // @todo Filter scopes.
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getClient(string $clientId): ?Entities\Client
+    {
+        $client = $this->clientRepository->getActiveByClientId($clientId);
 
         if (!$clientId) {
-            throw new BadRequest("No 'client_id'.");
+            throw new NotFound("Client not found.");
         }
 
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
-
-        $params = $params->withLogin();
-
-        $this->actionRenderer->write($response, $params);
+        return $client;
     }
 }

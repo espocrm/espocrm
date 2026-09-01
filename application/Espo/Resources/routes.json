@@ -730,5 +730,10 @@
         "route": "PipelineStage/:id/move/:type",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Pipeline\\Api\\PostStageMove"
+    },
+    {
+        "route": "OAuthServer/consentData",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\GetConsentData"
     }
 ]

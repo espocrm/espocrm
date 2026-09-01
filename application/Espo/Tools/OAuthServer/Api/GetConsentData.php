@@ -27,38 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+namespace Espo\Tools\OAuthServer\Api;
 
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Tools\OAuthServer\ConsentDataService;
 
 /**
  * @noinspection PhpUnused
  */
-class Authorize implements EntryPoint
+class GetConsentData implements Action
 {
     public function __construct(
-        private ActionRenderer $actionRenderer,
+        private ConsentDataService $service,
     ) {}
 
-    public function run(Request $request, Response $response): void
+    public function process(Request $request): Response
     {
-        $clientId = $request->getQueryParam('client_id');
+        $clientId = $request->getQueryParam('clientId') ?? throw new BadRequest("No clientId.");
 
-        if (!$clientId) {
-            throw new BadRequest("No 'client_id'.");
-        }
+        $data = $this->service->getData($clientId);
 
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
-
-        $params = $params->withLogin();
-
-        $this->actionRenderer->write($response, $params);
+        return ResponseComposer::json($data);
     }
 }

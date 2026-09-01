@@ -27,14 +27,16 @@
  ************************************************************************/
 
 import Controller from 'controller';
+import AuthorizationConsentView from 'views/o-auth-server/authorization-consent';
 
 // noinspection JSUnusedGlobalSymbols
 export default class OAuthAuthorizeController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
-    actionShow(data) {
+    actionShow() {
+        const view = new AuthorizationConsentView();
 
-        console.log(data);
+        this.entire(view);
     }
 }
 
