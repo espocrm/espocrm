@@ -27,36 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+namespace Espo\Tools\OAuthServer\Repository;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\ORM\EntityManager;
+use Espo\Tools\OAuthServer\Entities\Client;
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
+class ClientRepository
 {
     public function __construct(
-        private ActionRenderer $actionRenderer,
+        private EntityManager $entityManager,
     ) {}
 
-    public function run(Request $request, Response $response): void
+    public function getActiveByClientId(string $clientId): ?Client
     {
-        $clientId = $request->getQueryParam('client_id');
-
-        if (!$clientId) {
-            throw new BadRequest("No 'client_id'.");
-        }
-
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
-
-        $this->actionRenderer->write($response, $params);
+        return $this->entityManager
+            ->getRDBRepositoryByClass(Client::class)
+            ->where([
+                Client::FIELD_CLIENT_ID => $clientId,
+                Client::FIELD_STATUS => Client::STATUS_ACTIVE,
+            ])
+            ->findOne();
     }
 }

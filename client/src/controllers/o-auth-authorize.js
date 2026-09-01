@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,36 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+import Controller from 'controller';
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Client\ActionRenderer;
+// noinspection JSUnusedGlobalSymbols
+export default class OAuthAuthorizeController extends Controller {
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
-{
-    public function __construct(
-        private ActionRenderer $actionRenderer,
-    ) {}
+    // noinspection JSUnusedGlobalSymbols
+    actionShow(data) {
 
-    public function run(Request $request, Response $response): void
-    {
-        $clientId = $request->getQueryParam('client_id');
-
-        if (!$clientId) {
-            throw new BadRequest("No 'client_id'.");
-        }
-
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
-
-        $this->actionRenderer->write($response, $params);
+        console.log(data);
     }
 }
+

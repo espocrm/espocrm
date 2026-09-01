@@ -27,36 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+include "../../../bootstrap.php";
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Core\Application;
+use Espo\Core\Application\Runner\Params;
+use Espo\Core\ApplicationRunners\EntryPoint;
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
-{
-    public function __construct(
-        private ActionRenderer $actionRenderer,
-    ) {}
+$app = new Application();
 
-    public function run(Request $request, Response $response): void
-    {
-        $clientId = $request->getQueryParam('client_id');
+$app->setClientBasePath('../../');
 
-        if (!$clientId) {
-            throw new BadRequest("No 'client_id'.");
-        }
-
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
-
-        $this->actionRenderer->write($response, $params);
-    }
-}
+$app->run(
+    EntryPoint::class,
+    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oauthAuthorize')
+);

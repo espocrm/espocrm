@@ -101,5 +101,12 @@
             "name"
         ]
     },
+    "indexes": {
+        "clientId": {
+            "columns": [
+                "clientId"
+            ]
+        }
+    },
     "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\Client"
 }
