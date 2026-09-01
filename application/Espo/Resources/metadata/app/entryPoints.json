@@ -1,0 +1,8 @@
+{
+    "pdf": {
+        "className": "Espo\\EntryPoints\\Pdf"
+    },
+    "oauthCallback": {
+        "className": "Espo\\EntryPoints\\OauthCallback"
+    }
+}

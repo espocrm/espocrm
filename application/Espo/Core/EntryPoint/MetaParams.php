@@ -32,10 +32,16 @@ namespace Espo\Core\EntryPoint;
 /**
  * @since 10.1.0
  */
-readonly class Params
+readonly class MetaParams
 {
+    /**
+     * @param ?class-string<EntryPoint> $className
+     * @param ?string[] $allowedMethods
+     */
     public function __construct(
-        public ?string $name = null,
-        public bool $final = false,
+        public ?string $className = null,
+        public bool $notExposed = false,
+        public bool $noAuth = false,
+        public ?array $allowedMethods = null,
     ) {}
 }

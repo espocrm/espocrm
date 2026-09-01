@@ -294,6 +294,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/entryPoints.json"
+            ],
+            "url": "./schema/metadata/app/entryPoints.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/export.json"
             ],
             "url": "./schema/metadata/app/export.json"

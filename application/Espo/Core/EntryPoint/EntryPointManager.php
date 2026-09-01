@@ -35,6 +35,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\ClassFinder;
+use Espo\Core\Utils\Metadata;
 
 /**
  * Runs entry points.
@@ -43,7 +44,8 @@ class EntryPointManager
 {
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private ClassFinder $classFinder
+        private ClassFinder $classFinder,
+        private Metadata $metadata,
     ) {}
 
     /**
@@ -51,6 +53,12 @@ class EntryPointManager
      */
     public function checkAuthRequired(string $name): bool
     {
+        $metaParams = $this->getMetaParams($name);
+
+        if ($metaParams->noAuth) {
+            return false;
+        }
+
         $className = $this->getClassName($name);
 
         if (!$className) {
@@ -92,7 +100,33 @@ class EntryPointManager
      */
     private function getClassName(string $name): ?string
     {
+        $metaParams = $this->getMetaParams($name);
+
+        if ($metaParams->className) {
+            return $metaParams->className;
+        }
+
         /** @var ?class-string<EntryPoint> */
         return $this->classFinder->find('EntryPoints', ucfirst($name));
+    }
+
+    public function getMetaParams(string $name): MetaParams
+    {
+        /**
+         * @var array{
+         *     className?: ?class-string<EntryPoint>,
+         *     notExposed?: bool,
+         *     noAuth?: bool,
+         *     allowedMethods?: string[],
+         * } $params
+         */
+        $params = $this->metadata->get("app.entryPoints.$name") ?? [];
+
+        return new MetaParams(
+            className: $params['className'] ?? null,
+            notExposed: $params['notExposed'] ?? false,
+            noAuth: $params['noAuth'] ?? false,
+            allowedMethods: $params['allowedMethods'] ?? null,
+        );
     }
 }

@@ -29,13 +29,16 @@
 
 namespace Espo\Core\EntryPoint;
 
+use Espo\Core\Api\ResponseWrapper;
+use Slim\ResponseEmitter;
+
 /**
- * @since 10.1.0
+ * @internal
  */
-readonly class Params
+class OutputEmitter
 {
-    public function __construct(
-        public ?string $name = null,
-        public bool $final = false,
-    ) {}
+    public function emit(ResponseWrapper $response): void
+    {
+        (new ResponseEmitter())->emit($response->toPsr7());
+    }
 }

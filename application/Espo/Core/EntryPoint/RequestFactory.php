@@ -29,13 +29,20 @@
 
 namespace Espo\Core\EntryPoint;
 
+use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Utils\Route;
+use Slim\Factory\ServerRequestCreatorFactory;
+
 /**
- * @since 10.1.0
+ * @internal
  */
-readonly class Params
+class RequestFactory
 {
-    public function __construct(
-        public ?string $name = null,
-        public bool $final = false,
-    ) {}
+    public function create(): RequestWrapper
+    {
+        return new RequestWrapper(
+            ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),
+            Route::detectBasePath()
+        );
+    }
 }

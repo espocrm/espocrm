@@ -43,13 +43,8 @@ use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Api\AuthBuilderFactory;
 use Espo\Core\Portal\Utils\Url;
-use Espo\Core\Utils\Route;
 use Espo\Core\Utils\ClientManager;
 use Espo\Core\ApplicationRunners\EntryPoint as EntryPointRunner;
-
-use Slim\ResponseEmitter;
-use Slim\Factory\ServerRequestCreatorFactory;
-use Slim\Psr7\Response;
 
 use Exception;
 
@@ -65,35 +60,30 @@ class Starter
         private ApplicationUser $applicationUser,
         private AuthTokenManager $authTokenManager,
         private AuthBuilderFactory $authBuilderFactory,
+        private RequestFactory $requestFactory,
+        private ResponseFactory $responseFactory,
         private ErrorOutput $errorOutput,
+        private OutputEmitter $outputEmitter,
     ) {}
 
     /**
-     * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
      */
     public function start(Params $params = new Params()): void
     {
-        $requestWrapped = new RequestWrapper(
-            ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),
-            Route::detectBasePath()
-        );
+        $request = $this->requestFactory->create();
+        $response = $this->responseFactory->create();
 
-        $method = $requestWrapped->getMethod();
+        try {
+            $name = $this->getName($params, $request);
 
-        if ($params->allowedMethods !== null) {
-            if (!in_array($method, $params->allowedMethods)) {
-                throw new BadRequest("Method '$method' is not allowed.");
-            }
-        } else if ($method !== Method::GET) {
-            throw new BadRequest("Only GET requests allowed for the entry point.");
-        }
+            $this->checkStart($name, $params, $request->getMethod());
+        } catch (BadRequest|Forbidden $e) {
+            $this->errorOutput->processWithBodyPrinting($request, $response, $e);
+            $this->outputEmitter->emit($response);
 
-        $name = $params->name ?? $requestWrapped->getQueryParam('entryPoint');
-
-        if (!$name) {
-            throw new BadRequest("No 'entryPoint' param.");
+            return;
         }
 
         /**
@@ -109,20 +99,17 @@ class Starter
             return;
         }
 
-        $responseWrapped = new ResponseWrapper(new Response());
-
         try {
             $authRequired = $this->entryPointManager->checkAuthRequired($name);
-        } catch (NotFound $exception) {
-            $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
-
-            (new ResponseEmitter())->emit($responseWrapped->toPsr7());
+        } catch (NotFound $e) {
+            $this->errorOutput->processWithBodyPrinting($request, $response, $e);
+            $this->outputEmitter->emit($response);
 
             return;
         }
 
         if ($authRequired && !$params->final) {
-            $portalId = $this->detectPortalId($requestWrapped);
+            $portalId = $this->detectPortalId($request);
 
             if ($portalId) {
                 $this->runThroughPortal($portalId, $name);
@@ -133,30 +120,31 @@ class Starter
 
         $this->processRequest(
             entryPoint: $name,
-            requestWrapped: $requestWrapped,
-            responseWrapped: $responseWrapped,
+            request: $request,
+            response: $response,
             authRequired: $authRequired,
         );
 
-        (new ResponseEmitter())->emit($responseWrapped->toPsr7());
+        $this->outputEmitter->emit($response);
     }
 
     private function processRequest(
         string $entryPoint,
-        RequestWrapper $requestWrapped,
-        ResponseWrapper $responseWrapped,
+        RequestWrapper $request,
+        ResponseWrapper $response,
         bool $authRequired,
     ): void {
 
         try {
             $this->processRequestInternal(
                 entryPoint: $entryPoint,
-                request: $requestWrapped,
-                response: $responseWrapped,
+                request: $request,
+                response: $response,
                 authRequired: $authRequired,
             );
         } catch (Exception $exception) {
-            $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
+            print_r($exception->getMessage());
+            $this->errorOutput->processWithBodyPrinting($request, $response, $exception);
         }
     }
 
@@ -173,8 +161,7 @@ class Starter
 
         $authentication = $this->authenticationFactory->create();
 
-        $apiAuth = $this->authBuilderFactory
-            ->create()
+        $apiAuth = $this->authBuilderFactory->create()
             ->setAuthentication($authentication)
             ->setAuthRequired($authRequired)
             ->forEntryPoint()
@@ -238,5 +225,40 @@ class Starter
         ]);
 
         $app->run(EntryPointRunner::class, $params);
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function getName(Params $params, RequestWrapper $request): string
+    {
+        $name = $params->name ?? $request->getQueryParam('entryPoint');
+
+        if (!$name) {
+            throw new BadRequest("No 'entryPoint' param.");
+        }
+
+        return $name;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
+    private function checkStart(string $name, Params $params, string $method): void
+    {
+        $metaParams = $this->entryPointManager->getMetaParams($name);
+
+        if ($metaParams->notExposed && $params->name === null) {
+            throw new Forbidden("The entry point is not exposed.");
+        }
+
+        if ($metaParams->allowedMethods !== null) {
+            if (!in_array(strtolower($method), $metaParams->allowedMethods)) {
+                throw new BadRequest("Method '$method' is not allowed.");
+            }
+        } else if ($method !== Method::GET) {
+            throw new BadRequest("Only GET requests allowed for the entry point.");
+        }
     }
 }

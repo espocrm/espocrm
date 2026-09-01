@@ -29,13 +29,16 @@
 
 namespace Espo\Core\EntryPoint;
 
+use Espo\Core\Api\ResponseWrapper;
+use Slim\Psr7\Response;
+
 /**
- * @since 10.1.0
+ * @internal
  */
-readonly class Params
+class ResponseFactory
 {
-    public function __construct(
-        public ?string $name = null,
-        public bool $final = false,
-    ) {}
+    public function create(): ResponseWrapper
+    {
+        return new ResponseWrapper(new Response());
+    }
 }

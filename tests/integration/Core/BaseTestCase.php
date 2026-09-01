@@ -94,6 +94,7 @@ abstract class BaseTestCase extends TestCase
         ?string $portalId = null,
         ?BindingProcessor $binding = null,
         bool $reuse = false,
+        bool $noUser = false,
     ): Application {
 
         if (!$this->isNotCleanTest() && !$reuse) {
@@ -112,6 +113,7 @@ abstract class BaseTestCase extends TestCase
             portalId: $portalId,
             binding: $binding,
             reuse: $reuse,
+            noUser: $noUser,
         );
     }
 
@@ -266,11 +268,15 @@ abstract class BaseTestCase extends TestCase
 
     /**
      * Re-create an application.
+     *
+     * @param bool $reuse Re-use the previous application for performance.
+     * @param bool $noUser Do not set current user. May be needed when testing authentication.
      */
-    protected function reCreateApplication(bool $reuse = false): void
+    protected function reCreateApplication(bool $reuse = false, bool $noUser = false): void
     {
         $this->espoApplication = $this->createApplication(
             reuse: $reuse,
+            noUser: $noUser,
         );
     }
 

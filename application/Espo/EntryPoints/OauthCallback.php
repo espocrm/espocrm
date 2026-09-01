@@ -43,7 +43,11 @@ class OauthCallback implements EntryPoint
 
     public function run(Request $request, Response $response): void
     {
-        echo "If this window is not closed automatically, it's probable that the URL you use to access ".
-            "EspoCRM doesn't match the URL specified at Administration > Settings > Site URL.";
+        $text = <<<EOF
+            If this window is not closed automatically, it can be because the used URL
+            doesn't match the URL specified at Administration > Settings > Site URL.
+            EOF;
+
+        $response->writeBody($text);
     }
 }

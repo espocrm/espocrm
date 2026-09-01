@@ -198,6 +198,7 @@ class Tester
         ?string $portalId = null,
         ?BindingProcessor $binding = null,
         bool $reuse = false,
+        bool $noUser = false,
     ): Application {
 
         if ($this->application && !$reload) {
@@ -226,10 +227,12 @@ class Tester
             $this->application = new Application($applicationParams);
         }
 
-        if (isset($this->userName) || $this->authenticationMethod) {
-            $this->login();
-        } else {
-            $this->application->setupSystemUser();
+        if (!$noUser) {
+            if (isset($this->userName) || $this->authenticationMethod) {
+                $this->login();
+            } else {
+                $this->application->setupSystemUser();
+            }
         }
 
         return $this->application;

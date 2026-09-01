@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/scheduledJobs.json",
+    "title": "app/scheduledJobs",
+    "description": "Entry points definitions. As of v10.1.",
+    "type": "object",
+    "additionalProperties": {
+        "description": "An entry point name. Should start with a lower case letter.",
+        "type": "object",
+        "properties": {
+            "className": {
+                "type": "string",
+                "description": "An entry point implementation. Should implement Espo\\Core\\EntryPoint\\EntryPoint."
+            },
+            "notExposed": {
+                "type": "boolean",
+                "description": "If true, the entry point is not available via the regular entryPoint request – can be called only programmatically."
+            },
+            "noAuth": {
+                "type": "boolean",
+                "description": "If true, authentication is not required."
+            },
+            "allowedMethods": {
+                "type": "array",
+                "items": {
+                    "enum": [
+                        "get",
+                        "post",
+                        "put",
+                        "delete",
+                        "options",
+                        "patch"
+                    ]
+                },
+                "description": "Allowed HTTP methods.",
+                "default": ["get"]
+            }
+        }
+    }
+}
