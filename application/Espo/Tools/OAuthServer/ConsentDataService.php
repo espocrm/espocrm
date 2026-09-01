@@ -30,7 +30,10 @@
 namespace Espo\Tools\OAuthServer;
 
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Config\ApplicationConfig;
+use Espo\Core\Utils\Language;
 use Espo\Entities\User;
+use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
 use stdClass;
 
@@ -39,6 +42,8 @@ class ConsentDataService
     public function __construct(
         private ClientRepository $clientRepository,
         private User $user,
+        private Language $language,
+        private ApplicationConfig $applicationConfig,
     ) {}
 
     /**
@@ -53,19 +58,66 @@ class ConsentDataService
         $scopes = $client->getScopes();
 
         // @todo Filter scopes.
+
+        $scopeDataList = array_map(function ($scope) {
+            return (object) [
+                'name' => $scope,
+                'label' => $this->translateScope($scope),
+            ];
+        }, $scopes);
+
+        return (object) [
+            'scopeDataList' => $scopeDataList,
+            'labels' => (object) [
+                'allow' => $this->language->translateLabel('allow', 'strings', Client::ENTITY_TYPE),
+                'cancel' => $this->language->translateLabel('Cancel'),
+                'info' => $this->composeInfoText($client),
+            ],
+        ];
     }
 
     /**
      * @throws NotFound
      */
-    private function getClient(string $clientId): ?Entities\Client
+    private function getClient(string $clientId): Entities\Client
     {
         $client = $this->clientRepository->getActiveByClientId($clientId);
 
-        if (!$clientId) {
+        if (!$client) {
             throw new NotFound("Client not found.");
         }
 
         return $client;
+    }
+
+    private function translateScope(string $scope): string
+    {
+        $appScope = $scope;
+        $actionLabel = null;
+
+        if (str_contains($scope, ':')) {
+            [$appScope, $action] = explode(':', $appScope, 2);
+
+            $actionLabel = $this->language->translateOption($action, 'levelList', 'Role');
+        }
+
+        $scopeLabel = $this->language->translateLabel($appScope, 'scopeNames');
+
+        $label = $scopeLabel;
+
+        if ($actionLabel) {
+            $label .= ' . ' . $actionLabel;
+        }
+
+        return $label;
+    }
+
+    private function composeInfoText(Client $client): string
+    {
+        return strtr($this->language->translateLabel('allowAccessInfo', 'messages', Client::ENTITY_TYPE), [
+            '{clientName}' => $client->getName(),
+            '{applicationName}' => $this->applicationConfig->getApplicationName(),
+            '{username}' => $this->user->getUserName(),
+        ]);
     }
 }

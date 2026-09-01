@@ -48,11 +48,15 @@ export default class AuthorizationConsentView extends View<{
                             <li class="list-group-item">{{label}}</li>
                         {{/each}}
                     </ul>
-                    <div class="button-container center-align">
+                    <div class="margin-top-2x center-align">
                         <button
-                            class="btn btn-prinary btn-x-wide"
+                            class="btn btn-danger btn-x-wide pull-left"
                             data-action="allow"
-                        >{{labels.allowAccess}}</button>
+                        >{{labels.allow}}</button>
+                        <button
+                            class="btn btn-default btn-x-wide pull-right"
+                            data-action="cancel"
+                        >{{labels.cancel}}</button>
                     </div>
                 </div>
             </div>
@@ -79,6 +83,7 @@ export default class AuthorizationConsentView extends View<{
 
     protected setup() {
         this.addActionHandler('allow', () => this.handleAllow());
+        this.addActionHandler('cancel', () => this.handleCancel());
 
         const params = new URLSearchParams(window.location.search);
 
@@ -103,6 +108,10 @@ export default class AuthorizationConsentView extends View<{
     }
 
     private handleAllow() {
+
+    }
+
+    private handleCancel() {
 
     }
 }

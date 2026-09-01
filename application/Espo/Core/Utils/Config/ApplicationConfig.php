@@ -72,4 +72,12 @@ class ApplicationConfig
     {
         return (int) $this->config->get('recordsPerPage');
     }
+
+    /**
+     * @since 10.1.0
+     */
+    public function getApplicationName(): string
+    {
+        return $this->config->get('applicationName', 'EspoCRM');
+    }
 }

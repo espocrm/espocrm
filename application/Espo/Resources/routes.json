@@ -84,6 +84,11 @@
         "actionClassName": "Espo\\Tools\\GlobalSearch\\Api\\Get"
     },
     {
+        "route": "OAuthServer/consentData",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\GetConsentData"
+    },
+    {
         "route": "/LeadCapture/form/:id",
         "method": "post",
         "actionClassName": "Espo\\Tools\\LeadCapture\\Api\\PostForm",
@@ -730,10 +735,5 @@
         "route": "PipelineStage/:id/move/:type",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Pipeline\\Api\\PostStageMove"
-    },
-    {
-        "route": "OAuthServer/consentData",
-        "method": "get",
-        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\GetConsentData"
     }
 ]
