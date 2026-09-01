@@ -129,6 +129,51 @@ class EntryPointTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    public function testNotExposed(): void
+    {
+        $metadata = $this->getMetadata();
+        $metadata->set('app', 'entryPoints', [
+            'oauthCallback' => [
+                'notExposed' => true,
+            ],
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $outputEmitter = $this->createMock(OutputEmitter::class);
+        $errorOutput = $this->createMock(ErrorOutput::class);
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'entryPoint' => 'oauthCallback',
+            ],
+        );
+
+        $response = $this->createMock(ResponseWrapper::class);
+
+        $starter = $this->createStarter(
+            request: $request,
+            response: $response,
+            outputEmitter: $outputEmitter,
+            errorOutput: $errorOutput,
+        );
+
+        $errorOutput
+            ->expects(self::once())
+            ->method('processWithBodyPrinting');
+
+        $starter->start();
+
+        $applicationState = $this->getContainer()->getByClass(ApplicationState::class);
+
+        $this->assertFalse($applicationState->hasUser());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testAllowedMethods(): void
     {
         $metadata = $this->getMetadata();
