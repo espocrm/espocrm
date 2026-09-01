@@ -181,6 +181,7 @@ class ClientManager
             pageTitle: $params->pageTitle,
             theme: $params->theme,
             direction: $params->direction,
+            useRouter: $params->useRouter,
         );
     }
 
@@ -196,6 +197,7 @@ class ClientManager
         ?string $pageTitle = null,
         ?string $theme = null,
         ?Direction $direction = null,
+        bool $useRouter = true,
     ): string {
 
         $runScript ??= $this->runScript;
@@ -279,6 +281,7 @@ class ClientManager
             'applicationDescription' =>
                 $this->escapeValue($this->config->get('applicationDescription') ?? self::APP_DESCRIPTION),
             'nonce' => $this->nonce,
+            'useRouter' => $useRouter ? 'true' : 'false',
             'loaderParams' => Json::encode([
                 'basePath' => $this->basePath,
                 'cacheTimestamp' => $loaderCacheTimestamp,

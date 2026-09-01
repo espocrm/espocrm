@@ -47,6 +47,7 @@ class Params
     private ?string $pageTitle = null;
     private ?string $theme = null;
     private ?Direction $direction = null;
+    private bool $login = false;
 
     /**
      * @param ?array<string, mixed> $data
@@ -140,6 +141,17 @@ class Params
         return $obj;
     }
 
+    /**
+     * @since 10.1.0
+     */
+    public function withLogin(bool $login = true): self
+    {
+        $obj = clone $this;
+        $obj->login = $login;
+
+        return $obj;
+    }
+
     public function getController(): string
     {
         return $this->controller;
@@ -200,5 +212,13 @@ class Params
     public function getDirection(): ?Direction
     {
         return $this->direction;
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function login(): bool
+    {
+        return $this->login;
     }
 }

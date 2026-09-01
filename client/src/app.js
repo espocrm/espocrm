@@ -90,6 +90,7 @@ class App {
          */
         this.useCache = options.useCache || this.useCache;
 
+        this.useRouter = options.useRouter ?? true;
         this.apiUrl = options.apiUrl || this.apiUrl;
 
         /**
@@ -145,6 +146,12 @@ class App {
      * @type {boolean}
      */
     useCache = false
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    useRouter
 
     /**
      * @protected
@@ -453,9 +460,11 @@ class App {
 
     /**
      * Start the application.
+     *
+     * @param {{onAuth: () => void}} [options]
      */
-    start() {
-        this.initAuth();
+    start(options = {}) {
+        this.initAuth(options.onAuth);
 
         this.started = true;
 
@@ -465,7 +474,11 @@ class App {
             return;
         }
 
-        this.initUserData(null, () => this.onAuth());
+        this.initUserData(null, async () => {
+            await this.onAuth(false);
+
+            options?.onAuth();
+        });
     }
 
     /**
@@ -557,7 +570,9 @@ class App {
 
         this.acl.implementationClassMap = aclImplementationClassMap;
 
-        this.initRouter();
+        if (this.useRouter) {
+            this.initRouter();
+        }
 
         this.webSocketManager.subscribe('appParamsUpdate', () => this.appParams.load());
     }
@@ -889,8 +904,9 @@ class App {
 
     /**
      * @public
+     * @param {() => void} [callback]
      */
-    initAuth() {
+    initAuth(callback) {
         this.auth = this.storage.get('user', 'auth') || null;
         this.anotherUser = this.storage.get('user', 'anotherUser') || null;
 
@@ -915,7 +931,14 @@ class App {
             this.storage.set('user', 'anotherUser', this.anotherUser);
 
             this.setCookieAuth(userName, token);
-            this.initUserData(data, () => this.onAuth(true));
+
+            this.initUserData(data, async () => {
+                await this.onAuth(true);
+
+                if (callback) {
+                    callback();
+                }
+            });
         });
 
         this.baseController.on('logout', () => this.logout());
@@ -1599,6 +1622,7 @@ class App {
  * @property {Number|null} [cacheTimestamp] A cache timestamp.
  * @property {Number|null} [appTimestamp] An application timestamp.
  * @property {string|null} [theme] A theme name.
+ * @property {boolean} [useRouter = true] Use router.
  */
 
 Object.assign(App.prototype, Events);

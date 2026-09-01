@@ -58,6 +58,7 @@ class ActionRenderer
             pageTitle: $params->getPageTitle(),
             theme: $params->getTheme(),
             direction: $params->getDirection(),
+            login: $params->login(),
         );
 
         $securityParams = new SecurityParams(
@@ -81,21 +82,34 @@ class ActionRenderer
         ?string $pageTitle,
         ?string $theme,
         ?Direction $direction,
+        bool $login,
     ): string {
 
         $encodedData = Json::encode($data);
 
-        $initAuthPart = $initAuth ? "app.initAuth();" : '';
+        $doActionPart = <<<EOF
+                        app.doAction({
+                            controllerClassName: '$controller',
+                            action: '$action',
+                            options: $encodedData,
+                        });
+        EOF;
 
-        $script =
-            "
-                {$initAuthPart}
-                app.doAction({
-                    controllerClassName: '$controller',
-                    action: '$action',
-                    options: $encodedData,
-                });
-            ";
+        if ($login) {
+            $script = <<<EOF
+            app.start({
+                            onAuth: () => {
+            $doActionPart
+                                },
+                            });
+            EOF;
+        } else {
+            $initAuthPart = $initAuth ? "app.initAuth();\n" : '';
+
+            $script = <<<EOF
+            {$initAuthPart}
+            EOF . "\n" . $doActionPart;
+        }
 
         $params = new RenderParams(
             runScript: $script,
@@ -103,6 +117,7 @@ class ActionRenderer
             pageTitle: $pageTitle,
             theme: $theme,
             direction: $direction,
+            useRouter: false,
         );
 
         return $this->clientManager->render($params);
