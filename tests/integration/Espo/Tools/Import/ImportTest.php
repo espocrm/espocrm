@@ -32,6 +32,7 @@ namespace integration\Espo\Tools\Import;
 use Espo\Core\Acl\Table;
 use Espo\Entities\Attachment;
 use Espo\Entities\Role;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Tools\Import\Import;
@@ -83,6 +84,7 @@ class ImportTest extends BaseTestCase
         $attachment
             ->setName('test.csv')
             ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
             ->setContents(
                 <<<'EOT'
                 lastName,accountType
@@ -99,6 +101,7 @@ class ImportTest extends BaseTestCase
         $import = $this->getInjectableFactory()->create(Import::class);
 
         $import
+            ->setUser($this->getContainer()->getByClass(User::class))
             ->setEntityType(Contact::ENTITY_TYPE)
             ->setParams(
                 Params::create()
@@ -145,6 +148,7 @@ class ImportTest extends BaseTestCase
         $attachment
             ->setName('test.csv')
             ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
             ->setContents(
                 <<<'EOT'
                 lastName,accountName
@@ -211,6 +215,7 @@ class ImportTest extends BaseTestCase
         $attachment
             ->setName('test.csv')
             ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
             ->setContents(
                 <<<'EOT'
                 name

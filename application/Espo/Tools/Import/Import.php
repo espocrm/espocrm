@@ -81,6 +81,8 @@ class Import
     private const string DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
     private const string DEFAULT_TIME_FORMAT = 'HH:mm';
 
+    public const string FILE_ROLE = 'Import File';
+
     /** @var string[] */
     private array $attributeList = [];
     private Params $params;
@@ -205,11 +207,7 @@ class Import
         assert(is_string($this->entityType));
         assert(is_string($this->attachmentId));
 
-        $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getById($this->attachmentId);
-
-        if (!$attachment) {
-            throw new Error('Attachment not found.');
-        }
+        $attachment = $this->getAttachment();
 
         $contents = $this->fileStorageManager->getContents($attachment);
 
@@ -1583,5 +1581,34 @@ class Import
         $entityType = $this->entityType ?? throw new LogicException();
 
         return $this->aclManager->getScopeForbiddenAttributeList($this->user, $entityType, Table::ACTION_EDIT);
+    }
+
+    /**
+     * @throws Error
+     * @throws Forbidden
+     */
+    private function getAttachment(): Attachment
+    {
+        $id = $this->attachmentId ?? throw new LogicException();
+
+        $attachment = $this->entityManager->getRepositoryByClass(Attachment::class)->getById($id);
+
+        if (!$attachment) {
+            throw new Error('Attachment not found.');
+        }
+
+        if ($attachment->getRole() !== self::FILE_ROLE) {
+            throw new Error('Wrong attachment.');
+        }
+
+        if (
+            !$this->user->isAdmin() &&
+            !$this->user->isSystem() &&
+            $attachment->getCreatedBy()?->getId() !== $this->user->getId()
+        ) {
+            throw new Forbidden('No access to attachment.');
+        }
+
+        return $attachment;
     }
 }
