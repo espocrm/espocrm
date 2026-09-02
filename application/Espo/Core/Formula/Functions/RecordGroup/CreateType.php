@@ -36,6 +36,7 @@ use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 /**
@@ -64,7 +65,7 @@ class CreateType implements Func
 
         $notAllowedAttributes = array_intersect(
             array_keys($data),
-            $this->entityUtil->getWriteRestrictedAttributeList($entityType),
+            $this->getWriteRestrictedAttributeList($entityType),
         );
 
         if ($notAllowedAttributes) {
@@ -112,5 +113,16 @@ class CreateType implements Func
         }
 
         return $data;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getWriteRestrictedAttributeList(string $entityType): array
+    {
+        return [
+            ...$this->entityUtil->getWriteRestrictedAttributeList($entityType),
+            Attribute::ID,
+        ];
     }
 }
