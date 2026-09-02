@@ -40,7 +40,7 @@ export default class AuthorizationConsentView extends View<{
         <div class="block-center-5 margin-top">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="alert alert-info">
+                    <div class="alert alert-info margin-bottom-2x">
                         {{complexText labels.info}}
                     </div>
                     <ul class="list-group">
@@ -62,6 +62,7 @@ export default class AuthorizationConsentView extends View<{
             </div>
         </div>
     `
+
     params: {
         clientId: string | null,
         redirectUri: string | null,

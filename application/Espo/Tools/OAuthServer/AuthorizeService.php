@@ -27,41 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+namespace Espo\Tools\OAuthServer;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Utils\Client\ActionRenderer;
-use Espo\Tools\OAuthServer\AuthorizeService;
+use League\OAuth2\Server\AuthorizationServer;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
+class AuthorizeService
 {
-    public function __construct(
-        private ActionRenderer $actionRenderer,
-        private AuthorizeService $service,
-    ) {}
-
-    public function run(Request $request, Response $response): void
+    public function start(ServerRequestInterface $request): ?ResponseInterface
     {
-        $psr7Response = $this->service->start($request->toPsr7());
+        $server = new AuthorizationServer(
 
-        if ($psr7Response) {
-            $response->applyPsr7($psr7Response);
-
-            return;
-        }
-
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
         );
-
-        $params = $params->withLogin();
-
-        $this->actionRenderer->write($response, $params);
     }
 }
