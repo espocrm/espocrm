@@ -27,24 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Entities;
 
-use Espo\Core\Utils\Json;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
+use Espo\Entities\User;
+use League\OAuth2\Server\Entities\UserEntityInterface;
+use LogicException;
 
-class ScopeEntity implements ScopeEntityInterface
+class UserEntity implements UserEntityInterface
 {
     public function __construct(
-        private string $identifier,
-    ) {}
+        private User $user,
+    ) {
+        if ($user->isSystem()) {
+            // Extra safety measure.
+            throw new LogicException();
+        }
+    }
 
     public function getIdentifier()
     {
-        return $this->identifier;
-    }
-
-    public function jsonSerialize(): string
-    {
-        return Json::encode($this->identifier);
+        return $this->user->getId();
     }
 }

@@ -27,16 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Entities;
 
-use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
-use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
+use Espo\Tools\OAuthServer\ClientType;
+use Espo\Tools\OAuthServer\Entities\Client;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use UnexpectedValueException;
 
-class AuthCodeEntity implements AuthCodeEntityInterface
+class ClientEntity implements ClientEntityInterface
 {
-    use EntityTrait;
-    use AuthCodeTrait;
-    use TokenEntityTrait;
+    public function __construct(
+        private Client $entity,
+    ) {}
+
+    public function getIdentifier()
+    {
+        return $this->entity->getIdentifier() ?? throw new UnexpectedValueException("No client identifier.");
+    }
+
+    public function getName()
+    {
+        return $this->entity->getName() ?? $this->entity->getId();
+    }
+
+    public function getRedirectUri()
+    {
+        return $this->entity->getRedirectUris();
+    }
+
+    public function isConfidential()
+    {
+        return $this->entity->getClientType() === ClientType::Confidential;
+    }
+
+    public function getEntity(): Client
+    {
+        return $this->getEntity();
+    }
 }

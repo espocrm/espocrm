@@ -27,9 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Repositories;
 
 use Espo\Tools\OAuthServer\ClientType;
+use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
 use Espo\Tools\OAuthServer\Repository\ClientRepository as Repository;
 use Espo\Tools\OAuthServer\SecretValidator;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;

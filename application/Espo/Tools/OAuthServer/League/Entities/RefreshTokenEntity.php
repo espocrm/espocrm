@@ -27,41 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Entities;
 
-use Espo\Tools\OAuthServer\ScopeValidator;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Entities\Traits\EntityTrait;
+use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
 
-class ScopeRepository implements ScopeRepositoryInterface
+class RefreshTokenEntity implements RefreshTokenEntityInterface
 {
-    public function __construct(
-        private ScopeValidator $scopeValidator,
-    ) {}
-
-    public function getScopeEntityByIdentifier($identifier)
-    {
-        if (!$this->scopeValidator->validate($identifier)) {
-            return null;
-        }
-
-        return new ScopeEntity($identifier);
-    }
-
-    public function finalizeScopes(
-        array $scopes,
-        $grantType,
-        ClientEntityInterface $clientEntity,
-        $userIdentifier = null,
-    ) {
-
-        /** @noinspection PhpIfWithCommonPartsInspection */
-        if (!$userIdentifier) {
-            return $scopes;
-        }
-
-        // @todo Filter scopes not relevant for the user.
-
-        return $scopes;
-    }
+    use RefreshTokenTrait;
+    use EntityTrait;
 }

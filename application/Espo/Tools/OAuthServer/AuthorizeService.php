@@ -29,28 +29,24 @@
 
 namespace Espo\Tools\OAuthServer;
 
-use DateInterval;
 use Espo\Core\Exceptions\Error;
-use Espo\Tools\OAuthServer\League\AccessTokenRepository;
-use Espo\Tools\OAuthServer\League\AuthCodeRepository;
-use Espo\Tools\OAuthServer\League\ClientRepository;
-use Espo\Tools\OAuthServer\League\RefreshTokenRepository;
-use Espo\Tools\OAuthServer\League\ScopeRepository;
-use Exception;
-use League\OAuth2\Server\AuthorizationServer;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Session\Session;
+use Espo\Entities\User;
+use Espo\Tools\OAuthServer\League\AuthorizationServerFactory;
+use Espo\Tools\OAuthServer\League\Entities\UserEntity;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 
 class AuthorizeService
 {
     public function __construct(
-        private ClientRepository $clientRepository,
-        private AccessTokenRepository $accessTokenRepository,
-        private ScopeRepository $scopeRepository,
-        private AuthCodeRepository $authCodeRepository,
-        private RefreshTokenRepository $refreshTokenRepository,
+        private Session $session,
+        private AuthorizationServerFactory $authorizationServerFactory,
+        private User $user,
     ) {}
 
     /**
@@ -58,33 +54,65 @@ class AuthorizeService
      */
     public function start(ServerRequestInterface $request, ResponseInterface $response): ?ResponseInterface
     {
-        $server = new AuthorizationServer(
-            clientRepository: $this->clientRepository,
-            accessTokenRepository: $this->accessTokenRepository,
-            scopeRepository: $this->scopeRepository,
-            privateKey: '',
-            encryptionKey: '', // @todo
-        );
-
-        try {
-            $grant = new AuthCodeGrant(
-                authCodeRepository: $this->authCodeRepository,
-                refreshTokenRepository: $this->refreshTokenRepository,
-                authCodeTTL: new DateInterval('PT10M'),
-            );
-        } catch (Exception $e) {
-            throw new Error("Error occurred.", previous: $e);
-        }
-
-        $server->enableGrantType(
-            grantType: $grant,
-            accessTokenTTL: new DateInterval('PT1H'),
-        );
+        $server = $this->authorizationServerFactory->create();
 
         try {
             $authRequest = $server->validateAuthorizationRequest($request);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
+
+        $clientId = $authRequest->getClient()->getIdentifier();
+
+        $this->session->set(self::composeSessionKey($clientId), serialize($authRequest));
+
+        return null;
+    }
+
+    /**
+     * @throws NotFound
+     * @throws Error
+     * @noinspection PhpRedundantCatchClauseInspection
+     * @todo Make sure auth required for the entry point.
+     */
+    public function complete(string $clientId, ResponseInterface $response, bool $approved): ResponseInterface
+    {
+        $authRequest = $this->getAuthRequestFromSession($clientId);
+
+        $authRequest->setUser(new UserEntity($this->user));
+        $authRequest->setAuthorizationApproved($approved);
+
+        $server = $this->authorizationServerFactory->create();
+
+        try {
+            return $server->completeAuthorizationRequest($authRequest, $response);
+        } catch (OAuthServerException $e) {
+            return $e->generateHttpResponse($response);
+        }
+    }
+
+    private static function composeSessionKey(string $clientId): string
+    {
+        return "oAuthServerAuthorizeRequest_" . $clientId;
+    }
+
+    /**
+     * @throws NotFound
+     */
+    private function getAuthRequestFromSession(string $clientId): AuthorizationRequest
+    {
+        $raw = $this->session->get(self::composeSessionKey($clientId));
+
+        if (!$raw) {
+            throw new NotFound("Session not found.");
+        }
+
+        $authRequest = unserialize($raw, ['allowed_classes' => [AuthorizationRequest::class]]);
+
+        if (!$authRequest instanceof AuthorizationRequest) {
+            throw new RuntimeException("Unserialization error.");
+        }
+
+        return $authRequest;
     }
 }

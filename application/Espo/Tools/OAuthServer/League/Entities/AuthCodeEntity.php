@@ -27,14 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Entities;
 
-use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
+use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
+use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-class RefreshTokenEntity implements RefreshTokenEntityInterface
+class AuthCodeEntity implements AuthCodeEntityInterface
 {
-    use RefreshTokenTrait;
     use EntityTrait;
+    use AuthCodeTrait;
+    use TokenEntityTrait;
 }

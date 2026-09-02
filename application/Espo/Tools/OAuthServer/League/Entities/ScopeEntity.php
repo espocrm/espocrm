@@ -27,41 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Entities;
 
-use Espo\Tools\OAuthServer\ClientType;
-use Espo\Tools\OAuthServer\Entities\Client;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use UnexpectedValueException;
+use Espo\Core\Utils\Json;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
-class ClientEntity implements ClientEntityInterface
+class ScopeEntity implements ScopeEntityInterface
 {
     public function __construct(
-        private Client $entity,
+        private string $identifier,
     ) {}
 
     public function getIdentifier()
     {
-        return $this->entity->getIdentifier() ?? throw new UnexpectedValueException("No client identifier.");
+        return $this->identifier;
     }
 
-    public function getName()
+    public function jsonSerialize(): string
     {
-        return $this->entity->getName() ?? $this->entity->getId();
-    }
-
-    public function getRedirectUri()
-    {
-        return $this->entity->getRedirectUris();
-    }
-
-    public function isConfidential()
-    {
-        return $this->entity->getClientType() === ClientType::Confidential;
-    }
-
-    public function getEntity(): Client
-    {
-        return $this->getEntity();
+        return Json::encode($this->identifier);
     }
 }

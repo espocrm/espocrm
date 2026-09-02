@@ -27,12 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\League\Repositories;
 
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
+use Espo\Tools\OAuthServer\League\Entities\AuthCodeEntity;
 use Espo\Tools\OAuthServer\Repository\AuthorizationCodeRepository;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;

@@ -27,41 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+namespace Espo\Tools\OAuthServer\League\Repositories;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Utils\Client\ActionRenderer;
-use Espo\Tools\OAuthServer\AuthorizeService;
+use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
+use Espo\Tools\OAuthServer\ScopeValidator;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
+class ScopeRepository implements ScopeRepositoryInterface
 {
     public function __construct(
-        private ActionRenderer $actionRenderer,
-        private AuthorizeService $service,
+        private ScopeValidator $scopeValidator,
     ) {}
 
-    public function run(Request $request, Response $response): void
+    public function getScopeEntityByIdentifier($identifier)
     {
-        $psr7Response = $this->service->start($request->toPsr7(), $response->toPsr7());
-
-        if ($psr7Response) {
-            $response->applyPsr7($psr7Response);
-
-            return;
+        if (!$this->scopeValidator->validate($identifier)) {
+            return null;
         }
 
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
+        return new ScopeEntity($identifier);
+    }
 
-        $params = $params->withLogin();
+    public function finalizeScopes(
+        array $scopes,
+        $grantType,
+        ClientEntityInterface $clientEntity,
+        $userIdentifier = null,
+    ) {
 
-        $this->actionRenderer->write($response, $params);
+        /** @noinspection PhpIfWithCommonPartsInspection */
+        if (!$userIdentifier) {
+            return $scopes;
+        }
+
+        // @todo Filter scopes not relevant for the user.
+
+        return $scopes;
     }
 }
