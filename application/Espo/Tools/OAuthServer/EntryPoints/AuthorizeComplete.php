@@ -27,17 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "../../../bootstrap.php";
+namespace Espo\Tools\OAuthServer\EntryPoints;
 
-use Espo\Core\Application;
-use Espo\Core\Application\Runner\Params;
-use Espo\Core\ApplicationRunners\EntryPoint;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\EntryPoint\EntryPoint;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Tools\OAuthServer\AuthorizeService;
 
-$app = new Application();
+/**
+ * @noinspection PhpUnused
+ */
+class AuthorizeComplete implements EntryPoint
+{
+    public function __construct(
+        private AuthorizeService $service,
+    ) {}
 
-$app->setClientBasePath('../../');
+    public function run(Request $request, Response $response): void
+    {
+        $clientId = $request->getQueryParam('clientId') ?? throw new BadRequest("No clientId.");
+        $approved = $request->getQueryParam('approved') === 'true';
 
-$app->run(
-    EntryPoint::class,
-    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oAuthAuthorize')
-);
+        $psr7Response = $this->service->complete($clientId, $response->toPsr7(), $approved);
+
+        $response->applyPsr7($psr7Response);
+    }
+}

@@ -5,9 +5,12 @@
     "oauthCallback": {
         "className": "Espo\\EntryPoints\\OauthCallback"
     },
-    "oauthAuthorize": {
+    "oAuthAuthorize": {
         "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Authorize",
         "noAuth": true,
         "notExposed": true
+    },
+    "oAuthAuthorizeComplete": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizeComplete"
     }
 }

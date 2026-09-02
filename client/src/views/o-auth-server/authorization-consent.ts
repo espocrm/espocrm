@@ -64,8 +64,7 @@ export default class AuthorizationConsentView extends View<{
     `
 
     params: {
-        clientId: string | null,
-        redirectUri: string | null,
+        clientId: string,
     }
 
     consentData: {
@@ -88,14 +87,17 @@ export default class AuthorizationConsentView extends View<{
 
         const params = new URLSearchParams(window.location.search);
 
+        const clientId = params.get('client_id');
+
+        if (!clientId) {
+            throw new Error("No client_id.");
+        }
+
         this.params = {
-            clientId: params.get('client_id'),
-            redirectUri: params.get('redirect_uri'),
+            clientId: clientId,
         };
 
         this.wait(this.loadData());
-
-        // @todo Pass filtered scopes to the next step.
     }
 
     private async loadData() {
@@ -109,10 +111,18 @@ export default class AuthorizationConsentView extends View<{
     }
 
     private handleAllow() {
-
+        this.handleComplete(true);
     }
 
     private handleCancel() {
+        this.handleComplete(false);
+    }
 
+    private handleComplete(approved: boolean) {
+        const url = new URL(this.getBasePath() + '?entryPoint=oAuthAuthorizeComplete');
+        url.searchParams.append('clientId', this.params.clientId);
+        url.searchParams.append('approved', approved ? 'true' : 'false');
+
+        window.location.replace(url.toString());
     }
 }
