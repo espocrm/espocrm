@@ -1,6 +1,6 @@
 {
     "fields": {
-        "identifier": "Identifier",
+        "hash": "Hash",
         "status": "Status",
         "client": "Client",
         "user": "User",

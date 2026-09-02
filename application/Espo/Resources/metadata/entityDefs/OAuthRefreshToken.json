@@ -1,13 +1,5 @@
 {
     "fields": {
-        "identifier": {
-            "type": "password",
-            "notStorable": true,
-            "maxLength": 80,
-            "readOnly": true,
-            "required": true,
-            "utility": true
-        },
         "hash": {
             "type": "password",
             "maxLength": 64,
