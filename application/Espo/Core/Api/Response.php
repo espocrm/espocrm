@@ -107,4 +107,11 @@ interface Response
      * @since 10.1.0
      */
     public function applyPsr7(Psr7Response $psr7Response): self;
+
+    /**
+     * Get the PSR-7 response.
+     *
+     * @since 10.1.0
+     */
+    public function toPsr7(): Psr7Response;
 }
