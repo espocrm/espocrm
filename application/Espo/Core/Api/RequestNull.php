@@ -31,7 +31,10 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Api\Request as ApiRequest;
 
+use LogicException;
+use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 use Psr\Http\Message\UriInterface;
+use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\UriFactory;
 
 use stdClass;
@@ -129,5 +132,16 @@ class RequestNull implements ApiRequest
     public function getServerParam(string $name)
     {
         return null;
+    }
+
+    public function toPsr7(): Psr7Request
+    {
+        $request = (new RequestFactory())->createRequest(Method::GET, "http://localhost");
+
+        if (!$request instanceof Psr7Request) {
+            throw new LogicException();
+        }
+
+        return $request;
     }
 }

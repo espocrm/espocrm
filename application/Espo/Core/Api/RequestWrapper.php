@@ -289,4 +289,9 @@ class RequestWrapper implements ApiRequest
     {
         return $this->getMethod() === Method::DELETE;
     }
+
+    public function toPsr7(): Psr7Request
+    {
+        return $this->psr7Request;
+    }
 }
