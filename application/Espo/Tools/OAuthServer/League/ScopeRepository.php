@@ -27,23 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer\League;
 
-use Espo\Core\Utils\Util;
-use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Tools\OAuthServer\ScopeValidator;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class ScopeRepository implements ScopeRepositoryInterface
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private ScopeValidator $scopeValidator,
+    ) {}
+
+    public function getScopeEntityByIdentifier($identifier)
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
+        if (!$this->scopeValidator->validate($identifier)) {
+            return null;
         }
+
+        return new ScopeEntity($identifier);
+    }
+
+    public function finalizeScopes(
+        array $scopes,
+        $grantType,
+        ClientEntityInterface $clientEntity,
+        $userIdentifier = null,
+    ) {
+
+        /** @noinspection PhpIfWithCommonPartsInspection */
+        if (!$userIdentifier) {
+            return $scopes;
+        }
+
+        // @todo Filter scopes not relevant for the user.
+
+        return $scopes;
     }
 }

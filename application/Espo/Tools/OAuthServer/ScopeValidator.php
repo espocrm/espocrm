@@ -27,23 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer;
 
-use Espo\Core\Utils\Util;
-use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
-
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class ScopeValidator
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private ScopesProvider $scopesProvider,
+    ) {}
+
+    public function validate(string $scope): bool
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
-        }
+        return in_array($scope, $this->scopesProvider->get());
     }
 }

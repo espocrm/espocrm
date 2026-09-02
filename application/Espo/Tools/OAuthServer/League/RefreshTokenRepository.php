@@ -27,23 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer\League;
 
-use Espo\Core\Utils\Util;
-use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\ORM\EntityManager;
+use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository as Repository;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private EntityManager $entityManager,
+        private Repository $repository,
+    ) {}
+
+    public function getNewRefreshToken()
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
-        }
+        return new RefreshTokenEntity();
+    }
+
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
+    {
+        // TODO: Implement persistNewRefreshToken() method.
+    }
+
+    public function revokeRefreshToken($tokenId)
+    {
+        // TODO: Implement revokeRefreshToken() method.
+    }
+
+    public function isRefreshTokenRevoked($tokenId)
+    {
+        // TODO: Implement isRefreshTokenRevoked() method.
     }
 }

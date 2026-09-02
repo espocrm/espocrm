@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\OAuthServer\Entities;
 
-use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
@@ -40,7 +40,7 @@ class RefreshToken extends Entity
     public const string ENTITY_TYPE = 'OAuthRefreshToken';
 
     public const string FIELD_STATUS = 'status';
-    public const string FILED_CLIENT = 'client';
+    public const string FIELD_CLIENT = 'client';
     public const string FIELD_IDENTIFIER = 'identifier';
     public const string FIELD_EXPIRES_AT = 'expiresAt';
     public const string FIELD_USER = 'user';
@@ -54,9 +54,19 @@ class RefreshToken extends Entity
         return $this->get(self::FIELD_STATUS) === self::STATUS_ACTIVE;
     }
 
+    public function isRevoked(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_REVOKED;
+    }
+
+    public function setStatus(string $status): self
+    {
+        return $this->set(self::FIELD_STATUS, $status);
+    }
+
     public function getClient(): Client
     {
-        $client = $this->relations->getOne(self::FILED_CLIENT);
+        $client = $this->relations->getOne(self::FIELD_CLIENT);
 
         if (!$client instanceof Client) {
             throw new UnexpectedValueException("No client.");
@@ -67,7 +77,7 @@ class RefreshToken extends Entity
 
     public function setClient(Client $client): self
     {
-        return $this->setRelatedLinkOrEntity(self::FILED_CLIENT, $client);
+        return $this->setRelatedLinkOrEntity(self::FIELD_CLIENT, $client);
     }
 
     public function setRevoked(): self
@@ -90,18 +100,18 @@ class RefreshToken extends Entity
         return $this->get(self::FIELD_IDENTIFIER) ?? throw new UnexpectedValueException("No identifier.");
     }
 
-    public function getExpiresAt(): Date
+    public function getExpiresAt(): DateTime
     {
         $value = $this->getValueObject(self::FIELD_EXPIRES_AT);
 
-        if (!$value instanceof Date) {
+        if (!$value instanceof DateTime) {
             throw new UnexpectedValueException("No expiresAt.");
         }
 
         return $value;
     }
 
-    public function setExpiresAt(Date $expiresAt): self
+    public function setExpiresAt(DateTime $expiresAt): self
     {
         return $this->setValueObject(self::FIELD_EXPIRES_AT, $expiresAt);
     }

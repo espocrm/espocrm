@@ -12,7 +12,7 @@
         "width": 15
     },
     {
-        "name": "clientId",
+        "name": "identifier",
         "width": 26
     }
 ]

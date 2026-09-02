@@ -27,23 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer\League;
 
-use Espo\Core\Utils\Util;
-use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Core\Utils\Json;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class ScopeEntity implements ScopeEntityInterface
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private string $identifier,
+    ) {}
+
+    public function getIdentifier()
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
-        }
+        return $this->identifier;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return Json::encode($this->identifier);
     }
 }

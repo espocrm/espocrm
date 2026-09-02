@@ -1,7 +1,7 @@
 {
     "controller": "controllers/record",
     "relationshipPanels": {
-        "clientSecrets": {
+        "secrets": {
             "filterList": [
                 "all",
                 "active"

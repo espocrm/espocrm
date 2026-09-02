@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\OAuthServer\Entities;
 
-use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
@@ -56,6 +56,11 @@ class AuthorizationCode extends Entity
         return $this->get(self::FIELD_STATUS) === self::STATUS_ACTIVE;
     }
 
+    public function isRevoked(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_REVOKED;
+    }
+
     public function getClient(): Client
     {
         $client = $this->relations->getOne(self::FILED_CLIENT);
@@ -67,7 +72,7 @@ class AuthorizationCode extends Entity
         return $client;
     }
 
-    public function setClient(Client $client): self
+    public function setClient(Client|Link $client): self
     {
         return $this->setRelatedLinkOrEntity(self::FILED_CLIENT, $client);
     }
@@ -92,18 +97,18 @@ class AuthorizationCode extends Entity
         return $this->get(self::FIELD_IDENTIFIER) ?? throw new UnexpectedValueException("No identifier.");
     }
 
-    public function getExpiresAt(): Date
+    public function getExpiresAt(): DateTime
     {
         $value = $this->getValueObject(self::FIELD_EXPIRES_AT);
 
-        if (!$value instanceof Date) {
+        if (!$value instanceof DateTime) {
             throw new UnexpectedValueException("No expiresAt.");
         }
 
         return $value;
     }
 
-    public function setExpiresAt(Date $expiresAt): self
+    public function setExpiresAt(DateTime $expiresAt): self
     {
         return $this->setValueObject(self::FIELD_EXPIRES_AT, $expiresAt);
     }

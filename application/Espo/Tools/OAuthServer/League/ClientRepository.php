@@ -27,23 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer\League;
 
-use Espo\Core\Utils\Util;
-use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Tools\OAuthServer\ClientType;
+use Espo\Tools\OAuthServer\Repository\ClientRepository as Repository;
+use Espo\Tools\OAuthServer\SecretValidator;
+use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use SensitiveParameter;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class ClientRepository implements ClientRepositoryInterface
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private Repository $repository,
+        private SecretValidator $secretValidator,
+    ) {}
+
+    public function getClientEntity($clientIdentifier)
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
+        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
+
+        if (!$client) {
+            return null;
         }
+
+        return new ClientEntity($client);
+    }
+
+    public function validateClient($clientIdentifier, #[SensitiveParameter] $clientSecret, $grantType)
+    {
+        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
+
+        if (!$client) {
+            return false;
+        }
+
+        if (!$clientSecret) {
+            return $client->getClientType() === ClientType::Public;
+        }
+
+        return $this->secretValidator->validate($client, $clientSecret);
     }
 }

@@ -27,23 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer\Repository;
 
-use Espo\Core\Utils\Util;
-use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\ORM\EntityManager;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class AccessTokenRepository
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
+
+    public function getActiveByIdentifier(string $identifier): ?AccessToken
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
-        }
+        return $this->entityManager
+            ->getRDBRepositoryByClass(AccessToken::class)
+            ->where([
+                AccessToken::FIELD_IDENTIFIER => $identifier,
+                AccessToken::FIELD_STATUS => AccessToken::STATUS_ACTIVE,
+            ])
+            ->findOne();
     }
 }

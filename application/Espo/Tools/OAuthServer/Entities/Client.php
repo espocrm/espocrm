@@ -39,10 +39,12 @@ class Client extends Entity
     public const string ENTITY_TYPE = 'OAuthClient';
 
     public const string FIELD_STATUS = 'status';
-    public const string FIELD_CLIENT_ID = 'clientId';
+    public const string FIELD_IDENTIFIER = 'identifier';
     public const string FIELD_CLIENT_TYPE = 'clientType';
     public const string FIELD_SCOPES = 'scopes';
     public const string FIELD_REDIRECT_URIS = 'redirectUris';
+
+    public const string LINK_SECRETS = 'secrets';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_INACTIVE = 'Inactive';
@@ -69,14 +71,14 @@ class Client extends Entity
         return $this->set(self::FIELD_CLIENT_TYPE, $clientType->value);
     }
 
-    public function getClientId(): ?string
+    public function getIdentifier(): ?string
     {
-        return $this->get(self::FIELD_CLIENT_ID);
+        return $this->get(self::FIELD_IDENTIFIER);
     }
 
-    public function setClientId(?string $clientId): self
+    public function setIdentifier(?string $clientId): self
     {
-        return $this->set(self::FIELD_CLIENT_ID, $clientId);
+        return $this->set(self::FIELD_IDENTIFIER, $clientId);
     }
 
     public function isActive(): string

@@ -27,23 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer\League;
 
-use Espo\Core\Utils\Util;
+use Espo\Tools\OAuthServer\ClientType;
 use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use UnexpectedValueException;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class ClientEntity implements ClientEntityInterface
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private Client $entity,
+    ) {}
+
+    public function getIdentifier()
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
-        }
+        return $this->entity->getIdentifier() ?? throw new UnexpectedValueException("No client identifier.");
+    }
+
+    public function getName()
+    {
+        return $this->entity->getName() ?? $this->entity->getId();
+    }
+
+    public function getRedirectUri()
+    {
+        return $this->entity->getRedirectUris();
+    }
+
+    public function isConfidential()
+    {
+        return $this->entity->getClientType() === ClientType::Confidential;
+    }
+
+    public function getEntity(): Client
+    {
+        return $this->getEntity();
     }
 }

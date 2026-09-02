@@ -38,12 +38,12 @@ class ClientRepository
         private EntityManager $entityManager,
     ) {}
 
-    public function getActiveByClientId(string $clientId): ?Client
+    public function getActiveByIdentifier(string $identifier): ?Client
     {
         return $this->entityManager
             ->getRDBRepositoryByClass(Client::class)
             ->where([
-                Client::FIELD_CLIENT_ID => $clientId,
+                Client::FIELD_IDENTIFIER => $identifier,
                 Client::FIELD_STATUS => Client::STATUS_ACTIVE,
             ])
             ->findOne();

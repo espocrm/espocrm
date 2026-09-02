@@ -1,6 +1,6 @@
 [
     "status",
     "clientType",
-    "clientId",
+    "identifier",
     "scopes"
 ]

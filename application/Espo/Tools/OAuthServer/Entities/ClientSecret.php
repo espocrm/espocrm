@@ -32,6 +32,7 @@ namespace Espo\Tools\OAuthServer\Entities;
 use Espo\Core\Field\Date;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity;
+use SensitiveParameter;
 use UnexpectedValueException;
 
 class ClientSecret extends Entity
@@ -40,13 +41,15 @@ class ClientSecret extends Entity
 
     public const string FIELD_STATUS = 'status';
     public const string FIELD_HASH = 'hash';
-    public const string FILED_CLIENT = 'client';
+    public const string FIELD_CLIENT = 'client';
     public const string FIELD_EXPIRATION_DATE = 'expirationDate';
     public const string FIELD_VALUE = 'value';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_REVOKED = 'Revoked';
     public const string STATUS_EXPIRED = 'Expired';
+
+    public const string ATTR_CLIENT_ID = 'clientId';
 
     public function setName(string $name): self
     {
@@ -78,7 +81,7 @@ class ClientSecret extends Entity
         return $this->set(self::FIELD_STATUS, self::STATUS_EXPIRED);
     }
 
-    public function getExpirationData(): ?Date
+    public function getExpirationDate(): ?Date
     {
         /** @var ?Date */
         return $this->getValueObject(self::FIELD_EXPIRATION_DATE);
@@ -91,7 +94,7 @@ class ClientSecret extends Entity
 
     public function getClient(): Client
     {
-        $client = $this->relations->getOne(self::FILED_CLIENT);
+        $client = $this->relations->getOne(self::FIELD_CLIENT);
 
         if (!$client instanceof Client) {
             throw new UnexpectedValueException("No client.");
@@ -102,11 +105,16 @@ class ClientSecret extends Entity
 
     public function setClient(Client $client): self
     {
-        return $this->setRelatedLinkOrEntity(self::FILED_CLIENT, $client);
+        return $this->setRelatedLinkOrEntity(self::FIELD_CLIENT, $client);
     }
 
-    public function setValue(string $value): self
+    public function setValue(#[SensitiveParameter] string $value): self
     {
         return $this->set(self::FIELD_VALUE, $value);
+    }
+
+    public function getValue(): string
+    {
+        return $this->get(self::FIELD_VALUE) ?? throw new UnexpectedValueException("No value.");
     }
 }

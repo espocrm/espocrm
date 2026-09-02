@@ -29,16 +29,55 @@
 
 namespace Espo\Tools\OAuthServer;
 
+use DateInterval;
+use Espo\Core\Exceptions\Error;
+use Espo\Tools\OAuthServer\League\AccessTokenRepository;
+use Espo\Tools\OAuthServer\League\AuthCodeRepository;
+use Espo\Tools\OAuthServer\League\ClientRepository;
+use Espo\Tools\OAuthServer\League\RefreshTokenRepository;
+use Espo\Tools\OAuthServer\League\ScopeRepository;
+use Exception;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Grant\AuthCodeGrant;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class AuthorizeService
 {
+    public function __construct(
+        private ClientRepository $clientRepository,
+        private AccessTokenRepository $accessTokenRepository,
+        private ScopeRepository $scopeRepository,
+        private AuthCodeRepository $authCodeRepository,
+        private RefreshTokenRepository $refreshTokenRepository,
+    ) {}
+
+    /**
+     * @throws Error
+     */
     public function start(ServerRequestInterface $request): ?ResponseInterface
     {
         $server = new AuthorizationServer(
+            clientRepository: $this->clientRepository,
+            accessTokenRepository: $this->accessTokenRepository,
+            scopeRepository: $this->scopeRepository,
+            privateKey: '',
+            encryptionKey: '', // @todo
+        );
 
+        try {
+            $grant = new AuthCodeGrant(
+                authCodeRepository: $this->authCodeRepository,
+                refreshTokenRepository: $this->refreshTokenRepository,
+                authCodeTTL: new DateInterval('PT10M'),
+            );
+        } catch (Exception $e) {
+            throw new Error("Error occurred.", previous: $e);
+        }
+
+        $server->enableGrantType(
+            grantType: $grant,
+            accessTokenTTL: new DateInterval('PT1H'),
         );
     }
 }

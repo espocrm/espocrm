@@ -55,6 +55,8 @@ class Authorize implements EntryPoint
             return;
         }
 
+        // @todo Pass scopes.
+
         $params = new ActionRenderer\Params(
             controller: 'controllers/o-auth-authorize',
             action: 'show',

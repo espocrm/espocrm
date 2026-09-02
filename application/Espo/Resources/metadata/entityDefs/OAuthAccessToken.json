@@ -65,6 +65,11 @@
         "textFilterFields": []
     },
     "indexes": {
+        "identifier": {
+            "columns": [
+                "identifier"
+            ]
+        },
         "createdAt": {
             "columns": [
                 "createdAt"

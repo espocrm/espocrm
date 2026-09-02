@@ -14,7 +14,7 @@
                     "name": "clientType"
                 },
                 {
-                    "name": "clientId"
+                    "name": "identifier"
                 }
             ],
             [

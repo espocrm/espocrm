@@ -27,23 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\OAuthClient;
+namespace Espo\Tools\OAuthServer;
 
-use Espo\Core\Utils\Util;
+use Espo\Core\Name\Field;
+use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\PasswordHash;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Order;
 use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Tools\OAuthServer\Entities\ClientSecret;
+use SensitiveParameter;
 
-/**
- * @implements BeforeSave<Client>
- */
-class SetFields implements BeforeSave
+class SecretValidator
 {
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function __construct(
+        private EntityManager $entityManager,
+        private DateTime $dateTime,
+        private PasswordHash $passwordHash,
+    ) {}
+
+    public function validate(Client $client, #[SensitiveParameter] string $secret): bool
     {
-        if ($entity->isNew()) {
-            $entity->setIdentifier(Util::generateUuid4());
+        $secrets = $this->entityManager
+            ->getRDBRepositoryByClass(ClientSecret::class)
+            ->sth()
+            ->where([
+                ClientSecret::ATTR_CLIENT_ID => $client->getId(),
+                ClientSecret::FIELD_STATUS => ClientSecret::STATUS_ACTIVE,
+            ])
+            ->order(Field::CREATED_AT, Order::DESC)
+            ->find();
+
+        foreach ($secrets as $entry) {
+            /** @noinspection PhpParamsInspection */
+            if ($this->match($entry, $secret)) {
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    private function match(ClientSecret $entry, #[SensitiveParameter] string $secret): bool
+    {
+        if ($entry->getExpirationDate()?->isLessThanOrEqualTo($this->dateTime->getToday())) {
+            return false;
+        }
+
+        return $this->passwordHash->verify($secret, $entry->getValue());
     }
 }

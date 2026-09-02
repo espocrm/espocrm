@@ -81,7 +81,7 @@ class ConsentDataService
      */
     private function getClient(string $clientId): Entities\Client
     {
-        $client = $this->clientRepository->getActiveByClientId($clientId);
+        $client = $this->clientRepository->getActiveByIdentifier($clientId);
 
         if (!$client) {
             throw new NotFound("Client not found.");

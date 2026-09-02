@@ -1,6 +1,6 @@
 {
     "fields": {
-        "clientId": {
+        "identifier": {
             "visible": {
                 "conditionGroup": [
                     {
@@ -12,7 +12,7 @@
         }
     },
     "panels": {
-        "clientSecrets": {
+        "secrets": {
             "visible": {
                 "conditionGroup": [
                     {
