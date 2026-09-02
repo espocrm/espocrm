@@ -33,7 +33,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Tools\OAuthServer\AuthorizeService;
+use Espo\Tools\OAuthServer\AuthorizationService;
 
 /**
  * @noinspection PhpUnused
@@ -41,7 +41,7 @@ use Espo\Tools\OAuthServer\AuthorizeService;
 class AuthorizeComplete implements EntryPoint
 {
     public function __construct(
-        private AuthorizeService $service,
+        private AuthorizationService $service,
     ) {}
 
     public function run(Request $request, Response $response): void
@@ -49,7 +49,7 @@ class AuthorizeComplete implements EntryPoint
         $clientId = $request->getQueryParam('clientId') ?? throw new BadRequest("No clientId.");
         $approved = $request->getQueryParam('approved') === 'true';
 
-        $psr7Response = $this->service->complete($clientId, $response->toPsr7(), $approved);
+        $psr7Response = $this->service->authorizeComplete($clientId, $response->toPsr7(), $approved);
 
         $response->applyPsr7($psr7Response);
     }

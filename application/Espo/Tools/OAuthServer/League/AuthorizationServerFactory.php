@@ -41,6 +41,7 @@ use Exception;
 
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
 class AuthorizationServerFactory
 {
@@ -65,10 +66,24 @@ class AuthorizationServerFactory
             encryptionKey: '', // @todo
         );
 
+        $this->enableAuthorizationCodeGrant($server);
+        $this->enableRefreshTokenGrant($server);
+
+        return $server;
+    }
+
+    /**
+     * @param AuthorizationServer $server
+     * @return void
+     * @throws Error
+     */
+    private function enableAuthorizationCodeGrant(AuthorizationServer $server): void
+    {
         try {
             $grant = new AuthCodeGrant(
                 authCodeRepository: $this->authCodeRepository,
                 refreshTokenRepository: $this->refreshTokenRepository,
+                // @todo Configurable.
                 authCodeTTL: new DateInterval('PT10M'),
             );
         } catch (Exception $e) {
@@ -77,9 +92,29 @@ class AuthorizationServerFactory
 
         $server->enableGrantType(
             grantType: $grant,
+            // @todo Configurable.
             accessTokenTTL: new DateInterval('PT1H'),
         );
+    }
 
-        return $server;
+    /**
+     * @throws Error
+     */
+    private function enableRefreshTokenGrant(AuthorizationServer $server): void
+    {
+        try {
+            $grant = new RefreshTokenGrant($this->refreshTokenRepository);
+        } catch (Exception $e) {
+            throw new Error("Error occurred.", previous: $e);
+        }
+
+        // @todo Configurable.
+        $grant->setRefreshTokenTTL(new DateInterval('P1M'));
+
+        $server->enableGrantType(
+            grantType: $grant,
+            // @todo Configurable.
+            accessTokenTTL: new DateInterval('PT1H'),
+        );
     }
 }

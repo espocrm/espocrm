@@ -12,5 +12,10 @@
     },
     "oAuthAuthorizeComplete": {
         "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizeComplete"
+    },
+    "oAuthToken": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Token",
+        "noAuth": true,
+        "notExposed": true
     }
 }

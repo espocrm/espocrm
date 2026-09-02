@@ -32,36 +32,18 @@ namespace Espo\Tools\OAuthServer\EntryPoints;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Utils\Client\ActionRenderer;
 use Espo\Tools\OAuthServer\AuthorizationService;
 
-/**
- * @noinspection PhpUnused
- */
-class Authorize implements EntryPoint
+class Token implements EntryPoint
 {
     public function __construct(
-        private ActionRenderer $actionRenderer,
         private AuthorizationService $service,
     ) {}
 
     public function run(Request $request, Response $response): void
     {
-        $psr7Response = $this->service->authorizeStart($request->toPsr7(), $response->toPsr7());
+        $psr7Response = $this->service->token($request->toPsr7(), $response->toPsr7());
 
-        if ($psr7Response) {
-            $response->applyPsr7($psr7Response);
-
-            return;
-        }
-
-        $params = new ActionRenderer\Params(
-            controller: 'controllers/o-auth-authorize',
-            action: 'show',
-        );
-
-        $params = $params->withLogin();
-
-        $this->actionRenderer->write($response, $params);
+        $response->applyPsr7($psr7Response);
     }
 }

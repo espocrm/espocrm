@@ -41,7 +41,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
-class AuthorizeService
+class AuthorizationService
 {
     public function __construct(
         private Session $session,
@@ -52,7 +52,7 @@ class AuthorizeService
     /**
      * @throws Error
      */
-    public function start(ServerRequestInterface $request, ResponseInterface $response): ?ResponseInterface
+    public function authorizeStart(ServerRequestInterface $request, ResponseInterface $response): ?ResponseInterface
     {
         $server = $this->authorizationServerFactory->create();
 
@@ -75,7 +75,7 @@ class AuthorizeService
      * @noinspection PhpRedundantCatchClauseInspection
      * @todo Make sure auth required for the entry point.
      */
-    public function complete(string $clientId, ResponseInterface $response, bool $approved): ResponseInterface
+    public function authorizeComplete(string $clientId, ResponseInterface $response, bool $approved): ResponseInterface
     {
         $authRequest = $this->getAuthRequestFromSession($clientId);
 
@@ -86,6 +86,20 @@ class AuthorizeService
 
         try {
             return $server->completeAuthorizationRequest($authRequest, $response);
+        } catch (OAuthServerException $e) {
+            return $e->generateHttpResponse($response);
+        }
+    }
+
+    /**
+     * @throws Error
+     */
+    public function token(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $server = $this->authorizationServerFactory->create();
+
+        try {
+            return $server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
