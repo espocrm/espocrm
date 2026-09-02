@@ -45,6 +45,10 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         private AccessToken $entity,
     ) {}
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function setPrivateKey(CryptKey $privateKey)
     {}
 
@@ -58,6 +62,10 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         return $this->entity->getIdentifier();
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function setIdentifier($identifier)
     {
         $this->entity->setIdentifier($identifier);
@@ -68,18 +76,30 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         return $this->entity->getExpiresAt()->toDateTime();
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function setExpiryDateTime(DateTimeImmutable $dateTime)
     {
         $this->entity->setExpiresAt(DateTime::fromDateTime($dateTime));
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function setUserIdentifier($identifier)
     {
+        if ($identifier === null) {
+            throw new InvalidArgumentException("User ID must be specified.");
+        }
+
         if (is_int($identifier)) {
             throw new InvalidArgumentException("Integer user ID is not supported.");
         }
 
-        $link = $identifier !== null ? Link::create($identifier) : null;
+        $link = Link::create($identifier);
 
         $this->entity->setUser($link);
     }
@@ -94,6 +114,10 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         return new ClientEntity($this->entity->getClient());
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function setClient(ClientEntityInterface $client)
     {
         /** @noinspection PhpConditionAlreadyCheckedInspection */
@@ -104,12 +128,16 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         $this->entity->setClient($client->getEntity());
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function addScope(ScopeEntityInterface $scope)
     {
         $scopes = $this->entity->getScopes();
 
         if (!in_array($scope->getIdentifier(), $scopes)) {
-            $scopes[] = $scope;
+            $scopes[] = $scope->getIdentifier();
         }
 
         $this->entity->setScopes($scopes);

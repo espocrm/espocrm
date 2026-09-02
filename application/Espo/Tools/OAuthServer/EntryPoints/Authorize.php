@@ -47,7 +47,7 @@ class Authorize implements EntryPoint
 
     public function run(Request $request, Response $response): void
     {
-        $psr7Response = $this->service->start($request->toPsr7());
+        $psr7Response = $this->service->start($request->toPsr7(), $response->toPsr7());
 
         if ($psr7Response) {
             $response->applyPsr7($psr7Response);

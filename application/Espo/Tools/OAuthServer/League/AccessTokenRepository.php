@@ -44,6 +44,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         private Repository $repository,
     ) {}
 
+    /**
+     * @inheritDoc
+     */
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
         $entity = $this->entityManager->getRDBRepositoryByClass(AccessToken::class)->getNew();
@@ -59,6 +62,10 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         return $accessToken;
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
         /** @noinspection PhpConditionAlreadyCheckedInspection */
@@ -69,6 +76,10 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         $this->entityManager->saveEntity($accessTokenEntity->getEntity());
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function revokeAccessToken($tokenId)
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);

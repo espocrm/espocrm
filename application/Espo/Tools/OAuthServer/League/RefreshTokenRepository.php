@@ -29,16 +29,23 @@
 
 namespace Espo\Tools\OAuthServer\League;
 
+use Espo\Core\Field\DateTime;
+use Espo\Core\Field\Link;
 use Espo\ORM\EntityManager;
-use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository as Repository;
+use Espo\Tools\OAuthServer\Entities\RefreshToken;
+use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
+use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository as RefreshTokenRepositoryInternal;
+use InvalidArgumentException;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use RuntimeException;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     public function __construct(
         private EntityManager $entityManager,
-        private Repository $repository,
+        private RefreshTokenRepositoryInternal $repository,
+        private ClientRepositoryInternal $clientRepository,
     ) {}
 
     public function getNewRefreshToken()
@@ -46,18 +53,67 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         return new RefreshTokenEntity();
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        // TODO: Implement persistNewRefreshToken() method.
+        $entity = $this->entityManager->getRDBRepositoryByClass(RefreshToken::class)->getNew();
+
+        $userId = $refreshTokenEntity->getAccessToken()->getUserIdentifier();
+
+        if (!is_string($userId)) {
+            throw new InvalidArgumentException("User ID must be string.");
+        }
+
+        $clientId = $refreshTokenEntity->getAccessToken()->getClient()->getIdentifier();
+
+        $client = $this->clientRepository->getActiveByIdentifier($clientId) ??
+            throw new RuntimeException("Client not found.");
+
+        $accessToken = $refreshTokenEntity->getAccessToken();
+
+        if (!$accessToken instanceof AccessTokenEntity) {
+            throw new InvalidArgumentException("Not supported access token implementation.");
+        }
+
+        $entity
+            ->setClient($client)
+            ->setAccessToken($accessToken->getEntity())
+            ->setIdentifier($refreshTokenEntity->getIdentifier())
+            ->setUser(Link::create($userId))
+            ->setExpiresAt(DateTime::fromDateTime($refreshTokenEntity->getExpiryDateTime()));
+
+        $this->entityManager->saveEntity($entity);
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function revokeRefreshToken($tokenId)
     {
-        // TODO: Implement revokeRefreshToken() method.
+        $token = $this->repository->getActiveByIdentifier($tokenId);
+
+        if (!$token || $token->isRevoked()) {
+            return;
+        }
+
+        $token->setRevoked();
+
+        $this->entityManager->saveEntity($token);
     }
 
     public function isRefreshTokenRevoked($tokenId)
     {
-        // TODO: Implement isRefreshTokenRevoked() method.
+        $entity = $this->repository->getActiveByIdentifier($tokenId);
+
+        if (!$entity) {
+            return true;
+        }
+
+        // Intentionally.
+        return !$entity->isActive();
     }
 }

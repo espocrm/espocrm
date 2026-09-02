@@ -38,6 +38,7 @@ use Espo\Tools\OAuthServer\League\RefreshTokenRepository;
 use Espo\Tools\OAuthServer\League\ScopeRepository;
 use Exception;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -55,7 +56,7 @@ class AuthorizeService
     /**
      * @throws Error
      */
-    public function start(ServerRequestInterface $request): ?ResponseInterface
+    public function start(ServerRequestInterface $request, ResponseInterface $response): ?ResponseInterface
     {
         $server = new AuthorizationServer(
             clientRepository: $this->clientRepository,
@@ -79,5 +80,11 @@ class AuthorizeService
             grantType: $grant,
             accessTokenTTL: new DateInterval('PT1H'),
         );
+
+        try {
+            $authRequest = $server->validateAuthorizationRequest($request);
+        } catch (OAuthServerException $e) {
+            return $e->generateHttpResponse($response);
+        }
     }
 }

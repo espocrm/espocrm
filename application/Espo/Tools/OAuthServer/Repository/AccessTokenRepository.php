@@ -48,4 +48,14 @@ class AccessTokenRepository
             ])
             ->findOne();
     }
+
+    public function getByIdentifier(string $identifier): ?AccessToken
+    {
+        return $this->entityManager
+            ->getRDBRepositoryByClass(AccessToken::class)
+            ->where([
+                AccessToken::FIELD_IDENTIFIER => $identifier,
+            ])
+            ->findOne();
+    }
 }

@@ -50,6 +50,10 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         return new AuthCodeEntity();
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
         $entity = $this->entityManager->getRDBRepositoryByClass(AuthorizationCode::class)->getNew();
@@ -77,6 +81,10 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         $this->entityManager->saveEntity($entity);
     }
 
+    /**
+     * @inheritDoc
+     * @return void
+     */
     public function revokeAuthCode($codeId)
     {
         $code = $this->repository->getActiveByIdentifier($codeId);

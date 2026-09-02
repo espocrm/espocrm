@@ -44,6 +44,7 @@ class RefreshToken extends Entity
     public const string FIELD_IDENTIFIER = 'identifier';
     public const string FIELD_EXPIRES_AT = 'expiresAt';
     public const string FIELD_USER = 'user';
+    public const string FIELD_ACCESS_TOKEN = 'accessToken';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_REVOKED = 'Revoked';
@@ -73,6 +74,11 @@ class RefreshToken extends Entity
         }
 
         return $client;
+    }
+
+    public function setAccessToken(AccessToken $accessToken): self
+    {
+        return $this->setRelatedLinkOrEntity(self::FIELD_ACCESS_TOKEN, $accessToken);
     }
 
     public function setClient(Client $client): self
