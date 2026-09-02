@@ -30,6 +30,7 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Name\Field;
+use Espo\Tools\Notification\GetParams;
 use Espo\Tools\Notification\RecordService as Service;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
@@ -59,10 +60,23 @@ class Notification extends RecordBase
         $after = $request->getQueryParam('after');
         $beforeNumber = $request->getQueryParam('beforeNumber');
 
+        $where = $searchParamsAux->getWhere();
+
+        if ($where && $where->getItemList() === []) {
+            $where = null;
+        }
+
+        // Only a filter defined by a user disables grouping and marking as read.
+        $filtered = $where !== null;
+
         $searchParams = SearchParams
             ::create()
             ->withOffset($offset)
             ->withMaxSize($maxSize);
+
+        if ($where) {
+            $searchParams = $searchParams->withWhere($where);
+        }
 
         if ($after) {
             $searchParams = $searchParams
@@ -76,7 +90,12 @@ class Notification extends RecordBase
                 );
         }
 
-        $recordCollection = $this->getNotificationService()->get($this->user, $searchParams, $beforeNumber);
+        $recordCollection = $this->getNotificationService()->get(
+            $this->user,
+            $searchParams,
+            $beforeNumber,
+            new GetParams(groupingDisabled: $filtered, markAsRead: !$filtered),
+        );
 
         return $recordCollection->toApiOutput();
     }
