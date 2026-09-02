@@ -73,6 +73,8 @@ class UpdateType implements Func
             $this->getWriteRestrictedAttributeList($entityType),
         );
 
+        $notAllowedAttributes = array_values($notAllowedAttributes);
+
         if ($notAllowedAttributes) {
             throw new NotAllowedUsage("Cannot write $entityType.$notAllowedAttributes[0].");
         }

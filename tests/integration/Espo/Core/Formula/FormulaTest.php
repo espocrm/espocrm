@@ -1561,5 +1561,67 @@ class FormulaTest extends BaseTestCase
         $this->assertTrue($thrown);
 
         //
+
+
+        $script = "
+            \$data = object\\create();
+            record\\create('Extension', \$data);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testRecordCreateIdRestriction(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $this->getEntityManager();
+
+        $script = <<<EOF
+            \$data = object\create();
+            \$data['id'] = 'bad';
+            \$data['lastName'] = 'Test';
+
+            record\create('Lead', \$data);
+            EOF;
+
+        $this->expectException(NotAllowedUsage::class);
+
+        $fm->run($script);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testRecordUpdateIdRestriction(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $this->getEntityManager();
+
+        $script = <<<EOF
+            \$data = object\create();
+            \$data['lastName'] = 'Test';
+
+            \$id = record\create('Lead', \$data);
+
+            \$data['id'] = 'bad';
+
+            record\update('Lead', \$id, \$data);
+            EOF;
+
+        $this->expectException(NotAllowedUsage::class);
+
+        $fm->run($script);
     }
 }
