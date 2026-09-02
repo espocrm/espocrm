@@ -571,9 +571,9 @@ class EntityManager
         $export = $this->injectableFactory->create(ExportCustom::class);
         $service = $this->injectableFactory->create(ExportCustomService::class);
 
-        $service->storeToConfig($params);
-
         $result = $export->process($params);
+
+        $service->storeToConfig($params);
 
         return (object) ['id' => $result->getAttachmentId()];
     }

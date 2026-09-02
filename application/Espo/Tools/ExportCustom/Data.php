@@ -47,6 +47,6 @@ class Data
 
     public function getDestDir(): string
     {
-        return $this->getDir() . '/files/custom/Espo/Modules/' . $this->module;
+        return $this->getDir() . '/files/custom/Espo/Modules/' . basename($this->module);
     }
 }

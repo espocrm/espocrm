@@ -324,8 +324,6 @@ class LabelManager implements
             }
         }
 
-        //die;
-
         $languageObj->saveScopeCustom($scope, $customData);
 
         return $this->getScopeData($language, $scope);
