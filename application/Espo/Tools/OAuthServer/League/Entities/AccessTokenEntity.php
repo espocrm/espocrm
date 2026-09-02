@@ -33,7 +33,6 @@ use DateTimeImmutable;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
-use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
 use InvalidArgumentException;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
