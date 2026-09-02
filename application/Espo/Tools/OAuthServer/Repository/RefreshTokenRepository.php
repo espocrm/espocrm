@@ -29,21 +29,26 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
+use Espo\Core\Utils\Hasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
+use SensitiveParameter;
 
 class RefreshTokenRepository
 {
     public function __construct(
         private EntityManager $entityManager,
+        private Hasher $hasher,
     ) {}
 
-    public function getActiveByIdentifier(string $identifier): ?RefreshToken
+    public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?RefreshToken
     {
+        $hash = $this->hasher->hash($identifier);
+
         return $this->entityManager
             ->getRDBRepositoryByClass(RefreshToken::class)
             ->where([
-                RefreshToken::FIELD_IDENTIFIER => $identifier,
+                RefreshToken::FIELD_HASH => $hash,
                 RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
             ])
             ->findOne();

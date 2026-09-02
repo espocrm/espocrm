@@ -37,10 +37,12 @@ use Espo\Tools\OAuthServer\League\Entities\AccessTokenEntity;
 use Espo\Tools\OAuthServer\League\Entities\RefreshTokenEntity;
 use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
 use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository as RefreshTokenRepositoryInternal;
+use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use RuntimeException;
+use SensitiveParameter;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
@@ -48,6 +50,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         private EntityManager $entityManager,
         private RefreshTokenRepositoryInternal $repository,
         private ClientRepositoryInternal $clientRepository,
+        private Hasher $hasher,
     ) {}
 
     public function getNewRefreshToken()
@@ -80,10 +83,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
             throw new InvalidArgumentException("Not supported access token implementation.");
         }
 
+        $hash = $this->hasher->hash($refreshTokenEntity->getIdentifier());
+
         $entity
             ->setClient($client)
             ->setAccessToken($accessToken->getEntity())
-            ->setIdentifier($refreshTokenEntity->getIdentifier())
+            ->setHash($hash)
             ->setUser(Link::create($userId))
             ->setExpiresAt(DateTime::fromDateTime($refreshTokenEntity->getExpiryDateTime()));
 
@@ -94,7 +99,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      * @inheritDoc
      * @return void
      */
-    public function revokeRefreshToken($tokenId)
+    public function revokeRefreshToken(#[SensitiveParameter] $tokenId)
     {
         $token = $this->repository->getActiveByIdentifier($tokenId);
 
@@ -107,7 +112,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         $this->entityManager->saveEntity($token);
     }
 
-    public function isRefreshTokenRevoked($tokenId)
+    public function isRefreshTokenRevoked(#[SensitiveParameter] $tokenId)
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);
 

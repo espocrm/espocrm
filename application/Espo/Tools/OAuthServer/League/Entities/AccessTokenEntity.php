@@ -33,6 +33,7 @@ use DateTimeImmutable;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
+use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
@@ -43,6 +44,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
 {
     public function __construct(
         private AccessToken $entity,
+        private Hasher $hasher,
     ) {}
 
     /**
@@ -69,6 +71,10 @@ class AccessTokenEntity implements AccessTokenEntityInterface
     public function setIdentifier($identifier)
     {
         $this->entity->setIdentifier($identifier);
+
+        $hash = $this->hasher->hash($identifier);
+
+        $this->entity->setHash($hash);
     }
 
     public function getExpiryDateTime()

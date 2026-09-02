@@ -41,7 +41,7 @@ class AuthorizationCode extends Entity
 
     public const string FIELD_STATUS = 'status';
     public const string FILED_CLIENT = 'client';
-    public const string FIELD_IDENTIFIER = 'identifier';
+    public const string FIELD_HASH = 'hash';
     public const string FIELD_EXPIRES_AT = 'expiresAt';
     public const string FIELD_REDIRECT_URI = 'redirectUri';
     public const string FIELD_SCOPES = 'scopes';
@@ -87,14 +87,9 @@ class AuthorizationCode extends Entity
         return $this->set(self::FIELD_STATUS, self::STATUS_EXPIRED);
     }
 
-    public function setIdentifier(string $identifier): self
+    public function setHash(string $hash): self
     {
-        return $this->set(self::FIELD_IDENTIFIER, $identifier);
-    }
-
-    public function getIdentifier(): string
-    {
-        return $this->get(self::FIELD_IDENTIFIER) ?? throw new UnexpectedValueException("No identifier.");
+        return $this->set(self::FIELD_HASH, $hash);
     }
 
     public function getExpiresAt(): DateTime

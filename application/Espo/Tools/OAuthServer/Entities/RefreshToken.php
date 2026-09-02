@@ -41,14 +41,19 @@ class RefreshToken extends Entity
 
     public const string FIELD_STATUS = 'status';
     public const string FIELD_CLIENT = 'client';
-    public const string FIELD_IDENTIFIER = 'identifier';
     public const string FIELD_EXPIRES_AT = 'expiresAt';
     public const string FIELD_USER = 'user';
     public const string FIELD_ACCESS_TOKEN = 'accessToken';
+    public const string FIELD_HASH = 'hash';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_REVOKED = 'Revoked';
     public const string STATUS_EXPIRED = 'Expired';
+
+    public function setHash(string $value): self
+    {
+        return $this->set(self::FIELD_HASH, $value);
+    }
 
     public function isActive(): bool
     {
@@ -94,16 +99,6 @@ class RefreshToken extends Entity
     public function setExpired(): self
     {
         return $this->set(self::FIELD_STATUS, self::STATUS_EXPIRED);
-    }
-
-    public function setIdentifier(string $identifier): self
-    {
-        return $this->set(self::FIELD_IDENTIFIER, $identifier);
-    }
-
-    public function getIdentifier(): string
-    {
-        return $this->get(self::FIELD_IDENTIFIER) ?? throw new UnexpectedValueException("No identifier.");
     }
 
     public function getExpiresAt(): DateTime

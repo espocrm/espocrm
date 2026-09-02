@@ -33,16 +33,19 @@ use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\League\Entities\AccessTokenEntity;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository as Repository;
+use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use SensitiveParameter;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function __construct(
         private EntityManager $entityManager,
         private Repository $repository,
+        private Hasher $hasher,
     ) {}
 
     /**
@@ -52,7 +55,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     {
         $entity = $this->entityManager->getRDBRepositoryByClass(AccessToken::class)->getNew();
 
-        $accessToken = new AccessTokenEntity($entity);
+        $accessToken = new AccessTokenEntity($entity, $this->hasher);
 
         foreach ($scopes as $scope) {
             $accessToken->addScope($scope);
@@ -81,7 +84,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      * @inheritDoc
      * @return void
      */
-    public function revokeAccessToken($tokenId)
+    public function revokeAccessToken(#[SensitiveParameter] $tokenId)
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);
 
@@ -97,7 +100,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     /**
      * Not existent or inactive token is treated as revoked intentionally.
      */
-    public function isAccessTokenRevoked($tokenId)
+    public function isAccessTokenRevoked(#[SensitiveParameter] $tokenId)
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);
 

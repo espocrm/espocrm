@@ -35,15 +35,18 @@ use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
 use Espo\Tools\OAuthServer\League\Entities\AuthCodeEntity;
 use Espo\Tools\OAuthServer\Repository\AuthorizationCodeRepository;
+use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
+use SensitiveParameter;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
     public function __construct(
         private EntityManager $entityManager,
         private AuthorizationCodeRepository $repository,
+        private Hasher $hasher,
     ) {}
 
     public function getNewAuthCode()
@@ -71,9 +74,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
         $clientId = $authCodeEntity->getClient()->getIdentifier();
 
+        $hash = $this->hasher->hash($authCodeEntity->getIdentifier());
+
         $entity
             ->setClient(Link::create($clientId))
-            ->setIdentifier($authCodeEntity->getIdentifier())
+            ->setHash($hash)
             ->setUser(Link::create($userId))
             ->setScopes($scopes)
             ->setRedirectUri($redirectUri)
@@ -86,7 +91,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      * @inheritDoc
      * @return void
      */
-    public function revokeAuthCode($codeId)
+    public function revokeAuthCode(#[SensitiveParameter] $codeId)
     {
         $code = $this->repository->getActiveByIdentifier($codeId);
 
@@ -99,7 +104,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         $this->entityManager->saveEntity($code);
     }
 
-    public function isAuthCodeRevoked($codeId)
+    public function isAuthCodeRevoked(#[SensitiveParameter] $codeId)
     {
         $entity = $this->repository->getActiveByIdentifier($codeId);
 

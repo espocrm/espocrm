@@ -2,9 +2,16 @@
     "fields": {
         "identifier": {
             "type": "password",
+            "notStorable": true,
             "maxLength": 80,
             "readOnly": true,
-            "required": true
+            "required": true,
+            "utility": true
+        },
+        "hash": {
+            "type": "password",
+            "maxLength": 64,
+            "readOnly": true
         },
         "status": {
             "type": "enum",
@@ -72,9 +79,9 @@
         "textFilterFields": []
     },
     "indexes": {
-        "identifier": {
+        "hash": {
             "columns": [
-                "identifier"
+                "hash"
             ]
         },
         "createdAt": {

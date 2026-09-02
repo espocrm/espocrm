@@ -29,21 +29,26 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
+use Espo\Core\Utils\Hasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
+use SensitiveParameter;
 
 class AuthorizationCodeRepository
 {
     public function __construct(
         private EntityManager $entityManager,
+        private Hasher $hasher,
     ) {}
 
-    public function getActiveByIdentifier(string $identifier): ?AuthorizationCode
+    public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?AuthorizationCode
     {
+        $hash = $this->hasher->hash($identifier);
+
         return $this->entityManager
             ->getRDBRepositoryByClass(AuthorizationCode::class)
             ->where([
-                AuthorizationCode::FIELD_IDENTIFIER => $identifier,
+                AuthorizationCode::FIELD_HASH => $hash,
                 AuthorizationCode::FIELD_STATUS => AuthorizationCode::STATUS_ACTIVE,
             ])
             ->findOne();

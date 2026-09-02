@@ -33,6 +33,7 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Core\ORM\Entity;
 use Espo\Entities\User;
+use SensitiveParameter;
 use UnexpectedValueException;
 
 class AccessToken extends Entity
@@ -45,6 +46,7 @@ class AccessToken extends Entity
     public const string FIELD_EXPIRES_AT = 'expiresAt';
     public const string FIELD_SCOPES = 'scopes';
     public const string FIELD_USER = 'user';
+    public const string FIELD_HASH = 'hash';
 
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_REVOKED = 'Revoked';
@@ -86,7 +88,12 @@ class AccessToken extends Entity
         return $this->set(self::FIELD_STATUS, self::STATUS_EXPIRED);
     }
 
-    public function setIdentifier(string $identifier): self
+    public function setHash(string $hash): self
+    {
+        return $this->set(self::FIELD_HASH, $hash);
+    }
+
+    public function setIdentifier(#[SensitiveParameter] string $identifier): self
     {
         return $this->set(self::FIELD_IDENTIFIER, $identifier);
     }
