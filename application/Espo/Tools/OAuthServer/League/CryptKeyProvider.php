@@ -35,7 +35,6 @@ use RuntimeException;
 
 class CryptKeyProvider
 {
-    // @todo Test not available in settings.
     private const string PARAM_CRYPT_KEY = 'oAuthServerCryptKey';
 
     public function __construct(

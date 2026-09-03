@@ -29,9 +29,11 @@
 
 namespace Espo\Tools\OAuthServer\League\Repositories;
 
+use Espo\Core\Field\Link;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\League\Entities\AccessTokenEntity;
+use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository as Repository;
 use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
@@ -54,6 +56,13 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
         $entity = $this->entityManager->getRDBRepositoryByClass(AccessToken::class)->getNew();
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
+        if (!$clientEntity instanceof ClientEntity) {
+            throw new InvalidArgumentException("Bad client.");
+        }
+
+        $entity->setClient(Link::create($clientEntity->entityId));
 
         $accessToken = new AccessTokenEntity($entity, $this->hasher);
 

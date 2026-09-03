@@ -113,6 +113,7 @@ class AuthorizationService
         try {
             return $server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $e) {
+            print_r($e->getTraceAsString());
             return $e->generateHttpResponse($response);
         }
     }
@@ -171,6 +172,6 @@ class AuthorizationService
             $redirectUri = UriUtil::makeRedirectUri($redirectUri, $authorizationRequest->getState());
         }
 
-        throw OAuthServerException::accessDenied("User is not allowed", $redirectUri);
+        throw OAuthServerException::accessDenied("User is not allowed.", $redirectUri);
     }
 }

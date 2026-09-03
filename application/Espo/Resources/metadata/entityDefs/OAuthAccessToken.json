@@ -34,7 +34,7 @@
             "required": true
         },
         "scopes": {
-            "type": "multiEnum",
+            "type": "array",
             "readOnly": true,
             "displayAsList": true,
             "storeArrayValues": false

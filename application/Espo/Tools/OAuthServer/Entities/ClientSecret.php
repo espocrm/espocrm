@@ -61,6 +61,11 @@ class ClientSecret extends Entity
         return $this->get(Field::NAME);
     }
 
+    public function getHash(): string
+    {
+        return $this->get(self::FIELD_HASH) ?? throw new UnexpectedValueException("No hash.");
+    }
+
     public function setHash(string $value): self
     {
         return $this->set(self::FIELD_HASH, $value);

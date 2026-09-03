@@ -124,7 +124,7 @@ class AccessToken extends Entity
      */
     public function getScopes(): array
     {
-        return $this->get(self::FIELD_SCOPES);
+        return $this->get(self::FIELD_SCOPES) ?? [];
     }
 
     /**

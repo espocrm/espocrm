@@ -74,6 +74,6 @@ class SecretValidator
             return false;
         }
 
-        return $this->passwordHash->verify($secret, $entry->getValue());
+        return $this->passwordHash->verify($secret, $entry->getHash());
     }
 }

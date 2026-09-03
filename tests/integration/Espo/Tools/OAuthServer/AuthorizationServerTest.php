@@ -36,12 +36,15 @@ use Espo\Core\Authentication\Oidc\PkceUtil;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Session\Session;
+use Espo\Core\Utils\Json;
 use Espo\Entities\User;
+use Espo\Tools\App\SettingsService;
 use Espo\Tools\OAuthServer\ClientType;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\ClientSecret;
 use Espo\Tools\OAuthServer\EntryPoints\Authorize;
 use Espo\Tools\OAuthServer\EntryPoints\AuthorizeComplete;
+use Espo\Tools\OAuthServer\EntryPoints\Token;
 use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
@@ -107,7 +110,7 @@ class AuthorizationServerTest extends BaseTestCase
             resourcePath: '/oauth/authorize',
         );
 
-        $response = new ResponseWrapper(new Response());
+        $response = $this->createResponseWrapper();
 
         $authorizeEntryPoint = $this->getInjectableFactory()->create(Authorize::class);
 
@@ -165,15 +168,14 @@ class AuthorizationServerTest extends BaseTestCase
             headers: [
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
-            // @todo Use form.
             body: http_build_query([
                 'clientId' => $client->getIdentifier(),
                 'approved' => 'true',
             ]),
-            resourcePath: '?entryPoint=oAuthAuthorizeComplete'
+            resourcePath: '?entryPoint=oAuthAuthorizeComplete',
         );
 
-        $response = new ResponseWrapper(new Response());
+        $response = $this->createResponseWrapper();
 
         $completeEntryPoint = $this->getInjectableFactory()->create(AuthorizeComplete::class);
 
@@ -186,8 +188,65 @@ class AuthorizationServerTest extends BaseTestCase
 
         $urlData = parse_url($location);
         parse_str($urlData['query'], $queryParams);
-
         $this->assertIsString($queryParams['code']);
+        $code = $queryParams['code'];
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
+                    $binder->bindInstance(Session::class, $session);
+                }),
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'authorization_code',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => $redirectUri,
+                'code' => $code,
+                'code_verifier' => $codeChallenge,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $result = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('Bearer', $result->token_type);
+        $this->assertObjectHasProperty('access_token', $result);
+        $this->assertObjectHasProperty('refresh_token', $result);
+        $this->assertObjectHasProperty('expires_in', $result);
+    }
+
+    public function testSettings(): void
+    {
+        $this->createUser(
+            [
+                User::FIELD_USER_NAME => 'admin',
+                User::FIELD_TYPE => User::TYPE_ADMIN,
+            ],
+        );
+
+        $this->authenticate('admin');
+
+        $settingsService = $this->getInjectableFactory()->create(SettingsService::class);
+
+        $this->assertObjectNotHasProperty( 'oAuthServerCryptKey', $settingsService->getConfigData());
     }
 
     /**
@@ -208,5 +267,10 @@ class AuthorizationServerTest extends BaseTestCase
                 ($this->callback)($binder);
             }
         };
+    }
+
+    private function createResponseWrapper(): ResponseWrapper
+    {
+        return new ResponseWrapper(new Response());
     }
 }

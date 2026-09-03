@@ -17,6 +17,7 @@
     "oAuthToken": {
         "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Token",
         "noAuth": true,
-        "notExposed": true
+        "notExposed": true,
+        "allowedMethods": ["post"]
     }
 }
