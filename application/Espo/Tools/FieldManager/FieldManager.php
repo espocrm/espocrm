@@ -225,6 +225,10 @@ class FieldManager
             throw new Error("Entity type $scope is not customizable.");
         }
 
+        if (!$this->isCustomizable($scope, $name)) {
+            throw new Error("Field '$name' is not customizable.");
+        }
+
         $isCustom = false;
 
         if (!empty($fieldDefs['isCustom'])) {
@@ -930,6 +934,24 @@ class FieldManager
         }
 
         if ($this->metadata->get("scopes.$scope.entityManager.fields") === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isCustomizable(string $scope, string $name): bool
+    {
+        if (!$this->isScopeCustomizable($scope)) {
+            return false;
+        }
+
+        $defs = $this->metadata->get("entityDefs.$scope.fields.$name") ?? [];
+
+        $utility = $defs['utility'] ?? false;
+        $customizationDisabled = $defs['customizationDisabled'] ?? false;
+
+        if ($utility || $customizationDisabled) {
             return false;
         }
 

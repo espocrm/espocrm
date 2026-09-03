@@ -1518,6 +1518,10 @@
                     "type": "boolean",
                     "description": "The link will be hidden from the user on the UI but not disabled."
                 },
+                "customizationDisabled": {
+                    "type": "boolean",
+                    "description": "Disables the ability to customize the link. As of v10.0.8."
+                },
                 "disabled": {
                     "type": "boolean",
                     "description": "Disables the link."

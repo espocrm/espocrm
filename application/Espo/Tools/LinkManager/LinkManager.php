@@ -33,6 +33,7 @@ use Espo\Core\DataManager;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
@@ -50,6 +51,7 @@ use Espo\Tools\LinkManager\Hook\HookProcessor as LinkHookProcessor;
 use Espo\Tools\LinkManager\Params as LinkParams;
 use Espo\Tools\LinkManager\Type as LinkType;
 use Espo\Tools\EntityManager\NameUtil;
+use RuntimeException;
 
 /**
  * Administration > Entity Manager > {Entity Type} > Relationships.
@@ -633,6 +635,7 @@ class LinkManager
      * } $params
      * @throws BadRequest
      * @throws Error
+     * @throws Forbidden
      */
     public function update(array $params): void
     {
@@ -641,110 +644,105 @@ class LinkManager
         $entityForeign = $params['entityForeign'] ?? null;
         $linkForeign = $params['linkForeign'] ?? null;
 
-        if (empty($link)) {
+        if (!$link || !$entity) {
             throw new BadRequest();
         }
 
-        if (empty($entity)) {
-            throw new BadRequest();
+        if (!$this->isScopeCustomizable($entity)) {
+            throw new Forbidden("Entity type '$entity' is not customizable.");
+        }
+
+        if ($entityForeign && !$this->isScopeCustomizable($entityForeign)) {
+            throw new Forbidden("Entity type '$entityForeign' is not customizable.");
         }
 
         $linkType = $this->metadata->get("entityDefs.$entity.links.$link.type");
         $isCustom = $this->metadata->get("entityDefs.$entity.links.$link.isCustom");
 
         if ($linkType !== Entity::BELONGS_TO_PARENT) {
-            if (empty($entityForeign)) {
+            if (!$entityForeign) {
                 throw new BadRequest();
             }
 
-            if (empty($linkForeign)) {
+            if (!$linkForeign) {
                 throw new BadRequest();
             }
         }
 
         if (
-            $this->metadata->get("entityDefs.$entity.links.$link.type") == Entity::HAS_MANY &&
-            $this->metadata->get("entityDefs.$entity.links.$link.isCustom")
+            $linkType === Entity::HAS_MANY &&
+            $isCustom &&
+            array_key_exists('linkMultipleField', $params)
         ) {
-            if (array_key_exists('linkMultipleField', $params)) {
-                $this->updateLinkMultiple($params['linkMultipleField'], $entity, $link);
-            }
+            $this->updateLinkMultiple($params['linkMultipleField'], $entity, $link);
+        }
+
+        $linkTypeForeign = null;
+        $isCustomForeign = null;
+
+        if ($entityForeign && $linkForeign) {
+            $linkTypeForeign = $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign.type");
+            $isCustomForeign = $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign.isCustom");
         }
 
         if (
-            $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign.type") == Entity::HAS_MANY &&
-            $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign.isCustom")
-        ) {
-            /** @var string $entityForeign */
-            /** @var string $linkForeign */
-
-            if (array_key_exists('linkMultipleFieldForeign', $params)) {
-                $this->updateLinkMultiple($params['linkMultipleFieldForeign'], $entityForeign, $linkForeign);
-            }
-        }
-
-        if (
-            in_array($this->metadata->get("entityDefs.$entity.links.$link.type"), [
-                Entity::HAS_MANY,
-                Entity::HAS_CHILDREN,
-            ])
-        ) {
-            if (array_key_exists('audited', $params)) {
-                $audited = $params['audited'];
-
-                $dataLeft = [
-                    'links' => [
-                        $link => [
-                            "audited" => $audited,
-                        ],
-                    ],
-                ];
-                $this->metadata->set('entityDefs', $entity, $dataLeft);
-                $this->metadata->save();
-            }
-        }
-
-        if (
+            $entityForeign &&
             $linkForeign &&
-            in_array(
-                $this->metadata->get("entityDefs.$entityForeign.links.$linkForeign.type"),
-                [
-                    Entity::HAS_MANY,
-                    Entity::HAS_CHILDREN,
-                ]
-            )
+            $linkTypeForeign === Entity::HAS_MANY &&
+            $isCustomForeign &&
+            array_key_exists('linkMultipleFieldForeign', $params)
         ) {
-            /** @var string $entityForeign */
+            $this->updateLinkMultiple($params['linkMultipleFieldForeign'], $entityForeign, $linkForeign);
+        }
 
-            if (array_key_exists('auditedForeign', $params)) {
-                $auditedForeign = $params['auditedForeign'];
+        if (
+            in_array($linkType, [Entity::HAS_MANY, Entity::HAS_CHILDREN]) &&
+            array_key_exists('audited', $params)
+        ) {
+            $audited = $params['audited'];
 
-                $dataRight = [
-                    'links' => [
-                        $linkForeign => [
-                            "audited" => $auditedForeign,
-                        ],
+            $this->metadata->set('entityDefs', $entity, [
+                'links' => [
+                    $link => [
+                        "audited" => $audited,
                     ],
-                ];
+                ],
+            ]);
 
-                $this->metadata->set('entityDefs', $entityForeign, $dataRight);
-                $this->metadata->save();
-            }
+            $this->metadata->save();
+        }
+
+        if (
+            $entityForeign &&
+            $linkForeign &&
+            in_array($linkTypeForeign, [Entity::HAS_MANY, Entity::HAS_CHILDREN]) &&
+            array_key_exists('auditedForeign', $params)
+        ) {
+            $auditedForeign = $params['auditedForeign'];
+
+            $this->metadata->set('entityDefs', $entityForeign, [
+                'links' => [
+                    $linkForeign => [
+                        "audited" => $auditedForeign,
+                    ],
+                ],
+            ]);
+
+            $this->metadata->save();
         }
 
         if ($linkType === Entity::BELONGS_TO_PARENT) {
             $parentEntityTypeList = $params['parentEntityTypeList'] ?? null;
 
             if (is_array($parentEntityTypeList)) {
-                $data = [
+                $this->metadata->set('entityDefs', $entity, [
                     'fields' => [
                         $link => [
                             'entityList' => $parentEntityTypeList,
                         ],
                     ],
-                ];
+                ]);
 
-                $this->metadata->set('entityDefs', $entity, $data);
                 $this->metadata->save();
             }
 
@@ -792,24 +790,21 @@ class LinkManager
 
         $this->language->save();
 
-        if ($isCustom) {
-            if ($this->language->getLanguage() !== $this->baseLanguage->getLanguage()) {
-
-                if ($label) {
-                    $this->baseLanguage->set($entity, 'fields', $link, $label);
-                    $this->baseLanguage->set($entity, 'links', $link, $label);
-                }
-
-                if ($labelForeign && $linkType !== Entity::BELONGS_TO_PARENT) {
-                    /** @var string $linkForeign */
-                    /** @var string $entityForeign */
-
-                    $this->baseLanguage->set($entityForeign, 'fields', $linkForeign, $labelForeign);
-                    $this->baseLanguage->set($entityForeign, 'links', $linkForeign, $labelForeign);
-                }
-
-                $this->baseLanguage->save();
+        if ($isCustom && $this->language->getLanguage() !== $this->baseLanguage->getLanguage()) {
+            if ($label) {
+                $this->baseLanguage->set($entity, 'fields', $link, $label);
+                $this->baseLanguage->set($entity, 'links', $link, $label);
             }
+
+            if ($labelForeign && $linkType !== Entity::BELONGS_TO_PARENT) {
+                /** @var string $linkForeign */
+                /** @var string $entityForeign */
+
+                $this->baseLanguage->set($entityForeign, 'fields', $linkForeign, $labelForeign);
+                $this->baseLanguage->set($entityForeign, 'links', $linkForeign, $labelForeign);
+            }
+
+            $this->baseLanguage->save();
         }
 
         $this->dataManager->clearCache();
@@ -822,23 +817,32 @@ class LinkManager
      * } $params
      * @throws Error
      * @throws BadRequest
+     * @throws Forbidden
      */
     public function delete(array $params): void
     {
         $entity = $params['entity'] ?? null;
         $link = $params['link'] ?? null;
 
-        if (!$this->metadata->get("entityDefs.$entity.links.$link.isCustom")) {
-            throw new Error("Could not delete link $entity.$link. Not isCustom.");
+        if (!$entity || !$link) {
+            throw new BadRequest();
         }
 
-        if (empty($entity) || empty($link)) {
-            throw new BadRequest();
+        if (!$this->isScopeCustomizable($entity)) {
+            throw new Forbidden("Entity type '$entity' is not customizable.");
+        }
+
+        if (!$this->metadata->get("entityDefs.$entity.links.$link.isCustom")) {
+            throw new Error("Could not delete link $entity.$link. Not isCustom.");
         }
 
         $entityForeign = $this->metadata->get("entityDefs.$entity.links.$link.entity");
         $linkForeign = $this->metadata->get("entityDefs.$entity.links.$link.foreign");
         $linkType = $this->metadata->get("entityDefs.$entity.links.$link.type");
+
+        if ($entityForeign && !$this->isScopeCustomizable($entityForeign)) {
+            throw new Forbidden("Entity type '$entityForeign' is not customizable.");
+        }
 
         if (!$this->metadata->get(['entityDefs', $entity, 'links', $link, 'isCustom'])) {
             throw new Error("Can't remove not custom link.");
@@ -882,7 +886,7 @@ class LinkManager
             return;
         }
 
-        if (empty($entityForeign) || empty($linkForeign)) {
+        if (!$entityForeign || !$linkForeign) {
             throw new BadRequest();
         }
 
@@ -1159,12 +1163,31 @@ class LinkManager
     /**
      * @param array{readOnly?: bool, cascadeRemoval?: bool} $params
      * @throws Error
+     * @throws Forbidden
      */
     public function updateParams(string $entityType, string $link, array $params): void
     {
-        $type = $this->metadata->get("entityDefs.$entityType.links.$link.type");
-        $foreignEntityType = $this->metadata->get("entityDefs.$entityType.links.$link.entity");
-        $foreign = $this->metadata->get("entityDefs.$entityType.links.$link.foreign");
+        if (!$this->isLinkCustomizable($entityType, $link)) {
+            throw new Forbidden("Link '$link' is not customizable.");
+        }
+
+        /**
+         * @type array{
+         *     type?: string,
+         *     entity?: string|null,
+         *     foreign?: string|null,
+         * } $linkDefs
+         */
+        $linkDefs = $this->metadata->get("entityDefs.$entityType.links.$link") ?? [];
+
+        $type = $linkDefs['type'] ?? null;
+        $foreignEntityType = $linkDefs['entity'] ?? null;
+        $foreign = $linkDefs['foreign'] ?? null;
+
+        if (!$type) {
+            throw new RuntimeException("No type.");
+        }
+
         $foreignType = null;
         $isObject = false;
         $isSystem = false;
@@ -1260,5 +1283,29 @@ class LinkManager
                     ->encode()
             );
         }
+    }
+
+    private function isLinkCustomizable(string $entityType, string $link): bool
+    {
+        if (!$this->isScopeCustomizable($entityType)) {
+            return false;
+        }
+
+        /**
+         * @type array{
+         *     utility?: bool|null,
+         *     customizationDisabled?: bool|null,
+         * } $linkDefs
+         */
+        $linkDefs = $this->metadata->get("entityDefs.$entityType.links.$link") ?? [];
+
+        if (
+            ($linkDefs['utility'] ?? false) ||
+            ($linkDefs['customizationDisabled'] ?? false)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }
