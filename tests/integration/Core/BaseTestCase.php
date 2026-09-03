@@ -358,6 +358,14 @@ abstract class BaseTestCase extends TestCase
             $request = $request->withBody(
                 (new StreamFactory)->createStream($body)
             );
+
+            $contentType = $request->getHeaderLine('Content-Type');
+
+            if ($contentType === 'application/x-www-form-urlencoded') {
+                parse_str($body, $parsedBody);
+
+                $request = $request->withParsedBody($parsedBody);
+            }
         }
 
         return new RequestWrapper($request, '', $routeParams);
