@@ -179,7 +179,15 @@ class AuthorizationServerTest extends BaseTestCase
 
         $completeEntryPoint->run($request, $response);
 
-        // @todo Assert response.
+        $location = $response->getHeader('Location');
+
+        $this->assertIsString($location);
+        $this->assertStringStartsWith($redirectUri, $location);
+
+        $urlData = parse_url($location);
+        parse_str($urlData['query'], $queryParams);
+
+        $this->assertIsString($queryParams['code']);
     }
 
     /**
