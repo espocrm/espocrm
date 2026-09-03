@@ -35,6 +35,9 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Session\Session;
 use Espo\Entities\User;
 use Espo\Tools\OAuthServer\League\AuthorizationServerFactory;
+use Espo\Tools\OAuthServer\League\Entities\AuthCodeEntity;
+use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
+use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
 use Espo\Tools\OAuthServer\League\Entities\UserEntity;
 use Espo\Tools\OAuthServer\Utils\UriUtil;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -134,7 +137,14 @@ class AuthorizationService
 
         $this->session->clear($key);
 
-        $authRequest = unserialize($raw, ['allowed_classes' => [AuthorizationRequest::class]]);
+        $authRequest = unserialize($raw, [
+            'allowed_classes' => [
+                AuthorizationRequest::class,
+                ClientEntity::class,
+                ScopeEntity::class,
+                AuthCodeEntity::class,
+            ]
+        ]);
 
         if (!$authRequest instanceof AuthorizationRequest) {
             throw new RuntimeException("Unserialization error.");

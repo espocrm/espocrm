@@ -36,7 +36,6 @@ use Espo\Core\Authentication\Oidc\PkceUtil;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Session\Session;
-use Espo\Core\Utils\Json;
 use Espo\Entities\User;
 use Espo\Tools\OAuthServer\ClientType;
 use Espo\Tools\OAuthServer\Entities\Client;
@@ -74,7 +73,6 @@ class AuthorizationServerTest extends BaseTestCase
         $user = $this->createUser(
             [
                 User::FIELD_USER_NAME => 'test',
-                User::FIELD_PASSWORD => 'hello',
             ],
         );
 
@@ -149,7 +147,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
-        $this->authenticate($user->getUserName());
+        $this->auth($user->getUserName());
 
         $this->setApplication(
             $this->createApplication(
@@ -157,7 +155,6 @@ class AuthorizationServerTest extends BaseTestCase
                     $binder->bindInstance(Session::class, $session);
                 }),
                 reuse: true,
-                //noUser: true,
             )
         );
 

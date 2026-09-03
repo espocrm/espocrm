@@ -35,10 +35,12 @@ use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
 use Espo\Tools\OAuthServer\League\Entities\AuthCodeEntity;
 use Espo\Tools\OAuthServer\Repository\AuthorizationCodeRepository;
+use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepository;
 use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
+use RuntimeException;
 use SensitiveParameter;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
@@ -46,6 +48,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     public function __construct(
         private EntityManager $entityManager,
         private AuthorizationCodeRepository $repository,
+        private ClientRepository $clientRepository,
         private Hasher $hasher,
     ) {}
 
@@ -74,10 +77,16 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
         $clientId = $authCodeEntity->getClient()->getIdentifier();
 
+        $client = $this->clientRepository->getActiveByIdentifier($clientId);
+
+        if (!$client) {
+            throw new RuntimeException("Client not found.");
+        }
+
         $hash = $this->hasher->hash($authCodeEntity->getIdentifier());
 
         $entity
-            ->setClient(Link::create($clientId))
+            ->setClient($client)
             ->setHash($hash)
             ->setUser(Link::create($userId))
             ->setScopes($scopes)
