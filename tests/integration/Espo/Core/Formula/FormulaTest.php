@@ -38,6 +38,7 @@ use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
@@ -1583,31 +1584,10 @@ class FormulaTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    public function testRecordCreateIdRestriction(): void
-    {
-        $fm = $this->getContainer()->getByClass(Manager::class);
-        $this->getEntityManager();
-
-        $script = <<<EOF
-            \$data = object\create();
-            \$data['id'] = 'bad';
-            \$data['lastName'] = 'Test';
-
-            record\create('Lead', \$data);
-            EOF;
-
-        $this->expectException(NotAllowedUsage::class);
-
-        $fm->run($script);
-    }
-
-    /**
-     * @noinspection PhpUnhandledExceptionInspection
-     */
     public function testRecordUpdateIdRestriction(): void
     {
         $fm = $this->getContainer()->getByClass(Manager::class);
-        $this->getEntityManager();
+        $em = $this->getEntityManager();
 
         $script = <<<EOF
             \$data = object\create();
@@ -1618,10 +1598,14 @@ class FormulaTest extends BaseTestCase
             \$data['id'] = 'bad';
 
             record\update('Lead', \$id, \$data);
+
+            \$id;
             EOF;
 
-        $this->expectException(NotAllowedUsage::class);
+        $id = $fm->run($script);
 
-        $fm->run($script);
+        $lead = $em->getRDBRepositoryByClass(Lead::class)->getById($id);
+        $this->assertNotNull($lead);
+        $this->assertNotEquals('bad', $lead->getId());
     }
 }

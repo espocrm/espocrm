@@ -36,7 +36,6 @@ use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Name\Attribute;
 use stdClass;
 
 /**
@@ -65,7 +64,7 @@ class CreateType implements Func
 
         $notAllowedAttributes = array_intersect(
             array_keys($data),
-            $this->getWriteRestrictedAttributeList($entityType),
+            $this->entityUtil->getWriteRestrictedAttributeList($entityType),
         );
 
         $notAllowedAttributes = array_values($notAllowedAttributes);
@@ -91,7 +90,7 @@ class CreateType implements Func
     private function getData(EvaluatedArgumentList $args, mixed $entityType): array
     {
         if (count($args) >= 2 && $args[1] instanceof stdClass) {
-            return get_object_vars($args[1]);
+            return $this->filterData(get_object_vars($args[1]));
         }
 
         $data = [];
@@ -114,17 +113,15 @@ class CreateType implements Func
             $i = $i + 2;
         }
 
-        return $data;
+        return $this->filterData($data);
     }
 
     /**
-     * @return string[]
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
-    private function getWriteRestrictedAttributeList(string $entityType): array
+    private function filterData(array $data): array
     {
-        return [
-            ...$this->entityUtil->getWriteRestrictedAttributeList($entityType),
-            Attribute::ID,
-        ];
+        return $data;
     }
 }

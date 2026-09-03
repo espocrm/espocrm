@@ -70,7 +70,7 @@ class UpdateType implements Func
 
         $notAllowedAttributes = array_intersect(
             array_keys($data),
-            $this->getWriteRestrictedAttributeList($entityType),
+            $this->entityUtil->getWriteRestrictedAttributeList($entityType),
         );
 
         $notAllowedAttributes = array_values($notAllowedAttributes);
@@ -101,7 +101,7 @@ class UpdateType implements Func
     private function getData(EvaluatedArgumentList $args, mixed $entityType): array
     {
         if (count($args) >= 3 && $args[2] instanceof stdClass) {
-            return get_object_vars($args[2]);
+            return $this->filterData(get_object_vars($args[2]));
         }
 
         $data = [];
@@ -124,17 +124,17 @@ class UpdateType implements Func
             $i = $i + 2;
         }
 
-        return $data;
+        return $this->filterData($data);
     }
 
     /**
-     * @return string[]
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
-    private function getWriteRestrictedAttributeList(string $entityType): array
+    private function filterData(array $data): array
     {
-        return [
-            ...$this->entityUtil->getWriteRestrictedAttributeList($entityType),
-            Attribute::ID,
-        ];
+        unset($data[Attribute::ID]);
+
+        return $data;
     }
 }
