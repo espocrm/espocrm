@@ -35,6 +35,7 @@ use Espo\Core\Session\Session;
 use Espo\Entities\User;
 use Espo\Tools\OAuthServer\League\AuthorizationServerFactory;
 use Espo\Tools\OAuthServer\League\Entities\UserEntity;
+use Espo\Tools\OAuthServer\Utils\UriUtil;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -73,19 +74,24 @@ class AuthorizationService
      * @throws NotFound
      * @throws Error
      * @noinspection PhpRedundantCatchClauseInspection
-     * @todo Make sure auth required for the entry point.
      */
     public function authorizeComplete(string $clientId, ResponseInterface $response, bool $approved): ResponseInterface
     {
-        $authRequest = $this->getAuthRequestFromSession($clientId);
+        $authorizationRequest = $this->getAuthRequestFromSession($clientId);
 
-        $authRequest->setUser(new UserEntity($this->user));
-        $authRequest->setAuthorizationApproved($approved);
+        try {
+            $this->assertUser($this->user, $authorizationRequest);
+        } catch (OAuthServerException $e) {
+            return $e->generateHttpResponse($response);
+        }
+
+        $authorizationRequest->setUser(new UserEntity($this->user));
+        $authorizationRequest->setAuthorizationApproved($approved);
 
         $server = $this->authorizationServerFactory->create();
 
         try {
-            return $server->completeAuthorizationRequest($authRequest, $response);
+            return $server->completeAuthorizationRequest($authorizationRequest, $response);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
@@ -128,5 +134,26 @@ class AuthorizationService
         }
 
         return $authRequest;
+    }
+
+    /**
+     * @throws Error
+     * @throws OAuthServerException
+     */
+    private function assertUser(User $user, AuthorizationRequest $authorizationRequest): void
+    {
+        // @todo Throw if the user is not allowed for the client.
+
+        if ($user->isRegular() || $user->getType() === User::TYPE_ADMIN) {
+            return;
+        }
+
+        $redirectUri = $authorizationRequest->getRedirectUri();
+
+        if ($redirectUri && $authorizationRequest->getState()) {
+            $redirectUri = UriUtil::makeRedirectUri($redirectUri, $authorizationRequest->getState());
+        }
+
+        throw OAuthServerException::accessDenied("User is not allowed", $redirectUri);
     }
 }
