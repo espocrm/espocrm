@@ -67,6 +67,8 @@ class CreateType implements Func
             $this->entityUtil->getWriteRestrictedAttributeList($entityType),
         );
 
+        $notAllowedAttributes = array_values($notAllowedAttributes);
+
         if ($notAllowedAttributes) {
             throw new NotAllowedUsage("Cannot write $entityType.$notAllowedAttributes[0].");
         }
@@ -88,7 +90,7 @@ class CreateType implements Func
     private function getData(EvaluatedArgumentList $args, mixed $entityType): array
     {
         if (count($args) >= 2 && $args[1] instanceof stdClass) {
-            return get_object_vars($args[1]);
+            return $this->filterData(get_object_vars($args[1]));
         }
 
         $data = [];
@@ -111,6 +113,15 @@ class CreateType implements Func
             $i = $i + 2;
         }
 
+        return $this->filterData($data);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function filterData(array $data): array
+    {
         return $data;
     }
 }

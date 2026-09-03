@@ -36,6 +36,7 @@ use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 /**
@@ -72,6 +73,8 @@ class UpdateType implements Func
             $this->entityUtil->getWriteRestrictedAttributeList($entityType),
         );
 
+        $notAllowedAttributes = array_values($notAllowedAttributes);
+
         if ($notAllowedAttributes) {
             throw new NotAllowedUsage("Cannot write $entityType.$notAllowedAttributes[0].");
         }
@@ -98,7 +101,7 @@ class UpdateType implements Func
     private function getData(EvaluatedArgumentList $args, mixed $entityType): array
     {
         if (count($args) >= 3 && $args[2] instanceof stdClass) {
-            return get_object_vars($args[2]);
+            return $this->filterData(get_object_vars($args[2]));
         }
 
         $data = [];
@@ -120,6 +123,17 @@ class UpdateType implements Func
 
             $i = $i + 2;
         }
+
+        return $this->filterData($data);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function filterData(array $data): array
+    {
+        unset($data[Attribute::ID]);
 
         return $data;
     }

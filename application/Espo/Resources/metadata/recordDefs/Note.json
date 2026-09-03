@@ -14,5 +14,8 @@
     ],
     "afterCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Note\\AfterCreate"
+    ],
+    "outputFilterClassNameList": [
+        "Espo\\Classes\\Record\\Note\\OutputFilter"
     ]
 }

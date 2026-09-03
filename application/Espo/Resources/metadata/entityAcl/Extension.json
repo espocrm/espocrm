@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "fileList": {
+            "forbidden": true
+        },
+        "checkVersionUrl": {
+            "forbidden": true
+        }
+    },
+    "systemWriteForbidden": true
+}

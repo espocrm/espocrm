@@ -27,26 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\ExportCustom;
+namespace Espo\Classes\Record\Note;
 
-class Data
+use Espo\Core\Record\Output\Filter;
+use Espo\Entities\Note;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\Tools\Stream\NoteAccessControl;
+
+/**
+ * @implements Filter<Note>
+ */
+class OutputFilter implements Filter
 {
-    /**
-     * @param string[] $customEntityTypeList
-     */
     public function __construct(
-        public string $folder,
-        public array $customEntityTypeList,
-        private string $module
+        private NoteAccessControl $noteAccessControl,
+        private User $user,
     ) {}
 
-    public function getDir(): string
+    public function filter(Entity $entity): void
     {
-        return 'data/tmp/' . $this->folder;
-    }
-
-    public function getDestDir(): string
-    {
-        return $this->getDir() . '/files/custom/Espo/Modules/' . basename($this->module);
+        $this->noteAccessControl->apply($entity, $this->user);
     }
 }

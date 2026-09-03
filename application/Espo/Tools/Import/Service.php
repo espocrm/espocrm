@@ -340,7 +340,7 @@ class Service
         $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getNew();
 
         $attachment->setType('text/csv');
-        $attachment->setRole('Import File');
+        $attachment->setRole(Import::FILE_ROLE);
         $attachment->setName('import-file.csv');
         $attachment->setContents($contents);
 

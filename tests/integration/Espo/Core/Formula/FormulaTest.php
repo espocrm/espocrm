@@ -38,6 +38,7 @@ use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
@@ -1561,5 +1562,50 @@ class FormulaTest extends BaseTestCase
         $this->assertTrue($thrown);
 
         //
+
+
+        $script = "
+            \$data = object\\create();
+            record\\create('Extension', \$data);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testRecordUpdateIdRestriction(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $em = $this->getEntityManager();
+
+        $script = <<<EOF
+            \$data = object\create();
+            \$data['lastName'] = 'Test';
+
+            \$id = record\create('Lead', \$data);
+
+            \$data['id'] = 'bad';
+
+            record\update('Lead', \$id, \$data);
+
+            \$id;
+            EOF;
+
+        $id = $fm->run($script);
+
+        $lead = $em->getRDBRepositoryByClass(Lead::class)->getById($id);
+        $this->assertNotNull($lead);
+        $this->assertNotEquals('bad', $lead->getId());
     }
 }

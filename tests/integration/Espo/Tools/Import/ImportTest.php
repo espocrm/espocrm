@@ -32,6 +32,7 @@ namespace integration\Espo\Tools\Import;
 use Espo\Core\Acl\Table;
 use Espo\Entities\Attachment;
 use Espo\Entities\Role;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Tools\Import\Import;
@@ -83,6 +84,7 @@ class ImportTest extends BaseTestCase
         $attachment
             ->setName('test.csv')
             ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
             ->setContents(
                 <<<'EOT'
                 lastName,accountType
@@ -99,6 +101,7 @@ class ImportTest extends BaseTestCase
         $import = $this->getInjectableFactory()->create(Import::class);
 
         $import
+            ->setUser($this->getContainer()->getByClass(User::class))
             ->setEntityType(Contact::ENTITY_TYPE)
             ->setParams(
                 Params::create()
@@ -145,6 +148,7 @@ class ImportTest extends BaseTestCase
         $attachment
             ->setName('test.csv')
             ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
             ->setContents(
                 <<<'EOT'
                 lastName,accountName
@@ -176,5 +180,78 @@ class ImportTest extends BaseTestCase
 
         $this->assertNotNull($contact);
         $this->assertEquals($account->getId(), $contact->getAccount()?->getId());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testDefaultValues(): void
+    {
+        $this->createUser('test', [
+            Role::FIELD_DATA => [
+                'Import' => true,
+                Account::ENTITY_TYPE => [
+                    Table::ACTION_CREATE => Table::LEVEL_YES,
+                    Table::ACTION_READ => Table::LEVEL_ALL,
+                ],
+            ],
+            Role::FIELD_FIELD_DATA => [
+                Account::ENTITY_TYPE => [
+                    'type' => [
+                        Table::ACTION_READ => Table::LEVEL_YES,
+                        Table::ACTION_EDIT => Table::LEVEL_NO,
+                    ],
+                ]
+            ]
+        ]);
+
+        $this->authenticate('test');
+
+        $em = $this->getEntityManager();
+
+        //
+
+        $attachment = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $attachment
+            ->setName('test.csv')
+            ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
+            ->setContents(
+                <<<'EOT'
+                name
+                Test
+                ```
+                EOT
+            );
+        $em->saveEntity($attachment);
+
+        $account = $em->getRDBRepositoryByClass(Account::class)->getNew();
+        $account->setType(Account::TYPE_PARTNER);
+        $em->saveEntity($account);
+
+        $import = $this->getInjectableFactory()->create(Import::class);
+
+        $import
+            ->setEntityType(Account::ENTITY_TYPE)
+            ->setParams(
+                Params::create()->withDefaultValues([
+                    'type' => Account::TYPE_PARTNER,
+                    'description' => 'Test.',
+                ])
+            )
+            ->setAttachmentId($attachment->getId())
+            ->setAttributeList(['name']);
+
+        $import->run();
+
+        //
+
+        $account = $em->getRDBRepositoryByClass(Account::class)
+            ->where(['name' => 'Test'])
+            ->findOne();
+
+        $this->assertNotNull($account);
+        $this->assertNull($account->getType());
+        $this->assertEquals('Test.', $account->getDescription());
     }
 }
