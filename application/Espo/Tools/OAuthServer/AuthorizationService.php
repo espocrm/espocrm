@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\OAuthServer;
 
+use Espo\Core\ApplicationState;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Session\Session;
@@ -47,7 +48,7 @@ class AuthorizationService
     public function __construct(
         private Session $session,
         private AuthorizationServerFactory $authorizationServerFactory,
-        private User $user,
+        private ApplicationState $applicationState,
     ) {}
 
     /**
@@ -79,13 +80,15 @@ class AuthorizationService
     {
         $authorizationRequest = $this->getAuthRequestFromSession($clientId);
 
+        $user = $this->applicationState->getUser();
+
         try {
-            $this->assertUser($this->user, $authorizationRequest);
+            $this->assertUser($user, $authorizationRequest);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
 
-        $authorizationRequest->setUser(new UserEntity($this->user));
+        $authorizationRequest->setUser(new UserEntity($user));
         $authorizationRequest->setAuthorizationApproved($approved);
 
         $server = $this->authorizationServerFactory->create();
@@ -121,11 +124,15 @@ class AuthorizationService
      */
     private function getAuthRequestFromSession(string $clientId): AuthorizationRequest
     {
-        $raw = $this->session->get(self::composeSessionKey($clientId));
+        $key = self::composeSessionKey($clientId);
+
+        $raw = $this->session->get($key);
 
         if (!$raw) {
             throw new NotFound("Session not found.");
         }
+
+        $this->session->clear($key);
 
         $authRequest = unserialize($raw, ['allowed_classes' => [AuthorizationRequest::class]]);
 

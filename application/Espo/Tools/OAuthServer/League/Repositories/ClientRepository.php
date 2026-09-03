@@ -51,7 +51,7 @@ class ClientRepository implements ClientRepositoryInterface
             return null;
         }
 
-        return new ClientEntity($client);
+        return ClientEntity::fromEntity($client);
     }
 
     public function validateClient($clientIdentifier, #[SensitiveParameter] $clientSecret, $grantType)

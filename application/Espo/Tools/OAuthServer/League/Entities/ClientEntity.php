@@ -36,32 +36,45 @@ use UnexpectedValueException;
 
 class ClientEntity implements ClientEntityInterface
 {
+    /**
+     * @param string[] $redirectUri
+     */
     public function __construct(
-        private Client $entity,
+        public string $entityId,
+        private string $identifier,
+        private string $name,
+        private array $redirectUri,
+        private bool $isConfidential,
     ) {}
+
+    public static function fromEntity(Client $entity): self
+    {
+        return new self(
+            entityId: $entity->getId(),
+            identifier: $entity->getIdentifier() ?? throw new UnexpectedValueException("No client identifier."),
+            name: $entity->getName() ?? $entity->getId(),
+            redirectUri: $entity->getRedirectUris(),
+            isConfidential: $entity->getClientType() === ClientType::Confidential,
+        );
+    }
 
     public function getIdentifier()
     {
-        return $this->entity->getIdentifier() ?? throw new UnexpectedValueException("No client identifier.");
+        return $this->identifier;
     }
 
     public function getName()
     {
-        return $this->entity->getName() ?? $this->entity->getId();
+        return $this->name;
     }
 
     public function getRedirectUri()
     {
-        return $this->entity->getRedirectUris();
+        return $this->redirectUri;
     }
 
     public function isConfidential()
     {
-        return $this->entity->getClientType() === ClientType::Confidential;
-    }
-
-    public function getEntity(): Client
-    {
-        return $this->getEntity();
+        return $this->isConfidential;
     }
 }

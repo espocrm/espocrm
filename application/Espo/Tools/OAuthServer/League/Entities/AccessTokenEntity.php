@@ -117,7 +117,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
 
     public function getClient()
     {
-        return new ClientEntity($this->entity->getClient());
+        return ClientEntity::fromEntity($this->entity->getClient());
     }
 
     /**
@@ -131,7 +131,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
             throw new InvalidArgumentException("Not supported client entity.");
         }
 
-        $this->entity->setClient($client->getEntity());
+        $this->entity->setClient(Link::create($client->entityId));
     }
 
     /**

@@ -73,7 +73,7 @@ class AccessToken extends Entity
         return $client;
     }
 
-    public function setClient(Client $client): self
+    public function setClient(Client|Link $client): self
     {
         return $this->setRelatedLinkOrEntity(self::FIELD_CLIENT, $client);
     }

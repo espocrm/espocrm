@@ -49,14 +49,21 @@ export default class AuthorizationConsentView extends View<{
                         {{/each}}
                     </ul>
                     <div class="margin-top-2x center-align">
-                        <button
-                            class="btn btn-danger btn-x-wide pull-left"
-                            data-action="allow"
-                        >{{labels.allow}}</button>
-                        <button
-                            class="btn btn-default btn-x-wide pull-right"
-                            data-action="cancel"
-                        >{{labels.cancel}}</button>
+                        <form
+                            method="post"
+                            action="{{actionEndpoint}}"
+                        >
+                            <input type="hidden" name="clientId" value="{{clientId}}">
+                            <input type="hidden" name="approved">
+                            <button
+                                class="btn btn-danger btn-x-wide pull-left"
+                                data-action="allow"
+                            >{{labels.allow}}</button>
+                            <button
+                                class="btn btn-default btn-x-wide pull-right"
+                                data-action="cancel"
+                            >{{labels.cancel}}</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -78,6 +85,8 @@ export default class AuthorizationConsentView extends View<{
     protected data() {
         return {
             ...this.consentData,
+            actionEndpoint: '?entryPoint=oAuthAuthorizeComplete',
+            clientId: this.params.clientId,
         };
     }
 
@@ -119,10 +128,20 @@ export default class AuthorizationConsentView extends View<{
     }
 
     private handleComplete(approved: boolean) {
-        const url = new URL(this.getBasePath() + '?entryPoint=oAuthAuthorizeComplete');
-        url.searchParams.append('clientId', this.params.clientId);
-        url.searchParams.append('approved', approved ? 'true' : 'false');
+        const formElement = this.element.querySelector('form');
 
-        window.location.replace(url.toString());
+        if (!formElement) {
+            throw new Error();
+        }
+
+        const approvedElement = this.element.querySelector<HTMLInputElement>('input[name="approved"]');
+
+        if (!approvedElement) {
+            throw new Error();
+        }
+
+        approvedElement.value = approved ? 'true' : 'false';
+
+        formElement.submit();
     }
 }

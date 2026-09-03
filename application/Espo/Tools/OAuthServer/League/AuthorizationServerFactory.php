@@ -40,6 +40,7 @@ use Espo\Tools\OAuthServer\League\Repositories\ScopeRepository;
 use Exception;
 
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
@@ -51,6 +52,7 @@ class AuthorizationServerFactory
         private ScopeRepository $scopeRepository,
         private AuthCodeRepository $authCodeRepository,
         private RefreshTokenRepository $refreshTokenRepository,
+        private CryptKeyProvider $cryptKeyProvider,
     ) {}
 
     /**
@@ -62,8 +64,8 @@ class AuthorizationServerFactory
             clientRepository: $this->clientRepository,
             accessTokenRepository: $this->accessTokenRepository,
             scopeRepository: $this->scopeRepository,
-            privateKey: '',
-            encryptionKey: '', // @todo
+            privateKey: $this->createPrivateKeyStub(),
+            encryptionKey: $this->cryptKeyProvider->getCryptKey(),
         );
 
         $this->enableAuthorizationCodeGrant($server);
@@ -116,5 +118,19 @@ class AuthorizationServerFactory
             // @todo Configurable.
             accessTokenTTL: new DateInterval('PT1H'),
         );
+    }
+
+    /**
+     * Access token encryption is not used. Opaque tokens are used.
+     */
+    private function createPrivateKeyStub(): CryptKey
+    {
+        return new class() extends CryptKey {
+
+            /**
+             * @noinspection PhpMissingParentConstructorInspection
+             */
+            public function __construct() {}
+        };
     }
 }

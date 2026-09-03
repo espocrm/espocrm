@@ -27,36 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\EntryPoints;
+namespace Espo\Tools\OAuthServer\League;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\EntryPoint\EntryPoint;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Tools\OAuthServer\AuthorizationService;
+use Espo\Core\Utils\Config;
+use Random\RandomException;
+use RuntimeException;
 
-/**
- * @noinspection PhpUnused
- */
-class AuthorizeComplete implements EntryPoint
+class CryptKeyProvider
 {
+    // @todo Test not available in settings.
+    private const string PARAM_CRYPT_KEY = 'oAuthServerCryptKey';
+
     public function __construct(
-        private AuthorizationService $service,
+        private Config $config,
+        private Config\ConfigWriter $configWriter,
     ) {}
 
-    public function run(Request $request, Response $response): void
+    public function getCryptKey(): string
     {
-        $body = $request->getParsedBody();
-
-        $clientId = $body->clientId ?? throw new BadRequest("No clientId.");
-        $approved = ($body->approved ?? null) === 'true';
-
-        if (!is_string($clientId)) {
-            throw new BadRequest();
+        if (!$this->config->has(self::PARAM_CRYPT_KEY)) {
+            $this->configWriter->set(self::PARAM_CRYPT_KEY, $this->generateKey());
+            $this->configWriter->save();
         }
 
-        $psr7Response = $this->service->authorizeComplete($clientId, $response->toPsr7(), $approved);
+        return $this->config->get(self::PARAM_CRYPT_KEY) ?? throw new RuntimeException("No crypt key.");
+    }
 
-        $response->applyPsr7($psr7Response);
+    private function generateKey(): string
+    {
+        try {
+            $key = bin2hex(random_bytes(32));
+        } catch (RandomException $e) {
+            throw new RuntimeException(previous: $e);
+        }
+
+        return $key;
     }
 }

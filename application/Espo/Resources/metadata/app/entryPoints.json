@@ -11,7 +11,8 @@
         "notExposed": true
     },
     "oAuthAuthorizeComplete": {
-        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizeComplete"
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizeComplete",
+        "allowedMethods": ["post"]
     },
     "oAuthToken": {
         "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Token",

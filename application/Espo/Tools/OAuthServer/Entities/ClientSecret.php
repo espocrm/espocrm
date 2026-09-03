@@ -87,7 +87,7 @@ class ClientSecret extends Entity
         return $this->getValueObject(self::FIELD_EXPIRATION_DATE);
     }
 
-    public function setExpirationData(?Date $date): self
+    public function setExpirationDate(?Date $date): self
     {
         return $this->setValueObject(self::FIELD_EXPIRATION_DATE, $date);
     }
