@@ -109,7 +109,7 @@ class FieldManagerTest extends TestCase
         ];
 
         $map = [
-            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
+            ['entityDefs.Account.fields.name.type', null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
             ["scopes.Account.customizable", null, true],
@@ -189,7 +189,7 @@ class FieldManagerTest extends TestCase
         ];
 
         $map = [
-            [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
+            ['entityDefs.Account.fields.name.type', null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
             ["scopes.Account.customizable", null, true],

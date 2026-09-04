@@ -52,7 +52,7 @@ class FieldManager
     private bool $isChanged = false;
 
     // 64 - margin (for attribute name suffixes and prefixes)
-    private const MAX_NAME_LENGTH = 50;
+    private const int MAX_NAME_LENGTH = 50;
 
     /** @var array<string, array<string, mixed>> */
     private array $defaultParams = [
@@ -67,7 +67,7 @@ class FieldManager
         private Language $language,
         private Language $baseLanguage,
         private MetadataHelper $metadataHelper,
-        private NameUtil $nameUtil
+        private NameUtil $nameUtil,
     ) {}
 
     /**
@@ -190,7 +190,7 @@ class FieldManager
             throw new Error("Field name should contain only letters and numbers.");
         }
 
-        $type = $fieldDefs['type'] ?? null;
+        $type = $fieldDefs[FieldParam::TYPE] ?? null;
 
         if (!$type) {
             throw new BadRequest("No type.");
@@ -202,7 +202,7 @@ class FieldManager
             }
         }
 
-        $this->update($scope, $name, $fieldDefs, true);
+        $this->write($scope, $name, $fieldDefs, true);
 
         return $name;
     }
@@ -211,7 +211,18 @@ class FieldManager
      * @param array<string, mixed> $fieldDefs
      * @throws Error
      */
-    public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false): void
+    public function update(string $scope, string $name, array $fieldDefs): void
+    {
+        unset($fieldDefs[FieldParam::TYPE]);
+
+        $this->write($scope, $name, $fieldDefs, true);
+    }
+
+    /**
+     * @param array<string, mixed> $fieldDefs
+     * @throws Error
+     */
+    private function write(string $scope, string $name, array $fieldDefs, bool $isNew = false): void
     {
         $name = trim($name);
 
@@ -229,11 +240,7 @@ class FieldManager
             throw new Error("Field '$name' is not customizable.");
         }
 
-        $isCustom = false;
-
-        if (!empty($fieldDefs['isCustom'])) {
-            $isCustom = true;
-        }
+        $isCustom = !empty($fieldDefs['isCustom']);
 
         $isLabelChanged = false;
 
@@ -249,26 +256,27 @@ class FieldManager
             $isLabelChanged = true;
         }
 
-        $type = $fieldDefs['type'] ?? $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
+        $type = $fieldDefs[FieldParam::TYPE] ?? $this->metadata->get("entityDefs.$scope.fields.$name.type");
 
-        $fieldDefs['type'] ??= $type;
+        $fieldDefs[FieldParam::TYPE] ??= $type;
 
         $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, ['isNew' => $isNew]);
 
-        if ($this->metadata->get(['fields', $type, 'translatedOptions'])) {
-            if (isset($fieldDefs['translatedOptions'])) {
-                $translatedOptions = json_decode(Json::encode($fieldDefs['translatedOptions']), true);
+        if (
+            $this->metadata->get(['fields', $type, 'translatedOptions']) &&
+            isset($fieldDefs['translatedOptions'])
+        ) {
+            $translatedOptions = json_decode(Json::encode($fieldDefs['translatedOptions']), true);
 
-                if (isset($translatedOptions['_empty_'])) {
-                    $translatedOptions[''] = $translatedOptions['_empty_'];
+            if (isset($translatedOptions['_empty_'])) {
+                $translatedOptions[''] = $translatedOptions['_empty_'];
 
-                    unset($translatedOptions['_empty_']);
-                }
-
-                $this->setTranslatedOptions($scope, $name, $translatedOptions, $isNew, $isCustom);
-
-                $isLabelChanged = true;
+                unset($translatedOptions['_empty_']);
             }
+
+            $this->setTranslatedOptions($scope, $name, $translatedOptions, $isNew, $isCustom);
+
+            $isLabelChanged = true;
         }
 
         if ($isNew) {
@@ -276,7 +284,7 @@ class FieldManager
 
             if ($subFieldsDefs) {
                 foreach ($subFieldsDefs as $partField => $partFieldData) {
-                    $partLabel = $this->language->get('FieldManager.fieldParts.' . $type . '.' . $partField);
+                    $partLabel = $this->language->get("FieldManager.fieldParts.$type.$partField");
 
                     if ($partLabel) {
                         if ($this->metadata->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
@@ -298,10 +306,8 @@ class FieldManager
         if ($isLabelChanged) {
             $this->language->save();
 
-            if ($isNew || $isCustom) {
-                if ($this->baseLanguage->getLanguage() !== $this->language->getLanguage()) {
-                    $this->baseLanguage->save();
-                }
+            if (($isNew || $isCustom) && $this->baseLanguage->getLanguage() !== $this->language->getLanguage()) {
+                $this->baseLanguage->save();
             }
         }
 
@@ -362,14 +368,12 @@ class FieldManager
                 $logicDefs['options'][$name] = $fieldDefs['dynamicLogicOptions'];
 
                 $logicDefsToBeSet = true;
-            } else {
-                if ($this->metadata->get(['logicDefs', $scope, 'options', $name])) {
-                    $this->prepareLogicDefsOptions($logicDefs, $name);
+            } else if ($this->metadata->get(['logicDefs', $scope, 'options', $name])) {
+                $this->prepareLogicDefsOptions($logicDefs, $name);
 
-                    $logicDefs['options'][$name] = null;
+                $logicDefs['options'][$name] = null;
 
-                    $logicDefsToBeSet = true;
-                }
+                $logicDefsToBeSet = true;
             }
         }
 
@@ -380,16 +384,12 @@ class FieldManager
                 $logicDefs['fields'][$name]['invalid'] = $fieldDefs['dynamicLogicInvalid'];
 
                 $logicDefsToBeSet = true;
-            } else {
-                if (
-                    $this->metadata->get(['logicDefs', $scope, 'fields', $name, 'invalid'])
-                ) {
-                    $this->prepareLogicDefsFields($logicDefs, $name);
+            } else if ($this->metadata->get(['logicDefs', $scope, 'fields', $name, 'invalid'])) {
+                $this->prepareLogicDefsFields($logicDefs, $name);
 
-                    $logicDefs['fields'][$name]['invalid'] = null;
+                $logicDefs['fields'][$name]['invalid'] = null;
 
-                    $logicDefsToBeSet = true;
-                }
+                $logicDefsToBeSet = true;
             }
         }
 
@@ -400,14 +400,12 @@ class FieldManager
                 $logicDefs['fields'][$name]['readOnlySaved'] = $fieldDefs['dynamicLogicReadOnlySaved'];
 
                 $logicDefsToBeSet = true;
-            } else {
-                if ($this->metadata->get(['logicDefs', $scope, 'fields', $name, 'readOnlySaved'])) {
-                    $this->prepareLogicDefsFields($logicDefs, $name);
+            } else if ($this->metadata->get(['logicDefs', $scope, 'fields', $name, 'readOnlySaved'])) {
+                $this->prepareLogicDefsFields($logicDefs, $name);
 
-                    $logicDefs['fields'][$name]['readOnlySaved'] = null;
+                $logicDefs['fields'][$name]['readOnlySaved'] = null;
 
-                    $logicDefsToBeSet = true;
-                }
+                $logicDefsToBeSet = true;
             }
         }
 
@@ -417,9 +415,7 @@ class FieldManager
                 $logicDefs['cascadingFields'][$name] = $fieldDefs['dynamicLogicCascading'];
 
                 $logicDefsToBeSet = true;
-            } else if (
-                $this->metadata->get(['logicDefs', $scope, 'cascadingFields', $name])
-            ) {
+            } else if ($this->metadata->get(['logicDefs', $scope, 'cascadingFields', $name])) {
                 $this->prepareLogicDefsFields($logicDefs, $name);
 
                 $logicDefs['cascadingFields'][$name] = null;
@@ -436,7 +432,7 @@ class FieldManager
 
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
-        if (!empty((array) $entityDefs)) {
+        if ((array) $entityDefs) {
             $this->saveCustomEntityDefs($scope, $entityDefs);
 
             $this->isChanged = true;
@@ -743,7 +739,7 @@ class FieldManager
 
         foreach (($fieldDefs['fieldManagerAdditionalParamList'] ?? []) as $additionalParam) {
             $additionalParamList[$additionalParam->name] = [
-                'type' => $type,
+                FieldParam::TYPE => $type,
             ];
         }
 
@@ -836,13 +832,13 @@ class FieldManager
 
         $normalizedFieldDefs = $this->prepareFieldDefs($scope, $fieldName, $fieldDefs);
 
-        if (!empty($normalizedFieldDefs)) {
+        if ($normalizedFieldDefs) {
             $defs->fields = (object) [
                 $fieldName => (object) $normalizedFieldDefs,
             ];
         }
 
-        /** Save links for a field. */
+        /** Save links for the field. */
         $linkDefs = $fieldDefs['linkDefs'] ?? null;
         $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
 
@@ -851,6 +847,7 @@ class FieldManager
             $linkDefs = $linkDefs ?? [];
 
             $normalizedLinkedDefs = Util::merge($metaLinkDefs, $linkDefs);
+
             if (!empty($normalizedLinkedDefs)) {
                 $defs->links = (object) [
                     $fieldName => (object) $normalizedLinkedDefs,
