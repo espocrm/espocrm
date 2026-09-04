@@ -51,13 +51,15 @@ use RuntimeException;
 
 /**
  * Administration > Entity Manager.
+ *
+ * @todo Rename to EntityTypeManager.
  */
 class EntityManager
 {
-    private const DEFAULT_PARAM_LOCATION = 'scopes';
+    private const string DEFAULT_PARAM_LOCATION = 'scopes';
 
     /** @var string[] */
-    private const ALLOWED_PARAM_LOCATIONS = [
+    private const array ALLOWED_PARAM_LOCATIONS = [
         'scopes',
         'entityDefs',
         'clientDefs',
@@ -75,7 +77,7 @@ class EntityManager
         private DataManager $dataManager,
         private InjectableFactory $injectableFactory,
         private NameUtil $nameUtil,
-        private LinkManager $linkManager
+        private LinkManager $linkManager,
     ) {}
 
     /**
