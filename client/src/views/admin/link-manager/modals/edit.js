@@ -1160,7 +1160,9 @@ class LinkManagerEditModalView extends ModalView {
                     this.getLanguage().loadSkipCache(),
                 ]).then(() => {
                     this.broadcastUpdate();
-                    this.trigger('after:save');
+                    this.trigger('after:save', {
+                        link: this.model.attributes.link,
+                    });
 
                     if (!options.noClose) {
                         this.close();

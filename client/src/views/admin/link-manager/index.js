@@ -49,6 +49,12 @@ class LinkManagerIndexView extends View {
         };
     }
 
+    /**
+     * @private
+     * @type {Record<string, true>}
+     */
+    accentedLinksMap
+
     events = {
         /** @this LinkManagerIndexView */
         'click a[data-action="editLink"]': function (e) {
@@ -201,11 +207,14 @@ class LinkManagerIndexView extends View {
                 linkForeign: defs.foreign,
                 label: this.getLanguage().translate(link, 'links', this.scope),
                 labelForeign: this.getLanguage().translate(defs.foreign, 'links', defs.entity),
+                accented: this.accentedLinksMap[link] ?? false,
             });
         });
     }
 
     setup() {
+        this.accentedLinksMap = {};
+
         this.addActionHandler('editParams', (e, target) => this.actionEditParams(target.dataset.link));
 
         this.scope = this.options.scope || null;
@@ -228,8 +237,10 @@ class LinkManagerIndexView extends View {
             scope: this.scope,
         });
 
-        this.listenTo(view, 'after:save', () => {
+        this.listenTo(view, 'after:save', (/** {link: string} */data) => {
             this.clearView('edit');
+
+            this.accentedLinksMap[data.link] = true;
 
             this.setupLinkData();
             this.reRender();
