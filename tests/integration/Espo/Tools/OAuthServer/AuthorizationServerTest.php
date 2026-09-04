@@ -51,31 +51,24 @@ use tests\integration\Core\BaseTestCase;
 
 class AuthorizationServerTest extends BaseTestCase
 {
+    private const string REDIRECT_URI = 'http://localhost/oauth/callback';
+    private const string USER_USERNAME = 'test';
+
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
     public function testAuthorize(): void
     {
-        $redirectUri = 'http://localhost/oauth/callback';
+        $redirectUri = self::REDIRECT_URI;
 
-        $em = $this->getEntityManager();
-
-        $client = $em->getRDBRepositoryByClass(Client::class)->getNew();
-        $client
-            ->setScopes([ScopesProvider::SCOPE_GLOBAL])
-            ->setClientType(ClientType::Confidential)
-            ->setRedirectUris([$redirectUri]);
-        $em->saveEntity($client);
-
-        $secret = $em->getRDBRepositoryByClass(ClientSecret::class)->getNew();
-        $secret->setClient($client);
-        $em->saveEntity($secret);
+        $client = $this->createConfidentialClient();
+        $secret = $this->createSecret($client);
 
         //
 
         $user = $this->createUser(
             [
-                User::FIELD_USER_NAME => 'test',
+                User::FIELD_USER_NAME => self::USER_USERNAME,
             ],
         );
 
@@ -233,6 +226,56 @@ class AuthorizationServerTest extends BaseTestCase
         $this->assertObjectHasProperty('expires_in', $result);
     }
 
+    public function testWrongClientId(): void
+    {
+        $this->createConfidentialClient();
+
+        $clientId = 'wrong';
+        $redirectUri = self::REDIRECT_URI;
+        $scope = ScopesProvider::SCOPE_GLOBAL;
+
+        //
+
+        $response = $this->processCodeRequestError($clientId, $redirectUri, $scope);
+
+        $result = Json::decode((string) $response->getBody());
+        $this->assertEquals('invalid_client', $result->error);
+    }
+
+    public function testWrongRedirectUri(): void
+    {
+        $client = $this->createConfidentialClient();
+
+        $clientId = $client->getIdentifier();
+        $redirectUri = 'wrong';
+        $scope = ScopesProvider::SCOPE_GLOBAL;
+
+        //
+
+        $response = $this->processCodeRequestError($clientId, $redirectUri, $scope);
+
+        $result = Json::decode((string) $response->getBody());
+        $this->assertEquals('invalid_client', $result->error);
+    }
+
+    public function testWrongScope(): void
+    {
+        $client = $this->createConfidentialClient();
+
+        $clientId = $client->getIdentifier();
+        $redirectUri = self::REDIRECT_URI;
+        $scope = 'wrong';
+
+        //
+
+        $response =$this->processCodeRequestError($clientId, $redirectUri, $scope);
+
+        $location = $response->getHeader('Location');
+        $this->assertIsString($location);
+        $this->assertStringContainsString('error=invalid_scope', $location);
+    }
+
+
     public function testSettings(): void
     {
         $this->createUser(
@@ -272,5 +315,73 @@ class AuthorizationServerTest extends BaseTestCase
     private function createResponseWrapper(): ResponseWrapper
     {
         return new ResponseWrapper(new Response());
+    }
+
+
+    private function createConfidentialClient(): Client
+    {
+        $em = $this->getEntityManager();
+
+        $client = $em->getRDBRepositoryByClass(Client::class)->getNew();
+        $client
+            ->setScopes([ScopesProvider::SCOPE_GLOBAL])
+            ->setClientType(ClientType::Confidential)
+            ->setRedirectUris([self::REDIRECT_URI]);
+        $em->saveEntity($client);
+
+        return $client;
+    }
+
+    private function createSecret(Client $client): ClientSecret
+    {
+        $em = $this->getEntityManager();
+
+        $secret = $em->getRDBRepositoryByClass(ClientSecret::class)->getNew();
+        $secret->setClient($client);
+        $em->saveEntity($secret);
+
+        return $secret;
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function processCodeRequestError(
+        string $clientId,
+        string $redirectUri,
+        string $scope,
+    ): ResponseWrapper {
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        //
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'response_type' => 'code',
+                'client_id' => $clientId,
+                'redirect_uri' => $redirectUri,
+                'scope' => $scope,
+                'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
+                'code_challenge_method' => 'S256',
+            ],
+            resourcePath: '/oauth/authorize',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $authorizeEntryPoint = $this->getInjectableFactory()->create(Authorize::class);
+
+        $authorizeEntryPoint->run($request, $response);
+
+        return $response;
     }
 }
