@@ -283,6 +283,7 @@ return [
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
     'ldapUserObjectClass' => 'person',
     'ldapPortalUserLdapAuth' => false,
+    'ldapFallbackToLocalAuth' => false,
     'passwordGenerateLength' => 10,
     'passwordStrengthLength' => null,
     'passwordStrengthLetterCount' => null,
