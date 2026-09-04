@@ -113,7 +113,6 @@ class AuthorizationService
         try {
             return $server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $e) {
-            print_r($e->getTraceAsString());
             return $e->generateHttpResponse($response);
         }
     }

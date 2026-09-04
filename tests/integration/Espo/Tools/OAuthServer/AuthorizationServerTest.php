@@ -57,7 +57,7 @@ class AuthorizationServerTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    public function testAuthorize(): void
+    public function testAuthorizeSuccess(): void
     {
         $redirectUri = self::REDIRECT_URI;
 
@@ -74,123 +74,19 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
-        $session = $this->createMock(Session::class);
-
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
-                    $binder->bindInstance(Session::class, $session);
-                }),
-                reuse: true,
-                noUser: true,
-            )
-        );
-
         $codeChallenge = PkceUtil::generateCodeVerifier();
 
-        //
-
-        $request = $this->createRequest(
-            method: Method::GET,
-            queryParams: [
-                'client_id' => $client->getIdentifier(),
-                'redirect_uri' => $redirectUri,
-                'response_type' => 'code',
-                'scope' => ScopesProvider::SCOPE_GLOBAL,
-                'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
-                'code_challenge_method' => 'S256',
-            ],
-            resourcePath: '/oauth/authorize',
+        $code = $this->processObtainCode(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
         );
-
-        $response = $this->createResponseWrapper();
-
-        $authorizeEntryPoint = $this->getInjectableFactory()->create(Authorize::class);
-
-        $authorizationRequest = null;
-        $sessionKey = null;
-
-        $session
-            ->expects(self::once())
-            ->method('set')
-            ->with(
-                $this->callback(function ($key) use (&$sessionKey) {
-                    $sessionKey = $key;
-
-                    return true;
-                }),
-                $this->callback(function ($value) use (&$authorizationRequest) {
-                    $authorizationRequest = $value;
-
-                    return true;
-                })
-            );
-
-        $authorizeEntryPoint->run($request, $response);
-
-        //
-
-        $session
-            ->expects(self::once())
-            ->method('get')
-            ->with($sessionKey)
-            ->willReturn($authorizationRequest);
-
-        $session
-            ->expects(self::once())
-            ->method('clear')
-            ->with($sessionKey);
-
-        //
-
-        $this->auth($user->getUserName());
-
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
-                    $binder->bindInstance(Session::class, $session);
-                }),
-                reuse: true,
-            )
-        );
-
-        //
-
-        $request = $this->createRequest(
-            method: Method::POST,
-            headers: [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-            body: http_build_query([
-                'clientId' => $client->getIdentifier(),
-                'approved' => 'true',
-            ]),
-            resourcePath: '?entryPoint=oAuthAuthorizeComplete',
-        );
-
-        $response = $this->createResponseWrapper();
-
-        $completeEntryPoint = $this->getInjectableFactory()->create(AuthorizeComplete::class);
-
-        $completeEntryPoint->run($request, $response);
-
-        $location = $response->getHeader('Location');
-
-        $this->assertIsString($location);
-        $this->assertStringStartsWith($redirectUri, $location);
-
-        $urlData = parse_url($location);
-        parse_str($urlData['query'], $queryParams);
-        $this->assertIsString($queryParams['code']);
-        $code = $queryParams['code'];
 
         //
 
         $this->setApplication(
             $this->createApplication(
-                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
-                    $binder->bindInstance(Session::class, $session);
-                }),
                 reuse: true,
                 noUser: true,
             )
@@ -226,6 +122,204 @@ class AuthorizationServerTest extends BaseTestCase
         $this->assertObjectHasProperty('expires_in', $result);
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testAuthorizeWrongSecret(): void
+    {
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createConfidentialClient();
+        $this->createSecret($client);
+
+        //
+
+        $user = $this->createUser(
+            [
+                User::FIELD_USER_NAME => self::USER_USERNAME,
+            ],
+        );
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $code = $this->processObtainCode(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+        );
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'authorization_code',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => 'wrong',
+                'redirect_uri' => $redirectUri,
+                'code' => $code,
+                'code_verifier' => $codeChallenge,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $result = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('invalid_client', $result->error);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testAuthorizeWrongCodeChallenge(): void
+    {
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createConfidentialClient();
+        $secret = $this->createSecret($client);
+
+        //
+
+        $user = $this->createUser(
+            [
+                User::FIELD_USER_NAME => self::USER_USERNAME,
+            ],
+        );
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $code = $this->processObtainCode(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+        );
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'authorization_code',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => $redirectUri,
+                'code' => $code,
+                'code_verifier' => 'wrong',
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $result = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('invalid_request', $result->error);
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testAuthorizeWrongRequestUri(): void
+    {
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createConfidentialClient();
+        $secret = $this->createSecret($client);
+
+        //
+
+        $user = $this->createUser(
+            [
+                User::FIELD_USER_NAME => self::USER_USERNAME,
+            ],
+        );
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $code = $this->processObtainCode(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+        );
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'authorization_code',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => 'wrong',
+                'code' => $code,
+                'code_verifier' => $codeChallenge,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $result = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('invalid_client', $result->error);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
     public function testWrongClientId(): void
     {
         $this->createConfidentialClient();
@@ -240,6 +334,8 @@ class AuthorizationServerTest extends BaseTestCase
 
         $result = Json::decode((string) $response->getBody());
         $this->assertEquals('invalid_client', $result->error);
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testWrongRedirectUri(): void
@@ -256,6 +352,8 @@ class AuthorizationServerTest extends BaseTestCase
 
         $result = Json::decode((string) $response->getBody());
         $this->assertEquals('invalid_client', $result->error);
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testWrongScope(): void
@@ -383,5 +481,125 @@ class AuthorizationServerTest extends BaseTestCase
         $authorizeEntryPoint->run($request, $response);
 
         return $response;
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function processObtainCode(
+        Client $client,
+        string $redirectUri,
+        string $codeChallenge,
+        User $user,
+    ): string {
+
+        $session = $this->createMock(Session::class);
+
+        $this->setApplication(
+            $this->createApplication(
+                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
+                    $binder->bindInstance(Session::class, $session);
+                }),
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        //
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'client_id' => $client->getIdentifier(),
+                'redirect_uri' => $redirectUri,
+                'response_type' => 'code',
+                'scope' => ScopesProvider::SCOPE_GLOBAL,
+                'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
+                'code_challenge_method' => 'S256',
+            ],
+            resourcePath: '/oauth/authorize',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $authorizeEntryPoint = $this->getInjectableFactory()->create(Authorize::class);
+
+        $authorizationRequest = null;
+        $sessionKey = null;
+
+        $session
+            ->expects(self::once())
+            ->method('set')
+            ->with(
+                $this->callback(function ($key) use (&$sessionKey) {
+                    $sessionKey = $key;
+
+                    return true;
+                }),
+                $this->callback(function ($value) use (&$authorizationRequest) {
+                    $authorizationRequest = $value;
+
+                    return true;
+                })
+            );
+
+        $authorizeEntryPoint->run($request, $response);
+
+        //
+
+        $session
+            ->expects(self::once())
+            ->method('get')
+            ->with($sessionKey)
+            ->willReturn($authorizationRequest);
+
+        $session
+            ->expects(self::once())
+            ->method('clear')
+            ->with($sessionKey);
+
+        //
+
+        $this->auth($user->getUserName());
+
+        $this->setApplication(
+            $this->createApplication(
+                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
+                    $binder->bindInstance(Session::class, $session);
+                }),
+                reuse: true,
+            )
+        );
+
+        //
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'clientId' => $client->getIdentifier(),
+                'approved' => 'true',
+            ]),
+            resourcePath: '?entryPoint=oAuthAuthorizeComplete',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $completeEntryPoint = $this->getInjectableFactory()->create(AuthorizeComplete::class);
+
+        $completeEntryPoint->run($request, $response);
+
+        $location = $response->getHeader('Location');
+
+        $this->assertIsString($location);
+        $this->assertStringStartsWith($redirectUri, $location);
+
+        $urlData = parse_url($location);
+        parse_str($urlData['query'], $queryParams);
+        $this->assertIsString($queryParams['code']);
+
+        return $queryParams['code'];
     }
 }
