@@ -101,6 +101,8 @@ class IntFieldView<
 
     protected disableFormatting: boolean = false
 
+    protected isComposing: boolean = false
+
     protected setup() {
         if (this.getPreferences().has('thousandSeparator')) {
             this.thousandSeparator = this.getPreferences().get('thousandSeparator');
@@ -154,6 +156,21 @@ class IntFieldView<
                 const element = this.$element?.get(0) as HTMLInputElement;
 
                 this.autoNumericInstance = new AutoNumeric(element, null, this.autoNumericOptions);
+
+                // Handle IME (Input Method Editor) composition for CJK keyboards.
+                // Without this, clicking outside during IME composition erases the value.
+                element.addEventListener('compositionstart', () => {
+                    this.isComposing = true;
+                });
+
+                element.addEventListener('compositionend', () => {
+                    this.isComposing = false;
+
+                    // Re-sync AutoNumeric with the final composed value.
+                    if (this.autoNumericInstance) {
+                        this.autoNumericInstance.update(element.value);
+                    }
+                });
             }
         }
 
@@ -182,6 +199,17 @@ class IntFieldView<
 
                 new AutoNumeric(element1, null, this.autoNumericOptions);
                 new AutoNumeric(element2, null, this.autoNumericOptions);
+
+                // IME composition handling for search fields.
+                for (const el of [element1, element2]) {
+                    el.addEventListener('compositionstart', () => {
+                        this.isComposing = true;
+                    });
+
+                    el.addEventListener('compositionend', () => {
+                        this.isComposing = false;
+                    });
+                }
             }
         }
     }
