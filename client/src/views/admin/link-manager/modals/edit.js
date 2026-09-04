@@ -533,10 +533,12 @@ class LinkManagerEditModalView extends ModalView {
 
             this.getForeignLinkEntityTypeList(
                 this.model.get('entity'),
-                this.model.get('link'), this.model.get('parentEntityTypeList') || [], true
+                this.model.get('link'),
+                this.model.get('parentEntityTypeList') || [],
+                true
             )
                 .forEach(item => {
-                    if (!~checkedList.indexOf(item)) {
+                    if (!checkedList.includes(item)) {
                         checkedList.push(item);
                     }
                 });
@@ -1207,6 +1209,14 @@ class LinkManagerEditModalView extends ModalView {
         this.showActionItem('saveAndContinueEditing');
     }
 
+    /**
+     * @private
+     * @param {string} entityType
+     * @param {string} link
+     * @param {string[]} entityTypeList
+     * @param {boolean} onlyNotCustom
+     * @return {string[]}
+     */
     getForeignLinkEntityTypeList(entityType, link, entityTypeList, onlyNotCustom) {
         const list = [];
 
@@ -1222,10 +1232,8 @@ class LinkManagerEditModalView extends ModalView {
                     linkDefs[i].entity === entityType &&
                     linkDefs[i].type === 'hasChildren'
                 ) {
-                    if (onlyNotCustom) {
-                        if (linkDefs[i].isCustom) {
-                            continue;
-                        }
+                    if (onlyNotCustom && linkDefs[i].isCustom) {
+                        continue;
                     }
 
                     isFound = true;
