@@ -123,6 +123,7 @@ return [
         'rabbitMq',
         'redis',
         'eventTransport',
+        'apiExposeExceptions',
     ],
     'adminItems' => [
         'devMode',
