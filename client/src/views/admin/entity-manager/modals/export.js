@@ -156,7 +156,7 @@ class EntityManagerExportModalView extends ModalView {
 
                 window.location = this.getBasePath() + '?entryPoint=download&id=' + response.id;
             })
-            .catch(() => this.enableButton('create'));
+            .catch(() => this.enableButton('export'));
     }
 }
 
