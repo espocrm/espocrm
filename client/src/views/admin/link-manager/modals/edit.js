@@ -30,6 +30,8 @@ import ModalView from 'views/modal';
 import Model from 'model';
 import Index from 'views/admin/link-manager/index';
 import EnumFieldView from 'views/fields/enum';
+import Ajax from 'ajax';
+import Ui from 'ui';
 
 class LinkManagerEditModalView extends ModalView {
 
@@ -88,6 +90,17 @@ class LinkManagerEditModalView extends ModalView {
         const entity = scope;
 
         const isNew = this.isNew = (false === link);
+
+        if (!this.isNew) {
+            this.addDropdownItem({
+                name: 'saveAndContinueEditing',
+                label: 'Save & Continue Editing',
+                title: 'Ctrl+S',
+                groupIndex: 0,
+                iconClass: 'far fa-floppy-disk',
+                onClick: () => this.save({noClose: true}),
+            });
+        }
 
         this.headerText = this.translate('Create Link', 'labels', 'Admin');
 
@@ -592,9 +605,10 @@ class LinkManagerEditModalView extends ModalView {
             ['', ...this.getEntityTypeLayouts(foreignEntityType)] :
             [''];
 
-        this.layoutFieldView.translatedOptions = foreignEntityType ?
-            this.getEntityTypeLayoutsTranslations(foreignEntityType) :
-            {};
+        const translations = foreignEntityType ?
+            this.getEntityTypeLayoutsTranslations(foreignEntityType) : {};
+
+        this.layoutFieldView.setTranslatedOptions(translations);
 
         this.layoutFieldView.setOptionList(layouts)
             .then(() => this.layoutFieldView.reRender());
@@ -607,9 +621,10 @@ class LinkManagerEditModalView extends ModalView {
             ['', ...this.getEntityTypeFilters(foreignEntityType)] :
             [''];
 
-        this.selectFilterFieldView.translatedOptions = foreignEntityType ?
-            this.getEntityTypeFiltersTranslations(foreignEntityType) :
-            {};
+        const translations = foreignEntityType ?
+            this.getEntityTypeFiltersTranslations(foreignEntityType) : {};
+
+        this.selectFilterFieldView.setTranslatedOptions(translations);
 
         this.selectFilterFieldView.setOptionList(layouts)
             .then(() => this.selectFilterFieldView.reRender());
@@ -993,7 +1008,7 @@ class LinkManagerEditModalView extends ModalView {
      * @param {{noClose?: boolean}} [options]
      */
     save(options) {
-        options = options || {};
+        options = options ?? {};
 
         const arr = [
             'link',
@@ -1053,7 +1068,7 @@ class LinkManagerEditModalView extends ModalView {
             return;
         }
 
-        this.$el.find('button[data-name="save"]').addClass('disabled').attr('disabled');
+        this.disableActions();
 
         let url = 'EntityManager/action/createLink';
 
@@ -1129,14 +1144,13 @@ class LinkManagerEditModalView extends ModalView {
             delete attributes.selectFilterForeign;
         }
 
-        Espo.Ajax
+        Ajax
             .postRequest(url, attributes)
             .then(() => {
                 if (!this.isNew) {
-                    Espo.Ui.success(this.translate('Saved'));
-                }
-                else {
-                    Espo.Ui.success(this.translate('Created'));
+                    Ui.success(this.translate('Saved'));
+                } else {
+                    Ui.success(this.translate('Created'));
                 }
 
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
@@ -1153,9 +1167,7 @@ class LinkManagerEditModalView extends ModalView {
                     }
 
                     if (options.noClose) {
-                        this.$el.find('button[data-name="save"]')
-                            .removeClass('disabled')
-                            .removeAttr('disabled');
+                        this.enableActions();
                     }
                 });
             })
@@ -1168,13 +1180,29 @@ class LinkManagerEditModalView extends ModalView {
                         console.error(statusReasonHeader);
                     }
 
-                    Espo.Ui.error(msg, {closeButton: true});
+                    Ui.error(msg, {closeButton: true});
 
                     xhr.errorIsHandled = true;
                 }
 
-                this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
+                this.enableActions();
             });
+    }
+
+    /**
+     * @private
+     */
+    disableActions() {
+        this.disableButton('save');
+        this.hideActionItem('saveAndContinueEditing');
+    }
+
+    /**
+     * @private
+     */
+    enableActions() {
+        this.enableButton('save');
+        this.showActionItem('saveAndContinueEditing');
     }
 
     getForeignLinkEntityTypeList(entityType, link, entityTypeList, onlyNotCustom) {

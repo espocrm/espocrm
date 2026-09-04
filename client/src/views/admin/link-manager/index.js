@@ -30,6 +30,7 @@
 
 import View from 'view';
 import LinkManagerEditParamsModalView from 'views/admin/link-manager/modals/edit-params';
+import Ajax from 'ajax';
 
 class LinkManagerIndexView extends View {
 
@@ -222,47 +223,54 @@ class LinkManagerIndexView extends View {
         this.$el.find('input[data-name="quick-search"]').focus();
     }
 
-    createLink() {
-        this.createView('edit', 'views/admin/link-manager/modals/edit', {
+    async createLink() {
+        const view = await this.createView('edit', 'views/admin/link-manager/modals/edit', {
             scope: this.scope,
-        }, view => {
-            view.render();
-
-            this.listenTo(view, 'after:save', () => {
-                this.clearView('edit');
-
-                this.setupLinkData();
-                this.render();
-            });
-
-            this.listenTo(view, 'close', () => {
-                this.clearView('edit');
-            });
         });
+
+        this.listenTo(view, 'after:save', () => {
+            this.clearView('edit');
+
+            this.setupLinkData();
+            this.reRender();
+        });
+
+        this.listenTo(view, 'close', () => {
+            this.clearView('edit');
+        });
+
+        await view.render();
     }
 
-    editLink(link) {
-        this.createView('edit', 'views/admin/link-manager/modals/edit', {
+    async editLink(link) {
+        const view = await this.createView('edit', 'views/admin/link-manager/modals/edit', {
             scope: this.scope,
             link: link,
-        }, view => {
-            view.render();
+        })
 
-            this.listenTo(view, 'after:save', () => {
-                this.clearView('edit');
+        this.listenTo(view, 'after:save', async () => {
+            this.setupLinkData();
 
-                this.setupLinkData();
-                this.render();
-            });
+            if (view.isRemoved()) {
+                await this.reRender();
 
-            this.listenTo(view, 'close', () => {
-                this.clearView('edit');
-            });
+                return;
+            }
+
+            this.unchainView('edit');
+            await this.reRender();
+            this.setView('edit', view);
         });
+
+        this.listenTo(view, 'close', () => {
+            this.clearView('edit');
+        });
+
+        await view.render();
     }
 
     removeLink(link) {
-        Espo.Ajax
+        Ajax
             .postRequest('EntityManager/action/removeLink', {
                 entity: this.scope,
                 link: link,
