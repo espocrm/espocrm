@@ -28,10 +28,20 @@
 
 import View from 'view';
 import ViewDetailsModalView from 'views/admin/field-manager/modals/view-details';
+import Ajax from 'ajax';
+import Ui from 'ui';
 
 class FieldManagerListView extends View {
 
     template = 'admin/field-manager/list'
+
+    /**
+     * @todo Implement. Set after a new field is created..
+     *
+     * @private
+     * @type {Record<string, true>}
+     */
+    accentedFieldMap
 
     data() {
         return {
@@ -58,6 +68,8 @@ class FieldManagerListView extends View {
     setup() {
         this.addActionHandler('viewDetails', (e, target) => this.viewDetails(target.dataset.name));
 
+        this.accentedFieldMap = {};
+
         this.scope = this.options.scope;
 
         this.isCustomizable =
@@ -83,38 +95,38 @@ class FieldManagerListView extends View {
         this.$el.find('input[data-name="quick-search"]').focus();
     }
 
-    buildFieldDefs() {
-        return this.getModelFactory().create(this.scope).then(model => {
-            this.fields = model.defs.fields;
+    async buildFieldDefs() {
+        const model = await this.getModelFactory().create(this.scope);
 
-            this.fieldList = Object.keys(this.fields).sort();
-            this.fieldDefsArray = [];
+        this.fields = model.defs.fields;
+        this.fieldList = Object.keys(this.fields).sort();
+        this.fieldDefsArray = [];
 
-            this.fieldList.forEach(field => {
-                const defs = /** @type {Record} */this.fields[field];
+        this.fieldList.forEach(field => {
+            const defs = /** @type {Record} */ this.fields[field];
 
-                this.fieldDefsArray.push({
-                    name: field,
-                    isCustom: defs.isCustom || false,
-                    type: defs.type,
-                    label: this.translate(field, 'fields', this.scope),
-                    isEditable: !defs.customizationDisabled &&
-                        !defs.utility &&
-                        this.isCustomizable,
-                });
+            this.fieldDefsArray.push({
+                name: field,
+                isCustom: defs.isCustom || false,
+                type: defs.type,
+                label: this.translate(field, 'fields', this.scope),
+                isEditable: !defs.customizationDisabled &&
+                    !defs.utility &&
+                    this.isCustomizable,
+                accented: this.accentedFieldMap[field] ?? false,
             });
+        });
 
-            this.fieldDefsArray = this.fieldDefsArray.sort((a, b) => {
-                if (a.isEditable && !b.isEditable) {
-                    return -1;
-                }
+        this.fieldDefsArray = this.fieldDefsArray.sort((a, b) => {
+            if (a.isEditable && !b.isEditable) {
+                return -1;
+            }
 
-                if (!a.isEditable && b.isEditable) {
-                    return 1;
-                }
+            if (!a.isEditable && b.isEditable) {
+                return 1;
+            }
 
-                return 0;
-            })
+            return 0;
         });
     }
 
@@ -123,10 +135,10 @@ class FieldManagerListView extends View {
             .replace('{field}', field);
 
         this.confirm(msg, () => {
-            Espo.Ui.notifyWait();
+            Ui.notifyWait();
 
-            Espo.Ajax.deleteRequest('Admin/fieldManager/' + this.scope + '/' + field).then(() => {
-                Espo.Ui.success(this.translate('Removed'));
+            Ajax.deleteRequest('Admin/fieldManager/' + this.scope + '/' + field).then(() => {
+                Ui.success(this.translate('Removed'));
 
                 this.$el.find(`tr[data-name="${field}"]`).remove();
 
@@ -139,7 +151,7 @@ class FieldManagerListView extends View {
 
                                 return this.reRender();
                             })
-                            .then(() => Espo.Ui.success(this.translate('Removed')))
+                            .then(() => Ui.success(this.translate('Removed')))
                     });
             });
         });
