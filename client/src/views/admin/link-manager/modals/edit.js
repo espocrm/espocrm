@@ -32,6 +32,7 @@ import Index from 'views/admin/link-manager/index';
 import EnumFieldView from 'views/fields/enum';
 import Ajax from 'ajax';
 import Ui from 'ui';
+import Utils from 'utils';
 
 class LinkManagerEditModalView extends ModalView {
 
@@ -503,11 +504,9 @@ class LinkManagerEditModalView extends ModalView {
                 model: model,
                 mode: 'edit',
                 selector: '.field[data-name="foreignLinkEntityTypeList"]',
-                defs: {
-                    name: 'foreignLinkEntityTypeList',
-                    params: {
-                        options: this.model.get('parentEntityTypeList') || [],
-                    },
+                name: 'foreignLinkEntityTypeList',
+                params: {
+                    options: this.getForeignLinkEntityTypeListOptions(),
                 },
             });
 
@@ -526,7 +525,7 @@ class LinkManagerEditModalView extends ModalView {
                 this.getView('foreignLinkEntityTypeList');
 
             if (view && !this.noParentEntityTypeList) {
-                view.setOptionList(this.model.get('parentEntityTypeList') || []);
+                view.setOptionList(this.getForeignLinkEntityTypeListOptions());
             }
 
             const checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
@@ -551,6 +550,42 @@ class LinkManagerEditModalView extends ModalView {
 
         this.controlFilterField();
         this.listenTo(this.model, 'change:entityForeign', () => this.controlFilterField());
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getForeignLinkEntityTypeListOptions() {
+        let values = Utils.clone(this.model.get('parentEntityTypeList') ?? []);
+
+        console.log(values);
+
+        const linkForeign = this.model.attributes.linkForeign;
+
+        if (!linkForeign) {
+            return [];
+        }
+
+        values = values.filter(entityType => {
+            /**
+             * @type {{
+             *     type: string,
+             * } | null}
+             */
+            const defs = this.getMetadata().get(`entityDefs.${entityType}.links.${linkForeign}`);
+
+            if (!defs) {
+                return true;
+            }
+
+            if (defs.type !== 'hasChildren') {
+                return false;
+            }
+
+            return true;
+        });
+
+        return values;
     }
 
     getEntityTypeLayouts(entityType) {
