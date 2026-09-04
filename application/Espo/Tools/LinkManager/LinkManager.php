@@ -1032,7 +1032,7 @@ class LinkManager
         string $entityType,
         string $link,
         string $linkForeign,
-        array $foreignLinkEntityTypeList
+        array $foreignLinkEntityTypeList,
     ): void {
 
         $toCreateList = [];
@@ -1046,15 +1046,18 @@ class LinkManager
                 $kEntity = $defs['entity'] ?? null;
 
                 if (
-                    $kForeign === $link && !$kIsCustom && $kEntity == $entityType
+                    $kForeign === $link &&
+                    !$kIsCustom &&
+                    $kEntity === $entityType
                 ) {
                     continue 2;
                 }
 
-                if ($kLink == $linkForeign) {
-                    if ($defs[RelationParam::TYPE] !== Entity::HAS_CHILDREN) {
-                        continue 2;
-                    }
+                if (
+                    $kLink === $linkForeign &&
+                    $defs[RelationParam::TYPE] !== Entity::HAS_CHILDREN
+                ) {
+                    continue 2;
                 }
             }
 
