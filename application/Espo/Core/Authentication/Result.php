@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication;
 
+use Espo\Core\Api\Response;
 use Espo\Core\Authentication\Result\Data;
 use Espo\Entities\User;
 
@@ -52,6 +53,7 @@ class Result
     private ?string $failReason = null;
     private bool $bypassSecondStep = false;
     private ?Data $data;
+    private ?Response $response = null;
 
     private function __construct(string $status, ?User $user = null, ?Data $data = null)
     {
@@ -77,14 +79,24 @@ class Result
 
     /**
      * Create an instance for a failed login.
+     *
+     * @param ?string $reason A fail reason.
+     * @param ?Response $response An error response.
      */
-    public static function fail(?string $reason = null): self
+    public static function fail(?string $reason = null, ?Response $response = null): self
     {
         $data = $reason ?
             Data::createWithFailReason($reason) :
             Data::create();
 
-        return new self(self::STATUS_FAIL, null, $data);
+        $object = new self(
+            status: self::STATUS_FAIL,
+            data: $data,
+        );
+
+        $object->response = $response;
+
+        return $object;
     }
 
     /**
@@ -196,5 +208,15 @@ class Result
         $obj->bypassSecondStep = $bypassSecondStep;
 
         return $obj;
+    }
+
+    /**
+     * An error response.
+     *
+     * @since 10.1.0
+     */
+    public function getResponse(): ?Response
+    {
+        return $this->response;
     }
 }

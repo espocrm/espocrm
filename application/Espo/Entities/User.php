@@ -34,6 +34,7 @@ use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
 use Espo\Modules\Crm\Entities\Contact;
+use LogicException;
 use RuntimeException;
 
 class User extends Person
@@ -78,6 +79,12 @@ class User extends Person
     public const string FIELD_SECRET_KEY = 'secretKey';
     /** @since 10.0.4 */
     public const string FIELD_AUTH_METHOD = 'authMethod';
+
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string FIELD_SCOPES = 'scopes';
 
     /**
      * @internal
@@ -439,5 +446,29 @@ class User extends Person
     public function getPasswordVersion(): ?int
     {
         return $this->get(self::FIELD_PASSWORD_VERSION);
+    }
+
+    /**
+     * @internal
+     * @param string[] $scopes
+     * @since 10.1.0
+     */
+    public function setScopes(array $scopes): self
+    {
+        if ($this->get(self::FIELD_SCOPES) !== null) {
+            throw new LogicException("Scopes are already set.");
+        }
+
+        return $this->set(self::FIELD_SCOPES, $scopes);
+    }
+
+    /**
+     * @internal
+     * @return ?string[]
+     * @since 10.1.0
+     */
+    public function getScopes(): ?array
+    {
+        return $this->get(self::FIELD_SCOPES);
     }
 }

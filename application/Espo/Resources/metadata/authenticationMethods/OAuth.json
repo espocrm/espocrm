@@ -1,0 +1,6 @@
+{
+    "api": true,
+    "credentialsHeader": "Authorization",
+    "credentialsHeaderScheme": "Bearer",
+    "implementationClassName": "Espo\\Tools\\OAuthServer\\Login\\OAuthLogin"
+}

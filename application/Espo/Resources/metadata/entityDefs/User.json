@@ -462,6 +462,14 @@
             "customizationDisabled": true,
             "utility": true
         },
+        "scopes": {
+            "type": "array",
+            "notStorable": true,
+            "readOnly": true,
+            "orderDisabled": true,
+            "customizationDisabled": true,
+            "utility": true
+        },
         "avatar": {
             "type": "image",
             "view": "views/user/fields/avatar",

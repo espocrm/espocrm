@@ -15,7 +15,18 @@
         },
         "credentialsHeader": {
             "type": "string",
-            "description": "A header that is supposed to contain credentials. Actual only for API methods."
+            "description": "A header that is supposed to contain credentials. Actual only for API methods.",
+            "examples": [
+                "Authorization",
+                "X-Api-Key"
+            ]
+        },
+        "credentialsHeaderScheme": {
+            "type": "string",
+            "description": "An authorization header scheme. The header value should start with the specified value for this method to be used. Of omitted, the header is still checked for match. As of v10.1.",
+            "examples": [
+                "Bearer"
+            ]
         },
         "login": {
             "type": "object",

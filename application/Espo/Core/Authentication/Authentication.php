@@ -157,7 +157,7 @@ class Authentication
             $this->createAuthLogRecord($username, $user, $request, $method) : null;
 
         if ($result->isFail()) {
-            return $this->processFail($result, $data, $request);
+            return $this->processFail($result, $data, $request, $response);
         }
 
         if (!$user) {
@@ -584,9 +584,18 @@ class Authentication
         return false;
     }
 
-    private function processFail(Result $result, AuthenticationData $data, Request $request): Result
-    {
+    private function processFail(
+        Result $result,
+        AuthenticationData $data,
+        Request $request,
+        ?Response $response = null,
+    ): Result {
+
         $this->hookManager->processOnFail($result, $data, $request);
+
+        if ($result->getResponse() && $response) {
+            $response->applyPsr7($result->getResponse()->toPsr7());
+        }
 
         return $result;
     }

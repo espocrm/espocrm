@@ -29,51 +29,55 @@
 
 namespace Espo\Core\Authentication\Login;
 
+use Espo\Core\Api\Request;
+use Espo\Core\Authentication\ConfigDataProvider;
+use Espo\Core\Authentication\HeaderKey;
+
 /**
- * Immutable.
+ * @internal
  */
-class MetadataParams
+class MethodResolver
 {
-    /**
-     * @internal
-     */
     public function __construct(
-        private string $method,
-        private bool $api = false,
-        private ?string $credentialsHeader = null,
-        private ?string $credentialsHeaderScheme = null,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    public static function fromRaw(string $method, array $data): self
+    public function resolve(Request $request): ?string
     {
-        return new self(
-            method: $method,
-            api: $data['api'] ?? false,
-            credentialsHeader: $data['credentialsHeader'] ?? null,
-            credentialsHeaderScheme: $data['credentialsHeaderScheme'] ?? null,
-        );
-    }
+        if ($request->hasHeader(HeaderKey::AUTHORIZATION)) {
+            return null;
+        }
 
-    public function getMethod(): string
-    {
-        return $this->method;
-    }
+        $paramsList = $this->configDataProvider->getLoginMetadataParamsList();
 
-    public function getCredentialsHeader(): ?string
-    {
-        return $this->credentialsHeader;
-    }
+        $paramsList = array_filter($paramsList, function ($params) use ($request): bool {
+            $headerName = $params->getCredentialsHeader();
 
-    public function isApi(): bool
-    {
-        return $this->api;
-    }
+            if (
+                !$params->isApi() ||
+                !$headerName ||
+                !$request->hasHeader($headerName)
+            ) {
+                return false;
+            }
 
-    public function getCredentialsHeaderScheme(): ?string
-    {
-        return $this->credentialsHeaderScheme;
+            $headerValue = $request->getHeader($headerName) ?? '';
+
+            $scheme = $params->getCredentialsHeaderScheme();
+
+            if ($scheme !== null && !str_starts_with($headerValue, $scheme . ' ')) {
+                return false;
+            }
+
+            return true;
+        });
+
+        $paramsList = array_values($paramsList);
+
+        if (count($paramsList)) {
+            return $paramsList[0]->getMethod();
+        }
+
+        return null;
     }
 }
