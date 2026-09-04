@@ -508,7 +508,7 @@ module.exports = grunt => {
     });
 
     grunt.registerTask('npm-install', () => {
-        cp.execSync("npm ci", {stdio: 'ignore'});
+        cp.execSync("npm ci", {stdio: ['ignore', 'ignore', 'pipe']});
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
