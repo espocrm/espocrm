@@ -69,6 +69,17 @@ class SettingsAdminRecordView extends SettingsEditRecordView {
             this.setFieldReadOnly('siteUrl');
         }
     }
+
+    handleShortcutKeyCtrlS(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!this.hasAvailableActionItem('save')) {
+            return;
+        }
+
+        this.actionSaveAndContinueEditing();
+    }
 }
 
 export default SettingsAdminRecordView;
