@@ -49,6 +49,9 @@ use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
 
+/**
+ * @todo Access token renewal.
+ */
 class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';

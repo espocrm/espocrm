@@ -35,6 +35,8 @@ use Espo\Core\Authentication\HeaderKey;
 
 /**
  * @internal
+ *
+ * @todo Test.
  */
 class MethodResolver
 {
