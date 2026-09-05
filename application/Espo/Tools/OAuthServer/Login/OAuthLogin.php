@@ -74,7 +74,7 @@ class OAuthLogin implements Login
 
         $now = DateTime::fromDateTime($this->clock->now());
 
-        if (!$accessToken->getExpiresAt()->isLessThan($now)) {
+        if ($accessToken->getExpiresAt()->isLessThanOrEqualTo($now)) {
             $response = self::composeErrorResponse(
                 error: 'invalid_token',
                 errorDescription: 'The access token expired.',

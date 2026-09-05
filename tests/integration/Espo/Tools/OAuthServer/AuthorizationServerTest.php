@@ -30,8 +30,11 @@
 namespace tests\integration\Espo\Tools\OAuthServer;
 
 use Closure;
+use Espo\Core\Api\AuthBuilderFactory;
 use Espo\Core\Api\Method;
 use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\ApplicationState;
+use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\Oidc\PkceUtil;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingProcessor;
@@ -58,6 +61,9 @@ class AuthorizationServerTest extends BaseTestCase
 
     /**
      * @noinspection PhpUnhandledExceptionInspection
+     *
+     * @todo Test expired access token.
+     * @todo Test authentication wrong token.
      */
     public function testAuthorizeSuccess(): void
     {
@@ -128,6 +134,8 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
+        // @todo Test wrong client secret.
+
         $this->setApplication(
             $this->createApplication(
                 reuse: true,
@@ -179,6 +187,42 @@ class AuthorizationServerTest extends BaseTestCase
 
         $this->assertNotNull($oldRefreshToken);
         $this->assertTrue($oldRefreshToken->isRevoked());
+
+        $accessToken = $body->access_token;
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method::GET,
+            headers: [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        );
+
+        $authentication = $this->getInjectableFactory()->create(Authentication::class);
+
+        $authBuilderFactory = $this->getInjectableFactory()->create(AuthBuilderFactory::class);
+
+        $auth = $authBuilderFactory->create()
+            ->setAuthentication($authentication)
+            ->setAuthRequired(true)
+            ->build();
+
+        $response = $this->createResponse();
+
+        $result = $auth->process($request, $response);
+
+        $this->assertTrue($result->isResolved());
+        $this->assertEquals($user->getId(), $this->getContainer()->getByClass(ApplicationState::class)->getUserId());
+
+        //
     }
 
     /**
