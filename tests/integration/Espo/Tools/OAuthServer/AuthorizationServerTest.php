@@ -157,10 +157,11 @@ class AuthorizationServerTest extends BaseTestCase
         $body = Json::decode((string) $response->getBody());
 
         $this->assertObjectHasProperty('access_token', $body);
-        $this->assertObjectNotHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('refresh_token', $body);
         $this->assertObjectHasProperty('expires_in', $body);
 
         $this->assertNotEquals($accessToken, $body->access_token);
+        $this->assertNotEquals($refreshToken, $body->refresh_token);
     }
 
     /**

@@ -68,8 +68,7 @@ class AuthorizationServerFactory
             encryptionKey: $this->cryptKeyProvider->getCryptKey(),
         );
 
-        // @todo Make configurable? In the client?
-        $server->revokeRefreshTokens(false);
+        $server->revokeRefreshTokens(true);
 
         $this->enableAuthorizationCodeGrant($server);
         $this->enableRefreshTokenGrant($server);
