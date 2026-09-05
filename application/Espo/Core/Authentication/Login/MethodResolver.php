@@ -35,8 +35,6 @@ use Espo\Core\Authentication\HeaderKey;
 
 /**
  * @internal
- *
- * @todo Test.
  */
 class MethodResolver
 {
@@ -52,14 +50,16 @@ class MethodResolver
 
         $paramsList = $this->configDataProvider->getLoginMetadataParamsList();
 
+        $paramsList = array_filter($paramsList, fn ($it) => $it->isApi());
+
+        usort($paramsList, function (MetadataParams $a, MetadataParams $b) {
+            return ($b->getCredentialsHeaderScheme() !== null) <=> ($a->getCredentialsHeaderScheme() !== null);
+        });
+
         $paramsList = array_filter($paramsList, function ($params) use ($request): bool {
             $headerName = $params->getCredentialsHeader();
 
-            if (
-                !$params->isApi() ||
-                !$headerName ||
-                !$request->hasHeader($headerName)
-            ) {
+            if (!$headerName || !$request->hasHeader($headerName)) {
                 return false;
             }
 

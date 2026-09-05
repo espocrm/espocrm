@@ -57,7 +57,8 @@
         },
         "accessToken": {
             "type": "belongsTo",
-            "entity": "OAuthAccessToken"
+            "entity": "OAuthAccessToken",
+            "foreignName": "id"
         }
     },
     "collection": {

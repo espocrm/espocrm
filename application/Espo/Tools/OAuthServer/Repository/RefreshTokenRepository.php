@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
-use Espo\Core\Utils\Hasher;
+use Espo\Tools\OAuthServer\Utils\Hasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use SensitiveParameter;

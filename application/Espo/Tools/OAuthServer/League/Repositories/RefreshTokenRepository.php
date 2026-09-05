@@ -96,6 +96,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     }
 
     /**
+     * Not called by the authorization server as success tokes are not revoked on each refresh_token request.
      * @inheritDoc
      * @return void
      */

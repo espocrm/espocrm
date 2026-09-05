@@ -41,32 +41,22 @@ use Slim\Psr7\Factory\ServerRequestFactory;
 class MethodResolverTest extends TestCase
 {
 
+    /**
+     * @param MetadataParams[] $paramsList
+     * @param array{string, string} $headerPair
+     */
     #[DataProvider('provider')]
-    public function testResolve1(): void
+    public function testResolve(array $paramsList, array $headerPair, ?string $expected): void
     {
-        $paramsList = [
-            new MetadataParams(
-                method: 'ApiKey',
-                api: true,
-                credentialsHeader: 'X-Api-Key',
-            ),
-            new MetadataParams(
-                method: 'OAuth',
-                api: true,
-                credentialsHeader: 'Authorization',
-                credentialsHeaderScheme: 'Bearer',
-            ),
-        ];
-
-        $headerPair = ['Authorization', 'Bearer test'];
-        $expected = 'OAuth';
-
         $this->processTest($paramsList, $headerPair, $expected);
     }
 
     public static function provider(): array
     {
-        $paramsList = [
+        $paramsList1 = [
+            new MetadataParams(
+                method: 'Test',
+            ),
             new MetadataParams(
                 method: 'ApiKey',
                 api: true,
@@ -80,21 +70,69 @@ class MethodResolverTest extends TestCase
             ),
         ];
 
+        $paramsList2 = [
+            new MetadataParams(
+                method: 'Some',
+                api: true,
+                credentialsHeader: 'Authorization',
+            ),
+            new MetadataParams(
+                method: 'OAuth',
+                api: true,
+                credentialsHeader: 'Authorization',
+                credentialsHeaderScheme: 'Bearer',
+            ),
+        ];
+
+        $paramsList3 = [
+            new MetadataParams(
+                method: 'OAuth',
+                api: true,
+                credentialsHeader: 'Authorization',
+                credentialsHeaderScheme: 'Bearer',
+            ),
+            new MetadataParams(
+                method: 'Some',
+                api: true,
+                credentialsHeader: 'Authorization',
+            ),
+        ];
+
         return [
             [
-                $paramsList,
+                $paramsList1,
                 ['Authorization', 'Bearer test'],
                 'OAuth',
             ],
             [
-                $paramsList,
+                $paramsList1,
                 ['X-Api-Key', 'test'],
-                'X-Api-Key',
+                'ApiKey',
             ],
             [
-                $paramsList,
+                $paramsList1,
                 ['Espo-Authorization', 'test'],
                 null,
+            ],
+            [
+                $paramsList2,
+                ['Authorization', 'Bearer test'],
+                'OAuth',
+            ],
+            [
+                $paramsList3,
+                ['Authorization', 'Bearer test'],
+                'OAuth',
+            ],
+            [
+                $paramsList2,
+                ['Authorization', 'test'],
+                'Some',
+            ],
+            [
+                $paramsList3,
+                ['Authorization', 'test'],
+                'Some',
             ],
         ];
     }
@@ -108,7 +146,7 @@ class MethodResolverTest extends TestCase
         $config = $this->createMock(ConfigDataProvider::class);
 
         $config
-            ->expects(self::once())
+            ->expects(self::any())
             ->method('getLoginMetadataParamsList')
             ->willReturn($paramsList);
 

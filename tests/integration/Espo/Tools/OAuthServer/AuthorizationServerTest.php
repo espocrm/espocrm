@@ -49,9 +49,6 @@ use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
 
-/**
- * @todo Access token renewal.
- */
 class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';
@@ -117,12 +114,53 @@ class AuthorizationServerTest extends BaseTestCase
 
         $tokenEntryPoint->run($request, $response);
 
-        $result = Json::decode((string) $response->getBody());
+        $body = Json::decode((string) $response->getBody());
 
-        $this->assertEquals('Bearer', $result->token_type);
-        $this->assertObjectHasProperty('access_token', $result);
-        $this->assertObjectHasProperty('refresh_token', $result);
-        $this->assertObjectHasProperty('expires_in', $result);
+        $this->assertEquals('Bearer', $body->token_type);
+        $this->assertObjectHasProperty('access_token', $body);
+        $this->assertObjectHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('expires_in', $body);
+
+        $refreshToken = $body->refresh_token;
+        $accessToken = $body->access_token;
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken,
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => $redirectUri,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $body = Json::decode((string) $response->getBody());
+
+        $this->assertObjectHasProperty('access_token', $body);
+        $this->assertObjectNotHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('expires_in', $body);
+
+        $this->assertNotEquals($accessToken, $body->access_token);
     }
 
     /**
@@ -185,9 +223,9 @@ class AuthorizationServerTest extends BaseTestCase
 
         $tokenEntryPoint->run($request, $response);
 
-        $result = Json::decode((string) $response->getBody());
+        $body = Json::decode((string) $response->getBody());
 
-        $this->assertEquals('invalid_client', $result->error);
+        $this->assertEquals('invalid_client', $body->error);
         $this->assertEquals(401, $response->getStatusCode());
     }
 
@@ -251,9 +289,9 @@ class AuthorizationServerTest extends BaseTestCase
 
         $tokenEntryPoint->run($request, $response);
 
-        $result = Json::decode((string) $response->getBody());
+        $body = Json::decode((string) $response->getBody());
 
-        $this->assertEquals('invalid_request', $result->error);
+        $this->assertEquals('invalid_request', $body->error);
         $this->assertEquals(400, $response->getStatusCode());
     }
 
@@ -375,7 +413,6 @@ class AuthorizationServerTest extends BaseTestCase
         $this->assertIsString($location);
         $this->assertStringContainsString('error=invalid_scope', $location);
     }
-
 
     public function testSettings(): void
     {
