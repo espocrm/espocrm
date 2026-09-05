@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
-use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;

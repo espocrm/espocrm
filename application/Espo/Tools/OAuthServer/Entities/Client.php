@@ -85,9 +85,9 @@ class Client extends Entity
         return $this->set(self::FIELD_IDENTIFIER, $clientId);
     }
 
-    public function isActive(): string
+    public function isActive(): bool
     {
-        return $this->get(self::FIELD_STATUS);
+        return $this->get(self::FIELD_STATUS) === self::STATUS_ACTIVE;
     }
 
     public function setActive(): self

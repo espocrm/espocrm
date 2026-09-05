@@ -69,14 +69,19 @@ class OAuthLogin implements Login
         $accessToken = $this->repository->getActiveByIdentifier($opaqueToken);
 
         if (!$accessToken) {
-            return Result::fail(Result\FailReason::WRONG_CREDENTIALS);
+            $response = self::composeErrorResponse(
+                error: 'access_denied',
+                errorDescription: 'Invalid access token.',
+            );
+
+            return Result::fail(Result\FailReason::WRONG_CREDENTIALS, $response);
         }
 
         $now = DateTime::fromDateTime($this->clock->now());
 
         if ($accessToken->getExpiresAt()->isLessThanOrEqualTo($now)) {
             $response = self::composeErrorResponse(
-                error: 'invalid_token',
+                error: 'access_denied',
                 errorDescription: 'The access token expired.',
             );
 
@@ -110,10 +115,12 @@ class OAuthLogin implements Login
         return Result::success($user);
     }
 
+    /**
+     * @noinspection PhpSameParameterValueInspection
+     */
     private static function composeErrorResponse(
         string $error,
         string $errorDescription,
-
     ): Response {
 
         $header = "Bearer error=\"$error\", error_description=\"$errorDescription\"";
