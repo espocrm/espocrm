@@ -44,8 +44,12 @@ class UserEntity implements UserEntityInterface
         }
     }
 
-    public function getIdentifier()
+    /**
+     * @return non-empty-string
+     */
+    public function getIdentifier(): string
     {
+        /** @var non-empty-string */
         return $this->user->getId();
     }
 }

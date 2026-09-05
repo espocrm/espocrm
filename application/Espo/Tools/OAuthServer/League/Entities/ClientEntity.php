@@ -37,6 +37,7 @@ use UnexpectedValueException;
 class ClientEntity implements ClientEntityInterface
 {
     /**
+     * @param non-empty-string $identifier
      * @param string[] $redirectUri
      */
     public function __construct(
@@ -58,22 +59,28 @@ class ClientEntity implements ClientEntityInterface
         );
     }
 
-    public function getIdentifier()
+    /**
+     * @return non-empty-string
+     */
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getRedirectUri()
+    /**
+     * @return string[]
+     */
+    public function getRedirectUri(): array
     {
         return $this->redirectUri;
     }
 
-    public function isConfidential()
+    public function isConfidential(): bool
     {
         return $this->isConfidential;
     }

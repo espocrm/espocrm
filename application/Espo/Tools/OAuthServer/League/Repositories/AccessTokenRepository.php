@@ -39,6 +39,7 @@ use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use SensitiveParameter;
 
@@ -51,15 +52,23 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     ) {}
 
     /**
-     * @inheritDoc
+     * @param ScopeEntityInterface[] $scopes
      */
-    public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
-    {
+    public function getNewToken(
+        ClientEntityInterface $clientEntity,
+        array $scopes,
+        ?string $userIdentifier = null,
+    ): AccessTokenEntityInterface {
+
         $entity = $this->entityManager->getRDBRepositoryByClass(AccessToken::class)->getNew();
 
         /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (!$clientEntity instanceof ClientEntity) {
             throw new InvalidArgumentException("Bad client.");
+        }
+
+        if (!$userIdentifier) {
+            throw new InvalidArgumentException('No user ID.');
         }
 
         $entity->setClient(Link::create($clientEntity->entityId));
@@ -75,11 +84,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         return $accessToken;
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
+    public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity): void
     {
         /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (!$accessTokenEntity instanceof AccessTokenEntity) {
@@ -89,11 +94,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         $this->entityManager->saveEntity($accessTokenEntity->getEntity());
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function revokeAccessToken(#[SensitiveParameter] $tokenId)
+    public function revokeAccessToken(#[SensitiveParameter] string $tokenId): void
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);
 
@@ -109,7 +110,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     /**
      * Not existent or inactive token is treated as revoked intentionally.
      */
-    public function isAccessTokenRevoked(#[SensitiveParameter] $tokenId)
+    public function isAccessTokenRevoked(#[SensitiveParameter] string $tokenId): bool
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);
 

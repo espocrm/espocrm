@@ -71,8 +71,12 @@ class Client extends Entity
         return $this->set(self::FIELD_CLIENT_TYPE, $clientType->value);
     }
 
+    /**
+     * @return ?non-empty-string
+     */
     public function getIdentifier(): ?string
     {
+        /** @var ?non-empty-string */
         return $this->get(self::FIELD_IDENTIFIER);
     }
 

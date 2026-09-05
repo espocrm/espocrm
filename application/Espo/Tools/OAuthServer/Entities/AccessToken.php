@@ -98,8 +98,12 @@ class AccessToken extends Entity
         return $this->set(self::FIELD_IDENTIFIER, $identifier);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getIdentifier(): string
     {
+        /** @var non-empty-string */
         return $this->get(self::FIELD_IDENTIFIER) ?? throw new UnexpectedValueException("No identifier.");
     }
 
@@ -120,10 +124,11 @@ class AccessToken extends Entity
     }
 
     /**
-     * @return string[]
+     * @return non-empty-string[]
      */
     public function getScopes(): array
     {
+        /** @var non-empty-string[] */
         return $this->get(self::FIELD_SCOPES) ?? [];
     }
 

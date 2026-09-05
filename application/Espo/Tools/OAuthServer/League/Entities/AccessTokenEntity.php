@@ -35,7 +35,7 @@ use Espo\Core\Field\Link;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\Utils\Hasher;
 use InvalidArgumentException;
-use League\OAuth2\Server\CryptKey;
+use League\OAuth2\Server\CryptKeyInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
@@ -47,28 +47,29 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         private Hasher $hasher,
     ) {}
 
+    public function toString(): string
+    {
+        return $this->entity->getIdentifier();
+    }
+
     /**
      * @inheritDoc
      * @return void
      */
-    public function setPrivateKey(CryptKey $privateKey)
+    public function setPrivateKey(CryptKeyInterface $privateKey): void
     {}
 
     public function __toString()
     {
-        return $this->entity->getIdentifier();
+        return $this->toString();
     }
 
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->entity->getIdentifier();
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         $this->entity->setIdentifier($identifier);
 
@@ -77,54 +78,36 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         $this->entity->setHash($hash);
     }
 
-    public function getExpiryDateTime()
+    public function getExpiryDateTime(): DateTimeImmutable
     {
         return $this->entity->getExpiresAt()->toDateTime();
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function setExpiryDateTime(DateTimeImmutable $dateTime)
+    public function setExpiryDateTime(DateTimeImmutable $dateTime): void
     {
         $this->entity->setExpiresAt(DateTime::fromDateTime($dateTime));
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function setUserIdentifier($identifier)
+    public function setUserIdentifier(string $identifier): void
     {
-        if ($identifier === null) {
-            throw new InvalidArgumentException("User ID must be specified.");
-        }
-
-        if (is_int($identifier)) {
-            throw new InvalidArgumentException("Integer user ID is not supported.");
-        }
-
         $link = Link::create($identifier);
 
         $this->entity->setUser($link);
     }
 
-    public function getUserIdentifier()
+    public function getUserIdentifier(): ?string
     {
+        /** @var non-empty-string */
         return $this->entity->getUser()->getId();
     }
 
-    public function getClient()
+    public function getClient(): ClientEntityInterface
     {
         return ClientEntity::fromEntity($this->entity->getClient());
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function setClient(ClientEntityInterface $client)
+
+    public function setClient(ClientEntityInterface $client): void
     {
         /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (!$client instanceof ClientEntity) {
@@ -134,11 +117,8 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         $this->entity->setClient(Link::create($client->entityId));
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function addScope(ScopeEntityInterface $scope)
+
+    public function addScope(ScopeEntityInterface $scope): void
     {
         $scopes = $this->entity->getScopes();
 
@@ -149,7 +129,10 @@ class AccessTokenEntity implements AccessTokenEntityInterface
         $this->entity->setScopes($scopes);
     }
 
-    public function getScopes()
+    /**
+     * @return ScopeEntityInterface[]
+     */
+    public function getScopes(): array
     {
         $scopes = $this->entity->getScopes();
 

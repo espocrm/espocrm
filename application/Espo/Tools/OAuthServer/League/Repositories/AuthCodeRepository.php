@@ -52,16 +52,12 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         private Hasher $hasher,
     ) {}
 
-    public function getNewAuthCode()
+    public function getNewAuthCode(): AuthCodeEntity
     {
         return new AuthCodeEntity();
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
+    public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity): void
     {
         $entity = $this->entityManager->getRDBRepositoryByClass(AuthorizationCode::class)->getNew();
 
@@ -96,11 +92,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         $this->entityManager->saveEntity($entity);
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function revokeAuthCode(#[SensitiveParameter] $codeId)
+    public function revokeAuthCode(#[SensitiveParameter] string $codeId): void
     {
         $code = $this->repository->getActiveByIdentifier($codeId);
 
@@ -113,7 +105,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         $this->entityManager->saveEntity($code);
     }
 
-    public function isAuthCodeRevoked(#[SensitiveParameter] $codeId)
+    public function isAuthCodeRevoked(#[SensitiveParameter] string $codeId): bool
     {
         $entity = $this->repository->getActiveByIdentifier($codeId);
 

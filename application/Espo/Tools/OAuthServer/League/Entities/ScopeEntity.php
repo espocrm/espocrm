@@ -36,11 +36,17 @@ class ScopeEntity implements ScopeEntityInterface
 {
     use ScopeTrait;
 
+    /**
+     * @param non-empty-string $identifier
+     */
     public function __construct(
         private string $identifier,
     ) {}
 
-    public function getIdentifier()
+    /**
+     * @return non-empty-string
+     */
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }

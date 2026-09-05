@@ -40,7 +40,10 @@ class ScopeRepository implements ScopeRepositoryInterface
         private ScopeValidator $scopeValidator,
     ) {}
 
-    public function getScopeEntityByIdentifier($identifier)
+    /**
+     * @param non-empty-string $identifier
+     */
+    public function getScopeEntityByIdentifier(string $identifier): ?ScopeEntity
     {
         if (!$this->scopeValidator->validate($identifier)) {
             return null;
@@ -51,10 +54,11 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     public function finalizeScopes(
         array $scopes,
-        $grantType,
+        ?string $grantType,
         ClientEntityInterface $clientEntity,
-        $userIdentifier = null,
-    ) {
+        ?string $userIdentifier = null,
+        ?string $authCodeId = null,
+    ): array {
 
         /** @noinspection PhpIfWithCommonPartsInspection */
         if (!$userIdentifier) {

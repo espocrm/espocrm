@@ -18,7 +18,7 @@
         "ext-pdo": "*",
         "ext-ctype": "*",
         "psr/log": "~3",
-        "psr/http-message": "^1.0",
+        "psr/http-message": "^2.0",
         "psr/container": "^1.1",
         "slim/slim": "^4.15",
         "slim/psr7": "^1",
@@ -60,7 +60,7 @@
         "php-amqplib/php-amqplib": "^3.7",
         "predis/predis": "^3.5",
         "psr/cache": "^3.0",
-        "league/oauth2-server": "^8.5"
+        "league/oauth2-server": "^9.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",

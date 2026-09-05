@@ -53,16 +53,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         private Hasher $hasher,
     ) {}
 
-    public function getNewRefreshToken()
+    public function getNewRefreshToken(): RefreshTokenEntity
     {
         return new RefreshTokenEntity();
     }
 
-    /**
-     * @inheritDoc
-     * @return void
-     */
-    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity): void
     {
         $entity = $this->entityManager->getRDBRepositoryByClass(RefreshToken::class)->getNew();
 
@@ -79,6 +75,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
         $accessToken = $refreshTokenEntity->getAccessToken();
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (!$accessToken instanceof AccessTokenEntity) {
             throw new InvalidArgumentException("Not supported access token implementation.");
         }
@@ -97,10 +94,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
     /**
      * @todo Delay?
-     * @inheritDoc
-     * @return void
      */
-    public function revokeRefreshToken(#[SensitiveParameter] $tokenId)
+    public function revokeRefreshToken(#[SensitiveParameter] string $tokenId): void
     {
         $token = $this->repository->getActiveByIdentifier($tokenId);
 
@@ -113,7 +108,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         $this->entityManager->saveEntity($token);
     }
 
-    public function isRefreshTokenRevoked(#[SensitiveParameter] $tokenId)
+    public function isRefreshTokenRevoked(#[SensitiveParameter] string $tokenId): bool
     {
         $entity = $this->repository->getActiveByIdentifier($tokenId);
 

@@ -358,8 +358,8 @@ class AuthorizationServerTest extends BaseTestCase
 
         $result = Json::decode((string) $response->getBody());
 
-        $this->assertEquals('invalid_client', $result->error);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals('invalid_request', $result->error);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testWrongClientId(): void

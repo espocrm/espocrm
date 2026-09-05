@@ -43,7 +43,7 @@ class ClientRepository implements ClientRepositoryInterface
         private SecretValidator $secretValidator,
     ) {}
 
-    public function getClientEntity($clientIdentifier)
+    public function getClientEntity(string $clientIdentifier): ?ClientEntity
     {
         $client = $this->repository->getActiveByIdentifier($clientIdentifier);
 
@@ -54,8 +54,12 @@ class ClientRepository implements ClientRepositoryInterface
         return ClientEntity::fromEntity($client);
     }
 
-    public function validateClient($clientIdentifier, #[SensitiveParameter] $clientSecret, $grantType)
-    {
+    public function validateClient(
+        string $clientIdentifier,
+        #[SensitiveParameter] ?string $clientSecret,
+        ?string $grantType
+    ): bool {
+
         $client = $this->repository->getActiveByIdentifier($clientIdentifier);
 
         if (!$client) {
