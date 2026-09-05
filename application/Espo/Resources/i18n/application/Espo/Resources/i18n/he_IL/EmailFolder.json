@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "skipNotifications": "דלג על התראות"
+    },
+    "labels": {
+        "Create EmailFolder": "צור תיקייה",
+        "Manage Folders": "ניהול תיקייה",
+        "Emails": "הודעות דואר"
+    }
+}

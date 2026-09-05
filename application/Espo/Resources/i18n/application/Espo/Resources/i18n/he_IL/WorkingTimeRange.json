@@ -1,0 +1,31 @@
+{
+    "labels": {
+        "Create WorkingTimeRange": "צור חריגה",
+        "Calendars": "יומנים"
+    },
+    "fields": {
+        "timeRanges": "לוח זמנים",
+        "dateStart": "תאריך התחלה",
+        "dateEnd": "תאריך סיום",
+        "type": "סוג",
+        "calendars": "יומנים",
+        "users": "משתמשים"
+    },
+    "links": {
+        "calendars": "יומנים",
+        "users": "משתמשים"
+    },
+    "options": {
+        "type": {
+            "Non-working": "לא עבודה",
+            "Working": "עבודה"
+        }
+    },
+    "presetFilters": {
+        "actual": "נוכחי"
+    },
+    "tooltips": {
+        "calendars": "יומנים שיש להחיל עליהם את החריגה. החריגה תחול על כל המשתמשים של היומנים שנבחרו.\n\nהשאר את השדה ריק אם ברצונך להחיל את החריגה רק על משתמשים מסוימים.",
+        "users": "משתמשים מסוימים עליהם תחול החריגה."
+    }
+}

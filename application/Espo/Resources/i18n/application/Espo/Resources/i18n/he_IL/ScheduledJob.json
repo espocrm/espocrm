@@ -1,0 +1,41 @@
+{
+    "fields": {
+        "name": "שם",
+        "status": "סטטוס",
+        "job": "משימה",
+        "scheduling": "תזמון"
+    },
+    "links": {
+        "log": "לוג"
+    },
+    "labels": {
+        "As often as possible": "לעיתים תכופות ככל האפשר",
+        "Create ScheduledJob": "צור משימה מתוזמנת"
+    },
+    "options": {
+        "job": {
+            "Cleanup": "ניקוי",
+            "CheckInboundEmails": "בדיקת תיבות דוא\"ל קבוצתיות",
+            "CheckEmailAccounts": "בדיקת תיבות דוא\"ל אישיות",
+            "SendEmailReminders": "שליחת תזכורות בדוא\"ל",
+            "AuthTokenControl": "בקרת אסימוני אימות",
+            "SendEmailNotifications": "שליחת התראות בדוא\"ל",
+            "CheckNewVersion": "בדיקת גרסה חדשה",
+            "ProcessWebhookQueue": "עיבוד תור Webhook",
+            "SendScheduledEmails": "שליחת מיילים מתוזמנים"
+        },
+        "cronSetup": {
+            "linux": "הערה: הוסף שורה זו לקובץ crontab כדי להפעיל משימות מתוזמנות של Espo:",
+            "mac": "הערה: הוסף שורה זו לקובץ crontab כדי להפעיל משימות מתוזמנות של Espo:",
+            "windows": "הערה: צור קובץ batch עם הפקודות הבאות כדי להפעיל משימות מתוזמנות של Espo באמצעות משימות מתוזמנות של Windows:",
+            "default": "הערה: הוסף פקודה זו למשימה מתוזמנת (Cron Job):"
+        },
+        "status": {
+            "Active": "פעיל",
+            "Inactive": "לא פעיל"
+        }
+    },
+    "tooltips": {
+        "scheduling": "כתיב Crontab. מגדיר את תדירות הרצת המשימה.\n\n`*/5 * * * *` - כל 5 דקות\n\n`0 */2 * * *` - כל שעתיים\n\n`30 1 * * *` - בשעה 01:30 פעם ביום\n\n`0 0 1 * *` - ביום הראשון של החודש"
+    }
+}

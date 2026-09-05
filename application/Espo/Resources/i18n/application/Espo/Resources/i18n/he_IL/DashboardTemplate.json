@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "layout": "מערך",
+        "append": "הוסף (אל תסיר את הכרטיסיות של המשתמש)"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create DashboardTemplate": "צור תבנית",
+        "Deploy to Users": "פרוס למשתמשים",
+        "Deploy to Team": "פרוס לצוות"
+    }
+}

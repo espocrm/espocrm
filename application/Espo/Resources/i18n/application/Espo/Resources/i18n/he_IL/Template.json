@@ -1,0 +1,49 @@
+{
+    "fields": {
+        "name": "שם",
+        "body": "גוף",
+        "entityType": "סוג ישות",
+        "header": "כותרת עליונה",
+        "footer": "כותרת תחתונה",
+        "leftMargin": "שוליים שמאליים",
+        "topMargin": "שוליים עליונים",
+        "rightMargin": "שוליים ימניים",
+        "bottomMargin": "שוליים תחתונים",
+        "printFooter": "הדפס כותרת תחתונה",
+        "printHeader": "הדפס כותרת עליונה",
+        "footerPosition": "מיקום כותרת תחתונה",
+        "headerPosition": "מיקום כותרת עליונה",
+        "variables": "משתנים זמינים",
+        "pageOrientation": "כיוון עמוד",
+        "pageFormat": "פורמט נייר",
+        "pageWidth": "רוחב עמוד (מ\"מ)",
+        "pageHeight": "גובה עמוד (מ\"מ)",
+        "fontFace": "גופן",
+        "title": "כותרת",
+        "style": "סגנון"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create Template": "צור תבנית"
+    },
+    "options": {
+        "pageOrientation": {
+            "Portrait": "לאורך",
+            "Landscape": "לרוחב"
+        },
+        "pageFormat": {
+            "Custom": "מותאם אישית"
+        },
+        "placeholders": {
+            "pagebreak": "מעבר עמוד",
+            "today": "היום (תאריך)",
+            "now": "עכשיו (תאריך ושעה)"
+        },
+        "fontFace": {}
+    },
+    "tooltips": {
+        "footer": "השתמש ב-{pageNumber} כדי להדפיס מספר עמוד.",
+        "variables": "העתק והדבק את המשתנה הדרוש לכותרת העליונה, הגוף או הכותרת התחתונה."
+    }
+}
