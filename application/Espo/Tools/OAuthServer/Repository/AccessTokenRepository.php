@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
-use Espo\Core\Utils\Hasher;
+use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
 use SensitiveParameter;
@@ -38,7 +38,7 @@ class AccessTokenRepository
 {
     public function __construct(
         private EntityManager $entityManager,
-        private Hasher $hasher,
+        private IdentifierHasher $hasher,
     ) {}
 
     public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?AccessToken

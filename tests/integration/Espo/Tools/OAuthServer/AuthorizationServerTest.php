@@ -42,9 +42,11 @@ use Espo\Tools\App\SettingsService;
 use Espo\Tools\OAuthServer\ClientType;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\ClientSecret;
+use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use Espo\Tools\OAuthServer\EntryPoints\Authorize;
 use Espo\Tools\OAuthServer\EntryPoints\AuthorizeComplete;
 use Espo\Tools\OAuthServer\EntryPoints\Token;
+use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
 use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
@@ -162,6 +164,21 @@ class AuthorizationServerTest extends BaseTestCase
 
         $this->assertNotEquals($accessToken, $body->access_token);
         $this->assertNotEquals($refreshToken, $body->refresh_token);
+
+        $accessTokenRepo = $this->getInjectableFactory()->create(AccessTokenRepository::class);
+
+        $oldAccessToken = $accessTokenRepo->getByIdentifier($accessToken);
+
+        $this->assertNotNull($oldAccessToken);
+        $this->assertTrue($oldAccessToken->isRevoked());
+
+        $oldRefreshToken = $this->getEntityManager()
+            ->getRDBRepositoryByClass(RefreshToken::class)
+            ->where([RefreshToken::FIELD_ACCESS_TOKEN . 'Id' => $oldAccessToken->getId()])
+            ->findOne();
+
+        $this->assertNotNull($oldRefreshToken);
+        $this->assertTrue($oldRefreshToken->isRevoked());
     }
 
     /**

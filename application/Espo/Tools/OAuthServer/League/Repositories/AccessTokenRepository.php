@@ -35,7 +35,7 @@ use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\League\Entities\AccessTokenEntity;
 use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository as Repository;
-use Espo\Tools\OAuthServer\Utils\Hasher;
+use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -48,7 +48,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function __construct(
         private EntityManager $entityManager,
         private Repository $repository,
-        private Hasher $hasher,
+        private IdentifierHasher $hasher,
     ) {}
 
     /**

@@ -33,7 +33,7 @@ use DateTimeImmutable;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Field\Link;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
-use Espo\Tools\OAuthServer\Utils\Hasher;
+use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\CryptKeyInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
@@ -44,7 +44,7 @@ class AccessTokenEntity implements AccessTokenEntityInterface
 {
     public function __construct(
         private AccessToken $entity,
-        private Hasher $hasher,
+        private IdentifierHasher $hasher,
     ) {}
 
     public function toString(): string

@@ -29,7 +29,8 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
-use Espo\Tools\OAuthServer\Utils\Hasher;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
+use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use SensitiveParameter;
@@ -38,7 +39,7 @@ class RefreshTokenRepository
 {
     public function __construct(
         private EntityManager $entityManager,
-        private Hasher $hasher,
+        private IdentifierHasher $hasher,
     ) {}
 
     public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?RefreshToken

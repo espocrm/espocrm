@@ -36,7 +36,7 @@ use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
 use Espo\Tools\OAuthServer\League\Entities\AuthCodeEntity;
 use Espo\Tools\OAuthServer\Repository\AuthorizationCodeRepository;
 use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepository;
-use Espo\Tools\OAuthServer\Utils\Hasher;
+use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
@@ -49,7 +49,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         private EntityManager $entityManager,
         private AuthorizationCodeRepository $repository,
         private ClientRepository $clientRepository,
-        private Hasher $hasher,
+        private IdentifierHasher $hasher,
     ) {}
 
     public function getNewAuthCode(): AuthCodeEntity

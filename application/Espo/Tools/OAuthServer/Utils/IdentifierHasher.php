@@ -31,7 +31,7 @@ namespace Espo\Tools\OAuthServer\Utils;
 
 use SensitiveParameter;
 
-class Hasher
+class IdentifierHasher
 {
     public function hash(#[SensitiveParameter] string $value): string
     {

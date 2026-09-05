@@ -37,7 +37,7 @@ use Espo\Tools\OAuthServer\League\Entities\AccessTokenEntity;
 use Espo\Tools\OAuthServer\League\Entities\RefreshTokenEntity;
 use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
 use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository as RefreshTokenRepositoryInternal;
-use Espo\Tools\OAuthServer\Utils\Hasher;
+use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
@@ -50,7 +50,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         private EntityManager $entityManager,
         private RefreshTokenRepositoryInternal $repository,
         private ClientRepositoryInternal $clientRepository,
-        private Hasher $hasher,
+        private IdentifierHasher $hasher,
     ) {}
 
     public function getNewRefreshToken(): RefreshTokenEntity
