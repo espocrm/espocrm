@@ -37,6 +37,7 @@ use Espo\Entities\Webhook;
 use Espo\Core\HttpClient;
 use LogicException;
 use Psr\Http\Message\RequestInterface;
+use SensitiveParameter;
 
 /**
  * Sends a portion.
@@ -100,7 +101,7 @@ class Sender
         return $response->getStatusCode();
     }
 
-    private function buildSignature(Webhook $webhook, string $payload, string $secretKey): string
+    private function buildSignature(Webhook $webhook, string $payload, #[SensitiveParameter] string $secretKey): string
     {
         $webhookId = $webhook->getId();
         $hash = hash_hmac('sha256', $payload, $secretKey);
