@@ -37,7 +37,7 @@ class Params
     public function __construct(
         private string $name,
         private ?string $type,
-        private array $params
+        private array $params,
     ) {}
 
     public function get(string $name): mixed
