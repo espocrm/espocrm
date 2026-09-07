@@ -29,6 +29,7 @@
 
 namespace tests\integration\Core;
 
+use Composer\Autoload\ClassLoader;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
@@ -338,6 +339,10 @@ class Tester
         $installer->setSuccess();
 
         Registry::$isCleanAndReady = true;
+
+        if (!Registry::$isNamespaceConfigured) {
+            $this->configureNamespace();
+        }
     }
 
     // PDO can't be instantiated as dbname is set but database does not exist.
@@ -638,5 +643,18 @@ class Tester
         }
 
         return $services;
+    }
+
+    /**
+     * Called after cwd if set to the install-path.
+     */
+    private function configureNamespace(): void
+    {
+        $classLoader = new ClassLoader();
+
+        $classLoader->setPsr4("Espo\\Custom\\", "custom/Espo/Custom");
+        $classLoader->register();
+
+        Registry::$isNamespaceConfigured = true;
     }
 }

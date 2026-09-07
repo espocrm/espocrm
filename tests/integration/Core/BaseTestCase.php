@@ -197,6 +197,9 @@ abstract class BaseTestCase extends TestCase
         return $this->espoTester->normalizePath($path);
     }
 
+    /**
+     * Important. CWD is not set to `build/test before `setUp` is called. Do not clean up anything before.
+     */
     protected function setUp(): void
     {
         $params = [

@@ -27,14 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Core;
+namespace tests\integration\Espo\Tools\EntityTypeManager;
 
-class Registry
+use Espo\Core\Templates\Entities\BasePlus;
+use Espo\Tools\EntityManager\EntityManager;
+use integration\Core\NoTransaction;
+use tests\integration\Core\BaseTestCase;
+
+#[NoTransaction]
+class EntityTypeManagerTest extends BaseTestCase
 {
-    public static $isCleanAndReady = false;
+    private const string PARAM_CATEGORIES = 'categories';
 
     /**
-     * Set before the first test run, and never set back.
+     * @noinspection PhpUnhandledExceptionInspection
      */
-    public static $isNamespaceConfigured = false;
+    public function testCreateUpdateDelete(): void
+    {
+        $name = 'TestEntityType';
+
+        $tool = $this->getInjectableFactory()->create(EntityManager::class);
+
+        $tool->create($name, BasePlus::TEMPLATE_TYPE, [
+            'stream' => true,
+        ]);
+
+        //
+
+        $tool->update('C' . $name, [
+            'stream' => false,
+            self::PARAM_CATEGORIES => true,
+        ]);
+
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $this->assertTrue($em->hasRepository("C$name"));
+        $this->assertTrue($em->hasRepository("C{$name}Category"));
+
+        //
+
+        $tool->delete('C' . $name);
+
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $this->assertFalse($em->hasRepository("C{$name}Category"));
+        $this->assertFalse($em->hasRepository("C$name"));
+    }
 }
