@@ -283,6 +283,10 @@ class Auth
             return $this->decodeAuthorizationString($headerValue);
         }
 
+        if (!$this->authRequired) {
+            return [null, null];
+        }
+
         if (
             $request->getServerParam('PHP_AUTH_USER') &&
             $request->getServerParam('PHP_AUTH_PW')
@@ -301,8 +305,7 @@ class Auth
             return [$username, $password];
         }
 
-        $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
-            $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+        $cgiAuthString = $this->getCgiAuthString($request);
 
         if ($cgiAuthString) {
             [$username, $password] = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
@@ -316,5 +319,12 @@ class Auth
     private function obtainTokenFromCookies(Request $request): ?string
     {
         return $request->getCookieParam('auth-token');
+    }
+
+    private function getCgiAuthString(Request $request): ?string
+    {
+        return
+            $request->getHeader('Http-Espo-Cgi-Auth') ??
+            $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
     }
 }

@@ -129,7 +129,15 @@ class TokenRevoke implements EntryPoint
             return [null, null];
         }
 
-        [$clientId, $clientSecret] = self::decodeAuthorizationString($headerValue);
+        $prefix = 'Basic ';
+
+        if (!str_starts_with($headerValue, $prefix)) {
+            return [null, null];
+        }
+
+        $string = substr($headerValue, strlen($prefix));
+
+        [$clientId, $clientSecret] = self::decodeAuthorizationString($string);
 
         if (!$clientId) {
             $clientId = null;
