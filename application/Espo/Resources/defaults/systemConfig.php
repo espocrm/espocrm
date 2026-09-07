@@ -124,7 +124,8 @@ return [
         'redis',
         'eventTransport',
         'apiExposeExceptions',
-        'oAuthServerCryptKey'
+        'oAuthServerCryptKey',
+        'oAuthServer',
     ],
     'adminItems' => [
         'devMode',

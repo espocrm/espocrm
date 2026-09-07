@@ -756,7 +756,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $settingsService = $this->getInjectableFactory()->create(SettingsService::class);
 
-        $this->assertObjectNotHasProperty( 'oAuthServerCryptKey', $settingsService->getConfigData());
+        $this->assertObjectNotHasProperty('oAuthServerCryptKey', $settingsService->getConfigData());
     }
 
     /**
