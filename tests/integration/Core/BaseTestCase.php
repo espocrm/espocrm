@@ -29,9 +29,11 @@
 
 namespace tests\integration\Core;
 
+use Closure;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Application;
+use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Container;
 use Espo\Core\DataManager;
@@ -424,5 +426,23 @@ abstract class BaseTestCase extends TestCase
         $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
         $configWriter->setMultiple($params);
         $configWriter->save();
+    }
+
+    /**
+     * @param Closure(Binder): void $callback
+     */
+    protected function prepareBinding(Closure $callback): BindingProcessor
+    {
+        return new class ($callback) implements BindingProcessor {
+            /**
+             * @param Closure(Binder): void $callback
+             */
+            public function __construct(private Closure $callback) {}
+
+            public function process(Binder $binder): void
+            {
+                ($this->callback)($binder);
+            }
+        };
     }
 }
