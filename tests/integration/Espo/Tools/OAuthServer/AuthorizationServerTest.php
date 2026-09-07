@@ -29,7 +29,6 @@
 
 namespace tests\integration\Espo\Tools\OAuthServer;
 
-use Closure;
 use DateTimeImmutable;
 use Espo\Core\Api\Auth;
 use Espo\Core\Api\AuthBuilderFactory;
@@ -39,7 +38,6 @@ use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\Oidc\PkceUtil;
 use Espo\Core\Binding\Binder;
-use Espo\Core\Binding\BindingProcessor;
 use Espo\Core\Session\Session;
 use Espo\Core\Utils\DateTime\Clock;
 use Espo\Core\Utils\Json;
@@ -757,26 +755,6 @@ class AuthorizationServerTest extends BaseTestCase
         $settingsService = $this->getInjectableFactory()->create(SettingsService::class);
 
         $this->assertObjectNotHasProperty('oAuthServerCryptKey', $settingsService->getConfigData());
-    }
-
-    /**
-     * @todo Move to the super class.
-     * @param Closure(Binder): void $callback
-     */
-    private function prepareBinding(Closure $callback): BindingProcessor
-    {
-        return new class ($callback) implements BindingProcessor {
-
-            /**
-             * @param Closure(Binder): void $callback
-             */
-            public function __construct(private Closure $callback) {}
-
-            public function process(Binder $binder): void
-            {
-                ($this->callback)($binder);
-            }
-        };
     }
 
     private function createResponseWrapper(): ResponseWrapper

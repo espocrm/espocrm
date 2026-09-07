@@ -59,7 +59,7 @@ class GeneralCleanup implements Cleanup
 
     public function process(): void
     {
-        $this->processAuthorizationCode();
+        $this->processAuthorizationCodes();
         $this->processAccessTokens();
         $this->processRefreshTokens();
     }
@@ -79,7 +79,7 @@ class GeneralCleanup implements Cleanup
         return $this->config->get('oAuthServer.cleanup.refreshTokenPeriod') ?? self::PERIOD_REFRESH_TOKEN;
     }
 
-    private function processAuthorizationCode(): void
+    private function processAuthorizationCodes(): void
     {
         $time = $this->dateTime->getNow()
             ->modify('-' . $this->getAuthorizationCodePeriod());
@@ -88,7 +88,7 @@ class GeneralCleanup implements Cleanup
             ->getRDBRepositoryByClass(AuthorizationCode::class)
             ->sth()
             ->where([
-                AuthorizationCode::FIELD_EXPIRES_AT . '<' => $time->toString(),
+                AuthorizationCode::FIELD_EXPIRES_AT . '<=' => $time->toString(),
             ])
             ->find();
 
@@ -106,14 +106,14 @@ class GeneralCleanup implements Cleanup
             ->getRDBRepositoryByClass(AccessToken::class)
             ->sth()
             ->where([
-                AccessToken::FIELD_EXPIRES_AT . '<' => $time->toString(),
+                AccessToken::FIELD_EXPIRES_AT . '<=' => $time->toString(),
             ])
             ->where(
                 Cond::not(
                     Cond::exists(
                         SelectBuilder::create()
-                            ->from(RefreshToken::ENTITY_TYPE)
-                            ->select(Attribute::ID, 'r')
+                            ->from(RefreshToken::ENTITY_TYPE, 'r')
+                            ->select(Attribute::ID)
                             ->where([
                                 'r.' . RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
                             ])
@@ -145,11 +145,11 @@ class GeneralCleanup implements Cleanup
             ->where([
                 'OR' => [
                     [
-                        RefreshToken::FIELD_EXPIRES_AT . '<' => $time->toString(),
+                        RefreshToken::FIELD_EXPIRES_AT . '<=' => $time->toString(),
                     ],
                     [
                         RefreshToken::FIELD_STATUS => RefreshToken::STATUS_REVOKED,
-                        Field::MODIFIED_AT . '<' => $time->toString(),
+                        Field::MODIFIED_AT . '<=' => $time->toString(),
                     ],
                 ],
             ])
