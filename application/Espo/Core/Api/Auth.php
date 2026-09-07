@@ -283,6 +283,7 @@ class Auth
             return $this->decodeAuthorizationString($headerValue);
         }
 
+        // Bypass as the Authorization header may be used for OAuth.
         if (!$this->authRequired) {
             return [null, null];
         }
