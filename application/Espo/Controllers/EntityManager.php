@@ -307,6 +307,7 @@ class EntityManager
     /**
      * @throws BadRequest
      * @throws Error
+     * @throws Forbidden
      */
     public function postActionUpdateLink(Request $request): bool
     {
@@ -399,6 +400,7 @@ class EntityManager
     /**
      * @throws BadRequest
      * @throws Error
+     * @throws Forbidden
      */
     public function postActionRemoveLink(Request $request): bool
     {
@@ -433,6 +435,7 @@ class EntityManager
     /**
      * @throws BadRequest
      * @throws Error
+     * @throws Forbidden
      */
     public function postActionUpdateLinkParams(Request $request): bool
     {

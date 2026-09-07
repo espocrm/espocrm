@@ -46,7 +46,8 @@
             "fieldManagerParamList": [
                 "tooltipText"
             ],
-            "audited": true
+            "audited": true,
+            "customizationDisabled": true
         },
         "password": {
             "type": "password",
@@ -89,7 +90,8 @@
             "layoutListDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "customizationDisabled": true
         },
         "apiKey": {
             "type": "varchar",
@@ -105,7 +107,8 @@
             "copyToClipboard": true,
             "dynamicLogicVisibleDisabled": true,
             "duplicateIgnore": true,
-            "orderDisabled": true
+            "orderDisabled": true,
+            "customizationDisabled": true
         },
         "secretKey": {
             "type": "varchar",
@@ -122,7 +125,8 @@
             ],
             "copyToClipboard": true,
             "duplicateIgnore": true,
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "customizationDisabled": true
         },
         "salutationName": {
             "type": "enum",
@@ -396,7 +400,14 @@
             "layoutListDisabled": true,
             "tooltip": true,
             "audited": true,
-            "dynamicLogicVisibleDisabled": true
+            "dynamicLogicVisibleDisabled": true,
+            "fieldManagerParamList": [
+                "audited",
+                "tooltipText",
+                "readOnly",
+                "autocompleteOnEmpty",
+                "maxCount"
+            ]
         },
         "portalRoles": {
             "type": "linkMultiple",
@@ -437,7 +448,11 @@
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "readOnly": true,
-            "audited": true
+            "audited": true,
+            "fieldManagerParamList": [
+                "audited",
+                "tooltipText"
+            ]
         },
         "portal": {
             "type": "link",
@@ -521,13 +536,13 @@
             "link": "userData",
             "field": "auth2FA",
             "readOnly": true,
-            "view": "views/fields/foreign-bool"
+            "view": "views/fields/foreign-bool",
+            "customizationDisabled": true
         },
         "userData": {
             "type": "linkOne",
             "utility": true,
-            "duplicateIgnore": true,
-            "customizationDisabled": true
+            "duplicateIgnore": true
         },
         "lastAccess": {
             "type": "datetime",
@@ -539,7 +554,8 @@
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "directAccessDisabled": true,
-            "exportDisabled": true
+            "exportDisabled": true,
+            "customizationDisabled": true
         },
         "emailAddressList": {
             "type": "array",

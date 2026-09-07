@@ -30,6 +30,8 @@ import ModalView from 'views/modal';
 import Model from 'model';
 import EditForModalRecordView from 'views/record/edit-for-modal';
 import BoolFieldView from 'views/fields/bool';
+import Ui from 'ui';
+import Ajax from 'ajax';
 
 export default class LinkManagerEditParamsModalView extends ModalView {
 
@@ -100,6 +102,21 @@ export default class LinkManagerEditParamsModalView extends ModalView {
                 onClick: () => this.close(),
             },
         ];
+
+        this.shortcutKeys = {
+            'Control+Enter': (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.save()
+            },
+            'Control+KeyS': (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                this.save(true)
+            },
+        };
 
         if (!defs.isCustom) {
             this.addDropdownItem({
@@ -220,13 +237,14 @@ export default class LinkManagerEditParamsModalView extends ModalView {
     /**
      * @private
      */
-    async save() {
+    async save(noClose = false) {
         if (this.recordView.validate()) {
             return;
         }
 
         this.disableAllActionItems();
-        Espo.Ui.notifyWait();
+
+        Ui.notifyWait();
 
         const params = {};
 
@@ -253,9 +271,13 @@ export default class LinkManagerEditParamsModalView extends ModalView {
         await Promise.all([this.getMetadata().loadSkipCache()]);
         this.broadcastUpdate();
 
-        this.close();
+        if (!noClose) {
+            this.close();
+        } else {
+            this.enableAllActionItems();
+        }
 
-        Espo.Ui.success(this.translate('Saved'));
+        Ui.success(this.translate('Saved'));
     }
 
     /**
@@ -263,10 +285,10 @@ export default class LinkManagerEditParamsModalView extends ModalView {
      */
     async resetToDefault() {
         this.disableAllActionItems();
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         try {
-            await Espo.Ajax.postRequest('EntityManager/action/resetLinkParamsToDefault', {
+            await Ajax.postRequest('EntityManager/action/resetLinkParamsToDefault', {
                 entityType: this.props.entityType,
                 link: this.props.link,
             });
@@ -281,7 +303,7 @@ export default class LinkManagerEditParamsModalView extends ModalView {
         this.formModel.setMultiple(this.getParamsFromMetadata());
         this.enableAllActionItems();
 
-        Espo.Ui.success(this.translate('Saved'));
+        Ui.success(this.translate('Saved'));
     }
 
     /**

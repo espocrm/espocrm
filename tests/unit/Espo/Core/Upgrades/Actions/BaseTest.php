@@ -126,7 +126,7 @@ class BaseTest extends TestCase
         $this->reflection->setProperty('processId', 'ngkdf54n566n45');
 
         /* create a package directory with manifest.json file */
-        $packagePath = $this->reflection->invokeMethod('getPath');
+        $packagePath = $this->reflection->invokeMethod('getPath', ['packagePath']);
         $manifestName = $this->reflection->getProperty('manifestName');
 
         $filename = $packagePath . '/' .$manifestName;
@@ -143,7 +143,7 @@ class BaseTest extends TestCase
 
         $processId = $this->reflection->getProperty('processId');
         if (isset($processId)) {
-            $packagePath = $this->reflection->invokeMethod('getPath');
+            $packagePath = $this->reflection->invokeMethod('getPath', ['packagePath']);
 
             $this->fileManagerOriginal->removeInDir($packagePath, true);
         }
@@ -281,13 +281,13 @@ class BaseTest extends TestCase
         $this->assertTrue($this->reflection->invokeMethod('isAcceptable') );
     }
 
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $packageId = $this->reflection->invokeMethod('getProcessId');
         $packagePath = Util::fixPath($this->actionManagerParams['packagePath'] . '/' . $packageId);
 
-        $this->assertEquals($packagePath, $this->reflection->invokeMethod('getPath') );
-        $this->assertEquals($packagePath, $this->reflection->invokeMethod('getPath', ['packagePath']) );
+        $this->assertEquals($packagePath, $this->reflection->invokeMethod('getPath', ['packagePath']));
+        $this->assertEquals($packagePath, $this->reflection->invokeMethod('getPath', ['packagePath']));
 
         $postfix = 'z';
         $this->assertEquals($packagePath.$postfix, $this->reflection->invokeMethod('getPath', ['packagePath', true]));

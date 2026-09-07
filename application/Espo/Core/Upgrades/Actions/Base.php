@@ -433,11 +433,12 @@ abstract class Base
      *
      * @throws Error
      */
-    protected function getPath(string $name = 'packagePath', bool $isPackage = false): string
+    protected function getPath(string $name, bool $isPackage = false): string
     {
         $postfix = $isPackage ? $this->packagePostfix : '';
 
-        $processId = $this->getProcessId();
+        $processId = basename($this->getProcessId());
+
         $path = Util::concatPath($this->getParam($name), $processId);
 
         return $path . $postfix;

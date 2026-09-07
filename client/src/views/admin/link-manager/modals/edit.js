@@ -30,6 +30,9 @@ import ModalView from 'views/modal';
 import Model from 'model';
 import Index from 'views/admin/link-manager/index';
 import EnumFieldView from 'views/fields/enum';
+import Ajax from 'ajax';
+import Ui from 'ui';
+import Utils from 'utils';
 
 class LinkManagerEditModalView extends ModalView {
 
@@ -88,6 +91,17 @@ class LinkManagerEditModalView extends ModalView {
         const entity = scope;
 
         const isNew = this.isNew = (false === link);
+
+        if (!this.isNew) {
+            this.addDropdownItem({
+                name: 'saveAndContinueEditing',
+                label: 'Save & Continue Editing',
+                title: 'Ctrl+S',
+                groupIndex: 0,
+                iconClass: 'far fa-floppy-disk',
+                onClick: () => this.save({noClose: true}),
+            });
+        }
 
         this.headerText = this.translate('Create Link', 'labels', 'Admin');
 
@@ -490,11 +504,9 @@ class LinkManagerEditModalView extends ModalView {
                 model: model,
                 mode: 'edit',
                 selector: '.field[data-name="foreignLinkEntityTypeList"]',
-                defs: {
-                    name: 'foreignLinkEntityTypeList',
-                    params: {
-                        options: this.model.get('parentEntityTypeList') || [],
-                    },
+                name: 'foreignLinkEntityTypeList',
+                params: {
+                    options: this.getForeignLinkEntityTypeListOptions(),
                 },
             });
 
@@ -513,17 +525,19 @@ class LinkManagerEditModalView extends ModalView {
                 this.getView('foreignLinkEntityTypeList');
 
             if (view && !this.noParentEntityTypeList) {
-                view.setOptionList(this.model.get('parentEntityTypeList') || []);
+                view.setOptionList(this.getForeignLinkEntityTypeListOptions());
             }
 
             const checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
 
             this.getForeignLinkEntityTypeList(
                 this.model.get('entity'),
-                this.model.get('link'), this.model.get('parentEntityTypeList') || [], true
+                this.model.get('link'),
+                this.model.get('parentEntityTypeList') || [],
+                true
             )
                 .forEach(item => {
-                    if (!~checkedList.indexOf(item)) {
+                    if (!checkedList.includes(item)) {
                         checkedList.push(item);
                     }
                 });
@@ -536,6 +550,42 @@ class LinkManagerEditModalView extends ModalView {
 
         this.controlFilterField();
         this.listenTo(this.model, 'change:entityForeign', () => this.controlFilterField());
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getForeignLinkEntityTypeListOptions() {
+        let values = Utils.clone(this.model.get('parentEntityTypeList') ?? []);
+
+        console.log(values);
+
+        const linkForeign = this.model.attributes.linkForeign;
+
+        if (!linkForeign) {
+            return [];
+        }
+
+        values = values.filter(entityType => {
+            /**
+             * @type {{
+             *     type: string,
+             * } | null}
+             */
+            const defs = this.getMetadata().get(`entityDefs.${entityType}.links.${linkForeign}`);
+
+            if (!defs) {
+                return true;
+            }
+
+            if (defs.type !== 'hasChildren') {
+                return false;
+            }
+
+            return true;
+        });
+
+        return values;
     }
 
     getEntityTypeLayouts(entityType) {
@@ -592,9 +642,10 @@ class LinkManagerEditModalView extends ModalView {
             ['', ...this.getEntityTypeLayouts(foreignEntityType)] :
             [''];
 
-        this.layoutFieldView.translatedOptions = foreignEntityType ?
-            this.getEntityTypeLayoutsTranslations(foreignEntityType) :
-            {};
+        const translations = foreignEntityType ?
+            this.getEntityTypeLayoutsTranslations(foreignEntityType) : {};
+
+        this.layoutFieldView.setTranslatedOptions(translations);
 
         this.layoutFieldView.setOptionList(layouts)
             .then(() => this.layoutFieldView.reRender());
@@ -607,9 +658,10 @@ class LinkManagerEditModalView extends ModalView {
             ['', ...this.getEntityTypeFilters(foreignEntityType)] :
             [''];
 
-        this.selectFilterFieldView.translatedOptions = foreignEntityType ?
-            this.getEntityTypeFiltersTranslations(foreignEntityType) :
-            {};
+        const translations = foreignEntityType ?
+            this.getEntityTypeFiltersTranslations(foreignEntityType) : {};
+
+        this.selectFilterFieldView.setTranslatedOptions(translations);
 
         this.selectFilterFieldView.setOptionList(layouts)
             .then(() => this.selectFilterFieldView.reRender());
@@ -993,7 +1045,7 @@ class LinkManagerEditModalView extends ModalView {
      * @param {{noClose?: boolean}} [options]
      */
     save(options) {
-        options = options || {};
+        options = options ?? {};
 
         const arr = [
             'link',
@@ -1053,7 +1105,7 @@ class LinkManagerEditModalView extends ModalView {
             return;
         }
 
-        this.$el.find('button[data-name="save"]').addClass('disabled').attr('disabled');
+        this.disableActions();
 
         let url = 'EntityManager/action/createLink';
 
@@ -1129,14 +1181,13 @@ class LinkManagerEditModalView extends ModalView {
             delete attributes.selectFilterForeign;
         }
 
-        Espo.Ajax
+        Ajax
             .postRequest(url, attributes)
             .then(() => {
                 if (!this.isNew) {
-                    Espo.Ui.success(this.translate('Saved'));
-                }
-                else {
-                    Espo.Ui.success(this.translate('Created'));
+                    Ui.success(this.translate('Saved'));
+                } else {
+                    Ui.success(this.translate('Created'));
                 }
 
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
@@ -1146,16 +1197,16 @@ class LinkManagerEditModalView extends ModalView {
                     this.getLanguage().loadSkipCache(),
                 ]).then(() => {
                     this.broadcastUpdate();
-                    this.trigger('after:save');
+                    this.trigger('after:save', {
+                        link: this.model.attributes.link,
+                    });
 
                     if (!options.noClose) {
                         this.close();
                     }
 
                     if (options.noClose) {
-                        this.$el.find('button[data-name="save"]')
-                            .removeClass('disabled')
-                            .removeAttr('disabled');
+                        this.enableActions();
                     }
                 });
             })
@@ -1168,15 +1219,39 @@ class LinkManagerEditModalView extends ModalView {
                         console.error(statusReasonHeader);
                     }
 
-                    Espo.Ui.error(msg, {closeButton: true});
+                    Ui.error(msg, {closeButton: true});
 
                     xhr.errorIsHandled = true;
                 }
 
-                this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
+                this.enableActions();
             });
     }
 
+    /**
+     * @private
+     */
+    disableActions() {
+        this.disableButton('save');
+        this.hideActionItem('saveAndContinueEditing');
+    }
+
+    /**
+     * @private
+     */
+    enableActions() {
+        this.enableButton('save');
+        this.showActionItem('saveAndContinueEditing');
+    }
+
+    /**
+     * @private
+     * @param {string} entityType
+     * @param {string} link
+     * @param {string[]} entityTypeList
+     * @param {boolean} onlyNotCustom
+     * @return {string[]}
+     */
     getForeignLinkEntityTypeList(entityType, link, entityTypeList, onlyNotCustom) {
         const list = [];
 
@@ -1192,10 +1267,8 @@ class LinkManagerEditModalView extends ModalView {
                     linkDefs[i].entity === entityType &&
                     linkDefs[i].type === 'hasChildren'
                 ) {
-                    if (onlyNotCustom) {
-                        if (linkDefs[i].isCustom) {
-                            continue;
-                        }
+                    if (onlyNotCustom && linkDefs[i].isCustom) {
+                        continue;
                     }
 
                     isFound = true;

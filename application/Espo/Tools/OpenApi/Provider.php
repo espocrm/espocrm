@@ -44,6 +44,7 @@ use Espo\ORM\Defs;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Type\RelationType;
+use Espo\Tools\EntityManager\EntityManager;
 use Espo\Tools\OpenApi\Provider\Params;
 use ReflectionClass;
 use RuntimeException;
@@ -225,7 +226,7 @@ class Provider
                 continue;
             }
 
-            if ($params->skipCustom && $module === 'Custom') {
+            if ($params->skipCustom && $module === EntityManager::MODULE_CUSTOM) {
                 continue;
             }
 

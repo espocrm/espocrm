@@ -112,7 +112,6 @@ class Uninstall extends Base
      */
     protected function restoreFiles(): bool
     {
-        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $packagePath = $this->getPath('packagePath');
 
         $manifestPath = Util::concatPath($packagePath, $this->manifestName);
