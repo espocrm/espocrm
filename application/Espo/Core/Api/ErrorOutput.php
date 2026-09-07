@@ -169,11 +169,6 @@ class ErrorOutput
         return null;
     }
 
-    private function clearPasswords(string $string): string
-    {
-        return preg_replace('/"(.*password.*)":".*"/i', '"$1":"*****"', $string) ?? $string;
-    }
-
     private static function generateErrorBody(string $header, string $text): string
     {
         $body = "<h1>" . $header . "</h1>";
@@ -192,8 +187,6 @@ class ErrorOutput
 
     private function processRoute(string $route, Request $request, Throwable $exception): void
     {
-        $requestBodyString = $this->clearPasswords($request->getBodyContents() ?? '');
-
         $message = $exception->getMessage();
 
         if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
@@ -213,10 +206,6 @@ class ErrorOutput
         }
 
         $logMessageItemList[] = $request->getMethod() . ' ' . $request->getResourcePath();
-
-        if ($requestBodyString) {
-            $logMessageItemList[] = "Input data: " . $requestBodyString;
-        }
 
         $logMessageItemList[] = "Route pattern: " . $route;
 
