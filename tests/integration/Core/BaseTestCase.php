@@ -277,9 +277,14 @@ abstract class BaseTestCase extends TestCase
      * @param bool $reuse Re-use the previous application for performance.
      * @param bool $noUser Do not set current user. May be needed when testing authentication.
      */
-    protected function reCreateApplication(bool $reuse = false, bool $noUser = false): void
-    {
+    protected function reCreateApplication(
+        bool $reuse = false,
+        bool $noUser = false,
+        ?BindingProcessor $binding = null,
+    ): void {
+
         $this->espoApplication = $this->createApplication(
+            binding: $binding,
             reuse: $reuse,
             noUser: $noUser,
         );
