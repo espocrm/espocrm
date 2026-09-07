@@ -33,6 +33,8 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Utils\DateTime\Clock;
 use Espo\Tools\OAuthServer\Cleanup\GeneralCleanup;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
+use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
+use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use tests\integration\Core\BaseTestCase;
 
 class CleanupTest extends BaseTestCase
@@ -45,9 +47,19 @@ class CleanupTest extends BaseTestCase
 
         $em = $this->getEntityManager();
 
-        $token1 = $em->getRDBRepositoryByClass(AccessToken::class)->getNew();
-        $token1->setExpiresAt($now->addHours(1));
-        $em->saveEntity($token1);
+        $accessToken1 = $em->getRDBRepositoryByClass(AccessToken::class)->getNew();
+        $accessToken1->setExpiresAt($now->addHours(1));
+        $em->saveEntity($accessToken1);
+
+        $accessToken2 = $em->getRDBRepositoryByClass(AccessToken::class)->getNew();
+        $accessToken2->setExpiresAt($now->addHours(1));
+        $em->saveEntity($accessToken2);
+
+        $refreshToken = $em->getRDBRepositoryByClass(RefreshToken::class)->getNew();
+        $refreshToken
+            ->setAccessToken($accessToken2)
+            ->setExpiresAt($now->addMonths(3));
+        $em->saveEntity($refreshToken);
 
         //
 
@@ -55,7 +67,11 @@ class CleanupTest extends BaseTestCase
         $cleanup->process();
 
         $this->assertNotNull(
-            $em->getRDBRepositoryByClass(AccessToken::class)->getById($token1->getId())
+            $em->getRDBRepositoryByClass(AccessToken::class)->getById($accessToken1->getId())
+        );
+
+        $this->assertNotNull(
+            $em->getRDBRepositoryByClass(AccessToken::class)->getById($accessToken2->getId())
         );
 
         //
@@ -69,8 +85,101 @@ class CleanupTest extends BaseTestCase
         $cleanup = $this->getInjectableFactory()->create(GeneralCleanup::class);
         $cleanup->process();
 
+        $this->assertFalse(
+            $em->getRDBRepositoryByClass(AccessToken::class)->getById($accessToken1->getId()) !== null
+        );
+
         $this->assertTrue(
-            $em->getRDBRepositoryByClass(AccessToken::class)->getById($token1->getId()) === null
+            $em->getRDBRepositoryByClass(AccessToken::class)->getById($accessToken2->getId()) !== null
+        );
+
+        //
+
+        $refreshToken->setRevoked();
+        $em->saveEntity($refreshToken);
+
+        //
+
+        $cleanup->process();
+
+        $this->assertFalse(
+            $em->getRDBRepositoryByClass(AccessToken::class)->getById($accessToken2->getId()) !== null
+        );
+    }
+
+    public function testCleanupRefreshTokens(): void
+    {
+        $now = DateTime::fromString('2030-01-01 00:00');
+
+        $this->reCreateApplicationWithNow($now);
+
+        $em = $this->getEntityManager();
+
+        $refreshToken = $em->getRDBRepositoryByClass(RefreshToken::class)->getNew();
+        $refreshToken
+            ->setExpiresAt($now->addMonths(1));
+        $em->saveEntity($refreshToken);
+
+        //
+
+        $cleanup = $this->getInjectableFactory()->create(GeneralCleanup::class);
+        $cleanup->process();
+
+        $this->assertNotNull(
+            $em->getRDBRepositoryByClass(RefreshToken::class)->getById($refreshToken->getId())
+        );
+
+        //
+
+        $now = $now->addMonths(1)->addDays(30);
+
+        $this->reCreateApplicationWithNow($now);
+
+        //
+
+        $cleanup = $this->getInjectableFactory()->create(GeneralCleanup::class);
+        $cleanup->process();
+
+        $this->assertFalse(
+            $em->getRDBRepositoryByClass(RefreshToken::class)->getById($refreshToken->getId()) !== null
+        );
+    }
+
+    public function testCleanupAuthorizationCode(): void
+    {
+        $now = DateTime::fromString('2030-01-01 00:00');
+
+        $this->reCreateApplicationWithNow($now);
+
+        $em = $this->getEntityManager();
+
+        $code = $em->getRDBRepositoryByClass(AuthorizationCode::class)->getNew();
+        $code
+            ->setExpiresAt($now->addHours(1));
+        $em->saveEntity($code);
+
+        //
+
+        $cleanup = $this->getInjectableFactory()->create(GeneralCleanup::class);
+        $cleanup->process();
+
+        $this->assertNotNull(
+            $em->getRDBRepositoryByClass(AuthorizationCode::class)->getById($code->getId())
+        );
+
+        //
+
+        $now = $now->addHours(1)->addDays(15);
+
+        $this->reCreateApplicationWithNow($now);
+
+        //
+
+        $cleanup = $this->getInjectableFactory()->create(GeneralCleanup::class);
+        $cleanup->process();
+
+        $this->assertFalse(
+            $em->getRDBRepositoryByClass(AuthorizationCode::class)->getById($code->getId()) !== null
         );
     }
 
@@ -81,13 +190,11 @@ class CleanupTest extends BaseTestCase
             ->method('now')
             ->willReturn($now->toDateTime());
 
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function ($binder) use ($clock) {
-                    $binder->bindInstance(Clock::class, $clock);
-                }),
-                reuse: true,
-            )
+        $this->reCreateApplication(
+            reuse: true,
+            binding: $this->prepareBinding(function ($binder) use ($clock) {
+                $binder->bindInstance(Clock::class, $clock);
+            }),
         );
     }
 }

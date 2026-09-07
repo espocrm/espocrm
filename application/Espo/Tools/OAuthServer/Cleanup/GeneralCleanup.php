@@ -120,7 +120,7 @@ class GeneralCleanup implements Cleanup
                             ->where(
                                 Cond::equal(
                                     Expr::column(lcfirst(AccessToken::ENTITY_TYPE) . '.' . Attribute::ID),
-                                    Expr::column('r.' . Attribute::ID),
+                                    Expr::column('r.' . RefreshToken::FIELD_ACCESS_TOKEN . 'Id'),
                                 )
                             )
                             ->build()
