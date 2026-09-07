@@ -477,7 +477,9 @@ class App {
         this.initUserData(null, async () => {
             await this.onAuth(false);
 
-            options?.onAuth();
+            if (options.onAuth) {
+                options.onAuth();
+            }
         });
     }
 
