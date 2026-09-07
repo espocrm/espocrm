@@ -246,6 +246,7 @@ class AuthorizationServerTest extends BaseTestCase
         $body = Json::decode((string) $response->getBody());
         $this->assertObjectHasProperty('error', $body);
         $this->assertEquals('access_denied', $body->error);
+        $this->assertEquals(401, $response->getStatusCode());
 
         //
 
@@ -277,6 +278,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $body = Json::decode((string) $response->getBody());
         $this->assertEquals('access_denied', $body->error);
+        $this->assertEquals(401, $response->getStatusCode());
 
         //
 
@@ -324,6 +326,7 @@ class AuthorizationServerTest extends BaseTestCase
         $body = Json::decode((string) $response->getBody());
         $this->assertEquals('access_denied', $body->error);
         $this->assertStringContainsString('expired', $body->error_description);
+        $this->assertEquals(401, $response->getStatusCode());
 
         //
 

@@ -56,10 +56,10 @@ class TokenRevoke implements EntryPoint
 
         [$clientId, $clientSecret] = $this->obtainAuthorizationFromHeader($request);
 
-        $clientId ??= $request->getParsedBody()->client_id ?? null;
+        $clientId ??= $request->getParsedBody()->client_id ?? throw new BadRequest("No client ID.");
         $clientSecret ??= $request->getParsedBody()->client_secret ?? null;
 
-        if ($clientId !== null && !is_string($clientId)) {
+        if (!is_string($clientId)) {
             throw new BadRequest("Bad 'client_id' value");
         }
 

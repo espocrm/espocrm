@@ -34,6 +34,7 @@ use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\ClientValidator;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
+use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
@@ -69,19 +70,23 @@ class TokenRevokeService
         }
 
         if (!$tokenTypeHint || $tokenTypeHint === self::TYPE_ACCESS_TOKEN) {
-            $this->revokeAccessToken($token);
+            $this->revokeAccessToken($token, $client);
         }
 
         if (!$tokenTypeHint || $tokenTypeHint === self::TYPE_REFRESH_TOKEN) {
-            $this->revokeRefreshToken($token);
+            $this->revokeRefreshToken($token, $client);
         }
     }
 
-    private function revokeAccessToken(#[SensitiveParameter] string $token): void
+    private function revokeAccessToken(#[SensitiveParameter] string $token, Client $client): void
     {
         $accessToken = $this->accessTokenRepository->getActiveByIdentifier($token);
 
-        if (!$accessToken || !$this->tokenBelongsToUser($accessToken)) {
+        if (
+            !$accessToken ||
+            !$this->tokenBelongsToUser($accessToken) ||
+            $accessToken->getClient()->getId() !== $client->getId()
+        ) {
             return;
         }
 
@@ -90,11 +95,15 @@ class TokenRevokeService
         $this->entityManager->saveEntity($accessToken);
     }
 
-    private function revokeRefreshToken(#[SensitiveParameter] string $token): void
+    private function revokeRefreshToken(#[SensitiveParameter] string $token, Client $client): void
     {
         $refreshToken = $this->refreshTokenRepository->getActiveByIdentifier($token);
 
-        if (!$refreshToken || !$this->tokenBelongsToUser($refreshToken)) {
+        if (
+            !$refreshToken ||
+            !$this->tokenBelongsToUser($refreshToken) ||
+            $refreshToken->getClient()->getId() !== $client->getId()
+        ) {
             return;
         }
 
