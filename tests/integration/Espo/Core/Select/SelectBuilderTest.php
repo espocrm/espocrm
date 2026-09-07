@@ -32,6 +32,7 @@ namespace tests\integration\Espo\Core\Select;
 use Espo\Core\Application;
 use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
@@ -934,6 +935,73 @@ class SelectBuilderTest extends BaseTestCase
 
         $this->assertCount(1, $accounts);
         $this->assertEquals($account1->getId(), $accounts[0]->getId());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testPhoneNumberSearch(): void
+    {
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', Account::ENTITY_TYPE, [
+            'collection' => [
+                'textFilterFields' => [
+                    Field::PHONE_NUMBER,
+                ],
+            ],
+        ]);
+        $metadata->save();
+
+        $factory = $this->getInjectableFactory()->create(SelectBuilderFactory::class);
+
+
+        $em = $this->getEntityManager();
+
+        $em->createEntity(Account::ENTITY_TYPE, [
+            Field::PHONE_NUMBER => '+15453535543'
+        ]);
+
+        //
+
+        $query = $factory->create()
+            ->from(Account::ENTITY_TYPE)
+            ->withTextFilter('545-353-5543')
+            ->build();
+
+        $this->assertEquals(
+            1,
+            $em->getRDBRepositoryByClass(Account::class)
+                ->clone($query)
+                ->count()
+        );
+
+        //
+
+        $query = $factory->create()
+            ->from(Account::ENTITY_TYPE)
+            ->withTextFilter('+1545-353-5543')
+            ->build();
+
+        $this->assertEquals(
+            1,
+            $em->getRDBRepositoryByClass(Account::class)
+                ->clone($query)
+                ->count()
+        );
+
+        //
+
+        $query = $factory->create()
+            ->from(Account::ENTITY_TYPE)
+            ->withTextFilter('+545-353-5543')
+            ->build();
+
+        $this->assertEquals(
+            0,
+            $em->getRDBRepositoryByClass(Account::class)
+                ->clone($query)
+                ->count()
+        );
     }
 
     protected function createUserEmailAddress(Container $container) : string

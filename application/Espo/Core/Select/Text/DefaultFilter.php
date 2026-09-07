@@ -46,7 +46,7 @@ class DefaultFilter implements Filter
     public function __construct(
         private string $entityType,
         private MetadataProvider $metadataProvider,
-        private ConfigProvider $config
+        private ConfigProvider $config,
     ) {}
 
     public function apply(SelectBuilder $queryBuilder, Data $data): void
@@ -118,6 +118,8 @@ class DefaultFilter implements Filter
                 return;
             }
 
+            $hasPlus = str_starts_with($filter, '+');
+
             if ($this->config->usePhoneNumberNumericSearch()) {
                 $attribute = $attribute . 'Numeric';
 
@@ -125,6 +127,30 @@ class DefaultFilter implements Filter
             }
 
             if (!$filter) {
+                return;
+            }
+
+            if (
+                $this->config->usePhoneNumberNumericSearch() &&
+                $this->config->isPhoneNumberInternational() &&
+                !$skipWildcards
+            ) {
+                $preferredCodes = $this->config->getPreferredPhoneNumberCountryCodes();
+
+                $expression = $filter . '%';
+
+                $orGroupBuilder->add(
+                    Cmp::like(Expr::column($attribute), $expression)
+                );
+
+                if (!$hasPlus) {
+                    foreach ($preferredCodes as $code) {
+                        $orGroupBuilder->add(
+                            Cmp::like(Expr::column($attribute), $code . $expression)
+                        );
+                    }
+                }
+
                 return;
             }
         }
