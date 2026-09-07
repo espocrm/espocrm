@@ -48,7 +48,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 
 use GdImage;
-use RuntimeException;
 use Throwable;
 
 class Image implements EntryPoint
@@ -152,10 +151,13 @@ class Image implements EntryPoint
 
         $fileName = str_replace("\"", "\\\"", $fileName ?? '');
 
+        $csp = "default-src 'none'; script-src 'none'; object-src 'none'; form-action 'none'; " .
+            "style-src 'unsafe-inline'; sandbox;";
+
         $response
             ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
             ->setHeader('Content-Length', (string) $fileSize)
-            ->setHeader('Content-Security-Policy', "default-src 'self'; script-src 'none'; object-src 'none';");
+            ->setHeader('Content-Security-Policy', $csp);
 
         if (!$noCacheHeaders) {
             $response->setHeader('Cache-Control', 'private, max-age=864000, immutable');
