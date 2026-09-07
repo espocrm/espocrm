@@ -19,5 +19,11 @@
         "noAuth": true,
         "notExposed": true,
         "allowedMethods": ["post"]
+    },
+    "oAuthTokenRevoke": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\TokenRevoke",
+        "noAuth": true,
+        "notExposed": true,
+        "allowedMethods": ["post"]
     }
 }

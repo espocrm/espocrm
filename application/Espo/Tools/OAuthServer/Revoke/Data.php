@@ -27,44 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League\Repositories;
+namespace Espo\Tools\OAuthServer\Revoke;
 
-use Espo\Tools\OAuthServer\ClientValidator;
-use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
-use Espo\Tools\OAuthServer\Repository\ClientRepository as Repository;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use SensitiveParameter;
 
-class ClientRepository implements ClientRepositoryInterface
+readonly class Data
 {
     public function __construct(
-        private Repository $repository,
-        private ClientValidator $clientValidator,
+        public string $clientId,
+        #[SensitiveParameter]
+        public ?string $clientSecret,
+        public string $token,
+        public ?string $tokenTypeHint,
     ) {}
-
-    public function getClientEntity(string $clientIdentifier): ?ClientEntity
-    {
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
-
-        if (!$client) {
-            return null;
-        }
-
-        return ClientEntity::fromEntity($client);
-    }
-
-    public function validateClient(
-        string $clientIdentifier,
-        #[SensitiveParameter] ?string $clientSecret,
-        ?string $grantType,
-    ): bool {
-
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
-
-        if (!$client) {
-            return false;
-        }
-
-        return $this->clientValidator->validate($client, $clientSecret);
-    }
 }

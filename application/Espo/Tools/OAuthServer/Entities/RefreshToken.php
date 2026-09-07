@@ -132,4 +132,10 @@ class RefreshToken extends Entity
     {
         return $this->setRelatedLinkOrEntity(self::FIELD_USER, $user);
     }
+
+    public function getAccessToken(): ?AccessToken
+    {
+        /** @var ?AccessToken */
+        return $this->relations->getOne(self::FIELD_ACCESS_TOKEN);
+    }
 }

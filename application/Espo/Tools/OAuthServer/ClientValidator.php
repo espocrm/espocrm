@@ -27,44 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League\Repositories;
+namespace Espo\Tools\OAuthServer;
 
-use Espo\Tools\OAuthServer\ClientValidator;
-use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
-use Espo\Tools\OAuthServer\Repository\ClientRepository as Repository;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use Espo\Tools\OAuthServer\Entities\Client;
 use SensitiveParameter;
 
-class ClientRepository implements ClientRepositoryInterface
+class ClientValidator
 {
     public function __construct(
-        private Repository $repository,
-        private ClientValidator $clientValidator,
+        private SecretValidator $secretValidator,
     ) {}
 
-    public function getClientEntity(string $clientIdentifier): ?ClientEntity
+    public function validate(Client $client, #[SensitiveParameter] ?string $secret): bool
     {
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
-
-        if (!$client) {
-            return null;
+        if (!$secret) {
+            return $client->getClientType() === ClientType::Public;
         }
 
-        return ClientEntity::fromEntity($client);
-    }
-
-    public function validateClient(
-        string $clientIdentifier,
-        #[SensitiveParameter] ?string $clientSecret,
-        ?string $grantType,
-    ): bool {
-
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
-
-        if (!$client) {
-            return false;
-        }
-
-        return $this->clientValidator->validate($client, $clientSecret);
+        return $this->secretValidator->validate($client, $secret);
     }
 }

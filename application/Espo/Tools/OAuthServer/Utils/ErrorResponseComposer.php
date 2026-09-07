@@ -27,44 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League\Repositories;
+namespace Espo\Tools\OAuthServer\Utils;
 
-use Espo\Tools\OAuthServer\ClientValidator;
-use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
-use Espo\Tools\OAuthServer\Repository\ClientRepository as Repository;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use SensitiveParameter;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
 
-class ClientRepository implements ClientRepositoryInterface
+class ErrorResponseComposer
 {
-    public function __construct(
-        private Repository $repository,
-        private ClientValidator $clientValidator,
-    ) {}
+    /**
+     * @param ?int<400, 499> $statusCode
+     */
+    public static function composeErrorResponse(
+        string $error,
+        string $errorDescription,
+        ?int $statusCode = null,
+    ): Response {
 
-    public function getClientEntity(string $clientIdentifier): ?ClientEntity
-    {
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
+        $header = "Bearer error=\"$error\", error_description=\"$errorDescription\"";
 
-        if (!$client) {
-            return null;
+        $response = ResponseComposer::json([
+            'error' => $error,
+            'error_description' => $errorDescription,
+        ]);
+
+        if ($statusCode) {
+            $response->setStatus($statusCode);
         }
 
-        return ClientEntity::fromEntity($client);
-    }
+        $response->setHeader('WWW-Authenticate', $header);
 
-    public function validateClient(
-        string $clientIdentifier,
-        #[SensitiveParameter] ?string $clientSecret,
-        ?string $grantType,
-    ): bool {
-
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
-
-        if (!$client) {
-            return false;
-        }
-
-        return $this->clientValidator->validate($client, $clientSecret);
+        return $response;
     }
 }

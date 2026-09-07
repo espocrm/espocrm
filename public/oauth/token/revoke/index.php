@@ -27,44 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League\Repositories;
+include "../../../../bootstrap.php";
 
-use Espo\Tools\OAuthServer\ClientValidator;
-use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
-use Espo\Tools\OAuthServer\Repository\ClientRepository as Repository;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use SensitiveParameter;
+use Espo\Core\Application;
+use Espo\Core\Application\Runner\Params;
+use Espo\Core\ApplicationRunners\EntryPoint;
 
-class ClientRepository implements ClientRepositoryInterface
-{
-    public function __construct(
-        private Repository $repository,
-        private ClientValidator $clientValidator,
-    ) {}
+$app = new Application();
 
-    public function getClientEntity(string $clientIdentifier): ?ClientEntity
-    {
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
+$app->setClientBasePath('../../../');
 
-        if (!$client) {
-            return null;
-        }
-
-        return ClientEntity::fromEntity($client);
-    }
-
-    public function validateClient(
-        string $clientIdentifier,
-        #[SensitiveParameter] ?string $clientSecret,
-        ?string $grantType,
-    ): bool {
-
-        $client = $this->repository->getActiveByIdentifier($clientIdentifier);
-
-        if (!$client) {
-            return false;
-        }
-
-        return $this->clientValidator->validate($client, $clientSecret);
-    }
-}
+$app->run(
+    EntryPoint::class,
+    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oAuthTokenRevoke')
+);

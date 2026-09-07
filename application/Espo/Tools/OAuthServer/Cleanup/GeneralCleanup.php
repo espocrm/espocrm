@@ -49,7 +49,7 @@ class GeneralCleanup implements Cleanup
 {
     private const string PERIOD_AUTHORIZATION_CODE = '15 days';
     private const string PERIOD_ACCESS_TOKEN = '15 days';
-    private const string PERIOD_REFRESH_TOKEN = '30 days';
+    private const string PERIOD_REFRESH_TOKEN = '15 days';
 
     public function __construct(
         private Config $config,
@@ -60,8 +60,8 @@ class GeneralCleanup implements Cleanup
     public function process(): void
     {
         $this->processAuthorizationCodes();
-        $this->processAccessTokens();
         $this->processRefreshTokens();
+        $this->processAccessTokens();
     }
 
     private function getAuthorizationCodePeriod(): string
@@ -148,7 +148,10 @@ class GeneralCleanup implements Cleanup
                         RefreshToken::FIELD_EXPIRES_AT . '<=' => $time->toString(),
                     ],
                     [
-                        RefreshToken::FIELD_STATUS => RefreshToken::STATUS_REVOKED,
+                        RefreshToken::FIELD_STATUS => [
+                            RefreshToken::STATUS_REVOKED,
+                            RefreshToken::STATUS_EXPIRED,
+                        ],
                         Field::MODIFIED_AT . '<=' => $time->toString(),
                     ],
                 ],

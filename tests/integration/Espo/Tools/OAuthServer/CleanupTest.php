@@ -131,7 +131,7 @@ class CleanupTest extends BaseTestCase
 
         //
 
-        $now = $now->addMonths(1)->addDays(30);
+        $now = $now->addMonths(1)->addDays(15);
 
         $this->reCreateApplicationWithNow($now);
 

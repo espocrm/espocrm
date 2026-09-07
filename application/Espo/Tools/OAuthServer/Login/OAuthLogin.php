@@ -30,8 +30,6 @@
 namespace Espo\Tools\OAuthServer\Login;
 
 use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Authentication\Login;
 use Espo\Core\Authentication\Login\Data;
 use Espo\Core\Authentication\Repository\UserRepository;
@@ -39,6 +37,7 @@ use Espo\Core\Authentication\Result;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Utils\DateTime\Clock;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
+use Espo\Tools\OAuthServer\Utils\ErrorResponseComposer;
 
 /**
  * @noinspection PhpUnused
@@ -69,7 +68,7 @@ class OAuthLogin implements Login
         $accessToken = $this->repository->getActiveByIdentifier($opaqueToken);
 
         if (!$accessToken) {
-            $response = self::composeErrorResponse(
+            $response = ErrorResponseComposer::composeErrorResponse(
                 error: 'access_denied',
                 errorDescription: 'Invalid access token.',
             );
@@ -80,7 +79,7 @@ class OAuthLogin implements Login
         $now = DateTime::fromDateTime($this->clock->now());
 
         if ($accessToken->getExpiresAt()->isLessThanOrEqualTo($now)) {
-            $response = self::composeErrorResponse(
+            $response = ErrorResponseComposer::composeErrorResponse(
                 error: 'access_denied',
                 errorDescription: 'The access token expired.',
             );
@@ -89,7 +88,7 @@ class OAuthLogin implements Login
         }
 
         if (!$accessToken->getClient()->isActive()) {
-            $response = self::composeErrorResponse(
+            $response = ErrorResponseComposer::composeErrorResponse(
                 error: 'access_denied',
                 errorDescription: 'The client is not active.',
             );
@@ -102,7 +101,7 @@ class OAuthLogin implements Login
         $user = $this->userRepository->findOneById($userLink->getId());
 
         if (!$user) {
-            $response = self::composeErrorResponse(
+            $response = ErrorResponseComposer::composeErrorResponse(
                 error: 'access_denied',
                 errorDescription: 'User not found.',
             );
@@ -113,25 +112,5 @@ class OAuthLogin implements Login
         $user->setScopes($accessToken->getScopes());
 
         return Result::success($user);
-    }
-
-    /**
-     * @noinspection PhpSameParameterValueInspection
-     */
-    private static function composeErrorResponse(
-        string $error,
-        string $errorDescription,
-    ): Response {
-
-        $header = "Bearer error=\"$error\", error_description=\"$errorDescription\"";
-
-        $response = ResponseComposer::json([
-            'error' => $error,
-            'error_description' => $errorDescription,
-        ]);
-
-        $response->setHeader('WWW-Authenticate', $header);
-
-        return $response;
     }
 }
