@@ -65,7 +65,7 @@ class AuthorizationServerTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    public function testAuthorizeSuccess(): void
+    public function testAuthorizeConfidentialSuccess(): void
     {
         $em = $this->getEntityManager();
 
@@ -73,7 +73,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $redirectUri = self::REDIRECT_URI;
 
-        $client = $this->createConfidentialClient();
+        $client = $this->createClient();
         $secret = $this->createSecret($client);
 
         //
@@ -192,7 +192,6 @@ class AuthorizationServerTest extends BaseTestCase
         $this->assertTrue($oldRefreshToken->isRevoked());
 
         $accessToken = $body->access_token;
-        //$refreshToken = $body->refresh_token;
 
         //
 
@@ -373,7 +372,7 @@ class AuthorizationServerTest extends BaseTestCase
     {
         $redirectUri = self::REDIRECT_URI;
 
-        $client = $this->createConfidentialClient();
+        $client = $this->createClient();
         $this->createSecret($client);
 
         //
@@ -435,11 +434,138 @@ class AuthorizationServerTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
+    public function testAuthorizePublicSuccess(): void
+    {
+        $em = $this->getEntityManager();
+
+        //
+
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createClient(ClientType::Public);
+
+        //
+
+        $user = $this->createUser(
+            [
+                User::FIELD_USER_NAME => self::USER_USERNAME,
+            ],
+        );
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $code = $this->processObtainCode(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+        );
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'authorization_code',
+                'client_id' => $client->getIdentifier(),
+                'redirect_uri' => $redirectUri,
+                'code' => $code,
+                'code_verifier' => $codeChallenge,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $body = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('Bearer', $body->token_type);
+        $this->assertObjectHasProperty('access_token', $body);
+        $this->assertObjectHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('expires_in', $body);
+
+        $refreshToken = $body->refresh_token;
+        $accessToken = $body->access_token;
+
+        //
+
+        // Refresh token grant.
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken,
+                'client_id' => $client->getIdentifier(),
+                'redirect_uri' => $redirectUri,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $body = Json::decode((string) $response->getBody());
+
+        $this->assertObjectHasProperty('access_token', $body);
+        $this->assertObjectHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('expires_in', $body);
+
+        $this->assertNotEquals($accessToken, $body->access_token);
+        $this->assertNotEquals($refreshToken, $body->refresh_token);
+
+        $accessTokenRepo = $this->getInjectableFactory()->create(AccessTokenRepository::class);
+
+        $oldAccessToken = $accessTokenRepo->getByIdentifier($accessToken);
+
+        $this->assertNotNull($oldAccessToken);
+        $this->assertTrue($oldAccessToken->isRevoked());
+
+        $oldRefreshToken = $em->getRDBRepositoryByClass(RefreshToken::class)
+            ->where([RefreshToken::FIELD_ACCESS_TOKEN . 'Id' => $oldAccessToken->getId()])
+            ->findOne();
+
+        $this->assertNotNull($oldRefreshToken);
+        $this->assertTrue($oldRefreshToken->isRevoked());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testAuthorizeWrongCodeChallenge(): void
     {
         $redirectUri = self::REDIRECT_URI;
 
-        $client = $this->createConfidentialClient();
+        $client = $this->createClient();
         $secret = $this->createSecret($client);
 
         //
@@ -505,7 +631,7 @@ class AuthorizationServerTest extends BaseTestCase
     {
         $redirectUri = self::REDIRECT_URI;
 
-        $client = $this->createConfidentialClient();
+        $client = $this->createClient();
         $secret = $this->createSecret($client);
 
         //
@@ -566,7 +692,7 @@ class AuthorizationServerTest extends BaseTestCase
 
     public function testWrongClientId(): void
     {
-        $this->createConfidentialClient();
+        $this->createClient();
 
         $clientId = 'wrong';
         $redirectUri = self::REDIRECT_URI;
@@ -584,7 +710,7 @@ class AuthorizationServerTest extends BaseTestCase
 
     public function testWrongRedirectUri(): void
     {
-        $client = $this->createConfidentialClient();
+        $client = $this->createClient();
 
         $clientId = $client->getIdentifier();
         $redirectUri = 'wrong';
@@ -602,7 +728,7 @@ class AuthorizationServerTest extends BaseTestCase
 
     public function testWrongScope(): void
     {
-        $client = $this->createConfidentialClient();
+        $client = $this->createClient();
 
         $clientId = $client->getIdentifier();
         $redirectUri = self::REDIRECT_URI;
@@ -658,15 +784,14 @@ class AuthorizationServerTest extends BaseTestCase
         return new ResponseWrapper(new Response());
     }
 
-
-    private function createConfidentialClient(): Client
+    private function createClient(ClientType $type = ClientType::Confidential): Client
     {
         $em = $this->getEntityManager();
 
         $client = $em->getRDBRepositoryByClass(Client::class)->getNew();
         $client
             ->setScopes([ScopesProvider::SCOPE_GLOBAL])
-            ->setClientType(ClientType::Confidential)
+            ->setClientType($type)
             ->setRedirectUris([self::REDIRECT_URI]);
         $em->saveEntity($client);
 
@@ -845,7 +970,6 @@ class AuthorizationServerTest extends BaseTestCase
 
         return $queryParams['code'];
     }
-
 
     private function prepareAuth(): Auth
     {
