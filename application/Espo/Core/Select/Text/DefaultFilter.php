@@ -135,8 +135,6 @@ class DefaultFilter implements Filter
                 $this->config->isPhoneNumberInternational() &&
                 !$skipWildcards
             ) {
-                $preferredCodes = $this->config->getPreferredPhoneNumberCountryCodes();
-
                 $expression = $filter . '%';
 
                 $orGroupBuilder->add(
@@ -144,6 +142,8 @@ class DefaultFilter implements Filter
                 );
 
                 if (!$hasPlus) {
+                    $preferredCodes = $this->config->getPreferredPhoneNumberCountryCodes();
+
                     foreach ($preferredCodes as $code) {
                         $orGroupBuilder->add(
                             Cmp::like(Expr::column($attribute), $code . $expression)
