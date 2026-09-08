@@ -30,15 +30,14 @@
 namespace Espo\Tools\OAuthServer\Revoke;
 
 use Espo\Core\Exceptions\Unauthorized;
-use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\ClientValidator;
-use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\Entities\Client;
-use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
 use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository;
+use Espo\Tools\OAuthServer\Utils\RefreshTokenDataExtractor;
+use Exception;
 use SensitiveParameter;
 
 class TokenRevokeService
@@ -47,12 +46,12 @@ class TokenRevokeService
     public const string TYPE_REFRESH_TOKEN = 'refresh_token';
 
     public function __construct(
-        private User $user,
         private AccessTokenRepository $accessTokenRepository,
         private RefreshTokenRepository $refreshTokenRepository,
         private ClientRepository $clientRepository,
         private ClientValidator $clientValidator,
         private EntityManager $entityManager,
+        private RefreshTokenDataExtractor $refreshTokenDataExtractor,
     ) {}
 
     /**
@@ -65,7 +64,7 @@ class TokenRevokeService
 
         $client = $this->clientRepository->getActiveByIdentifier($data->clientId);
 
-        if (!$client || $this->clientValidator->validate($client, $data->clientSecret)) {
+        if (!$client || !$this->clientValidator->validate($client, $data->clientSecret)) {
             throw new Unauthorized();
         }
 
@@ -84,7 +83,6 @@ class TokenRevokeService
 
         if (
             !$accessToken ||
-            !$this->tokenBelongsToUser($accessToken) ||
             $accessToken->getClient()->getId() !== $client->getId()
         ) {
             return;
@@ -97,11 +95,16 @@ class TokenRevokeService
 
     private function revokeRefreshToken(#[SensitiveParameter] string $token, Client $client): void
     {
-        $refreshToken = $this->refreshTokenRepository->getActiveByIdentifier($token);
+        try {
+            $identifier = $this->refreshTokenDataExtractor->extractIdentifier($token);
+        } catch (Exception) {
+            return;
+        }
+
+        $refreshToken = $this->refreshTokenRepository->getActiveByIdentifier($identifier);
 
         if (
             !$refreshToken ||
-            !$this->tokenBelongsToUser($refreshToken) ||
             $refreshToken->getClient()->getId() !== $client->getId()
         ) {
             return;
@@ -118,10 +121,5 @@ class TokenRevokeService
 
             $this->entityManager->saveEntity($accessToken);
         }
-    }
-
-    private function tokenBelongsToUser(AccessToken|RefreshToken $entry): bool
-    {
-        return $entry->getUser()->getId() === $this->user->getId();
     }
 }

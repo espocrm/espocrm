@@ -27,39 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\League;
+namespace Espo\Tools\OAuthServer\Utils;
 
-use Espo\Core\Utils\Config;
-use Random\RandomException;
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use RuntimeException;
+use SensitiveParameter;
 
-class CryptKeyProvider
+class Crypt
 {
-    private const string PARAM_CRYPT_KEY = 'oAuthServerCryptKey';
-
     public function __construct(
-        private Config $config,
-        private Config\ConfigWriter $configWriter,
+        private CryptKeyProvider $keyProvider,
     ) {}
 
-    public function getCryptKey(): string
+    public function decrypt(#[SensitiveParameter] string $value): string
     {
-        if (!$this->config->has(self::PARAM_CRYPT_KEY)) {
-            $this->configWriter->set(self::PARAM_CRYPT_KEY, $this->generateKey());
-            $this->configWriter->save();
-        }
+        $key = $this->keyProvider->getCryptKey();
 
-        return $this->config->get(self::PARAM_CRYPT_KEY) ?? throw new RuntimeException("No crypt key.");
-    }
-
-    private function generateKey(): string
-    {
         try {
-            $key = bin2hex(random_bytes(32));
-        } catch (RandomException $e) {
-            throw new RuntimeException(previous: $e);
+            return Crypto::decryptWithPassword($value, $key);
+        } catch (EnvironmentIsBrokenException|WrongKeyOrModifiedCiphertextException $e) {
+            throw new RuntimeException(previous: $e->getMessage());
         }
-
-        return $key;
     }
 }

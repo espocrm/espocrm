@@ -16,19 +16,19 @@
             "dropdown": [
                 {
                     "name": "authorizationCodes",
-                    "labelTranslation": "Global.scopeNamesPlural.OAuthAuthorizationCode",
+                    "labelTranslation": "OAuthClient.strings.authorizationCodes",
                     "aclScope": "OAuthAuthorizationCode",
                     "link": "#OAuthAuthorizationCode"
                 },
                 {
                     "name": "accessToken",
-                    "labelTranslation": "Global.scopeNamesPlural.OAuthAccessToken",
+                    "labelTranslation": "OAuthClient.strings.accessTokens",
                     "aclScope": "OAuthAccessToken",
                     "link": "#OAuthAccessToken"
                 },
                 {
                     "name": "refreshTokens",
-                    "labelTranslation": "Global.scopeNamesPlural.OAuthRefreshToken",
+                    "labelTranslation": "OAuthClient.strings.refreshTokens",
                     "aclScope": "OAuthRefreshToken",
                     "link": "#OAuthRefreshToken"
                 }

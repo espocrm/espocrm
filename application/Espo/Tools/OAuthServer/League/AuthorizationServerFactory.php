@@ -37,6 +37,7 @@ use Espo\Tools\OAuthServer\League\Repositories\AuthCodeRepository;
 use Espo\Tools\OAuthServer\League\Repositories\ClientRepository;
 use Espo\Tools\OAuthServer\League\Repositories\RefreshTokenRepository;
 use Espo\Tools\OAuthServer\League\Repositories\ScopeRepository;
+use Espo\Tools\OAuthServer\Utils\CryptKeyProvider;
 use Exception;
 
 use League\OAuth2\Server\AuthorizationServer;
@@ -77,8 +78,6 @@ class AuthorizationServerFactory
     }
 
     /**
-     * @param AuthorizationServer $server
-     * @return void
      * @throws Error
      */
     private function enableAuthorizationCodeGrant(AuthorizationServer $server): void

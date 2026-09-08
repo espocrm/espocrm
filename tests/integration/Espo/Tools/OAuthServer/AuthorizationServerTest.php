@@ -44,14 +44,18 @@ use Espo\Core\Utils\Json;
 use Espo\Entities\User;
 use Espo\Tools\App\SettingsService;
 use Espo\Tools\OAuthServer\ClientType;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\ClientSecret;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
 use Espo\Tools\OAuthServer\EntryPoints\Authorize;
 use Espo\Tools\OAuthServer\EntryPoints\AuthorizeComplete;
 use Espo\Tools\OAuthServer\EntryPoints\Token;
+use Espo\Tools\OAuthServer\EntryPoints\TokenRevoke;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
+use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository;
 use Espo\Tools\OAuthServer\ScopesProvider;
+use RuntimeException;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
 
@@ -190,6 +194,7 @@ class AuthorizationServerTest extends BaseTestCase
         $this->assertTrue($oldRefreshToken->isRevoked());
 
         $accessToken = $body->access_token;
+        $refreshToken = $body->refresh_token;
 
         //
 
@@ -364,6 +369,138 @@ class AuthorizationServerTest extends BaseTestCase
 
         $body = Json::decode((string) $response->getBody());
         $this->assertEquals('invalid_client', $body->error);
+
+        //
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $client->setActive();
+        $em->saveEntity($client);
+
+        // Revoke.
+
+        $tokenRevokeEntryPoint = $this->getInjectableFactory()->create(TokenRevoke::class);
+
+        // Revoke access token with Authorization header.
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Authorization' => 'Basic ' . base64_encode($client->getIdentifier() . ':' . $secret->getValue()),
+            ],
+            body: http_build_query([
+                'token' => $accessToken,
+                'token_type_hint' => 'access_token',
+            ]),
+            resourcePath: '/oauth/token/revoke',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $em->getTransactionManager()->start();
+
+        $tokenRevokeEntryPoint->run($request, $response);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($accessTokenRepo->getByIdentifier($accessToken)->isRevoked());
+
+        $em->getTransactionManager()->rollback();
+
+        //
+
+        $this->assertFalse($accessTokenRepo->getByIdentifier($accessToken)->isRevoked());
+
+        // Revoke access token with POST parameters.
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'token' => $accessToken,
+                'token_type_hint' => 'access_token',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+            ]),
+            resourcePath: '/oauth/token/revoke',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $em->getTransactionManager()->start();
+
+        $tokenRevokeEntryPoint->run($request, $response);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($accessTokenRepo->getByIdentifier($accessToken)->isRevoked());
+
+        $em->getTransactionManager()->rollback();
+
+        //
+
+        $this->assertFalse($accessTokenRepo->getByIdentifier($accessToken)->isRevoked());
+
+        //
+
+
+        // Revoke refresh token.
+
+        $this->assertEquals(
+            1,
+            $em->getRDBRepositoryByClass(RefreshToken::class)
+                ->where([RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE])
+                ->count()
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'token' => $refreshToken,
+                'token_type_hint' => 'refresh_token',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+            ]),
+            resourcePath: '/oauth/token/revoke',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $em->getTransactionManager()->start();
+
+        $tokenRevokeEntryPoint->run($request, $response);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($accessTokenRepo->getByIdentifier($accessToken)?->isRevoked());
+        $this->assertEquals(
+            0,
+            $em->getRDBRepositoryByClass(RefreshToken::class)
+                ->where([RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE])
+                ->count()
+        );
+
+        $em->getTransactionManager()->rollback();
+
+        //
+
+        $this->assertFalse($accessTokenRepo->getByIdentifier($accessToken)->isRevoked());
+        $this->assertEquals(
+            1,
+            $em->getRDBRepositoryByClass(RefreshToken::class)
+                ->where([RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE])
+                ->count()
+        );
+
+        //
     }
 
     /**

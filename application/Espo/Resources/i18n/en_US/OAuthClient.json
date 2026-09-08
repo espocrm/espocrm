@@ -23,7 +23,10 @@
         }
     },
     "strings": {
-        "allow": "Allow Access"
+        "allow": "Allow Access",
+        "authorizationCodes": "Authorization Codes",
+        "accessTokens": "Access Tokens",
+        "refreshTokens": "Refresh Tokens"
     },
     "messages": {
         "allowAccessInfo": "**{clientName}** would like to access **{applicationName}** as *{username}*. By granting access, you will allow {clientName} to access the following scopes."
