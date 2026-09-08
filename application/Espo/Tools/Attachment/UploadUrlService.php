@@ -67,7 +67,7 @@ class UploadUrlService
      */
     public function uploadImage(string $url, FieldData $data): Attachment
     {
-        if (!$this->urlCheck->isUrlAndNotIternal($url)) {
+        if (!$this->urlCheck->isUrlAndNotInternal($url)) {
             throw new ForbiddenSilent("Not allowed URL.");
         }
 

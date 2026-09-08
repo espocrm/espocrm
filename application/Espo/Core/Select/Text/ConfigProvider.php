@@ -30,6 +30,7 @@
 namespace Espo\Core\Select\Text;
 
 use Espo\Core\Utils\Config;
+use libphonenumber\PhoneNumberUtil;
 
 class ConfigProvider
 {
@@ -63,5 +64,27 @@ class ConfigProvider
     public function usePhoneNumberNumericSearch(): bool
     {
         return $this->config->get('phoneNumberNumericSearch') ?? false;
+    }
+
+    public function isPhoneNumberInternational(): bool
+    {
+        return $this->config->get('phoneNumberInternational') ?? false;
+    }
+
+    /**
+     * @return int[]
+     * @since 10.0.8
+     */
+    public function getPreferredPhoneNumberCountryCodes(): array
+    {
+        $regionCodes = $this->config->get('phoneNumberPreferredCountryList') ?? [];
+
+        $codes = array_map(function ($code) {
+            return PhoneNumberUtil::getInstance()->getCountryCodeForRegion($code);
+        }, $regionCodes);
+
+        $codes = array_filter($codes, fn ($it) => $it !== 0);
+
+        return array_values($codes);
     }
 }

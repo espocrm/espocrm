@@ -93,7 +93,7 @@ class Client
     {
         if (
             !Util::matchUrlToAddressList($url, $allowed) &&
-            !$this->urlCheck->isUrlAndNotIternal($url)
+            !$this->urlCheck->isUrlAndNotInternal($url)
         ) {
             throw new NotAllowedInternalHost("Not allowed internal host in '$url'.");
         }

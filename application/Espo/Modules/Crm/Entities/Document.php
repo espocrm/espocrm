@@ -44,6 +44,16 @@ class Document extends Entity
     public const STATUS_ACTIVE = 'Active';
     public const STATUS_DRAFT = 'Draft';
 
+    /**
+     * @since 10.0.8
+     */
+    public const string FIELD_FILE = 'file';
+
+    /**
+     * @since 10.0.8
+     */
+    public const string FIELD_PUBLISH_DATE = 'publishDate';
+
     public function getName(): ?string
     {
         return $this->get(Field::NAME);

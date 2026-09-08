@@ -48,7 +48,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 
 use GdImage;
-use RuntimeException;
 use Throwable;
 
 class Image implements EntryPoint
@@ -57,6 +56,15 @@ class Image implements EntryPoint
     protected $allowedRelatedTypeList = null;
     /** @var ?string[] */
     protected $allowedFieldList = null;
+
+    private const string TYPE_SVG = 'image/svg+xml';
+
+    /**
+     * @var string[]
+     */
+    private array $noInlineTypeList = [
+        self::TYPE_SVG,
+    ];
 
     public function __construct(
         private FileStorageManager $fileStorageManager,
@@ -76,7 +84,7 @@ class Image implements EntryPoint
             throw new BadRequest("No id.");
         }
 
-        $this->show($response, $id, $size);
+        $this->show($request, $response, $id, $size);
     }
 
     /**
@@ -86,6 +94,7 @@ class Image implements EntryPoint
      * @throws ForbiddenSilent
      */
     protected function show(
+        Request $request,
         Response $response,
         string $id,
         ?string $size,
@@ -150,12 +159,18 @@ class Image implements EntryPoint
             $response->setHeader('Content-Type', $fileType);
         }
 
-        $fileName = str_replace("\"", "\\\"", $fileName ?? '');
+        $fileName = self::sanitizeFileName($fileName);
+
+        $csp =
+            "default-src 'none'; script-src 'none'; object-src 'none'; form-action 'none'; " .
+            "style-src 'unsafe-inline'; sandbox;";
+
+        $disposition = $this->chooseDisposition($fileType, $request);
 
         $response
-            ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
+            ->setHeader('Content-Disposition', "$disposition;filename=\"$fileName\"")
             ->setHeader('Content-Length', (string) $fileSize)
-            ->setHeader('Content-Security-Policy', "default-src 'self'; script-src 'none'; object-src 'none';");
+            ->setHeader('Content-Security-Policy', $csp);
 
         if (!$noCacheHeaders) {
             $response->setHeader('Cache-Control', 'private, max-age=864000, immutable');
@@ -460,5 +475,27 @@ class Image implements EntryPoint
             0, 0, 0, 0,
             $targetWidth, $targetHeight, $originalWidth, $originalHeight
         );
+    }
+
+    private function chooseDisposition(?string $fileType, Request $request): string
+    {
+        $disposition = 'inline';
+
+        if (
+            in_array($fileType, $this->noInlineTypeList) &&
+            in_array($request->getHeader('Sec-Fetch-Dest'), [
+                'document',
+                'iframe',
+            ])
+        ) {
+            $disposition = 'attachment';
+        }
+
+        return $disposition;
+    }
+
+    private static function sanitizeFileName(?string $fileName): string
+    {
+        return str_replace("\"", "\\\"", $fileName ?? '');
     }
 }
