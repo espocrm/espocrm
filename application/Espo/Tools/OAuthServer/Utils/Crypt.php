@@ -48,7 +48,7 @@ class Crypt
         try {
             return Crypto::decryptWithPassword($value, $key);
         } catch (EnvironmentIsBrokenException|WrongKeyOrModifiedCiphertextException $e) {
-            throw new RuntimeException(previous: $e->getMessage());
+            throw new RuntimeException(previous: $e);
         }
     }
 }
