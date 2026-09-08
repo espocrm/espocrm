@@ -31,15 +31,18 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\Date;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Document;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
@@ -520,5 +523,131 @@ class LinkTest extends BaseTestCase
                 ->getRelation($task, 'case')
                 ->isRelatedById($case->getId())
         );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testAttachmentsOne(): void
+    {
+        $em = $this->getEntityManager();
+
+        $attachment1 = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $em->saveEntity($attachment1);
+
+        $attachment2 = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $em->saveEntity($attachment2);
+
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Document::class);
+
+        $document1 = $service->create((object) [
+            Field::NAME => 'Good',
+            Document::FIELD_FILE . 'Id' => $attachment1->getId(),
+            Document::FIELD_PUBLISH_DATE => Date::createToday()->toString(),
+        ])->getEntity();
+
+        //
+
+        $throw = false;
+
+        try {
+            $service->create((object) [
+                Field::NAME => 'Bad',
+                Document::FIELD_FILE . 'Id' => $attachment1->getId(),
+                Document::FIELD_PUBLISH_DATE => Date::createToday()->toString(),
+            ]);
+        } catch (Forbidden) {
+            $throw = true;
+        }
+
+        $this->assertTrue($throw, 'Should not allow to link already linked attachments.');
+
+        //
+
+        $service->create((object) [
+            Field::NAME => 'Good 2',
+            Document::FIELD_FILE . 'Id' => $attachment2->getId(),
+            Document::FIELD_PUBLISH_DATE => Date::createToday()->toString(),
+        ]);
+
+        //
+
+        $throw = false;
+
+        try {
+            $service->update($document1->getId(), (object) [
+                Document::FIELD_FILE . 'Id' => $attachment2->getId(),
+            ]);
+        } catch (Forbidden) {
+            $throw = true;
+        }
+
+        $this->assertTrue($throw, 'Should not allow to link already linked attachments.');
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testAttachmentsMany(): void
+    {
+        $em = $this->getEntityManager();
+
+        $attachment1 = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $em->saveEntity($attachment1);
+
+        $attachment2 = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $em->saveEntity($attachment2);
+
+        $attachment3 = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $em->saveEntity($attachment3);
+
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(CaseObj::class);
+
+        $case1 = $service->create((object) [
+            Field::NAME => 'Good',
+            CaseObj::FIELD_ATTACHMENTS . 'Ids' => [$attachment1->getId()],
+        ])->getEntity();
+
+        //
+
+        $throw = false;
+
+        try {
+            $service->create((object) [
+                Field::NAME => 'Bad',
+                CaseObj::FIELD_ATTACHMENTS . 'Ids' => [$attachment1->getId()],
+            ]);
+        } catch (Forbidden) {
+            $throw = true;
+        }
+
+        $this->assertTrue($throw, 'Should not allow to link already linked attachments.');
+
+        //
+
+        $case2 = $service->create((object) [
+            Field::NAME => 'Good 2',
+            CaseObj::FIELD_ATTACHMENTS . 'Ids' => [$attachment3->getId()],
+        ])->getEntity();
+
+        //
+
+        $service->update($case1->getId(), (object) [
+            CaseObj::FIELD_ATTACHMENTS . 'Ids' => [$attachment1->getId(), $attachment2->getId()],
+        ]);
+
+        //
+
+        $throw = false;
+
+        try {
+            $service->update($case2->getId(), (object) [
+                CaseObj::FIELD_ATTACHMENTS . 'Ids' => [$attachment2->getId()],
+            ]);
+        } catch (Forbidden) {
+            $throw = true;
+        }
+
+        $this->assertTrue($throw, 'Should not allow to link already linked attachments.');
     }
 }
