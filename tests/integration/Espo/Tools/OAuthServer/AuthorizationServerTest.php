@@ -38,6 +38,7 @@ use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\Oidc\PkceUtil;
 use Espo\Core\Binding\Binder;
+use Espo\Core\Field\Date;
 use Espo\Core\Session\Session;
 use Espo\Core\Utils\DateTime\Clock;
 use Espo\Core\Utils\Json;
@@ -56,9 +57,6 @@ use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
 
-/**
- * @todo Test expired secret.
- */
 class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';
@@ -93,16 +91,21 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
-        $this->reCreateApplication(reuse: true, noUser: true);
-
-        //
-
         [$accessToken, $refreshToken] = $this->tokenWithAuthorizationCode(
             client: $client,
             secret: $secret,
             redirectUri: $redirectUri,
             code: $code,
             codeChallenge: $codeChallenge,
+        );
+
+        //
+
+        $this->expiredSecret(
+            client: $client,
+            secret: $secret,
+            redirectUri: $redirectUri,
+            refreshToken: $refreshToken,
         );
 
         //
@@ -130,7 +133,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $this->reCreateApplication(reuse: true, noUser: true);
 
-        // Revoke.
+        //
 
         $this->revokeAccessTokenWithAuthorizationHeader(
             client: $client,
@@ -588,7 +591,11 @@ class AuthorizationServerTest extends BaseTestCase
         $em = $this->getEntityManager();
 
         $secret = $em->getRDBRepositoryByClass(ClientSecret::class)->getNew();
-        $secret->setClient($client);
+
+        $secret
+            ->setClient($client)
+            ->setExpirationDate(Date::createToday()->addYears(1));
+
         $em->saveEntity($secret);
 
         return $secret;
@@ -1102,16 +1109,14 @@ class AuthorizationServerTest extends BaseTestCase
         $clock = $this->createMock(Clock::class);
         $clock->expects(self::any())
             ->method('now')
-            ->willReturn((new DateTimeImmutable())->modify('+ 1 day'));
+            ->willReturn((new DateTimeImmutable())->modify('+1 day'));
 
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function ($binder) use ($clock) {
-                    $binder->bindInstance(Clock::class, $clock);
-                }),
-                reuse: true,
-                noUser: true,
-            )
+        $this->reCreateApplication(
+            reuse: true,
+            noUser: true,
+            binding: $this->prepareBinding(function ($binder) use ($clock) {
+                $binder->bindInstance(Clock::class, $clock);
+            }),
         );
 
         $request = $this->createRequest(
@@ -1146,12 +1151,7 @@ class AuthorizationServerTest extends BaseTestCase
         $client->setInactive();
         $em->saveEntity($client);
 
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
+        $this->reCreateApplication(reuse: true, noUser: true);
 
         $request = $this->createRequest(
             method::GET,
@@ -1184,12 +1184,7 @@ class AuthorizationServerTest extends BaseTestCase
      */
     private function resourceAccessTokenWrong(): void
     {
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
+        $this->reCreateApplication(reuse: true, noUser: true);
 
         $request = $this->createRequest(
             method::GET,
@@ -1220,12 +1215,7 @@ class AuthorizationServerTest extends BaseTestCase
      */
     private function resourceSuccess($accessToken, User $user): void
     {
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
+        $this->reCreateApplication(reuse: true, noUser: true);
 
         $request = $this->createRequest(
             method::GET,
@@ -1256,14 +1246,9 @@ class AuthorizationServerTest extends BaseTestCase
         string $accessToken,
     ): array {
 
-        $em = $this->getEntityManager();
+        $this->reCreateApplication(reuse: true, noUser: true);
 
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
+        $em = $this->getEntityManager();
 
         $request = $this->createRequest(
             method: Method::POST,
@@ -1327,6 +1312,8 @@ class AuthorizationServerTest extends BaseTestCase
         string $codeChallenge,
     ): array {
 
+        $this->reCreateApplication(reuse: true, noUser: true);
+
         $request = $this->createRequest(
             method: Method::POST,
             headers: [
@@ -1360,5 +1347,60 @@ class AuthorizationServerTest extends BaseTestCase
         $accessToken = $body->access_token;
 
         return [$accessToken, $refreshToken];
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function expiredSecret(
+        Client $client,
+        ClientSecret $secret,
+        string $redirectUri,
+        string $refreshToken,
+    ): void {
+
+        $clock = $this->createMock(Clock::class);
+        $clock->expects(self::any())
+            ->method('now')
+            ->willReturn((new DateTimeImmutable())->modify('+1 year'));
+
+        $this->reCreateApplication(
+            reuse: true,
+            noUser: true,
+            binding: $this->prepareBinding(function ($binder) use ($clock) {
+                $binder->bindInstance(Clock::class, $clock);
+            }),
+        );
+
+        $em = $this->getEntityManager();
+
+        $em->getTransactionManager()->start();
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken,
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => $redirectUri,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $body = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('invalid_client', $body->error);
+
+        $em->getTransactionManager()->rollback();
     }
 }
