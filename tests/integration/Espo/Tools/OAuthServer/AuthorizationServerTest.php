@@ -56,6 +56,9 @@ use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
 
+/**
+ * @todo Test expired secret.
+ */
 class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';
@@ -66,16 +69,10 @@ class AuthorizationServerTest extends BaseTestCase
      */
     public function testAuthorizeConfidentialSuccess(): void
     {
-        $em = $this->getEntityManager();
-
-        //
-
         $redirectUri = self::REDIRECT_URI;
 
         $client = $this->createClient();
         $secret = $this->createSecret($client);
-
-        //
 
         $user = $this->createUser(
             [
@@ -96,288 +93,42 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
-
-        $request = $this->createRequest(
-            method: Method::POST,
-            headers: [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-            body: http_build_query([
-                'grant_type' => 'authorization_code',
-                'client_id' => $client->getIdentifier(),
-                'client_secret' => $secret->getValue(),
-                'redirect_uri' => $redirectUri,
-                'code' => $code,
-                'code_verifier' => $codeChallenge,
-            ]),
-            resourcePath: '/oauth/token',
-        );
-
-        $response = $this->createResponseWrapper();
-
-        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
-
-        $tokenEntryPoint->run($request, $response);
-
-        $body = Json::decode((string) $response->getBody());
-
-        $this->assertEquals('Bearer', $body->token_type);
-        $this->assertObjectHasProperty('access_token', $body);
-        $this->assertObjectHasProperty('refresh_token', $body);
-        $this->assertObjectHasProperty('expires_in', $body);
-
-        $refreshToken = $body->refresh_token;
-        $accessToken = $body->access_token;
+        $this->reCreateApplication(reuse: true, noUser: true);
 
         //
 
-        // Refresh token grant.
-
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
+        [$accessToken, $refreshToken] = $this->tokenWithAuthorizationCode(
+            client: $client,
+            secret: $secret,
+            redirectUri: $redirectUri,
+            code: $code,
+            codeChallenge: $codeChallenge,
         );
-
-        $request = $this->createRequest(
-            method: Method::POST,
-            headers: [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-            body: http_build_query([
-                'grant_type' => 'refresh_token',
-                'refresh_token' => $refreshToken,
-                'client_id' => $client->getIdentifier(),
-                'client_secret' => $secret->getValue(),
-                'redirect_uri' => $redirectUri,
-            ]),
-            resourcePath: '/oauth/token',
-        );
-
-        $response = $this->createResponseWrapper();
-
-        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
-
-        $tokenEntryPoint->run($request, $response);
-
-        $body = Json::decode((string) $response->getBody());
-
-        $this->assertObjectHasProperty('access_token', $body);
-        $this->assertObjectHasProperty('refresh_token', $body);
-        $this->assertObjectHasProperty('expires_in', $body);
-
-        $this->assertNotEquals($accessToken, $body->access_token);
-        $this->assertNotEquals($refreshToken, $body->refresh_token);
-
-        $accessTokenRepo = $this->getInjectableFactory()->create(AccessTokenRepository::class);
-
-        $oldAccessToken = $accessTokenRepo->getByIdentifier($accessToken);
-
-        $this->assertNotNull($oldAccessToken);
-        $this->assertTrue($oldAccessToken->isRevoked());
-
-        $oldRefreshToken = $em->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([RefreshToken::FIELD_ACCESS_TOKEN . 'Id' => $oldAccessToken->getId()])
-            ->findOne();
-
-        $this->assertNotNull($oldRefreshToken);
-        $this->assertTrue($oldRefreshToken->isRevoked());
-
-        $accessToken = $body->access_token;
-        $refreshToken = $body->refresh_token;
 
         //
 
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
+        [$accessToken, $refreshToken] = $this->refreshTokenGrant(
+            refreshToken: $refreshToken,
+            client: $client,
+            secret: $secret,
+            redirectUri: $redirectUri,
+            accessToken: $accessToken,
         );
-
-        $request = $this->createRequest(
-            method::GET,
-            headers: [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-        );
-
-        $auth = $this->prepareAuth();
-
-        $response = $this->createResponse();
-
-        $result = $auth->process($request, $response);
-
-        $this->assertTrue($result->isResolved());
-        $this->assertEquals($user->getId(), $this->getContainer()->getByClass(ApplicationState::class)->getUserId());
 
         //
 
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
-
-        $request = $this->createRequest(
-            method::GET,
-            headers: [
-                'Authorization' => 'Bearer wrong',
-            ],
-        );
-
-        $auth = $this->prepareAuth();
-
-        $response = $this->createResponse();
-
-        $result = $auth->process($request, $response);
-
-        $this->assertFalse($result->isResolved());
-        $this->assertFalse($this->getContainer()->getByClass(ApplicationState::class)->hasUser());
-
-        $this->assertNotNull($response->getHeader('WWW-Authenticate'));
-
-        $body = Json::decode((string) $response->getBody());
-        $this->assertObjectHasProperty('error', $body);
-        $this->assertEquals('access_denied', $body->error);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->resourceSuccess($accessToken, $user);
+        $this->resourceAccessTokenWrong();
+        $this->resourceAccessTokenInactive($client, $accessToken);
+        $this->resourceAccessTokenExpired($accessToken);
 
         //
 
-        $client->setInactive();
-        $em->saveEntity($client);
-
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
-
-        $request = $this->createRequest(
-            method::GET,
-            headers: [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-        );
-
-        $auth = $this->prepareAuth();
-
-        $response = $this->createResponse();
-
-        $result = $auth->process($request, $response);
-
-        $this->assertFalse($result->isResolved());
-        $this->assertFalse($this->getContainer()->getByClass(ApplicationState::class)->hasUser());
-
-        $body = Json::decode((string) $response->getBody());
-        $this->assertEquals('access_denied', $body->error);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->refreshTokenGrantWrongSecret($client, $redirectUri);
 
         //
 
-        $client->setActive();
-        $em->saveEntity($client);
-
-        //
-
-        $client->setInactive();
-        $em->saveEntity($client);
-
-        //
-
-        $clock = $this->createMock(Clock::class);
-        $clock->expects(self::any())
-            ->method('now')
-            ->willReturn((new DateTimeImmutable())->modify('+ 1 day'));
-
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function ($binder) use ($clock) {
-                    $binder->bindInstance(Clock::class, $clock);
-                }),
-                reuse: true,
-                noUser: true,
-            )
-        );
-
-        $request = $this->createRequest(
-            method::GET,
-            headers: [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-        );
-
-        $auth = $this->prepareAuth();
-
-        $response = $this->createResponse();
-
-        $result = $auth->process($request, $response);
-
-        $this->assertFalse($result->isResolved());
-        $this->assertFalse($this->getContainer()->getByClass(ApplicationState::class)->hasUser());
-
-        $body = Json::decode((string) $response->getBody());
-        $this->assertEquals('access_denied', $body->error);
-        $this->assertStringContainsString('expired', $body->error_description);
-        $this->assertEquals(401, $response->getStatusCode());
-
-        //
-
-        // Refresh token grant wrong secret.
-
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
-
-        $request = $this->createRequest(
-            method: Method::POST,
-            headers: [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-            body: http_build_query([
-                'grant_type' => 'refresh_token',
-                'refresh_token' => 'wrong',
-                'client_id' => $client->getIdentifier(),
-                'client_secret' => 'wrong',
-                'redirect_uri' => $redirectUri,
-            ]),
-            resourcePath: '/oauth/token',
-        );
-
-        $response = $this->createResponseWrapper();
-
-        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
-
-        $tokenEntryPoint->run($request, $response);
-
-        $this->assertEquals(401, $response->getStatusCode());
-
-        $body = Json::decode((string) $response->getBody());
-        $this->assertEquals('invalid_client', $body->error);
-
-        //
-
-        $this->setApplication(
-            $this->createApplication(
-                reuse: true,
-                noUser: true,
-            )
-        );
-
-        $client->setActive();
-        $em->saveEntity($client);
+        $this->reCreateApplication(reuse: true, noUser: true);
 
         // Revoke.
 
@@ -1302,5 +1053,312 @@ class AuthorizationServerTest extends BaseTestCase
         $this->assertFalse($accessTokenRepo->getByIdentifier($accessToken)->isRevoked());
 
         $em->getTransactionManager()->rollback();
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function refreshTokenGrantWrongSecret(Client $client, string $redirectUri): void
+    {
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'refresh_token',
+                'refresh_token' => 'wrong',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => 'wrong',
+                'redirect_uri' => $redirectUri,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $this->assertEquals(401, $response->getStatusCode());
+
+        $body = Json::decode((string) $response->getBody());
+        $this->assertEquals('invalid_client', $body->error);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function resourceAccessTokenExpired($accessToken): void
+    {
+        $clock = $this->createMock(Clock::class);
+        $clock->expects(self::any())
+            ->method('now')
+            ->willReturn((new DateTimeImmutable())->modify('+ 1 day'));
+
+        $this->setApplication(
+            $this->createApplication(
+                binding: $this->prepareBinding(function ($binder) use ($clock) {
+                    $binder->bindInstance(Clock::class, $clock);
+                }),
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method::GET,
+            headers: [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        );
+
+        $auth = $this->prepareAuth();
+
+        $response = $this->createResponse();
+
+        $result = $auth->process($request, $response);
+
+        $this->assertFalse($result->isResolved());
+        $this->assertFalse($this->getContainer()->getByClass(ApplicationState::class)->hasUser());
+
+        $body = Json::decode((string) $response->getBody());
+        $this->assertEquals('access_denied', $body->error);
+        $this->assertStringContainsString('expired', $body->error_description);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function resourceAccessTokenInactive(Client $client, string $accessToken): void
+    {
+        $em = $this->getEntityManager();
+
+        $client->setInactive();
+        $em->saveEntity($client);
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method::GET,
+            headers: [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        );
+
+        $auth = $this->prepareAuth();
+
+        $response = $this->createResponse();
+
+        $result = $auth->process($request, $response);
+
+        $this->assertFalse($result->isResolved());
+        $this->assertFalse($this->getContainer()->getByClass(ApplicationState::class)->hasUser());
+
+        $body = Json::decode((string) $response->getBody());
+        $this->assertEquals('access_denied', $body->error);
+        $this->assertEquals(401, $response->getStatusCode());
+
+        //
+
+        $client->setActive();
+        $em->saveEntity($client);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function resourceAccessTokenWrong(): void
+    {
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method::GET,
+            headers: [
+                'Authorization' => 'Bearer wrong',
+            ],
+        );
+
+        $auth = $this->prepareAuth();
+
+        $response = $this->createResponse();
+
+        $result = $auth->process($request, $response);
+
+        $this->assertFalse($result->isResolved());
+        $this->assertFalse($this->getContainer()->getByClass(ApplicationState::class)->hasUser());
+
+        $this->assertNotNull($response->getHeader('WWW-Authenticate'));
+
+        $body = Json::decode((string) $response->getBody());
+        $this->assertObjectHasProperty('error', $body);
+        $this->assertEquals('access_denied', $body->error);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function resourceSuccess($accessToken, User $user): void
+    {
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method::GET,
+            headers: [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        );
+
+        $auth = $this->prepareAuth();
+
+        $response = $this->createResponse();
+
+        $result = $auth->process($request, $response);
+
+        $this->assertTrue($result->isResolved());
+        $this->assertEquals($user->getId(), $this->getContainer()->getByClass(ApplicationState::class)->getUserId());
+    }
+
+    /**
+     * @return array{string, string}
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function refreshTokenGrant(
+        string $refreshToken,
+        Client $client,
+        ClientSecret $secret,
+        string $redirectUri,
+        string $accessToken,
+    ): array {
+
+        $em = $this->getEntityManager();
+
+        $this->setApplication(
+            $this->createApplication(
+                reuse: true,
+                noUser: true,
+            )
+        );
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'refresh_token',
+                'refresh_token' => $refreshToken,
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => $redirectUri,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $body = Json::decode((string) $response->getBody());
+
+        $this->assertObjectHasProperty('access_token', $body);
+        $this->assertObjectHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('expires_in', $body);
+
+        $this->assertNotEquals($accessToken, $body->access_token);
+        $this->assertNotEquals($refreshToken, $body->refresh_token);
+
+        $accessTokenRepo = $this->getInjectableFactory()->create(AccessTokenRepository::class);
+
+        $oldAccessToken = $accessTokenRepo->getByIdentifier($accessToken);
+
+        $this->assertNotNull($oldAccessToken);
+        $this->assertTrue($oldAccessToken->isRevoked());
+
+        $oldRefreshToken = $em->getRDBRepositoryByClass(RefreshToken::class)
+            ->where([RefreshToken::FIELD_ACCESS_TOKEN . 'Id' => $oldAccessToken->getId()])
+            ->findOne();
+
+        $this->assertNotNull($oldRefreshToken);
+        $this->assertTrue($oldRefreshToken->isRevoked());
+
+        $accessToken = $body->access_token;
+        $refreshToken = $body->refresh_token;
+
+        return [$accessToken, $refreshToken];
+    }
+
+    /**
+     * @return array{string, string}
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function tokenWithAuthorizationCode(
+        Client $client,
+        ClientSecret $secret,
+        string $redirectUri,
+        string $code,
+        string $codeChallenge,
+    ): array {
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'grant_type' => 'authorization_code',
+                'client_id' => $client->getIdentifier(),
+                'client_secret' => $secret->getValue(),
+                'redirect_uri' => $redirectUri,
+                'code' => $code,
+                'code_verifier' => $codeChallenge,
+            ]),
+            resourcePath: '/oauth/token',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $tokenEntryPoint = $this->getInjectableFactory()->create(Token::class);
+
+        $tokenEntryPoint->run($request, $response);
+
+        $body = Json::decode((string) $response->getBody());
+
+        $this->assertEquals('Bearer', $body->token_type);
+        $this->assertObjectHasProperty('access_token', $body);
+        $this->assertObjectHasProperty('refresh_token', $body);
+        $this->assertObjectHasProperty('expires_in', $body);
+
+        $refreshToken = $body->refresh_token;
+        $accessToken = $body->access_token;
+
+        return [$accessToken, $refreshToken];
     }
 }
