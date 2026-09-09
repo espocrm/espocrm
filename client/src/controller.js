@@ -748,6 +748,7 @@ class Controller {
         this.setMasterRendered(false);
 
         if (typeof view === 'object') {
+            view.setSelector('body');
             view.setElement('body');
 
             this.viewFactory.prepare(view, () => {
