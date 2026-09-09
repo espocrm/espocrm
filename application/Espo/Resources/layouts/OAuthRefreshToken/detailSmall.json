@@ -3,7 +3,7 @@
         "rows": [
             [
                 {
-                    "name": "name"
+                    "name": "id"
                 },
                 {
                     "name": "status"
@@ -23,11 +23,6 @@
                 },
                 {
                     "name": "accessToken"
-                }
-            ],
-            [
-                {
-                    "name": "description"
                 }
             ]
         ]

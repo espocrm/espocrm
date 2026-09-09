@@ -4,9 +4,11 @@
         "status": "Status",
         "client": "Client",
         "user": "User",
+        "accessToken": "Access Token",
         "expiresAt": "Expires At"
     },
     "links": {
+        "accessToken": "Access Token",
         "client": "Client",
         "user": "User"
     },
