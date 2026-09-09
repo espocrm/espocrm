@@ -27,17 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "../../../../bootstrap.php";
+require_once('../../bootstrap.php');
 
 use Espo\Core\Application;
 use Espo\Core\Application\Runner\Params;
 use Espo\Core\ApplicationRunners\EntryPoint;
+use Espo\Core\Utils\OAuth\OAuthRouteUtil;
+
+$redirectUrl = OAuthRouteUtil::getRedirectUrlWithTrailingSlash();
+
+if ($redirectUrl) {
+    header('Location: ' . $redirectUrl, true, 301);
+
+    exit;
+}
 
 $app = new Application();
 
-$app->setClientBasePath('../../../');
+$map = [
+    'token' => 'oAuthToken',
+    'token/revoke' => 'oAuthTokenRevoke',
+    'authorize' => 'oAuthAuthorize',
+    'callback' => 'oauthCallback',
+];
+
+$path = OAuthRouteUtil::detectPath();
+
+$entryPoint = $map[$path] ?? null;
+
+if (!$entryPoint) {
+    http_response_code(404);
+
+    exit;
+}
+
+$basePath = OAuthRouteUtil::detectBasePast();
+
+$app->setClientBasePath($basePath);
 
 $app->run(
     EntryPoint::class,
-    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oAuthTokenRevoke')
+    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, $entryPoint)
 );
