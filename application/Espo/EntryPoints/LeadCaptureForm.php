@@ -30,6 +30,7 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Utils\Client\Script;
+use Espo\Core\Utils\Client\SecurityParams;
 use Espo\Tools\LeadCapture\FormService;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
@@ -72,10 +73,14 @@ class LeadCaptureForm implements EntryPoint
         );
 
         $params = $params
-            ->withFrameAncestors($leadCapture->getFormFrameAncestors())
             ->withPageTitle($leadCapture->getFormTitle())
             ->withTheme($leadCapture->getFormTheme())
-            ->withDirection($direction);
+            ->withDirection($direction)
+            ->withSecurityParams(
+                new SecurityParams(
+                    frameAncestors: $leadCapture->getFormFrameAncestors(),
+                )
+            );
 
         if ($captchaScript) {
             $params = $params->withScripts([new Script(source: $captchaScript)]);

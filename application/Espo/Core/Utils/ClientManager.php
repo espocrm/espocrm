@@ -123,7 +123,16 @@ class ClientManager
             $string .= ' ' . $src;
         }
 
-        if (!$this->config->get('clientCspFormActionDisabled')) {
+        if ($params->formAction !== null) {
+            if ($params->formAction !== []) {
+                $string .= '; form-action';
+
+                foreach ($params->formAction as $item) {
+                    $string .= ' ' . $item;
+                }
+            }
+
+        } else if (!$this->config->get('clientCspFormActionDisabled')) {
             $string .= "; form-action 'self'";
         }
 

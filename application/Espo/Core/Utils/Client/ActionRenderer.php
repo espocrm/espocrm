@@ -61,11 +61,16 @@ class ActionRenderer
             login: $params->login(),
         );
 
-        $securityParams = new SecurityParams(
-            frameAncestors: $params->getFrameAncestors(),
-        );
+        $securityParams = $params->getSecurityParams();
+
+        if (!$securityParams && $params->getFrameAncestors()) {
+            $securityParams = new SecurityParams(
+                frameAncestors: $params->getFrameAncestors(),
+            );
+        }
 
         $this->clientManager->writeHeaders($response, $securityParams);
+
         $response->writeBody($body);
     }
 
