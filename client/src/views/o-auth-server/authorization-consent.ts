@@ -56,10 +56,12 @@ export default class AuthorizationConsentView extends View<{
                             <input type="hidden" name="clientId" value="{{clientId}}">
                             <input type="hidden" name="approved">
                             <button
+                                type="button"
                                 class="btn btn-danger btn-x-wide pull-left"
                                 data-action="allow"
                             >{{labels.allow}}</button>
                             <button
+                                type="button"
                                 class="btn btn-default btn-x-wide pull-right"
                                 data-action="cancel"
                             >{{labels.cancel}}</button>
@@ -85,7 +87,7 @@ export default class AuthorizationConsentView extends View<{
     protected data() {
         return {
             ...this.consentData,
-            actionEndpoint: '?entryPoint=oAuthAuthorizeComplete',
+            actionEndpoint: this.getBasePath() + '?entryPoint=oAuthAuthorizeComplete',
             clientId: this.params.clientId,
         };
     }

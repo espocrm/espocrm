@@ -33,6 +33,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\Utils\Client\ActionRenderer;
+use Espo\Core\Utils\Client\SecurityParams;
 use Espo\Tools\OAuthServer\AuthorizationService;
 
 /**
@@ -60,7 +61,13 @@ class Authorize implements EntryPoint
             action: 'show',
         );
 
-        $params = $params->withLogin();
+        $params = $params
+            ->withLogin()
+            ->withSecurityParams(
+                new SecurityParams(
+                    formAction: [],
+                )
+            );
 
         $this->actionRenderer->write($response, $params);
     }
