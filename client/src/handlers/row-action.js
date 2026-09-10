@@ -34,22 +34,27 @@
 class RowActionHandler {
 
     /**
-     * @param {module:views/record/list} view
+     * @protected
+     * @type {import('collection').default}
+     */
+    collection
+
+    /**
+     * @protected
+     * @type {import('views/record/list').default} view
+     */
+    view
+
+    /**
+     * @param {import('views/record/list').default} view
      */
     constructor(view) {
-        // noinspection JSUnusedGlobalSymbols
-        /** @protected */
         this.view = view;
-
-        /**
-         * @protected
-         * @type {module:collection}
-         */
         this.collection = this.view.collection;
     }
 
     /**
-     * @param {module:model} model A model.
+     * @param {import('model').default} model A model.
      * @param {string} action An action.
      * @return {boolean}
      */
@@ -58,7 +63,8 @@ class RowActionHandler {
     }
 
     /**
-     * @param {module:model} model A model.
+     * @abstract
+     * @param {import('model').default} model A model.
      * @param {string} action An action.
      */
     process(model, action) {}
