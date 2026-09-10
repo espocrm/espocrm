@@ -20,5 +20,8 @@
     },
     "massActions": {
         "revoke": "Revoke"
+    },
+    "messages": {
+        "massRevokeDone": "{count} revoked"
     }
 }

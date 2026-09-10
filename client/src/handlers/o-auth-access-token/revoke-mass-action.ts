@@ -26,8 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import ActionHandler from 'action-handler';
 import MassActionHelper from 'helpers/mass-action';
+import ListRecordView from 'views/record/list';
+import Ui from 'ui';
+import Ajax from 'ajax';
 
-export default class RevokeMassActionHandler extends MassActionHelper {
+// noinspection JSUnusedGlobalSymbols
+export default class RevokeMassActionHandler extends ActionHandler {
 
+    async revoke(action: string) {
+        const view = this.view as ListRecordView;
+
+        const helper = new MassActionHelper(this.view);
+        const params = view.getMassActionSelectionPostData();
+        const idle = !!params.searchParams && helper.checkIsIdle(view.collection.total);
+
+        const onDone = (count: number) => {
+            const labelKey = action === 'lock' ? 'massLockDone': 'massUnlockDone';
+
+            const msg = this.view.translate(labelKey, 'messages')
+                .replace('{count}', count.toString());
+
+            Ui.success(msg);
+        };
+
+        Ui.notifyWait();
+
+        const result = await Ajax.postRequest('MassAction', {
+            entityType: view.collection.entityType!,
+            action: action,
+            params: params,
+            idle: idle,
+        });
+
+        if (result.id) {
+            const view = await helper.process(result.id, action)
+
+            this.view.listenToOnce(view, 'close:success', result => onDone(result.count));
+
+            return;
+        }
+
+        onDone(result.count);
+    }
 }
