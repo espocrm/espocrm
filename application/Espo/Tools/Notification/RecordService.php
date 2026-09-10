@@ -400,7 +400,7 @@ class RecordService
         $relatedType = $note->getRelatedType();
 
         if ($relatedId && $relatedType && $notification->getType() !== Notification::TYPE_USER_REACTION) {
-            $note->loadParentNameField(Notification::FIELD_RELATED);
+            $note->loadParentNameField(Note::FIELD_RELATED);
         }
 
         if ($notification->getType() !== Notification::TYPE_USER_REACTION) {
