@@ -32,10 +32,13 @@ import ListRecordView from 'views/record/list';
 import Ui from 'ui';
 import Ajax from 'ajax';
 
+/**
+ * Important. Used for AccessToken, RefreshToken, AuthorizationCode.
+ */
 // noinspection JSUnusedGlobalSymbols
 export default class RevokeMassActionHandler extends ActionHandler {
 
-    async revoke(action: string) {
+    async process(action: string) {
         const view = this.view as ListRecordView;
 
         const helper = new MassActionHelper(this.view);
@@ -43,9 +46,7 @@ export default class RevokeMassActionHandler extends ActionHandler {
         const idle = !!params.searchParams && helper.checkIsIdle(view.collection.total);
 
         const onDone = (count: number) => {
-            const labelKey = action === 'lock' ? 'massLockDone': 'massUnlockDone';
-
-            const msg = this.view.translate(labelKey, 'messages')
+            const msg = this.view.translate('massRevokeDone', 'messages', 'OAuthAccessToken')
                 .replace('{count}', count.toString());
 
             Ui.success(msg);
