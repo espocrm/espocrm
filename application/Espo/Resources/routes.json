@@ -547,6 +547,21 @@
         "actionClassName": "Espo\\Tools\\OAuth\\Api\\GetAuthorizationData"
     },
     {
+        "method": "post",
+        "route": "/OAuthAccessToken/:id/revoke",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\AccessToken\\PostRevoke"
+    },
+    {
+        "method": "post",
+        "route": "/OAuthRefreshToken/:id/revoke",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\RefreshToken\\PostRevoke"
+    },
+    {
+        "method": "post",
+        "route": "/OAuthAuthorizationCode/:id/revoke",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\AuthorizationCode\\PostRevoke"
+    },
+    {
         "method": "get",
         "route": "/OpenApi",
         "actionClassName": "Espo\\Tools\\OpenApi\\Api\\GetSpec"

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,33 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import RowActionHandler from 'handlers/row-action';
-import Model from 'model';
-import Ajax from 'ajax';
-import Ui from 'ui';
-import {inject} from 'di';
-import Language from 'language';
+namespace Espo\Tools\OAuthServer\Record;
 
-/**
- * Important. Used for AccessToken, RefreshToken, AuthorizationCode.
- */
-// noinspection JSUnusedGlobalSymbols
-export default class RevokeRowActionHandler extends RowActionHandler {
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\ORM\EntityManager;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
+use Espo\Tools\OAuthServer\Entities\AuthorizationCode;
+use Espo\Tools\OAuthServer\Entities\RefreshToken;
 
-    @inject(Language)
-    private language: Language
+class TokenService
+{
+    public function __construct(
+        private Acl $acl,
+        private EntityManager $entityManager,
+    ) {}
 
-    async process(model: Model, _action: string) {
-        Ui.notifyWait();
+    /**
+     * @throws Forbidden
+     * @throws Conflict
+     */
+    public function revoke(AccessToken|RefreshToken|AuthorizationCode $token): void
+    {
+        if (!$this->acl->checkEntityEdit($token)) {
+            throw new Forbidden("No edit access.");
+        }
 
-        await Ajax.postRequest(`${model.entityType}/${model.id}/revoke`);
+        if (!$token->isActive()) {
+            throw new Conflict("Token is not active.");
+        }
 
-        await model.fetch();
+        $token->setRevoked();
 
-        Ui.success(this.language.translate('Done'));
-    }
-
-    isAvailable(model: Model, _action: string): boolean {
-        return model.attributes.status === 'Active';
+        $this->entityManager->saveEntity($token);
     }
 }

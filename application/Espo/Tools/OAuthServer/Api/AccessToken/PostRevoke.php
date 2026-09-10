@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,33 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import RowActionHandler from 'handlers/row-action';
-import Model from 'model';
-import Ajax from 'ajax';
-import Ui from 'ui';
-import {inject} from 'di';
-import Language from 'language';
+namespace Espo\Tools\OAuthServer\Api\AccessToken;
+
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\EntityProvider;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
+use Espo\Tools\OAuthServer\Record\TokenService;
 
 /**
- * Important. Used for AccessToken, RefreshToken, AuthorizationCode.
+ * @noinspection PhpUnused
  */
-// noinspection JSUnusedGlobalSymbols
-export default class RevokeRowActionHandler extends RowActionHandler {
+class PostRevoke implements Action
+{
+    public function __construct(
+        private EntityProvider $entityProvider,
+        private TokenService $service,
+    ) {}
 
-    @inject(Language)
-    private language: Language
+    public function process(Request $request): Response
+    {
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
 
-    async process(model: Model, _action: string) {
-        Ui.notifyWait();
+        $entity = $this->entityProvider->getByClass(AccessToken::class, $id);
 
-        await Ajax.postRequest(`${model.entityType}/${model.id}/revoke`);
+        $this->service->revoke($entity);
 
-        await model.fetch();
-
-        Ui.success(this.language.translate('Done'));
-    }
-
-    isAvailable(model: Model, _action: string): boolean {
-        return model.attributes.status === 'Active';
+        return ResponseComposer::json(true);
     }
 }

@@ -67,11 +67,15 @@ class OAuthRouteUtil
 
     public static function detectPath(): string
     {
-        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+
+        if (!is_string($requestPath)) {
+            throw new RuntimeException();
+        }
 
         $basePath = self::detectBasePath();
 
-        $path = substr($requestUri, strlen($basePath));
+        $path = substr($requestPath, strlen($basePath));
 
         return trim($path, '/');
     }
@@ -93,9 +97,13 @@ class OAuthRouteUtil
     {
         $requestUri = $_SERVER['REQUEST_URI'] ?? '';
 
-        $path = parse_url($requestUri, PHP_URL_PATH);
+        $requestPath = parse_url($requestUri, PHP_URL_PATH);
 
-        return ($path !== '/' && str_ends_with($path, '/'));
+        if (!is_string($requestPath)) {
+            throw new RuntimeException();
+        }
+
+        return ($requestPath !== '/' && str_ends_with($requestPath, '/'));
     }
 
     public static function getRedirectUrlWithTrailingSlash(): ?string

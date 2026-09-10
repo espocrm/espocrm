@@ -4,6 +4,16 @@
     "createDisabled": true,
     "editDisabled": true,
     "massUpdateDisabled": true,
+    "rowActionDefs": {
+        "revoke": {
+            "labelTranslation": "OAuthClient.strings.revoke",
+            "handler": "handlers/o-auth-access-token/revoke-row-action",
+            "acl": "edit"
+        }
+    },
+    "rowActionList": [
+        "revoke"
+    ],
     "menu": {
         "list": {
             "dropdown": [

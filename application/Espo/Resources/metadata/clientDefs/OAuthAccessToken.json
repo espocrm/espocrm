@@ -7,7 +7,8 @@
     "rowActionDefs": {
         "revoke": {
             "labelTranslation": "OAuthClient.strings.revoke",
-            "handler": "handlers/o-auth-access-token/row-action-revoke"
+            "handler": "handlers/o-auth-access-token/revoke-row-action",
+            "acl": "edit"
         }
     },
     "rowActionList": [
