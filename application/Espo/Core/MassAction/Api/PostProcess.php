@@ -61,7 +61,13 @@ class PostProcess implements Action
         $data = $body->data ?? (object) [];
         $isIdle = $body->idle ?? false;
 
-        if (!$entityType || !$action || !$params) {
+        if (
+            !is_string($entityType) ||
+            !is_string($action) ||
+            !$params instanceof stdClass ||
+            !$entityType ||
+            !$action
+        ) {
             throw new BadRequest();
         }
 
