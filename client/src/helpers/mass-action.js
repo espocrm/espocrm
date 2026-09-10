@@ -29,6 +29,7 @@
 import {inject} from 'di';
 import Settings from 'models/settings';
 import User from 'models/user';
+import Ui from 'ui';
 
 /**
  * A mass-action helper.
@@ -50,13 +51,17 @@ class MassActionHelper {
     user
 
     /**
-     * @param {module:view} view A view.
+     * A view.
+     *
+     * @private
+     * @type {import('view').default & {scope?: string, entityType?: string}}
+     */
+    view
+
+    /**
+     * @param {import('view').default & {scope?: string, entityType?: string}} view A view.
      */
     constructor(view) {
-        /**
-         * @private
-         * @type {module:view}
-         */
         this.view = view;
     }
 
@@ -87,11 +92,11 @@ class MassActionHelper {
      *
      * @param {string} id An ID.
      * @param {string} action An action.
-     * @returns {Promise<module:view>} Resolves with a dialog view.
+     * @returns {Promise<import('view').default>} Resolves with a dialog view.
      *   The view emits the 'close:success' event.
      */
     process(id, action) {
-        Espo.Ui.notify(false);
+        Ui.notify();
 
         return new Promise(resolve => {
             const entityType = this.view.scope || this.view.entityType;
