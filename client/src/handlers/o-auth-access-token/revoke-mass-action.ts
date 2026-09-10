@@ -38,7 +38,7 @@ import Ajax from 'ajax';
 // noinspection JSUnusedGlobalSymbols
 export default class RevokeMassActionHandler extends ActionHandler {
 
-    async process(action: string) {
+    async process() {
         const view = this.view as ListRecordView;
 
         const helper = new MassActionHelper(this.view);
@@ -56,13 +56,13 @@ export default class RevokeMassActionHandler extends ActionHandler {
 
         const result = await Ajax.postRequest('MassAction', {
             entityType: view.collection.entityType!,
-            action: action,
+            action: 'revoke',
             params: params,
             idle: idle,
         });
 
         if (result.id) {
-            const view = await helper.process(result.id, action)
+            const view = await helper.process(result.id, 'revoke')
 
             this.view.listenToOnce(view, 'close:success', result => onDone(result.count));
 
