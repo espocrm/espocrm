@@ -54,6 +54,7 @@ class AuthorizationServerFactory
         private AuthCodeRepository $authCodeRepository,
         private RefreshTokenRepository $refreshTokenRepository,
         private CryptKeyProvider $cryptKeyProvider,
+        private ConfigDataProvider $configDataProvider,
     ) {}
 
     /**
@@ -86,8 +87,7 @@ class AuthorizationServerFactory
             $grant = new AuthCodeGrant(
                 authCodeRepository: $this->authCodeRepository,
                 refreshTokenRepository: $this->refreshTokenRepository,
-                // @todo Configurable.
-                authCodeTTL: new DateInterval('PT10M'),
+                authCodeTTL: $this->configDataProvider->getAuthorizationCodeTtl(),
             );
         } catch (Exception $e) {
             throw new Error("Error occurred.", previous: $e);
@@ -95,8 +95,7 @@ class AuthorizationServerFactory
 
         $server->enableGrantType(
             grantType: $grant,
-            // @todo Configurable.
-            accessTokenTTL: new DateInterval('PT1H'),
+            accessTokenTTL: $this->configDataProvider->getAccessTokenTtl(),
         );
     }
 
@@ -112,12 +111,11 @@ class AuthorizationServerFactory
         }
 
         // @todo Configurable.
-        $grant->setRefreshTokenTTL(new DateInterval('P1M'));
+        $grant->setRefreshTokenTTL($this->configDataProvider->getRefreshTokenTtl());
 
         $server->enableGrantType(
             grantType: $grant,
-            // @todo Configurable.
-            accessTokenTTL: new DateInterval('PT1H'),
+            accessTokenTTL: $this->configDataProvider->getAccessTokenTtl(),
         );
     }
 
