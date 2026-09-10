@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "user": "משתמש",
+        "action": "פעולה",
+        "createdAt": "תאריך",
+        "userType": "סוג משתמש",
+        "target": "יעד",
+        "targetType": "סוג יעד",
+        "authToken": "טוקן אימות",
+        "ipAddress": "כתובת IP",
+        "authLogRecord": "רשומת יומן אימות"
+    },
+    "links": {
+        "authToken": "טוקן אימות",
+        "authLogRecord": "רשומת יומן אימות",
+        "user": "משתמש",
+        "target": "יעד"
+    },
+    "presetFilters": {
+        "onlyMy": "רק שלי"
+    },
+    "options": {
+        "action": {
+            "read": "קריאה",
+            "update": "עדכון",
+            "delete": "מחיקה",
+            "create": "יצירה"
+        }
+    }
+}

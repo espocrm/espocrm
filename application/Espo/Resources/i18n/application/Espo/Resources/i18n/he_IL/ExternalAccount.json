@@ -1,0 +1,12 @@
+{
+    "labels": {
+        "Connect": "לחבר",
+        "Disconnect": "לנתק",
+        "Disconnected": "מנותק",
+        "Connected": "מחובר"
+    },
+    "help": {},
+    "messages": {
+        "externalAccountNoConnectDisabled": "חשבון חיצוני עבור האינטגרציה '{integration}' הושבת עקב חוסר אפשרות להתחבר."
+    }
+}

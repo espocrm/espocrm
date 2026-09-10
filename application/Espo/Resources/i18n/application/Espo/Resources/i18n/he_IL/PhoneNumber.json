@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "type": "סוג",
+        "optOut": "הוסר מהרשימה",
+        "invalid": "לא תקין",
+        "numeric": "ערך מספרי"
+    },
+    "presetFilters": {
+        "orphan": "יתום"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "labels": {
+        "Create EmailTemplateCategory": "צור קטגוריה",
+        "Manage Categories": "ניהול קטגוריות",
+        "EmailTemplates": "תבניות דואר"
+    },
+    "fields": {
+        "order": "סדר",
+        "childList": "רשימת ילדים"
+    },
+    "links": {
+        "emailTemplates": "תבניות דואר"
+    }
+}

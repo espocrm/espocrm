@@ -1,0 +1,24 @@
+{
+    "fields": {
+        "type": "סוג",
+        "validationFailures": "כשלי אימות",
+        "import": "ייבוא",
+        "rowIndex": "מספר שורה",
+        "exportRowIndex": "מספר שורת ייצוא",
+        "lineNumber": "מספר שורה",
+        "exportLineNumber": "מספר שורת ייצוא",
+        "row": "שורה",
+        "entityType": "סוג ישות"
+    },
+    "options": {
+        "type": {
+            "Validation": "אימות",
+            "Access": "גישה",
+            "Not-Found": "לא נמצא"
+        }
+    },
+    "tooltips": {
+        "lineNumber": "מספר שורה בקובץ ה-CSV המקורי.",
+        "exportLineNumber": "מספר שורה בקובץ ה-CSV לייצוא."
+    }
+}

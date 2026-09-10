@@ -1,0 +1,36 @@
+{
+    "fields": {
+        "name": "שם",
+        "status": "סטטוס",
+        "isHtml": "HTML",
+        "body": "תוכן",
+        "subject": "נושא",
+        "attachments": "קבצים מצורפים",
+        "oneOff": "חד פעמי",
+        "category": "קטגוריה",
+        "insertField": "שדות להוספה"
+    },
+    "links": {
+    },
+    "labels": {
+        "Create EmailTemplate": "צור תבנית דוא\"ל",
+        "Info": "מידע",
+        "Available placeholders": "שדות זמינים להוספה"
+    },
+    "messages": {
+        "infoText": "שדות זמינים להוספה:\n\n{optOutUrl} &#8211; כתובת URL לביטול הרשמה;\n\n{optOutLink} &#8211; קישור לביטול הרשמה."
+    },
+    "tooltips": {
+        "oneOff": "סמן אם אתה מתכוון להשתמש בתבנית זו פעם אחת בלבד. למשל, עבור דיוור המוני."
+    },
+    "presetFilters": {
+        "actual": "נוכחי"
+    },
+    "placeholderTexts": {
+        "today": "תאריך היום",
+        "now": "תאריך ושעה נוכחיים",
+        "currentYear": "שנה נוכחית",
+        "optOutUrl": "כתובת URL לביטול הרשמה",
+        "optOutLink": "קישור לביטול הרשמה"
+    }
+}
