@@ -26,7 +26,8 @@
         "allow": "Allow Access",
         "authorizationCodes": "Authorization Codes",
         "accessTokens": "Access Tokens",
-        "refreshTokens": "Refresh Tokens"
+        "refreshTokens": "Refresh Tokens",
+        "revoke": "Revoke"
     },
     "messages": {
         "allowAccessInfo": "**{clientName}** would like to access **{applicationName}** as *{username}*. By granting access, you will allow {clientName} to access the following scopes."
