@@ -1199,7 +1199,7 @@ abstract class ListBaseRecordView<
         return where;
     }
 
-    private getMassActionSelectionPostData(): Record<string, any> {
+    getMassActionSelectionPostData(): Record<string, any> {
         const data = {} as any;
 
         if (this.allResultIsChecked) {
@@ -1288,7 +1288,11 @@ abstract class ListBaseRecordView<
 
         Ui.notifyWait();
 
-        const helper = new MassActionHelper(this);
+        if (!this.entityType) {
+            throw new Error("No entity type.");
+        }
+
+        const helper = new MassActionHelper(this, {entityType: this.entityType});
         const params = this.getMassActionSelectionPostData();
         const idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
@@ -1653,7 +1657,8 @@ abstract class ListBaseRecordView<
 
         Ui.success(this.translate('Unlinked'));
 
-        this.collection.fetch();
+        this.collection.fetch().then(() => {});
+
         (this.model ?? this.collection.parentModel)?.trigger('after:unrelate');
     }
 
