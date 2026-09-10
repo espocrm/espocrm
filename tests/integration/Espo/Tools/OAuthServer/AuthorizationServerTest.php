@@ -45,6 +45,7 @@ use Espo\Core\Utils\Json;
 use Espo\Entities\User;
 use Espo\Tools\App\SettingsService;
 use Espo\Tools\OAuthServer\ClientType;
+use Espo\Tools\OAuthServer\ConsentDataService;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\ClientSecret;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
@@ -655,14 +656,12 @@ class AuthorizationServerTest extends BaseTestCase
 
         $session = $this->createMock(Session::class);
 
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
-                    $binder->bindInstance(Session::class, $session);
-                }),
-                reuse: true,
-                noUser: true,
-            )
+        $this->reCreateApplication(
+            reuse: true,
+            noUser: true,
+            binding: $this->prepareBinding(function (Binder $binder) use ($session) {
+                $binder->bindInstance(Session::class, $session);
+            }),
         );
 
         //
@@ -722,14 +721,20 @@ class AuthorizationServerTest extends BaseTestCase
 
         $this->auth($user->getUserName());
 
-        $this->setApplication(
-            $this->createApplication(
-                binding: $this->prepareBinding(function (Binder $binder) use ($session) {
-                    $binder->bindInstance(Session::class, $session);
-                }),
-                reuse: true,
-            )
+        $this->reCreateApplication(
+            reuse: true,
+            binding: $this->prepareBinding(function (Binder $binder) use ($session) {
+                $binder->bindInstance(Session::class, $session);
+            }),
         );
+
+        //
+
+        $consentDataService = $this->getInjectableFactory()->create(ConsentDataService::class);
+
+        $data = $consentDataService->getData($client->getIdentifier());
+
+        $this->assertIsArray($data->scopeDataList);
 
         //
 

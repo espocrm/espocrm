@@ -54,20 +54,10 @@ class ConsentDataService
         $client = $this->getClient($clientId);
 
         // @todo Check user is associated.
-
-        $scopes = $client->getScopes();
-
         // @todo Filter scopes.
 
-        $scopeDataList = array_map(function ($scope) {
-            return (object) [
-                'name' => $scope,
-                'label' => $this->translateScope($scope),
-            ];
-        }, $scopes);
-
         return (object) [
-            'scopeDataList' => $scopeDataList,
+            'scopeDataList' => $this->getScopeDataList($client),
             'labels' => (object) [
                 'allow' => $this->language->translateLabel('allow', 'strings', Client::ENTITY_TYPE),
                 'cancel' => $this->language->translateLabel('Cancel'),
@@ -119,5 +109,25 @@ class ConsentDataService
             '{applicationName}' => $this->applicationConfig->getApplicationName(),
             '{username}' => $this->user->getUserName(),
         ]);
+    }
+
+    /**
+     * @return stdClass[]
+     */
+    private function getScopeDataList(Client $client): array
+    {
+        $scopes = $client->getScopes();
+
+        /** @var (stdClass & object{name: string, label: string})[] $scopeDataList */
+        $scopeDataList = array_map(function ($scope) {
+            return (object) [
+                'name' => $scope,
+                'label' => $this->translateScope($scope),
+            ];
+        }, $scopes);
+
+        usort($scopeDataList, fn ($a, $b) => strcasecmp($a->label, $b->label));
+
+        return $scopeDataList;
     }
 }
