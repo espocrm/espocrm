@@ -91,6 +91,11 @@ class RefreshToken extends Entity
         return $this->setRelatedLinkOrEntity(self::FIELD_CLIENT, $client);
     }
 
+    public function isExpired(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_EXPIRED;
+    }
+
     public function setRevoked(): self
     {
         return $this->set(self::FIELD_STATUS, self::STATUS_REVOKED);

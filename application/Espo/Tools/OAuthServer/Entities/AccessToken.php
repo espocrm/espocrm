@@ -123,6 +123,11 @@ class AccessToken extends Entity
         return $this->setValueObject(self::FIELD_EXPIRES_AT, $expiresAt);
     }
 
+    public function isExpired(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_EXPIRED;
+    }
+
     /**
      * @return non-empty-string[]
      */

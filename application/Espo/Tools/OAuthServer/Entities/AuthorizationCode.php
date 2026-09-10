@@ -118,6 +118,11 @@ class AuthorizationCode extends Entity
         return $this->set(self::FIELD_REDIRECT_URI, $redirectUri);
     }
 
+    public function isExpired(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_EXPIRED;
+    }
+
     /**
      * @return string[]
      */

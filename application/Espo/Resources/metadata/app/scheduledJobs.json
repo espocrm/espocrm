@@ -47,6 +47,12 @@
         "scheduling": "2 0 * * *",
         "isSystem": true
     },
+    "OAuthServerControl": {
+        "name": "OAuth Server Control",
+        "jobClassName": "Espo\\Tools\\OAuthServer\\Jobs\\OAuthServerControl",
+        "scheduling": "3 0 * * *",
+        "isSystem": true
+    },
     "Cleanup": {
         "jobClassName": "Espo\\Classes\\Jobs\\Cleanup",
         "scheduling": "1 1 * * 0",

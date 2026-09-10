@@ -76,6 +76,16 @@ class ClientSecret extends Entity
         return $this->get(self::FIELD_STATUS) === self::STATUS_ACTIVE;
     }
 
+    public function isExpired(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_EXPIRED;
+    }
+
+    public function isRevoked(): bool
+    {
+        return $this->get(self::FIELD_STATUS) === self::STATUS_REVOKED;
+    }
+
     public function setRevoked(): self
     {
         return $this->set(self::FIELD_STATUS, self::STATUS_REVOKED);
