@@ -17,5 +17,8 @@
             "Revoked": "Revoked",
             "Expired": "Expired"
         }
+    },
+    "massActions": {
+        "revoke": "Revoke"
     }
 }

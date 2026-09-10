@@ -14,6 +14,20 @@
     "rowActionList": [
         "revoke"
     ],
+    "massActionDefs": {
+        "revoke": {
+            "acl": "edit",
+            "handler": "handlers/o-auth-access-token/revoke-mass-action",
+            "actionFunction": "process",
+            "groupIndex": 9
+        }
+    },
+    "massActionList": [
+        "revoke"
+    ],
+    "checkAllResultMassActionList": [
+        "revoke"
+    ],
     "menu": {
         "list": {
             "dropdown": [

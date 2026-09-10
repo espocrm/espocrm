@@ -2,6 +2,10 @@
     "massActions": {
         "delete": {
             "allowed": true
+        },
+        "revoke": {
+            "allowed": true,
+            "implementationClassName": "Espo\\Tools\\OAuthServer\\Record\\MassActions\\RevokeMassAction"
         }
     }
 }
