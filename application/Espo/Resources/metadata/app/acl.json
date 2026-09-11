@@ -1,6 +1,7 @@
 {
     "mandatory": {
         "scopeLevel": {
+            "Admin": false,
             "Note": {
                 "read": "own",
                 "edit": "own",
@@ -134,6 +135,7 @@
     },
     "adminMandatory": {
         "scopeLevel": {
+            "Admin": true,
             "User": {
                 "create": "yes",
                 "read": "all",

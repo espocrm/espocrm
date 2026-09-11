@@ -220,7 +220,7 @@ class SettingsService
     {
         $user = $this->applicationState->getUser();
 
-        if (!$user->isAdmin()) {
+        if (!$user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -309,7 +309,7 @@ class SettingsService
             $ignoreItemList[] = $item;
         }
 
-        if (!$user->isAdmin() || $user->isSystem()) {
+        if (!$user->isEffectiveAdmin() || $user->isSystem()) {
             foreach ($this->access->getAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
@@ -368,7 +368,7 @@ class SettingsService
     {
         $user = $this->applicationState->getUser();
 
-        if (!$user->isAdmin() && !$user->isSystem()) {
+        if (!$user->isEffectiveAdmin() && !$user->isSystem()) {
             $this->filterEntityTypeParams($data);
         }
 
@@ -388,7 +388,7 @@ class SettingsService
             return;
         }
 
-        if ($user->isAdmin()) {
+        if ($user->isEffectiveAdmin()) {
             return;
         }
 

@@ -33,6 +33,6 @@ class EmailQueueItem extends \Espo\Core\Controllers\Record
 {
     protected function checkAccess(): bool
     {
-        return $this->user->isAdmin();
+        return $this->user->isEffectiveAdmin();
     }
 }

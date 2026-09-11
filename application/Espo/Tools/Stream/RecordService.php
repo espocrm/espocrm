@@ -111,7 +111,7 @@ class RecordService
             throw new Forbidden();
         }
 
-        if ($entity instanceof User && !$this->user->isAdmin()) {
+        if ($entity instanceof User && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

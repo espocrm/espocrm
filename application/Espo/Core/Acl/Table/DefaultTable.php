@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Acl\Table;
 
+use Espo\Core\Acl\Scope;
 use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Entities\User;
 
@@ -193,7 +194,7 @@ class DefaultTable implements Table
         $aclTable = (object) [];
         $fieldTable = (object) [];
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->isAdmin()) {
             $roleList = $this->roleListProvider->get();
 
             foreach ($roleList as $role) {
@@ -212,16 +213,18 @@ class DefaultTable implements Table
 
             $this->applyDefault($aclTable, $fieldTable);
             $this->applyDisabled($aclTable, $fieldTable);
+            $this->stripScopes($aclTable, $fieldTable);
             $this->applyMandatory($aclTable, $fieldTable);
         }
 
-        if ($this->user->isAdmin()) {
+        if ($this->isAdmin()) {
             $aclTable = (object) [];
             $fieldTable = (object) [];
 
             $this->applyHighest($aclTable);
             $this->applyDisabled($aclTable, $fieldTable);
-            $this->applyAdminMandatory($aclTable, $fieldTable);
+            $this->stripScopes($aclTable, $fieldTable);
+            $this->applyAdminMandatoryGeneral($aclTable, $fieldTable);
         }
 
         foreach (get_object_vars($aclTable) as $scope => $data) {
@@ -233,7 +236,7 @@ class DefaultTable implements Table
         $this->data->scopes = $aclTable;
         $this->data->fields = $fieldTable;
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->isAdmin()) {
             foreach ($this->valuePermissionList as $permissionKey) {
                 $permission = $this->normalizePermissionName($permissionKey);
 
@@ -254,7 +257,7 @@ class DefaultTable implements Table
             }
         }
 
-        if ($this->user->isAdmin()) {
+        if ($this->isAdmin()) {
             foreach ($this->valuePermissionList as $permissionKey) {
                 $permission = $this->normalizePermissionName($permissionKey);
 
@@ -286,7 +289,7 @@ class DefaultTable implements Table
     private function applyHighest(stdClass $table): void
     {
         foreach ($this->getScopeList() as $scope) {
-            if ($this->metadata->get(['scopes', $scope, $this->type]) === ScopeDataType::BOOLEAN) {
+            if ($this->getAclMetaValue($scope) === ScopeDataType::BOOLEAN) {
                 $table->$scope = true;
 
                 continue;
@@ -320,7 +323,7 @@ class DefaultTable implements Table
 
     protected function applyDefault(stdClass &$table, stdClass &$fieldTable): void
     {
-        if ($this->user->isAdmin()) {
+        if ($this->isAdmin()) {
             return;
         }
 
@@ -393,7 +396,7 @@ class DefaultTable implements Table
                 continue;
             }
 
-            $aclType = $this->metadata->get(['scopes', $scope, $this->type]);
+            $aclType = $this->getAclMetaValue($scope);
 
             if (empty($aclType)) {
                 continue;
@@ -705,5 +708,53 @@ class DefaultTable implements Table
         }
 
         return $data;
+    }
+
+    private function getAclMetaValue(string $scope): mixed
+    {
+        return $this->metadata->get("scopes.$scope.$this->type");
+    }
+
+    private function applyAdminMandatoryGeneral(stdClass $aclTable, stdClass $fieldTable): void
+    {
+        $isAllowedAdmin = $this->user->getScopes() === null || in_array(Scope::ADMIN, $this->user->getScopes());
+
+        if ($isAllowedAdmin) {
+            $this->applyAdminMandatory($aclTable, $fieldTable);
+        } else {
+            $this->applyMandatory($aclTable, $fieldTable);
+        }
+    }
+
+    protected function stripScopes(stdClass $table, stdClass $fieldTable): void
+    {
+        if ($this->user->getScopes() === null) {
+            return;
+        }
+
+        $map = array_fill_keys($this->user->getScopes(), true);
+
+        if (array_key_exists(Scope::GLOBAL, $map)) {
+            return;
+        }
+
+        foreach ($this->getScopeList() as $scope) {
+            $value = $this->getAclMetaValue($scope);
+
+            if (!$value || array_key_exists($scope, $map)) {
+                continue;
+            }
+
+            if (isset($table->$scope)) {
+                $table->$scope = false;
+            }
+
+            unset($fieldTable->$scope);
+        }
+    }
+
+    private function isAdmin(): bool
+    {
+        return $this->user->isAdmin();
     }
 }

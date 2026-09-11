@@ -75,7 +75,7 @@ class Service
      */
     public function createAndSendPasswordRecovery(string $id): void
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -260,7 +260,7 @@ class Service
      */
     public function generateAndSendNewPasswordForUser(string $id): void
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

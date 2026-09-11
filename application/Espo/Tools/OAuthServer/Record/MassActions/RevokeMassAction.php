@@ -111,7 +111,7 @@ class RevokeMassAction implements MassAction
      */
     private function assertAccess(string $entityType): void
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

@@ -393,4 +393,14 @@ class Acl
         /** @noinspection PhpDeprecationInspection */
         return $this->aclManager->checkUser($this->user, $permission, $entity);
     }
+
+    /**
+     * Whether the user is admin and has admin capabilities.
+     *
+     * @since 10.1.0
+     */
+    public function checkAdmin(): bool
+    {
+        return $this->aclManager->checkAdmin($this->user);
+    }
 }

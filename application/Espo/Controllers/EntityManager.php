@@ -55,7 +55,7 @@ class EntityManager
         private LinkManager $linkManager,
         private InjectableFactory $injectableFactory
     ) {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
     }

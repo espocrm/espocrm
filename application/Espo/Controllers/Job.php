@@ -40,7 +40,7 @@ class Job extends RecordBase
 {
     protected function checkAccess(): bool
     {
-        return $this->user->isAdmin();
+        return $this->user->isEffectiveAdmin();
     }
 
     public function postActionCreate(Request $request, Response $response): stdClass

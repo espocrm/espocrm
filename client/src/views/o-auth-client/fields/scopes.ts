@@ -26,12 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import MultiEnumFieldView from 'views/fields/multi-enum';
+import ArrayFieldView from 'views/fields/array';
 
-export default class OAuthClientScopesFieldView extends MultiEnumFieldView {
+export default class OAuthClientScopesFieldView extends ArrayFieldView {
+
 
     protected setupOptions() {
         this.params.options = [
+            'Admin',
             'Global',
         ];
     }

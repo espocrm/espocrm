@@ -57,7 +57,7 @@ class Settings
      */
     public function putActionUpdate(Request $request): stdClass
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

@@ -71,7 +71,7 @@ class BeforeSave implements SaveHook
         $this->checkEntityUserIsApi($entity);
         $this->processEntityEventData($entity);
 
-        if ($entity->isNew() && !$this->user->isAdmin()) {
+        if ($entity->isNew() && !$this->user->isEffectiveAdmin()) {
             $this->checkMaxCount();
         }
     }

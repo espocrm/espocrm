@@ -59,7 +59,7 @@ class ApiService
      */
     public function generateNewApiKey(string $id): User
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

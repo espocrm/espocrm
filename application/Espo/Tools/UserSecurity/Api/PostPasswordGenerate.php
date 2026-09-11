@@ -50,7 +50,7 @@ class PostPasswordGenerate implements Action
 
     public function process(Request $request): Response
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

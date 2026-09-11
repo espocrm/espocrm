@@ -41,7 +41,7 @@ class PipelineLinkChecker implements LinkChecker
 {
     public function check(User $user, Entity $entity, Entity $foreignEntity): bool
     {
-        if ($user->isAdmin()) {
+        if ($user->isEffectiveAdmin()) {
             return true;
         }
 

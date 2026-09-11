@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Acl\Scope;
 use Espo\Core\Entities\Person;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
@@ -179,12 +180,38 @@ class User extends Person
 
     /**
      * Is admin, super-admin or system user.
+     *
+     * Do not use for access check for the current user. Use Acl::checkAdmin instead.
      */
     public function isAdmin(): bool
     {
         return $this->getType() === self::TYPE_ADMIN ||
             $this->isSystem() ||
             $this->isSuperAdmin();
+    }
+
+    /**
+     * Is admin and is not stripped of admin capabilities.
+     *
+     * Prefer using Acl::checkAdmin instead.
+     *
+     * @since 10.1.0
+     */
+    public function isEffectiveAdmin(): bool
+    {
+        if (!$this->isAdmin()) {
+            return false;
+        }
+
+        if ($this->getScopes() === null) {
+            return true;
+        }
+
+        if (!in_array(Scope::ADMIN, $this->getScopes())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

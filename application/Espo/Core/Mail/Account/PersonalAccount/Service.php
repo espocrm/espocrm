@@ -173,7 +173,7 @@ class Service
 
         if (
             $userId &&
-            !$this->user->isAdmin() &&
+            !$this->user->isEffectiveAdmin() &&
             $userId !== $this->user->getId()
         ) {
             throw new Forbidden();
@@ -195,7 +195,7 @@ class Service
             $account = $this->accountFactory->create($params->getId());
 
             if (
-                !$this->user->isAdmin() &&
+                !$this->user->isEffectiveAdmin() &&
                 $account->getUser()->getId() !== $this->user->getId()
             ) {
                 throw new Forbidden();

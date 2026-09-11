@@ -83,7 +83,7 @@ class TwoFactorEmail
             throw new BadRequest("No 'emailAddress'.");
         }
 
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 

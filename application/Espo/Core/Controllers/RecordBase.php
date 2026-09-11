@@ -301,7 +301,7 @@ class RecordBase
      */
     public function postActionRestoreDeleted(Request $request): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

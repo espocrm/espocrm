@@ -165,7 +165,7 @@ class Authentication
             return $this->processFail(Result::fail(FailReason::USER_NOT_FOUND), $data, $request);
         }
 
-        if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
+        if (!$user->isEffectiveAdmin() && $this->configDataProvider->isMaintenanceMode()) {
             $this->throwMaintenanceModeException();
         }
 
@@ -652,7 +652,7 @@ class Authentication
         }
 
         // Important check.
-        if (!$user->isAdmin()) {
+        if (!$user->isEffectiveAdmin()) {
             return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
         }
 

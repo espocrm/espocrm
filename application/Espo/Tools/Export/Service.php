@@ -63,7 +63,7 @@ class Service
      */
     public function process(Params $params, ServiceParams $serviceParams): ServiceResult
     {
-        if ($this->config->get('exportDisabled') && !$this->user->isAdmin()) {
+        if ($this->config->get('exportDisabled') && !$this->user->isEffectiveAdmin()) {
             throw new ForbiddenSilent("Export disabled for non-admin users.");
         }
 

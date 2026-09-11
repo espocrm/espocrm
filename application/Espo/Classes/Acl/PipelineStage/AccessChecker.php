@@ -52,7 +52,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkCreate(User $user, ScopeData $data): bool
     {
-        return $user->isAdmin();
+        return $user->isEffectiveAdmin();
     }
 
     public function checkRead(User $user, ScopeData $data): bool
@@ -62,32 +62,32 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkEdit(User $user, ScopeData $data): bool
     {
-        return $user->isAdmin();
+        return $user->isEffectiveAdmin();
     }
 
     public function checkDelete(User $user, ScopeData $data): bool
     {
-        return $user->isAdmin();
+        return $user->isEffectiveAdmin();
     }
 
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $user->isAdmin();
+        return $user->isEffectiveAdmin();
     }
 
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $user->isAdmin();
+        return $user->isEffectiveAdmin();
     }
 
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $user->isAdmin();
+        return $user->isEffectiveAdmin();
     }
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        if ($user->isAdmin()) {
+        if ($user->isEffectiveAdmin()) {
             return true;
         }
 

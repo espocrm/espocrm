@@ -47,7 +47,7 @@ class Mandatory implements Filter
 
     public function apply(SelectBuilder $queryBuilder): void
     {
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             return;
         }
 

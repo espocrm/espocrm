@@ -86,7 +86,7 @@ class AccessChecker
         }
 
         if (
-            $this->user->isAdmin() &&
+            $this->user->isEffectiveAdmin() &&
             $role === Attachment::ROLE_INLINE_ATTACHMENT &&
             in_array($relatedEntityType, $this->adminOnlyHavingInlineAttachmentsEntityTypeList)
         ) {
@@ -107,7 +107,7 @@ class AccessChecker
             throw new Forbidden("Field type '$fieldType' is not allowed for $role.");
         }
 
-        if ($this->user->isAdmin() && $relatedEntityType === Settings::ENTITY_TYPE) {
+        if ($this->user->isEffectiveAdmin() && $relatedEntityType === Settings::ENTITY_TYPE) {
             return;
         }
 

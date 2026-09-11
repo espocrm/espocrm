@@ -35,6 +35,6 @@ class ScheduledJob extends Record
 {
     protected function checkAccess(): bool
     {
-        return $this->user->isAdmin();
+        return $this->user->isEffectiveAdmin();
     }
 }

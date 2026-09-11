@@ -100,7 +100,7 @@ class Service
     {
         [$integration, $userId] = explode('__', $id);
 
-        if ($this->user->getId() != $userId && !$this->user->isAdmin()) {
+        if ($this->user->getId() != $userId && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -125,7 +125,7 @@ class Service
     {
         [, $userId] = explode('__', $id);
 
-        if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
+        if ($this->user->getId() !== $userId && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -156,7 +156,7 @@ class Service
     {
         [$integration, $userId] = explode('__', $id);
 
-        if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
+        if ($this->user->getId() !== $userId && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

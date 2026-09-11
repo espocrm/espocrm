@@ -99,7 +99,7 @@ class DefaultUserProvider implements UserProvider
 
         $isPortal = $this->applicationState->isPortal();
 
-        if (!$isPortal && !$user->isRegular() && !$user->isAdmin()) {
+        if (!$isPortal && !$user->isRegular() && !$user->isEffectiveAdmin()) {
             $this->log->info("Oidc: User $userId found but it's neither regular user nor admin.");
 
             return false;

@@ -410,7 +410,7 @@ class SendService
         if (
             $userId &&
             $userId !== $this->user->getId() &&
-            !$this->user->isAdmin()
+            !$this->user->isEffectiveAdmin()
         ) {
             throw new Forbidden();
         }
@@ -558,7 +558,7 @@ class SendService
             $personalAccount = $this->personalAccountFactory->create($id);
 
             if (
-                !$this->user->isAdmin() &&
+                !$this->user->isEffectiveAdmin() &&
                 $personalAccount->getUser()->getId() !== $this->user->getId()
             ) {
                 throw new Forbidden();
@@ -569,7 +569,7 @@ class SendService
             return $smtpParams?->getPassword();
         }
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

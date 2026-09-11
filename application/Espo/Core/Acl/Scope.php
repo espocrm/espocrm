@@ -27,27 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Import\AccessControlFilters;
+namespace Espo\Core\Acl;
 
-use Espo\ORM\Query\SelectBuilder;
-
-use Espo\Core\Select\AccessControl\Filter;
-
-use Espo\Entities\User;
-
-class Mandatory implements Filter
+/**
+ * @since 10.1.0
+ */
+class Scope
 {
-    public function __construct(private User $user)
-    {}
+    /**
+     * Access to admin capabilities.
+     */
+    public const string ADMIN = 'Admin';
 
-    public function apply(SelectBuilder $queryBuilder): void
-    {
-        if ($this->user->isEffectiveAdmin()) {
-            return;
-        }
-
-        $queryBuilder->where([
-            'createdById' => $this->user->getId(),
-        ]);
-    }
+    /**
+     * Reserved scope used for OAuth. If Global is present, the current user's scopes are not stripped.
+     */
+    public const string GLOBAL = 'Global';
 }

@@ -1602,7 +1602,7 @@ class Import
         }
 
         if (
-            !$this->user->isAdmin() &&
+            !$this->user->isEffectiveAdmin() &&
             !$this->user->isSystem() &&
             $attachment->getCreatedBy()?->getId() !== $this->user->getId()
         ) {

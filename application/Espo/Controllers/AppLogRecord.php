@@ -39,7 +39,7 @@ class AppLogRecord extends Record
 {
     protected function checkAccess(): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             return false;
         }
 

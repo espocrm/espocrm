@@ -46,7 +46,7 @@ class PipelineDataUserFilter
      */
     public function filter(array $data): array
     {
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             return $data;
         }
 

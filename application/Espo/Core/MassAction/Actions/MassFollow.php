@@ -68,7 +68,7 @@ class MassFollow implements MassAction
 
         $passedUserId = $data->get('userId');
 
-        if ($passedUserId && !$this->user->isAdmin()) {
+        if ($passedUserId && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

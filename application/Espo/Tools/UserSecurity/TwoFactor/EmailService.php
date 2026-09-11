@@ -54,7 +54,7 @@ class EmailService
      */
     public function sendCode(string $userId, string $emailAddress): void
     {
-        if (!$this->user->isAdmin() && $userId !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $userId !== $this->user->getId()) {
             throw new Forbidden();
         }
 

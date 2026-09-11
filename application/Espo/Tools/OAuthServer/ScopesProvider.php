@@ -29,12 +29,17 @@
 
 namespace Espo\Tools\OAuthServer;
 
+use Espo\Core\Acl\Scope;
+
 /**
  * @since 10.1.0
  */
 class ScopesProvider
 {
-    public const string SCOPE_GLOBAL = 'Global';
+    /**
+     * @todo Remove. Use Scope::GLOBAL.
+     */
+    public const string SCOPE_GLOBAL = Scope::GLOBAL;
 
     /**
      * @return string[]
@@ -42,7 +47,8 @@ class ScopesProvider
     public function get(): array
     {
         return [
-            self::SCOPE_GLOBAL,
+            Scope::ADMIN,
+            Scope::GLOBAL,
         ];
     }
 }

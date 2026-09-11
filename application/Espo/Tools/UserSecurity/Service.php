@@ -64,7 +64,7 @@ class Service
      */
     public function read(string $id): stdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -104,7 +104,7 @@ class Service
     public function getTwoFactorUserSetupData(string $id, stdClass $data): stdClass
     {
         if (
-            !$this->user->isAdmin() &&
+            !$this->user->isEffectiveAdmin() &&
             $id !== $this->user->getId()
         ) {
             throw new Forbidden();
@@ -137,11 +137,11 @@ class Service
             throw new Forbidden('Passport required.');
         }
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             $this->checkPassword($id, $password);
         }
 
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             $this->checkPassword($this->user->getId(), $password);
         }
 
@@ -187,7 +187,7 @@ class Service
      */
     public function update(string $id, stdClass $data): stdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -219,7 +219,7 @@ class Service
             throw new Forbidden('Password required.');
         }
 
-        if (!$this->user->isAdmin() || $this->user->getId() === $id) {
+        if (!$this->user->isEffectiveAdmin() || $this->user->getId() === $id) {
             $this->checkPassword($id, $password);
         }
 

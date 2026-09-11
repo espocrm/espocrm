@@ -57,7 +57,7 @@ class Admin
         private DataManager $dataManager,
         private Config\SystemConfig $systemConfig,
     ) {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
     }
