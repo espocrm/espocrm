@@ -30,7 +30,7 @@
 namespace Espo\Tools\OAuthServer\League\Repositories;
 
 use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
-use Espo\Tools\OAuthServer\Scope\UserAvailableScopeFilter;
+use Espo\Tools\OAuthServer\Scope\UserAvailableScopesFilter;
 use Espo\Tools\OAuthServer\Scope\ScopeValidator;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -39,7 +39,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 {
     public function __construct(
         private ScopeValidator $scopeValidator,
-        private UserAvailableScopeFilter $userAvailableScopeProvider,
+        private UserAvailableScopesFilter $userAvailableScopesProvider,
     ) {}
 
     /**
@@ -71,7 +71,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 
         $ids = array_map(fn ($it) => $it->getIdentifier(), $scopes);
 
-        $availableIds = $this->userAvailableScopeProvider->filter($userIdentifier, $ids);
+        $availableIds = $this->userAvailableScopesProvider->filter($userIdentifier, $ids);
 
         $scopes = array_filter($scopes, function ($scope) use ($availableIds) {
             return in_array($scope->getIdentifier(), $availableIds);

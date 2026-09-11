@@ -34,7 +34,7 @@ use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 
-class UserAvailableScopeFilter
+class UserAvailableScopesFilter
 {
     public function __construct(
         private EntityManager $entityManager,

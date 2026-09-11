@@ -110,7 +110,6 @@ class AuthorizationServerFactory
             throw new Error("Error occurred.", previous: $e);
         }
 
-        // @todo Configurable.
         $grant->setRefreshTokenTTL($this->configDataProvider->getRefreshTokenTtl());
 
         $server->enableGrantType(

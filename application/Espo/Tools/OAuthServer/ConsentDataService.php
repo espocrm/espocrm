@@ -37,6 +37,7 @@ use Espo\Entities\User;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\League\AuthorizationRequestStorage;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
+use Espo\Tools\OAuthServer\Scope\UserAvailableScopesFilter;
 use InvalidArgumentException;
 use stdClass;
 
@@ -48,6 +49,7 @@ class ConsentDataService
         private Language $language,
         private ApplicationConfig $applicationConfig,
         private AuthorizationRequestStorage $authorizationRequestStorage,
+        private UserAvailableScopesFilter $userAvailableScopesFilter,
     ) {}
 
     /**
@@ -59,7 +61,6 @@ class ConsentDataService
         $client = $this->getClient($clientId);
 
         // @todo Check user is associated.
-        // @todo Filter scopes. In Repo?
 
         return (object) [
             'scopeDataList' => $this->getScopeDataList($client),
@@ -131,6 +132,8 @@ class ConsentDataService
         }
 
         $scopes = array_map(fn ($it) => $it->getIdentifier(), $request->getScopes());
+
+        $scopes = $this->userAvailableScopesFilter->filter($this->user->getId(), $scopes);
 
         /** @var (stdClass & object{name: string, label: string})[] $scopeDataList */
         $scopeDataList = array_map(function ($scope) {
