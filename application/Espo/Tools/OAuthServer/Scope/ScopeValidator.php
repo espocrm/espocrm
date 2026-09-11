@@ -27,68 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer;
+namespace Espo\Tools\OAuthServer\Scope;
 
-use Espo\Core\Acl\Scope;
-use Espo\Core\Utils\Metadata;
-
-/**
- * @since 10.1.0
- */
-class ScopesProvider
+class ScopeValidator
 {
-    /**
-     * @var string[]
-     */
-    private array $commonScopes = [
-        Scope::ADMIN,
-        Scope::GLOBAL,
-    ];
-
     public function __construct(
-        private Metadata $metadata,
+        private ScopesProvider $scopesProvider,
     ) {}
 
-    /**
-     * @return string[]
-     */
-    public function get(): array
+    public function validate(string $scope): bool
     {
-        return [
-            ...$this->commonScopes,
-            ...$this->getAclScopes(),
-        ];
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getAclScopes(): array
-    {
-        /**
-         * @var array<string, array{
-         *     disabled?: bool,
-         *     acl?: mixed,
-         * }> $scopesDefs
-         */
-        $scopesDefs = $this->metadata->get("scopes", []);
-
-        $list = [];
-
-        foreach ($scopesDefs as $scope => $defs) {
-            if (
-                ($defs['disabled'] ?? false) ||
-                !($defs['acl'] ?? false) ||
-                in_array($scope, $this->commonScopes)
-            ) {
-                continue;
-            }
-
-            $list[] = $scope;
-        }
-
-        sort($list);
-
-        return $list;
+        return in_array($scope, $this->scopesProvider->get());
     }
 }

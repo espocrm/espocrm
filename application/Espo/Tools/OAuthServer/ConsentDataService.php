@@ -37,6 +37,7 @@ use Espo\Entities\User;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\League\AuthorizationRequestStorage;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
+use InvalidArgumentException;
 use stdClass;
 
 class ConsentDataService
@@ -58,7 +59,7 @@ class ConsentDataService
         $client = $this->getClient($clientId);
 
         // @todo Check user is associated.
-        // @todo Filter scopes.
+        // @todo Filter scopes. In Repo?
 
         return (object) [
             'scopeDataList' => $this->getScopeDataList($client),
@@ -121,15 +122,15 @@ class ConsentDataService
      */
     private function getScopeDataList(Client $client): array
     {
-        $request = $this->authorizationRequestStorage->get($client->getIdentifier());
+        $clientId = $client->getIdentifier() ?? throw new InvalidArgumentException("No client identifier.");
+
+        $request = $this->authorizationRequestStorage->get($clientId);
 
         if (!$request) {
             throw new Error("No session data.");
         }
 
         $scopes = array_map(fn ($it) => $it->getIdentifier(), $request->getScopes());
-
-        //$scopes = $client->getScopes();
 
         /** @var (stdClass & object{name: string, label: string})[] $scopeDataList */
         $scopeDataList = array_map(function ($scope) {

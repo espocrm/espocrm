@@ -27,16 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer;
+namespace Espo\Tools\OAuthServer\Scope;
 
-class ScopeValidator
+use Espo\Core\Acl\Scope;
+use Espo\Core\Utils\Acl\UserAclManagerProvider;
+use Espo\Entities\User;
+use Espo\ORM\EntityManager;
+
+class UserAvailableScopeFilter
 {
     public function __construct(
-        private ScopesProvider $scopesProvider,
+        private EntityManager $entityManager,
+        private UserAclManagerProvider $aclManagerProvider,
     ) {}
 
-    public function validate(string $scope): bool
+    /**
+     * @param string[] $scopes
+     * @return string[]
+     */
+    public function filter(string $userId, array $scopes): array
     {
-        return in_array($scope, $this->scopesProvider->get());
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            return [];
+        }
+
+        $aclManager = $this->aclManagerProvider->get($user);
+
+        $scopes = array_filter($scopes, function ($scope) use ($aclManager, $user) {
+            if ($scope === Scope::GLOBAL) {
+                return true;
+            }
+
+            return $aclManager->tryCheck($user, $scope);
+        });
+
+        return array_values($scopes);
     }
 }

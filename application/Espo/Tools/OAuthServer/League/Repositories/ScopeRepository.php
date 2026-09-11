@@ -30,7 +30,8 @@
 namespace Espo\Tools\OAuthServer\League\Repositories;
 
 use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
-use Espo\Tools\OAuthServer\ScopeValidator;
+use Espo\Tools\OAuthServer\Scope\UserAvailableScopeFilter;
+use Espo\Tools\OAuthServer\Scope\ScopeValidator;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
@@ -38,6 +39,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 {
     public function __construct(
         private ScopeValidator $scopeValidator,
+        private UserAvailableScopeFilter $userAvailableScopeProvider,
     ) {}
 
     /**
@@ -52,6 +54,9 @@ class ScopeRepository implements ScopeRepositoryInterface
         return new ScopeEntity($identifier);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function finalizeScopes(
         array $scopes,
         ?string $grantType,
@@ -60,13 +65,18 @@ class ScopeRepository implements ScopeRepositoryInterface
         ?string $authCodeId = null,
     ): array {
 
-        /** @noinspection PhpIfWithCommonPartsInspection */
         if (!$userIdentifier) {
             return $scopes;
         }
 
-        // @todo Filter scopes not relevant for the user.
+        $ids = array_map(fn ($it) => $it->getIdentifier(), $scopes);
 
-        return $scopes;
+        $availableIds = $this->userAvailableScopeProvider->filter($userIdentifier, $ids);
+
+        $scopes = array_filter($scopes, function ($scope) use ($availableIds) {
+            return in_array($scope->getIdentifier(), $availableIds);
+        });
+
+        return array_values($scopes);
     }
 }
