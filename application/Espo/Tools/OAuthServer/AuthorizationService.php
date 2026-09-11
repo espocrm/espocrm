@@ -32,26 +32,22 @@ namespace Espo\Tools\OAuthServer;
 use Espo\Core\ApplicationState;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Session\Session;
 use Espo\Entities\User;
+use Espo\Tools\OAuthServer\League\AuthorizationRequestStorage;
 use Espo\Tools\OAuthServer\League\AuthorizationServerFactory;
-use Espo\Tools\OAuthServer\League\Entities\AuthCodeEntity;
-use Espo\Tools\OAuthServer\League\Entities\ClientEntity;
-use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
 use Espo\Tools\OAuthServer\League\Entities\UserEntity;
 use Espo\Tools\OAuthServer\Utils\UriUtil;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 
 class AuthorizationService
 {
     public function __construct(
-        private Session $session,
         private AuthorizationServerFactory $authorizationServerFactory,
         private ApplicationState $applicationState,
+        private AuthorizationRequestStorage $authorizationRequestStorage,
     ) {}
 
     /**
@@ -69,7 +65,7 @@ class AuthorizationService
 
         $clientId = $authRequest->getClient()->getIdentifier();
 
-        $this->session->set(self::composeSessionKey($clientId), serialize($authRequest));
+        $this->authorizationRequestStorage->store($clientId, $authRequest);
 
         return null;
     }
@@ -117,37 +113,15 @@ class AuthorizationService
         }
     }
 
-    private static function composeSessionKey(string $clientId): string
-    {
-        return "oAuthServerAuthorizeRequest_" . $clientId;
-    }
-
     /**
      * @throws NotFound
      */
     private function getAuthRequestFromSession(string $clientId): AuthorizationRequest
     {
-        $key = self::composeSessionKey($clientId);
+        $authRequest = $this->authorizationRequestStorage->get($clientId, clear: true);
 
-        $raw = $this->session->get($key);
-
-        if (!$raw) {
+        if (!$authRequest) {
             throw new NotFound("Session not found.");
-        }
-
-        $this->session->clear($key);
-
-        $authRequest = unserialize($raw, [
-            'allowed_classes' => [
-                AuthorizationRequest::class,
-                ClientEntity::class,
-                ScopeEntity::class,
-                AuthCodeEntity::class,
-            ]
-        ]);
-
-        if (!$authRequest instanceof AuthorizationRequest) {
-            throw new RuntimeException("Unserialization error.");
         }
 
         return $authRequest;

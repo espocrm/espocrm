@@ -29,11 +29,13 @@
 
 namespace Espo\Tools\OAuthServer;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\Language;
 use Espo\Entities\User;
 use Espo\Tools\OAuthServer\Entities\Client;
+use Espo\Tools\OAuthServer\League\AuthorizationRequestStorage;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
 use stdClass;
 
@@ -44,10 +46,12 @@ class ConsentDataService
         private User $user,
         private Language $language,
         private ApplicationConfig $applicationConfig,
+        private AuthorizationRequestStorage $authorizationRequestStorage,
     ) {}
 
     /**
      * @throws NotFound
+     * @throws Error
      */
     public function getData(string $clientId): stdClass
     {
@@ -113,10 +117,19 @@ class ConsentDataService
 
     /**
      * @return stdClass[]
+     * @throws Error
      */
     private function getScopeDataList(Client $client): array
     {
-        $scopes = $client->getScopes();
+        $request = $this->authorizationRequestStorage->get($client->getIdentifier());
+
+        if (!$request) {
+            throw new Error("No session data.");
+        }
+
+        $scopes = array_map(fn ($it) => $it->getIdentifier(), $request->getScopes());
+
+        //$scopes = $client->getScopes();
 
         /** @var (stdClass & object{name: string, label: string})[] $scopeDataList */
         $scopeDataList = array_map(function ($scope) {

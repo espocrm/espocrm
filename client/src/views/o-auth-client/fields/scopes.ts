@@ -30,12 +30,43 @@ import ArrayFieldView from 'views/fields/array';
 
 export default class OAuthClientScopesFieldView extends ArrayFieldView {
 
+    private commonScopes = [
+        'Global',
+        'Admin',
+    ]
+
     protected setupOptions() {
         this.params.options = [
-            'Global',
-            'Admin',
+            ...this.commonScopes,
+            ...this.getAclScopes(),
         ];
+    }
 
-        // @todo Add all scopes, sorted.
+    private getAclScopes(): string[] {
+        const scopesDefs = this.getMetadata().get('scopes', []) as
+            {disabled?: boolean, acl?: any}[];
+
+        const list: string[] = [];
+
+        for (const [scope, defs] of Object.entries(scopesDefs)) {
+            if (
+                defs.disabled ||
+                !defs.acl ||
+                this.commonScopes.includes(scope)
+            ) {
+                continue;
+            }
+
+            list.push(scope);
+        }
+
+        list.sort((a, b) => {
+            const aLabel = this.getLanguage().translate(a, 'scopeNames');
+            const bLabel = this.getLanguage().translate(b, 'scopeNames');
+
+            return aLabel.localeCompare(bLabel);
+        });
+
+        return list;
     }
 }

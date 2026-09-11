@@ -30,6 +30,7 @@
 namespace tests\integration\Espo\Tools\OAuthServer;
 
 use DateTimeImmutable;
+use Espo\Core\Acl\Scope;
 use Espo\Core\Api\Auth;
 use Espo\Core\Api\AuthBuilderFactory;
 use Espo\Core\Api\Method;
@@ -54,7 +55,6 @@ use Espo\Tools\OAuthServer\EntryPoints\AuthorizeComplete;
 use Espo\Tools\OAuthServer\EntryPoints\Token;
 use Espo\Tools\OAuthServer\EntryPoints\TokenRevoke;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
-use Espo\Tools\OAuthServer\ScopesProvider;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
 
@@ -166,7 +166,6 @@ class AuthorizationServerTest extends BaseTestCase
             accessToken: $accessToken,
             client: $client,
         );
-
 
         $this->revokeFailDueWrongClientId(
             accessToken: $accessToken,
@@ -505,7 +504,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $clientId = 'wrong';
         $redirectUri = self::REDIRECT_URI;
-        $scope = ScopesProvider::SCOPE_GLOBAL;
+        $scope = Scope::GLOBAL;
 
         //
 
@@ -523,7 +522,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $clientId = $client->getIdentifier();
         $redirectUri = 'wrong';
-        $scope = ScopesProvider::SCOPE_GLOBAL;
+        $scope = Scope::GLOBAL;
 
         //
 
@@ -579,7 +578,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $client = $em->getRDBRepositoryByClass(Client::class)->getNew();
         $client
-            ->setScopes([ScopesProvider::SCOPE_GLOBAL])
+            ->setScopes([Scope::GLOBAL])
             ->setClientType($type)
             ->setRedirectUris([self::REDIRECT_URI]);
         $em->saveEntity($client);
@@ -672,7 +671,7 @@ class AuthorizationServerTest extends BaseTestCase
                 'client_id' => $client->getIdentifier(),
                 'redirect_uri' => $redirectUri,
                 'response_type' => 'code',
-                'scope' => ScopesProvider::SCOPE_GLOBAL,
+                'scope' => Scope::GLOBAL,
                 'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
                 'code_challenge_method' => 'S256',
             ],
@@ -687,7 +686,7 @@ class AuthorizationServerTest extends BaseTestCase
         $sessionKey = null;
 
         $session
-            ->expects(self::once())
+            ->expects(self::any())
             ->method('set')
             ->with(
                 $this->callback(function ($key) use (&$sessionKey) {
@@ -707,7 +706,7 @@ class AuthorizationServerTest extends BaseTestCase
         //
 
         $session
-            ->expects(self::once())
+            ->expects(self::any())
             ->method('get')
             ->with($sessionKey)
             ->willReturn($authorizationRequest);
@@ -1237,6 +1236,10 @@ class AuthorizationServerTest extends BaseTestCase
 
         $this->assertTrue($result->isResolved());
         $this->assertEquals($user->getId(), $this->getContainer()->getByClass(ApplicationState::class)->getUserId());
+
+        $loggedUser = $this->getContainer()->getByClass(ApplicationState::class)->getUser();
+
+        $this->assertEquals([Scope::GLOBAL], $loggedUser->getScopes());
     }
 
     /**

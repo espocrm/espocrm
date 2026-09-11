@@ -30,6 +30,7 @@
 namespace Espo\Tools\OAuthServer;
 
 use Espo\Core\Acl\Scope;
+use Espo\Core\Utils\Metadata;
 
 /**
  * @since 10.1.0
@@ -37,9 +38,16 @@ use Espo\Core\Acl\Scope;
 class ScopesProvider
 {
     /**
-     * @todo Remove. Use Scope::GLOBAL.
+     * @var string[]
      */
-    public const string SCOPE_GLOBAL = Scope::GLOBAL;
+    private array $commonScopes = [
+        Scope::ADMIN,
+        Scope::GLOBAL,
+    ];
+
+    public function __construct(
+        private Metadata $metadata,
+    ) {}
 
     /**
      * @return string[]
@@ -47,8 +55,40 @@ class ScopesProvider
     public function get(): array
     {
         return [
-            Scope::ADMIN,
-            Scope::GLOBAL,
+            ...$this->commonScopes,
+            ...$this->getAclScopes(),
         ];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAclScopes(): array
+    {
+        /**
+         * @var array<string, array{
+         *     disabled?: bool,
+         *     acl?: mixed,
+         * }> $scopesDefs
+         */
+        $scopesDefs = $this->metadata->get("scopes", []);
+
+        $list = [];
+
+        foreach ($scopesDefs as $scope => $defs) {
+            if (
+                ($defs['disabled'] ?? false) ||
+                !($defs['acl'] ?? false) ||
+                in_array($scope, $this->commonScopes)
+            ) {
+                continue;
+            }
+
+            $list[] = $scope;
+        }
+
+        sort($list);
+
+        return $list;
     }
 }
