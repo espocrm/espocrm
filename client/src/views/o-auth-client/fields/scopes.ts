@@ -30,11 +30,12 @@ import ArrayFieldView from 'views/fields/array';
 
 export default class OAuthClientScopesFieldView extends ArrayFieldView {
 
-
     protected setupOptions() {
         this.params.options = [
-            'Admin',
             'Global',
+            'Admin',
         ];
+
+        // @todo Add all scopes, sorted.
     }
 }

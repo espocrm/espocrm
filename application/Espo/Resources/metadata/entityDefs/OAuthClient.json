@@ -51,7 +51,6 @@
             "audited": true,
             "displayAsList": true,
             "required": true,
-            "isSorted": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\OAuthClient\\Scopes\\Valid"
             ],
