@@ -27,29 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl\Table;
+namespace tests\unit\Espo\Core\Acl\Table;
 
+use Espo\Core\Acl\Table\DefaultCacheKeyProvider;
 use Espo\Entities\User;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-final class DefaultCacheKeyProvider implements CacheKeyProvider
+class DefaultCacheKeyProviderTest extends TestCase
 {
-    public function __construct(private User $user)
-    {}
-
-    public function get(): string
+    #[DataProvider('provider')]
+    public function testKey(string $expected, string $userId, ?array $scopes = null): void
     {
-        $key = 'acl/' . $this->user->getId();
+        $user = $this->createMock(User::class);
 
-        $scopes = $this->user->getScopes();
+        $user->expects(self::any())
+            ->method('getId')
+            ->willReturn($userId);
 
-        if ($scopes === null) {
-            return $key;
-        }
+        $user->expects(self::any())
+            ->method('getScopes')
+            ->willReturn($scopes);
 
-        $hash = hash('xxh128', implode(' ', $scopes));
+        $provider = new DefaultCacheKeyProvider($user);
 
-        $key .= '/' . $hash;
+        $this->assertEquals($expected, $provider->get());
+    }
 
-        return $key;
+    public static function provider(): array
+    {
+        return [
+            ['acl/01', '01', null],
+            ['acl/01/37f6e5e382faedc68e0769892e78d8d3', '01', ['Admin', 'Global']],
+            ['acl/01/99aa06d3014798d86001c324468d497f', '01', []],
+        ];
     }
 }

@@ -738,6 +738,11 @@ class DefaultTable implements Table
             return;
         }
 
+        if ($this->isAdmin() && array_key_exists(Scope::ADMIN, $map)) {
+            // Grant an effective admin access to everything.
+            return;
+        }
+
         foreach ($this->getScopeList() as $scope) {
             $value = $this->getAclMetaValue($scope);
 

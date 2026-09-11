@@ -31,9 +31,6 @@ namespace Espo\Core\Acl\Map;
 
 use Espo\Entities\User;
 
-/**
- * @todo Test.
- */
 final class DefaultCacheKeyProvider implements CacheKeyProvider
 {
     public function __construct(private User $user)
@@ -49,7 +46,7 @@ final class DefaultCacheKeyProvider implements CacheKeyProvider
             return $key;
         }
 
-        $hash = hash('xxh3', implode(' ', $scopes) ?: '_');
+        $hash = hash('xxh128', implode(' ', $scopes));
 
         $key .= '/' . $hash;
 

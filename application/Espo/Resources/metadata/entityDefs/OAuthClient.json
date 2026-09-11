@@ -51,6 +51,7 @@
             "audited": true,
             "displayAsList": true,
             "required": true,
+            "translation": "Global.scopeNames",
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\OAuthClient\\Scopes\\Valid"
             ],
