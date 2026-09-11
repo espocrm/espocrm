@@ -490,7 +490,9 @@ class User extends Person
     }
 
     /**
-     * @internal
+     * Get access scopes. If not set, no additional restrictions.
+     * Only for the current user.
+     *
      * @return ?string[]
      * @since 10.1.0
      */

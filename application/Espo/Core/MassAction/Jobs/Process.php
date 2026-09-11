@@ -29,7 +29,6 @@
 
 namespace Espo\Core\MassAction\Jobs;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data as JobData;
 use Espo\Core\MassAction\MassActionFactory;
@@ -40,40 +39,34 @@ use Espo\Entities\MassAction as MassActionEntity;
 use Espo\Entities\Notification;
 use Espo\Entities\User;
 
+use RuntimeException;
 use Throwable;
 
 class Process implements Job
 {
+    public const string PARAM_USER_SCOPES = 'userScopes';
+
     public function __construct(
         private EntityManager $entityManager,
         private MassActionFactory $factory,
         private Language $language
     ) {}
 
-    /**
-     * @throws Error
-     */
     public function run(JobData $data): void
     {
         $id = $data->getTargetId();
 
         if ($id === null) {
-            throw new Error("ID not passed to the mass action job.");
+            throw new RuntimeException("ID not passed to the mass action job.");
         }
 
-        /** @var MassActionEntity|null $entity */
-        $entity = $this->entityManager->getEntityById(MassActionEntity::ENTITY_TYPE, $id);
+        $entity = $this->entityManager->getRDBRepositoryByClass(MassActionEntity::class)->getById($id);
 
-        if ($entity === null) {
-            throw new Error("MassAction '$id' not found.");
+        if (!$entity) {
+            throw new RuntimeException("MassAction '$id' not found.");
         }
 
-        /** @var User|null $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $entity->getCreatedBy()->getId());
-
-        if (!$user) {
-            throw new Error("MassAction '$id', user not found.");
-        }
+        $user = $this->getUser($entity, $data);
 
         $params = $entity->getParams();
 
@@ -89,7 +82,7 @@ class Process implements Job
         } catch (Throwable $e) {
             $this->setFailed($entity);
 
-            throw new Error("Mass action job error: " . $e->getMessage());
+            throw new RuntimeException("Mass action job error: " . $e->getMessage());
         }
 
         $this->setSuccess($entity, $result);
@@ -136,5 +129,22 @@ class Process implements Job
             ->setProcessedCount($result->getCount());
 
         $this->entityManager->saveEntity($entity);
+    }
+
+    private function getUser(MassActionEntity $entity, JobData $data): User
+    {
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($entity->getCreatedBy()->getId());
+
+        if (!$user) {
+            throw new RuntimeException("MassAction '{$entity->getId()}', user not found.");
+        }
+
+        $userScopes = $data->get(self::PARAM_USER_SCOPES);
+
+        if (is_array($userScopes)) {
+            $user->setScopes($userScopes);
+        }
+
+        return $user;
     }
 }

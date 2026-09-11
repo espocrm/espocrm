@@ -29,57 +29,73 @@
 
 namespace Espo\Tools\Import\Jobs;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
-use Espo\Core\Exceptions\Error;
 use Espo\Tools\Import\ImportFactory;
 use Espo\Tools\Import\Params as ImportParams;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
+use RuntimeException;
 
 class RunIdle implements Job
 {
+    public const string PARAM_USER_SCOPES = 'userScopes';
+
     public function __construct(
         private ImportFactory $factory,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
     ) {}
 
-    /**
-     * @throws Forbidden
-     * @throws Error
-     */
     public function run(Data $data): void
     {
         $raw = $data->getRaw();
 
-        $entityType = $raw->entityType;
-        $attachmentId = $raw->attachmentId;
-        $importId = $raw->importId;
-        $importAttributeList = $raw->importAttributeList;
-        $userId = $raw->userId;
+        $entityType = $raw->entityType ?? throw new RuntimeException();
+        $attachmentId = $raw->attachmentId ?? throw new RuntimeException();
+        $importId = $raw->importId ?? throw new RuntimeException();
+        $importAttributeList = $raw->importAttributeList ?? throw new RuntimeException();
+        $userId = $raw->userId ?? throw new RuntimeException();
 
         $params = ImportParams::fromRaw($raw->params);
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        $user = $this->getUser($userId, $data);
 
-        if (!$user) {
-            throw new Error("Import: User not found.");
-        }
-
-        if (!$user->isActive()) {
-            throw new Error("Import: User is not active.");
-        }
-
-        $this->factory
+        $import = $this->factory
             ->create()
             ->setEntityType($entityType)
             ->setAttributeList($importAttributeList)
             ->setAttachmentId($attachmentId)
             ->setParams($params)
             ->setId($importId)
-            ->setUser($user)
-            ->run();
+            ->setUser($user);
+
+        try {
+            $import->run();
+        } catch (Error|Forbidden $e) {
+            throw new RuntimeException("Import error: " . $e->getMessage(), previous: $e);
+        }
+    }
+
+    private function getUser(string $userId, Data $data): User
+    {
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            throw new RuntimeException("Import: User not found.");
+        }
+
+        if (!$user->isActive()) {
+            throw new RuntimeException("Import: User is not active.");
+        }
+
+        $userScopes = $data->get(self::PARAM_USER_SCOPES);
+
+        if (is_array($userScopes)) {
+            $user->setScopes($userScopes);
+        }
+
+        return $user;
     }
 }
