@@ -36,7 +36,6 @@
             "type": "multiEnum",
             "readOnly": true,
             "displayAsList": true,
-            "translation": "Global.scopeNames",
             "storeArrayValues": false
         },
         "user": {

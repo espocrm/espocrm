@@ -60,12 +60,7 @@ export default class OAuthClientScopesFieldView extends ArrayFieldView {
             list.push(scope);
         }
 
-        list.sort((a, b) => {
-            const aLabel = this.getLanguage().translate(a, 'scopeNames');
-            const bLabel = this.getLanguage().translate(b, 'scopeNames');
-
-            return aLabel.localeCompare(bLabel);
-        });
+        list.sort((a, b) => a.localeCompare(b));
 
         return list;
     }
