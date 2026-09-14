@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\Client;
+use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
 use Espo\Tools\OAuthServer\Repository\ClientRepository;
 use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository;
 use RuntimeException;
@@ -44,6 +45,7 @@ class ConnectedAppService
     public function __construct(
         private ClientRepository $clientRepository,
         private RefreshTokenRepository $refreshTokenRepository,
+        private AccessTokenRepository $accessTokenRepository,
         private EntityManager $entityManager,
     ) {}
 
@@ -75,12 +77,20 @@ class ConnectedAppService
             throw new NotFound("Client not found.");
         }
 
-        $refreshTokens = $this->refreshTokenRepository->getActiveForClientIdAndUser($client->getId(), $user->getId());
+        $refreshTokens = $this->refreshTokenRepository->findActiveForClientIdAndUser($client->getId(), $user->getId());
 
         foreach ($refreshTokens as $refreshToken) {
             $refreshToken->setRevoked();
 
             $this->entityManager->saveEntity($refreshToken);
+        }
+
+        $accessTokens = $this->accessTokenRepository->findActiveForClientIdAndUser($client->getId(), $user->getId());
+
+        foreach ($accessTokens as $accessToken) {
+            $accessToken->setRevoked();
+
+            $this->entityManager->saveEntity($accessToken);
         }
     }
 }

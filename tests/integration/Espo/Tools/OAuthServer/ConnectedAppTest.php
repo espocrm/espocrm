@@ -33,8 +33,10 @@ use Espo\Core\Acl\Scope;
 use Espo\Core\Field\DateTime;
 use Espo\Tools\OAuthServer\ClientType;
 use Espo\Tools\OAuthServer\ConnectedApp\ConnectedAppService;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
+use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
 use tests\integration\Core\BaseTestCase;
 
 class ConnectedAppTest extends BaseTestCase
@@ -58,7 +60,7 @@ class ConnectedAppTest extends BaseTestCase
             $em->getRDBRepositoryByClass(RefreshToken::class)
                 ->getNew()
                 ->setClient($client1)
-                ->setExpiresAt(DateTime::createNow())
+                ->setExpiresAt(DateTime::createNow()->addHours(1))
                 ->setUser($user1)
         );
 
@@ -66,7 +68,7 @@ class ConnectedAppTest extends BaseTestCase
             $em->getRDBRepositoryByClass(RefreshToken::class)
                 ->getNew()
                 ->setClient($client2)
-                ->setExpiresAt(DateTime::createNow())
+                ->setExpiresAt(DateTime::createNow()->addHours(1))
                 ->setUser($user1)
         );
 
@@ -74,7 +76,23 @@ class ConnectedAppTest extends BaseTestCase
             $em->getRDBRepositoryByClass(RefreshToken::class)
                 ->getNew()
                 ->setClient($client1)
-                ->setExpiresAt(DateTime::createNow())
+                ->setExpiresAt(DateTime::createNow()->addHours(1))
+                ->setUser($user1)
+        );
+
+        $em->saveEntity(
+            $em->getRDBRepositoryByClass(AccessToken::class)
+                ->getNew()
+                ->setClient($client1)
+                ->setExpiresAt(DateTime::createNow()->addHours(1))
+                ->setUser($user1)
+        );
+
+        $em->saveEntity(
+            $em->getRDBRepositoryByClass(AccessToken::class)
+                ->getNew()
+                ->setClient($client2)
+                ->setExpiresAt(DateTime::createNow()->addHours(1))
                 ->setUser($user1)
         );
 
@@ -82,11 +100,13 @@ class ConnectedAppTest extends BaseTestCase
             $em->getRDBRepositoryByClass(RefreshToken::class)
                 ->getNew()
                 ->setClient($client1)
-                ->setExpiresAt(DateTime::createNow())
+                ->setExpiresAt(DateTime::createNow()->addHours(1))
                 ->setUser($user2)
         );
 
         //
+
+        $accessTokenRepo = $this->getInjectableFactory()->create(AccessTokenRepository::class);
 
         $service = $this->getInjectableFactory()->create(ConnectedAppService::class);
 
@@ -95,6 +115,13 @@ class ConnectedAppTest extends BaseTestCase
         $this->assertCount(2, $apps);
         $this->assertEquals($client1->getIdentifier(), $apps[0]->id);
 
+        $this->assertEquals(
+            1,
+            $accessTokenRepo
+                ->findActiveForClientIdAndUser($client1->getId(), $user1->getId())
+                ->count(),
+        );
+
         //
 
         $service->disconnect($user1, $client1->getIdentifier());
@@ -102,6 +129,13 @@ class ConnectedAppTest extends BaseTestCase
         $apps = $service->getList($user1);
 
         $this->assertCount(1, $apps);
+
+        $this->assertEquals(
+            0,
+            $accessTokenRepo
+                ->findActiveForClientIdAndUser($client1->getId(), $user1->getId())
+                ->count(),
+        );
 
         //
 

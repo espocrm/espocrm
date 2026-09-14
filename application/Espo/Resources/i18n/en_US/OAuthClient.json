@@ -38,6 +38,6 @@
         "scopes": "Special scopes:\n\n- `Global` – Grants all possible scopes except Admin.\n- `Admin` – Administrative capabilities. Applicable only for admin users. If an admin user does not have this scope, their admin capabilities will be removed."
     },
     "messages": {
-        "allowAccessInfo": "**{clientName}** would like to access **{applicationName}** as *{username}*. By granting access, you will allow {clientName} to access the following scopes."
+        "allowAccessInfo": "**{clientName}** would like to access **{applicationName}** as *{username}*. By granting access, you will allow {clientName} to access the scopes listed below."
     }
 }

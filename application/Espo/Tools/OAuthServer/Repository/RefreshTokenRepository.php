@@ -58,7 +58,7 @@ class RefreshTokenRepository
     /**
      * @return SthCollection<RefreshToken>
      */
-    public function getActiveForClientIdAndUser(string $clientId, string $userId): SthCollection
+    public function findActiveForClientIdAndUser(string $clientId, string $userId): SthCollection
     {
         return $this->entityManager->getRDBRepositoryByClass(RefreshToken::class)
             ->where([

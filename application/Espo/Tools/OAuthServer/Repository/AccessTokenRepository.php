@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\OAuthServer\Repository;
 
+use Espo\ORM\SthCollection;
 use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
 use Espo\ORM\EntityManager;
 use Espo\Tools\OAuthServer\Entities\AccessToken;
@@ -64,5 +65,20 @@ class AccessTokenRepository
                 AccessToken::FIELD_HASH => $hash,
             ])
             ->findOne();
+    }
+
+    /**
+     * @return SthCollection<AccessToken>
+     */
+    public function findActiveForClientIdAndUser(string $clientId, string $userId): SthCollection
+    {
+        return $this->entityManager->getRDBRepositoryByClass(AccessToken::class)
+            ->where([
+                AccessToken::FIELD_STATUS => AccessToken::STATUS_ACTIVE,
+                AccessToken::FIELD_CLIENT . 'Id' => $clientId,
+                AccessToken::FIELD_USER . 'Id' => $userId,
+            ])
+            ->sth()
+            ->find();
     }
 }
