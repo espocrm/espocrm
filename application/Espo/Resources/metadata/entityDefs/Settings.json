@@ -621,7 +621,8 @@
             "disabled": true
         },
         "siteUrl": {
-            "type": "varchar",
+            "type": "url",
+            "protocolRequired": true,
             "tooltip": true
         },
         "applicationName": {
