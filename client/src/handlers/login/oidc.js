@@ -35,7 +35,7 @@ class OidcLoginHandler extends LoginHandler {
     process() {
         const proxy = window.open(
             'about:blank',
-            'ConnectWithOAuth',
+            'ConnectWithOAuthOidc',
             'location=0,status=0,width=800,height=800'
         );
 
