@@ -40,6 +40,7 @@ use Espo\Core\Record\EntityProvider;
 use Espo\Entities\User;
 use Espo\Tools\OAuthServer\ConnectedApp\AppData;
 use Espo\Tools\OAuthServer\ConnectedApp\ConnectedAppService;
+use Espo\Tools\OAuthServer\ConnectedApp\UserCheck;
 
 /**
  * @noinspection PhpUnused
@@ -50,6 +51,7 @@ class GetConnectedApps implements Action
         private EntityProvider $entityProvider,
         private User $user,
         private ConnectedAppService $oAuthService,
+        private UserCheck $userCheck,
     ) {}
 
     /**
@@ -63,6 +65,10 @@ class GetConnectedApps implements Action
 
         return ResponseComposer::json([
             'list' => array_map(fn (AppData $it) => $it->toApiOutput(), $apps),
+            'user' => [
+                'id' => $user->getId(),
+                'name' => $user->getName() ?? $user->getId(),
+            ],
         ]);
     }
 
@@ -79,6 +85,10 @@ class GetConnectedApps implements Action
             throw new Forbidden();
         }
 
-        return $this->entityProvider->getByClass(User::class, $id);
+        $user = $this->entityProvider->getByClass(User::class, $id);
+
+        $this->userCheck->assert($user);
+
+        return $user;
     }
 }

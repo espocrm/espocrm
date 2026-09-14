@@ -148,6 +148,7 @@
         "OAuthRefreshToken": "OAuth Refresh Tokens"
     },
     "labels": {
+        "Disconnect": "Disconnect",
         "Previous Page": "Previous Page",
         "Next Page": "Next Page",
         "First Page": "First Page",

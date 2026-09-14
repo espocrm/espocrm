@@ -108,7 +108,7 @@ class ConnectedAppTest extends BaseTestCase
         $apps = $service->getList($user2);
 
         $this->assertCount(1, $apps);
-        
+
         //
 
         $apps = $service->getList($user2);

@@ -18,5 +18,11 @@
             "action": "page"
         },
         "order": 1
+    },
+    "User/:id/connectedApps": {
+        "params": {
+            "controller": "User",
+            "action": "listConnectedApps"
+        }
     }
 }

@@ -55,9 +55,11 @@ class ConnectedAppService
         $clients = $this->clientRepository->findWithActiveRefreshTokensForUser($user->getId(), self::LIMIT);
 
         return array_map(function (Client $it) {
+            $id = $it->getIdentifier() ?? throw new RuntimeException();
+
             return new AppData(
-                id: $it->getIdentifier() ?? throw new RuntimeException(),
-                name: $it->getName(),
+                id: $id,
+                name: $it->getName() ?? $id,
             );
         }, iterator_to_array($clients));
     }
