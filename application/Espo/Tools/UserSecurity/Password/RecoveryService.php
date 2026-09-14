@@ -268,7 +268,7 @@ class RecoveryService
 
         $entity = $this->entityManager->getRDBRepositoryByClass(PasswordChangeRequest::class)->getNew();
 
-        $entity->set([
+        $entity->setMultiple([
             'userId' => $user->getId(),
             'requestId' => Util::generateCryptId(),
             'url' => $url,
