@@ -27,46 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\Repository;
+namespace Espo\Tools\OAuthServer\ConnectedApp;
 
-use Espo\ORM\SthCollection;
-use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
-use Espo\Tools\OAuthServer\Entities\RefreshToken;
-use SensitiveParameter;
+use Espo\Tools\OAuthServer\Entities\Client;
+use Espo\Tools\OAuthServer\Repository\ClientRepository;
+use Espo\Tools\OAuthServer\Repository\RefreshTokenRepository;
+use RuntimeException;
 
-class RefreshTokenRepository
+class ConnectedAppService
 {
+    private const int LIMIT = 50;
+
     public function __construct(
+        private ClientRepository $clientRepository,
+        private RefreshTokenRepository $refreshTokenRepository,
         private EntityManager $entityManager,
-        private IdentifierHasher $hasher,
     ) {}
 
-    public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?RefreshToken
+    /**
+     * @return AppData[]
+     */
+    public function getList(User $user): array
     {
-        $hash = $this->hasher->hash($identifier);
+        $clients = $this->clientRepository->findWithActiveRefreshTokensForUser($user->getId(), self::LIMIT);
 
-        return $this->entityManager
-            ->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([
-                RefreshToken::FIELD_HASH => $hash,
-                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-            ])
-            ->findOne();
+        return array_map(function (Client $it) {
+            return new AppData(
+                id: $it->getIdentifier() ?? throw new RuntimeException(),
+                name: $it->getName(),
+            );
+        }, iterator_to_array($clients));
     }
 
     /**
-     * @return SthCollection<RefreshToken>
+     * @throws NotFound
      */
-    public function getActiveForClientIdAndUser(string $clientId, string $userId): SthCollection
+    public function disconnect(User $user, string $clientId): void
     {
-        return $this->entityManager->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([
-                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-                RefreshToken::FIELD_CLIENT . 'Id' => $clientId,
-                RefreshToken::FIELD_USER . 'Id' => $userId,
-            ])
-            ->sth()
-            ->find();
+        $client = $this->clientRepository->getByIdentifier($clientId);
+
+        if (!$client) {
+            throw new NotFound("Client not found.");
+        }
+
+        $refreshTokens = $this->refreshTokenRepository->getActiveForClientIdAndUser($client->getId(), $user->getId());
+
+        foreach ($refreshTokens as $refreshToken) {
+            $refreshToken->setRevoked();
+
+            $this->entityManager->saveEntity($refreshToken);
+        }
     }
 }

@@ -27,46 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\Repository;
+namespace Espo\Tools\OAuthServer\ConnectedApp;
 
-use Espo\ORM\SthCollection;
-use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
-use Espo\ORM\EntityManager;
-use Espo\Tools\OAuthServer\Entities\RefreshToken;
-use SensitiveParameter;
+use stdClass;
 
-class RefreshTokenRepository
+readonly class AppData
 {
     public function __construct(
-        private EntityManager $entityManager,
-        private IdentifierHasher $hasher,
+        public string $id,
+        public ?string $name,
     ) {}
 
-    public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?RefreshToken
+    public function toApiOutput(): stdClass
     {
-        $hash = $this->hasher->hash($identifier);
-
-        return $this->entityManager
-            ->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([
-                RefreshToken::FIELD_HASH => $hash,
-                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-            ])
-            ->findOne();
-    }
-
-    /**
-     * @return SthCollection<RefreshToken>
-     */
-    public function getActiveForClientIdAndUser(string $clientId, string $userId): SthCollection
-    {
-        return $this->entityManager->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([
-                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-                RefreshToken::FIELD_CLIENT . 'Id' => $clientId,
-                RefreshToken::FIELD_USER . 'Id' => $userId,
-            ])
-            ->sth()
-            ->find();
+        return (object) [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
     }
 }

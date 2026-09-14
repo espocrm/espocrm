@@ -461,6 +461,16 @@
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetUserAcl"
     },
     {
+        "route": "/User/:id/connectedApps",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetConnectedApps"
+    },
+    {
+        "route": "/User/:id/connectedApps/:appId",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\DeleteConnectedApp"
+    },
+    {
         "route": "/UserSecurity/apiKey/generate",
         "method": "post",
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostApiKeyGenerate"

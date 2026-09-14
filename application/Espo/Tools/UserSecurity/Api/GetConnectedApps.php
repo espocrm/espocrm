@@ -27,46 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OAuthServer\Repository;
+namespace Espo\Tools\UserSecurity\Api;
 
-use Espo\ORM\SthCollection;
-use Espo\Tools\OAuthServer\Utils\IdentifierHasher;
-use Espo\ORM\EntityManager;
-use Espo\Tools\OAuthServer\Entities\RefreshToken;
-use SensitiveParameter;
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Record\EntityProvider;
+use Espo\Entities\User;
+use Espo\Tools\OAuthServer\ConnectedApp\AppData;
+use Espo\Tools\OAuthServer\ConnectedApp\ConnectedAppService;
 
-class RefreshTokenRepository
+/**
+ * @noinspection PhpUnused
+ */
+class GetConnectedApps implements Action
 {
     public function __construct(
-        private EntityManager $entityManager,
-        private IdentifierHasher $hasher,
+        private EntityProvider $entityProvider,
+        private User $user,
+        private ConnectedAppService $oAuthService,
     ) {}
 
-    public function getActiveByIdentifier(#[SensitiveParameter] string $identifier): ?RefreshToken
+    /**
+     * @inheritDoc
+     */
+    public function process(Request $request): Response
     {
-        $hash = $this->hasher->hash($identifier);
+        $user = $this->fetchUser($request);
 
-        return $this->entityManager
-            ->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([
-                RefreshToken::FIELD_HASH => $hash,
-                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-            ])
-            ->findOne();
+        $apps = $this->oAuthService->getList($user);
+
+        return ResponseComposer::json([
+            'list' => array_map(fn (AppData $it) => $it->toApiOutput(), $apps),
+        ]);
     }
 
     /**
-     * @return SthCollection<RefreshToken>
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
      */
-    public function getActiveForClientIdAndUser(string $clientId, string $userId): SthCollection
+    private function fetchUser(Request $request): User
     {
-        return $this->entityManager->getRDBRepositoryByClass(RefreshToken::class)
-            ->where([
-                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-                RefreshToken::FIELD_CLIENT . 'Id' => $clientId,
-                RefreshToken::FIELD_USER . 'Id' => $userId,
-            ])
-            ->sth()
-            ->find();
+        $id = $request->getRouteParam('id') ?? throw new BadRequest();
+
+        if ($id !== $this->user->getId() && !$this->user->isEffectiveAdmin()) {
+            throw new Forbidden();
+        }
+
+        return $this->entityProvider->getByClass(User::class, $id);
     }
 }
