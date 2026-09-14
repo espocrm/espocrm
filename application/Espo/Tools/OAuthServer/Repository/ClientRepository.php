@@ -36,6 +36,7 @@ use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\Tools\OAuthServer\Entities\AccessToken;
 use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\Entities\RefreshToken;
 
@@ -69,20 +70,33 @@ class ClientRepository
     /**
      * @return EntityCollection<Client>
      */
-    public function findWithActiveRefreshTokensForUser(string $userId, int $limit): EntityCollection
+    public function findConnectedForUser(string $userId, int $limit): EntityCollection
     {
         return $this->entityManager->getRDBRepositoryByClass(Client::class)
             ->where(
-                Cond::in(
-                    Expr::column(Attribute::ID),
-                    SelectBuilder::create()
-                        ->from(RefreshToken::ENTITY_TYPE)
-                        ->select([RefreshToken::FIELD_CLIENT . 'Id'])
-                        ->where([
-                            RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
-                            RefreshToken::FIELD_USER . 'Id' => $userId,
-                        ])
-                        ->build()
+                Cond::or(
+                    Cond::in(
+                        Expr::column(Attribute::ID),
+                        SelectBuilder::create()
+                            ->from(RefreshToken::ENTITY_TYPE)
+                            ->select([RefreshToken::FIELD_CLIENT . 'Id'])
+                            ->where([
+                                RefreshToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
+                                RefreshToken::FIELD_USER . 'Id' => $userId,
+                            ])
+                            ->build()
+                    ),
+                    Cond::in(
+                        Expr::column(Attribute::ID),
+                        SelectBuilder::create()
+                            ->from(AccessToken::ENTITY_TYPE)
+                            ->select([RefreshToken::FIELD_CLIENT . 'Id'])
+                            ->where([
+                                AccessToken::FIELD_STATUS => RefreshToken::STATUS_ACTIVE,
+                                AccessToken::FIELD_USER . 'Id' => $userId,
+                            ])
+                            ->build()
+                    ),
                 )
             )
             ->where([

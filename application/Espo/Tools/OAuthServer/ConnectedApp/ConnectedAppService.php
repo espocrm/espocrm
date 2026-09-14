@@ -54,7 +54,7 @@ class ConnectedAppService
      */
     public function getList(User $user): array
     {
-        $clients = $this->clientRepository->findWithActiveRefreshTokensForUser($user->getId(), self::LIMIT);
+        $clients = $this->clientRepository->findConnectedForUser($user->getId(), self::LIMIT);
 
         return array_map(function (Client $it) {
             $id = $it->getIdentifier() ?? throw new RuntimeException();
