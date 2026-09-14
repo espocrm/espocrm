@@ -3,7 +3,8 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "index": true
+            "index": true,
+            "maxLength": 64
         },
         "data": {
             "type": "jsonObject"

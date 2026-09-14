@@ -44,7 +44,7 @@ class UniqueId extends Database
     {
         $entity = parent::getNew();
 
-        $entity->set(Field::NAME, Util::generateMoreEntropyId());
+        $entity->set(Field::NAME, Util::generateCryptId());
 
         return $entity;
     }

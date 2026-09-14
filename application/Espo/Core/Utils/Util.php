@@ -581,18 +581,16 @@ class Util
 
     /**
      * Generate an ID with more entropy.
+     * @deprecated As of v10.1.0.
+     * @todo Remove in v11.0.
      */
     public static function generateMoreEntropyId(): string
     {
-        return
-            substr(md5(uniqid((string) rand(), true)), 0, 16) .
-            substr(md5((string) rand()), 0, 4);
+        return self::generateCryptId();
     }
 
     /**
      * Generate a crypt ID.
-     *
-     * @return string
      */
     public static function generateCryptId(): string
     {
