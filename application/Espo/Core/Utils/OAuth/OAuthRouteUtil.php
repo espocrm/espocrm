@@ -44,7 +44,10 @@ class OAuthRouteUtil
         /** @var string $scriptName */
         $scriptName = parse_url($serverScriptName , PHP_URL_PATH);
 
-        $scriptNameModified = str_replace('public/oauth/', 'oauth/', $scriptName);
+        $scriptNameModified = strtr($scriptName, [
+            '/public/oauth/' => '/oauth/',
+            '/public/.well-known/' => '/.well-known/',
+        ]);
 
         $scriptDir = dirname($scriptNameModified);
 

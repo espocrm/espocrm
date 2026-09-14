@@ -25,5 +25,15 @@
         "noAuth": true,
         "notExposed": true,
         "allowedMethods": ["post"]
+    },
+    "oAuthProtectedResourceMetadata": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\ProtectedResourceMetadata",
+        "noAuth": true,
+        "notExposed": true
+    },
+    "oAuthAuthorizationServerMetadata": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizationServerMetadata",
+        "noAuth": true,
+        "notExposed": true
     }
 }
