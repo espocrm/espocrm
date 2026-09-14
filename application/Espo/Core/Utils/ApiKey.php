@@ -46,6 +46,7 @@ class ApiKey
 
     /**
      * @deprecated
+     * @todo Remove in v11.0.
      * @internal
      */
     public static function hashLegacy(string $secretKey, string $string = ''): string

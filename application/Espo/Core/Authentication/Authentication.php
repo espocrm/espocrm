@@ -829,10 +829,10 @@ class Authentication
             $authToken = $this->authTokenManager->get($password);
         }
 
-        if ($authToken && $authToken->getSecret()) {
+        if ($authToken?->getSecret()) {
             $sentSecret = $request->getCookieParam(self::COOKIE_AUTH_TOKEN_SECRET);
 
-            if ($sentSecret !== $authToken->getSecret()) {
+            if (!$sentSecret || !hash_equals($authToken->getSecret(), $sentSecret)) {
                 $authToken = null;
             }
         }

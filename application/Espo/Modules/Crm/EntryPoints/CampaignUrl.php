@@ -153,7 +153,7 @@ class CampaignUrl implements EntryPoint
     {
         $hashActual = $this->hasher->hash($emailAddress);
 
-        if ($hashActual !== $hash) {
+        if (!hash_equals($hashActual, $hash)) {
             throw new NotFoundSilent();
         }
 
@@ -182,7 +182,7 @@ class CampaignUrl implements EntryPoint
     {
         $hashActual = $this->hasher->hash($uid);
 
-        if ($hashActual !== $hash) {
+        if (!hash_equals($hashActual, $hash)) {
             throw new NotFoundSilent();
         }
 

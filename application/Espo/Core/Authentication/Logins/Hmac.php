@@ -76,11 +76,12 @@ class Hmac implements Login
         $string = $request->getMethod() . ' ' . $request->getResourcePath();
 
         // As of v8.4.1.
-        if ($hash === ApiKey::hash($secretKey, $string)) {
+        if (hash_equals(ApiKey::hash($secretKey, $string), $hash)) {
             return Result::success($user);
         }
 
-        if ($hash === ApiKey::hashLegacy($secretKey, $string)) {
+        // @todo Remove in v11.0.
+        if (hash_equals(ApiKey::hashLegacy($secretKey, $string), $hash)) {
             return Result::success($user);
         }
 
