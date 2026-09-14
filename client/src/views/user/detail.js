@@ -106,6 +106,18 @@ export default class extends DetailView {
                 hidden: !showActivities,
             })
         }
+
+        if (
+            (this.getUserModel().isRegular() || this.getUserModel().isAdmin()) &&
+            (this.getUser().id === this.getUserModel().id || this.getUser().isAdmin())
+        ) {
+            this.addMenuItem('dropdown', {
+                name: 'connectedApps',
+                iconHtml: '<span class="fas fa-user-lock"></span>',
+                text: this.translate('Connected Apps', 'labels', 'User'),
+                link: `#User/${this.model.id}/connectedApps`,
+            });
+        }
     }
 
     /**

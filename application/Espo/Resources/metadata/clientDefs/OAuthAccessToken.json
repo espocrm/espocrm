@@ -1,0 +1,43 @@
+{
+    "controller": "controllers/record",
+    "textFilterDisabled": true,
+    "createDisabled": true,
+    "editDisabled": true,
+    "massUpdateDisabled": true,
+    "rowActionDefs": {
+        "revoke": {
+            "labelTranslation": "OAuthClient.strings.revoke",
+            "handler": "handlers/o-auth-access-token/revoke-row-action",
+            "acl": "edit"
+        }
+    },
+    "rowActionList": [
+        "revoke"
+    ],
+    "massActionDefs": {
+        "revoke": {
+            "acl": "edit",
+            "handler": "handlers/o-auth-access-token/revoke-mass-action",
+            "actionFunction": "process",
+            "groupIndex": 9
+        }
+    },
+    "massActionList": [
+        "revoke"
+    ],
+    "checkAllResultMassActionList": [
+        "revoke"
+    ],
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "name": "oAuthClients",
+                    "labelTranslation": "Global.scopeNamesPlural.OAuthClient",
+                    "aclScope": "OAuthClient",
+                    "link": "#Admin/oAuthClients"
+                }
+            ]
+        }
+    }
+}

@@ -49,6 +49,7 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
 use Espo\Tools\MassUpdate\Processor;
+use RuntimeException;
 use tests\integration\Core\BaseTestCase;
 
 class MassActionTest extends BaseTestCase
@@ -280,7 +281,7 @@ class MassActionTest extends BaseTestCase
         $process = $injectableFactory1->create(JobProcess::class);
 
         // Mass-update for User entity type is allowed only for admins.
-        $this->expectException(Error::class);
+        $this->expectException(RuntimeException::class);
 
         $process->run(JobData::create()->withTargetId($massActionId));
     }

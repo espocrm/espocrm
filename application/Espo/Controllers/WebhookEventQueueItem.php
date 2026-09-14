@@ -42,7 +42,7 @@ class WebhookEventQueueItem extends RecordBase
 {
     protected function checkAccess(): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             return false;
         }
 

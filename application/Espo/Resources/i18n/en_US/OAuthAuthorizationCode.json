@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "hash": "Hash",
+        "status": "Status",
+        "client": "Client",
+        "user": "User",
+        "expiresAt": "Expires At",
+        "redirectUri": "Redirect URI",
+        "scopes": "Scopes"
+    },
+    "links": {
+        "client": "Client",
+        "user": "User"
+    },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Revoked": "Revoked",
+            "Expired": "Expired"
+        }
+    },
+    "massActions": {
+        "revoke": "Revoke"
+    }
+}

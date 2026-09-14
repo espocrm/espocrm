@@ -29,11 +29,13 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Acl\Scope;
 use Espo\Core\Entities\Person;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Name\Field;
 use Espo\Modules\Crm\Entities\Contact;
+use LogicException;
 use RuntimeException;
 
 class User extends Person
@@ -78,6 +80,12 @@ class User extends Person
     public const string FIELD_SECRET_KEY = 'secretKey';
     /** @since 10.0.4 */
     public const string FIELD_AUTH_METHOD = 'authMethod';
+
+    /**
+     * @internal
+     * @since 10.1.0
+     */
+    public const string FIELD_SCOPES = 'scopes';
 
     /**
      * @internal
@@ -172,12 +180,38 @@ class User extends Person
 
     /**
      * Is admin, super-admin or system user.
+     *
+     * Do not use for access check for the current user. Use Acl::checkAdmin instead.
      */
     public function isAdmin(): bool
     {
         return $this->getType() === self::TYPE_ADMIN ||
             $this->isSystem() ||
             $this->isSuperAdmin();
+    }
+
+    /**
+     * Is admin and is not stripped of admin capabilities.
+     *
+     * Prefer using Acl::checkAdmin instead.
+     *
+     * @since 10.1.0
+     */
+    public function isEffectiveAdmin(): bool
+    {
+        if (!$this->isAdmin()) {
+            return false;
+        }
+
+        if ($this->getScopes() === null) {
+            return true;
+        }
+
+        if (!in_array(Scope::ADMIN, $this->getScopes())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -439,5 +473,31 @@ class User extends Person
     public function getPasswordVersion(): ?int
     {
         return $this->get(self::FIELD_PASSWORD_VERSION);
+    }
+
+    /**
+     * @internal
+     * @param string[] $scopes
+     * @since 10.1.0
+     */
+    public function setScopes(array $scopes): self
+    {
+        if ($this->get(self::FIELD_SCOPES) !== null) {
+            throw new LogicException("Scopes are already set.");
+        }
+
+        return $this->set(self::FIELD_SCOPES, $scopes);
+    }
+
+    /**
+     * Get access scopes. If not set, no additional restrictions.
+     * Only for the current user.
+     *
+     * @return ?string[]
+     * @since 10.1.0
+     */
+    public function getScopes(): ?array
+    {
+        return $this->get(self::FIELD_SCOPES);
     }
 }

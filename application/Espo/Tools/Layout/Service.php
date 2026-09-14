@@ -137,7 +137,7 @@ class Service
         }
 
         if (
-            !$this->user->isAdmin() &&
+            !$this->user->isEffectiveAdmin() &&
             $name === 'relationships' &&
             is_array($data)
         ) {

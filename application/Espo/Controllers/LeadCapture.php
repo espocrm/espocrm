@@ -134,7 +134,7 @@ class LeadCapture extends Record
      */
     public function getActionSmtpAccountDataList(): array
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

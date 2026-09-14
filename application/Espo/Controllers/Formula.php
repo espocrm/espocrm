@@ -49,7 +49,7 @@ class Formula
         private Service $service,
         User $user,
     ) {
-        if (!$user->isAdmin()) {
+        if (!$user->isEffectiveAdmin()) {
             throw new ForbiddenSilent();
         }
     }

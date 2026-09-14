@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "identifier": {
+            "forbidden": true
+        },
+        "hash": {
+            "forbidden": true
+        }
+    },
+    "systemWriteForbidden": true
+}

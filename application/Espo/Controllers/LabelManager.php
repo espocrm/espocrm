@@ -52,7 +52,7 @@ class LabelManager
         private DataManager $dataManager,
         private LabelManagerTool $labelManagerTool
     ) {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
     }

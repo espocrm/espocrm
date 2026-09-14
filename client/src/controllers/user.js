@@ -27,6 +27,9 @@
  ************************************************************************/
 
 import RecordController from 'controllers/record';
+import Ui from 'ui';
+import Ajax from 'ajax';
+import UserConnectedAppsView from 'views/user/connected-apps';
 
 class UserController extends RecordController {
 
@@ -67,6 +70,24 @@ class UserController extends RecordController {
         }
 
         super.createViewView(options, model, view);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {{
+     *     id?: string,
+     * }} options
+     */
+    async actionListConnectedApps(options) {
+        if (!options.id) {
+            throw new Error("No user ID.");
+        }
+
+        const view = new UserConnectedAppsView({
+            id: options.id,
+        });
+
+        this.main(view);
     }
 }
 

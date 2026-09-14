@@ -48,7 +48,7 @@ class Integration
         private User $user,
     ) {
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
     }

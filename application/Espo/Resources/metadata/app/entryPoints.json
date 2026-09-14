@@ -4,5 +4,26 @@
     },
     "oauthCallback": {
         "className": "Espo\\EntryPoints\\OauthCallback"
+    },
+    "oAuthAuthorize": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Authorize",
+        "noAuth": true,
+        "notExposed": true
+    },
+    "oAuthAuthorizeComplete": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizeComplete",
+        "allowedMethods": ["post"]
+    },
+    "oAuthToken": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Token",
+        "noAuth": true,
+        "notExposed": true,
+        "allowedMethods": ["post"]
+    },
+    "oAuthTokenRevoke": {
+        "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\TokenRevoke",
+        "noAuth": true,
+        "notExposed": true,
+        "allowedMethods": ["post"]
     }
 }

@@ -88,7 +88,7 @@ class Layout
             $data = get_object_vars($data);
         }
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -114,7 +114,7 @@ class Layout
     {
         $data = $request->getParsedBody();
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -134,7 +134,7 @@ class Layout
      */
     public function getActionGetOriginal(Request $request)
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -156,7 +156,7 @@ class Layout
      */
     public function postActionCreate(Request $request): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -195,7 +195,7 @@ class Layout
      */
     public function postActionDelete(Request $request): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

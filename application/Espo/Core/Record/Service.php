@@ -265,7 +265,7 @@ class Service implements Crud,
             ->where([Attribute::ID => $id])
             ->findOne();
 
-        if (!$entity && $this->user->isAdmin()) {
+        if (!$entity && $this->user->isEffectiveAdmin()) {
             $entity = $this->getEntityEvenDeleted($id);
         }
 
@@ -932,7 +932,7 @@ class Service implements Crud,
      */
     public function restoreDeleted(string $id): void
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden("Only admin can restore.");
         }
 

@@ -72,10 +72,13 @@ class Clearer
             return;
         }
 
-        $part = basename($user->getId() . '.php');
+        $file = basename($user->getId() . '.php');
+        $dir = basename($user->getId());
 
-        $this->fileManager->remove('data/cache/application/acl/' . $part);
-        $this->fileManager->remove('data/cache/application/aclMap/' . $part);
+        $this->fileManager->remove('data/cache/application/acl/' . $file);
+        $this->fileManager->remove('data/cache/application/aclMap/' . $file);
+        $this->fileManager->removeInDir('data/cache/application/acl/' . $dir, true);
+        $this->fileManager->removeInDir('data/cache/application/aclMap/' . $dir, true);
 
         $this->eventDispatcher->dispatch(new UserRoleUpdate($user->getId()));
     }

@@ -92,6 +92,28 @@ class User extends Model {
     isSuperAdmin() {
         return this.get('type') === 'super-admin';
     }
+
+    /**
+     * Is admin and is not stripped of admin capabilities.
+     *
+     * @return {boolean}
+     *
+     * @since 10.1.0
+     */
+    isEffectiveAdmin() {
+        if (!this.isAdmin()) {
+            return false;
+        }
+
+        /** @type {string[]|null} */
+        const scopes = this.attributes.scopes;
+
+        if (scopes == null) {
+            return true;
+        }
+
+        return scopes.includes('Admin');
+    }
 }
 
 export default User;

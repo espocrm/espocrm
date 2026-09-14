@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "identifier": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "isNotEmpty",
+                        "attribute": "id"
+                    }
+                ]
+            }
+        }
+    },
+    "panels": {
+        "secrets": {
+            "visible": {
+                "conditionGroup": [
+                    {
+                        "type": "in",
+                        "attribute": "clientType",
+                        "value": [
+                            "Confidential"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

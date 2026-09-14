@@ -1,0 +1,43 @@
+{
+    "labels": {
+        "Create OAuthClient": "Register OAuth Client"
+    },
+    "fields": {
+        "status": "Status",
+        "clientType": "Client Type",
+        "identifier": "Client ID",
+        "redirectUris": "Redirect URIs",
+        "scopes": "Scopes"
+    },
+    "links": {
+        "secrets": "Client Secrets"
+    },
+    "options": {
+        "clientType": {
+            "Confidential": "Confidential",
+            "Public": "Public"
+        },
+        "status": {
+            "Active": "Active",
+            "Inactive": "Inactive"
+        }
+    },
+    "strings": {
+        "allow": "Allow Access",
+        "authorizationCodes": "Authorization Codes",
+        "accessTokens": "Access Tokens",
+        "refreshTokens": "Refresh Tokens",
+        "revoke": "Revoke"
+    },
+    "scopeDescriptions": {
+        "Global": "Access to everything.",
+        "GlobalAdmin": "Access to everything (except administrative capabilities).",
+        "Admin": "Access to administrative capabilities."
+    },
+    "tooltips": {
+        "scopes": "Special scopes:\n\n- `Global` – Grants all possible scopes except Admin.\n- `Admin` – Administrative capabilities. Applicable only for admin users. If an admin user does not have this scope, their admin capabilities will be removed."
+    },
+    "messages": {
+        "allowAccessInfo": "**{clientName}** would like to access **{applicationName}** as *{username}*. By granting access, you will allow {clientName} to access the scopes listed below."
+    }
+}

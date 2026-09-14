@@ -40,7 +40,7 @@ class Attachment extends RecordBase
 {
     public function getActionList(Request $request, Response $response): stdClass
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

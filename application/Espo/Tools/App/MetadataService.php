@@ -59,7 +59,7 @@ class MetadataService
             $this->removeDataByPath($row, $data);
         }
 
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             return $data;
         }
 

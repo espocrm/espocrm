@@ -30,10 +30,10 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Authentication\HeaderKey;
+use Espo\Core\Authentication\Login\MethodResolver;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Authentication\ConfigDataProvider;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\Result;
@@ -51,9 +51,9 @@ class Auth
     public function __construct(
         private Log $log,
         private Authentication $authentication,
-        private ConfigDataProvider $configDataProvider,
+        private MethodResolver $methodResolver,
         private bool $authRequired = true,
-        private bool $isEntryPoint = false
+        private bool $isEntryPoint = false,
     ) {}
 
     /**
@@ -65,7 +65,7 @@ class Auth
         $username = null;
         $password = null;
 
-        $authenticationMethod = $this->obtainAuthenticationMethodFromRequest($request);
+        $authenticationMethod = $this->methodResolver->resolve($request);
 
         if (!$authenticationMethod) {
             [$username, $password] = $this->obtainUsernamePasswordFromRequest($request);
@@ -271,32 +271,6 @@ class Auth
         return false;
     }
 
-    private function obtainAuthenticationMethodFromRequest(Request $request): ?string
-    {
-        if ($request->hasHeader(HeaderKey::AUTHORIZATION)) {
-            return null;
-        }
-
-        $paramsList = array_values(array_filter(
-            $this->configDataProvider->getLoginMetadataParamsList(),
-            function ($params) use ($request): bool {
-                $header = $params->getCredentialsHeader();
-
-                if (!$header || !$params->isApi()) {
-                    return false;
-                }
-
-                return $request->hasHeader($header);
-            }
-        ));
-
-        if (count($paramsList)) {
-            return $paramsList[0]->getMethod();
-        }
-
-        return null;
-    }
-
     /**
      * @return array{?string, ?string}
      * @throws BadRequest
@@ -307,6 +281,11 @@ class Auth
             $headerValue = $request->getHeader(HeaderKey::AUTHORIZATION) ?? '';
 
             return $this->decodeAuthorizationString($headerValue);
+        }
+
+        // Bypass as the Authorization header may be used for OAuth.
+        if (!$this->authRequired) {
+            return [null, null];
         }
 
         if (
@@ -327,8 +306,7 @@ class Auth
             return [$username, $password];
         }
 
-        $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
-            $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+        $cgiAuthString = $this->getCgiAuthString($request);
 
         if ($cgiAuthString) {
             [$username, $password] = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
@@ -342,5 +320,12 @@ class Auth
     private function obtainTokenFromCookies(Request $request): ?string
     {
         return $request->getCookieParam('auth-token');
+    }
+
+    private function getCgiAuthString(Request $request): ?string
+    {
+        return
+            $request->getHeader('Http-Espo-Cgi-Auth') ??
+            $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
     }
 }

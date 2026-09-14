@@ -63,7 +63,7 @@ class Service
      */
     public function process(Params $params, ServiceParams $serviceParams): ServiceResult
     {
-        if ($this->config->get('exportDisabled') && !$this->user->isAdmin()) {
+        if ($this->config->get('exportDisabled') && !$this->user->isEffectiveAdmin()) {
             throw new ForbiddenSilent("Export disabled for non-admin users.");
         }
 
@@ -154,7 +154,7 @@ class Service
             ->create()
             ->setClassName(Process::class)
             ->setData(
-                JobData::create()
+                JobData::create([Process::PARAM_USER_SCOPES => $this->user->getScopes()])
                     ->withTargetId($entity->getId())
                     ->withTargetType($entity->getEntityType())
             )

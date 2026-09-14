@@ -86,7 +86,8 @@
         "Code": "Code",
         "Secret": "Secret",
         "Send Code": "Send Code",
-        "Login Link": "Login Link"
+        "Login Link": "Login Link",
+        "Connected Apps": "Connected Apps"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",

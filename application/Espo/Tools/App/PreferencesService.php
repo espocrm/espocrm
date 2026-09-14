@@ -77,7 +77,7 @@ class PreferencesService
      */
     protected function processAccessCheck(string $userId): void
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             if ($this->user->getId() !== $userId) {
                 throw new Forbidden();
             }

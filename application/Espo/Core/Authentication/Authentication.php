@@ -157,7 +157,7 @@ class Authentication
             $this->createAuthLogRecord($username, $user, $request, $method) : null;
 
         if ($result->isFail()) {
-            return $this->processFail($result, $data, $request);
+            return $this->processFail($result, $data, $request, $response);
         }
 
         if (!$user) {
@@ -165,7 +165,7 @@ class Authentication
             return $this->processFail(Result::fail(FailReason::USER_NOT_FOUND), $data, $request);
         }
 
-        if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
+        if (!$user->isEffectiveAdmin() && $this->configDataProvider->isMaintenanceMode()) {
             $this->throwMaintenanceModeException();
         }
 
@@ -584,9 +584,18 @@ class Authentication
         return false;
     }
 
-    private function processFail(Result $result, AuthenticationData $data, Request $request): Result
-    {
+    private function processFail(
+        Result $result,
+        AuthenticationData $data,
+        Request $request,
+        ?Response $response = null,
+    ): Result {
+
         $this->hookManager->processOnFail($result, $data, $request);
+
+        if ($result->getResponse() && $response) {
+            $response->applyPsr7($result->getResponse()->toPsr7());
+        }
 
         return $result;
     }
@@ -643,7 +652,7 @@ class Authentication
         }
 
         // Important check.
-        if (!$user->isAdmin()) {
+        if (!$user->isEffectiveAdmin()) {
             return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
         }
 

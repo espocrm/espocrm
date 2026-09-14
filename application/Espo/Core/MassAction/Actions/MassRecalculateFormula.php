@@ -29,7 +29,7 @@
 
 namespace Espo\Core\MassAction\Actions;
 
-use Espo\Core\ApplicationUser;
+use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\MassAction;
@@ -38,20 +38,19 @@ use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Result;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\SystemUser;
-use Espo\Entities\User;
 
 class MassRecalculateFormula implements MassAction
 {
     public function __construct(
         private QueryBuilder $queryBuilder,
         private EntityManager $entityManager,
-        private User $user,
-        private SystemUser $systemUser
+        private SystemUser $systemUser,
+        private Acl $acl,
     ) {}
 
     public function process(Params $params, Data $data): Result
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->acl->checkAdmin()) {
             throw new Forbidden();
         }
 

@@ -52,7 +52,7 @@ class BooleanOwn implements FilterResolver
             return 'no';
         }
 
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             return 'all';
         }
 

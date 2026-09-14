@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "hash": "Hash",
+        "status": "Status",
+        "client": "Client",
+        "user": "User",
+        "accessToken": "Access Token",
+        "expiresAt": "Expires At"
+    },
+    "links": {
+        "accessToken": "Access Token",
+        "client": "Client",
+        "user": "User"
+    },
+    "options": {
+        "status": {
+            "Active": "Active",
+            "Revoked": "Revoked",
+            "Expired": "Expired"
+        }
+    },
+    "massActions": {
+        "revoke": "Revoke"
+    }
+}

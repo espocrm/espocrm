@@ -33,8 +33,8 @@ use Espo\Core\Api\Auth;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\Response;
 use Espo\Core\Authentication\Authentication;
-use Espo\Core\Authentication\ConfigDataProvider;
 use Espo\Core\Authentication\HeaderKey;
+use Espo\Core\Authentication\Login\MethodResolver;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\Data;
 use Espo\Core\Utils\Json;
@@ -63,12 +63,10 @@ class AuthTest extends TestCase
                 Result::secondStepRequired($this->createMock(User::class), Data::create())
             );
 
-        $configDataProvider = $this->createConfigDataProvider();
-
         $auth = new Auth(
             log: $this->createMock(Log::class),
             authentication: $authentication,
-            configDataProvider: $configDataProvider,
+            methodResolver: $this->createMock(MethodResolver::class),
             authRequired: false,
         );
 
@@ -94,12 +92,10 @@ class AuthTest extends TestCase
                 Result::fail()
             );
 
-        $configDataProvider = $this->createConfigDataProvider();
-
         $auth = new Auth(
             log: $this->createMock(Log::class),
             authentication: $authentication,
-            configDataProvider: $configDataProvider,
+            methodResolver: $this->createMock(MethodResolver::class),
         );
 
         $result = $auth->process($request, $response);
@@ -141,15 +137,5 @@ class AuthTest extends TestCase
             ],
             body: Json::encode((object) []),
         );
-    }
-
-    private function createConfigDataProvider(): ConfigDataProvider
-    {
-        $configDataProvider = $this->createMock(ConfigDataProvider::class);
-        $configDataProvider
-            ->method('getLoginMetadataParamsList')
-            ->willReturn([]);
-
-        return $configDataProvider;
     }
 }

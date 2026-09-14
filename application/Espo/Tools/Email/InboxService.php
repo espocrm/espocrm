@@ -527,7 +527,7 @@ class InboxService
             ->distinct()
             ->leftJoin(Field::TEAMS)
             ->where(
-                $this->user->isAdmin() ?
+                $this->user->isEffectiveAdmin() ?
                     ['id!=' => null] :
                     ['teams.id' => $this->user->getTeamIdList()]
             )

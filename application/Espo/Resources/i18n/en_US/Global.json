@@ -72,7 +72,12 @@
         "CurrencyRecord": "Currency Record",
         "CurrencyRecordRate": "Currency Rate",
         "Pipeline": "Pipeline",
-        "PipelineStage": "Pipeline Stage"
+        "PipelineStage": "Pipeline Stage",
+        "OAuthClient": "OAuth Client",
+        "OAuthClientSecret": "OAuth Client Secret",
+        "OAuthAuthorizationCode": "OAuth Authorization Code",
+        "OAuthAccessToken": "OAuth Access Token",
+        "OAuthRefreshToken": "OAuth Refresh Token"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -135,9 +140,15 @@
         "CurrencyRecord": "Currencies",
         "CurrencyRecordRate": "Currency Rates",
         "Pipeline": "Pipelines",
-        "PipelineStage": "Pipeline Stages"
+        "PipelineStage": "Pipeline Stages",
+        "OAuthClient": "OAuth Clients",
+        "OAuthClientSecret": "OAuth Client Secrets",
+        "OAuthAuthorizationCode": "OAuth Authorization Codes",
+        "OAuthAccessToken": "OAuth Access Tokens",
+        "OAuthRefreshToken": "OAuth Refresh Tokens"
     },
     "labels": {
+        "Disconnect": "Disconnect",
         "Previous Page": "Previous Page",
         "Next Page": "Next Page",
         "First Page": "First Page",

@@ -31,13 +31,25 @@ namespace Espo\Core\Acl\Map;
 
 use Espo\Entities\User;
 
-class DefaultCacheKeyProvider implements CacheKeyProvider
+final class DefaultCacheKeyProvider implements CacheKeyProvider
 {
     public function __construct(private User $user)
     {}
 
     public function get(): string
     {
-        return 'aclMap/' . $this->user->getId();
+        $key = 'aclMap/' . $this->user->getId();
+
+        $scopes = $this->user->getScopes();
+
+        if ($scopes === null) {
+            return $key;
+        }
+
+        $hash = hash('xxh128', implode(' ', $scopes));
+
+        $key .= '/' . $hash;
+
+        return $key;
     }
 }

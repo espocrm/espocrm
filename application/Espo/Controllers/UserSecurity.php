@@ -77,7 +77,7 @@ class UserSecurity
             throw new BadRequest();
         }
 
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -100,7 +100,7 @@ class UserSecurity
             throw new BadRequest("No 'id'.");
         }
 
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -122,7 +122,7 @@ class UserSecurity
             throw new BadRequest();
         }
 
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 

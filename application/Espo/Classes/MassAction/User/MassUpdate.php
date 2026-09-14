@@ -82,7 +82,7 @@ class MassUpdate implements MassAction
     {
         $entityType = $params->getEntityType();
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden("Only admin can mass-update users.");
         }
 

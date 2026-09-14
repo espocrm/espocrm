@@ -132,7 +132,7 @@ class ApplicationState
             return false;
         }
 
-        return $this->getUser()->isAdmin();
+        return $this->getUser()->isEffectiveAdmin();
     }
 
 

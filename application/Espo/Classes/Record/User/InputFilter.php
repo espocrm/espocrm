@@ -51,7 +51,7 @@ class InputFilter implements Filter
             $data->clear('isSuperAdmin');
         }
 
-        if (!$this->user->isAdmin() && !$this->acl->checkScope(TeamEntity::ENTITY_TYPE)) {
+        if (!$this->user->isEffectiveAdmin() && !$this->acl->checkScope(TeamEntity::ENTITY_TYPE)) {
             $data->clear('defaultTeamId');
         }
     }

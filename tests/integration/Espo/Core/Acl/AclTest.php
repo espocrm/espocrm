@@ -38,6 +38,7 @@ use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Call;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Task;
+use RuntimeException;
 use tests\integration\Core\BaseTestCase;
 
 class AclTest extends BaseTestCase
@@ -246,5 +247,63 @@ class AclTest extends BaseTestCase
         $this->assertFalse($aclManager->checkScope($user, 'Meeting', Acl\Table::ACTION_STREAM));
         $this->assertTrue($aclManager->checkScope($user, 'Call', Acl\Table::ACTION_CREATE));
         $this->assertTrue($aclManager->checkScope($user, 'Call', Acl\Table::ACTION_EDIT));
+    }
+
+    public function testCheckAdmin(): void
+    {
+        $user = $this->createUser(
+            userData: [
+                User::FIELD_USER_NAME => 'test',
+            ],
+        );
+
+        $admin = $this->createUser(
+            userData: [
+                User::FIELD_USER_NAME => 'admin-test',
+                User::FIELD_TYPE => User::TYPE_ADMIN,
+            ],
+        );
+
+        $aclManager = $this->getInjectableFactory()->create(AclManager::class);
+
+        //
+
+        $user = $this->reFetchUser($user);
+        $admin = $this->reFetchUser($admin);
+
+        $this->assertFalse($aclManager->checkAdmin($user));
+        $this->assertTrue($aclManager->checkAdmin($admin));
+
+        $this->assertFalse($aclManager->createUserAcl($user)->checkAdmin());
+        $this->assertTrue($aclManager->createUserAcl($admin)->checkAdmin());
+
+        //
+
+        $user = $this->reFetchUser($user);
+        $admin = $this->reFetchUser($admin);
+
+        $user->setScopes([Acl\Scope::ADMIN]);
+        $admin->setScopes([Acl\Scope::ADMIN]);
+
+        $this->assertFalse($aclManager->checkAdmin($user));
+        $this->assertTrue($aclManager->checkAdmin($admin));
+
+        //
+
+        $user = $this->reFetchUser($user);
+        $admin = $this->reFetchUser($admin);
+
+        $user->setScopes([]);
+        $admin->setScopes([]);
+
+        $this->assertFalse($aclManager->checkAdmin($user));
+        $this->assertFalse($aclManager->checkAdmin($admin));
+    }
+
+    private function reFetchUser(User $user): User
+    {
+        return $this->getEntityManager()
+            ->getRDBRepositoryByClass(User::class)
+            ->getById($user->getId()) ?? throw new RuntimeException();
     }
 }

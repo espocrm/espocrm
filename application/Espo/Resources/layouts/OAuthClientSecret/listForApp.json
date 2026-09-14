@@ -1,0 +1,16 @@
+[
+    {
+        "name": "value",
+        "link": true
+    },
+    {
+        "name": "status",
+        "width": 25,
+        "notSortable": true
+    },
+    {
+        "name": "expirationDate",
+        "width": 25,
+        "notSortable": true
+    }
+]

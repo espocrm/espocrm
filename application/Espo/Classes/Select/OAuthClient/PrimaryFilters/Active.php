@@ -27,15 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "../../../bootstrap.php";
+namespace Espo\Classes\Select\OAuthClient\PrimaryFilters;
 
-use Espo\Core\Application;
-use Espo\Core\Application\Runner\Params;
-use Espo\Core\ApplicationRunners\EntryPoint;
+use Espo\Core\Select\Primary\Filter;
+use Espo\Tools\OAuthServer\Entities\Client;
+use Espo\ORM\Query\SelectBuilder;
 
-$app = new Application();
-
-$app->run(
-    EntryPoint::class,
-    Params::create()->with(EntryPoint::PARAM_ENTRY_POINT, 'oauthCallback')
-);
+class Active implements Filter
+{
+    public function apply(SelectBuilder $queryBuilder): void
+    {
+        $queryBuilder->where([
+            Client::FIELD_STATUS => Client::STATUS_ACTIVE,
+        ]);
+    }
+}

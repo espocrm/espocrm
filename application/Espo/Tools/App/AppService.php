@@ -248,7 +248,7 @@ class AppService
     {
         $data = $this->acl->getMapData();
 
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             $data = unserialize(serialize($data));
 
             /** @var string[] $scopeList */

@@ -310,6 +310,12 @@
                 "label": "Authentication Providers",
                 "iconClass": "fas fa-sign-in-alt",
                 "description": "authenticationProviders"
+            },
+            {
+                "url": "#Admin/oAuthClients",
+                "labelTranslation": "Global.scopeNamesPlural.OAuthClient",
+                "iconClass": "fas fa-user-lock",
+                "description": "oAuthClients"
             }
         ],
         "order": 24

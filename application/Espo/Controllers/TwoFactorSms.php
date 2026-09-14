@@ -83,7 +83,7 @@ class TwoFactorSms
             throw new BadRequest("No 'phoneNumber'.");
         }
 
-        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 

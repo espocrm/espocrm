@@ -51,7 +51,7 @@ class BeforeCreate implements SaveHook
 
     public function process(Entity $entity): void
     {
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             return;
         }
 

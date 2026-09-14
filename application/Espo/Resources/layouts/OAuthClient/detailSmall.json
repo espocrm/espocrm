@@ -1,0 +1,35 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "status"
+                }
+            ],
+            [
+                {
+                    "name": "clientType"
+                },
+                {
+                    "name": "identifier"
+                }
+            ],
+            [
+                {
+                    "name": "redirectUris"
+                },
+                {
+                    "name": "scopes"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ]
+    }
+]

@@ -72,7 +72,7 @@ class ExternalAccount extends Record
     {
         [, $userId] = explode('__', $id);
 
-        if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
+        if ($this->user->getId() !== $userId && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

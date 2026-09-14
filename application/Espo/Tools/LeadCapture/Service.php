@@ -131,7 +131,7 @@ class Service
      */
     public function getSmtpAccountDataList(): array
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

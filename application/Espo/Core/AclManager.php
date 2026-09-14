@@ -32,6 +32,7 @@ namespace Espo\Core;
 use Espo\Core\Acl\Events\UserRoleUpdate;
 use Espo\Core\Acl\OwnershipSharedChecker;
 use Espo\Core\Acl\Permission;
+use Espo\Core\Acl\Scope;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Event\EventDispatcher;
 use Espo\ORM\Entity;
@@ -472,14 +473,14 @@ class AclManager
             $typeList[] = GlobalRestriction::TYPE_INTERNAL;
         }
 
-        if (!$user->isAdmin()) {
+        if (!$this->checkAdmin($user)) {
             $typeList[] = GlobalRestriction::TYPE_ONLY_ADMIN;
         }
 
         if ($action === Table::ACTION_EDIT) {
             $typeList[] = GlobalRestriction::TYPE_READ_ONLY;
 
-            if (!$user->isAdmin()) {
+            if (!$this->checkAdmin($user)) {
                 $typeList[] = GlobalRestriction::TYPE_NON_ADMIN_READ_ONLY;
             }
         }
@@ -796,5 +797,15 @@ class AclManager
             unset($this->tableHashMap[$userId]);
             unset($this->mapHashMap[$userId]);
         });
+    }
+
+    /**
+     * Whether the user is admin and has admin capabilities.
+     *
+     * @since 10.1.0
+     */
+    public function checkAdmin(User $user): bool
+    {
+        return $user->isEffectiveAdmin() && $this->checkScope($user, Scope::ADMIN);
     }
 }

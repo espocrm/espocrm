@@ -44,7 +44,7 @@ class UpdateInputFilter implements Filter
 
     public function filter(Data $data): void
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             $data->clear('event');
         }
     }

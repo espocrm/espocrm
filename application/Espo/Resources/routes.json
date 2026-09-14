@@ -84,6 +84,11 @@
         "actionClassName": "Espo\\Tools\\GlobalSearch\\Api\\Get"
     },
     {
+        "route": "OAuthServer/consentData",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\GetConsentData"
+    },
+    {
         "route": "/LeadCapture/form/:id",
         "method": "post",
         "actionClassName": "Espo\\Tools\\LeadCapture\\Api\\PostForm",
@@ -456,6 +461,16 @@
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetUserAcl"
     },
     {
+        "route": "/User/:id/connectedApps",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetConnectedApps"
+    },
+    {
+        "route": "/User/:id/connectedApps/:appId",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\DeleteConnectedApp"
+    },
+    {
         "route": "/UserSecurity/apiKey/generate",
         "method": "post",
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostApiKeyGenerate"
@@ -540,6 +555,21 @@
         "method": "get",
         "route": "/OAuth/:id/authorizationData",
         "actionClassName": "Espo\\Tools\\OAuth\\Api\\GetAuthorizationData"
+    },
+    {
+        "method": "post",
+        "route": "/OAuthAccessToken/:id/revoke",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\AccessToken\\PostRevoke"
+    },
+    {
+        "method": "post",
+        "route": "/OAuthRefreshToken/:id/revoke",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\RefreshToken\\PostRevoke"
+    },
+    {
+        "method": "post",
+        "route": "/OAuthAuthorizationCode/:id/revoke",
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\AuthorizationCode\\PostRevoke"
     },
     {
         "method": "get",

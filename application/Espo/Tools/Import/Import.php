@@ -271,6 +271,7 @@ class Import
                     'importAttributeList' => $attributeList,
                     'importId' => $import->getId(),
                     'userId' => $this->user->getId(),
+                    RunIdle::PARAM_USER_SCOPES => $this->user->getScopes(),
                 ])
                 ->schedule();
 
@@ -1602,7 +1603,7 @@ class Import
         }
 
         if (
-            !$this->user->isAdmin() &&
+            !$this->user->isEffectiveAdmin() &&
             !$this->user->isSystem() &&
             $attachment->getCreatedBy()?->getId() !== $this->user->getId()
         ) {

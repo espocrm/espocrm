@@ -34,19 +34,15 @@ namespace Espo\Core\Authentication\Login;
  */
 class MetadataParams
 {
-    private string $method;
-    private ?string $credentialsHeader;
-    private bool $api;
-
+    /**
+     * @internal
+     */
     public function __construct(
-        string $method,
-        ?string $credentialsHeader = null,
-        bool $api = false
-    ) {
-        $this->method = $method;
-        $this->credentialsHeader = $credentialsHeader;
-        $this->api = $api;
-    }
+        private string $method,
+        private bool $api = false,
+        private ?string $credentialsHeader = null,
+        private ?string $credentialsHeaderScheme = null,
+    ) {}
 
     /**
      * @param array<string, mixed> $data
@@ -54,9 +50,10 @@ class MetadataParams
     public static function fromRaw(string $method, array $data): self
     {
         return new self(
-            $method,
-            $data['credentialsHeader'] ?? null,
-            $data['api'] ?? false,
+            method: $method,
+            api: $data['api'] ?? false,
+            credentialsHeader: $data['credentialsHeader'] ?? null,
+            credentialsHeaderScheme: $data['credentialsHeaderScheme'] ?? null,
         );
     }
 
@@ -73,5 +70,10 @@ class MetadataParams
     public function isApi(): bool
     {
         return $this->api;
+    }
+
+    public function getCredentialsHeaderScheme(): ?string
+    {
+        return $this->credentialsHeaderScheme;
     }
 }

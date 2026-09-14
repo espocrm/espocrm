@@ -96,7 +96,7 @@ class LanguageService
             unset($data['Campaign']['options']);
             unset($data['Campaign']['tooltips']);
             unset($data['Campaign']['presetFilters']);
-        } else if (!$this->user->isAdmin()) {
+        } else if (!$this->user->isEffectiveAdmin()) {
             /** @var string[] $scopeList */
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
@@ -136,7 +136,7 @@ class LanguageService
                 }
             }
 
-            if (!$this->user->isAdmin()) {
+            if (!$this->user->isEffectiveAdmin()) {
                 $this->prepareDataNonAdmin($data, $language);
             }
         }

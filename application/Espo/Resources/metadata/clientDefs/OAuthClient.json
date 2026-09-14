@@ -1,0 +1,38 @@
+{
+    "controller": "controllers/record",
+    "relationshipPanels": {
+        "secrets": {
+            "filterList": [
+                "all",
+                "active"
+            ],
+            "layout": "listForApp",
+            "orderBy": "createdAt",
+            "orderDirection": "desc"
+        }
+    },
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "name": "authorizationCodes",
+                    "labelTranslation": "OAuthClient.strings.authorizationCodes",
+                    "aclScope": "OAuthAuthorizationCode",
+                    "link": "#OAuthAuthorizationCode"
+                },
+                {
+                    "name": "accessToken",
+                    "labelTranslation": "OAuthClient.strings.accessTokens",
+                    "aclScope": "OAuthAccessToken",
+                    "link": "#OAuthAccessToken"
+                },
+                {
+                    "name": "refreshTokens",
+                    "labelTranslation": "OAuthClient.strings.refreshTokens",
+                    "aclScope": "OAuthRefreshToken",
+                    "link": "#OAuthRefreshToken"
+                }
+            ]
+        }
+    }
+}

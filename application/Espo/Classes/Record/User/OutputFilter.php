@@ -58,7 +58,7 @@ class OutputFilter implements Filter
             return;
         }
 
-        if ($this->user->isAdmin()) {
+        if ($this->user->isEffectiveAdmin()) {
             if ($entity->getAuthMethod() === Hmac::NAME) {
                 $secretKey = $this->apiKey->getSecretKeyForUserId($entity->getId());
 

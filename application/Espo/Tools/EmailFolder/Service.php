@@ -80,7 +80,7 @@ class Service
         if (
             $userId &&
             $userId !== $this->user->getId() &&
-            !$this->user->isAdmin()
+            !$this->user->isEffectiveAdmin()
         ) {
             throw new ForbiddenSilent();
         }
@@ -110,7 +110,7 @@ class Service
             ->distinct()
             ->leftJoin(Field::TEAMS)
             ->where(
-                $user->isAdmin() ?
+                $user->isEffectiveAdmin() ?
                     ['id!=' => null] :
                     ['teams.id' => $user->getTeamIdList()]
             )

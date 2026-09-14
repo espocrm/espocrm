@@ -60,7 +60,7 @@ class GetUserAcl implements Action
         }
 
         if (
-            !$this->user->isAdmin() &&
+            !$this->user->isEffectiveAdmin() &&
             $this->user->getId() !== $userId
         ) {
             throw new Forbidden();

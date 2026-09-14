@@ -51,7 +51,7 @@ class User extends Record
 
     public function postActionCreateLink(Request $request): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 
@@ -60,7 +60,7 @@ class User extends Record
 
     public function deleteActionRemoveLink(Request $request): bool
     {
-        if (!$this->user->isAdmin()) {
+        if (!$this->user->isEffectiveAdmin()) {
             throw new Forbidden();
         }
 

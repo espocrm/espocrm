@@ -245,6 +245,11 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    actionOAuthClients() {
+        this.getRouter().dispatch('OAuthClient', 'list', {fromAdmin: true});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     actionAddressCountries() {
         this.getRouter().dispatch('AddressCountry', 'list', {fromAdmin: true});
     }

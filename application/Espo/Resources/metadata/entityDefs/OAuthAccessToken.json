@@ -1,0 +1,93 @@
+{
+    "fields": {
+        "identifier": {
+            "type": "password",
+            "notStorable": true,
+            "maxLength": 80,
+            "readOnly": true,
+            "required": true,
+            "utility": true
+        },
+        "hash": {
+            "type": "password",
+            "maxLength": 64,
+            "readOnly": true
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Active",
+                "Revoked",
+                "Expired"
+            ],
+            "default": "Active",
+            "maxLength": 7,
+            "readOnly": true,
+            "style": {
+                "Revoked": "info",
+                "Expired": "info"
+            }
+        },
+        "expiresAt": {
+            "type": "datetime",
+            "readOnly": true,
+            "required": true
+        },
+        "scopes": {
+            "type": "array",
+            "readOnly": true,
+            "displayAsList": true,
+            "storeArrayValues": false
+        },
+        "user": {
+            "type": "link",
+            "readOnly": true
+        },
+        "client": {
+            "type": "link",
+            "readOnly": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "client": {
+            "type": "belongsTo",
+            "entity": "OAuthClient"
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": []
+    },
+    "indexes": {
+        "hash": {
+            "columns": [
+                "hash"
+            ]
+        },
+        "createdAt": {
+            "columns": [
+                "createdAt"
+            ]
+        },
+        "expiresAtStatus": {
+            "columns": [
+                "expiresAt",
+                "status"
+            ]
+        }
+    },
+    "entityClassName": "Espo\\Tools\\OAuthServer\\Entities\\AccessToken"
+}

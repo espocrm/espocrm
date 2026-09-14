@@ -58,7 +58,7 @@ class BeforeCreate implements SaveHook
     {
         $this->checkParent($entity);
 
-        if (!$entity->isPost() && !$this->user->isAdmin()) {
+        if (!$entity->isPost() && !$this->user->isEffectiveAdmin()) {
             throw new Forbidden("Only 'Post' type allowed.");
         }
 
