@@ -51,14 +51,6 @@ class LoginSecondStepView extends View {
     anotherUser = null
 
     /**
-     * Response from the first step.
-     *
-     * @type {Object.<string, *>}
-     * @private
-     */
-    loginData =  null
-
-    /**
      * Headers composed in the first step.
      *
      * @type {Object.<string, string>}
@@ -81,22 +73,50 @@ class LoginSecondStepView extends View {
      */
     submitElement
 
+    /**
+     * @private
+     * @type {number}
+     */
+    static CODE_LENGTH = 7
+
+    /**
+     * @private
+     * @type {number}
+     */
+    codeLength
+
     data() {
         return {
             message: this.message,
+            codeLength: this.codeLength,
         };
     }
 
     setup() {
-        this.message = this.translate(this.options.loginData.message, 'messages', 'User');
+        /**
+         * @type {{
+         *     message?: string,
+         *     data?: {
+         *         codeLength?: number,
+         *     },
+         * }}
+         */
+        const loginData = this.options.loginData ?? {};
+
+        this.message = this.translate(loginData.message, 'messages', 'User');
         this.anotherUser = this.options.anotherUser || null;
         this.headers = this.options.headers || {};
-        this.loginData = this.options.loginData;
+
+        this.codeLength = loginData.data?.codeLength ?? LoginSecondStepView.CODE_LENGTH;
 
         this.addHandler('submit', '#login-form', e => {
             e.preventDefault();
 
             this.send();
+        });
+
+        this.addHandler('input', 'input[data-name="field-code"]', (_, /** HTMLInputElement */target) => {
+            target.value = target.value.replace(/[^0-9]/g, '');
         });
 
         this.addHandler('keydown', '', e => {

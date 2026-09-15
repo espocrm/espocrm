@@ -36,6 +36,11 @@ use stdClass;
  */
 class Data
 {
+    /**
+     * @since 10.1.0
+     */
+    public const string PARAM_CODE_LENGTH = 'codeLength';
+
     /** @var array<string, mixed> */
     private array $data = [];
 
@@ -43,7 +48,7 @@ class Data
     private function __construct(
         private ?string $message = null,
         private ?string $failReason = null,
-        private ?string $view = null
+        private ?string $view = null,
     ) {}
 
     public static function create(): self

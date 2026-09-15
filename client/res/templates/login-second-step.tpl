@@ -3,7 +3,12 @@
     <div id="login" class="panel panel-default block-center-sm">
         <div class="panel-body">
             <div>
-                <p>{{message}}</p>
+                {{#if message}}
+                    <div
+                        class="complex-text margin-bottom-2x center-align small text-soft"
+                    >{{complexText message}}</div>
+                {{/if}}
+
                 <form id="login-form">
                     <div class="form-group cell">
                         <label for="field-code">{{translate 'Code' scope='User'}}</label>
@@ -16,8 +21,9 @@
                             spellcheck="false"
                             tabindex="1"
                             autocomplete="one-time-code"
-                            maxlength="7"
+                            maxlength="{{codeLength}}"
                             inputmode="numeric"
+                            pattern="[0-9]*"
                         >
                     </div>
                     <div class="margin-top-2x">

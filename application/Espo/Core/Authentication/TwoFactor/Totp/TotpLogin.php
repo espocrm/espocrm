@@ -47,7 +47,9 @@ use RuntimeException;
  */
 class TotpLogin implements Login
 {
-    public const NAME = 'Totp';
+    public const string NAME = 'Totp';
+
+    private const int CODE_LENGTH = 6;
 
     public function __construct(
         private EntityManager $entityManager,
@@ -77,7 +79,8 @@ class TotpLogin implements Login
 
     private function getResultData(): ResultData
     {
-        return ResultData::createWithMessage('enterTotpCode');
+        return ResultData::createWithMessage('enterTotpCode')
+            ->withDataItem(Result\Data::PARAM_CODE_LENGTH, self::CODE_LENGTH);
     }
 
     private function verifyCode(User $user, string $code): bool
