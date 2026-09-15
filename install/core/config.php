@@ -58,6 +58,18 @@ sudo service apache2 restart',
         }
     }
 
+    location /oauth/ {
+        if (!-e $request_filename){
+            rewrite ^/oauth/(.*)$ /oauth/index.php last; break;
+        }
+    }
+
+    location /.well-known/ {
+        if (!-e $request_filename){
+            rewrite ^/.well-known/(.*)$ /.well-known/index.php last; break;
+        }
+    }
+
     location /portal/ {
         try_files $uri $uri/ /portal/index.php?$query_string;
     }
