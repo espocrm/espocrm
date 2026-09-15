@@ -58,6 +58,7 @@
         },
         "recordContentWidth": {
             "": "Normal",
+            "Wide": "Wide",
             "Full": "Full"
         }
     },
