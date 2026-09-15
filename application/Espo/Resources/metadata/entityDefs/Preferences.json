@@ -167,7 +167,8 @@
                 "Wide",
                 "Full"
             ],
-            "default": null
+            "default": null,
+            "tooltip": true
         },
         "recordContentWidth": {
             "type": "enum",
@@ -175,7 +176,8 @@
                 "",
                 "Full"
             ],
-            "default": null
+            "default": null,
+            "tooltip": true
         },
         "useCustomTabList": {
             "type": "bool",

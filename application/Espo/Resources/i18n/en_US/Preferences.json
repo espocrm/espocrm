@@ -69,6 +69,8 @@
         "Reset Dashboard to Default": "Reset Dashboard to Default"
     },
     "tooltips": {
+        "pageContentWidth": "The maximum width of the content area. Normal provides better scannability, while Wide allows more columns to be displayed in lists.",
+        "recordContentWidth": "The maximum width of the record detail view area. Full fits the entire page content area.",
         "addCustomTabs": "If checked, custom tabs will be appended to default tabs. Otherwise, custom tabs will be used instead of default tabs.",
         "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
         "doNotFillAssignedUserIfNotRequired": "When creating a new record, the assigned user won't be pre-filled with the own user. If the assigned user field is required, then this parameter has no effect.",
