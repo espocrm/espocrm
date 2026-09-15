@@ -67,13 +67,19 @@ class Shared implements Filter
         $key1 = $relationDefs->getMidKey();
         $key2 = $relationDefs->getForeignMidKey();
 
+        $midConditions = [
+            "collaboratorsMiddle.$key1:" => Attribute::ID,
+            'collaboratorsMiddle.deleted' => false,
+        ];
+
+        foreach ($relationDefs->getConditions() as $key => $value) {
+            $midConditions["collaboratorsMiddle.$key"] = $value;
+        }
+
         $subQuery = SelectBuilder::create()
             ->select(Attribute::ID)
             ->from($this->entityType)
-            ->leftJoin($middleEntityType, 'collaboratorsMiddle', [
-                "collaboratorsMiddle.$key1:" => Attribute::ID,
-                'collaboratorsMiddle.deleted' => false,
-            ])
+            ->leftJoin($middleEntityType, 'collaboratorsMiddle', $midConditions)
             ->where(["collaboratorsMiddle.$key2" => $this->user->getId()])
             ->build();
 

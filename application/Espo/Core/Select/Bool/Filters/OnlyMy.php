@@ -75,13 +75,19 @@ class OnlyMy implements Filter
             $key1 = $relationDefs->getMidKey();
             $key2 = $relationDefs->getForeignMidKey();
 
+            $midConditions = [
+                "assignedUsersMiddle.$key1:" => Attribute::ID,
+                'assignedUsersMiddle.deleted' => false,
+            ];
+
+            foreach ($relationDefs->getConditions() as $key => $value) {
+                $midConditions["assignedUsersMiddle.$key"] = $value;
+            }
+
             $subQuery = SelectBuilder::create()
                 ->select(Attribute::ID)
                 ->from($this->entityType)
-                ->leftJoin($middleEntityType, 'assignedUsersMiddle', [
-                    "assignedUsersMiddle.$key1:" => Attribute::ID,
-                    'assignedUsersMiddle.deleted' => false,
-                ])
+                ->leftJoin($middleEntityType, 'assignedUsersMiddle', $midConditions)
                 ->where(["assignedUsersMiddle.$key2" => $this->user->getId()])
                 ->build();
 
