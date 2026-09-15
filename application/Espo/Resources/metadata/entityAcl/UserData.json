@@ -3,5 +3,6 @@
         "auth2FATotpSecret": {
             "forbidden": true
         }
-    }
+    },
+    "systemWriteForbidden": true
 }
