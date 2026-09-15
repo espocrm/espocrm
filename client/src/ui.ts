@@ -33,6 +33,7 @@ import DOMPurify from 'dompurify';
 import JQuery from 'jquery';
 import Dialog from 'ui/dialog';
 import {DialogParams} from 'ui/dialog';
+import Utils from 'utils';
 
 const $ = JQuery;
 
@@ -130,6 +131,34 @@ const Ui = {
         confirmCount ++;
 
         return new Promise(resolve => {
+            const confirm = () => {
+                isResolved = true;
+
+                if (callback) {
+                    if (context) {
+                        callback.call(context);
+                    } else {
+                        callback();
+                    }
+                }
+
+                resolve();
+
+                dialog.close();
+            };
+
+            const keydownHandler = (e: KeyboardEvent) => {
+                if (!dialog.isTopmost()) {
+                    return;
+                }
+
+                if (Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                    confirm();
+                }
+            };
+
+            window.addEventListener('keydown', keydownHandler);
+
             const dialog = new Dialog({
                 backdrop: backdrop,
                 header: null,
@@ -141,21 +170,7 @@ const Ui = {
                         text: ` ${confirmText} `,
                         name: 'confirm',
                         className: 'btn-s-wide',
-                        onClick: () => {
-                            isResolved = true;
-
-                            if (callback) {
-                                if (context) {
-                                    callback.call(context);
-                                } else {
-                                    callback();
-                                }
-                            }
-
-                            resolve();
-
-                            dialog.close();
-                        },
+                        onClick: () => confirm(),
                         style: confirmStyle,
                         position: 'right',
                     },
@@ -181,10 +196,12 @@ const Ui = {
 
                     processCancel();
                 },
+                onRemove: () => {
+                    window.removeEventListener('keydown', keydownHandler);
+                },
             });
 
             dialog.show();
-            $(dialog.getElement()).find('button[data-name="confirm"]').trigger('focus');
         });
     },
 

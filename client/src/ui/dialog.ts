@@ -524,6 +524,15 @@ class Dialog {
     }
 
     /**
+     * Is the topmost dialog.
+     *
+     * @since 10.1.0
+     */
+    isTopmost(): boolean {
+        return shownDialogList.at(-1) === this;
+    }
+
+    /**
      * Show.
      */
     show() {

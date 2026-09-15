@@ -8,7 +8,7 @@
         "module": "ES6",
         "target": "ES2018",
         "lib": [
-            "ES2019",
+            "ES2022",
             "Decorators",
             "DOM.Iterable"
         ],
