@@ -125,7 +125,7 @@ class PersonalDataRecordView extends BaseRecordView {
 
                 if (value) {
                     if (Object.prototype.toString.call(value) === '[object Array]') {
-                        if (value.length) {
+                        if (!value.length) {
                             return;
                         }
                     }
