@@ -1237,6 +1237,10 @@
                     "type": "boolean",
                     "description": "Whether the field may contain personal data."
                 },
+                "noOptimisticConcurrencyControlResolution": {
+                    "type": "boolean",
+                    "description": "Disables optimistic concurrency control resolution. As of v10.1."
+                },
                 "valueFactoryClassName": {
                     "type": "string",
                     "description": "A factory for value objects. For field types it's defined at metadata > fields. Here you can define a factory for a specific field."

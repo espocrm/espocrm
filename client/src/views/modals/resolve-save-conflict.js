@@ -138,9 +138,19 @@ class ResolveSaveConflictModalView extends ModalView {
 
         const fieldList = [];
 
+
         this.getFieldManager()
             .getEntityTypeFieldList(this.entityType)
             .forEach(field => {
+                const fieldType = this.model.getFieldType(field);
+
+                if (
+                    this.getMetadata().get(`fields.${fieldType}.composite`) ||
+                    this.model.getFieldParam(field, 'noOptimisticConcurrencyControlResolution')
+                ) {
+                    return;
+                }
+
                 const fieldAttributeList = this.getFieldManager()
                     .getEntityTypeFieldAttributeList(this.entityType, field);
 

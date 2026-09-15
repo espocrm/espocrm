@@ -13,6 +13,10 @@
             "type": "boolean",
             "description": "Whether the field of this type can be created in the Entity Manager tool."
         },
+        "composite": {
+            "type": "boolean",
+            "description": "Whether the field is composite. It means it groups other fields and had no attributes that are not from the grouped fields."
+        },
         "readOnly": {
             "type": "boolean",
             "description": "Is this field type Read Only (can't be edited)."

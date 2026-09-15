@@ -38,6 +38,7 @@
     "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\PersonName",
     "notMergeable": true,
     "notCreatable": true,
+    "composite": true,
     "filter": true,
     "skipOrmDefs": false,
     "personalData": true,

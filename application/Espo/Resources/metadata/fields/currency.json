@@ -80,7 +80,8 @@
             "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
             "customizationTooltipTextDisabled": true,
             "maxLength": 3,
-            "apiSpecDisabled": true
+            "apiSpecDisabled": true,
+            "noOptimisticConcurrencyControlResolution": true
         },
         "converted": {
             "type": "currencyConverted",
