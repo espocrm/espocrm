@@ -45,9 +45,8 @@ class Client
 
     /**
      * @noinspection PhpUnused
-     * @noinspection SpellCheckingInspection
      */
-    const CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENENCODED = 'application/x-www-form-urlencoded';
+    const CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
     const CONTENT_TYPE_MULTIPART_FORM_DATA = 'multipart/form-data';
     const CONTENT_TYPE_APPLICATION_JSON = 'application/json';
 
