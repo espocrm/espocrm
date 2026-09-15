@@ -130,7 +130,7 @@
         "choose2FaEmailAddress": "Select an email address that will be used for 2FA. It's highly recommended to use a non-primary email address.",
         "enterCodeSentInEmail": "Enter the code sent to your email address.",
         "enterCodeSentBySms": "Enter the code sent by SMS to your phone number.",
-        "enterTotpCode": "Enter a code from your authenticator app.",
+        "enterTotpCode": "Enter the code from your authenticator app.",
         "verifyTotpCode": "Scan the QR-code with your mobile authenticator app. If you have a trouble with scanning, you can enter the secret manually. After that you will see a 6-digit code in your application. Enter this code in the field below.",
         "generateAndSendNewPassword": "A new password will be generated and sent to the user's email address.",
         "security2FaResetConfirmation": "Are you sure you want to reset the current 2FA settings?",
