@@ -17,6 +17,7 @@
                             tabindex="1"
                             autocomplete="one-time-code"
                             maxlength="7"
+                            inputmode="numeric"
                         >
                     </div>
                     <div class="margin-top-2x">
