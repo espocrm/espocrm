@@ -49,10 +49,10 @@ class ResolveSaveConflictModalView extends ModalView {
                 <tbody>
                 {{#each dataList}}
                     <tr>
-                        <td class="cell cell-nowrap">
-                    <span>
-                        {{translate field category='fields' scope=../entityType}}
-                    </span>
+                        <td class="cell cell-nowrap ">
+                            <div class="detail-field-container">
+                                {{translate field category='fields' scope=../entityType}}
+                            </div>
                         </td>
                         <td class="cell">
                             <select class="form-control" data-name="resolution" data-field="{{field}}">
@@ -60,7 +60,11 @@ class ResolveSaveConflictModalView extends ModalView {
                             </select>
                         </td>
                         <td class="cell">
-                            <div data-name="field" data-field="{{field}}">
+                            <div
+                                data-name="field"
+                                data-field="{{field}}"
+                                class="detail-field-container"
+                            >
                                 {{{var viewKey ../this}}}
                             </div>
                         </td>
