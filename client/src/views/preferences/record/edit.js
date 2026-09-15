@@ -151,7 +151,8 @@ class PreferencesEditRecordView extends EditRecordView {
                 this.model.get('theme') !== initialAttributes.theme ||
                 (this.model.get('themeParams') || {}).navbar !== (initialAttributes.themeParams || {}).navbar ||
                 (this.model.get('themeParams') || {}).direction !== (initialAttributes.themeParams || {}).direction ||
-                this.model.get('pageContentWidth') !== initialAttributes.pageContentWidth
+                this.model.get('pageContentWidth') !== initialAttributes.pageContentWidth ||
+                this.model.get('recordContentWidth') !== initialAttributes.recordContentWidth
             ) {
                 this.setConfirmLeaveOut(false);
 

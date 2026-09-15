@@ -105,6 +105,10 @@
             [
                 {"name": "theme"},
                 {"name": "pageContentWidth"}
+            ],
+            [
+                false,
+                {"name": "recordContentWidth"}
             ]
         ]
     },

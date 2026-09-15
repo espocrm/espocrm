@@ -26,6 +26,7 @@
         "defaultRemindersTask": "Default Reminders for Tasks",
         "theme": "Theme",
         "pageContentWidth": "Content Width",
+        "recordContentWidth": "Record Content Width",
         "useCustomTabList": "Custom Tab List",
         "addCustomTabs": "Add Custom Tabs",
         "tabList": "Tab List",
@@ -52,7 +53,12 @@
         },
         "pageContentWidth": {
             "": "Normal",
-            "Wide": "Wide"
+            "Wide": "Wide",
+            "Full": "Full"
+        },
+        "recordContentWidth": {
+            "": "Normal",
+            "Full": "Full"
         }
     },
     "labels": {

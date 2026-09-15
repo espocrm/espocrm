@@ -1066,9 +1066,14 @@ class App {
      */
     applyUserStyle() {
         const pageContentWidth = this.preferences.get('pageContentWidth');
+        const recordContentWidth = this.preferences.get('recordContentWidth');
 
         if (pageContentWidth) {
             document.body.dataset.contentWidth = pageContentWidth;
+        }
+
+        if (recordContentWidth) {
+            document.body.dataset.recordContentWidth = recordContentWidth;
         }
     }
 

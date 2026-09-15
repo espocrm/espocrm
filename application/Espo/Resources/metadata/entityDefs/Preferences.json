@@ -164,8 +164,18 @@
             "type": "enum",
             "options": [
                 "",
-                "Wide"
-            ]
+                "Wide",
+                "Full"
+            ],
+            "default": null
+        },
+        "recordContentWidth": {
+            "type": "enum",
+            "options": [
+                "",
+                "Full"
+            ],
+            "default": null
         },
         "useCustomTabList": {
             "type": "bool",
