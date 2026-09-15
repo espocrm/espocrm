@@ -128,6 +128,13 @@ interface Request
     public function getServerParam(string $name);
 
     /**
+     * Get the content type.
+     *
+     * @since 10.1.0
+     */
+    public function getContentType(): ?string;
+
+    /**
      * Get the PSR-7 request.
      *
      * @since 10.1.0

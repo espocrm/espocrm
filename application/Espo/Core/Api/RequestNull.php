@@ -134,6 +134,11 @@ class RequestNull implements ApiRequest
         return null;
     }
 
+    public function getContentType(): ?string
+    {
+        return null;
+    }
+
     public function toPsr7(): Psr7Request
     {
         $request = (new RequestFactory())->createRequest(Method::GET, "http://localhost");
