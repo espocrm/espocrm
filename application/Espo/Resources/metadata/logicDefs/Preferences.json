@@ -40,5 +40,52 @@
                 ]
             }
         }
+    },
+    "options": {
+        "recordContentWidth": [
+            {
+                "conditionGroup": [
+                    {
+                        "attribute": "pageContentWidth",
+                        "type": "isEmpty"
+                    }
+                ],
+                "optionList": [
+                    "",
+                    "Full"
+                ]
+            },
+            {
+                "conditionGroup": [
+                    {
+                        "attribute": "pageContentWidth",
+                        "type": "in",
+                        "value": [
+                            "Wide"
+                        ]
+                    }
+                ],
+                "optionList": [
+                    "",
+                    "Full"
+                ]
+            },
+            {
+                "conditionGroup": [
+                    {
+                        "attribute": "pageContentWidth",
+                        "type": "in",
+                        "value": [
+                            "Full"
+                        ]
+                    }
+                ],
+                "optionList": [
+                    "",
+                    "Wide",
+                    "Full"
+                ]
+            }
+        ]
     }
 }
