@@ -36,6 +36,7 @@ use Espo\Core\Formula\Exceptions\TooFewArguments;
 use Espo\Core\Formula\Func;
 use Espo\Core\Formula\Utils\EntityUtil;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use stdClass;
 
 /**
@@ -71,6 +72,18 @@ class CreateType implements Func
 
         if ($notAllowedAttributes) {
             throw new NotAllowedUsage("Cannot write $entityType.$notAllowedAttributes[0].");
+        }
+
+        $id = $data[Attribute::ID] ?? null;
+
+        if ($id !== null) {
+            if (!is_string($id) && !is_int($id)) {
+                throw new NotAllowedUsage("Entity ID can be only string or int.");
+            }
+
+            if (is_string($id) && !preg_match('/^[a-zA-Z0-9\-]+$/', $id)) {
+                throw new NotAllowedUsage("Not allowed characters in ID '$id'.");
+            }
         }
 
         $entity = $this->entityManager->getNewEntity($entityType);

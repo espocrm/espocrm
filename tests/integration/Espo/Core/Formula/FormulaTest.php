@@ -1579,6 +1579,55 @@ class FormulaTest extends BaseTestCase
         $this->assertTrue($thrown);
 
         //
+
+        $script = "
+            \$data = object\\create();
+            \$data['id'] = 10.1;
+            record\\create('Account', \$data);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$data = object\\create();
+            \$data['id'] = 'a/b';
+            record\\create('Account', \$data);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+
+        //
+
+        $script = "
+            \$data = object\\create();
+            \$data['id'] = 'abc';
+            record\\create('Account', \$data);
+        ";
+
+        $thrown = false;
+        try {
+            $fm->run($script, $user);
+        } catch (NotAllowedUsage) {
+            $thrown = true;
+        }
+
+        $this->assertFalse($thrown);
     }
 
     /**
