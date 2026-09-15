@@ -34,15 +34,21 @@ class FetchParams
     private ?int $maxSize;
     private ?int $offset;
     private ?string $entityType;
+    private ?string $orderBy;
+    private ?string $order;
 
     public function __construct(
         ?int $maxSize,
         ?int $offset,
-        ?string $entityType
+        ?string $entityType,
+        ?string $orderBy,
+        ?string $order
     ) {
         $this->maxSize = $maxSize;
         $this->offset = $offset;
         $this->entityType = $entityType;
+        $this->orderBy = $orderBy;
+        $this->order = $order;
     }
 
     public function getMaxSize(): ?int
@@ -58,5 +64,15 @@ class FetchParams
     public function getEntityType(): ?string
     {
         return $this->entityType;
+    }
+
+    public function getOrderBy(): ?string
+    {
+        return $this->orderBy;
+    }
+
+    public function getOrder(): ?string
+    {
+        return $this->order;
     }
 }
