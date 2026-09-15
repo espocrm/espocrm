@@ -35,21 +35,36 @@ use tests\integration\Core\BaseTestCase;
 
 class AccessTest extends BaseTestCase
 {
-    public function testGlobalAccess()
+    public function testGlobalAccess(): void
     {
-        $data = $this->getInjectableFactory()
-            ->create(SettingsService::class)
-            ->getConfigData();
+        $service = $this->getInjectableFactory()->create(SettingsService::class);
 
-        $this->assertTrue(property_exists($data, 'cacheTimestamp'));
-        $this->assertFalse(property_exists($data, 'googleMapsApiKey'));
-        $this->assertFalse(property_exists($data, 'outboundEmailFromAddress'));
-        $this->assertFalse(property_exists($data, 'jobPeriod'));
-        $this->assertFalse(property_exists($data, 'cryptKey'));
+        $data = $service->getConfigData();
+
+        $hiddenProps = [
+            'googleMapsApiKey',
+            'outboundEmailFromAddress',
+            'jobPeriod',
+            'cryptKey',
+        ];
+
+        foreach ($hiddenProps as $prop) {
+            $this->assertObjectNotHasProperty($prop, $data);
+        }
+
+        $this->assertObjectHasProperty('cacheTimestamp', $data);
     }
 
-    public function testUserAccess1()
+    public function testUserAccess1(): void
     {
+        $this->setConfigParams([
+            'internalSmtpServer' => 'test',
+            'internalSmtpPassword' => 'test',
+            'oAuthServer' => [
+                'test' => 'test',
+            ],
+        ]);
+
         $this->createUser('tester', [
             'data' => [
                 'Email' => [
@@ -63,14 +78,27 @@ class AccessTest extends BaseTestCase
 
         $this->authenticate('tester');
 
-        $data = $this->getInjectableFactory()
-            ->create(SettingsService::class)
-            ->getConfigData();
+        $service = $this->getInjectableFactory()->create(SettingsService::class);
 
-        $this->assertTrue(property_exists($data, 'version'));
-        $this->assertFalse(property_exists($data, 'outboundEmailFromAddress'));
-        $this->assertFalse(property_exists($data, 'jobPeriod'));
-        $this->assertFalse(property_exists($data, 'cryptKey'));
+        $data = $service->getConfigData();
+
+        $hiddenProps = [
+            'googleMapsApiKey',
+            'outboundEmailFromAddress',
+            'jobPeriod',
+            'cryptKey',
+            'oAuthServer',
+            'apiExposeExceptions',
+            'database',
+            'internalSmtpServer',
+            'internalSmtpPassword',
+        ];
+
+        foreach ($hiddenProps as $prop) {
+            $this->assertObjectNotHasProperty($prop, $data);
+        }
+
+        $this->assertObjectHasProperty('version', $data);
     }
 
     public function testUserAccess2()
@@ -109,6 +137,9 @@ class AccessTest extends BaseTestCase
         $this->assertFalse(property_exists($data, 'cryptKey'));
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testReadOnly(): void
     {
         $this->createUser([
@@ -118,12 +149,18 @@ class AccessTest extends BaseTestCase
 
         $this->authenticate('admin-tester');
 
-        $this->getInjectableFactory()
-            ->create(SettingsService::class)
-            ->setConfigData((object) [
-                'systemUserId' => 'test'
-            ]);
+        $service = $this->getInjectableFactory()->create(SettingsService::class);
+
+        $service->setConfigData((object) [
+            'systemUserId' => 'test',
+            'cryptKey' => 'test',
+            'oAuthServerCryptKey' => 'test',
+        ]);
+
+        $this->reCreateApplication(reuse: true);
 
         $this->assertNull($this->getConfig()->get('systemUserId'));
+        $this->assertNotEquals('test', $this->getConfig()->get('cryptKey'));
+        $this->assertNotEquals('test', $this->getConfig()->get('oAuthServerCryptKey'));
     }
 }
