@@ -31,6 +31,7 @@ namespace Espo\Controllers;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\Route\ContentType;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Tools\Formula\Service;
 use Espo\Core\Exceptions\BadRequest;
@@ -75,7 +76,7 @@ class Formula
      */
     public function postActionRun(Request $request): stdClass
     {
-        if ($request instanceof RequestWrapper && $request->getContentType() !== 'application/json') {
+        if ($request->getContentType() !== ContentType::APPLICATION_JSON) {
             throw new BadRequest();
         }
 

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Api\Route\ContentType;
 use Slim\Psr7\Factory\ResponseFactory;
 use Espo\Core\Utils\Json;
 use stdClass;
@@ -44,7 +45,7 @@ class ResponseComposer
     {
         return self::empty()
             ->writeBody(Json::encode($data))
-            ->setHeader('Content-Type', 'application/json');
+            ->setHeader('Content-Type', ContentType::APPLICATION_JSON);
     }
 
     /**

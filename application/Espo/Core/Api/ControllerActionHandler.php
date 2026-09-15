@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Api\Route\ContentType;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config;
 use Psr\Http\Message\ResponseInterface;
@@ -76,7 +77,7 @@ class ControllerActionHandler implements RequestHandlerInterface
 
     private function beforeProceed(): void
     {
-        $this->responseWrapped->setHeader('Content-Type', 'application/json');
+        $this->responseWrapped->setHeader('Content-Type', ContentType::APPLICATION_JSON);
     }
 
     private function afterProceed(Response $responseWrapped): void

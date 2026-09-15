@@ -27,58 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\OpenApi\Api;
-
-use Espo\Core\Acl;
-use Espo\Core\Api\Action;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\Api\ResponseComposer;
-use Espo\Core\Api\Route\ContentType;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Tools\OpenApi\Provider\Params;
-use Espo\Tools\OpenApi\ProviderFactory;
+namespace Espo\Core\Api\Route;
 
 /**
- * @noinspection PhpUnused
+ * @since 10.1.0
  */
-class GetSpec implements Action
+class ContentType
 {
-    private const string SCOPE = 'OpenApi';
-
-    public function __construct(
-        private Acl $acl,
-        private ProviderFactory $providerFactory,
-    ) {}
-
-    public function process(Request $request): Response
-    {
-        $this->checkAccess();
-
-        $provider = $this->providerFactory->create();
-
-        $skipCustom = $request->getQueryParam('skipCustom') === 'true';
-        $module = $request->getQueryParam('module');
-
-        $params = new Params(
-            skipCustom: $skipCustom,
-            module: $module,
-        );
-
-        $spec = $provider->get($params);
-
-        return ResponseComposer::empty()
-            ->writeBody($spec)
-            ->setHeader('Content-Type', ContentType::APPLICATION_JSON);
-    }
-
-    /**
-     * @throws Forbidden
-     */
-    private function checkAccess(): void
-    {
-        if (!$this->acl->checkScope(self::SCOPE)) {
-            throw new Forbidden("No access to OpenApi scope.");
-        }
-    }
+    public const string APPLICATION_X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+    public const string MULTIPART_FORM_DATA = 'multipart/form-data';
+    public const string APPLICATION_JSON = 'application/json';
+    public const string TEXT_PLAIN = 'text/plain';
 }

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Api\Route\ContentType;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\InjectableFactory;
@@ -95,7 +96,7 @@ class ControllerActionProcessor
 
         $data = $request->getBodyContents();
 
-        if ($data && $this->getRequestContentType($request) === 'application/json') {
+        if ($data && $this->getRequestContentType($request) === ContentType::APPLICATION_JSON) {
             $data = json_decode($data);
         }
 
