@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Formula\Functions\StringGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 
+/**
+ * @noinspection PhpUnused
+ */
 class TrimType extends BaseFunction
 {
     public function process(ArgumentList $args)
@@ -48,6 +49,16 @@ class TrimType extends BaseFunction
 
         if (!is_string($value)) {
             $value = strval($value);
+        }
+
+        return self::trim($value);
+    }
+
+    private static function trim(string $value): string
+    {
+        // @todo Remove check when PHP 8.4 is min supported.
+        if (function_exists('mb_trim')) {
+            return mb_trim($value);
         }
 
         return trim($value);
