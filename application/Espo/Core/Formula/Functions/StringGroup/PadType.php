@@ -65,6 +65,6 @@ class PadType extends BaseFunction
 
         $padType = $map[$type] ?? \STR_PAD_RIGHT;
 
-        return str_pad($input, $length, $string, $padType);
+        return mb_str_pad($input, $length, $string, $padType);
     }
 }
