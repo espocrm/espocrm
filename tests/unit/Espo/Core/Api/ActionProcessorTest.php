@@ -29,44 +29,43 @@
 
 namespace tests\unit\Espo\Core\Api;
 
-use Espo\Core\{
-    Utils\ClassFinder,
-    InjectableFactory,
-    Api\ControllerActionProcessor,
-    Api\RequestWrapper,
-    Api\ResponseWrapper,
-};
-
+use Espo\Core\Api\ControllerActionProcessor;
+use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
+use PHPUnit\Framework\TestCase;
 use tests\unit\testClasses\Controllers\TestController;
 
-class ActionProcessor extends \PHPUnit\Framework\TestCase
+class ActionProcessorTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $this->classFinder = $this->createMock(ClassFinder::class);
-        $this->injectableFactory = $this->createMock(InjectableFactory::class);
-        $this->request = $this->createMock(RequestWrapper::class);
-        $this->response = $this->createMock(ResponseWrapper::class);
 
-        $this->actionProcessor = new ActionProcessor($this->injectableFactory, $this->classFinder);
-    }
-
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     public function testAction1()
     {
+        $classFinder = $this->createMock(ClassFinder::class);
+        $injectableFactory = $this->createMock(InjectableFactory::class);
+        $request = $this->createMock(RequestWrapper::class);
+        $response = $this->createMock(ResponseWrapper::class);
+
+        $actionProcessor = new ControllerActionProcessor($injectableFactory, $classFinder);
+
         $controller = $this->getMockBuilder(TestController::class)->disableOriginalConstructor()->getMock();
 
-        $this->classFinder
+        $classFinder
             ->expects($this->once())
             ->method('find')
             ->with('Controllers', 'Test')
             ->willReturn(TestController::class);
 
-        $this->request
+        $request
             ->expects($this->once())
             ->method('getMethod')
             ->willReturn('POST');
 
-        $this->injectableFactory
+        $injectableFactory
             ->expects($this->once())
             ->method('createWith')
             ->with(TestController::class, ['name' => 'Test'])
@@ -75,8 +74,8 @@ class ActionProcessor extends \PHPUnit\Framework\TestCase
         $controller
             ->expects($this->once())
             ->method('postActionHello')
-            ->with($this->request, $this->response);
+            ->with($request, $response);
 
-        $this->actionProcessor->process('Test', 'hello', $this->request, $this->response);
+        $actionProcessor->process('Test', 'hello', $request, $response);
     }
 }
