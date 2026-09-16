@@ -266,6 +266,17 @@ class EvaluatorTest extends TestCase
         $this->assertEquals('0110', $actual);
     }
 
+    public function testStringPadMultibyte()
+    {
+        $expression = "string\\pad('Zoé', 5, '0', 'left')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('00Zoé', $actual);
+
+        $expression = "string\\pad('1', 3, '€')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('1€€', $actual);
+    }
+
     public function testStringMatchAll()
     {
         $expression = "string\\matchAll('{token1} foo {token2} bar', '/{[^}]*}/')";
