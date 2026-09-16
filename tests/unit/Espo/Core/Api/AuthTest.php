@@ -30,9 +30,11 @@
 namespace tests\unit\Espo\Core\Api;
 
 use Espo\Core\Api\Auth;
+use Espo\Core\Api\Method;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\Response;
 use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Authentication\Login\MethodResolver;
 use Espo\Core\Authentication\Result;
@@ -104,6 +106,48 @@ class AuthTest extends TestCase
         $this->assertFalse($result->isResolvedUseNoAuth());
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testCgiHeader(): void
+    {
+        $request = $this->createRequest(
+            method: Method::GET,
+            headers: [
+                'Http-Espo-Cgi-Auth' => 'Basic ' . base64_encode('test:1'),
+            ],
+        );
+
+        $response = $this->createMock(Response::class);
+
+        $authentication = $this->createMock(Authentication::class);
+        $authentication
+            ->expects(self::once())
+            ->method('login')
+            ->with(
+                AuthenticationData::create()
+                    ->withUsername('test')
+                    ->withPassword('1')
+            )
+            ->willReturn(
+                Result::success($this->createMock(User::class))
+            );
+
+        $auth = new Auth(
+            log: $this->createMock(Log::class),
+            authentication: $authentication,
+            methodResolver: $this->createMock(MethodResolver::class),
+            authRequired: true,
+        );
+
+        $result = $auth->process($request, $response);
+
+        $this->assertTrue($result->isResolved());
+    }
+
+    /**
+     * @noinspection PhpSameParameterValueInspection
+     */
     private function createRequest(
         string $method,
         array $queryParams = [],
