@@ -118,12 +118,17 @@ const Ajax = {
         }
 
         xhr.open(method, urlObj);
-        xhr.setRequestHeader('Content-Type', contentType);
 
-        if (options.headers) {
-            for (const key in options.headers) {
-                xhr.setRequestHeader(key, options.headers[key]);
-            }
+        const headers = options.headers ?? {}
+
+        const hasContentType = Object.keys(headers).find(it => it.toLowerCase() === 'content-type');
+
+        if (!hasContentType) {
+            xhr.setRequestHeader('Content-Type', contentType);
+        }
+
+        for (const key in headers) {
+            xhr.setRequestHeader(key, headers[key]);
         }
 
         if (beforeSend) {

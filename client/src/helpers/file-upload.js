@@ -142,8 +142,8 @@ class FileUploadExport {
             Espo.Ajax
                 .postRequest('Attachment/chunk/' + attachment.id, e.target.result, {
                     headers: {
-                        contentType: 'multipart/form-data',
-                    }
+                        'Content-Type': 'multipart/form-data',
+                    },
                 })
                 .then(() => {
                     options.afterChunkUpload(end);
