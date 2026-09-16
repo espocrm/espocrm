@@ -148,9 +148,11 @@ class UrlFieldView<
         }
 
         try {
-            if (value === decodeURI(value)) {
-                value = encodeURI(value);
+            if (decodeURIComponent(value) !== value) {
+                return value;
             }
+
+            value = encodeURI(value);
         } catch (e) {
             console.warn(`Malformed URI ${value}.`);
 
