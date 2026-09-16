@@ -77,7 +77,7 @@ class ClientManager
         private ApplicationConfig $applicationConfig,
         private ThemeMetadataProvider $themeMetadataProvider,
     ) {
-        $this->nonce = Util::generateKey();
+        $this->nonce = Util::generateCryptId();
     }
 
     public function setBasePath(string $basePath): void
