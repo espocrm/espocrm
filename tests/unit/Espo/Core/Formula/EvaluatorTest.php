@@ -311,6 +311,18 @@ class EvaluatorTest extends TestCase
         $this->assertEquals(['1000', '2000'], $actual);
     }
 
+    public function testDatetimeDiffMonths(): void
+    {
+        $expression = "datetime\\diff('2022-03-01', '2020-01-01', 'months')";
+        $this->assertEquals(26, $this->evaluator->process($expression));
+
+        $expression = "datetime\\diff('2020-01-01', '2022-03-01', 'months')";
+        $this->assertEquals(-26, $this->evaluator->process($expression));
+
+        $expression = "datetime\\diff('2020-01-01', '2021-01-01', 'months')";
+        $this->assertEquals(-12, $this->evaluator->process($expression));
+    }
+
     public function testStringReplace()
     {
         $expression = "string\\replace('hello {test} hello', '{test}', 'hello')";
