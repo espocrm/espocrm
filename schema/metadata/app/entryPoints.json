@@ -34,6 +34,20 @@
                 },
                 "description": "Allowed HTTP methods.",
                 "default": ["get"]
+            },
+            "consumes": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "description": "Media type.",
+                    "examples": [
+                        "application/json",
+                        "multipart/form-data",
+                        "application/x-www-form-urlencoded",
+                        "text/plain"
+                    ]
+                },
+                "description": "If defined, restricts content types allowed for the entry point. If an empty array, the Content-Type header must be empty."
             }
         }
     }

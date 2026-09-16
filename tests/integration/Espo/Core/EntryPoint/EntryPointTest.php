@@ -257,6 +257,102 @@ class EntryPointTest extends BaseTestCase
         $this->assertFalse($applicationState->hasUser());
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testConsumesFail(): void
+    {
+        $metadata = $this->getMetadata();
+        $metadata->set('app', 'entryPoints', [
+            'oauthCallback' => [
+                'consumes' => ['application/json'],
+            ],
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $outputEmitter = $this->createMock(OutputEmitter::class);
+        $errorOutput = $this->createMock(ErrorOutput::class);
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'entryPoint' => 'oauthCallback',
+            ],
+            headers: [
+                'Content-Type' => 'text/plain',
+            ],
+        );
+
+        $response = $this->createMock(ResponseWrapper::class);
+
+        $starter = $this->createStarter(
+            request: $request,
+            response: $response,
+            outputEmitter: $outputEmitter,
+            errorOutput: $errorOutput,
+        );
+
+        $errorOutput
+            ->expects(self::once())
+            ->method('processWithBodyPrinting');
+
+        $starter->start();
+
+        $applicationState = $this->getContainer()->getByClass(ApplicationState::class);
+
+        $this->assertFalse($applicationState->hasUser());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testConsumesSuccess(): void
+    {
+        $metadata = $this->getMetadata();
+        $metadata->set('app', 'entryPoints', [
+            'oauthCallback' => [
+                'consumes' => ['application/json'],
+            ],
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $outputEmitter = $this->createMock(OutputEmitter::class);
+        $errorOutput = $this->createMock(ErrorOutput::class);
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'entryPoint' => 'oauthCallback',
+            ],
+            headers: [
+                'Content-Type' => 'application/json',
+            ],
+        );
+
+        $response = $this->createMock(ResponseWrapper::class);
+
+        $starter = $this->createStarter(
+            request: $request,
+            response: $response,
+            outputEmitter: $outputEmitter,
+            errorOutput: $errorOutput,
+        );
+
+        $errorOutput
+            ->expects(self::never())
+            ->method('processWithBodyPrinting');
+
+        $starter->start();
+
+        $applicationState = $this->getContainer()->getByClass(ApplicationState::class);
+
+        $this->assertTrue($applicationState->hasUser());
+    }
+
     private function createStarter(
         RequestWrapper $request,
         ResponseWrapper $response,

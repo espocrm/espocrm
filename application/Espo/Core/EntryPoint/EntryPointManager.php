@@ -117,7 +117,8 @@ class EntryPointManager
          *     className?: ?class-string<EntryPoint>,
          *     notExposed?: bool,
          *     noAuth?: bool,
-         *     allowedMethods?: string[],
+         *     allowedMethods?: ?string[],
+         *     consumes?: ?string[]
          * } $params
          */
         $params = $this->metadata->get("app.entryPoints.$name") ?? [];
@@ -127,6 +128,7 @@ class EntryPointManager
             notExposed: $params['notExposed'] ?? false,
             noAuth: $params['noAuth'] ?? false,
             allowedMethods: $params['allowedMethods'] ?? null,
+            consumes: $params['consumes'] ?? null,
         );
     }
 }

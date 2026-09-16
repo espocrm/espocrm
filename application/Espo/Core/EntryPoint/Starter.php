@@ -78,7 +78,7 @@ class Starter
         try {
             $name = $this->getName($params, $request);
 
-            $this->checkStart($name, $params, $request->getMethod());
+            $this->checkStart($name, $params, $request);
         } catch (BadRequest|Forbidden $e) {
             $this->errorOutput->processWithBodyPrinting($request, $response, $e);
             $this->outputEmitter->emit($response);
@@ -245,8 +245,10 @@ class Starter
      * @throws BadRequest
      * @throws Forbidden
      */
-    private function checkStart(string $name, Params $params, string $method): void
+    private function checkStart(string $name, Params $params, RequestWrapper $request): void
     {
+        $method = $request->getMethod();
+
         $metaParams = $this->entryPointManager->getMetaParams($name);
 
         if ($metaParams->notExposed && $params->name === null) {
@@ -259,6 +261,10 @@ class Starter
             }
         } else if ($method !== Method::GET) {
             throw new BadRequest("Only GET requests allowed for the entry point.");
+        }
+
+        if ($metaParams->consumes !== null && !in_array($request->getContentType(), $metaParams->consumes)) {
+            throw new BadRequest("Not allowed Content-Type.");
         }
     }
 }

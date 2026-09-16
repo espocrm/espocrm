@@ -37,11 +37,13 @@ readonly class MetaParams
     /**
      * @param ?class-string<EntryPoint> $className
      * @param ?string[] $allowedMethods
+     * @param ?string[] $consumes
      */
     public function __construct(
         public ?string $className = null,
         public bool $notExposed = false,
         public bool $noAuth = false,
         public ?array $allowedMethods = null,
+        public ?array $consumes = null,
     ) {}
 }
