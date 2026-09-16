@@ -36,6 +36,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\ApplicationUser;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 
@@ -102,6 +103,8 @@ class RouteProcessor
         RequestWrapper $request,
         ResponseWrapper $response,
     ): Psr7Response {
+
+        $this->assertContentTypeAllowed($processData, $request);
 
         $authRequired = !$processData->getRoute()->noAuth();
 
@@ -281,6 +284,18 @@ class RouteProcessor
 
         foreach ($controllerMiddlewareList as $middleware) {
             $dispatcher->addMiddleware($middleware);
+        }
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function assertContentTypeAllowed(ProcessData $processData, RequestWrapper $request): void
+    {
+        $consumes = $processData->getRoute()->getConsumes();
+
+        if ($consumes !== null && !in_array($request->getContentType(), $consumes)) {
+            throw new BadRequest("Not allowed Content-Type.");
         }
     }
 }

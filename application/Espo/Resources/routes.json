@@ -328,6 +328,9 @@
     {
         "route": "/Attachment/chunk/:id",
         "method": "post",
+        "consumes": [
+            "multipart/form-data"
+        ],
         "actionClassName": "Espo\\Tools\\Attachment\\Api\\PostChunk"
     },
     {

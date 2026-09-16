@@ -226,9 +226,8 @@ class AuthTest extends TestCase
      * @param array<string, string> $headers
      * @param array<string, string> $queryParams
      * @param array<string, string> $cookieParams
-     * @noinspection PhpSameParameterValueInspection
      */
-    private function createRequest(
+    public static function createRequest(
         string $method,
         array $queryParams = [],
         array $headers = [],

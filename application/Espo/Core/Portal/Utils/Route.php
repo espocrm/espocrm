@@ -55,6 +55,7 @@ class Route extends BaseRoute
                 adjustedRoute: $path,
                 params: $route->getParams(),
                 noAuth: $route->noAuth(),
+                consumes: $route->getConsumes(),
                 actionClassName: $route->getActionClassName(),
             );
 

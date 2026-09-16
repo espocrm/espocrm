@@ -43,6 +43,7 @@ use Espo\Core\Utils\Resource\PathProvider;
  *     method: string,
  *     noAuth?: bool,
  *     params?: array<string, mixed>,
+ *     consumes?: ?string[],
  *     actionClassName: ?class-string<Action>
  *   }
  */
@@ -83,6 +84,7 @@ class Route
                     adjustedRoute: $item['adjustedRoute'],
                     params: $item['params'] ?? [],
                     noAuth: $item['noAuth'] ?? false,
+                    consumes: $item['consumes'] ?? null,
                     actionClassName: $item['actionClassName'] ?? null,
                 );
             },

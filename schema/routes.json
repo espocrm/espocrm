@@ -32,6 +32,20 @@
                 "type": "string",
                 "description": "An action class. Should implement the interface Espo\\Core\\Api\\Action."
             },
+            "consumes": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "description": "Media type.",
+                    "examples": [
+                        "application/json",
+                        "multipart/form-data",
+                        "application/x-www-form-urlencoded",
+                        "text/plain"
+                    ]
+                },
+                "description": "If defined, restricts content types allowed for the endpoint. If an empty array, the Content-Type header must be empty. As of v10.1."
+            },
             "params": {
                 "type": "object",
                 "description": "Parameters. If starts with a colon, then will be parsed from the URI. Example: `:id`.",
