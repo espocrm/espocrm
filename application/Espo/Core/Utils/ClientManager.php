@@ -48,8 +48,6 @@ use Slim\ResponseEmitter;
 
 /**
  * Renders the main HTML page.
- *
- * @todo Use Handlebars.
  */
 class ClientManager
 {
@@ -63,7 +61,10 @@ class ClientManager
 
     private string $nonce;
 
-    private const APP_DESCRIPTION = "EspoCRM – Open Source CRM application.";
+    private const string APP_DESCRIPTION = "EspoCRM – Open Source CRM application.";
+    private const string APP_NAME = 'EspoCRM';
+
+    private const int AJAX_TIMEOUT = 60000;
 
     public function __construct(
         private Config $config,
@@ -226,6 +227,7 @@ class ClientManager
 
         $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
+
         $faviconAlternate = $this->metadata->get('app.client.faviconAlternate') ?? $this->faviconAlternate;
         [$favicon, $faviconType] = $this->getFaviconData();
 
@@ -267,7 +269,7 @@ class ClientManager
         $data = [
             'applicationId' => $this->applicationId,
             'apiUrl' => $this->apiUrl,
-            'applicationName' => $this->escapeValue($pageTitle ?? $this->config->get('applicationName', 'EspoCRM')),
+            'applicationName' => $this->getApplicationName($pageTitle),
             'cacheTimestamp' => $cacheTimestamp,
             'appTimestamp' => $appTimestamp,
             'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),
@@ -276,7 +278,7 @@ class ClientManager
             'theme' => Json::encode($theme),
             'runScript' => $runScript,
             'basePath' => $this->basePath,
-            'useCache' => $useCache ? 'true' : 'false',
+            'useCache' => self::boolToString($useCache),
             'appClientClassName' => 'app',
             'scriptsHtml' => $scriptsHtml,
             'additionalStyleSheetsHtml' => $additionalStyleSheetsHtml,
@@ -284,13 +286,12 @@ class ClientManager
             'faviconAlternate' => $faviconAlternate,
             'favicon' => $favicon,
             'faviconType' => $faviconType,
-            'ajaxTimeout' => (int) ($this->config->get('ajaxTimeout') ?? 60000),
+            'ajaxTimeout' => $this->getAjaxTimeout(),
             'internalModuleList' => Json::encode($internalModuleList),
             'bundledModuleList' => Json::encode($this->getBundledModuleList()),
-            'applicationDescription' =>
-                $this->escapeValue($this->config->get('applicationDescription') ?? self::APP_DESCRIPTION),
+            'applicationDescription' => $this->getApplicationDescription(),
             'nonce' => $this->nonce,
-            'useRouter' => $useRouter ? 'true' : 'false',
+            'useRouter' => self::boolToString($useRouter),
             'loaderParams' => Json::encode([
                 'basePath' => $this->basePath,
                 'cacheTimestamp' => $loaderCacheTimestamp,
@@ -303,19 +304,9 @@ class ClientManager
 
         $html = $this->fileManager->getContents($htmlFilePath);
 
-        foreach ($vars as $key => $value) {
-            $html = str_replace('{{' . $key . '}}', $value, $html);
-        }
+        $replaceData = $this->prepareRelaceData($vars, $data);
 
-        foreach ($data as $key => $value) {
-            if (array_key_exists($key, $vars)) {
-                continue;
-            }
-
-            $html = str_replace('{{' . $key . '}}', $value, $html);
-        }
-
-        return $html;
+        return strtr($html, $replaceData);
     }
 
     /**
@@ -515,5 +506,54 @@ class ClientManager
         $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
         return str_replace(['{', '}'], ['&#123;', '&#125;'], $value);
+    }
+
+    /**
+     * @param array<string, mixed> $vars
+     * @param array<string, mixed> $data
+     * @return array<string, string>
+     */
+    private function prepareRelaceData(array $vars, array $data): array
+    {
+        $replaceData = [];
+
+        foreach ($vars as $key => $value) {
+            $replaceData['{{' . $key . '}}'] = (string) $value;
+        }
+
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $vars)) {
+                continue;
+            }
+
+            $replaceData['{{' . $key . '}}'] = (string) $value;
+        }
+
+        return $replaceData;
+    }
+
+    private function getApplicationName(?string $pageTitle): string
+    {
+        $value = $pageTitle ?? $this->config->get('applicationName', self::APP_NAME);
+
+        return $this->escapeValue($value);
+    }
+
+    private function getApplicationDescription(): string
+    {
+        $value = $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION;
+
+        return $this->escapeValue($value);
+    }
+
+
+    private static function boolToString(bool $useCache): string
+    {
+        return $useCache ? 'true' : 'false';
+    }
+
+    private function getAjaxTimeout(): int
+    {
+        return (int) ($this->config->get('ajaxTimeout') ?? self::AJAX_TIMEOUT);
     }
 }
