@@ -43,7 +43,7 @@ class Route
         private string $adjustedRoute,
         private array $params,
         private bool $noAuth,
-        private ?string $actionClassName
+        private ?string $actionClassName,
     ) {
         $this->method = strtoupper($method);
     }

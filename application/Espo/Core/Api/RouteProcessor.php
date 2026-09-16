@@ -62,13 +62,13 @@ class RouteProcessor
         private ApplicationUser $applicationUser,
         private ControllerActionProcessor $actionProcessor,
         private MiddlewareProvider $middlewareProvider,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
     ) {}
 
     public function process(
         ProcessData $processData,
         Psr7Request $request,
-        Psr7Response $response
+        Psr7Response $response,
     ): Psr7Response {
 
         $requestWrapped = new RequestWrapper($request, $processData->getBasePath(), $processData->getRouteParams());
@@ -76,17 +76,17 @@ class RouteProcessor
 
         try {
             return $this->processInternal(
-                $processData,
-                $request,
-                $requestWrapped,
-                $responseWrapped
+                processData: $processData,
+                psrRequest: $request,
+                request: $requestWrapped,
+                response: $responseWrapped,
             );
         } catch (Exception $exception) {
             $this->handleException(
-                $exception,
-                $requestWrapped,
-                $responseWrapped,
-                $processData->getRoute()->getAdjustedRoute()
+                exception: $exception,
+                request: $requestWrapped,
+                response: $responseWrapped,
+                route: $processData->getRoute()->getAdjustedRoute(),
             );
 
             return $responseWrapped->toPsr7();
@@ -100,7 +100,7 @@ class RouteProcessor
         ProcessData $processData,
         Psr7Request $psrRequest,
         RequestWrapper $request,
-        ResponseWrapper $response
+        ResponseWrapper $response,
     ): Psr7Response {
 
         $authRequired = !$processData->getRoute()->noAuth();
@@ -136,13 +136,18 @@ class RouteProcessor
     private function processAfterAuth(
         ProcessData $processData,
         Psr7Request $request,
-        ResponseWrapper $responseWrapped
+        ResponseWrapper $responseWrapped,
     ): Psr7Response {
 
         $actionClassName = $processData->getRoute()->getActionClassName();
 
         if ($actionClassName) {
-            return $this->processAction($actionClassName, $processData, $request, $responseWrapped);
+            return $this->processAction(
+                actionClassName: $actionClassName,
+                processData: $processData,
+                request: $request,
+                responseWrapped: $responseWrapped,
+            );
         }
 
         return $this->processControllerAction($processData, $request, $responseWrapped);
@@ -155,10 +160,9 @@ class RouteProcessor
         string $actionClassName,
         ProcessData $processData,
         Psr7Request $request,
-        ResponseWrapper $responseWrapped
+        ResponseWrapper $responseWrapped,
     ): Psr7Response {
 
-        /** @var Action $action */
         $action = $this->injectableFactory->create($actionClassName);
 
         $handler = new ActionHandler(
@@ -189,7 +193,7 @@ class RouteProcessor
     private function processControllerAction(
         ProcessData $processData,
         Psr7Request $request,
-        ResponseWrapper $responseWrapped
+        ResponseWrapper $responseWrapped,
     ): Psr7Response {
 
         $controller = $this->getControllerName($processData);
@@ -236,11 +240,16 @@ class RouteProcessor
         Exception $exception,
         Request $request,
         Response $response,
-        string $route
+        string $route,
     ): void {
 
         try {
-            $this->errorOutput->process($request, $response, $exception, $route);
+            $this->errorOutput->process(
+                request: $request,
+                response: $response,
+                exception: $exception,
+                route: $route,
+            );
         } catch (Throwable $exceptionAnother) {
             $this->log->error($exceptionAnother->getMessage());
 
@@ -255,18 +264,20 @@ class RouteProcessor
         MiddlewareDispatcher $dispatcher,
         string $method,
         string $controller,
-        string $action
+        string $action,
     ): void {
 
-        $controllerActionMiddlewareList = $this->middlewareProvider
-            ->getControllerActionMiddlewareList($method, $controller, $action);
+        $controllerActionMiddlewareList = $this->middlewareProvider->getControllerActionMiddlewareList(
+            method: $method,
+            controller: $controller,
+            action: $action,
+        );
 
         foreach ($controllerActionMiddlewareList as $middleware) {
             $dispatcher->addMiddleware($middleware);
         }
 
-        $controllerMiddlewareList = $this->middlewareProvider
-            ->getControllerMiddlewareList($controller);
+        $controllerMiddlewareList = $this->middlewareProvider->getControllerMiddlewareList($controller);
 
         foreach ($controllerMiddlewareList as $middleware) {
             $dispatcher->addMiddleware($middleware);

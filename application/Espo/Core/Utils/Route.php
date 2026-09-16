@@ -32,7 +32,6 @@ namespace Espo\Core\Utils;
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Route as RouteItem;
 use Espo\Core\Binding\Attributes\Qualify;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Resource\PathProvider;
@@ -79,12 +78,12 @@ class Route
         return array_map(
             function (array $item): RouteItem {
                 return new RouteItem(
-                    $item['method'],
-                    $item['route'],
-                    $item['adjustedRoute'],
-                    $item['params'] ?? [],
-                    $item['noAuth'] ?? false,
-                    $item['actionClassName'] ?? null
+                    method: $item['method'],
+                    route: $item['route'],
+                    adjustedRoute: $item['adjustedRoute'],
+                    params: $item['params'] ?? [],
+                    noAuth: $item['noAuth'] ?? false,
+                    actionClassName: $item['actionClassName'] ?? null,
                 );
             },
             $this->data
