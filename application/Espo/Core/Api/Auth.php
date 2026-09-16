@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Api\Route\ContentType;
 use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Authentication\Login\MethodResolver;
 use Espo\Core\Exceptions\BadRequest;
@@ -80,7 +81,7 @@ class Auth
 
         $hasAuthData = $username || $authenticationMethod;
 
-        if (!$hasAuthData) {
+        if (!$hasAuthData && !$this->toIgnoreNonHeaderAuthorizationData($request)) {
             $password = self::obtainTokenFromCookies($request);
 
             if ($password) {
@@ -278,6 +279,10 @@ class Auth
             return [null, null];
         }
 
+        if ($this->toIgnoreNonHeaderAuthorizationData($request)) {
+            return [null, null];
+        }
+
         if (
             $request->getServerParam('PHP_AUTH_USER') &&
             $request->getServerParam('PHP_AUTH_PW')
@@ -350,5 +355,17 @@ class Auth
         return
             $request->getHeader('Sec-Fetch-Mode') === 'navigate' &&
             $request->getHeader('Sec-Fetch-Dest') === 'document';
+    }
+
+    private function toIgnoreNonHeaderAuthorizationData(Request $request): bool
+    {
+        return
+            !$this->isEntryPoint &&
+            $request->getHeader('Sec-Fetch-Mode') === 'navigate' &&
+            in_array($request->getContentType(), [
+                ContentType::MULTIPART_FORM_DATA,
+                ContentType::APPLICATION_X_WWW_FORM_URLENCODED,
+                ContentType::TEXT_PLAIN,
+            ]);
     }
 }
