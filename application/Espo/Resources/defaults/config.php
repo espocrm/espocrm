@@ -310,6 +310,7 @@ return [
     'phoneNumberPreferredCountryList' => ['us', 'de'],
     'adminUpgradeDisabled' => false,
     'adminUpgrade' => false,
+    'adminExtensionManage' => true,
     'adminExtensionUpload' => true,
     'wysiwygCodeEditorDisabled' => false,
     'customPrefixDisabled' => false,

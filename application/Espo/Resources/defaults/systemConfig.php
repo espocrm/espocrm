@@ -64,6 +64,7 @@ return [
         'instanceId',
         'adminUpgradeDisabled',
         'adminUpgrade',
+        'adminExtensionManage',
         'adminExtensionUpload',
         'userLimit',
         'portalUserLimit',

@@ -53,7 +53,7 @@ class Extension extends RecordBase
      */
     public function postActionUpload(Request $request): stdClass
     {
-        $this->assertUpgradeAllowed();
+        $this->assertUploadAllowed();
 
         $body = $request->getBodyContents();
 
@@ -81,11 +81,9 @@ class Extension extends RecordBase
      */
     public function postActionInstall(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $this->assertInstallAllowed();
 
-        if ($this->config->get('restrictedMode')) {
-            throw new Forbidden();
-        }
+        $data = $request->getParsedBody();
 
         $manager = $this->createManager();
 
@@ -100,11 +98,9 @@ class Extension extends RecordBase
      */
     public function postActionUninstall(Request $request): bool
     {
-        $data = $request->getParsedBody();
+        $this->assertInstallAllowed();
 
-        if ($this->config->get('restrictedMode')) {
-            throw new Forbidden();
-        }
+        $data = $request->getParsedBody();
 
         $manager = $this->createManager();
 
@@ -121,7 +117,7 @@ class Extension extends RecordBase
     {
         $params = $request->getRouteParams();
 
-        $this->assertUpgradeAllowed();
+        $this->assertUploadAllowed();
 
         $manager = $this->createManager();
 
@@ -148,7 +144,21 @@ class Extension extends RecordBase
     /**
      * @throws Forbidden
      */
-    private function assertUpgradeAllowed(): void
+    private function assertInstallAllowed(): void
+    {
+        if ($this->config->get('restrictedMode')) {
+            throw new Forbidden("Not allowed in restricted mode.");
+        }
+
+        if ($this->config->get('adminExtensionManage') !== true) {
+            throw new Forbidden("Cannot manage extensions as `adminExtensionManage` is not enabled.");
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertUploadAllowed(): void
     {
         if ($this->config->get('restrictedMode')) {
             throw new Forbidden("Not allowed in restricted mode.");
@@ -156,6 +166,10 @@ class Extension extends RecordBase
 
         if ($this->config->get('adminExtensionUpload') !== true) {
             throw new Forbidden("Cannot upload extensions as `adminExtensionUpload` is not enabled.");
+        }
+
+        if ($this->config->get('adminExtensionManage') !== true) {
+            throw new Forbidden("Cannot manage extensions as `adminExtensionManage` is not enabled.");
         }
 
         if ($this->config->get('adminUpgradeDisabled')) {
