@@ -27,46 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\FieldSanitizers;
+namespace tests\unit\Espo\Classes\FieldSanitizers;
 
-use Espo\Core\FieldSanitize\Sanitizer;
+use Espo\Classes\FieldSanitizers\StringTrim;
 use Espo\Core\FieldSanitize\Sanitizer\Data;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @noinspection PhpUnused
- */
-class ArrayStringTrim implements Sanitizer
+class StringTrimTest extends TestCase
 {
-    public function sanitize(Data $data, string $field): void
+    #[DataProvider('provider')]
+    public function testTrim(string $expected, string $input): void
     {
-        if (!$data->has($field)) {
-            return;
-        }
+        $data = new Data((object) ['test' => $input]);
 
-        $value = $data->get($field);
+        (new StringTrim())->sanitize($data, 'test');
 
-        if (!is_array($value)) {
-            return;
-        }
-
-        foreach ($value as $i => $item) {
-            if (!is_string($item)) {
-                continue;
-            }
-
-            $value[$i] = self::trim($item);
-        }
-
-        $data->set($field, $value);
+        $this->assertEquals($expected, $data->get('test'));
     }
 
-    private static function trim(string $value): string
+    public static function provider(): array
     {
-        // @todo Remove check when PHP 8.4 is min supported.
-        if (function_exists('mb_trim')) {
-            return mb_trim($value);
-        }
-
-        return trim($value);
+        return [
+            ['test', ' test '],
+        ];
     }
 }

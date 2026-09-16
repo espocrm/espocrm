@@ -49,12 +49,22 @@ class StringTrim implements Sanitizer
             return;
         }
 
-        $value = trim($value);
+        $value = self::trim($value);
 
         if ($value === '') {
             $value = null;
         }
 
         $data->set($field, $value);
+    }
+
+    private static function trim(string $value): string
+    {
+        // @todo Remove check when PHP 8.4 is min supported.
+        if (function_exists('mb_trim')) {
+            return mb_trim($value);
+        }
+
+        return trim($value);
     }
 }
