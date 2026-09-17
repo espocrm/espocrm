@@ -27,34 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database;
+namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
-class BooleanFieldTest extends Base
+class FileFieldTest extends Base
 {
     public function testColumn()
     {
-        $column = $this->getColumnInfo('Test', 'testBoolean');
+        $column = $this->getColumnInfo('Test', 'testFileId');
 
         $this->assertNotEmpty($column);
-        $this->assertEquals('tinyint', $column['DATA_TYPE']);
-        $this->assertEquals('0', $column['COLUMN_DEFAULT']);
-        $this->assertEquals('NO', $column['IS_NULLABLE']);
-    }
-
-    public function testDefaultValue()
-    {
-        $this->updateDefs('Test', 'testBoolean', [
-            'default' => true,
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testBoolean');
-
-        $this->assertNotEmpty($column);
-        $this->assertEquals('tinyint', $column['DATA_TYPE']);
-        $this->assertEquals('1', $column['COLUMN_DEFAULT']);
-        $this->assertEquals('NO', $column['IS_NULLABLE']);
+        $this->assertEquals('varchar', $column['DATA_TYPE']);
+        $this->assertEquals(17, $column['CHARACTER_MAXIMUM_LENGTH']);
+        $this->assertEquals('YES', $column['IS_NULLABLE']);
+        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
     }
 }

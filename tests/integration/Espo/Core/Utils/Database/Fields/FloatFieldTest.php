@@ -27,19 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database;
+namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
-class DateTimeFieldTest extends Base
+class FloatFieldTest extends Base
 {
     public function testColumn()
     {
-        $column = $this->getColumnInfo('Test', 'testDateTime');
+        $column = $this->getColumnInfo('Test', 'testFloat');
 
         $this->assertNotEmpty($column);
-        $this->assertEquals('datetime', $column['DATA_TYPE']);
+        $this->assertEquals('double', $column['DATA_TYPE']);
         $this->assertEquals('YES', $column['IS_NULLABLE']);
     }
 }

@@ -27,34 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database;
+namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use integration\Core\NoTransaction;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[NoTransaction]
-class AddressFieldTest extends Base
+class BooleanFieldTest extends Base
 {
-    static public function fieldList()
+    public function testColumn()
     {
-        return [
-            ['testAddressStreet', 255],
-            ['testAddressCity', 100],
-            ['testAddressState', 100],
-            ['testAddressCountry', 100],
-            ['testAddressPostalCode', 40],
-        ];
-    }
-
-    #[DataProvider('fieldList')]
-    public function testColumn($fieldName, $length)
-    {
-        $column = $this->getColumnInfo('Test', $fieldName);
+        $column = $this->getColumnInfo('Test', 'testBoolean');
 
         $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals($length, $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+        $this->assertEquals('tinyint', $column['DATA_TYPE']);
+        $this->assertEquals('0', $column['COLUMN_DEFAULT']);
+        $this->assertEquals('NO', $column['IS_NULLABLE']);
+    }
+
+    public function testDefaultValue()
+    {
+        $this->updateDefs('Test', 'testBoolean', [
+            'default' => true,
+        ]);
+
+        $column = $this->getColumnInfo('Test', 'testBoolean');
+
+        $this->assertNotEmpty($column);
+        $this->assertEquals('tinyint', $column['DATA_TYPE']);
+        $this->assertEquals('1', $column['COLUMN_DEFAULT']);
+        $this->assertEquals('NO', $column['IS_NULLABLE']);
     }
 }
