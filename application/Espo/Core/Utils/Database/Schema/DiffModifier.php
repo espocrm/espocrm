@@ -132,8 +132,8 @@ class DiffModifier
 
     private function amendColumnDiffLength(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
     {
-        $fromColumn = $columnDiff->fromColumn;
-        $column = $columnDiff->column;
+        $fromColumn = $columnDiff->getOldColumn();
+        $column = $columnDiff->getNewColumn();
 
         if (!$fromColumn) {
             return;
@@ -160,8 +160,8 @@ class DiffModifier
      */
     private function amendColumnDiffTextType(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
     {
-        $fromColumn = $columnDiff->fromColumn;
-        $column = $columnDiff->column;
+        $fromColumn = $columnDiff->getOldColumn();
+        $column = $columnDiff->getNewColumn();
 
         if (!$fromColumn) {
             return;
@@ -187,22 +187,25 @@ class DiffModifier
             LongtextType::NAME,
         ];
 
-        $fromIndex = array_search($fromType->getName(), $typePriority);
-        $index = array_search($type->getName(), $typePriority);
+        $fromName = $fromType::getTypeRegistry()->lookupName($fromType);
+        $toName = $type::getTypeRegistry()->lookupName($type);
+
+        $fromIndex = array_search($fromName, $typePriority);
+        $index = array_search($toName, $typePriority);
 
         if ($index >= $fromIndex) {
             return;
         }
 
-        $column->setType(Type::getType($fromType->getName()));
+        $column->setType(Type::getType($fromName));
 
         self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'type');
     }
 
     private function amendColumnDiffCollation(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
     {
-        $fromColumn = $columnDiff->fromColumn;
-        $column = $columnDiff->column;
+        $fromColumn = $columnDiff->getOldColumn();
+        $column = $columnDiff->getNewColumn();
 
         if (!$fromColumn) {
             return;
@@ -225,8 +228,8 @@ class DiffModifier
 
     private function amendColumnDiffCharset(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
     {
-        $fromColumn = $columnDiff->fromColumn;
-        $column = $columnDiff->column;
+        $fromColumn = $columnDiff->getOldColumn();
+        $column = $columnDiff->getNewColumn();
 
         if (!$fromColumn) {
             return;
@@ -249,8 +252,8 @@ class DiffModifier
 
     private function amendColumnDiffAutoincrement(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): bool
     {
-        $fromColumn = $columnDiff->fromColumn;
-        $column = $columnDiff->column;
+        $fromColumn = $columnDiff->getOldColumn();
+        $column = $columnDiff->getNewColumn();
 
         if (!$fromColumn) {
             return false;
