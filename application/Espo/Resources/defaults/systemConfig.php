@@ -301,7 +301,7 @@ return [
     ],
     'requiredMysqlVersion' => '8.0.0',
     'recommendedMysqlParams' => [],
-    'requiredMariadbVersion' => '10.3.0',
+    'requiredMariadbVersion' => '10.6.0',
     'requiredPostgresqlVersion' => '15.0',
     'recommendedMariadbParams' => [],
     /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
