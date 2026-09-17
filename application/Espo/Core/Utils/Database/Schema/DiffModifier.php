@@ -76,17 +76,6 @@ class DiffModifier
     {
         $reRun = false;
 
-        /**
-         * @todo Leave only for MariaDB?
-         * MariaDB supports RENAME INDEX as of v10.5.
-         * Find out how long does it take to rename for different databases.
-         */
-
-        if (!$isHard) {
-            // Prevent index renaming as an operation may take a lot of time.
-            $tableDiff->renamedIndexes = [];
-        }
-
         foreach ($tableDiff->removedColumns as $name => $column) {
             $reRun = $this->moveRemovedAutoincrementColumnToChanged($tableDiff, $column, $name) || $reRun;
         }
@@ -94,43 +83,48 @@ class DiffModifier
         if (!$isHard) {
             // Prevent column removal to prevent data loss.
             $tableDiff->removedColumns = [];
+
+            // @todo Recreate $tableDiff w/o dropped columns. Or config.
         }
 
+        // @todo Config.
         // Prevent column renaming as a not desired behavior.
-        foreach ($tableDiff->renamedColumns as $renamedColumn) {
+        /*foreach ($tableDiff->getRenamedColumns() as $renamedColumn) {
             $addedName = strtolower($renamedColumn->getName());
+
             $tableDiff->addedColumns[$addedName] = $renamedColumn;
-        }
+        }*/
+
 
         $tableDiff->renamedColumns = [];
 
-        foreach ($tableDiff->addedColumns as $column) {
+        foreach ($tableDiff->getAddedColumns() as $column) {
             // Suppress autoincrement as need having a unique index first.
             $reRun = $this->amendAddedColumnAutoincrement($column) || $reRun;
         }
 
-        foreach ($tableDiff->changedColumns as $name => $columnDiff) {
+        foreach ($tableDiff->getModifiedColumns() as $columnDiff) {
             if (!$isHard) {
                 // Prevent decreasing length for string columns to prevent data loss.
-                $this->amendColumnDiffLength($tableDiff, $columnDiff, $name);
+                $this->amendColumnDiffLength($columnDiff);
                 // Prevent longtext => mediumtext to prevent data loss.
-                $this->amendColumnDiffTextType($tableDiff, $columnDiff, $name);
+                $this->amendColumnDiffTextType($columnDiff);
                 // Prevent changing collation.
-                $this->amendColumnDiffCollation($tableDiff, $columnDiff, $name);
+                $this->amendColumnDiffCollation($columnDiff);
                 // Prevent changing charset.
-                $this->amendColumnDiffCharset($tableDiff, $columnDiff, $name);
+                $this->amendColumnDiffCharset($columnDiff);
             }
 
             // Prevent setting autoincrement in first run.
             if (!$secondRun) {
-                $reRun = $this->amendColumnDiffAutoincrement($tableDiff, $columnDiff, $name) || $reRun;
+                $reRun = $this->amendColumnDiffAutoincrement($columnDiff) || $reRun;
             }
         }
 
         return $reRun;
     }
 
-    private function amendColumnDiffLength(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
+    private function amendColumnDiffLength(ColumnDiff $columnDiff): void
     {
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
@@ -151,14 +145,12 @@ class DiffModifier
         }
 
         $column->setLength($fromLength);
-
-        self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'length');
     }
 
     /**
      * @throws DbalException
      */
-    private function amendColumnDiffTextType(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
+    private function amendColumnDiffTextType(ColumnDiff $columnDiff): void
     {
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
@@ -198,35 +190,28 @@ class DiffModifier
         }
 
         $column->setType(Type::getType($fromName));
-
-        self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'type');
     }
 
-    private function amendColumnDiffCollation(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
+    private function amendColumnDiffCollation(ColumnDiff $columnDiff): void
     {
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
 
         if (!$fromColumn) {
-            return;
-        }
-
-        if (!in_array('collation', $columnDiff->changedProperties)) {
             return;
         }
 
         $fromCollation = $fromColumn->getPlatformOption('collation');
+        $collation = $column->getPlatformOption('collation');
 
-        if (!$fromCollation) {
+        if (!$fromCollation || $fromCollation === $collation) {
             return;
         }
 
         $column->setPlatformOption('collation', $fromCollation);
-
-        self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'collation');
     }
 
-    private function amendColumnDiffCharset(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): void
+    private function amendColumnDiffCharset(ColumnDiff $columnDiff): void
     {
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
@@ -235,22 +220,17 @@ class DiffModifier
             return;
         }
 
-        if (!in_array('charset', $columnDiff->changedProperties)) {
-            return;
-        }
-
         $fromCharset = $fromColumn->getPlatformOption('charset');
+        $charset = $column->getPlatformOption('charset');
 
-        if (!$fromCharset) {
+        if (!$fromCharset || $fromCharset === $charset) {
             return;
         }
 
         $column->setPlatformOption('charset', $fromCharset);
-
-        self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'charset');
     }
 
-    private function amendColumnDiffAutoincrement(TableDiff $tableDiff, ColumnDiff $columnDiff, string $name): bool
+    private function amendColumnDiffAutoincrement(ColumnDiff $columnDiff): bool
     {
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
@@ -259,7 +239,7 @@ class DiffModifier
             return false;
         }
 
-        if (!$columnDiff->hasAutoIncrementChanged()) {
+        if (!$columnDiff->hasAutoIncrementChanged() || $fromColumn->getAutoincrement()) {
             return false;
         }
 
@@ -268,11 +248,9 @@ class DiffModifier
             ->setNotnull(false)
             ->setDefault(null);
 
-        if ($name === Attribute::ID) {
+        if ($column->getName() === Attribute::ID) {
             $column->setNotnull(true);
         }
-
-        self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'autoincrement');
 
         return true;
     }
