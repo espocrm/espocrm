@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database;
+namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use integration\Core\NoTransaction;
 

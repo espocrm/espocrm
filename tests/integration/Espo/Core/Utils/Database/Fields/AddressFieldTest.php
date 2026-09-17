@@ -27,31 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database;
+namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use integration\Core\NoTransaction;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[NoTransaction]
-class CurrencyFieldTest extends Base
+class AddressFieldTest extends Base
 {
-    static public function fieldList(): array
+    static public function fieldList()
     {
         return [
-            ['testCurrency', 'double', null, null],
-            ['testCurrencyCurrency', 'varchar', 3, 'utf8mb4_unicode_ci'],
+            ['testAddressStreet', 255],
+            ['testAddressCity', 100],
+            ['testAddressState', 100],
+            ['testAddressCountry', 100],
+            ['testAddressPostalCode', 40],
         ];
     }
 
     #[DataProvider('fieldList')]
-    public function testColumns($fieldName, $type, $length, $collation): void
+    public function testColumn($fieldName, $length)
     {
         $column = $this->getColumnInfo('Test', $fieldName);
 
         $this->assertNotEmpty($column);
-        $this->assertEquals($type, $column['DATA_TYPE']);
+        $this->assertEquals('varchar', $column['DATA_TYPE']);
         $this->assertEquals($length, $column['CHARACTER_MAXIMUM_LENGTH']);
         $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals($collation, $column['COLLATION_NAME']);
+        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
     }
 }

@@ -27,20 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database;
+namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
-class FileFieldTest extends Base
+class ArrayFieldTest extends Base
 {
     public function testColumn()
     {
-        $column = $this->getColumnInfo('Test', 'testFileId');
+        $column = $this->getColumnInfo('Test', 'testArray');
 
         $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals(17, $column['CHARACTER_MAXIMUM_LENGTH']);
+        $this->assertEquals('mediumtext', $column['COLUMN_TYPE']);
         $this->assertEquals('YES', $column['IS_NULLABLE']);
         $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
     }
