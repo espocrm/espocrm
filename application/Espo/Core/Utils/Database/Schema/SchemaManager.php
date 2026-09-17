@@ -34,6 +34,7 @@ use Doctrine\DBAL\Exception as DbalException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
@@ -72,10 +73,15 @@ class SchemaManager
             ->getDatabasePlatform()
             ->createSchemaManager($this->getDbalConnection());
 
-        // Not using a platform specific comparator as it unsets a collation and charset if
-        // they match a table default.
-        //$this->comparator = $this->schemaManager->createComparator();
-        $this->comparator = new Comparator($this->getPlatform());
+        $comparatorConfig = new ComparatorConfig(
+            // Column renaming as not a desired behavior.
+            detectRenamedColumns: false,
+        );
+
+        // Not using a platform specific comparator as it unsets the collation and charset if
+        // they match the table default.
+        // `$this->schemaManager->createComparator()`
+        $this->comparator = new Comparator($this->getPlatform(), $comparatorConfig);
 
         $this->initFieldTypes();
 
@@ -145,7 +151,13 @@ class SchemaManager
         }
 
         $diff = $this->comparator->compareSchemas($fromSchema, $schema);
-        $needReRun = $this->diffModifier->modify($diff, $schema, false, $mode);
+
+        $needReRun = $this->diffModifier->modify(
+            diff: $diff,
+            schema: $schema,
+            mode: $mode,
+        );
+
         $sql = $this->composeDiffSql($diff);
 
         $result = $this->runSql($sql);
@@ -163,8 +175,14 @@ class SchemaManager
 
             $diff = $this->comparator->compareSchemas($intermediateSchema, $schema);
 
-            $this->diffModifier->modify($diff, $schema, true);
+            $this->diffModifier->modify(
+                diff: $diff,
+                schema: $schema,
+                secondRun: true,
+            );
+
             $sql = $this->composeDiffSql($diff);
+
             $result = $this->runSql($sql);
         }
 

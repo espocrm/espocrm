@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Schema\ColumnPreparators;
 
+use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
 use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
@@ -59,6 +60,10 @@ class MysqlColumnPreparator implements ColumnPreparator
 
     private const int MB4_INDEX_LENGTH_LIMIT = 3072;
     private const int DEFAULT_INDEX_LIMIT = 1000;
+
+    private const int DEFAULT_STRING_MAX_LENGTH = 255;
+    private const int DEFAULT_PRECISION = 13;
+    private const int DEFAULT_SCALE = 4;
 
     /** @var string[] */
     private array $mediumTextTypeList = [
@@ -104,6 +109,10 @@ class MysqlColumnPreparator implements ColumnPreparator
 
         $column = Column::create($columnName, strtolower($columnType));
 
+        if ($columnType === Types::STRING) {
+            $length ??= self::DEFAULT_STRING_MAX_LENGTH;
+        }
+
         if ($length !== null) {
             $column = $column->withLength($length);
         }
@@ -118,6 +127,11 @@ class MysqlColumnPreparator implements ColumnPreparator
 
         if ($autoincrement !== null) {
             $column = $column->withAutoincrement($autoincrement);
+        }
+
+        if ($columnType === Types::DECIMAL) {
+            $precision ??= self::DEFAULT_PRECISION;
+            $scale ??= self::DEFAULT_SCALE;
         }
 
         if ($precision !== null) {

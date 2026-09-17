@@ -30,13 +30,12 @@
 namespace Espo\Core\Utils\Database\Dbal\Platforms;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform as PostgreSQLPlatformDbal;
 use Doctrine\DBAL\Schema\Index;
-use Doctrine\DBAL\Schema\Table;
 
 use InvalidArgumentException;
 
-class PostgresqlPlatform extends PostgreSQL100Platform
+class PostgresqlPlatform extends PostgreSQLPlatformDbal
 {
     private const string TEXT_SEARCH_CONFIG = 'pg_catalog.simple';
 
@@ -52,14 +51,13 @@ class PostgresqlPlatform extends PostgreSQL100Platform
         return new PostgreSQLSchemaManager($connection, $this);
     }
 
-    public function getCreateIndexSQL(Index $index, $table)
+    /**
+     * @todo Test.
+     */
+    public function getCreateIndexSQL(Index $index, string $table): string
     {
         if (!$index->hasFlag('fulltext')) {
             return parent::getCreateIndexSQL($index, $table);
-        }
-
-        if ($table instanceof Table) {
-            $table = $table->getQuotedName($this);
         }
 
         $name = $index->getQuotedName($this);

@@ -130,11 +130,11 @@ class AfterUpgrade implements Script
         $connection = $this->helper->getDbalConnection();
         $schemaManager = $connection->createSchemaManager();
 
-        if (!$schemaManager->tablesExist('subscription')) {
+        if (!$schemaManager->tablesExist(['subscription'])) {
             return;
         }
 
-        if ($schemaManager->tablesExist('stream_subscription')) {
+        if ($schemaManager->tablesExist(['stream_subscription'])) {
             try {
                 $schemaManager->dropTable('stream_subscription');
             } catch (DbalException) {

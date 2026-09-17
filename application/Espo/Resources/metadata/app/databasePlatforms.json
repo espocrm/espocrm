@@ -21,6 +21,9 @@
         "columnPreparatorClassName": "Espo\\Core\\Utils\\Database\\Schema\\ColumnPreparators\\PostgresqlColumnPreparator",
         "dbalTypeClassNameMap": {
             "uuid": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\UuidType"
-        }
+        },
+        "preRebuildActionClassNameList": [
+            "Espo\\Core\\Utils\\Database\\Schema\\RebuildActions\\Postgresql\\MigrateSequences"
+        ]
     }
 }
