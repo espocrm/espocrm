@@ -40,6 +40,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
 use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
+use Espo\ORM\Name\Attribute;
 
 class DiffModifier
 {
@@ -51,7 +52,7 @@ class DiffModifier
         SchemaDiff $diff,
         Schema $schema,
         bool $secondRun = false,
-        string $mode = RebuildMode::SOFT
+        string $mode = RebuildMode::SOFT,
     ): bool {
 
         $reRun = false;
@@ -138,7 +139,7 @@ class DiffModifier
             return;
         }
 
-        if (!in_array('length', $columnDiff->changedProperties)) {
+        if (!$columnDiff->hasLengthChanged()) {
             return;
         }
 
@@ -166,7 +167,7 @@ class DiffModifier
             return;
         }
 
-        if (!in_array('type', $columnDiff->changedProperties)) {
+        if (!$columnDiff->hasTypeChanged()) {
             return;
         }
 
@@ -255,7 +256,7 @@ class DiffModifier
             return false;
         }
 
-        if (!in_array('autoincrement', $columnDiff->changedProperties)) {
+        if (!$columnDiff->hasAutoIncrementChanged()) {
             return false;
         }
 
@@ -264,7 +265,7 @@ class DiffModifier
             ->setNotnull(false)
             ->setDefault(null);
 
-        if ($name === 'id') {
+        if ($name === Attribute::ID) {
             $column->setNotnull(true);
         }
 
