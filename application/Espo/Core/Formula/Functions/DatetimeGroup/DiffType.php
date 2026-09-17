@@ -119,11 +119,11 @@ class DiffType extends BaseFunction
         if ($intervalType === 'seconds') {
             $number = $secondsDiff;
         } else if ($intervalType === 'minutes') {
-            $number = floor($secondsDiff / 60);
+            $number = (int) floor($secondsDiff / 60);
         } else if ($intervalType === 'hours') {
-            $number = floor($secondsDiff / (60 * 60));
+            $number = (int) floor($secondsDiff / (60 * 60));
         } else if ($intervalType === 'days') {
-            $number = floor($secondsDiff / (60 * 60 * 24));
+            $number = (int) floor($secondsDiff / (60 * 60 * 24));
         } else {
             $property = $this->intervalTypePropertyMap[$intervalType];
             $interval = $dateTime2->diff($dateTime1);
