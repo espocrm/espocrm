@@ -334,6 +334,21 @@ class EvaluatorTest extends TestCase
         $this->assertEquals(-12, $this->evaluator->process($expression));
     }
 
+    public function testDatetimeDiffReturnsInt(): void
+    {
+        $expression = "datetime\\diff('2022-01-04', '2022-01-01', 'days')";
+        $this->assertSame(3, $this->evaluator->process($expression));
+
+        $expression = "datetime\\diff('2022-01-01 10:30:00', '2022-01-01 08:00:00', 'hours')";
+        $this->assertSame(2, $this->evaluator->process($expression));
+
+        $expression = "datetime\\diff('2022-01-01 10:30:00', '2022-01-01 10:00:00', 'minutes')";
+        $this->assertSame(30, $this->evaluator->process($expression));
+
+        $expression = "datetime\\diff('2022-01-04', '2022-01-01', 'days') == 3";
+        $this->assertTrue($this->evaluator->process($expression));
+    }
+
     public function testStringReplace()
     {
         $expression = "string\\replace('hello {test} hello', '{test}', 'hello')";
