@@ -37,11 +37,14 @@ use Espo\Core\Utils\Log;
 
 use Exception;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PrepareForFulltextIndex implements RebuildAction
 {
     public function __construct(
         private Helper $helper,
-        private Log $log
+        private Log $log,
     ) {}
 
     /**
@@ -80,8 +83,8 @@ class PrepareForFulltextIndex implements RebuildAction
                     switch (strtoupper($row['Type'])) {
                         case 'LONGTEXT':
                             $alterSql =
-                                "ALTER TABLE `{$tableName}` " .
-                                "MODIFY `{$columnName}` MEDIUMTEXT COLLATE " . $row['Collation'];
+                                "ALTER TABLE `$tableName` " .
+                                "MODIFY `$columnName` MEDIUMTEXT COLLATE " . $row['Collation'];
 
                             $this->log->info('SCHEMA, Execute Query: ' . $alterSql);
 

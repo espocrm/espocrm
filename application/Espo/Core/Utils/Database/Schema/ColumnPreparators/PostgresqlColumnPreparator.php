@@ -37,14 +37,17 @@ use Espo\ORM\Defs\AttributeDefs;
 use Espo\ORM\Defs\Params\AttributeParam;
 use Espo\ORM\Entity;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PostgresqlColumnPreparator implements ColumnPreparator
 {
-    private const PARAM_DB_TYPE = AttributeParam::DB_TYPE;
-    private const PARAM_DEFAULT = AttributeParam::DEFAULT;
-    private const PARAM_NOT_NULL = AttributeParam::NOT_NULL;
-    private const PARAM_AUTOINCREMENT = 'autoincrement';
-    private const PARAM_PRECISION = 'precision';
-    private const PARAM_SCALE = 'scale';
+    private const string PARAM_DB_TYPE = AttributeParam::DB_TYPE;
+    private const string PARAM_DEFAULT = AttributeParam::DEFAULT;
+    private const string PARAM_NOT_NULL = AttributeParam::NOT_NULL;
+    private const string PARAM_AUTOINCREMENT = 'autoincrement';
+    private const string PARAM_PRECISION = 'precision';
+    private const string PARAM_SCALE = 'scale';
     private const string PARAM_STORE_ARRAY_VALUES = 'storeArrayValues';
 
     /** @var string[] */

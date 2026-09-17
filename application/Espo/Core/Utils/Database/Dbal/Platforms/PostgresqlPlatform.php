@@ -34,9 +34,11 @@ use Doctrine\DBAL\Platforms\PostgreSQL100Platform;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Table;
 
+use InvalidArgumentException;
+
 class PostgresqlPlatform extends PostgreSQL100Platform
 {
-    private const TEXT_SEARCH_CONFIG = 'pg_catalog.simple';
+    private const string TEXT_SEARCH_CONFIG = 'pg_catalog.simple';
 
     private ?string $textSearchConfig;
 
@@ -64,7 +66,7 @@ class PostgresqlPlatform extends PostgreSQL100Platform
         $columns = $index->getColumns();
 
         if (count($columns) === 0) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Incomplete or invalid index definition %s on table %s',
                 $name,
                 $table,
@@ -78,6 +80,6 @@ class PostgresqlPlatform extends PostgreSQL100Platform
         $textSearchConfig = preg_replace('/[^A-Za-z0-9_.\-]+/', '', $textSearchConfig) ?? '';
         $configPart = $this->quoteStringLiteral($textSearchConfig);
 
-        return "CREATE INDEX {$name} ON {$table} USING GIN (TO_TSVECTOR({$configPart}, {$columnsPart})) {$partialPart}";
+        return "CREATE INDEX $name ON $table USING GIN (TO_TSVECTOR($configPart, $columnsPart)) $partialPart";
     }
 }
