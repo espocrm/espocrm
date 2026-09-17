@@ -32,7 +32,6 @@ namespace tests\integration\Core;
 use Composer\Autoload\ClassLoader;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\SchemaException;
-use Doctrine\DBAL\Schema\Table;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Application;
@@ -406,7 +405,9 @@ class Tester
         $tables = $schemaManager->listTableNames();
 
         foreach ($tables as $table) {
-            $sql = $platform->getDropTableSQL(new Table($table));
+            $tableQuoted = $platform->quoteIdentifier($table);
+
+            $sql = $platform->getDropTableSQL($tableQuoted);
 
             $pdo->query($sql);
         }

@@ -36,37 +36,47 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
 {
     /**
      * DBAL does not add the 'fulltext' flag on reverse engineering.
+     *
+     * @todo Test.
      */
-    protected function _getPortableTableIndexesList($tableIndexes, $tableName = null)
+    protected function _getPortableTableIndexesList(array $rows, string $tableName): array
     {
-        $indexes = parent::_getPortableTableIndexesList($tableIndexes, $tableName);
+        $indexes = parent::_getPortableTableIndexesList($rows, $tableName);
 
-        foreach ($tableIndexes as $row) {
-            $key = $row['relname'];
+        foreach ($rows as $row) {
+            $key = $row['key_name'];
 
-            if (is_string($tableName) && str_starts_with($tableName, '"') && str_ends_with($tableName, '"')) {
+            if (str_starts_with($tableName, '"') && str_ends_with($tableName, '"')) {
                 $tableName = substr($tableName, 1, -1);
             }
 
-            if ($key === "idx_{$tableName}_system_full_text_search") {
-                $sql = "SELECT indexdef FROM pg_indexes WHERE indexname = '{$key}'";
-
-                $rows = $this->_conn->fetchAllAssociative($sql);
-
-                if (!$rows) {
-                    continue;
-                }
-
-                $columns = self::parseColumnsIndexFromDeclaration($rows[0]['indexdef']);
-
-                $indexes[$key] = new Index(
-                    $key,
-                    $columns,
-                    false,
-                    false,
-                    ['fulltext']
-                );
+            if ($key !== "idx_{$tableName}_system_full_text_search") {
+                continue;
             }
+
+            $sql = "SELECT indexdef FROM pg_indexes WHERE indexname = '$key'";
+
+            $items = $this->connection->fetchAllAssociative($sql);
+
+            if (!$items) {
+                continue;
+            }
+
+            $columns = self::parseColumnsIndexFromDeclaration($items[0]['indexdef']);
+
+            if (!$columns) {
+                unset($indexes[$key]);
+
+                continue;
+            }
+
+            $indexes[$key] = new Index(
+                name: $key,
+                columns: array_values($columns),
+                isUnique: false,
+                isPrimary: false,
+                flags: ['fulltext'],
+            );
         }
 
         return $indexes;

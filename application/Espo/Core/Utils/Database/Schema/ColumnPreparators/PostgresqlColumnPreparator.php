@@ -50,6 +50,10 @@ class PostgresqlColumnPreparator implements ColumnPreparator
     private const string PARAM_SCALE = 'scale';
     private const string PARAM_STORE_ARRAY_VALUES = 'storeArrayValues';
 
+    private const int DEFAULT_STRING_MAX_LENGTH = 255;
+    private const int DEFAULT_PRECISION = 13;
+    private const int DEFAULT_SCALE = 4;
+
     /** @var string[] */
     private array $textTypeList = [
         Entity::TEXT,
@@ -91,6 +95,10 @@ class PostgresqlColumnPreparator implements ColumnPreparator
 
         $column = Column::create($columnName, strtolower($columnType));
 
+        if ($columnType === Types::STRING) {
+            $length ??= self::DEFAULT_STRING_MAX_LENGTH;
+        }
+
         if ($length !== null) {
             $column = $column->withLength($length);
         }
@@ -105,6 +113,11 @@ class PostgresqlColumnPreparator implements ColumnPreparator
 
         if ($autoincrement !== null) {
             $column = $column->withAutoincrement($autoincrement);
+        }
+
+        if ($columnType === Types::DECIMAL) {
+            $precision ??= self::DEFAULT_PRECISION;
+            $scale ??= self::DEFAULT_SCALE;
         }
 
         if ($precision !== null) {
