@@ -40,7 +40,7 @@ class ColumnPreparatorFactory
     public function __construct(
         private Metadata $metadata,
         private InjectableFactory $injectableFactory,
-        private Helper $helper
+        private Helper $helper,
     ) {}
 
     public function create(string $platform): ColumnPreparator
@@ -50,7 +50,7 @@ class ColumnPreparatorFactory
             ->get(['app', 'databasePlatforms', $platform, 'columnPreparatorClassName']);
 
         if (!$className) {
-            throw new RuntimeException("No Column-Preparator for {$platform}.");
+            throw new RuntimeException("No Column-Preparator for '$platform'.");
         }
 
         $binding = BindingContainerBuilder::create()

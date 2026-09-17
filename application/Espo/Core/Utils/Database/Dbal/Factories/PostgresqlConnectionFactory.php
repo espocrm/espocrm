@@ -41,13 +41,16 @@ use Espo\ORM\PDO\Options as PdoOptions;
 use PDO;
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PostgresqlConnectionFactory implements ConnectionFactory
 {
-    private const DEFAULT_CHARSET = 'utf8';
+    private const string DEFAULT_CHARSET = 'utf8';
 
     public function __construct(
         private PDO $pdo,
-        private Helper $helper
+        private Helper $helper,
     ) {}
 
     /**

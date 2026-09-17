@@ -32,9 +32,12 @@ namespace Espo\Core\Utils\Database\DetailsProviders;
 use Espo\Core\Utils\Database\DetailsProvider;
 use PDO;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PostgresqlDetailsProvider implements DetailsProvider
 {
-    private const TYPE_POSTGRESQL = 'PostgreSQL';
+    private const string TYPE_POSTGRESQL = 'PostgreSQL';
 
     public function __construct(private PDO $pdo)
     {}

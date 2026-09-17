@@ -39,7 +39,7 @@ class ConnectionFactoryFactory
 {
     public function __construct(
         private Metadata $metadata,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
     ) {}
 
     public function create(string $platform, PDO $pdo): ConnectionFactory
@@ -49,7 +49,7 @@ class ConnectionFactoryFactory
             ->get(['app', 'databasePlatforms', $platform, 'dbalConnectionFactoryClassName']);
 
         if (!$className) {
-            throw new RuntimeException("No DBAL ConnectionFactory for {$platform}.");
+            throw new RuntimeException("No DBAL ConnectionFactory for '$platform'.");
         }
 
         $bindingContainer = BindingContainerBuilder::create()

@@ -37,7 +37,7 @@ use Doctrine\DBAL\Types\Type;
  */
 class UuidType extends Type
 {
-    public const NAME = 'uuid';
+    public const string NAME = 'uuid';
 
     public function getName()
     {

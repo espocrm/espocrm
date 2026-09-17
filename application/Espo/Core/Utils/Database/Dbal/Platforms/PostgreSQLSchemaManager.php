@@ -92,11 +92,6 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
         $part = str_replace("(", '', $part);
         $part = str_replace(")", '', $part);
 
-        $list = array_map(
-            fn ($item) => trim($item),
-            explode(' ', $part)
-        );
-
-        return $list;
+        return array_map(fn ($item) => trim($item),  explode(' ', $part));
     }
 }

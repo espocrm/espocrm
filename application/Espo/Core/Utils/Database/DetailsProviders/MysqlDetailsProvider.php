@@ -32,10 +32,13 @@ namespace Espo\Core\Utils\Database\DetailsProviders;
 use Espo\Core\Utils\Database\DetailsProvider;
 use PDO;
 
+/**
+ * @noinspection PhpUnused
+ */
 class MysqlDetailsProvider implements DetailsProvider
 {
-    public const TYPE_MYSQL = 'MySQL';
-    public const TYPE_MARIADB = 'MariaDB';
+    public const string TYPE_MYSQL = 'MySQL';
+    public const string TYPE_MARIADB = 'MariaDB';
 
     public function __construct(
         private PDO $pdo

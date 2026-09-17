@@ -37,7 +37,7 @@ use Doctrine\DBAL\Types\TextType;
  */
 class MediumtextType extends TextType
 {
-    public const NAME = 'mediumtext';
+    public const string NAME = 'mediumtext';
 
     public function getName()
     {

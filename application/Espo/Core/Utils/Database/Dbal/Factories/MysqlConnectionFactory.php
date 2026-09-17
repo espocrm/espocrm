@@ -40,12 +40,15 @@ use Espo\ORM\PDO\Options as PdoOptions;
 use PDO;
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class MysqlConnectionFactory implements ConnectionFactory
 {
-    private const DEFAULT_CHARSET = 'utf8mb4';
+    private const string DEFAULT_CHARSET = 'utf8mb4';
 
     public function __construct(
-        private PDO $pdo
+        private PDO $pdo,
     ) {}
 
     /**

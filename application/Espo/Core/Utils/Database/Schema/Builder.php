@@ -56,8 +56,8 @@ use Espo\ORM\Type\AttributeType;
  */
 class Builder
 {
-    private const ATTR_ID = 'id';
-    private const ATTR_DELETED = 'deleted';
+    private const string ATTR_ID = 'id';
+    private const string ATTR_DELETED = 'deleted';
 
     private int $idLength;
     private string $idDbType;

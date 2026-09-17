@@ -37,7 +37,7 @@ use Doctrine\DBAL\Types\TextType;
  */
 class LongtextType extends TextType
 {
-    public const NAME = 'longtext';
+    public const string NAME = 'longtext';
 
     public function getName()
     {
