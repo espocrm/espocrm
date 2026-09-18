@@ -138,6 +138,12 @@ class DiffModifier
         foreach ($tableDiff->getChangedColumns() as $name => $columnDiff) {
             $newColumnDiff = $columnDiff;
 
+            $this->fixPlatformOptions($columnDiff);
+
+            if ($columnDiff->countChangedProperties() === 0) {
+                continue;
+            }
+
             if (!$isHard) {
                 $this->amendColumnDiffLength($columnDiff);
                 $this->amendColumnDiffTextType($columnDiff);
@@ -313,6 +319,28 @@ class DiffModifier
             ->setDefault(null);
 
         return true;
+    }
+
+    /**
+     * Fixes the DBAL's bug that platform options are detected as changed for FLOAT columns.
+     */
+    private function fixPlatformOptions(ColumnDiff $columnDiff): void
+    {
+        $oldColumn = $columnDiff->getOldColumn();
+        $newColumn = $columnDiff->getNewColumn();
+
+        if (!$columnDiff->hasPlatformOptionsChanged()) {
+            return;
+        }
+
+        if (
+            $oldColumn->getCollation() === null &&
+            $newColumn->getCollation() === null &&
+            $oldColumn->getCharset() === null &&
+            $newColumn->getCharset() === null
+        ) {
+            $oldColumn->setPlatformOptions([]);
+        }
     }
 
     private function moveRemovedAutoincrementColumnToChanged(TableDiff $tableDiff, Column $column): ?TableDiff
