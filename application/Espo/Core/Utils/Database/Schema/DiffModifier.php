@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\Schema;
 
 use Doctrine\DBAL\Exception as DbalException;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\Column as Column;
 use Doctrine\DBAL\Schema\ColumnDiff;
 use Doctrine\DBAL\Schema\Index;
@@ -41,11 +42,17 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
 use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
+use Espo\Core\Utils\Database\Helper;
 use Espo\ORM\Name\Attribute;
 
 class DiffModifier
 {
     private const int DEFAULT_VARCHAR_LENGTH = 255;
+
+    public function __construct(
+        private Helper $helper,
+    ) {}
+
 
     /**
      * @param RebuildMode::* $mode
@@ -120,8 +127,10 @@ class DiffModifier
             $tableDiff = $this->cloneTableDiffWithoutDroppedColumns($tableDiff);
         }
 
-        foreach ($tableDiff->getAddedColumns() as $column) {
-            $reRun = $this->amendAddedColumnAutoincrement($column) || $reRun;
+        if ($this->helper->getDbalConnection()->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
+            foreach ($tableDiff->getAddedColumns() as $column) {
+                $reRun = $this->amendAddedColumnAutoincrement($column) || $reRun;
+            }
         }
 
         $changedColumns = [];

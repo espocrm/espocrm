@@ -58,6 +58,7 @@ class SchemaManager
     private AbstractSchemaManager $schemaManager;
     private Comparator $comparator;
     private Builder $builder;
+    private DiffModifier $diffModifier;
 
     /**
      * @throws DbalException
@@ -67,7 +68,6 @@ class SchemaManager
         private Log $log,
         private Helper $helper,
         private MetadataProvider $metadataProvider,
-        private DiffModifier $diffModifier,
         private InjectableFactory $injectableFactory
     ) {
         $this->schemaManager = $this->getDbalConnection()
@@ -88,6 +88,13 @@ class SchemaManager
 
         $this->builder = $this->injectableFactory->createWithBinding(
             Builder::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(Helper::class, $this->helper)
+                ->build()
+        );
+
+        $this->diffModifier = $this->injectableFactory->createWithBinding(
+            DiffModifier::class,
             BindingContainerBuilder::create()
                 ->bindInstance(Helper::class, $this->helper)
                 ->build()
