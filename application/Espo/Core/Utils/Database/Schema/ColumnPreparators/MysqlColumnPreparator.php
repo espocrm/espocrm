@@ -63,6 +63,7 @@ class MysqlColumnPreparator implements ColumnPreparator
     private const int DEFAULT_STRING_MAX_LENGTH = 255;
     private const int DEFAULT_PRECISION = 13;
     private const int DEFAULT_SCALE = 4;
+    private const int DEFAULT_FLOAT_PRECISION = 22;
 
     /** @var string[] */
     private array $mediumTextTypeList = [
@@ -133,6 +134,10 @@ class MysqlColumnPreparator implements ColumnPreparator
             $scale ??= self::DEFAULT_SCALE;
         }
 
+        if ($columnType === Types::FLOAT) {
+            $precision = self::DEFAULT_FLOAT_PRECISION;
+        }
+
         if ($precision !== null) {
             $column = $column->withPrecision($precision);
         }
@@ -189,7 +194,9 @@ class MysqlColumnPreparator implements ColumnPreparator
                 LongtextType::NAME,
             ])
         ) {
-            return $column;
+            return $column
+                ->withCollation(null)
+                ->withCharset(null);
         }
 
         $collation = $binary ?
