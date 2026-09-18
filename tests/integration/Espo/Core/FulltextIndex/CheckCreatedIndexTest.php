@@ -29,8 +29,14 @@
 
 namespace tests\integration\Espo\Core\FulltextIndex;
 
+use Doctrine\DBAL\Schema\Index\IndexType;
+use Doctrine\DBAL\Schema\Table;
+use Espo\Core\ORM\DatabaseParamsFactory;
+use Espo\Core\Utils\Database\Schema\SchemaManager;
 use Espo\Core\Utils\Util;
+use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
+use RuntimeException;
 use tests\integration\Core\BaseTestCase;
 
 class CheckCreatedIndexTest extends BaseTestCase
@@ -38,7 +44,7 @@ class CheckCreatedIndexTest extends BaseTestCase
     protected ?string $dataFile = 'InitData.php';
     protected ?string $pathToFiles = 'Core/FulltextIndex/customFiles';
 
-    static public function entityList()
+    static public function entityTypeList(): array
     {
         return [
             ['Email'],
@@ -47,35 +53,85 @@ class CheckCreatedIndexTest extends BaseTestCase
         ];
     }
 
-    #[DataProvider('entityList')]
-    public function testCreatedIndexes($entityName)
+    #[DataProvider('entityTypeList')]
+    public function testCreatedIndexes(string $entityType): void
     {
-        $entityManager = $this->getContainer()->get('entityManager');
-        $pdo = $entityManager->getPDO();
-
-        $fulltextFieldList = $entityManager->getMetadata()->get($entityName, 'fullTextSearchColumnList');
-
-        if (!$fulltextFieldList) {
-            $this->assertNull($fulltextFieldList);
+        if ($this->getPlatform() === 'Postgresql') {
             return;
         }
 
-        $query = "SHOW INDEX FROM `". Util::toCamelCase($entityName) ."` WHERE Index_type = 'FULLTEXT'";
-        $sth = $pdo->prepare($query);
-        $sth->execute();
+        $entityManager = $this->getEntityManager();
 
-        $rowList = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $fulltextFieldList = $entityManager->getMetadata()->get($entityType, 'fullTextSearchColumnList');
 
-        $this->assertNotEmpty($rowList);
+        if (!$fulltextFieldList) {
+            $this->assertNull($fulltextFieldList);
 
-        $result = [];
-        foreach ($rowList as $row) {
-            $result[] = Util::toCamelCase($row['Column_name']);
+            return;
         }
 
-        asort($fulltextFieldList);
-        asort($result);
+        $expectedList = array_map(fn (string $it) => Util::toUnderScore($it), $fulltextFieldList);
 
-        $this->assertEquals($fulltextFieldList, $result);
+
+        $table = $this->getTable(Util::camelCaseToUnderscore($entityType));
+
+        $indexes = $table->getIndexes();
+
+        $foundIndex = null;
+
+        foreach ($indexes as $index) {
+            if ($index->getType() !== IndexType::FULLTEXT) {
+                continue;
+            }
+
+            $foundIndex = $index;
+        }
+
+        if (!$foundIndex) {
+            throw new RuntimeException("Full-text index not found.");
+        }
+
+        $columnNames = [];
+
+        foreach ($foundIndex->getIndexedColumns() as $indexedColumn) {
+            $columnNames[] = $indexedColumn->getColumnName()->getIdentifier()->getValue();
+        }
+
+        asort($expectedList);
+        asort($columnNames);
+
+        $this->assertEquals($expectedList, $columnNames);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function getTable(string $name): Table
+    {
+        $manager = $this->getInjectableFactory()->create(SchemaManager::class);
+
+        $helper = $manager->getDatabaseHelper();
+
+        $tables = $helper->getDbalConnection()
+            ->createSchemaManager()
+            ->introspectTables();
+
+        foreach ($tables as $table) {
+            if ($table->getObjectName()->getUnqualifiedName()->getValue() !== $name) {
+                continue;
+            }
+
+            return $table;
+        }
+
+        throw new RuntimeException("Table '$name' not found.");
+    }
+
+    private function getPlatform(): ?string
+    {
+        $params = $this->getInjectableFactory()->create(DatabaseParamsFactory::class)
+            ->create();
+
+        return $params->getPlatform();
     }
 }

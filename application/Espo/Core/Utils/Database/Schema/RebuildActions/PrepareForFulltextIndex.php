@@ -70,8 +70,8 @@ class PrepareForFulltextIndex implements RebuildAction
                     continue;
                 }
 
-                foreach ($index->getIndexedColumns() as $column) {
-                    $columnName = $column->getColumnName()->toString();
+                foreach ($index->getIndexedColumns() as $indexedColumn) {
+                    $columnName = $indexedColumn->getColumnName()->getIdentifier()->getValue();
 
                     $quotedColumnName = $pdo->quote($columnName);
 
