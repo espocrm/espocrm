@@ -29,55 +29,67 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
+use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
 class TextFieldTest extends Base
 {
-    public function testColumn()
+    public function testColumn(): void
     {
-        $column = $this->getColumnInfo('Test', 'testText');
+        $column = $this->getColumn('Test', 'testText');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('mediumtext', $column['COLUMN_TYPE']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(MediumtextType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
+        }
+
+        $this->runIncreaseColumnLength();
+        $this->runReduceColumnLength();
     }
 
-    public function testIncreaseColumnLength()
+    private function runIncreaseColumnLength(): void
     {
         $this->updateDefs('Test', 'testText', [
             'type' => 'text',
             'dbType' => 'longtext',
         ]);
 
-        $column = $this->getColumnInfo('Test', 'testText');
+        $column = $this->getColumn('Test', 'testText');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('longtext', $column['COLUMN_TYPE']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(LongtextType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
+        }
     }
 
-    public function testReduceColumnLength()
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function runReduceColumnLength(): void
     {
-        $this->updateDefs('Test', 'testText', [
-            'type' => 'text',
-            'dbType' => 'longtext',
-        ]);
-
-        $this->getContainer()->get('metadata')->delete('entityDefs', 'Test', [
+        $this->getMetadata()->delete('entityDefs', 'Test', [
             'fields.testText.dbType',
         ]);
-        $this->getContainer()->get('metadata')->save();
+        $this->getMetadata()->save();
 
         $this->getDataManager()->rebuildDatabase();
 
-        $column = $this->getColumnInfo('Test', 'testText');
+        $column = $this->getColumn('Test', 'testText');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('longtext', $column['COLUMN_TYPE']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(LongtextType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
+        }
     }
 }

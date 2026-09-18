@@ -29,19 +29,23 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\StringType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
 class FileFieldTest extends Base
 {
-    public function testColumn()
+    public function testColumn(): void
     {
-        $column = $this->getColumnInfo('Test', 'testFileId');
+        $column = $this->getColumn('Test', 'testFileId');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals(17, $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(StringType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
+        $this->assertEquals(17, $column->getLength());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
+        }
     }
 }

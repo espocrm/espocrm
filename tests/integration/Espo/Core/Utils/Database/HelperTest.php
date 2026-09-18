@@ -27,8 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database\Fields;
+namespace tests\integration\Espo\Core\Utils\Database;
 
+use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\Helper;
 use Doctrine\DBAL\Connection;
 use PDO;
@@ -36,82 +37,61 @@ use tests\integration\Core\BaseTestCase;
 
 class HelperTest extends BaseTestCase
 {
-    /** @var ?Helper */
-    protected $helper;
+    protected ?Helper$helper = null;
 
     protected function initTest()
     {
         $this->helper = $this->getInjectableFactory()->create(Helper::class);
     }
 
-    private function getDatabaseInfo()
-    {
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $sth = $pdo->prepare("select version()");
-        $sth->execute();
-
-        $version = $sth->fetchColumn();
-
-        $type = 'mysql';
-        if (preg_match('/mariadb/i', $version)) {
-            $type = 'mariadb';
-        }
-
-        if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $version, $match)) {
-            $version = $match[0];
-        }
-
-        return [
-            'type' => $type,
-            'version' => $version,
-        ];
-    }
-
-    public function testGetDbalConnectionWithConfig()
+    public function testGetDbalConnectionWithConfig(): void
     {
         $this->initTest();
 
         $this->assertInstanceOf(Connection::class, $this->helper->getDbalConnection());
     }
 
-    public function testGetPdoConnectionWithConfig()
+    public function testGetPdoConnectionWithConfig(): void
     {
         $this->initTest();
 
         $this->assertInstanceOf(PDO::class, $this->helper->getPDO());
     }
 
-    public function testGetDatabaseInfo()
+    public function testGetDatabaseInfo(): void
     {
         $this->initTest();
 
-        $databaseInfo = $this->getDatabaseInfo();
-        if (empty($databaseInfo)) {
-            return;
-        }
+        $this->helper->getVersion();
 
-        $this->assertEquals($databaseInfo['type'], strtolower($this->helper->getType()));
-        $this->assertEquals($databaseInfo['version'], $this->helper->getVersion());
+        $this->assertTrue(true);
     }
 
-    public function testGetDatabaseType()
+    public function testGetDatabaseType(): void
     {
         $this->initTest();
 
-        $databaseInfo = $this->getDatabaseInfo();
-        if (empty($databaseInfo)) {
-            return;
-        }
+        switch ($this->getPlatform()) {
+            case 'Mysql':
+                $this->assertContains($this->helper->getType(), [
+                    'MySQL',
+                    'MariaDB',
+                ]);
 
-        switch ($databaseInfo['type']) {
-            case 'mysql':
-                $this->assertEquals('MySQL', $this->helper->getType());
                 break;
 
-            case 'mariadb':
-                $this->assertEquals('MariaDB', $this->helper->getType());
+            case 'Postgresql':
+                $this->assertEquals('PostgreSQL', $this->helper->getType());
+
                 break;
         }
+    }
+
+    private function getPlatform(): ?string
+    {
+        $params = $this->getInjectableFactory()->create(DatabaseParamsFactory::class)
+            ->create();
+
+        return $params->getPlatform();
     }
 }

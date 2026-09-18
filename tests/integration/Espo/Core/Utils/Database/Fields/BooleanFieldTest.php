@@ -29,32 +29,44 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\BooleanType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
 class BooleanFieldTest extends Base
 {
-    public function testColumn()
+    public function testColumn(): void
     {
-        $column = $this->getColumnInfo('Test', 'testBoolean');
+        $column = $this->getColumn('Test', 'testBoolean');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('tinyint', $column['DATA_TYPE']);
-        $this->assertEquals('0', $column['COLUMN_DEFAULT']);
-        $this->assertEquals('NO', $column['IS_NULLABLE']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(BooleanType::class, $column->getType());
+        $this->assertTrue($column->getNotnull());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals(0, $column->getDefault());
+        } else {
+            $this->assertFalse($column->getDefault());
+        }
+
+        $this->runDefaultValue();
     }
 
-    public function testDefaultValue()
+    public function runDefaultValue(): void
     {
         $this->updateDefs('Test', 'testBoolean', [
             'default' => true,
         ]);
 
-        $column = $this->getColumnInfo('Test', 'testBoolean');
+        $column = $this->getColumn('Test', 'testBoolean');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('tinyint', $column['DATA_TYPE']);
-        $this->assertEquals('1', $column['COLUMN_DEFAULT']);
-        $this->assertEquals('NO', $column['IS_NULLABLE']);
+        $this->assertInstanceOf(BooleanType::class, $column->getType());
+        $this->assertTrue($column->getNotnull());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals(1, $column->getDefault());
+        } else {
+            $this->assertTrue($column->getDefault());
+        }
     }
 }

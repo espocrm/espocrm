@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Utils\Database\Schema\ColumnPreparators;
 
-use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
 use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;

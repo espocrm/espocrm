@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\FloatType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
@@ -36,10 +37,10 @@ class FloatFieldTest extends Base
 {
     public function testColumn()
     {
-        $column = $this->getColumnInfo('Test', 'testFloat');
+        $column = $this->getColumn('Test', 'testFloat');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('double', $column['DATA_TYPE']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(FloatType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
     }
 }

@@ -29,9 +29,10 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
-use Espo\Core\Utils\Config;
+use Doctrine\DBAL\Schema\Column;
+use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\Helper;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Database\Schema\SchemaManager;
 use Espo\Core\Utils\Util;
 use tests\integration\Core\BaseTestCase;
 
@@ -43,34 +44,61 @@ abstract class Base extends BaseTestCase
     protected function beforeSetUp(): void
     {}
 
-    protected function getColumnInfo($entityName, $fieldName)
+    protected function getPlatform(): ?string
     {
-        $pdo = $this->getInjectableFactory()
-            ->create(Helper::class)
-            ->getPDO();
+        $params = $this->getInjectableFactory()->create(DatabaseParamsFactory::class)
+            ->create();
 
-        $dbName = $this->getContainer()
-            ->getByClass(Config::class)
-            ->get('database.dbname');
-
-        $query = "
-            SELECT * FROM information_schema.columns
-            WHERE table_name = '" . Util::toUnderScore($entityName) . "'
-            AND column_name = '" . Util::toUnderScore($fieldName) . "'
-            AND table_schema = '" . $dbName . "'
-        ";
-
-        $sth = $pdo->prepare($query);
-        $sth->execute();
-
-        return $sth->fetch(\PDO::FETCH_ASSOC);
+        return $params->getPlatform();
     }
 
-    protected function updateDefs($entityName, $fieldName, array $fieldDefs = [], ?array $linkDefs = null)
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    protected function getColumn(string $entityType, string $attribute): ?Column
     {
-        $metadata = $this->getContainer()->getByClass(Metadata::class);
+        $table = Util::camelCaseToUnderscore($entityType);
+        $column = Util::camelCaseToUnderscore($attribute);
 
-        $entityDefs = $metadata->get(['entityDefs', $entityName]);
+        // Custom types are registered.
+        $manager = $this->getInjectableFactory()->create(SchemaManager::class);
+
+        $helper = $manager->getDatabaseHelper();
+
+        $tables = $helper->getDbalConnection()
+            ->createSchemaManager()
+            ->introspectTables();
+
+        foreach ($tables as $tableObject) {
+            if ($tableObject->getObjectName()->getUnqualifiedName()->getValue() !== $table) {
+                continue;
+            }
+
+            foreach ($tableObject->getColumns() as $columnObject) {
+                if ($columnObject->getObjectName()->getIdentifier()->getValue() !== $column) {
+                    continue;
+                }
+
+                return $columnObject;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    protected function updateDefs(
+        string $entityType,
+        string $attribute,
+        array $fieldDefs = [],
+        ?array $linkDefs = null,
+    ): void {
+
+        $metadata = $this->getMetadata();
+
+        $entityDefs = $metadata->get(['entityDefs', $entityType]);
 
         if (empty($entityDefs)) {
             return;
@@ -79,14 +107,14 @@ abstract class Base extends BaseTestCase
         $save = false;
 
         if (!empty($fieldDefs)) {
-            $currentFieldDefs = $entityDefs['fields'][$fieldName] ?? [];
-            $entityDefs['fields'][$fieldName] = array_merge($currentFieldDefs, $fieldDefs);
+            $currentFieldDefs = $entityDefs['fields'][$attribute] ?? [];
+            $entityDefs['fields'][$attribute] = array_merge($currentFieldDefs, $fieldDefs);
             $save = true;
         }
 
         if (!empty($linkDefs)) {
-            $currentLinkDefs = $entityDefs['links'][$fieldName] ?? [];
-            $entityDefs['links'][$fieldName] = array_merge($currentLinkDefs, $linkDefs);
+            $currentLinkDefs = $entityDefs['links'][$attribute] ?? [];
+            $entityDefs['links'][$attribute] = array_merge($currentLinkDefs, $linkDefs);
             $save = true;
         }
 
@@ -94,7 +122,7 @@ abstract class Base extends BaseTestCase
             $metadata->set('entityDefs', 'Test', $entityDefs);
             $metadata->save();
 
-            $this->getDataManager()->rebuild([$entityName]);
+            $this->getDataManager()->rebuild([$entityType]);
         }
     }
 
