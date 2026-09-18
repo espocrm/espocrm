@@ -365,7 +365,7 @@ class Tester
             throw new RuntimeException('No "dbname" in database config.');
         }
 
-        $params = $params->withName(null);
+        //$params = $params->withName(null);
 
         $pdo = $databaseHelper->createPDO($params);
 
@@ -374,13 +374,14 @@ class Tester
             ->create($params);
 
         $schemaManager = $connection->createSchemaManager();
-        $platform = $connection->getDatabasePlatform();
 
         foreach ($schemaManager->introspectDatabaseNames() as $databaseName) {
             if ($dbname === $databaseName->getIdentifier()->getValue()) {
                 return;
             }
         }
+
+        $platform = $connection->getDatabasePlatform();
 
         $schemaManager->createDatabase($platform->quoteSingleIdentifier($dbname));
     }
@@ -407,7 +408,7 @@ class Tester
         $tables = $schemaManager->introspectTables();
 
         foreach ($tables as $table) {
-            $tableQuoted = $table->getObjectName()->toString();
+            $tableQuoted = $table->getObjectName()->toSQL($platform);
 
             $sql = $platform->getDropTableSQL($tableQuoted);
 

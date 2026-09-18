@@ -189,14 +189,9 @@ class RebuildTest extends BaseTestCase
 
         // Enable autoincrement back.
 
-
-
         if ($this->getPlatform() !== 'Postgresql') {
             $this->runAutoincrementBack($entity, $table);
         }
-
-
-
 
         // Delete entity type.
 
