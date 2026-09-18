@@ -38,7 +38,6 @@ use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
-use Doctrine\DBAL\Types\Exception\TypesException;
 use Doctrine\DBAL\Types\Type;
 
 use Espo\Core\Binding\BindingContainerBuilder;
@@ -157,9 +156,7 @@ class SchemaManager
         try {
             $this->processPreRebuildActions($fromSchema, $schema);
         } catch (Throwable $e) {
-            $this->log->alert('Rebuild database pre-rebuild error: '. $e->getMessage());
-
-            return false;
+            throw new RuntimeException("Rebuild database pre-rebuild error.", previous: $e);
         }
 
         $diff = $this->comparator->compareSchemas($fromSchema, $schema);
