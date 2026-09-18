@@ -30,10 +30,9 @@
 namespace Espo\Core\Utils\Database\Dbal\Factories;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\PDO\PgSQL\Driver as PostgreSQLDriver;
 use Doctrine\DBAL\Exception as DBALException;
 use Espo\Core\Utils\Database\Dbal\ConnectionFactory;
-use Espo\Core\Utils\Database\Dbal\Platforms\PostgresqlPlatform;
+use Espo\Core\Utils\Database\Dbal\Drivers\PostgreSQLCustomDriver;
 use Espo\Core\Utils\Database\Helper;
 use Espo\ORM\DatabaseParams;
 use Espo\ORM\PDO\Options as PdoOptions;
@@ -58,20 +57,21 @@ class PostgresqlConnectionFactory implements ConnectionFactory
      */
     public function create(DatabaseParams $databaseParams): Connection
     {
-        $driver = new PostgreSQLDriver();
+        $textSearchConfig = null;
+
+        if ($databaseParams->getName()) {
+            $textSearchConfig = $this->helper->getParam('default_text_search_config');
+        }
+
+        $driver = new PostgreSQLCustomDriver(
+            textSearchConfig: $textSearchConfig,
+        );
 
         if (!$databaseParams->getHost()) {
             throw new RuntimeException("No database host in config.");
         }
 
-        $platform = new PostgresqlPlatform();
-
-        if ($databaseParams->getName()) {
-            $platform->setTextSearchConfig($this->helper->getParam('default_text_search_config'));
-        }
-
         $params = [
-            'platform' => $platform,
             'pdo' => $this->pdo,
             'host' => $databaseParams->getHost(),
             'driverOptions' => PdoOptions::getOptionsFromDatabaseParams($databaseParams),
