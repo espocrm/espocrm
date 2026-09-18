@@ -11,7 +11,6 @@
     </testsuite>
     <testsuite name="integration-pg">
       <directory>tests/integration</directory>
-      <exclude>tests/integration/Espo/Core/Utils/Database/Fields</exclude>
       <exclude>tests/integration/Espo/Core/FulltextIndex/CheckCreatedIndexTest.php</exclude>
     </testsuite>
   </testsuites>
