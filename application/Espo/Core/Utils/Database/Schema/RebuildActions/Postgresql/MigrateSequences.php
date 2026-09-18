@@ -58,69 +58,25 @@ class MigrateSequences implements RebuildAction
     private function runMigrationScript(): void
     {
         $sql = <<<'SQL'
-            CREATE OR REPLACE FUNCTION upgrade_serial_to_identity(tbl regclass, col name)
-                RETURNS void
-                LANGUAGE plpgsql
-                AS $$
-                DECLARE
-                    colnum smallint;
-                    seqid oid;
-                    count int;
-                BEGIN
-                -- Find column number.
-                SELECT attnum INTO colnum FROM pg_attribute WHERE attrelid = tbl AND attname = col;
-                IF NOT FOUND THEN
-                    RAISE EXCEPTION 'column does not exist';
-                END IF;
-
-                -- Find sequence.
-                SELECT INTO seqid objid
-                FROM pg_depend
-                WHERE
-                    (refclassid, refobjid, refobjsubid) = ('pg_class'::regclass, tbl, colnum) AND
-                    classid = 'pg_class'::regclass AND
-                    objsubid = 0 AND
-                    deptype = 'a';
-
-                GET DIAGNOSTICS count = ROW_COUNT;
-                IF count < 1 THEN
-                    RAISE EXCEPTION 'no linked sequence found';
-                ELSIF count > 1 THEN
-                    RAISE EXCEPTION 'more than one linked sequence found';
-                END IF;
-
-                -- Drop the default.
-                EXECUTE 'ALTER TABLE ' || tbl || ' ALTER COLUMN ' || quote_ident(col) || ' DROP DEFAULT';
-
-                -- Change the dependency between column and sequence to internal.
-                UPDATE pg_depend
-                SET deptype = 'i'
-                WHERE
-                    (classid, objid, objsubid) = ('pg_class'::regclass, seqid, 0) AND
-                    deptype = 'a';
-
-                -- Mark the column as identity column.
-                UPDATE pg_attribute
-                SET attidentity = 'd'
-                WHERE
-                    attrelid = tbl AND
-                    attname = col;
-                END;
-            $$;
-
             DO $$
                 DECLARE
                     r record;
+                    colnum smallint;
+                    seqid oid;
+                    cnt int;
                 BEGIN
                     FOR r IN
                         SELECT
+                            a.attrelid AS table_oid,
                             a.attrelid::regclass AS table_name,
-                            a.attname AS column_name
+                            a.attname AS column_name,
+                            a.attnum AS column_num,
+                            d.objid AS sequence_oid
                         FROM pg_attribute a
-                        JOIN pg_depend d ON
-                            d.refclassid = 'pg_class'::regclass AND
-                            d.refobjid = a.attrelid AND
-                            d.refobjsubid = a.attnum
+                            JOIN pg_depend d ON
+                                d.refclassid = 'pg_class'::regclass AND
+                                d.refobjid = a.attrelid AND
+                                d.refobjsubid = a.attnum
                         WHERE
                             a.attnum > 0 AND
                             NOT a.attisdropped AND
@@ -135,12 +91,31 @@ class MigrateSequences implements RebuildAction
                                     s.relkind = 'S'
                             )
                         LOOP
-                            PERFORM
-                                upgrade_serial_to_identity(r.table_name, r.column_name);
+                            -- Drop the default.
+                            EXECUTE
+                                'ALTER TABLE ' || r.table_oid::regclass ||
+                                ' ALTER COLUMN ' || quote_ident(r.column_name) ||
+                                ' DROP DEFAULT';
+
+                            -- Change the sequence dependency from auto to internal.
+                            UPDATE pg_depend
+                            SET deptype = 'i'
+                            WHERE
+                                classid = 'pg_class'::regclass AND
+                                objid = r.sequence_oid AND
+                                objsubid = 0 AND
+                                deptype = 'a';
+
+                            -- Mark the column as an identity column.
+                            UPDATE pg_attribute
+                            SET attidentity = 'd'
+                            WHERE
+                                attrelid = r.table_oid AND
+                                attname = r.column_name;
                         END LOOP;
-                END;
+                END
             $$;
-            SQL;
+        SQL;
 
         $connection = $this->helper->getDbalConnection();
 
