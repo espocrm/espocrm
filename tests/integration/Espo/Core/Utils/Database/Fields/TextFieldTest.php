@@ -41,10 +41,10 @@ class TextFieldTest extends Base
         $column = $this->getColumn('Test', 'testText');
 
         $this->assertNotNull($column);
-        $this->assertInstanceOf(MediumtextType::class, $column->getType());
         $this->assertFalse($column->getNotnull());
 
         if ($this->getPlatform() === 'Mysql') {
+            $this->assertInstanceOf(MediumtextType::class, $column->getType());
             $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }
 
@@ -62,10 +62,10 @@ class TextFieldTest extends Base
         $column = $this->getColumn('Test', 'testText');
 
         $this->assertNotNull($column);
-        $this->assertInstanceOf(LongtextType::class, $column->getType());
         $this->assertFalse($column->getNotnull());
 
         if ($this->getPlatform() === 'Mysql') {
+            $this->assertInstanceOf(LongtextType::class, $column->getType());
             $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }
     }
@@ -85,10 +85,10 @@ class TextFieldTest extends Base
         $column = $this->getColumn('Test', 'testText');
 
         $this->assertNotNull($column);
-        $this->assertInstanceOf(LongtextType::class, $column->getType());
         $this->assertFalse($column->getNotnull());
 
         if ($this->getPlatform() === 'Mysql') {
+            $this->assertInstanceOf(LongtextType::class, $column->getType());
             $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }
     }

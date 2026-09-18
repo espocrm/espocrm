@@ -106,6 +106,14 @@ class DiffModifier
 
                 $reRun = true;
             }
+
+            if (!$isHard && $secondRun) {
+                $itemTableDiff = $this->moveDroppedNotNullableToChangedNullable($tableDiff, $column);
+
+                if ($itemTableDiff) {
+                    $tableDiff = $itemTableDiff;
+                }
+            }
         }
 
         if (!$isHard) {
@@ -255,13 +263,21 @@ class DiffModifier
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
 
-        if (!$columnDiff->hasAutoIncrementChanged() || $fromColumn->getAutoincrement()) {
+        if (!$columnDiff->hasAutoIncrementChanged() /*|| $fromColumn->getAutoincrement()*/) {
             return [$columnDiff, false];
+        }
+
+        $notNull = false;
+
+        if ($fromColumn->getAutoincrement()) {
+            // Need to preserve while the sequence is still there.
+            // To be set to false in the second run.
+            $notNull = $fromColumn->getNotnull();
         }
 
         $column
             ->setAutoincrement(false)
-            ->setNotnull(false)
+            ->setNotnull($notNull)
             ->setDefault(null);
 
         $name = $column->getObjectName()->getIdentifier()->getValue();
@@ -328,6 +344,33 @@ class DiffModifier
         }
 
         return $this->cloneTableDiffWithDroppedIndexes($tableDiff, $droppedIndexes);
+    }
+
+    /**
+     * After autoincrement is removed, the column is still not-nullable after the first run.
+     * Otherwise, a conflict with the sequence occurs. Here, it is set to nullable.
+     */
+    private function moveDroppedNotNullableToChangedNullable(TableDiff $tableDiff, Column $column): ?TableDiff
+    {
+        if (!$column->getNotnull()) {
+            return null;
+        }
+
+        $newColumn = clone $column;
+
+        $newColumn
+            ->setNotnull(false);
+
+        $columnDiff = new ColumnDiff(
+            oldColumn: $column,
+            newColumn: $newColumn,
+        );
+
+        $name = $column->getObjectName()->getIdentifier()->getValue();
+
+        $changedColumns = [...$tableDiff->getChangedColumns(), $name => $columnDiff];
+
+        return $this->cloneTableDiffWithChangedColumns($tableDiff, $changedColumns);
     }
 
     /**
