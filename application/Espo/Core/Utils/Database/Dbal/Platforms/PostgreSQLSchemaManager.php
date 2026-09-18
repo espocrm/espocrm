@@ -29,11 +29,60 @@
 
 namespace Espo\Core\Utils\Database\Dbal\Platforms;
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\PostgreSQLSchemaManager as BasePostgreSQLSchemaManager;
+use RuntimeException;
 
 class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
 {
+    /**
+     * Partially copy-pasted. Added parts to retrieve fulltext indexes too.
+     *
+     * @throws Exception
+     */
+    protected function selectIndexColumns(string $databaseName, ?string $tableName = null): Result
+    {
+        $params = [];
+
+        $sql = sprintf(
+            <<<'SQL'
+            SELECT
+                   quote_ident(n.nspname) AS schema_name,
+                   quote_ident(c.relname) AS table_name,
+                   quote_ident(ic.relname) AS relname,
+                   i.indisunique,
+                   i.indisprimary,
+                   i.indkey,
+                   i.indrelid,
+                   pg_get_expr(indpred, indrelid) AS "where",
+                   quote_ident(attname) AS attname,
+                   -- added
+                   CASE
+                       WHEN keys.attnum = 0
+                       THEN pg_get_expr(i.indexprs, i.indrelid)
+                       ELSE quote_ident(a.attname)
+               END AS attname
+              FROM pg_index i
+                   JOIN pg_class AS c ON c.oid = i.indrelid
+                   JOIN pg_namespace n ON n.oid = c.relnamespace
+                   JOIN pg_class AS ic ON ic.oid = i.indexrelid
+                   JOIN LATERAL UNNEST(i.indkey) WITH ORDINALITY AS keys(attnum, ord)
+                        ON TRUE
+                   -- LEFT added
+                   LEFT JOIN pg_attribute a
+                        ON a.attrelid = c.oid
+                            AND a.attnum = keys.attnum
+             WHERE %s
+             ORDER BY 1, 2, keys.ord;
+            SQL,
+            implode(' AND ', $this->buildQueryConditions($tableName, $params)),
+        );
+
+        return $this->connection->executeQuery($sql, $params);
+    }
+
     /**
      * DBAL does not add the 'fulltext' flag on reverse engineering.
      *
@@ -44,11 +93,7 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
         $indexes = parent::_getPortableTableIndexesList($rows, $tableName);
 
         foreach ($rows as $row) {
-            $key = $row['key_name'];
-
-            if (str_starts_with($tableName, '"') && str_ends_with($tableName, '"')) {
-                $tableName = substr($tableName, 1, -1);
-            }
+            $key = $row['relname'];
 
             if ($key !== "idx_{$tableName}_system_full_text_search") {
                 continue;
@@ -56,7 +101,11 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
 
             $sql = "SELECT indexdef FROM pg_indexes WHERE indexname = '$key'";
 
-            $items = $this->connection->fetchAllAssociative($sql);
+            try {
+                $items = $this->connection->fetchAllAssociative($sql);
+            } catch (Exception $e) {
+                throw new RuntimeException($e->getMessage(), previous: $e);
+            }
 
             if (!$items) {
                 continue;
@@ -103,5 +152,34 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
         $part = str_replace(")", '', $part);
 
         return array_map(fn ($item) => trim($item),  explode(' ', $part));
+    }
+
+    /**
+     * Copy-pasted the private method.
+     *
+     * @param list<int|string> $params
+     * @return non-empty-list<string>
+     */
+    private function buildQueryConditions(?string $tableName, array &$params): array
+    {
+        $conditions = [];
+
+        if ($tableName !== null) {
+            if (str_contains($tableName, '.')) {
+                [$schemaName, $tableName] = explode('.', $tableName);
+
+                $conditions[] = 'n.nspname = ?';
+                $params[] = $schemaName;
+            } else {
+                $conditions[] = 'n.nspname = ANY(current_schemas(false))';
+            }
+
+            $conditions[] = 'c.relname = ?';
+            $params[] = $tableName;
+        }
+
+        $conditions[] = "n.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')";
+
+        return $conditions;
     }
 }

@@ -35,7 +35,7 @@ use Doctrine\DBAL\Schema\Index;
 
 use InvalidArgumentException;
 
-class PostgresqlPlatform extends PostgreSQLPlatformDbal
+class PostgresqlCustomPlatform extends PostgreSQLPlatformDbal
 {
     private const string TEXT_SEARCH_CONFIG = 'pg_catalog.simple';
 
@@ -56,7 +56,7 @@ class PostgresqlPlatform extends PostgreSQLPlatformDbal
      */
     public function getCreateIndexSQL(Index $index, string $table): string
     {
-        if (!$index->hasFlag('fulltext')) {
+        if ($index->getType() !== Index\IndexType::FULLTEXT) {
             return parent::getCreateIndexSQL($index, $table);
         }
 

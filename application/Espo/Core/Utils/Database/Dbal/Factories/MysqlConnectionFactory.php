@@ -31,7 +31,6 @@ namespace Espo\Core\Utils\Database\Dbal\Factories;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PDOMySQLDriver;
-use Doctrine\DBAL\Exception as DBALException;
 
 use Espo\Core\Utils\Database\Dbal\ConnectionFactory;
 use Espo\ORM\DatabaseParams;
@@ -51,9 +50,6 @@ class MysqlConnectionFactory implements ConnectionFactory
         private PDO $pdo,
     ) {}
 
-    /**
-     * @throws DBALException
-     */
     public function create(DatabaseParams $databaseParams): Connection
     {
         $driver = new PDOMySQLDriver();

@@ -34,7 +34,6 @@ use Doctrine\DBAL\Schema\Table;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\Schema\SchemaManager;
 use Espo\Core\Utils\Util;
-use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 use tests\integration\Core\BaseTestCase;
@@ -57,6 +56,9 @@ class CheckCreatedIndexTest extends BaseTestCase
     public function testCreatedIndexes(string $entityType): void
     {
         if ($this->getPlatform() === 'Postgresql') {
+            // DBAL uses two different codes to fetch indexes.
+            // `getIndexes` won't work, but `introspectTableIndexes` might work.
+            // Consider to implement the test.
             return;
         }
 
@@ -72,14 +74,11 @@ class CheckCreatedIndexTest extends BaseTestCase
 
         $expectedList = array_map(fn (string $it) => Util::toUnderScore($it), $fulltextFieldList);
 
-
         $table = $this->getTable(Util::camelCaseToUnderscore($entityType));
-
-        $indexes = $table->getIndexes();
 
         $foundIndex = null;
 
-        foreach ($indexes as $index) {
+        foreach ($table->getIndexes() as $index) {
             if ($index->getType() !== IndexType::FULLTEXT) {
                 continue;
             }
@@ -112,19 +111,11 @@ class CheckCreatedIndexTest extends BaseTestCase
 
         $helper = $manager->getDatabaseHelper();
 
-        $tables = $helper->getDbalConnection()
+        $table = $helper->getDbalConnection()
             ->createSchemaManager()
-            ->introspectTables();
+            ->introspectTableByUnquotedName($name);
 
-        foreach ($tables as $table) {
-            if ($table->getObjectName()->getUnqualifiedName()->getValue() !== $name) {
-                continue;
-            }
-
-            return $table;
-        }
-
-        throw new RuntimeException("Table '$name' not found.");
+        return $table ?? throw new RuntimeException("Table '$name' not found.");
     }
 
     private function getPlatform(): ?string
