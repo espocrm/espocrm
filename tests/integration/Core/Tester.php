@@ -376,11 +376,13 @@ class Tester
         $schemaManager = $connection->createSchemaManager();
         $platform = $connection->getDatabasePlatform();
 
-        if (in_array($dbname, $schemaManager->listDatabases())) {
-            return;
+        foreach ($schemaManager->introspectDatabaseNames() as $databaseName) {
+            if ($dbname === $databaseName->getIdentifier()->getValue()) {
+                return;
+            }
         }
 
-        $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
+        $schemaManager->createDatabase($platform->quoteSingleIdentifier($dbname));
     }
 
     /**
@@ -402,10 +404,10 @@ class Tester
 
         $pdo = $databaseHelper->getPDO();
 
-        $tables = $schemaManager->listTableNames();
+        $tables = $schemaManager->introspectTables();
 
         foreach ($tables as $table) {
-            $tableQuoted = $platform->quoteIdentifier($table);
+            $tableQuoted = $table->getObjectName()->toString();
 
             $sql = $platform->getDropTableSQL($tableQuoted);
 

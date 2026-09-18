@@ -157,19 +157,23 @@ class DataManager
 
         $schemaManager = $this->schemaManager;
 
+        $exception = null;
+
         try {
             $result = $schemaManager->rebuild($entityTypeList, $mode);
         } catch (Throwable $e) {
             $result = false;
 
-            $this->log->error(
-                "Failed to rebuild database schema. {$e->getMessage()}; {$e->getFile()}:{$e->getLine()}",
-                ['exception' => $e]
-            );
+            $this->log->error("Failed to rebuild database schema. {message}", [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+            ]);
+
+            $exception = $e;
         }
 
         if (!$result) {
-            throw new Error("Error while rebuilding database. See log file for details.");
+            throw new Error("Error while rebuilding database. See log file for details.", previous: $exception);
         }
 
         $databaseType = strtolower($schemaManager->getDatabaseHelper()->getType());
