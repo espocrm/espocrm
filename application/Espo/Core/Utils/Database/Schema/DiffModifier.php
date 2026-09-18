@@ -278,7 +278,7 @@ class DiffModifier
         $fromColumn = $columnDiff->getOldColumn();
         $column = $columnDiff->getNewColumn();
 
-        if (!$columnDiff->hasAutoIncrementChanged() /*|| $fromColumn->getAutoincrement()*/) {
+        if (!$columnDiff->hasAutoIncrementChanged()) {
             return [$columnDiff, false];
         }
 
