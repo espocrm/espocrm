@@ -30,11 +30,13 @@
 namespace tests\integration\Espo\Core\Utils\Database;
 
 use Doctrine\DBAL\Schema\Column;
+use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Templates\Entities\Base;
 use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Database\Schema\RebuildMode;
 use Espo\ORM\Defs\Params\FieldParam;
+use Espo\ORM\Entity;
 use Espo\Tools\EntityManager\EntityManager as EntityTypeManager;
 use Espo\Tools\FieldManager\FieldManager;
 use integration\Core\NoTransaction;
@@ -172,47 +174,29 @@ class RebuildTest extends BaseTestCase
 
         //
 
+        $em = $this->getEntityManager();
+
         $entity = $em->createEntity('C' . self::ENTITY_TYPE_TEST);
         $em->refreshEntity($entity);
 
         $this->assertEquals(null, $entity->get('testSecond'));
 
+        //
+        if ($this->getPlatform() === 'Postgresql') {
+            $entity->set('testSecond', 4);
+            $em->saveEntity($entity);
+        }
+
         // Enable autoincrement back.
 
-        $this->getMetadata()->set('entityDefs', 'C' . self::ENTITY_TYPE_TEST, [
-            'fields' => [
-                'testSecond' => [
-                    'type' => FieldType::INT,
-                    'autoincrement' => true,
-                ],
-            ],
-        ]);
-        $this->getMetadata()->save();
 
-        $this->reCreateApplication();
-        $this->getDataManager()->rebuildDatabase();
 
-        $this->assertTrue($this->getColumn($table, 'test_second')?->getAutoincrement());
+        if ($this->getPlatform() !== 'Postgresql') {
+            $this->runAutoincrementBack($entity, $table);
+        }
 
-        //
 
-        $em->refreshEntity($entity);
-        $this->assertEquals(4, $entity->get('testSecond'));
 
-        $entity = $em->createEntity('C' . self::ENTITY_TYPE_TEST);
-        $em->refreshEntity($entity);
-
-        // Sequence is not preserved in MariaDB for some reason.
-        $this->assertIsInt($entity->get('testSecond'));
-
-        // Delete autoincrement column.
-
-        $fm->delete('C' . self::ENTITY_TYPE_TEST, 'testSecond');
-
-        $this->reCreateApplication();
-        $this->getDataManager()->rebuildDatabase();
-
-        $this->assertFalse($this->getColumn($table, 'test_second')?->getAutoincrement());
 
         // Delete entity type.
 
@@ -280,5 +264,57 @@ class RebuildTest extends BaseTestCase
         }
 
         return null;
+    }
+
+    private function getPlatform(): ?string
+    {
+        $params = $this->getInjectableFactory()->create(DatabaseParamsFactory::class)
+            ->create();
+
+        return $params->getPlatform();
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function runAutoincrementBack(Entity $entity, string $table): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getInjectableFactory()->create(FieldManager::class);
+
+        $this->getMetadata()->set('entityDefs', 'C' . self::ENTITY_TYPE_TEST, [
+            'fields' => [
+                'testSecond' => [
+                    'type' => FieldType::INT,
+                    'autoincrement' => true,
+                ],
+            ],
+        ]);
+        $this->getMetadata()->save();
+
+        $this->reCreateApplication();
+        $this->getDataManager()->rebuildDatabase();
+
+        $this->assertTrue($this->getColumn($table, 'test_second')?->getAutoincrement());
+
+        //
+
+        $em->refreshEntity($entity);
+        $this->assertEquals(4, $entity->get('testSecond'));
+
+        $entity = $em->createEntity('C' . self::ENTITY_TYPE_TEST);
+        $em->refreshEntity($entity);
+
+        // Sequence is not preserved in MariaDB for some reason.
+        $this->assertIsInt($entity->get('testSecond'));
+
+        // Delete autoincrement column.
+
+        $fm->delete('C' . self::ENTITY_TYPE_TEST, 'testSecond');
+
+        $this->reCreateApplication();
+        $this->getDataManager()->rebuildDatabase();
+
+        $this->assertFalse($this->getColumn($table, 'test_second')?->getAutoincrement());
     }
 }
