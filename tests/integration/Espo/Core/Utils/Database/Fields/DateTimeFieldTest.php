@@ -29,17 +29,18 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\DateTimeType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
 class DateTimeFieldTest extends Base
 {
-    public function testColumn()
+    public function testColumn(): void
     {
-        $column = $this->getColumnInfo('Test', 'testDateTime');
+        $column = $this->getColumn('Test', 'testDateTime');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('datetime', $column['DATA_TYPE']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(DateTimeType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
     }
 }

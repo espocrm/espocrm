@@ -38,6 +38,7 @@ use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\DBAL\Schema\SchemaException;
+use Doctrine\DBAL\Types\Exception\TypesException;
 use Doctrine\DBAL\Types\Type;
 
 use Espo\Core\Binding\BindingContainerBuilder;
@@ -46,6 +47,7 @@ use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata\OrmMetadataData;
 
+use RuntimeException;
 use Throwable;
 
 /**
@@ -83,7 +85,7 @@ class SchemaManager
         // `$this->schemaManager->createComparator()`
         $this->comparator = new Comparator($this->getPlatform(), $comparatorConfig);
 
-        $this->initFieldTypes();
+        $this->registerTypes();
 
         $this->builder = $this->injectableFactory->createWithBinding(
             Builder::class,
@@ -111,20 +113,30 @@ class SchemaManager
         return $this->helper->getDbalConnection();
     }
 
-    /**
-     * @throws DbalException
-     */
-    private function initFieldTypes(): void
+    private function registerTypes(): void
     {
         foreach ($this->metadataProvider->getDbalTypeClassNameMap() as $type => $className) {
-            Type::hasType($type) ?
-                Type::overrideType($type, $className) :
-                Type::addType($type, $className);
-
-            $this->getDbalConnection()
-                ->getDatabasePlatform()
-                ->registerDoctrineTypeMapping($type, $type);
+            try {
+                $this->registerType($type, $className);
+            } catch (DbalException $e) {
+                throw new RuntimeException("Could not register DBAL type '$type'.", previous: $e);
+            }
         }
+    }
+
+    /**
+     * @param class-string<Type> $className
+     * @throws DbalException
+     */
+    private function registerType(string $type, string $className): void
+    {
+        Type::hasType($type) ?
+            Type::overrideType($type, $className) :
+            Type::addType($type, $className);
+
+        $this->getDbalConnection()
+            ->getDatabasePlatform()
+            ->registerDoctrineTypeMapping($type, $type);
     }
 
     /**

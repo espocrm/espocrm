@@ -29,18 +29,22 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
 use integration\Core\NoTransaction;
 
-#[NoTransaction]
 class ArrayFieldTest extends Base
 {
-    public function testColumn()
+    #[NoTransaction]
+    public function testColumn(): void
     {
-        $column = $this->getColumnInfo('Test', 'testArray');
+        $column = $this->getColumn('Test', 'testArray');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('mediumtext', $column['COLUMN_TYPE']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+        $this->assertNotNull($column);
+        $this->assertFalse($column->getNotnull());
+
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertInstanceOf(MediumtextType::class, $column->getType());
+            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
+        }
     }
 }

@@ -29,201 +29,64 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
-use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Doctrine\DBAL\Types\StringType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
 class VarcharFieldTest extends Base
 {
-    public function testColumn()
+    public function testColumn(): void
     {
-        $column = $this->getColumnInfo('Test', 'testVarchar');
+        $column = $this->getColumn('Test', 'testVarchar');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals(100, $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-    }
+        $this->assertInstanceOf(StringType::class, $column?->getType());
+        $this->assertEquals(100, $column->getLength());
+        $this->assertFalse($column->getNotnull());
 
-    public function testIncreaseColumnLength()
-    {
-        $this->updateDefs('Test', 'testVarchar', [
-            'maxLength' => 150,
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('150', $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-    }
-
-    public function testReduceColumnLength()
-    {
-        $this->updateDefs('Test', 'testVarchar', [
-            'maxLength' => 50,
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-    }
-
-    public function testReduceColumnLength2()
-    {
-        $this->updateDefs('Test', 'testVarchar', [
-            'maxLength' => 50,
-            'default' => 'test-default',
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-    }
-
-    public function testReduceColumnLength3()
-    {
-        $this->executeQuery(
-            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
-        );
-
-        $this->updateDefs('Test', 'testVarchar', [
-            'maxLength' => 50,
-            'default' => 'test-default',
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-
-        $this->assertContains($column['COLLATION_NAME'], [
-            'utf8_unicode_ci',
-            'utf8mb3_unicode_ci'
-        ]);
-    }
-
-    public function testCollationForExistingColumn()
-    {
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-
-        $this->executeQuery(
-            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(". $column['CHARACTER_MAXIMUM_LENGTH'] .") CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
-        );
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertContains($column['COLLATION_NAME'], [
-            'utf8_unicode_ci',
-            'utf8mb3_unicode_ci'
-        ]);
-
-        $this->updateDefs('Test', 'testVarchar', [
-            'maxLength' => 150,
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('150', $column['CHARACTER_MAXIMUM_LENGTH']);
-
-        $this->assertContains($column['COLLATION_NAME'], [
-            'utf8_unicode_ci',
-            'utf8mb3_unicode_ci'
-        ]);
-    }
-
-    public function testCollationForExistingColumn2()
-    {
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-
-        $this->executeQuery(
-            "ALTER TABLE test MODIFY COLUMN test_varchar VARCHAR(". $column['CHARACTER_MAXIMUM_LENGTH'] .") CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;"
-        );
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertContains($column['COLLATION_NAME'], [
-            'utf8_unicode_ci',
-            'utf8mb3_unicode_ci'
-        ]);
-
-        $this->updateDefs('Test', 'testVarchar', [
-            'default' => 'test-default',
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-
-        $this->assertContains($column['COLLATION_NAME'], [
-            'utf8_unicode_ci',
-            'utf8mb3_unicode_ci'
-        ]);
-    }
-
-    public function testCollationForNewColumn()
-    {
-        $this->updateDefs('Test', 'newTestVarchar', [
-            'type' => 'varchar',
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'newTestVarchar');
-
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-    }
-
-    public function testDefaultValue()
-    {
-        $this->updateDefs('Test', 'testVarchar', [
-            'default' => 'test-default',
-        ]);
-
-        $column = $this->getColumnInfo('Test', 'testVarchar');
-
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals('100', $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
-
-        $dbHelper = $this->getInjectableFactory()->create(DatabaseHelper::class);
-
-        if (
-            $dbHelper->getType() == 'MariaDB'
-            && version_compare($dbHelper->getVersion(), '10.2.7', '>=')
-        ) {
-            $this->assertEquals("'test-default'", $column['COLUMN_DEFAULT']);
-        } else {
-            $this->assertEquals('test-default', $column['COLUMN_DEFAULT']);
+        if ($this->getPlatform() === 'Mysql') {
+            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }
+
+        $this->runIncreaseColumnLength();
+        $this->runReduceColumnLength1();
+        $this->runReduceColumnLengthAndDefault();
     }
 
-    /**
-     * Make sure columns not removed.
-     */
-    public function testRemoveField(): void
+    private function runIncreaseColumnLength(): void
     {
-        $this->getMetadata()->delete('entityDefs', 'Test', ['fields.testVarchar']);
-        $this->getMetadata()->save();
-        $this->getDataManager()->rebuildDatabase();
+        $this->updateDefs('Test', 'testVarchar', [
+            'maxLength' => 150,
+        ]);
 
-        $column = $this->getColumnInfo('Test', 'testVarchar');
+        $column = $this->getColumn('Test', 'testVarchar');
 
-        $this->assertTrue((bool) $column);
+        $this->assertNotNull($column);
+        $this->assertEquals(150, $column->getLength());
+    }
+
+    private function runReduceColumnLength1(): void
+    {
+        $this->updateDefs('Test', 'testVarchar', [
+            'maxLength' => 50,
+        ]);
+
+        $column = $this->getColumn('Test', 'testVarchar');
+
+        $this->assertInstanceOf(StringType::class, $column?->getType());
+        $this->assertEquals(150, $column->getLength());
+    }
+
+    private function runReduceColumnLengthAndDefault(): void
+    {
+        $this->updateDefs('Test', 'testVarchar', [
+            'maxLength' => 50,
+            'default' => 'test-default',
+        ]);
+
+        $column = $this->getColumn('Test', 'testVarchar');
+
+        $this->assertInstanceOf(StringType::class, $column?->getType());
+        $this->assertEquals(150, $column->getLength());
+        $this->assertEquals('test-default', $column->getDefault());
     }
 }

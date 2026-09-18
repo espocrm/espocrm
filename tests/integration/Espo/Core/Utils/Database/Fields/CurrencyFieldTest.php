@@ -29,29 +29,32 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\FloatType;
+use Doctrine\DBAL\Types\StringType;
 use integration\Core\NoTransaction;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[NoTransaction]
 class CurrencyFieldTest extends Base
 {
-    static public function fieldList(): array
+    public function testColumns(): void
     {
-        return [
-            ['testCurrency', 'double', null, null],
-            ['testCurrencyCurrency', 'varchar', 3, 'utf8mb4_unicode_ci'],
+        $list = [
+            ['testCurrency', FloatType::class, null, null],
+            ['testCurrencyCurrency', StringType::class, 3, 'utf8mb4_unicode_ci'],
         ];
-    }
 
-    #[DataProvider('fieldList')]
-    public function testColumns($fieldName, $type, $length, $collation): void
-    {
-        $column = $this->getColumnInfo('Test', $fieldName);
+        foreach ($list as [$attribute, $typeClass, $length, $collation]) {
+            $column = $this->getColumn('Test', $attribute);
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals($type, $column['DATA_TYPE']);
-        $this->assertEquals($length, $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals($collation, $column['COLLATION_NAME']);
+            $this->assertNotNull($column);
+            $this->assertFalse($column->getNotnull());
+            $this->assertEquals($length, $column->getLength());
+
+            $this->assertInstanceOf($typeClass, $column->getType());
+
+            if ($this->getPlatform() === 'Mysql') {
+                $this->assertEquals($collation, $column->getCollation());
+            }
+        }
     }
 }

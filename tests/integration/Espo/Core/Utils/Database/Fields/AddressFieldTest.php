@@ -29,32 +29,33 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\StringType;
 use integration\Core\NoTransaction;
-use PHPUnit\Framework\Attributes\DataProvider;
 
-#[NoTransaction]
 class AddressFieldTest extends Base
 {
-    static public function fieldList()
+    #[NoTransaction]
+    public function testColumn(): void
     {
-        return [
+        $list = [
             ['testAddressStreet', 255],
             ['testAddressCity', 100],
             ['testAddressState', 100],
             ['testAddressCountry', 100],
             ['testAddressPostalCode', 40],
         ];
-    }
 
-    #[DataProvider('fieldList')]
-    public function testColumn($fieldName, $length)
-    {
-        $column = $this->getColumnInfo('Test', $fieldName);
+        foreach ($list as [$attribute, $length]) {
+            $column = $this->getColumn('Test', $attribute);
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('varchar', $column['DATA_TYPE']);
-        $this->assertEquals($length, $column['CHARACTER_MAXIMUM_LENGTH']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
-        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
+            $this->assertNotNull($column);
+            $this->assertInstanceOf(StringType::class, $column->getType());
+            $this->assertEquals($length, $column->getLength());
+            $this->assertFalse($column->getNotnull());
+
+            if ($this->getPlatform() === 'Mysql') {
+                $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
+            }
+        }
     }
 }

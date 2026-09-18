@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
+use Doctrine\DBAL\Types\IntegerType;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
@@ -36,11 +37,11 @@ class IntegerFieldTest extends Base
 {
     public function testColumn()
     {
-        $column = $this->getColumnInfo('Test', 'testInteger');
+        $column = $this->getColumn('Test', 'testInteger');
 
-        $this->assertNotEmpty($column);
-        $this->assertEquals('int', $column['DATA_TYPE']);
-        $this->assertEquals(10, $column['NUMERIC_PRECISION']);
-        $this->assertEquals('YES', $column['IS_NULLABLE']);
+        $this->assertNotNull($column);
+        $this->assertInstanceOf(IntegerType::class, $column->getType());
+        $this->assertFalse($column->getNotnull());
+        $this->assertNull($column->getPrecision());
     }
 }
