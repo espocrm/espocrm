@@ -40,6 +40,9 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
     /**
      * Partially copy-pasted. Added parts to retrieve fulltext indexes too.
      *
+     * Might stop working in future versions in DBAL. In this case, a custom
+     * metadata provider might need to be used.
+     *
      * @throws Exception
      */
     protected function selectIndexColumns(string $databaseName, ?string $tableName = null): Result
