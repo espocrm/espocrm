@@ -30,6 +30,7 @@
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use Doctrine\DBAL\Types\StringType;
+use Espo\Core\Utils\Database\Platform;
 use integration\Core\NoTransaction;
 
 class AddressFieldTest extends Base
@@ -53,7 +54,7 @@ class AddressFieldTest extends Base
             $this->assertEquals($length, $column->getLength());
             $this->assertFalse($column->getNotnull());
 
-            if ($this->getPlatform() === 'Mysql') {
+            if ($this->getPlatform() === Platform::MYSQL) {
                 $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
             }
         }

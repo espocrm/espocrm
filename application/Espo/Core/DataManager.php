@@ -36,6 +36,7 @@ use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Utils\Cache\DataCacheProvider;
 use Espo\Core\Utils\Cache\Exceptions\PersistenceError;
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\Database\Platform;
 use Espo\Core\Utils\Database\Schema\RebuildMode;
 use Espo\Core\Utils\Database\Schema\SchemaManagerProxy;
 use Espo\Core\Utils\DataCache;
@@ -149,7 +150,7 @@ class DataManager
      */
     public function rebuildDatabase(?array $entityTypeList = null, string $mode = RebuildMode::SOFT): void
     {
-        if ($entityTypeList && $this->config->get('database.platform') === 'Postgresql') {
+        if ($entityTypeList && $this->config->get('database.platform') === Platform::POSTGRESQL) {
             // Prevents sequences from being dropped.
             // @todo Refactor.
             $entityTypeList = null;
@@ -244,7 +245,7 @@ class DataManager
     {
         $databaseParams = $this->databaseParamsFactory->create();
 
-        if ($databaseParams->getPlatform() !== 'Mysql') {
+        if ($databaseParams->getPlatform() !== Platform::MYSQL) {
             return;
         }
 

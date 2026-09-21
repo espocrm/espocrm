@@ -30,6 +30,7 @@
 namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use Doctrine\DBAL\Types\BooleanType;
+use Espo\Core\Utils\Database\Platform;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
@@ -43,7 +44,7 @@ class BooleanFieldTest extends Base
         $this->assertInstanceOf(BooleanType::class, $column->getType());
         $this->assertTrue($column->getNotnull());
 
-        if ($this->getPlatform() === 'Mysql') {
+        if ($this->getPlatform() === Platform::MYSQL) {
             $this->assertEquals(0, $column->getDefault());
         } else {
             $this->assertFalse($column->getDefault());
@@ -63,7 +64,7 @@ class BooleanFieldTest extends Base
         $this->assertInstanceOf(BooleanType::class, $column->getType());
         $this->assertTrue($column->getNotnull());
 
-        if ($this->getPlatform() === 'Mysql') {
+        if ($this->getPlatform() === Platform::MYSQL) {
             $this->assertEquals(1, $column->getDefault());
         } else {
             $this->assertTrue($column->getDefault());

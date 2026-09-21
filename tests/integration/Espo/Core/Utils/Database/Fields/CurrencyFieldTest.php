@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use Doctrine\DBAL\Types\FloatType;
 use Doctrine\DBAL\Types\StringType;
+use Espo\Core\Utils\Database\Platform;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
@@ -52,7 +53,7 @@ class CurrencyFieldTest extends Base
 
             $this->assertInstanceOf($typeClass, $column->getType());
 
-            if ($this->getPlatform() === 'Mysql') {
+            if ($this->getPlatform() === Platform::MYSQL) {
                 $this->assertEquals($collation, $column->getCollation());
             }
         }

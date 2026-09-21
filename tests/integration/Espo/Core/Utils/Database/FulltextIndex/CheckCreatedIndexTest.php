@@ -33,6 +33,7 @@ use Doctrine\DBAL\Schema\Index\IndexType;
 use Doctrine\DBAL\Schema\Table;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\Helper;
+use Espo\Core\Utils\Database\Platform;
 use Espo\Core\Utils\Util;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
@@ -58,7 +59,7 @@ class CheckCreatedIndexTest extends BaseTestCase
     #[DataProvider('entityTypeList')]
     public function testCreatedIndexes(string $entityType): void
     {
-        if ($this->getPlatform() === 'Postgresql') {
+        if ($this->getPlatform() === Platform::POSTGRESQL) {
             // DBAL uses two different codes to fetch indexes.
             return;
         }

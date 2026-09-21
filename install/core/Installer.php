@@ -36,6 +36,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory;
+use Espo\Core\Utils\Database\Platform;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\ScheduledJob as ScheduledJobUtil;
 use Espo\Core\Utils\Util;
@@ -301,7 +302,7 @@ class Installer
         bool $requiredOnly = false,
         ?array $additionalData = null
     ): array {
-        $platform = $additionalData['databaseParams']['platform'] ?? 'Mysql';
+        $platform = $additionalData['databaseParams']['platform'] ?? Platform::MYSQL;
 
         $dbConfigDataProvider = new DatabaseConfigDataProvider($platform);
 

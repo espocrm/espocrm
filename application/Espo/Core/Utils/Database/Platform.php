@@ -27,26 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\Database\Fields;
+namespace Espo\Core\Utils\Database;
 
-use Doctrine\DBAL\Types\StringType;
-use Espo\Core\Utils\Database\Platform;
-use integration\Core\NoTransaction;
-
-#[NoTransaction]
-class FileFieldTest extends Base
+/**
+ * @since 10.1.0
+ */
+class Platform
 {
-    public function testColumn(): void
-    {
-        $column = $this->getColumn('Test', 'testFileId');
-
-        $this->assertNotNull($column);
-        $this->assertInstanceOf(StringType::class, $column->getType());
-        $this->assertFalse($column->getNotnull());
-        $this->assertEquals(17, $column->getLength());
-
-        if ($this->getPlatform() === Platform::MYSQL) {
-            $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
-        }
-    }
+    public const string MYSQL = 'Mysql';
+    public const string POSTGRESQL = 'Postgresql';
 }

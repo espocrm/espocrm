@@ -30,13 +30,14 @@
 namespace Espo\Core\ORM;
 
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Platform;
 use Espo\ORM\DatabaseParams;
 
 use RuntimeException;
 
 class DatabaseParamsFactory
 {
-    private const DEFAULT_PLATFORM = 'Mysql';
+    private const string DEFAULT_PLATFORM = Platform::MYSQL;
 
     public function __construct(private Config $config) {}
 
