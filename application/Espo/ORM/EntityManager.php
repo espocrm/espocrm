@@ -29,6 +29,7 @@
 
 namespace Espo\ORM;
 
+use Espo\Core\Utils\Database\Platform;
 use Espo\ORM\Defs\Defs;
 use Espo\ORM\Executor\DefaultQueryExecutor;
 use Espo\ORM\Executor\DefaultSqlExecutor;
@@ -140,7 +141,7 @@ class EntityManager
 
         $className = BaseLocker::class;
 
-        if ($platform === 'Mysql') {
+        if ($platform === Platform::MYSQL) {
             $className = MysqlLocker::class;
         }
 

@@ -32,6 +32,7 @@ namespace tests\integration\Espo\Core\Utils\Database;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\Helper;
 use Doctrine\DBAL\Connection;
+use Espo\Core\Utils\Database\Platform;
 use PDO;
 use tests\integration\Core\BaseTestCase;
 
@@ -72,7 +73,7 @@ class HelperTest extends BaseTestCase
         $this->initTest();
 
         switch ($this->getPlatform()) {
-            case 'Mysql':
+            case Platform::MYSQL:
                 $this->assertContains($this->helper->getType(), [
                     'MySQL',
                     'MariaDB',
@@ -80,7 +81,7 @@ class HelperTest extends BaseTestCase
 
                 break;
 
-            case 'Postgresql':
+            case Platform::POSTGRESQL:
                 $this->assertEquals('PostgreSQL', $this->helper->getType());
 
                 break;

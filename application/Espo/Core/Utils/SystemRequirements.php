@@ -32,17 +32,15 @@ namespace Espo\Core\Utils;
 use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\Database\Platform;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 class SystemRequirements
 {
-    private const PLATFORM_MYSQL = 'Mysql';
-    private const PLATFORM_POSTGRESQL = 'Postgresql';
-
     /** @var array<string, string> */
     private $pdoExtensionMap = [
-        self::PLATFORM_MYSQL => 'pdo_mysql',
-        self::PLATFORM_POSTGRESQL => 'pdo_pgsql',
+        Platform::MYSQL => 'pdo_mysql',
+        Platform::POSTGRESQL => 'pdo_pgsql',
     ];
 
     public function __construct(
@@ -141,7 +139,7 @@ class SystemRequirements
     {
         $platform = $this->databaseConfig->getPlatform() ?:
             $this->config->get('database.platform') ?:
-                self::PLATFORM_MYSQL;
+                Platform::MYSQL;
 
         return $this->pdoExtensionMap[$platform] ?? null;
     }

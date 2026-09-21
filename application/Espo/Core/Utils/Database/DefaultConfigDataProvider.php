@@ -33,7 +33,7 @@ use Espo\Core\Utils\Config;
 
 class DefaultConfigDataProvider implements ConfigDataProvider
 {
-    private const DEFAULT_PLATFORM = 'Mysql';
+    private const string DEFAULT_PLATFORM = Platform::MYSQL;
 
     public function __construct(private Config $config) {}
 

@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Core\Utils\Database\Fields;
 
 use Espo\Core\Utils\Database\Dbal\Types\LongtextType;
 use Espo\Core\Utils\Database\Dbal\Types\MediumtextType;
+use Espo\Core\Utils\Database\Platform;
 use integration\Core\NoTransaction;
 
 #[NoTransaction]
@@ -43,7 +44,7 @@ class TextFieldTest extends Base
         $this->assertNotNull($column);
         $this->assertFalse($column->getNotnull());
 
-        if ($this->getPlatform() === 'Mysql') {
+        if ($this->getPlatform() === Platform::MYSQL) {
             $this->assertInstanceOf(MediumtextType::class, $column->getType());
             $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }
@@ -64,7 +65,7 @@ class TextFieldTest extends Base
         $this->assertNotNull($column);
         $this->assertFalse($column->getNotnull());
 
-        if ($this->getPlatform() === 'Mysql') {
+        if ($this->getPlatform() === Platform::MYSQL) {
             $this->assertInstanceOf(LongtextType::class, $column->getType());
             $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }
@@ -87,7 +88,7 @@ class TextFieldTest extends Base
         $this->assertNotNull($column);
         $this->assertFalse($column->getNotnull());
 
-        if ($this->getPlatform() === 'Mysql') {
+        if ($this->getPlatform() === Platform::MYSQL) {
             $this->assertInstanceOf(LongtextType::class, $column->getType());
             $this->assertEquals('utf8mb4_unicode_ci', $column->getCollation());
         }

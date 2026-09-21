@@ -34,6 +34,7 @@ use Espo\Core\ORM\DatabaseParamsFactory;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Templates\Entities\Base;
 use Espo\Core\Utils\Database\Helper;
+use Espo\Core\Utils\Database\Platform;
 use Espo\Core\Utils\Database\Schema\RebuildMode;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\Entity;
@@ -182,14 +183,14 @@ class RebuildTest extends BaseTestCase
         $this->assertEquals(null, $entity->get('testSecond'));
 
         //
-        if ($this->getPlatform() === 'Postgresql') {
+        if ($this->getPlatform() === Platform::POSTGRESQL) {
             $entity->set('testSecond', 4);
             $em->saveEntity($entity);
         }
 
         // Enable autoincrement back.
 
-        if ($this->getPlatform() !== 'Postgresql') {
+        if ($this->getPlatform() !== Platform::POSTGRESQL) {
             $this->runAutoincrementBack($entity, $table);
         }
 
