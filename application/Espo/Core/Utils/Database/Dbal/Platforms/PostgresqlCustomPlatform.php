@@ -51,9 +51,6 @@ class PostgresqlCustomPlatform extends PostgreSQLPlatformDbal
         return new PostgreSQLSchemaManager($connection, $this);
     }
 
-    /**
-     * @todo Test.
-     */
     public function getCreateIndexSQL(Index $index, string $table): string
     {
         if ($index->getType() !== Index\IndexType::FULLTEXT) {
