@@ -27,12 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\FulltextIndex;
+namespace tests\integration\Espo\Core\Utils\Database\FulltextIndex;
 
 use Doctrine\DBAL\Schema\Index\IndexType;
 use Doctrine\DBAL\Schema\Table;
 use Espo\Core\ORM\DatabaseParamsFactory;
-use Espo\Core\Utils\Database\Schema\SchemaManager;
+use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Util;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
@@ -52,13 +52,14 @@ class CheckCreatedIndexTest extends BaseTestCase
         ];
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
     #[DataProvider('entityTypeList')]
     public function testCreatedIndexes(string $entityType): void
     {
         if ($this->getPlatform() === 'Postgresql') {
             // DBAL uses two different codes to fetch indexes.
-            // `getIndexes` won't work, but `introspectTableIndexes` might work.
-            // Consider to implement the test.
             return;
         }
 
@@ -74,7 +75,9 @@ class CheckCreatedIndexTest extends BaseTestCase
 
         $expectedList = array_map(fn (string $it) => Util::toUnderScore($it), $fulltextFieldList);
 
-        $table = $this->getTable(Util::camelCaseToUnderscore($entityType));
+        $helper = $this->getInjectableFactory()->create(Helper::class);
+
+        $table = $this->getTable($helper, Util::camelCaseToUnderscore($entityType));
 
         $foundIndex = null;
 
@@ -105,22 +108,17 @@ class CheckCreatedIndexTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    private function getTable(string $name): Table
+    private function getTable(Helper $helper, string $name): Table
     {
-        $manager = $this->getInjectableFactory()->create(SchemaManager::class);
+        $schemaManager = $helper->getDbalConnection()->createSchemaManager();
 
-        $helper = $manager->getDatabaseHelper();
-
-        $table = $helper->getDbalConnection()
-            ->createSchemaManager()
-            ->introspectTableByUnquotedName($name);
-
-        return $table ?? throw new RuntimeException("Table '$name' not found.");
+        return $schemaManager->introspectTableByUnquotedName($name);
     }
 
     private function getPlatform(): ?string
     {
-        $params = $this->getInjectableFactory()->create(DatabaseParamsFactory::class)
+        $params = $this->getInjectableFactory()
+            ->create(DatabaseParamsFactory::class)
             ->create();
 
         return $params->getPlatform();
