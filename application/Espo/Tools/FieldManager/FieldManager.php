@@ -147,13 +147,7 @@ class FieldManager
             );
         }
 
-        if (
-            str_ends_with($name, 'Id') && $this->nameUtil->linkExists($scope, substr($name, 0, -2)) ||
-            str_ends_with($name, 'Name') && $this->nameUtil->linkExists($scope, substr($name, 0, -4)) ||
-            str_ends_with($name, 'Ids') && $this->nameUtil->linkExists($scope, substr($name, 0, -3)) ||
-            str_ends_with($name, 'Names') && $this->nameUtil->linkExists($scope, substr($name, 0, -5)) ||
-            str_ends_with($name, 'Type') && $this->nameUtil->linkExists($scope, substr($name, 0, -4))
-        ) {
+        if ($this->checkLinkAttributeConflict($scope, $name)) {
             throw Conflict::createWithBody(
                 "namingFieldLinkConflict",
                 Error\Body::create()
@@ -830,7 +824,7 @@ class FieldManager
      */
     private function normalizeDefs(string $scope, string $fieldName, array $fieldDefs): stdClass
     {
-        $defs = new stdClass();
+        $defs = (object) [];
 
         $normalizedFieldDefs = $this->prepareFieldDefs($scope, $fieldName, $fieldDefs);
 
@@ -955,5 +949,16 @@ class FieldManager
         }
 
         return true;
+    }
+
+
+    private function checkLinkAttributeConflict(string $scope, string $name): bool
+    {
+        return
+            str_ends_with($name, 'Id') && $this->nameUtil->linkExists($scope, substr($name, 0, - 2)) ||
+            str_ends_with($name, 'Name') && $this->nameUtil->linkExists($scope, substr($name, 0, - 4)) ||
+            str_ends_with($name, 'Ids') && $this->nameUtil->linkExists($scope, substr($name, 0, - 3)) ||
+            str_ends_with($name, 'Names') && $this->nameUtil->linkExists($scope, substr($name, 0, - 5)) ||
+            str_ends_with($name, 'Type') && $this->nameUtil->linkExists($scope, substr($name, 0, - 4));
     }
 }
