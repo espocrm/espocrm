@@ -108,10 +108,10 @@ class LinkManager
         $linkType = $params['linkType'];
 
         $entity = $params['entity'];
-        $link = trim($params['link']);
+        $link = $params['link'];
 
         $entityForeign = $params['entityForeign'];
-        $linkForeign = trim($params['linkForeign']);
+        $linkForeign = $params['linkForeign'];
 
         $label = $params['label'];
         $labelForeign = $params['labelForeign'];
@@ -131,6 +131,10 @@ class LinkManager
             throw new BadRequest("No link or link-foreign.");
         }
 
+        if ($link !== trim($link) || $linkForeign !== trim($linkForeign)) {
+            throw new BadRequest("Not trimmed value.");
+        }
+
         if ($linkType === self::MANY_TO_MANY) {
             if (!$entityForeign) {
                 throw new Error("No entityForeign.");
@@ -142,6 +146,8 @@ class LinkManager
 
             if ($relationName[0] !== 'c' || !preg_match('/[A-Z]/', $relationName[1])) {
                 $relationName = $this->nameUtil->addCustomPrefix($relationName);
+
+                $params['relationName'] = $relationName;
             }
 
             if ($this->isNameTooLong($relationName)) {
@@ -166,10 +172,14 @@ class LinkManager
 
         if (!$this->isScopeCustom($entity)) {
             $link = $this->nameUtil->addCustomPrefix($link);
+
+            $params['link'] = $link;
         }
 
         if (!$entityForeign || !$this->isScopeCustom($entityForeign)) {
             $linkForeign = $this->nameUtil->addCustomPrefix($linkForeign);
+
+            $params['linkForeign'] = $linkForeign;
         }
 
         $linkParams = LinkParams::createBuilder()
@@ -906,8 +916,8 @@ class LinkManager
             $type = LinkType::ONE_TO_ONE_RIGHT;
         }
 
-        $name = $this->metadata->get(['entityDefs', $entity, $link, RelationParam::RELATION_NAME]) ??
-            $this->metadata->get(['entityDefs', $entityForeign, $linkForeign, RelationParam::RELATION_NAME]);
+        $name = $this->metadata->get(['entityDefs', $entity, 'links', $link, RelationParam::RELATION_NAME]) ??
+            $this->metadata->get(['entityDefs', $entityForeign, 'links', $linkForeign, RelationParam::RELATION_NAME]);
 
         $linkParams = null;
 
