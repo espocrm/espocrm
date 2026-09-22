@@ -235,7 +235,7 @@ class DefaultImporter implements Importer
 
     private function copyAttributesToDuplicate(Email $email, Email $duplicate): void
     {
-        $duplicate->set([
+        $duplicate->setMultiple([
             'from' => $email->get('from'),
             'to' => $email->get('to'),
             'cc' => $email->get('cc'),
