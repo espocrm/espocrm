@@ -190,6 +190,7 @@ class RebuildTest extends BaseTestCase
 
         // Enable autoincrement back.
 
+        // PostgreSQL does not restore the sequence.
         if ($this->getPlatform() !== Platform::POSTGRESQL) {
             $this->runAutoincrementBack($entity, $table);
         }
