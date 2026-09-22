@@ -396,6 +396,10 @@
                         "description": "A translatable label.",
                         "type": "string"
                     },
+                    "labelTranslation": {
+                        "type": "string",
+                        "description": "A label translation path. As of v10.1."
+                    },
                     "readOnly": {
                         "description": "Read-only.",
                         "type": "boolean"

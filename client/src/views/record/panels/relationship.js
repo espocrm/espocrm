@@ -454,6 +454,8 @@ class RelationshipPanelView extends BottomPanelView {
             if (parentEntityType && this.getLanguage().has(this.defs.label, 'labels', parentEntityType)) {
                 titlePart = this.translate(this.defs.label, 'labels', parentEntityType);
             }
+        } else if (this.defs.labelTranslation) {
+            titlePart = this.getLanguage().translatePath(this.defs.labelTranslation);
         } else {
             titlePart = this.title;
         }
