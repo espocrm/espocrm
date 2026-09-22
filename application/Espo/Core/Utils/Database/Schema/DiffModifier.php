@@ -68,7 +68,6 @@ class DiffModifier
         $reRun = false;
         $isHard = $mode === RebuildMode::HARD;
 
-        // @todo Test.
         $diff = $this->handleRemovedSequences($diff, $schema);
 
         $alteredTables = [];
@@ -413,6 +412,8 @@ class DiffModifier
     /**
      * DBAL does not handle autoincrement columns that are not primary keys,
      * making them dropped.
+     *
+     * @todo Remove? Not needed anymore?
      */
     private function handleRemovedSequences(SchemaDiff $diff, Schema $schema): SchemaDiff
     {
