@@ -98,6 +98,10 @@ class PostgreSQLSchemaManager extends BasePostgreSQLSchemaManager
         foreach ($rows as $row) {
             $key = $row['relname'];
 
+            if (str_starts_with($tableName, '"')) {
+                $tableName = substr($tableName, 1, -1);
+            }
+
             if ($key !== "idx_{$tableName}_system_full_text_search") {
                 continue;
             }
