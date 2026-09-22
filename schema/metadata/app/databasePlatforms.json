@@ -31,6 +31,16 @@
                 "type": "string",
                 "description": "Should implement Espo\\Core\\Utils\\Database\\Schema\\ColumnPreparator."
             },
+            "earlyRebuildActionClassNameList": {
+                "type": "array",
+                "description": "Early-rebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\EarlyRebuildAction. As of v10.1.",
+                "items": {
+                    "anyOf": [
+                        {"enum": ["__APPEND__"]},
+                        {"type": "string"}
+                    ]
+                }
+            },
             "preRebuildActionClassNameList": {
                 "type": "array",
                 "description": "Pre-rebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",

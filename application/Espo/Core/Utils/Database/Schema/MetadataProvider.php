@@ -46,6 +46,16 @@ class MetadataProvider
     }
 
     /**
+     * @return class-string<EarlyRebuildAction>[]
+     */
+    public function getEarlyRebuildActionClassNameList(): array
+    {
+        /** @var class-string<EarlyRebuildAction>[] */
+        return $this->metadata
+            ->get(['app', 'databasePlatforms', $this->getPlatform(), 'earlyRebuildActionClassNameList']) ?? [];
+    }
+
+    /**
      * @return class-string<RebuildAction>[]
      */
     public function getPreRebuildActionClassNameList(): array
