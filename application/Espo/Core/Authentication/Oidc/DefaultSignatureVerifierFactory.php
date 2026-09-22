@@ -31,6 +31,7 @@ namespace Espo\Core\Authentication\Oidc;
 
 use Espo\Core\Authentication\Jwt\SignatureVerifier;
 use Espo\Core\Authentication\Jwt\SignatureVerifierFactory;
+use Espo\Core\Authentication\Jwt\SignatureVerifiers\Ecdsa;
 use Espo\Core\Authentication\Jwt\SignatureVerifiers\Hmac;
 use Espo\Core\Authentication\Jwt\SignatureVerifiers\Rsa;
 use RuntimeException;
@@ -43,6 +44,9 @@ class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
     private const HS256 = 'HS256';
     private const HS384 = 'HS384';
     private const HS512 = 'HS512';
+    private const ES256 = 'ES256';
+    private const ES384 = 'ES384';
+    private const ES512 = 'ES512';
 
     private const ALGORITHM_VERIFIER_CLASS_NAME_MAP = [
         self::RS256 => Rsa::class,
@@ -51,6 +55,9 @@ class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
         self::HS256 => Hmac::class,
         self::HS384 => Hmac::class,
         self::HS512 => Hmac::class,
+        self::ES256 => Ecdsa::class,
+        self::ES384 => Ecdsa::class,
+        self::ES512 => Ecdsa::class,
     ];
 
     public function __construct(
@@ -81,6 +88,12 @@ class DefaultSignatureVerifierFactory implements SignatureVerifierFactory
             }
 
             return new Hmac($algorithm, $key);
+        }
+
+        if ($className === Ecdsa::class) {
+            $keys = $this->keysProvider->get();
+
+            return new Ecdsa($algorithm, $keys);
         }
 
         throw new RuntimeException();
