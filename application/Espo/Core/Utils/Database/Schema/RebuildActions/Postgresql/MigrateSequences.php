@@ -30,23 +30,22 @@
 namespace Espo\Core\Utils\Database\Schema\RebuildActions\Postgresql;
 
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Schema\Schema as DbalSchema;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Database\Helper;
-use Espo\Core\Utils\Database\Schema\RebuildAction;
+use Espo\Core\Utils\Database\Schema\EarlyRebuildAction;
 use RuntimeException;
 
 /**
  * @noinspection PhpUnused
  */
-class MigrateSequences implements RebuildAction
+class MigrateSequences implements EarlyRebuildAction
 {
     public function __construct(
         private Config\SystemConfig $config,
         private Helper $helper,
     ) {}
 
-    public function process(DbalSchema $oldSchema, DbalSchema $newSchema): void
+    public function process(): void
     {
         $version = $this->config->getVersion();
 

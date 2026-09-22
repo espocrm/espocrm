@@ -22,7 +22,7 @@
         "dbalTypeClassNameMap": {
             "uuid": "Espo\\Core\\Utils\\Database\\Dbal\\Types\\UuidType"
         },
-        "preRebuildActionClassNameList": [
+        "earlyRebuildActionClassNameList": [
             "Espo\\Core\\Utils\\Database\\Schema\\RebuildActions\\Postgresql\\MigrateSequences"
         ]
     }

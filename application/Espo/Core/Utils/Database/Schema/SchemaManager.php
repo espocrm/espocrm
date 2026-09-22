@@ -157,6 +157,12 @@ class SchemaManager
      */
     public function rebuild(?array $entityTypeList = null, string $mode = RebuildMode::SOFT): bool
     {
+        try {
+            $this->processEarlyRebuildActions();
+        } catch (Throwable $e) {
+            throw new RuntimeException("Rebuild database early-rebuild error.", previous: $e);
+        }
+
         $fromSchema = $this->introspectSchema();
         $schema = $this->builder->build($this->ormMetadataData->getData(), $entityTypeList);
 
@@ -259,6 +265,19 @@ class SchemaManager
     private function composeDiffSql(SchemaDiff $diff): array
     {
         return $this->getPlatform()->getAlterSchemaSQL($diff);
+    }
+
+    private function processEarlyRebuildActions(): void
+    {
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(Helper::class, $this->helper)
+            ->build();
+
+        foreach ($this->metadataProvider->getEarlyRebuildActionClassNameList() as $className) {
+            $action = $this->injectableFactory->createWithBinding($className, $binding);
+
+            $action->process();
+        }
     }
 
     private function processPreRebuildActions(Schema $actualSchema, Schema $schema): void
