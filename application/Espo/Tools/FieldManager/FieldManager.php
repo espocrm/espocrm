@@ -90,6 +90,31 @@ class FieldManager
         ],
     ];
 
+    /**
+     * @var array<string, string[]>
+     */
+    private array $paramMapping = [
+        'default' => ['defaultAttributes'],
+        'options' => [
+            'translatedOptions',
+            'style',
+        ],
+    ];
+
+    /**
+     * @var string[]
+     */
+    private array $filterIgnoreParamList = [
+        'label',
+        'tooltipText',
+        'dynamicLogicVisible',
+        'dynamicLogicReadOnly',
+        'dynamicLogicRequired',
+        'dynamicLogicInvalid',
+        'dynamicLogicReadOnlySaved',
+        'dynamicLogicCascading',
+    ];
+
     public function __construct(
         private InjectableFactory $injectableFactory,
         private Metadata $metadata,
@@ -252,10 +277,18 @@ class FieldManager
 
         $this->isChanged = false;
 
-        if (!$this->isCore($scope, $name)) {
-            $fieldDefs['isCustom'] = true;
-        } else {
+        if ($this->isCore($scope, $name)) {
             unset($fieldDefs['isCustom']);
+
+            if (!$isNew) {
+                $this->filterFieldDefs($scope, $name, $fieldDefs);
+            }
+
+            $isCustom = false;
+        } else {
+            $fieldDefs['isCustom'] = true;
+
+            $isCustom = true;
         }
 
         if (!$this->isScopeCustomizable($scope)) {
@@ -265,8 +298,6 @@ class FieldManager
         if (!$this->isCustomizable($scope, $name)) {
             throw new Error("Field '$name' is not customizable.");
         }
-
-        $isCustom = !empty($fieldDefs['isCustom']);
 
         $isLabelChanged = false;
 
@@ -1017,5 +1048,28 @@ class FieldManager
         }
 
         return $filteredFieldDefs;
+    }
+
+    /**
+     * @param array<string, mixed> $fieldDefs
+     */
+    private function filterFieldDefs(string $scope, string $name, array &$fieldDefs): void
+    {
+        /** @var ?string[] $fieldManagerParamList */
+        $fieldManagerParamList = $this->metadata->get("entityDefs.$scope.fields.$name.fieldManagerParamList");
+
+        if ($fieldManagerParamList === null) {
+            return;
+        }
+
+        $allowedList = [...$fieldManagerParamList, ...$this->filterIgnoreParamList];
+
+        foreach ($fieldManagerParamList as $param) {
+            $mappedList = $this->paramMapping[$param] ?? [];
+
+            $allowedList = [...$allowedList, ...$mappedList];
+        }
+
+        $fieldDefs = array_intersect_key($fieldDefs, array_fill_keys($allowedList, true));
     }
 }
