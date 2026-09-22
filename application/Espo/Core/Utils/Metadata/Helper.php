@@ -41,6 +41,7 @@ class Helper
      *
      * @param array<string, mixed> $defs It can be a string or field definition from entityDefs.
      * @return ?array<string, mixed>
+     * @internal
      */
     public function getFieldDefsByType($defs)
     {
@@ -54,6 +55,7 @@ class Helper
     /**
      * @param array<string, mixed> $defs
      * @return ?array<string, mixed>
+     * @internal
      */
     public function getFieldDefsInFieldMetadata($defs)
     {
@@ -74,6 +76,7 @@ class Helper
      * @param string $entityType
      * @param array<string, mixed> $defs
      * @return ?array<string, mixed>
+     * @internal
      */
     public function getLinkDefsInFieldMeta($entityType, $defs)
     {
