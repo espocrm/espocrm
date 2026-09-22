@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Importer;
 
+
 use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
@@ -67,11 +68,13 @@ use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 
 use DateTime;
 use Exception;
+use DateMalformedStringException;
+use RuntimeException;
 
 class DefaultImporter implements Importer
 {
-    private const SUBJECT_MAX_LENGTH = 255;
-    private const PROCESS_ACL_DELAY_PERIOD = '5 seconds';
+    private const int SUBJECT_MAX_LENGTH = 255;
+    private const string PROCESS_ACL_DELAY_PERIOD = '5 seconds';
 
     /** @var AssignmentNotificator<Email>  */
     private AssignmentNotificator $notificator;
@@ -352,10 +355,10 @@ class DefaultImporter implements Importer
             $this->relateWithGroupFolder($email, $groupFolderId);
 
             $addedFromFolder = $this->applyGroupFolder(
-                $email,
-                $groupFolderId,
-                $fetchedUserIds,
-                $fetchedTeamIds
+                email: $email,
+                groupFolderId: $groupFolderId,
+                fetchedUserIds: $fetchedUserIds,
+                fetchedTeamIds: $fetchedTeamIds,
             );
 
             if ($addedFromFolder) {
@@ -703,7 +706,12 @@ class DefaultImporter implements Importer
         // To grant access to the user who received the email.
 
         $dt = new DateTime();
-        $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
+
+        try {
+            $dt->modify('+' . self::PROCESS_ACL_DELAY_PERIOD);
+        } catch (DateMalformedStringException $e) {
+            throw new RuntimeException(previous: $e);
+        }
 
         $this->jobSchedulerFactory
             ->create()
