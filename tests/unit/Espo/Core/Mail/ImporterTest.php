@@ -49,6 +49,7 @@ use Espo\Core\Repositories\Database;
 use Espo\Core\Utils\Config;
 use Espo\ORM\Repository\RDBSelectBuilder;
 
+use Espo\Tools\Email\GroupFolderApplier;
 use PHPUnit\Framework\TestCase;
 
 class ImporterTest extends TestCase
@@ -209,6 +210,7 @@ class ImporterTest extends TestCase
             parentFinder: $this->parentFinder,
             autoReplyDetector: $this->createMock(Importer\AutoReplyDetector::class),
             emailSaver: $saver,
+            groupFolderApplier: $this->createMock(GroupFolderApplier::class),
         );
 
         $message = new MessageWrapper(0, null, null, $contents);

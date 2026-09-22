@@ -102,6 +102,7 @@ class SendService
         private PersonalAccountFactory $personalAccountFactory,
         private GroupAccountFactory $groupAccountFactory,
         private ConfigDataProvider $configDataProvider,
+        private GroupFolderApplier $groupFolderApplier,
     ) {}
 
     /**
@@ -599,6 +600,8 @@ class SendService
 
         if ($replied && $replied->getGroupFolder()) {
             $entity->setGroupFolder($replied->getGroupFolder());
+
+            $this->groupFolderApplier->apply($entity, $replied->getGroupFolder());
         }
     }
 }

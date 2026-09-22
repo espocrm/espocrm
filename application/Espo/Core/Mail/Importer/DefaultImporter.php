@@ -29,8 +29,8 @@
 
 namespace Espo\Core\Mail\Importer;
 
-
 use Espo\Core\Field\DateTime as DateTimeField;
+use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Job\Job\Data as JobData;
@@ -54,16 +54,10 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
-use Espo\Entities\GroupEmailFolder;
-use Espo\Entities\Team;
-use Espo\Entities\User;
 use Espo\ORM\Defs\Params\AttributeParam;
-use Espo\ORM\Name\Attribute;
-use Espo\ORM\Query\Part\Condition;
-use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\SelectBuilder;
 use Espo\Repositories\Email as EmailRepository;
 use Espo\ORM\EntityManager;
+use Espo\Tools\Email\GroupFolderApplier;
 use Espo\Tools\Stream\Jobs\ProcessNoteAcl;
 
 use DateTime;
@@ -89,6 +83,7 @@ class DefaultImporter implements Importer
         private ParentFinder $parentFinder,
         private AutoReplyDetector $autoReplyDetector,
         private EmailSaver $emailSaver,
+        private GroupFolderApplier $groupFolderApplier,
     ) {
         $this->notificator = $notificatorFactory->createByClass(Email::class);
         $this->filtersMatcher = new FiltersMatcher();
@@ -206,6 +201,10 @@ class DefaultImporter implements Importer
             $this->processDuplicate($duplicate, $data, $email->getGroupFolder()?->getId());
 
             return $duplicate;
+        }
+
+        if ($email->getGroupFolder()) {
+            $this->applyGroupFolder($email, $email->getGroupFolder()->getId());
         }
 
         if (!$email->getMessageId()) {
@@ -597,7 +596,7 @@ class DefaultImporter implements Importer
             $matchedFilter->getAction() === EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER &&
             $matchedFilter->getGroupEmailFolderId()
         ) {
-            $this->applyGroupFolder($email, $matchedFilter->getGroupEmailFolderId());
+            $email->setGroupFolderId($matchedFilter->getGroupEmailFolderId());
         }
 
         return false;
@@ -648,53 +647,12 @@ class DefaultImporter implements Importer
         array $fetchedTeamIds = [],
     ): bool {
 
-        $email->setGroupFolderId($groupFolderId);
-
-        $groupFolder = $this->entityManager
-            ->getRDBRepositoryByClass(GroupEmailFolder::class)
-            ->getById($groupFolderId);
-
-        if (!$groupFolder || !$groupFolder->getTeams()->getCount()) {
-            return false;
-        }
-
-        $added = false;
-
-        foreach ($groupFolder->getTeams()->getIdList() as $teamId) {
-            if (!in_array($teamId, $fetchedTeamIds)) {
-                $added = true;
-
-                $email->addTeamId($teamId);
-            }
-        }
-
-        $users = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->select([Attribute::ID])
-            ->where([
-                'type' => [User::TYPE_REGULAR, User::TYPE_ADMIN],
-                'isActive' => true,
-                Attribute::ID . '!=' => $fetchedUserIds,
-            ])
-            ->where(
-                Condition::in(
-                    Expression::column(Attribute::ID),
-                    SelectBuilder::create()
-                        ->from(Team::RELATIONSHIP_TEAM_USER)
-                        ->select('userId')
-                        ->where(['teamId' => $groupFolder->getTeams()->getIdList()])
-                        ->build()
-                )
-            )
-            ->find();
-
-        foreach ($users as $user) {
-            $added = true;
-
-            $email->addUserId($user->getId());
-        }
-
-        return $added;
+        return $this->groupFolderApplier->apply(
+            email: $email,
+            groupFolder: Link::create($groupFolderId),
+            ignoreUserIds: $fetchedUserIds,
+            ignoreTeamIds: $fetchedTeamIds,
+        );
     }
 
     private function scheduleAclJob(Email $email): void

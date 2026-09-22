@@ -27,32 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace tests\integration\Espo\Tools\Email;
 
 use Espo\Core\Field\LinkMultiple;
-use Espo\Core\Name\Field;
-use Espo\Core\ORM\Entity;
+use Espo\Entities\Email;
+use Espo\Entities\GroupEmailFolder;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\Tools\Email\GroupFolderApplier;
+use tests\integration\Core\BaseTestCase;
 
-class GroupEmailFolder extends Entity
+class GroupFolderApplierTest extends BaseTestCase
 {
-    public const ENTITY_TYPE = 'GroupEmailFolder';
-
-    public function getOrder(): ?int
+    public function testApply(): void
     {
-        return $this->get('order');
-    }
+        $em = $this->getEntityManager();
 
-    public function getTeams(): LinkMultiple
-    {
-        /** @var LinkMultiple */
-        return $this->getValueObject('teams');
-    }
+        $team = $this->getEntityManager()->getRDBRepositoryByClass(Team::class)->getNew();
+        $em->saveEntity($team);
 
-    /**
-     * @since 10.1.0
-     */
-    public function setTeams(LinkMultiple $teams): self
-    {
-        return $this->setValueObject(Field::TEAMS, $teams);
+        $user1 = $this->getEntityManager()->getRDBRepositoryByClass(User::class)->getNew();
+        $user1
+            ->setUserName('test-1')
+            ->setTeams(LinkMultiple::create()->withAddedId($team->getId()));
+        $em->saveEntity($user1);
+
+        $folder = $em->getRDBRepositoryByClass(GroupEmailFolder::class)->getNew();
+        $folder->setTeams(LinkMultiple::create()->withAddedId($team->getId()));
+        $em->saveEntity($folder);
+
+        $email = $em->getRDBRepositoryByClass(Email::class)->getNew();
+
+        $applier = $this->getInjectableFactory()->create(GroupFolderApplier::class);
+
+        $applier->apply($email, $folder);
+
+        $this->assertContains($user1->getId(), $email->getUsers()->getIdList());
+        $this->assertContains($team->getId(), $email->getTeams()->getIdList());
     }
 }
