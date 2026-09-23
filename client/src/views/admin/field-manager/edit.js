@@ -328,6 +328,7 @@ class FieldManagerEditView extends View {
                         this.paramList.push({
                             name: 'notLockable',
                             type: 'bool',
+                            tooltip: true,
                         });
                     }
                 }

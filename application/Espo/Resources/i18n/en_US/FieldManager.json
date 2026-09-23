@@ -82,6 +82,7 @@
         }
     },
     "tooltips": {
+        "notLockable": "If enabled, this field remains editable when the record is locked.",
         "imageCapture": "Specifies which camera to use for capture of image data.",
         "optionsReference": "Re-use options from another field.",
         "currencyDecimal": "Use the Decimal DB type. In the app, values will be represented as strings. Check this parameter if precision is required.",
