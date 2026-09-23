@@ -264,7 +264,7 @@ class FieldManager
     {
         unset($fieldDefs[FieldParam::TYPE]);
 
-        $this->write($scope, $name, $fieldDefs, true);
+        $this->write($scope, $name, $fieldDefs);
     }
 
     /**
