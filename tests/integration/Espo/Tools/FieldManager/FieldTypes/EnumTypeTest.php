@@ -27,75 +27,79 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\FieldManager;
+namespace tests\integration\Espo\Tools\FieldManager\FieldTypes;
 
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
+use Espo\Tools\FieldManager\FieldManager;
 use tests\integration\Core\BaseTestCase;
 
-class VarcharTypeTest extends BaseTestCase
+class EnumTypeTest extends BaseTestCase
 {
     private $jsonFieldDefs = '{
-        "type":"varchar",
+        "type":"enum",
         "required":true,
-        "trim":true,
         "dynamicLogicVisible":null,
         "dynamicLogicRequired":null,
         "dynamicLogicReadOnly":null,
-        "name":"testVarchar",
-        "label":"TestVarchar",
+        "dynamicLogicOptions":null,
+        "name":"testEnum",
+        "label":"TestEnum",
+        "audited":true,
+        "options":["option1","option2","option3"],
+        "translatedOptions":{"option1":"option1","option2":"option2","option3":"option3"},
+        "default":"option2",
         "tooltipText":"",
         "isPersonalData":false,
-        "default":"",
-        "maxLength":null,
-        "audited":false,
+        "isSorted":false,
         "readOnly":false,
         "tooltip":false
     }';
 
-    protected function createFieldManager($app = null)
+    protected function createFieldManager($app = null): FieldManager
     {
         if (!$app) {
             $app = $this;
         }
 
-        return $app->getContainer()->get('injectableFactory')->create(
-            'Espo\\Tools\\FieldManager\\FieldManager'
-        );
+        return $app->getInjectableFactory()->create(FieldManager::class);
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $fieldManager = $this->createFieldManager();
 
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
 
-        $fieldManager->create('Account', 'testVarchar', $fieldDefs);
-        $this->getContainer()->get('dataManager')->rebuild(['Account']);
+        $fieldManager->create('Account', 'testEnum', $fieldDefs);
+        $this->getDataManager()->rebuild(['Account']);
 
         $app = $this->createApplication();
 
-        $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestVarchar');
+        $metadata = $app->getContainer()->getByClass(Metadata::class);
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestEnum');
 
-        $this->assertArrayHasKey('type', $savedFieldDefs);
-        $this->assertArrayHasKey('isCustom', $savedFieldDefs);
-        $this->assertEquals('varchar', $savedFieldDefs['type']);
+        $this->assertEquals('enum', $savedFieldDefs['type']);
+        $this->assertEquals('option2', $savedFieldDefs['default']);
         $this->assertTrue($savedFieldDefs['required']);
         $this->assertTrue($savedFieldDefs['isCustom']);
+        $this->assertTrue($savedFieldDefs['audited']);
 
-        $entityManager = $app->getContainer()->get('entityManager');
-        $account = $entityManager->getEntity('Account');
-        $account->set([
+        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+
+        $account = $entityManager->getNewEntity('Account');
+        $account->setMultiple([
             'name' => 'Test',
-            'cTestVarchar' => 'test-value'
+            'cTestEnum' => 'option1',
         ]);
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->getId());
-        $this->assertEquals('test-value', $account->get('cTestVarchar'));
+        $account = $entityManager->getEntityById('Account', $account->getId());
+        $this->assertEquals('option1', $account->get('cTestEnum'));
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $this->testCreate();
 
@@ -105,29 +109,32 @@ class VarcharTypeTest extends BaseTestCase
 
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
         $fieldDefs['required'] = false;
-        $fieldDefs['default'] = 'default-value';
+        $fieldDefs['default'] = 'option3';
+        $fieldDefs['readOnly'] = true;
 
-        $fieldManager->update('Account', 'cTestVarchar', $fieldDefs);
-        $this->getContainer()->get('dataManager')->rebuild(['Account']);
+        $fieldManager->update('Account', 'cTestEnum', $fieldDefs);
+        $this->getDataManager()->rebuild(['Account']);
 
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestVarchar');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestEnum');
 
         $this->assertFalse($savedFieldDefs['required']);
-        $this->assertEquals('default-value', $savedFieldDefs['default']);
+        $this->assertEquals('option3', $savedFieldDefs['default']);
+        $this->assertTrue($savedFieldDefs['audited']);
+        $this->assertTrue($savedFieldDefs['readOnly']);
 
-        $entityManager = $app->getContainer()->get('entityManager');
+        $entityManager = $app->getContainer()->getByClass(EntityManager::class);
 
-        $account = $entityManager->getEntity('Account');
-        $account->set([
+        $account = $entityManager->getNewEntity('Account');
+        $account->setMultiple([
             'name' => 'New Test',
         ]);
 
         $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $account->getId());
-        $this->assertEquals('default-value', $account->get('cTestVarchar'));
+        $account = $entityManager->getEntityById('Account', $account->getId());
+        $this->assertEquals('option3', $account->get('cTestEnum'));
     }
 }

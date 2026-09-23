@@ -27,9 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Utils\FieldManager;
+namespace tests\integration\Espo\Tools\FieldManager\FieldTypes;
 
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
+use Espo\Tools\FieldManager\FieldManager;
 use tests\integration\Core\BaseTestCase;
 
 class ArrayTypeTest extends BaseTestCase
@@ -54,18 +56,16 @@ class ArrayTypeTest extends BaseTestCase
         "tooltip":false
     }';
 
-    protected function createFieldManager($app = null)
+    protected function createFieldManager($app = null): FieldManager
     {
         if (!$app) {
             $app = $this;
         }
 
-        return $app->getContainer()->get('injectableFactory')->create(
-            'Espo\\Tools\\FieldManager\\FieldManager'
-        );
+        return $app->getInjectableFactory()->create(FieldManager::class);
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $fieldManager = $this->createFieldManager();
 
@@ -73,11 +73,12 @@ class ArrayTypeTest extends BaseTestCase
 
         $fieldManager->create('Account', 'testArray', $fieldDefs);
 
-        $this->getContainer()->get('dataManager')->rebuild(['Account']);
+        $this->getDataManager()->rebuild(['Account']);
 
         $app = $this->createApplication();
 
-        $metadata = $app->getContainer()->get('metadata');
+        $metadata = $app->getContainer()->getByClass(Metadata::class);
+
         $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestArray');
 
         $this->assertArrayHasKey('type', $savedFieldDefs);
@@ -89,7 +90,7 @@ class ArrayTypeTest extends BaseTestCase
         $entityManager = $app->getContainer()->getByClass(EntityManager::class);
 
         $account = $entityManager->getNewEntity('Account');
-        $account->set([
+        $account->setMultiple([
             'name' => 'Test',
             'cTestArray' => ['option1', 'option3']
         ]);
@@ -100,7 +101,7 @@ class ArrayTypeTest extends BaseTestCase
         $this->assertEquals(['option1', 'option3'], $account->get('cTestArray'));
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $this->testCreate();
 
@@ -113,21 +114,21 @@ class ArrayTypeTest extends BaseTestCase
 
         $fieldManager->update('Account', 'cTestArray', $fieldDefs);
 
-        $this->getContainer()->get('dataManager')->rebuild(['Account']);
+        $this->getDataManager()->rebuild(['Account']);
 
         $app = $this->createApplication();
 
-        $metadata = $app->getContainer()->get('metadata');
+        $metadata = $app->getContainer()->getByClass(Metadata::class);
         $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestArray');
 
         $this->assertTrue($savedFieldDefs['required']);
 
         $entityManager = $app->getContainer()->getByClass(EntityManager::class);
+
         $account = $entityManager->getNewEntity('Account');
-        $account->set([
+        $account->setMultiple([
             'name' => 'Test',
         ]);
-
         $entityManager->saveEntity($account);
     }
 }
