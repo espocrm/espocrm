@@ -30,6 +30,11 @@ import EnumFieldView from 'views/fields/enum';
 
 export default class extends EnumFieldView {
 
+    /**
+     * @type {string[]}
+     */
+    typeList
+
     setup() {
         super.setup();
 
@@ -72,7 +77,7 @@ export default class extends EnumFieldView {
         this.params.options = Object.keys(Espo.Utils.clone(fields)).filter(item => {
             const type = fields[item].type;
 
-            if (!this.typeList.inclides(type)) {
+            if (!this.typeList.includes(type)) {
                 return;
             }
 
