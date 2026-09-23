@@ -324,10 +324,12 @@ class FieldManagerEditView extends View {
                     this.isEntityTypeLockable &&
                     !this.globalRestriction.readOnly
                 ) {
-                    this.paramList.push({
-                        name: 'notLockable',
-                        type: 'bool',
-                    });
+                    if (this.type !== 'foreign') {
+                        this.paramList.push({
+                            name: 'notLockable',
+                            type: 'bool',
+                        });
+                    }
                 }
 
                 if (this.hasTooltipText) {
