@@ -36,12 +36,6 @@ export default class extends EnumFieldView {
         if (!this.model.isNew()) {
             this.wait(this.setReadOnly(true));
         }
-
-        this.listenTo(this.model, 'change:field', () => {
-            this.manageField();
-        });
-
-        this.viewValue = this.model.get('view');
     }
 
     setupOptions() {
@@ -78,7 +72,7 @@ export default class extends EnumFieldView {
         this.params.options = Object.keys(Espo.Utils.clone(fields)).filter(item => {
             const type = fields[item].type;
 
-            if (!~this.typeList.indexOf(type)) {
+            if (!this.typeList.inclides(type)) {
                 return;
             }
 
@@ -105,40 +99,5 @@ export default class extends EnumFieldView {
         });
 
         this.params.options.unshift('');
-    }
-
-    manageField() {
-        if (!this.model.isNew()) {
-            return;
-        }
-
-        const link = this.model.get('link');
-        const field = this.model.get('field');
-
-        if (!link || !field) {
-            return;
-        }
-
-        const scope = this.getMetadata().get(['entityDefs', this.options.scope, 'links', link, 'entity']);
-
-        if (!scope) {
-            return;
-        }
-
-        const type = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
-
-        this.viewValue = this.getMetadata().get(['fields', 'foreign', 'fieldTypeViewMap', type]);
-    }
-
-    fetch() {
-        const data = super.fetch();
-
-        if (this.model.isNew()) {
-            if (this.viewValue) {
-                data['view'] = this.viewValue;
-            }
-        }
-
-        return data;
     }
 }
