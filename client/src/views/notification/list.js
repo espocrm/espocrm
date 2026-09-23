@@ -29,6 +29,8 @@
 import View from 'view';
 import Ajax from 'ajax';
 import Ui from 'ui';
+import SearchManager from 'search-manager';
+import SearchView from 'views/record/search';
 
 class NotificationListView extends View {
 
@@ -39,6 +41,12 @@ class NotificationListView extends View {
      * @type {boolean}
      */
     groupingEnabled
+
+    /**
+     * @private
+     * @type {module:search-manager}
+     */
+    searchManager
 
     setup() {
         this.addActionHandler('refresh', () => this.actionRefresh());
@@ -52,9 +60,35 @@ class NotificationListView extends View {
                 .then(collection => {
                     this.collection = collection;
                     this.collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
+
+                    this.setupSearchManager();
+
+                    return this.createSearchView();
                 })
 
         this.wait(promise);
+    }
+
+    /**
+     * @private
+     */
+    setupSearchManager() {
+        this.searchManager = new SearchManager(this.collection);
+
+        this.collection.where = this.searchManager.getWhere();
+    }
+
+    /**
+     * @private
+     * @return {Promise}
+     */
+    createSearchView() {
+        const view = new SearchView({
+            collection: this.collection,
+            searchManager: this.searchManager,
+        });
+
+        return this.assignView('search', view, '.search-container');
     }
 
     actionRefresh() {
