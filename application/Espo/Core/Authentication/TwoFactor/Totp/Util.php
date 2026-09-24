@@ -35,6 +35,8 @@ use RuntimeException;
 
 class Util
 {
+    private const int BITS = 160;
+
     public function verifyCode(string $secret, string $code): bool
     {
         $impl = new TwoFactorAuth();
@@ -47,7 +49,7 @@ class Util
         $impl = new TwoFactorAuth();
 
         try {
-            return $impl->createSecret();
+            return $impl->createSecret(self::BITS);
         } catch (TwoFactorAuthException $e) {
             throw new RuntimeException($e->getMessage());
         }
