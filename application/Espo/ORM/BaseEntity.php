@@ -558,6 +558,10 @@ class BaseEntity implements Entity
         $preparedValue = $value;
 
         if (is_array($value)) {
+            if ($value === []) {
+                return (object) [];
+            }
+
             $preparedValue = json_decode(json_encode($value, JSON_THROW_ON_ERROR));
 
             if ($preparedValue instanceof stdClass) {

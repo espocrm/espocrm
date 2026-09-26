@@ -83,6 +83,15 @@ class EntityTest extends TestCase
         return new $classNameToUse($entityType, $defs, $this->entityManager);
     }
 
+    public function testObjectAsArray(): void
+    {
+        $job = $this->createEntity('Job', Job::class);
+
+        $job->set('object', []);
+
+        $this->assertEquals((object) [], $job->get('object'));
+    }
+
     public function testIsAttributeChanged()
     {
         $job = $this->createEntity('Job', Job::class);
