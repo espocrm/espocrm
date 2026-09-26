@@ -422,7 +422,7 @@ class EntityTest extends TestCase
     {
         $entity = $this->createEntity('Test');
 
-        $entity->set([
+        $entity->setMultiple([
             'int' => '1',
             'object' => (object) [],
         ]);
