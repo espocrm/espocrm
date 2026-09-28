@@ -368,23 +368,35 @@ class Sender
     private function handleException(Exception|TransportExceptionInterface $e): never
     {
         if ($e instanceof TransportExceptionInterface) {
-            $message = "unknownError";
-
-            if (
-                stripos($e->getMessage(), 'password') !== false ||
-                stripos($e->getMessage(), 'credentials') !== false ||
-                stripos($e->getMessage(), '5.7.8') !== false ||
-                stripos($e->getMessage(), '5.7.3') !== false
-            ) {
-                $message = 'invalidCredentials';
-            }
-
             $this->log->error("Email sending error: " . $e->getMessage(), ['exception' => $e]);
+
+            $message = $this->getErrorMessage($e);
 
             throw new SendingError($message);
         }
 
         throw new SendingError($e->getMessage());
+    }
+
+    private function getErrorMessage(TransportExceptionInterface $e): string
+    {
+        if (
+            stripos($e->getMessage(), 'password') !== false ||
+            stripos($e->getMessage(), 'credentials') !== false ||
+            stripos($e->getMessage(), '5.7.8') !== false ||
+            stripos($e->getMessage(), '5.7.3') !== false
+        ) {
+            return 'invalidCredentials';
+        }
+
+        if (
+            stripos($e->getMessage(), '5.1.1') !== false ||
+            stripos($e->getMessage(), '5.4.6') !== false
+        ) {
+            return 'recipientNotFound';
+        }
+
+        return "unknownError";
     }
 
     private function addRecipientAddresses(Email $email, Message $message): void
