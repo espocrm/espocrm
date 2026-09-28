@@ -85,7 +85,9 @@ class Formula implements BeforeSave
                 throw new ValidationException("Before-save validation error.", previous: $e);
             }
 
-            throw new PersistenceException("Before-save formula script failed.", previous: $e);
+            $entityType = $entity->getEntityType();
+
+            throw new PersistenceException("Before-save formula script failed for '$entityType'.", previous: $e);
         }
     }
 }
