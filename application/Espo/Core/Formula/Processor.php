@@ -100,13 +100,17 @@ class Processor
             return $this->processFunc($item, $function);
         }
 
-        if ($function instanceof DeprecatedBaseFunction) {
-            return $function->process(self::dataToStdClass($item->getData()));
-        }
-
         try {
+            if ($function instanceof DeprecatedBaseFunction) {
+                return $function->process(self::dataToStdClass($item->getData()));
+            }
+
             return $function->process($item->getArgumentList());
         } catch (UndefinedKey $e) {
+            if ($function instanceof DeprecatedBaseFunction) {
+                throw $e;
+            }
+
             throw UndefinedKey::cloneWithLevelRisen($e);
         } catch (TooFewArguments|BadArgumentType|BadArgumentValue $e) {
             $message = sprintf('Function %s; %s', $item->getType(), $e->getLogMessage());
