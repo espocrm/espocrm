@@ -34,11 +34,18 @@ namespace Espo\Core\Formula\Parser\Ast;
  */
 class Value
 {
-    public function __construct(private mixed $value)
-    {}
+    public function __construct(
+        private mixed $value,
+        private ?int $position = null,
+    ) {}
 
     public function getValue(): mixed
     {
         return $this->value;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
     }
 }

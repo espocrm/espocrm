@@ -33,8 +33,10 @@ class StatementRef
 {
     private bool $endedWithSemicolon = false;
 
-    public function __construct(private int $start, private ?int $end = null)
-    {}
+    public function __construct(
+        private int $start,
+        private ?int $end = null,
+    ) {}
 
     public function setEnd(int $end, bool $endedWithSemicolon = false): void
     {

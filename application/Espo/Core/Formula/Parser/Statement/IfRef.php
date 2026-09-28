@@ -51,8 +51,7 @@ class IfRef
     private bool $hasInlineElse = false;
     private int $state = self::STATE_EMPTY;
 
-    public function __construct()
-    {}
+    public function __construct() {}
 
     public function setConditionStart(int $conditionStart): void
     {

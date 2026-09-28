@@ -34,11 +34,18 @@ namespace Espo\Core\Formula\Parser\Ast;
  */
 class Attribute
 {
-    public function __construct(private string $name)
-    {}
+    public function __construct(
+        private string $name,
+        private ?int $position = null,
+    ) {}
 
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
     }
 }

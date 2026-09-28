@@ -69,6 +69,20 @@ class Argument implements Evaluatable
         throw new Error("Can't get type from scalar.");
     }
 
+    public function getPosition(): ?int
+    {
+        if (
+            $this->data instanceof Node ||
+            $this->data instanceof Value ||
+            $this->data instanceof Variable ||
+            $this->data instanceof Attribute
+        ) {
+            return $this->data->getPosition();
+        }
+
+        return null;
+    }
+
     /**
      * Get a nested argument list.
      *

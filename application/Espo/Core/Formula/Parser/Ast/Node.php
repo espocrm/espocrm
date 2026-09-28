@@ -37,8 +37,11 @@ class Node
     /**
      * @param (Node|Value|Attribute|Variable)[] $childNodes
      */
-    public function __construct(private string $type, private array $childNodes)
-    {}
+    public function __construct(
+        private string $type,
+        private array $childNodes,
+        private ?int $position = null,
+    ) {}
 
     public function getType(): string
     {
@@ -51,5 +54,10 @@ class Node
     public function getChildNodes(): array
     {
         return $this->childNodes;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
     }
 }
