@@ -36,7 +36,6 @@ use Espo\Core\Formula\Parser\Ast\Value;
 use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\Core\Formula\Parser\Statement\IfRef;
 use Espo\Core\Formula\Parser\Statement\StatementRef;
-
 use Espo\Core\Formula\Parser\Statement\WhileRef;
 use LogicException;
 
@@ -148,7 +147,7 @@ class Parser
         string &$string,
         string &$modifiedString,
         ?array &$statementList = null,
-        bool $intoOneLine = false
+        bool $intoOneLine = false,
     ): bool {
 
         $isString = false;
@@ -275,18 +274,6 @@ class Parser
             if ($isCommentEnding) {
                 $isComment = false;
             }
-
-            /*if ($isLineComment) {
-                if ($string[$i] === "\n") {
-                    $isLineComment = false;
-                }
-            }
-
-            if ($isComment) {
-                if ($string[$i - 1] === "*" && $string[$i] === "/") {
-                    $isComment = false;
-                }
-            }*/
         }
 
         if ($statementList !== null) {
@@ -375,11 +362,11 @@ class Parser
             !$lastStatement->isReady()
         ) {
             $toContinue = $this->processStringWhileStatement(
-                $string,
-                $i,
-                $parenthesisCounter,
-                $braceCounter,
-                $lastStatement
+                string: $string,
+                i: $i,
+                parenthesisCounter: $parenthesisCounter,
+                braceCounter: $braceCounter,
+                statement: $lastStatement,
             );
 
             if ($toContinue === null) {
@@ -1095,7 +1082,7 @@ class Parser
     private function processStatementList(
         string $expression,
         array $statementList,
-        bool $isRoot
+        bool $isRoot,
     ): Node|Value|Attribute|Variable {
 
         $parsedPartList = [];
@@ -1203,13 +1190,7 @@ class Parser
 
     private static function sliceByStartEnd(string $expression, int $start, int $end): string
     {
-        return trim(
-            substr(
-                $expression,
-                $start,
-                $end - $start
-            )
-        );
+        return trim(substr($expression, $start, $end - $start));
     }
 
     /**
@@ -1234,19 +1215,15 @@ class Parser
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = true;
-                } else {
-                    if ($isSingleQuote) {
-                        $isString = false;
-                    }
+                } else if ($isSingleQuote) {
+                    $isString = false;
                 }
             } else if ($functionContent[$i] === "\"" && self::isNotAfterBackslash($functionContent, $i)) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = false;
-                } else {
-                    if (!$isSingleQuote) {
-                        $isString = false;
-                    }
+                } else if (!$isSingleQuote) {
+                    $isString = false;
                 }
             }
 
@@ -1519,10 +1496,8 @@ class Parser
         }
 
         foreach ($indexPairs as $i => $pair) {
-            if ($i > 0) {
-                if ($indexPairs[$i - 1][1] !== $pair[0] - 2) {
-                    throw new SyntaxError("Nested brackets must have no gaps in between.");
-                }
+            if ($i > 0 && $indexPairs[$i - 1][1] !== $pair[0] - 2) {
+                throw new SyntaxError("Nested brackets must have no gaps in between.");
             }
 
             $itemExpression = trim(substr($expression, $pair[0], $pair[1] - $pair[0]));
