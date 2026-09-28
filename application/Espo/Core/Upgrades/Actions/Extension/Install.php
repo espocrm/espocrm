@@ -209,6 +209,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         $this->executeAction(Base::UNINSTALL, [
             'id' => $extensionEntity->get(Attribute::ID),
+            'isUpgrade' => true,
             'skipSystemRebuild' => true,
             'skipAfterScript' => true,
             'parentProcessId' => $this->getProcessId(),

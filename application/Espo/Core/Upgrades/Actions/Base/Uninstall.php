@@ -57,6 +57,8 @@ class Uninstall extends Base
             $this->setParentProcessId($data['parentProcessId']);
         }
 
+        $this->scriptParams['isUpgrade'] = $data['isUpgrade'] ?? false;
+
         $this->initialize();
         $this->checkIsWritable();
         $this->enableMaintenanceMode();
