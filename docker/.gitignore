@@ -1,0 +1,5 @@
+/test.sh
+/push.sh
+/.jq-template.awk
+.env
+!.env.example
