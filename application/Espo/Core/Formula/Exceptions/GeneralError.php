@@ -27,21 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Parser\Ast;
+namespace Espo\Core\Formula\Exceptions;
+
+use Throwable;
 
 /**
- * A variable AST node.
+ * @internal
  */
-class Variable
+class GeneralError extends Error
 {
-    public function __construct(
-        private string $name,
-        private ?int $position = null,
-    ) {}
+    private ?int $position = null;
 
-    public function getName(): string
-    {
-        return $this->name;
+    /**
+     * @internal
+     */
+    public static function create(
+        string $message,
+        ?int $position = null,
+        Throwable $previous = null,
+    ): self {
+
+        $object = new self($message, previous: $previous);
+
+        $object->position = $position;
+
+        return $object;
     }
 
     public function getPosition(): ?int

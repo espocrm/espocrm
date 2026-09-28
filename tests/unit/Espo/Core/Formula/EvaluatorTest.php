@@ -48,10 +48,9 @@ use tests\unit\ContainerMocker;
 
 class EvaluatorTest extends TestCase
 {
-    /**
-     * @var Evaluator
-     */
-    private $evaluator;
+    private ?Evaluator $evaluator = null;
+
+    private ?Log $log = null;
 
     protected function setUp(): void
     {
@@ -81,7 +80,14 @@ class EvaluatorTest extends TestCase
 
         $injectableFactory = new InjectableFactory($container, $bindingContainer);
 
-        $this->evaluator = new Evaluator($injectableFactory, [], ['test\\unsafe']);
+        $this->log = $this->createMock(Log::class);
+
+        $this->evaluator = new Evaluator(
+            injectableFactory: $injectableFactory,
+            functionClassNameMap: [],
+            unsafeFunctionList: ['test\\unsafe'],
+            log: $this->log,
+        );
     }
 
     protected function tearDown() : void
@@ -2175,5 +2181,58 @@ class EvaluatorTest extends TestCase
         $this->assertEquals([0, 1], $vars->a);
         $this->assertEquals([0, 1], $vars->b);
         $this->assertEquals([0, 1], $vars->c);
+    }
+
+    public function testLoggingBadFunction(): void
+    {
+        $expression = <<<EOF
+            \$a = 1;
+
+            test();
+            EOF;
+
+        $this->log->expects(self::once())
+            ->method('info')
+            ->with(
+                $this->anything(),
+                [
+                    'excerpt' => 'test();',
+                    'line' => 3,
+                    'column' => 1,
+                    'position' => 11,
+                ],
+            );
+
+        try {
+            $this->evaluator->process($expression);
+        } catch (Error) {}
+    }
+
+    public function testLoggingError(): void
+    {
+        $expression = <<<EOF
+            \$a = 'a';
+            if (1) {
+                string\contains(\$a);
+                \$b = 'b';
+            }
+
+            EOF;
+
+        $this->log->expects(self::once())
+            ->method('info')
+            ->with(
+                $this->anything(),
+                [
+                    'excerpt' => "string\contains(\$a);\r\n    \$b = 'b';\r\n}\r\n",
+                    'line' => 3,
+                    'column' => 5,
+                    'position' => 25,
+                ],
+            );
+
+        try {
+            $this->evaluator->process($expression);
+        } catch (Error) {}
     }
 }

@@ -43,8 +43,9 @@ class WhileRef
     private ?int $bodyEnd = null;
     private int $state = self::STATE_EMPTY;
 
-    public function __construct(private int $start)
-    {}
+    public function __construct(
+        private int $start
+    ) {}
 
     public function setConditionStart(int $conditionStart): void
     {
