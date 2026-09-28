@@ -1,0 +1,28 @@
+{
+  "latest": {
+    "architectures": {
+      "apache": "amd64, i386, arm32v5, arm32v7, arm64v8",
+      "fpm": "amd64, i386, arm32v5, arm32v7, arm64v8",
+      "fpm-alpine": "amd64, i386, arm32v6, arm32v7, arm64v8"
+    },
+    "distributions": {
+      "apache": "apache-trixie",
+      "fpm": "fpm-trixie",
+      "fpm-alpine": "fpm-alpine3.23"
+    },
+    "downloadUrl": "https://www.espocrm.com/downloads/EspoCRM-10.0.8.zip",
+    "phpVersion": "8.4",
+    "sha256": "b40f1631cda1f49a1958734bddef5831a48363a1785bc9d57ff67ded58419163",
+    "templates": {
+      "apache": "debian",
+      "fpm": "debian",
+      "fpm-alpine": "alpine"
+    },
+    "variantList": [
+      "apache",
+      "fpm",
+      "fpm-alpine"
+    ],
+    "version": "10.0.8"
+  }
+}
