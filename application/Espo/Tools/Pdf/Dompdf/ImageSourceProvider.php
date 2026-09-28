@@ -45,8 +45,7 @@ class ImageSourceProvider
 
     public function get(string $id): ?string
     {
-        /** @var Attachment $attachment */
-        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
+        $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
         if (!$attachment) {
             return null;
