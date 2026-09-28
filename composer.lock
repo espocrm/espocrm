@@ -8625,16 +8625,16 @@
         },
         {
             "name": "zbateson/mail-mime-parser",
-            "version": "3.0.6",
+            "version": "3.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zbateson/mail-mime-parser.git",
-                "reference": "395c406cc1c5d1eb171d9decb0a3b509e8bd6bc0"
+                "reference": "4c3ac067793cd5565ca7f4c1918c1fce8e1460f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/395c406cc1c5d1eb171d9decb0a3b509e8bd6bc0",
-                "reference": "395c406cc1c5d1eb171d9decb0a3b509e8bd6bc0",
+                "url": "https://api.github.com/repos/zbateson/mail-mime-parser/zipball/4c3ac067793cd5565ca7f4c1918c1fce8e1460f3",
+                "reference": "4c3ac067793cd5565ca7f4c1918c1fce8e1460f3",
                 "shasum": ""
             },
             "require": {
@@ -8697,7 +8697,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-24T13:42:46+00:00"
+            "time": "2026-09-09T17:40:57+00:00"
         },
         {
             "name": "zbateson/mb-wrapper",
