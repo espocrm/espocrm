@@ -168,3 +168,15 @@ curl.exe -s -u "<USERNAME>:<PASSWORD>" "http://localhost:8080/api/v1/Opportunity
 1. **Zero Credential Exposure:** Neither passwords nor sensitive auth tokens are committed or hardcoded in this documentation.
 2. **Standard REST Protocol:** All interactions followed EspoCRM's standard REST API specification over JSON.
 3. **Application Integrity:** Executed strictly against live container endpoints; no core application files or framework classes were modified.
+
+---
+
+## ✅ W5D1 Verification
+
+* **Docker Environment Verification:**
+  - The local multi-container Docker Compose environment (`espocrm`, `espocrm-db`, `espocrm-daemon`, `espocrm-websocket`) was thoroughly verified in an operational and healthy state.
+  - Persistent volumes for MariaDB and EspoCRM data (`data`, `custom`, `client/custom`) and environment configurations were confirmed functional.
+* **API Testing Execution:**
+  - All three documented REST API calls (`/api/v1/App/user`, `/api/v1/Account`, and `/api/v1/Opportunity`) were tested locally via PowerShell `curl.exe` and returned valid `200 OK` JSON responses.
+* **CRM Core Workflow Completion:**
+  - The required **Lead → Opportunity → Account → Activity** workflow was executed and verified within the local EspoCRM instance, validating end-to-end data creation, conversion, and relationship linking.
