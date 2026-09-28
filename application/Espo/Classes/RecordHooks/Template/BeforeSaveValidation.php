@@ -27,68 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Classes\RecordHooks\Template;
 
-use Espo\Core\ORM\Entity;
-use UnexpectedValueException;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\Template;
+use Espo\ORM\Entity;
+use Espo\Tools\Pdf\Util\Validation;
 
-class Template extends Entity
+/**
+ * @implements SaveHook<Template>
+ */
+class BeforeSaveValidation implements SaveHook
 {
-    public const string ENTITY_TYPE = 'Template';
+    public function __construct(
+        private Validation $validation,
+    ) {}
 
-    public const string STATUS_ACTIVE = 'Active';
-
-    public const string FIELD_ENTITY_TYPE = 'entityType';
-
-    /** @since 10.1.0 */
-    public const string FIELD_BODY = 'body';
-    /** @since 10.1.0 */
-    public const string FIELD_HEADER = 'header';
-    /** @since 10.1.0 */
-    public const string FIELD_FOOTER = 'footer';
-
-    public function getTargetEntityType(): string
+    public function process(Entity $entity): void
     {
-        $entityType = $this->get(self::FIELD_ENTITY_TYPE);
-
-        if ($entityType === null) {
-            throw new UnexpectedValueException();
-        }
-
-        return $entityType;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->get('status') === self::STATUS_ACTIVE;
-    }
-
-    public function getFilename(): ?string
-    {
-        return $this->get('filename');
-    }
-
-    /**
-     * since 10.1.0
-     */
-    public function getBody(): ?string
-    {
-        return $this->get(self::FIELD_BODY);
-    }
-
-    /**
-     * since 10.1.0
-     */
-    public function getHeader(): ?string
-    {
-        return $this->get(self::FIELD_HEADER);
-    }
-
-    /**
-     * since 10.1.0
-     */
-    public function getFooter(): ?string
-    {
-        return $this->get(self::FIELD_FOOTER);
+        $this->validation->process($entity);
     }
 }
