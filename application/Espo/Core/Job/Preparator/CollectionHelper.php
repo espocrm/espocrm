@@ -29,9 +29,10 @@
 
 namespace Espo\Core\Job\Preparator;
 
+use Espo\Core\Field\DateTime;
 use Espo\Core\Job\Job\Status;
-use Espo\Core\Utils\DateTime;
 use Espo\Entities\Job;
+use Espo\Entities\ScheduledJob;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -65,19 +66,32 @@ class CollectionHelper
      */
     private function prepareItem(Entity $entity, Data $data, DateTimeImmutable $executeTime): void
     {
+        $this->entityManager->getTransactionManager()
+            ->run(fn () => $this->prepareItemInternal($entity, $data, $executeTime));
+    }
+
+    /**
+     * @param TEntity $entity
+     */
+    private function prepareItemInternal(Entity $entity, Data $data, DateTimeImmutable $executeTime): void
+    {
+        $this->entityManager->getRDBRepositoryByClass(ScheduledJob::class)
+            ->select(Attribute::ID)
+            ->forUpdate()
+            ->where([Attribute::ID => $data->getId()])
+            ->findOne();
+
         $running = $this->entityManager
             ->getRDBRepositoryByClass(Job::class)
-            // Reduces the chance of race condition.
-            ->forUpdate()
             ->select(Attribute::ID)
             ->where([
-                'scheduledJobId' => $data->getId(),
                 Job::FIELD_STATUS => [
                     Status::RUNNING,
                     Status::READY,
                 ],
-                'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->getId(),
+                Job::ATTR_SCHEDULED_JOB_ID => $data->getId(),
+                Job::ATTR_TARGET_TYPE => $entity->getEntityType(),
+                Job::ATTR_TARGET_ID => $entity->getId(),
             ])
             ->findOne();
 
@@ -88,10 +102,10 @@ class CollectionHelper
         $countPending = $this->entityManager
             ->getRDBRepositoryByClass(Job::class)
             ->where([
-                'scheduledJobId' => $data->getId(),
+                Job::ATTR_SCHEDULED_JOB_ID => $data->getId(),
                 Job::FIELD_STATUS => Status::PENDING,
-                'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->getId(),
+                Job::ATTR_TARGET_TYPE => $entity->getEntityType(),
+                Job::ATTR_TARGET_ID => $entity->getId(),
             ])
             ->count();
 
@@ -99,15 +113,12 @@ class CollectionHelper
             return;
         }
 
-        $job = $this->entityManager->getRDBRepositoryByClass(Job::class)->getNew();
-
-        $job->setMultiple([
-            'name' => $data->getName(),
-            'scheduledJobId' => $data->getId(),
-            'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-            'targetType' => $entity->getEntityType(),
-            'targetId' => $entity->getId(),
-        ]);
+        $job = $this->entityManager->getRDBRepositoryByClass(Job::class)->getNew()
+            ->setName($data->getName())
+            ->setExecuteTime(DateTime::fromDateTime($executeTime))
+            ->setTargetId($entity->getId())
+            ->setTargetType($entity->getEntityType())
+            ->setScheduleJobId($data->getId());
 
         $this->entityManager->saveEntity($job);
     }

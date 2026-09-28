@@ -122,8 +122,13 @@
         "status": {
             "columns": ["status", "deleted"]
         },
-        "statusScheduledJobId": {
-            "columns": ["status", "scheduledJobId"]
+        "statusScheduledJobIdTarget": {
+            "columns": [
+                "status",
+                "scheduledJobId",
+                "targetType",
+                "targetId"
+            ]
         }
     },
     "hooksDisabled": true

@@ -29,22 +29,26 @@
 
 namespace Espo\Core\Job\Preparator\Preparators;
 
-use Espo\Core\Utils\DateTime;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Job\Job\Data as JobData;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Job\Job\Status;
 use Espo\Core\Job\Preparator;
 use Espo\Core\Job\Preparator\Data;
-
+use Espo\Entities\ScheduledJob;
 use Espo\ORM\EntityManager;
-
-use Espo\Entities\Job as JobEntity;
-
-use DateTimeImmutable;
+use Espo\Entities\Job;
 use Espo\ORM\Name\Attribute;
+use DateTimeImmutable;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ProcessJobGroupPreparator implements Preparator
 {
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+    ) {}
 
     public function prepare(Data $data, DateTimeImmutable $executeTime): void
     {
@@ -52,21 +56,21 @@ class ProcessJobGroupPreparator implements Preparator
 
         $query = $this->entityManager
             ->getQueryBuilder()
-            ->select('group')
-            ->from(JobEntity::ENTITY_TYPE)
+            ->select(Job::FIELD_GROUP)
+            ->from(Job::ENTITY_TYPE)
             ->where([
-                'status' => Status::PENDING,
-                'queue' => null,
-                'group!=' => null,
-                'executeTime<=' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
+                Job::FIELD_STATUS => Status::PENDING,
+                Job::FIELD_QUEUE => null,
+                Job::FIELD_GROUP . '!=' => null,
+                Job::FIELD_EXECUTION_TIME . '<=' => $executeTime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
             ])
-            ->group('group')
+            ->group(Job::FIELD_GROUP)
             ->build();
 
         $sth = $this->entityManager->getQueryExecutor()->execute($query);
 
         while ($row = $sth->fetch()) {
-            $group = $row['group'];
+            $group = $row[Job::FIELD_GROUP];
 
             if ($group === null) {
                 continue;
@@ -80,35 +84,51 @@ class ProcessJobGroupPreparator implements Preparator
         }
 
         foreach ($groupList as $group) {
-            $existingJob = $this->entityManager
-                ->getRDBRepository(JobEntity::ENTITY_TYPE)
-                ->select(Attribute::ID)
-                ->where([
-                    'scheduledJobId' => $data->getId(),
-                    'targetGroup' => $group,
-                    'status' => [
-                        Status::RUNNING,
-                        Status::READY,
-                        Status::PENDING,
-                    ],
-                ])
-                ->findOne();
-
-            if ($existingJob) {
-                continue;
-            }
-
-            $name = $data->getName() . ' :: ' . $group;
-
-            $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
-                'scheduledJobId' => $data->getId(),
-                'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
-                'name' => $name,
-                'data' => [
-                    'group' => $group,
-                ],
-                'targetGroup' => $group,
-            ]);
+            $this->processGroup($group, $data, $executeTime);
         }
+    }
+
+    private function processGroup(string $group, Data $data, DateTimeImmutable $executeTime): void
+    {
+        $this->entityManager->getTransactionManager()
+            ->run(fn () => $this->processGroupInternal($group, $data, $executeTime));
+    }
+
+    private function processGroupInternal(string $group, Data $data, DateTimeImmutable $executeTime): void
+    {
+        $this->entityManager->getRDBRepositoryByClass(ScheduledJob::class)
+            ->select(Attribute::ID)
+            ->forUpdate()
+            ->where([Attribute::ID => $data->getId()])
+            ->findOne();
+
+        $existingJob = $this->entityManager
+            ->getRDBRepositoryByClass(Job::class)
+            ->select(Attribute::ID)
+            ->where([
+                Job::FIELD_STATUS => [
+                    Status::RUNNING,
+                    Status::READY,
+                    Status::PENDING,
+                ],
+                Job::ATTR_SCHEDULED_JOB_ID => $data->getId(),
+                Job::FIELD_TARGET_GROUP => $group,
+            ])
+            ->findOne();
+
+        if ($existingJob) {
+            return;
+        }
+
+        $name = $data->getName() . ' :: ' . $group;
+
+        $job = $this->entityManager->getRDBRepositoryByClass(Job::class)->getNew()
+            ->setName($name)
+            ->setScheduleJobId($data->getId())
+            ->setExecuteTime(DateTime::fromDateTime($executeTime))
+            ->setTargetGroup($group)
+            ->setData(JobData::create(['group' => $group]));
+
+        $this->entityManager->saveEntity($job);
     }
 }
