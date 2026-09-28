@@ -2290,21 +2290,23 @@ td > span.color-icon {
 }
 
 .stream-date-container {
-    display: inline-block;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--6px);
+
     width: 100%;
 
-    .pin-icon {
+    .pin-icon-container {
         display: inline-block;
-        float: right;
-        position: absolute;
-        right: var(--14px);
-        top: var(--36px);
 
-        color: var(--text-muted-color);
+        > span {
+            color: var(--text-muted-color);
+        }
     }
 
     .reactions-container {
-        float: right;
+        margin-left: auto;
         display: inline-flex;
         width: calc(100% - var(--190px));
         flex-wrap: wrap;
