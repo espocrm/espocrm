@@ -110,7 +110,9 @@ class Processor
         } catch (WrapperException $e) {
             throw $e->getWrappedException();
         } catch (FormulaError $e) {
-            throw new RuntimeException('Before save API script error.', previous: $e);
+            $entityType = $entity->getEntityType();
+
+            throw new RuntimeException("Before-save formula API script failed for '$entityType'.", previous: $e);
         }
     }
 
