@@ -44,6 +44,13 @@ class KnowledgeBaseArticle extends Entity
     public const STATUS_PUBLISHED = 'Published';
     public const STATUS_ARCHIVED = 'Archived';
 
+    /** @since 10.1.0 */
+    public const string FIELD_IS_HTML = 'isHtml';
+    /** @since 10.1.0 */
+    public const string FIELD_BODY = 'body';
+    /** @since 10.1.0 */
+    public const string FIELD_BODY_PLAIN = 'bodyPlain';
+
     public function getName(): ?string
     {
         return $this->get(Field::NAME);
@@ -126,5 +133,11 @@ class KnowledgeBaseArticle extends Entity
     public function setBody(?string $body): self
     {
         return $this->set('body', $body);
+    }
+
+    /** @since 10.1.0 */
+    public function isHtml(): bool
+    {
+        return $this->get(self::FIELD_IS_HTML);
     }
 }

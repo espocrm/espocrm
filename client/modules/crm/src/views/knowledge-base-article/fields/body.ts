@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,43 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Hooks\KnowledgeBaseArticle;
+import WysiwygFieldView from 'views/fields/wysiwyg';
 
-use Espo\Core\Hook\Hook\BeforeSave;
-use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
-use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
-use Espo\Tools\Email\Util as EmailUtil;
+export default class KnowledgeBaseArticleBodyFieldView extends WysiwygFieldView {
 
-/**
- * @implements BeforeSave<KnowledgeBaseArticle>
- */
-class SetBodyPlain implements BeforeSave
-{
-    public function beforeSave(Entity $entity, SaveOptions $options): void
-    {
-        if (
-            !$entity->isAttributeChanged(KnowledgeBaseArticle::FIELD_BODY) &&
-            !$entity->isAttributeChanged(KnowledgeBaseArticle::FIELD_IS_HTML)
-        ) {
-            return;
-        }
-
-        if ($entity->isHtml()) {
-            $bodyPlain = $this->stripHtml($entity->getBody());
-        } else {
-            $bodyPlain = $entity->getBody();
-        }
-
-        $entity->set(KnowledgeBaseArticle::FIELD_BODY_PLAIN, $bodyPlain);
-    }
-
-    private function stripHtml(?string $body): ?string
-    {
-        if (!$body) {
-            return null;
-        }
-
-        return EmailUtil::stripHtml($body) ?: null;
-    }
+    protected hasBodyPlainField: boolean = true
 }

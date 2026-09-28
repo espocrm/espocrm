@@ -37,8 +37,10 @@ use Espo\Entities\LeadCapture;
 use Espo\Entities\Portal;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\UpdateBuilder;
 
 class AfterUpgrade implements Script
 {
@@ -57,6 +59,7 @@ class AfterUpgrade implements Script
         $this->updatePreferences();
         $this->updatePortals();
         $this->updateLeadCaptures();
+        $this->updateKBArticles();
     }
 
     private function updateConfig(): void
@@ -143,5 +146,17 @@ class AfterUpgrade implements Script
         $themeParams['direction'] = Direction::Rtl->value;
 
         return (object) $themeParams;
+    }
+
+    private function updateKBArticles(): void
+    {
+        $query = UpdateBuilder::create()
+            ->in(KnowledgeBaseArticle::ENTITY_TYPE)
+            ->set([
+                'isHtml' => true,
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($query);
     }
 }

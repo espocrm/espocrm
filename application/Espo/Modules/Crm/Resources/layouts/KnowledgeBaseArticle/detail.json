@@ -10,7 +10,7 @@
     {
         "rows": [
             [{"name": "body"}],
-            [{"name": "attachments"}]
+            [{"name": "attachments"}, {"name": "isHtml"}]
         ]
     }
 ]
