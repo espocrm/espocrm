@@ -29,9 +29,6 @@
 
 namespace Espo\Tools\Pdf\Dompdf;
 
-use chillerlan\QRCode\Common\EccLevel;
-use chillerlan\QRCode\Output\QRMarkupSVG;
-use chillerlan\QRCode\Output\QROutputInterface;
 use Espo\Core\Htmlizer\TemplateRendererFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -41,9 +38,13 @@ use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
 
 use Picqer\Barcode\BarcodeGeneratorSVG;
+use Picqer\Barcode\Exceptions\UnknownTypeException;
+
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
-use Picqer\Barcode\Exceptions\UnknownTypeException;
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\Output\QROutputInterface;
+
 use RuntimeException;
 
 class HtmlComposer
@@ -52,7 +53,7 @@ class HtmlComposer
         private Config $config,
         private TemplateRendererFactory $templateRendererFactory,
         private ImageSourceProvider $imageSourceProvider,
-        private Log $log
+        private Log $log,
     ) {}
 
     public function composeHead(Template $template, Entity $entity): string
@@ -78,11 +79,10 @@ class HtmlComposer
 
         $templateStyle = $template->getStyle() ?? '';
 
-        /** @noinspection HtmlRequiredTitleElement */
-        return "
+        return <<<EOF
             <head>
                 {$titleHtml}
-                <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
             </head>
             <style>
             @page {
@@ -125,7 +125,7 @@ class HtmlComposer
 
             $templateStyle
             </style>
-        ";
+            EOF;
     }
 
     public function composeHeaderFooter(Template $template, Entity $entity, Params $params, Data $data): string
