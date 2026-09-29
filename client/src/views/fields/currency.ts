@@ -33,6 +33,7 @@
 import FloatFieldView from 'views/fields/float';
 import Select from 'ui/select';
 import {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
+import Utils from 'utils';
 
 /**
  * Parameters.
@@ -132,7 +133,7 @@ class CurrencyFieldView<
     protected currencyList: string[]
     protected decimalPlaces: number
 
-    private $currency: JQuery
+    private currencyElement: HTMLSelectElement | null = null
 
     protected data() {
         const currencyValue = this.model.get(this.currencyFieldName) ||
@@ -309,15 +310,22 @@ class CurrencyFieldView<
         super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
-            this.$currency = this.$el.find(`[data-name="${this.currencyFieldName}"]`);
+            this.currencyElement = this.element
+                .querySelector<HTMLSelectElement>(`[data-name="${this.currencyFieldName}"]`);
 
-            if (this.$currency.length) {
-                this.$currency.on('change', () => {
-                    this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
+            if (this.currencyElement) {
+                this.currencyElement.addEventListener('change', () => {
+                    this.model.set(this.currencyFieldName, this.currencyElement?.value, {ui: true});
                 });
 
-                Select.init(this.$currency);
+                if (!Utils.isMobile()) {
+                    Select.init(this.currencyElement);
+                } else {
+                    this.currencyElement.classList.add('native-select');
+                }
             }
+        } else {
+            this.currencyElement = null;
         }
     }
 
@@ -348,8 +356,8 @@ class CurrencyFieldView<
 
         const data = {} as Record<string, any>;
 
-        let currencyValue: any = this.$currency.length ?
-            this.$currency.val() :
+        let currencyValue: any = this.currencyElement ?
+            this.currencyElement.value :
             this.defaultCurrency;
 
         if (value === null) {
