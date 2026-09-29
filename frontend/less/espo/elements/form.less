@@ -592,6 +592,12 @@ input[type="radio"].form-radio {
 }
 
 select.form-control.native-select {
+    min-height: var(--input-height-base);
+
+    &.input-sm {
+        min-height: var(--input-height-small);
+    }
+
     &, &::picker(select) {
         appearance: base-select;
     }

@@ -34,6 +34,7 @@ import Model from 'model';
 import Ui from 'ui';
 import _ from 'underscore';
 import JQuery from 'jquery'
+import Utils from 'utils';
 
 const $ = JQuery;
 
@@ -864,10 +865,14 @@ export default class BaseFieldView<
             }
 
             if (this.isSearchMode()) {
-                const $searchType = this.$el.find('select.search-type');
+                const searchTypeElement = this.element.querySelector<HTMLSelectElement>('select.search-type');
 
-                if ($searchType.length) {
-                    Select.init($searchType, {matchAnyWord: true});
+                if (searchTypeElement) {
+                    if (!Utils.isMobile()) {
+                        Select.init(searchTypeElement, {matchAnyWord: true});
+                    } else {
+                        searchTypeElement.classList.add('native-select');
+                    }
                 }
             }
         });

@@ -31,7 +31,9 @@ import type ViewHelper from 'view-helper';
 import type AclManager from 'acl-manager';
 import type Model from 'model';
 import type User from 'models/user';
-import _, {functions} from 'underscore';
+import _ from 'underscore';
+
+let isMobile;
 
 export interface AccessDefs {
     /**
@@ -756,13 +758,11 @@ const Utils = {
      * @internal
      */
     isMobile: function(): boolean {
-        if (!('userAgentData' in navigator)) {
-            return false;
-        }
+        // @ts-ignore
+        isMobile ??= navigator?.userAgentData?.mobile ??
+            /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-        const userAgentData = navigator.userAgentData as Record<string, any>;
-
-        return userAgentData.mobile ?? false;
+        return isMobile;
     },
 };
 
