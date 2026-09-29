@@ -1093,7 +1093,7 @@ class Parser
                 }
 
                 if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
-                    throw new SyntaxError("Bad function name `$functionName`.");
+                    throw SyntaxError::create("Bad function name `$functionName`.", position: $position);
                 }
 
                 return new Node(
@@ -1105,15 +1105,18 @@ class Parser
         }
 
         if (str_contains($expression, ' ')) {
-            throw SyntaxError::create("Could not parse.");
+            throw SyntaxError::create("Could not parse.", position: $position);
         }
 
         if (!preg_match($this->attributeNameRegExp, $expression)) {
-            throw SyntaxError::create("Attribute name `$expression` contains not allowed characters.");
+            throw SyntaxError::create(
+                message: "Attribute name `$expression` contains not allowed characters.",
+                position: $position,
+            );
         }
 
         if (str_ends_with($expression, '.')) {
-            throw SyntaxError::create("Attribute ends with dot.");
+            throw SyntaxError::create("Attribute ends with dot.", position: $position);
         }
 
         return new Attribute(
@@ -1191,8 +1194,8 @@ class Parser
             } else if ($statement instanceof IfRef) {
                 if (!$isRoot || !$statement->isReady()) {
                     throw SyntaxError::create(
-                        'Incorrect if statement usage in expression ' . $expression . '.',
-                        'Incorrect if statement.'
+                        message: 'Incorrect if statement usage in expression ' . $expression . '.',
+                        shortMessage: 'Incorrect if statement.',
                     );
                 }
 
@@ -1242,8 +1245,8 @@ class Parser
             } else if ($statement instanceof WhileRef) {
                 if (!$isRoot || !$statement->isReady()) {
                     throw SyntaxError::create(
-                        'Incorrect while statement usage in expression ' . $expression . '.',
-                        'Incorrect while statement.'
+                        message: 'Incorrect while statement usage in expression ' . $expression . '.',
+                        shortMessage: 'Incorrect while statement.',
                     );
                 }
 
@@ -1277,8 +1280,9 @@ class Parser
 
             if (!$parsedPart) {
                 throw SyntaxError::create(
-                    'Unknown syntax error in expression ' . $expression . '.',
-                    'Unknown syntax error.'
+                    message: 'Unknown syntax error in expression ' . $expression . '.',
+                    shortMessage: 'Unknown syntax error.',
+                    position: $position,
                 );
             }
 
@@ -1480,7 +1484,7 @@ class Parser
         }
 
         if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
-            throw new SyntaxError("Bad variable name `$variable`.");
+            throw SyntaxError::create("Bad variable name `$variable`.", position: $firstPosition);
         }
 
         $secondNode = $this->split($secondPart, position: $secondPosition);
@@ -1541,7 +1545,7 @@ class Parser
         }
 
         if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-            throw new SyntaxError("Bad variable name `$value`.");
+            throw SyntaxError::create("Bad variable name `$value`.", position: $position);
         }
 
         if ($isIncrement) {

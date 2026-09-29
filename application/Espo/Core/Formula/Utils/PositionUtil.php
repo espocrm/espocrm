@@ -27,43 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Exceptions;
+namespace Espo\Core\Formula\Utils;
 
-use Throwable;
-
-class SyntaxError extends Error
+/**
+ * @since 10.1.0
+ */
+class PositionUtil
 {
     /**
-     * @var ?string
+     * @return array{int, int}
      */
-    private $shortMessage = null;
-
-    private ?int $position = null;
-
-    final public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
+    public static function getLineAndColumn(string $expression, int $position): array
     {
-        parent::__construct($message, $code, $previous);
-    }
+        $line = substr_count($expression, "\n", 0, $position) + 1;
 
-    public static function create(string $message, ?string $shortMessage = null, ?int $position = null): self
-    {
-        $obj = new static($message);
-        $obj->shortMessage = $shortMessage;
-        $obj->position = $position;
+        $lastNewline = strrpos(substr($expression, 0, $position), "\n");
+        $column = $position - ($lastNewline === false ? -1 : $lastNewline);
 
-        return $obj;
-    }
-
-    public function getShortMessage(): ?string
-    {
-        return $this->shortMessage ?? $this->getMessage();
-    }
-
-    /**
-     * @since 10.1.0
-     */
-    public function getPosition(): ?int
-    {
-        return $this->position;
+        return [$line, $column];
     }
 }

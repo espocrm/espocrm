@@ -476,6 +476,13 @@ class FormulaFieldView extends TextFieldView {
                     message += ' ' + response.message;
                 }
 
+                if (response.line != null && response.column != null) {
+                    message += "\n\n" +
+                        this.translate('checkSyntaxErrorPosition', 'messages', 'Formula')
+                            .replace('{line}', response.line)
+                            .replace('{column}', response.column);
+                }
+
                 Ui.error(message, {
                     closeButton: true,
                 });

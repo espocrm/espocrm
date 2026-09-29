@@ -55,7 +55,7 @@ class Service
 
             $result = SyntaxCheckResult::createSuccess();
         }  catch (SyntaxError $e) {
-            return SyntaxCheckResult::createError($e);
+            return SyntaxCheckResult::createError($e, $expression);
         }
 
         return $result;

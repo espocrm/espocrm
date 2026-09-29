@@ -40,6 +40,7 @@ use Espo\Core\Formula\Parser\Ast\Attribute;
 use Espo\Core\Formula\Parser\Ast\Node;
 use Espo\Core\Formula\Parser\Ast\Value;
 use Espo\Core\Formula\Parser\Ast\Variable;
+use Espo\Core\Formula\Utils\PositionUtil;
 use Espo\Core\Utils\Log;
 use Espo\ORM\Entity;
 use Espo\Core\InjectableFactory;
@@ -184,10 +185,7 @@ class Evaluator
 
         $excerpt = substr($expression, $position, self::ERROR_PART_LENGTH);
 
-        $line = substr_count($expression, "\n", 0, $position) + 1;
-
-        $lastNewline = strrpos(substr($expression, 0, $position), "\n");
-        $column = $position - ($lastNewline === false ? -1 : $lastNewline);
+        [$line, $column] = PositionUtil::getLineAndColumn($expression, $position);
 
         $this->log?->info("Failed formula script; line: {line}, column: {column}. Code:\n{excerpt}", [
             'excerpt' => $excerpt,

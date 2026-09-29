@@ -15,7 +15,8 @@
         "runError": "Error.",
         "checkSyntaxSuccess": "Syntax is correct.",
         "checkSyntaxError": "Syntax error.",
-        "emptyScript": "Script is empty."
+        "emptyScript": "Script is empty.",
+        "checkSyntaxErrorPosition": "Line: `{line}`\nColumn: `{column}`"
     },
     "tooltips": {
         "output": "Print values with the function `output\\printLine`."
