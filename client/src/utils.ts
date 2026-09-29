@@ -31,7 +31,7 @@ import type ViewHelper from 'view-helper';
 import type AclManager from 'acl-manager';
 import type Model from 'model';
 import type User from 'models/user';
-import _ from 'underscore';
+import _, {functions} from 'underscore';
 
 export interface AccessDefs {
     /**
@@ -749,7 +749,21 @@ const Utils = {
         }
 
         return baseUrl;
-    }
+    },
+
+    /**
+     * @since 10.1.0
+     * @internal
+     */
+    isMobile: function(): boolean {
+        if (!('userAgentData' in navigator)) {
+            return false;
+        }
+
+        const userAgentData = navigator.userAgentData as Record<string, any>;
+
+        return userAgentData.mobile ?? false;
+    },
 };
 
 const keyMap = {

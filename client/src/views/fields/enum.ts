@@ -215,6 +215,10 @@ class EnumFieldView<
     }
 
     protected setup() {
+        if (Utils.isMobile()) {
+            this.nativeSelect = true;
+        }
+
         if (!this.params.options) {
             // @todo Revise.
             const methodName = 'get' + Utils.upperCaseFirst(this.name) + 'Options';
