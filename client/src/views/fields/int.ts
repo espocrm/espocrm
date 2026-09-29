@@ -133,7 +133,6 @@ class IntFieldView<
             modifyValueOnWheel: false,
             decimalPlaces: 0,
             selectOnFocus: false,
-            // @ts-ignore
             formulaMode: true,
         };
 

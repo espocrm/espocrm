@@ -110,7 +110,6 @@ class DecimalFieldView<
             decimalPlacesRawValue: this.decimalPlacesRawValue,
             allowDecimalPadding: true,
             showWarnings: false,
-            // @ts-ignore
             formulaMode: true,
         };
 

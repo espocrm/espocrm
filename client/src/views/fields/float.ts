@@ -109,7 +109,6 @@ class FloatFieldView<
             decimalPlacesRawValue: this.decimalPlacesRawValue,
             allowDecimalPadding: false,
             showWarnings: false,
-            // @ts-ignore
             formulaMode: true,
         };
     }

@@ -188,7 +188,6 @@ class CurrencyFieldView<
             decimalPlaces: this.decimalPlaces,
             allowDecimalPadding: true,
             showWarnings: false,
-            // @ts-ignore
             formulaMode: true,
         };
 
