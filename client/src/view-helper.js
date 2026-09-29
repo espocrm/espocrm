@@ -37,6 +37,15 @@ import Handlebars from 'handlebars';
  */
 class ViewHelper {
 
+    /**
+     * @private
+     * @type {string[]}
+     */
+    static FORBIDDEN_ATTRIBUTES = [
+        'data-handler',
+        'data-action',
+    ]
+
     constructor() {
         this._registerHandlebarsHelpers();
 
@@ -801,7 +810,9 @@ class ViewHelper {
             marked.parseInline(text) :
             marked.parse(text);
 
-        text = DOMPurify.sanitize(text, {}).toString();
+        text = DOMPurify.sanitize(text, {
+            FORBID_ATTR: ViewHelper.FORBIDDEN_ATTRIBUTES,
+        }).toString();
 
         if (options.linksInNewTab) {
             text = text.replace(/<a href=/gm, '<a target="_blank" rel="noopener noreferrer" href=');
@@ -858,7 +869,11 @@ class ViewHelper {
      * @returns {string}
      */
     sanitizeHtml(text) {
-        return DOMPurify.sanitize(text).toString();
+        const params = {
+            FORBID_ATTR: ViewHelper.FORBIDDEN_ATTRIBUTES,
+        };
+
+        return DOMPurify.sanitize(text, params).toString();
     }
 
     /**
@@ -871,6 +886,7 @@ class ViewHelper {
         const params = {
             ADD_ATTR: ['x-if', 'iterate'],
             ADD_TAGS: ['#comment'],
+            FORBID_ATTR: ViewHelper.FORBIDDEN_ATTRIBUTES,
         };
 
         return DOMPurify.sanitize(value || '', params).toString();
