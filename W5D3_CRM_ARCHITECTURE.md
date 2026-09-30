@@ -440,3 +440,24 @@ While both Workflows and Business Process Management (BPM) automate operations i
 The W5D3 architecture analysis validates that EspoCRM combines a decoupled, metadata-driven architecture with structured sales pipeline management, fine-grained access control, and extensible automation capabilities.
 
 Through practical REST API testing of verified **Lead**, **Opportunity**, **Account**, and **Meeting** entities, the system's underlying entity relations and query projection capabilities were demonstrated to function as designed on the local Docker environment, establishing an enterprise foundation for scalable CRM operations.
+
+---
+
+## W5D3 Verification Summary
+
+The W5D3 architecture review was completed using the local EspoCRM Docker environment and previously verified CRM records.
+
+Verified business entities:
+- Lead: Mr. Rahul Sharma
+- Opportunity: Tech Solutions CRM Project
+- Account: Tech Solutions
+- Activity: Follow up with Rahul Sharma
+
+Verified API inspections:
+- Opportunity REST API: successful
+- Account REST API: successful
+- Meeting REST API: successful
+
+The documentation describes EspoCRM architecture, entity relationships, workflow and automation concepts, reporting/data flow, REST API interaction, and the differences between Workflow and BPM.
+
+No unverified custom automation execution is claimed.
