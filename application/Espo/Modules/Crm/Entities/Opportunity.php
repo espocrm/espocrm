@@ -41,12 +41,6 @@ class Opportunity extends Entity
 {
     public const ENTITY_TYPE = 'Opportunity';
 
-    /**
-     * @deprecated
-     * @todo Remove in v10.1.
-     */
-    public const string FIELD_CLOSED_DATE = 'closeDate';
-
     /** @since 10.0.0 */
     public const string FIELD_CLOSE_DATE = 'closeDate';
     /**@since 10.0.0 */

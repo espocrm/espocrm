@@ -631,17 +631,6 @@ class DefaultTable implements Table
             }
 
             $data->$scope->$action = self::LEVEL_NO;
-
-            // @todo Remove everything below. In v10.1.
-            if ($i === 0) {
-                continue;
-            }
-
-            $previousAction = $this->actionList[$i - 1];
-
-            if ($action === self::ACTION_STREAM && isset($data->$scope->$previousAction)) {
-                $data->$scope->$action = $data->$scope->$previousAction;
-            }
         }
     }
 
