@@ -8,16 +8,19 @@
         "body": {
             "type": "wysiwyg",
             "view": "views/template/fields/body",
-            "tooltip": true
+            "tooltip": true,
+            "useIframe": true
         },
         "header": {
             "type": "wysiwyg",
-            "view": "views/template/fields/body"
+            "view": "views/template/fields/body",
+            "useIframe": true
         },
         "footer": {
             "type": "wysiwyg",
             "view": "views/template/fields/body",
-            "tooltip": true
+            "tooltip": true,
+            "useIframe": true
         },
         "entityType": {
             "type": "enum",

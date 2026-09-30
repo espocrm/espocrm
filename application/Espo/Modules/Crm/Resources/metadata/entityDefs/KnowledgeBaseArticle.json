@@ -121,7 +121,8 @@
                 "maxLength",
                 "readOnly",
                 "tooltipText"
-            ]
+            ],
+            "useIframe": true
         },
         "bodyPlain": {
             "type": "text",

@@ -32,7 +32,8 @@
         },
         {
             "name": "useIframe",
-            "type": "bool"
+            "type": "bool",
+            "default": true
         },
         {
             "name": "maxLength",
