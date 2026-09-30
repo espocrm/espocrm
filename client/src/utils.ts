@@ -186,9 +186,6 @@ const Utils = {
             method = 'action' + Utils.upperCaseFirst(action);
         }
 
-        // @todo Drop `data.handler` support in v10.1.
-        handler = actionData.handler ?? handler ?? data.handler ?? null;
-
         let fired = false;
 
         if (handler) {
