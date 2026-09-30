@@ -343,10 +343,51 @@
                                 "type": "integer",
                                 "minimum": 1,
                                 "description": "A text higher then a specified value will be cut with a 'show more' button displayed."
-                            },
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {
+                                        "const": "text"
+                                    },
+                                    {
+                                        "const": "wysiwyg"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
                             "attachmentField": {
                                 "type": "string",
                                 "description": "An attachment-multiple field to connect with. As of v9.0."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {
+                                        "const": "wysiwyg"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "useIframe": {
+                                "type": "string",
+                                "description": "Use IFRAME in read mode."
                             }
                         }
                     }
