@@ -50,6 +50,7 @@ class AuditTest extends BaseTestCase
                 KnowledgeBaseArticle::ENTITY_TYPE => [
                     'create' => Table::LEVEL_NO,
                     'read' => Table::LEVEL_ALL,
+                    'stream' => Table::LEVEL_ALL,
                 ],
             ]
         ]);
@@ -60,6 +61,7 @@ class AuditTest extends BaseTestCase
                 KnowledgeBaseArticle::ENTITY_TYPE => [
                     'create' => Table::LEVEL_NO,
                     'read' => Table::LEVEL_ALL,
+                    'stream' => Table::LEVEL_ALL,
                 ],
             ]
         ]);
@@ -70,6 +72,7 @@ class AuditTest extends BaseTestCase
                 KnowledgeBaseArticle::ENTITY_TYPE => [
                     'create' => Table::LEVEL_NO,
                     'read' => Table::LEVEL_NO,
+                    'stream' => Table::LEVEL_NO,
                 ],
             ]
         ]);
