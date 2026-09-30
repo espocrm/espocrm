@@ -114,7 +114,7 @@ class WysiwygFieldView <
 
     protected noStylesheet: boolean = false
 
-    protected useIframe: boolean = false
+    protected useIframe: boolean = true
 
     protected handlebars: boolean = false
 
@@ -164,7 +164,7 @@ class WysiwygFieldView <
             this.minHeight = this.params.minHeight as number;
         }
 
-        this.useIframe = this.params.useIframe || this.useIframe;
+        this.useIframe = this.params.useIframe ?? this.useIframe;
 
         this.setupToolbar();
         this.setupIsHtml();
