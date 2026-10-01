@@ -1,0 +1,10 @@
+[
+    {
+        "route": "/ActivitySummary",
+        "method": "get",
+        "params": {
+            "controller": "ActivitySummary",
+            "action": "summary"
+        }
+    }
+]
