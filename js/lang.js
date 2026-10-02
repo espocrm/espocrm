@@ -59,39 +59,39 @@ class Lang
 
         const dirNames = this.dirNames = {};
 
-        const coreDir = this.espoPath + 'application/Espo/Resources/i18n/' + this.baseLanguage + '/';
+        const coreDir = `${this.espoPath}application/Espo/Resources/i18n/${this.baseLanguage}/`;
 
         let dirs = [coreDir];
 
-        dirNames[coreDir] = 'application/Espo/Resources/i18n/' + this.language + '/';
+        dirNames[coreDir] = `application/Espo/Resources/i18n/${this.language}/`;
 
-        const installDir = this.espoPath + 'install/core/i18n/' + this.baseLanguage + '/';
+        const installDir = `${this.espoPath}install/core/i18n/${this.baseLanguage}/`;
 
         dirs.push(installDir);
-        dirNames[installDir] = 'install/core/i18n/' + this.language + '/';
+        dirNames[installDir] = `install/core/i18n/${this.language}/`;
 
-        const templatesDir = this.espoPath + 'application/Espo/Core/Templates/i18n/' + this.baseLanguage + '/';
+        const templatesDir = `${this.espoPath}application/Espo/Core/Templates/i18n/${this.baseLanguage}/`;
 
         dirs.push(templatesDir);
-        dirNames[templatesDir] = 'application/Espo/Core/Templates/i18n/' + this.language + '/';
+        dirNames[templatesDir] = `application/Espo/Core/Templates/i18n/${this.language}/`;
 
         if (onlyModuleName) {
             dirs = [];
         }
 
         this.moduleList.forEach(moduleName => {
-            const path1 = this.espoPath + 'application/Espo/Modules/' + moduleName;
-            const path2 = this.espoPath + 'custom/Espo/Modules/' + moduleName;
+            const path1 = `${this.espoPath}application/Espo/Modules/${moduleName}`;
+            const path2 = `${this.espoPath}custom/Espo/Modules/${moduleName}`;
 
             const baseDir = fs.existsSync(path1) ? path1 : path2;
 
-            const dir = baseDir + '/Resources/i18n/' + this.baseLanguage + '/';
+            const dir = `${baseDir}/Resources/i18n/${this.baseLanguage}/`;
 
             dirs.push(dir);
 
             dirNames[dir] = fs.existsSync(path1) ?
-                'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.language + '/' :
-                'custom/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.language + '/';
+                `application/Espo/Modules/${moduleName}/Resources/i18n/${this.language}/` :
+                `custom/Espo/Modules/${moduleName}/Resources/i18n/${this.language}/`;
         });
 
         this.dirs = dirs;
@@ -112,7 +112,7 @@ class Lang
 
         PO.load(this.poPath, (err, po) => {
             if (err) {
-                throw new Error("Could not parse " + this.poPath + ".");
+                throw new Error(`Could not parse '${this.poPath}'.`);
             }
 
             po.items.forEach(item => {
@@ -138,7 +138,7 @@ class Lang
 
             dirs.forEach(path => {
                 const resDirPath = this.dirNames[path];
-                const resPath = this.espoPath + 'build/' + language + '/' + resDirPath;
+                const resPath = `${this.espoPath}build/${language}/${resDirPath}`;
 
                 if (!fs.existsSync(resPath)) {
                     let d = '';
@@ -235,11 +235,8 @@ class Lang
 
                         if (targetValue === '') {
                             return;
-                        }
-                        else {
-                            if (item.stringOriginal === item.stringTranslated) {
-                                return;
-                            }
+                        } else if (item.stringOriginal === item.stringTranslated) {
+                            return;
                         }
 
                         if (isArray) {
@@ -249,6 +246,7 @@ class Lang
                                 targetValue = null;
                             }
                         }
+
                         if (targetValue == null) {
                             return;
                         }
