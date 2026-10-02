@@ -70,10 +70,10 @@ class PO
         }
 
         this.moduleList.forEach(moduleName => {
-            let path1 = this.espoPath + 'application/Espo/Modules/' + moduleName;
-            let path2 = this.espoPath + 'custom/Espo/Modules/' + moduleName;
+            const path1 = this.espoPath + 'application/Espo/Modules/' + moduleName;
+            const path2 = this.espoPath + 'custom/Espo/Modules/' + moduleName;
 
-            let dir = fs.existsSync(path1) ? path1 : path2;
+            const dir = fs.existsSync(path1) ? path1 : path2;
 
             dirs.push(dir + '/Resources/i18n/');
         });
@@ -93,9 +93,9 @@ class PO
     }
 
     runAll () {
-        let pathToLanguage = this.espoPath + '/application/Espo/Resources/i18n/';
+        const pathToLanguage = this.espoPath + '/application/Espo/Resources/i18n/';
 
-        let languageList = [];
+        const languageList = [];
 
         fs.readdirSync(pathToLanguage).forEach(dir => {
             if (dir.indexOf('_') === 2) {
@@ -104,31 +104,31 @@ class PO
         });
 
         languageList.forEach(language => {
-            let po = new PO(this.espoPath, language, this.onlyModuleName);
+            const po = new PO(this.espoPath, language, this.onlyModuleName);
 
             po.run();
         });
     }
 
     run () {
-        let dirs = this.dirs;
-        let messageData = {};
+        const dirs = this.dirs;
+        const messageData = {};
         let targetMessageData = {}
 
         let poContents = this.poContentHeader;
 
         dirs.forEach(path => {
-            let dirPath = this.getDirPath(path, this.baseLanguage);
+            const dirPath = this.getDirPath(path, this.baseLanguage);
 
-            let list = fs.readdirSync(dirPath);
+            const list = fs.readdirSync(dirPath);
 
             list.forEach(fileName => {
-                let filePath = this.getDirPath(path, this.baseLanguage) + fileName;
+                const filePath = this.getDirPath(path, this.baseLanguage) + fileName;
 
                 this.populateMessageDataFromFile(filePath, messageData);
 
                 if (this.language !== this.baseLanguage) {
-                    let langFilePath = this.getDirPath(path, this.language) + fileName;
+                    const langFilePath = this.getDirPath(path, this.language) + fileName;
 
                     this.populateMessageDataFromFile(langFilePath, targetMessageData);
                 }
@@ -140,16 +140,16 @@ class PO
             targetMessageData = messageData;
         }
 
-        for (let key in messageData) {
+        for (const key in messageData) {
             poContents += 'msgctxt "' + messageData[key].context + '"\n';
             poContents += 'msgid "' + messageData[key].value + '"\n';
 
-            let translatedValue = (targetMessageData[key] || {}).value || "";
+            const translatedValue = (targetMessageData[key] || {}).value || "";
 
             poContents += 'msgstr "' + translatedValue + '"\n\n';
         }
 
-        let resFilePath = this.espoPath + 'build/' + this.outputFileName;
+        const resFilePath = this.espoPath + 'build/' + this.outputFileName;
 
         if (fs.existsSync(resFilePath)) {
             fs.unlinkSync(resFilePath);
@@ -167,7 +167,7 @@ class PO
 
         data = JSON.parse(data);
 
-        let fileName = filePath.split('\/').slice(-1).pop().split('.')[0];
+        const fileName = filePath.split('\/').slice(-1).pop().split('.')[0];
 
         this.populateMessageData(fileName, data, '', messageData);
     }
@@ -179,13 +179,13 @@ class PO
     populateMessageData (fileName, dataObject, prefix, messageData) {
         prefix = prefix || '';
 
-        for (let index in dataObject) {
+        for (const index in dataObject) {
             if (dataObject[index] === null || dataObject[index] === "") {
                 continue;
             }
 
             if (typeof dataObject[index] === 'object' && !Array.isArray(dataObject[index])) {
-                let nextPrefix = prefix + (prefix ? '.' : '') + index;
+                const nextPrefix = prefix + (prefix ? '.' : '') + index;
 
                 this.populateMessageData(fileName, dataObject[index], nextPrefix, messageData);
 
@@ -193,7 +193,7 @@ class PO
             }
 
             let path = fileName + '.' + prefix;
-            let key = path + '.' + index;
+            const key = path + '.' + index;
             let value = dataObject[index];
 
             if (Array.isArray(value)) {
@@ -209,7 +209,7 @@ class PO
     }
 
     replaceAll (string, find, replace) {
-        let escapedRegExp = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        const escapedRegExp = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 
         return string.replace(new RegExp(escapedRegExp, 'g'), replace);
     }

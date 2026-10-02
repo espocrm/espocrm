@@ -46,7 +46,7 @@ let language = process.argv[2] || null;
 let onlyModuleName = null;
 
 if (process.argv.length > 2) {
-    for (let i in process.argv) {
+    for (const i in process.argv) {
         if (~process.argv[i].indexOf('--module=')) {
             onlyModuleName = process.argv[i].substr(('--module=').length);
         }
@@ -57,9 +57,9 @@ if (process.argv.length > 2) {
     }
 }
 
-let espoPath = path.dirname(fs.realpathSync(__filename)) + '';
+const espoPath = path.dirname(fs.realpathSync(__filename)) + '';
 
-let po = new PO(espoPath, language, onlyModuleName);
+const po = new PO(espoPath, language, onlyModuleName);
 
 language === '--all' ?
     po.runAll() :
