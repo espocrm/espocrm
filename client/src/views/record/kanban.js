@@ -33,6 +33,9 @@ import RecordModal from 'helpers/record-modal';
 import KanbanPipelineDropdownView from 'views/record/kanban/pipeline-dropdown';
 import PipelinesHelper from 'helpers/misc/pipelines';
 import _ from 'underscore';
+import Utils from 'utils';
+import Ui from 'ui';
+import Ajax from 'ajax';
 
 /**
  * A kanban record view.
@@ -183,118 +186,6 @@ class KanbanRecordView extends ListRecordView {
         this.groupChangeSaveHandler = options.groupChangeSaveHandler;
     }
 
-    // @todo Move to `setupEventHandlers`.
-    events = {
-        /** @this KanbanRecordView */
-        'click a.link': function (e) {
-            if (e.ctrlKey || e.metaKey || e.shiftKey) {
-                return;
-            }
-
-            e.stopPropagation();
-
-            if (!this.scope || this.selectable) {
-                return;
-            }
-
-            e.preventDefault();
-
-            const id = $(e.currentTarget).data('id');
-            const model = this.collection.get(id);
-
-            const scope = this.getModelScope(id);
-
-            const options = {
-                id: id,
-                model: model,
-            };
-
-            if (this.options.keepCurrentRootUrl) {
-                options.rootUrl = this.getRouter().getCurrentUrl();
-            }
-
-            this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
-            this.getRouter().dispatch(scope, 'view', options);
-        },
-        /** @this KanbanRecordView */
-        'click [data-action="groupShowMore"]': function (e) {
-            const $target = $(e.currentTarget);
-
-            const group = $target.data('name');
-
-            this.groupShowMore(group);
-        },
-        /** @this KanbanRecordView */
-        'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
-                actionItems: [...this.buttonList],
-                className: 'list-action-item',
-            });
-        },
-        /** @this KanbanRecordView */
-        'mouseenter th.group-header': function (e) {
-            if (!this.isCreatable) {
-                return;
-            }
-
-            const group = $(e.currentTarget).attr('data-name');
-
-            this.showPlus(group);
-        },
-        /** @this KanbanRecordView */
-        'mouseleave th.group-header': function (e) {
-            const group = $(e.currentTarget).attr('data-name');
-
-            this.hidePlus(group);
-        },
-        /** @this KanbanRecordView */
-        'click [data-action="createInGroup"]': function (e) {
-            const group = $(e.currentTarget).attr('data-group');
-
-            this.actionCreateInGroup(group);
-        },
-        /** @this KanbanRecordView */
-        'mousedown .kanban-columns td': function (e) {
-            if ($(e.originalEvent.target).closest('.item').length) {
-                return;
-            }
-
-            this.initBackDrag(e.originalEvent);
-        },
-        /** @this KanbanRecordView */
-        'auxclick a.link': function (e) {
-            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
-
-            if (!isCombination) {
-                return;
-            }
-
-            const $target = $(e.currentTarget);
-
-            const id = $target.attr('data-id');
-
-            if (!id) {
-                return;
-            }
-
-            if (this.quickDetailDisabled) {
-                return;
-            }
-
-            const $quickView = $target.parent().closest(`[data-id="${id}"]`)
-                .find(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
-
-            if (!$quickView.length) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            this.actionQuickView({id: id});
-        },
-    }
-
     // noinspection JSCheckFunctionSignatures
     data() {
         const topBar = !this.options.topBarDisabled && (
@@ -371,7 +262,7 @@ class KanbanRecordView extends ListRecordView {
         this.entityType = this.collection.entityType || null;
         this.scope = this.options.scope || this.entityType;
 
-        this.buttonList = Espo.Utils.clone(this.buttonList);
+        this.buttonList = Utils.clone(this.buttonList);
 
         if ('showCount' in this.options) {
             this.showCount = this.options.showCount;
@@ -486,7 +377,103 @@ class KanbanRecordView extends ListRecordView {
     /**
      * @protected
      */
-    setupEventHandlers() {}
+    setupEventHandlers() {
+        this.addHandler('click', 'a.link', (e, target) => {
+            if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                return;
+            }
+
+            e.stopPropagation();
+
+            if (!this.scope || this.selectable) {
+                return;
+            }
+
+            e.preventDefault();
+
+            const id = target.dataset.id;
+            const model = this.collection.get(id);
+
+            const scope = this.getModelScope(id);
+
+            const options = {
+                id: id,
+                model: model,
+            };
+
+            if (this.options.keepCurrentRootUrl) {
+                options.rootUrl = this.getRouter().getCurrentUrl();
+            }
+
+            this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
+            this.getRouter().dispatch(scope, 'view', options);
+        });
+
+        this.addHandler('auxclick', 'a.link', (e, target) => {
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+            if (!isCombination) {
+                return;
+            }
+
+            const id = target.dataset.id;
+
+            if (!id) {
+                return;
+            }
+
+            if (this.quickDetailDisabled) {
+                return;
+            }
+
+            const quickViewElement = target.parentElement.closest(`[data-id="${id}"]`)
+                ?.querySelector(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
+
+            if (!quickViewElement) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.actionQuickView({id: id});
+        });
+
+        this.addActionHandler('groupShowMore', (_, target) => {
+            this.groupShowMore(target.dataset.name);
+        });
+
+        this.addHandler('click', '.action', (event, target) => {
+            Utils.handleAction(this, event, target, {
+                actionItems: [...this.buttonList],
+                className: 'list-action-item',
+            });
+        });
+
+        this.addHandler('mouseenter', 'th.group-header', (_, target) => {
+            if (!this.isCreatable) {
+                return;
+            }
+
+            this.showPlus(target.dataset.name);
+        });
+
+        this.addHandler('mouseleave', 'th.group-header', (_, target) => {
+            this.hidePlus(target.dataset.name);
+        });
+
+        this.addHandler('mousedown', '.kanban-columns td', (e, target) => {
+            if (target.closest('.item')) {
+                return;
+            }
+
+            this.initBackDrag(e);
+        });
+
+        this.addActionHandler('createInGroup', (_, target) => {
+            this.actionCreateInGroup(target.dataset.group);
+        });
+    }
 
     /**
      * @private
@@ -559,11 +546,11 @@ class KanbanRecordView extends ListRecordView {
 
                 await view.reRender();
 
-                Espo.Ui.notifyWait();
+                Ui.notifyWait();
 
                 await this.collection.fetch({maxSize: this.collection.maxSize});
 
-                Espo.Ui.notify();
+                Ui.notify();
             },
         });
 
@@ -817,7 +804,7 @@ class KanbanRecordView extends ListRecordView {
 
                     processSave()
                         .then(() => {
-                            Espo.Ui.success(this.translate('Saved'));
+                            Ui.success(this.translate('Saved'));
 
                             $list.sortable('destroy');
 
@@ -870,7 +857,7 @@ class KanbanRecordView extends ListRecordView {
             return this.onGroupOrder(group, ids);
         }
 
-        return Espo.Ajax.putRequest('Kanban/order', {
+        return Ajax.putRequest('Kanban/order', {
             entityType: this.entityType,
             group: group,
             ids: ids,
@@ -1331,6 +1318,10 @@ class KanbanRecordView extends ListRecordView {
         }
     }
 
+    /**
+     * @private
+     * @param {string} group
+     */
     groupShowMore(group) {
         let groupItem;
 
@@ -1648,11 +1639,11 @@ class KanbanRecordView extends ListRecordView {
             }
         }
 
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         await this.collection.fetch({maxSize: this.collection.maxSize});
 
-        Espo.Ui.notify(false)
+        Ui.notify(false)
     }
 
     // noinspection JSUnusedGlobalSymbols
