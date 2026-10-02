@@ -465,9 +465,15 @@ class KanbanRecordView extends ListRecordView {
      * @type {string}
      */
     processLinkClick(id) {
-        const model = this.collection.get(id);
-
         const scope = this.getModelScope(id);
+
+        const originalModel = this.collection.get(id);
+        const groupCollection = originalModel.collection;
+        const collection = groupCollection.clone({withModels: true});
+
+        collection.data.select = Utils.clone(this.collection.data.select);
+
+        const model = collection.get(id);
 
         const options = {
             id: id,
@@ -477,6 +483,22 @@ class KanbanRecordView extends ListRecordView {
         if (this.options.keepCurrentRootUrl) {
             options.rootUrl = this.getRouter().getCurrentUrl();
         }
+
+        this.listenTo(collection, 'model-sync', (/** Model */m, /** Record */o) => {
+            if (o.action === 'destroy') {
+                this.removeRecordFromList(m.id);
+            }
+
+            const model = this.collection.get(m.id);
+
+            if (!model) {
+                return;
+            }
+
+            if (o.action === 'set' || o.action === 'fetch' || o.action === 'save') {
+                model.setMultiple(m.getClonedAttributes(), o);
+            }
+        });
 
         this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
         this.getRouter().dispatch(scope, 'view', options);
@@ -1095,6 +1117,8 @@ class KanbanRecordView extends ListRecordView {
 
                 this.subCollectionList.push(collection);
                 this.collection.add(collection.models);
+
+                collection.data.select = Utils.clone(this.collection.data.select);
 
                 const itemDataList = [];
 
