@@ -97,11 +97,24 @@ class RecordService
      *
      * @internal
      */
-    public function get(User $user, SearchParams $searchParams, ?string $beforeNumber = null): RecordCollection
-    {
-        $queryBuilder = $this->isGroupingEnabled($user) ?
+    public function get(
+        User $user,
+        SearchParams $searchParams,
+        ?string $beforeNumber = null,
+        GetParams $params = new GetParams(),
+    ): RecordCollection {
+
+        $grouping = $this->isGroupingEnabled($user) && !$params->groupingDisabled;
+        $actionGrouping = $this->isActionGroupingEnabled() && !$params->groupingDisabled;
+
+        $queryBuilder = $grouping ?
             $this->prepareGroupingQueryBuilder($user, $searchParams, beforeNumber: $beforeNumber) :
-            $this->prepareQueryBuilder($user, $searchParams, beforeNumber: $beforeNumber);
+            $this->prepareQueryBuilder(
+                user: $user,
+                searchParams: $searchParams,
+                beforeNumber: $beforeNumber,
+                actionGrouping: $actionGrouping,
+            );
 
         $offset = $searchParams->getOffset();
         $limit = $searchParams->getMaxSize();
@@ -127,7 +140,9 @@ class RecordService
 
         $collection = $this->prepareCollection($collection, $user);
 
-        $groupedCountMap = $this->getActionGroupedCountMap($collection, $user->getId());
+        $groupedCountMap = $actionGrouping ?
+            $this->getActionGroupedCountMap($collection, $user->getId()) :
+            [];
 
         $ids = [];
         $actionIds = [];
@@ -143,13 +158,13 @@ class RecordService
 
             $groupedCount = null;
 
-            if ($this->isGroupingEnabled($user) && $entity->getGroupType()) {
+            if ($grouping && $entity->getGroupType()) {
                 $groupedCount = -1;
 
                 $entity->loadParentNameField(Notification::FIELD_RELATED_PARENT);
             }
 
-            if ($entity->getActionId() && $this->isActionGroupingEnabled() && !$this->isGroupingEnabled($user)) {
+            if ($entity->getActionId() && $actionGrouping && !$grouping) {
                 $actionIds[] = $entity->getActionId();
 
                 $groupedCount = $groupedCountMap[$entity->getActionId()] ?? 0;
@@ -160,7 +175,9 @@ class RecordService
 
         $collection = new EntityCollection([...$collection], Notification::ENTITY_TYPE);
 
-        $this->markAsRead($user, $ids, $actionIds);
+        if ($params->markAsRead) {
+            $this->markAsRead($user, $ids, $actionIds);
+        }
 
         return RecordCollection::createNoCount($collection, $limit);
     }
@@ -615,12 +632,14 @@ class RecordService
         SearchParams $searchParams,
         bool $notRead = false,
         ?string $beforeNumber = null,
+        bool $actionGrouping = true,
     ): SelectBuilder {
 
         $builder = $this->selectBuilderFactory
             ->create()
             ->from(Notification::ENTITY_TYPE)
             ->withSearchParams($searchParams)
+            ->withComplexExpressionsForbidden()
             ->buildQueryBuilder()
             ->where([Notification::ATTR_USER_ID => $user->getId()])
             ->order(Notification::ATTR_NUMBER, SearchParams::ORDER_DESC);
@@ -635,7 +654,7 @@ class RecordService
 
         $this->applyRelatedAccess($builder);
 
-        if ($this->isActionGroupingEnabled()) {
+        if ($actionGrouping && $this->isActionGroupingEnabled()) {
             $builder->where($this->getActionIdWhere($user->getId()));
         }
 

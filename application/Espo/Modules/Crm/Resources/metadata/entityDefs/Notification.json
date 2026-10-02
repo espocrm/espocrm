@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "type": {
+            "options": [
+                "__APPEND__",
+                "EventAttendee"
+            ]
+        }
+    }
+}
