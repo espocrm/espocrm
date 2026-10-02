@@ -1320,6 +1320,10 @@ class KanbanRecordView extends ListRecordView {
             $item.remove();
         }
 
+        if (o.action && o.action !== 'sync') {
+            return;
+        }
+
         if (!this.orderDisabled) {
             this.storeGroupOrder(group);
         }
