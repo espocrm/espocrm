@@ -391,22 +391,7 @@ class KanbanRecordView extends ListRecordView {
 
             e.preventDefault();
 
-            const id = target.dataset.id;
-            const model = this.collection.get(id);
-
-            const scope = this.getModelScope(id);
-
-            const options = {
-                id: id,
-                model: model,
-            };
-
-            if (this.options.keepCurrentRootUrl) {
-                options.rootUrl = this.getRouter().getCurrentUrl();
-            }
-
-            this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
-            this.getRouter().dispatch(scope, 'view', options);
+            this.processLinkClick(target.dataset.id);
         });
 
         this.addHandler('auxclick', 'a.link', (e, target) => {
@@ -473,6 +458,28 @@ class KanbanRecordView extends ListRecordView {
         this.addActionHandler('createInGroup', (_, target) => {
             this.actionCreateInGroup(target.dataset.group);
         });
+    }
+
+    /**
+     * @protected
+     * @type {string}
+     */
+    processLinkClick(id) {
+        const model = this.collection.get(id);
+
+        const scope = this.getModelScope(id);
+
+        const options = {
+            id: id,
+            model: model,
+        };
+
+        if (this.options.keepCurrentRootUrl) {
+            options.rootUrl = this.getRouter().getCurrentUrl();
+        }
+
+        this.getRouter().navigate(`#${scope}/view/${id}`, {trigger: false});
+        this.getRouter().dispatch(scope, 'view', options);
     }
 
     /**

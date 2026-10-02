@@ -2180,7 +2180,7 @@ abstract class ListBaseRecordView<
         });
     }
 
-    private processLinkClick(id: string) {
+    protected processLinkClick(id: string) {
         const scope = this.getModelScope(id);
 
         const collection = this.collection.clone({withModels: true});
