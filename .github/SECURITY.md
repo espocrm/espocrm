@@ -13,3 +13,7 @@ What reports we do not accept:
 Submitting multiple unverified reports without a proper proof of concept
 (for example, by simply copy-pasting LLM-generated output) may be considered abuse of the reporting process
 and may result in the reporting account being blocked.
+
+Previously published advisories or CVEs do not necessarily establish precedents for handling similar reports in the future.
+The fact that a particular issue was previously published as a vulnerability does not mean that a similar issue
+will necessarily be addressed or published in the future.
