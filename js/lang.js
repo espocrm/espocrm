@@ -41,6 +41,8 @@ class Lang
         this.language = language;
         this.poPath = poPath;
 
+        this.baseSimalarLanguageList = ['en_GB'];
+
         this.ignoreList = [
             'Global.options.language',
         ];
@@ -235,7 +237,10 @@ class Lang
 
                         if (targetValue === '') {
                             return;
-                        } else if (item.stringOriginal === item.stringTranslated) {
+                        } else if (
+                            item.stringOriginal === item.stringTranslated &&
+                            this.baseSimalarLanguageList.includes(this.language)
+                        ) {
                             return;
                         }
 
