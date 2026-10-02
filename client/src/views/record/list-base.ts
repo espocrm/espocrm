@@ -2133,10 +2133,6 @@ abstract class ListBaseRecordView<
         this.addHandler('click', 'a.reset-custom-order', () => this.resetCustomOrder());
 
         this.addHandler('click', 'a.link', (e, target) => {
-            if (!(e instanceof MouseEvent)) {
-                throw new Error();
-            }
-
             if (e.ctrlKey || e.metaKey || e.shiftKey) {
                 return;
             }
