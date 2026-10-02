@@ -1311,13 +1311,15 @@ class KanbanRecordView extends ListRecordView {
             }
         }
 
-        const $item = this.$el.find('.item[data-id="' + id + '"]');
-        const $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
+        const columnElement = this.element?.querySelector(`.group-column[data-name="${group}"] .group-column-list`);
+        const itemElement = this.element?.querySelector(`.item[data-id="${id}"]`);
 
-        if ($column.length) {
-            $column.prepend($item);
-        } else {
-            $item.remove();
+        if (itemElement) {
+            if (columnElement) {
+                columnElement.prepend(itemElement);
+            } else {
+                itemElement.remove();
+            }
         }
 
         if (o.action && o.action !== 'sync') {
