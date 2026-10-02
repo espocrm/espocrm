@@ -1,0 +1,15 @@
+{
+    "dashlets": {
+        "ActivitySummary": "Activity Summary",
+        "ConversationSummarizer": "AI Conversation Summarizer"
+    },
+    "labels": {
+        "ConversationSummarizer": "AI Conversation Summarizer",
+        "SummarizeConversation": "Summarize Conversation",
+        "ExecutiveSummary": "Executive Summary",
+        "KeyDiscussionPoints": "Key Discussion Points",
+        "ActionItems": "Action Items & Next Steps",
+        "DealTemperature": "Deal Temperature",
+        "Sentiment": "Sentiment"
+    }
+}

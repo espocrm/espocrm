@@ -1,0 +1,26 @@
+[
+    {
+        "route": "/ActivitySummary",
+        "method": "get",
+        "params": {
+            "controller": "ActivitySummary",
+            "action": "summary"
+        }
+    },
+    {
+        "route": "/ConversationSummarizer/summarize",
+        "method": "post",
+        "params": {
+            "controller": "ConversationSummarizer",
+            "action": "summarize"
+        }
+    },
+    {
+        "route": "/ConversationSummarizer/status",
+        "method": "get",
+        "params": {
+            "controller": "ConversationSummarizer",
+            "action": "status"
+        }
+    }
+]

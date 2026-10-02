@@ -1,0 +1,34 @@
+{
+    "view": "custom:views/dashlets/conversation-summarizer",
+    "aclScope": "Meeting",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "model": {
+                "type": "varchar",
+                "default": "llama-3.3-70b-versatile"
+            }
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        false
+                    ],
+                    [
+                        {"name": "model"},
+                        false
+                    ]
+                ]
+            }
+        ],
+        "defaults": {
+            "title": "AI Conversation Summarizer",
+            "model": "llama-3.3-70b-versatile"
+        }
+    }
+}
