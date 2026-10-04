@@ -1,0 +1,14 @@
+{
+	"labels": {
+	    "Primary": "ראשי",
+	    "Opted Out": "ביטל הרשמה",
+	    "Invalid": "לא תקין"
+	},
+	"fields": {
+	   "optOut": "ביטול הרשמה",
+	   "invalid": "לא תקין"
+	},
+	"presetFilters": {
+	   "orphan": "יתום"
+	}
+}

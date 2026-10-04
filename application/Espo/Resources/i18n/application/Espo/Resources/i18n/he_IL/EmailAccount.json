@@ -1,0 +1,65 @@
+{
+    "fields": {
+        "name": "שם",
+        "status": "סטטוס",
+        "host": "שרת",
+        "username": "שם משתמש",
+        "password": "סיסמה",
+        "port": "פורט",
+        "monitoredFolders": "תיקיות במעקב",
+        "security": "אבטחה",
+        "fetchSince": "הורד מתאריך",
+        "emailAddress": "כתובת אימייל",
+        "sentFolder": "תיקיית נשלח",
+        "storeSentEmails": "שמור אימיילים שנשלחו",
+        "keepFetchedEmailsUnread": "שמור אימיילים שהורדו כלא נקראו",
+        "emailFolder": "שים בתיקייה",
+        "connectedAt": "מחובר מאז",
+        "useImap": "הורד אימיילים",
+        "useSmtp": "השתמש ב-SMTP",
+        "smtpHost": "שרת SMTP",
+        "smtpPort": "פורט SMTP",
+        "smtpAuth": "אימות SMTP",
+        "smtpSecurity": "אבטחת SMTP",
+        "smtpAuthMechanism": "מנגנון אימות SMTP",
+        "smtpUsername": "שם משתמש SMTP",
+        "smtpPassword": "סיסמת SMTP"
+    },
+    "links": {
+        "filters": "מסננים",
+        "emails": "אימיילים"
+    },
+    "options": {
+        "status": {
+            "Active": "פעיל",
+            "Inactive": "לא פעיל"
+        },
+        "smtpAuthMechanism": {
+            "plain": "PLAIN",
+            "login": "LOGIN",
+            "crammd5": "CRAM-MD5"
+        }
+    },
+    "labels": {
+        "Create EmailAccount": "צור חשבון אימייל",
+        "IMAP": "IMAP",
+        "Main": "ראשי",
+        "Test Connection": "בדוק חיבור",
+        "Send Test Email": "שלח אימייל בדיקה",
+        "SMTP": "SMTP"
+    },
+    "presetFilters": {
+        "active": "פעיל"
+    },
+    "messages": {
+        "couldNotConnectToImap": "לא ניתן להתחבר לשרת IMAP",
+        "connectionIsOk": "החיבור תקין",
+        "imapNotConnected": "לא ניתן להתחבר ל[חשבון IMAP](#EmailAccount/view/{id})."
+    },
+    "tooltips": {
+        "useSmtp": "האפשרות לשלוח אימיילים.",
+        "emailAddress": "לרשומת המשתמש (המשתמש המשויך) צריכה להיות אותה כתובת אימייל כדי שיוכל להשתמש בחשבון אימייל זה לשליחה.",
+        "monitoredFolders": "תיקיות מרובות יש להפריד בפסיק.\n\nניתן להוסיף תיקיית 'נשלח' כדי לסנכרן אימיילים שנשלחו מתוכנת אימייל חיצונית.",
+        "storeSentEmails": "אימיילים שנשלחו יישמרו בשרת ה-IMAP. שדה כתובת האימייל חייב להתאים לכתובת ממנה יישלחו האימיילים."
+    }
+}

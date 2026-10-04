@@ -1,0 +1,17 @@
+{
+    "labels": {
+        "Create Webhook": "צור (וובהוק -Webhook) מנגנון התראה"
+    },
+    "fields": {
+        "event": "אירוע",
+        "url": "כתובת URL",
+        "isActive": "פעיל",
+        "user": "משתמש API",
+        "entityType": "סוג ישות",
+        "field": "שדה",
+        "secretKey": "מפתח סודי"
+    },
+    "links": {
+        "user": "משתמש"
+    }
+}

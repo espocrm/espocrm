@@ -1,0 +1,16 @@
+{
+    "messages": {
+        "infoMention": "הקלד **@username** כדי לתייג משתמש בפוסט.",
+        "infoSyntax": "תחביר Markdown זמין",
+        "couldNotAddFollowerUserHasNoAccessToStream": "לא ניתן להוסיף את המשתמש '{userName}' לעוקבים. למשתמש אין גישה ל'סטרים' של הרשומה."
+    },
+    "syntaxItems": {
+        "code": "קוד",
+        "multilineCode": "קוד רב-שורות",
+        "strongText": "טקסט מודגש",
+        "emphasizedText": "טקסט מוטה",
+        "deletedText": "טקסט שנמחק",
+        "blockquote": "ציטוט",
+        "link": "טקסט קישור"
+    }
+}

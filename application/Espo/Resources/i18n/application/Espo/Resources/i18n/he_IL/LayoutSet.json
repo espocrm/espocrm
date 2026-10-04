@@ -1,0 +1,11 @@
+{
+    "fields": {
+        "layoutList": "תצוגות"
+    },
+    "labels": {
+        "Create LayoutSet": "צור קבוצת תצוגות",
+        "Edit Layouts": "ערוך תצוגות"
+    },
+    "tooltips": {
+    }
+}

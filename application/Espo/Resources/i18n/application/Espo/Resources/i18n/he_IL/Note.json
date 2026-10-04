@@ -1,0 +1,64 @@
+{
+    "fields": {
+      "post": "פוסט",
+      "attachments": "קבצים מצורפים",
+      "targetType": "יעד",
+      "teams": "צוותים",
+      "users": "משתמשים",
+      "portals": "פורטלים",
+      "type": "סוג",
+      "isGlobal": "גלובלי",
+      "isInternal": "פנימי (עבור משתמשים פנימיים)",
+      "isPinned": "נעוץ",
+      "related": "קשור",
+      "createdByGender": "מגדר היוצר",
+      "data": "נתונים",
+      "number": "מספר"
+    },
+    "filters": {
+      "all": "הכל",
+      "posts": "פוסטים",
+      "updates": "עדכונים",
+      "activity": "פעילות"
+    },
+    "options": {
+      "targetType": {
+        "self": "לעצמי",
+        "users": "למשתמש/ים מסוימים",
+        "teams": "לצוות/ים מסוימים",
+        "all": "לכל המשתמשים הפנימיים",
+        "portals": "למשתמשי הפורטל"
+      },
+      "type": {
+        "Post": "פוסט",
+        "Create": "יצירה",
+        "CreateRelated": "יצירה קשורה",
+        "Update": "עדכון",
+        "Status": "סטטוס",
+        "Assign": "שייך",
+        "Relate": "קשר",
+        "Unrelate": "בטל קשר",
+        "EmailReceived": "התקבלה הודעת אימייל",
+        "EmailSent": "הודעת אימייל נשלחה"
+      }
+    },
+    "labels": {
+      "View Posts": "צפה בפוסטים",
+      "View Activity": "צפה בפעילות",
+      "Pin": "נעץ",
+      "Unpin": "בטל נעיצה",
+      "Pinned": "נעוץ",
+      "Quote Reply": "הגב עם ציטוט"
+    },
+    "messages": {
+      "writeMessage": "כתוב את ההודעה שלך כאן",
+      "pinnedMaxCountExceeded": "לא ניתן לנעוץ יותר פתקים. המספר המרבי המותר הוא {count}."
+    },
+    "links": {
+      "portals": "פורטלים",
+      "attachments": "קבצים מצורפים",
+      "superParent": "אב ראשי",
+      "related": "קשור"
+    }
+  }
+  

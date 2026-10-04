@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "username": "שם משתמש",
+        "ipAddress": "כתובת IP",
+        "requestTime": "זמן בקשה",
+        "createdAt": "התבקש ב",
+        "isDenied": "נדחה",
+        "denialReason": "סיבת דחייה",
+        "portal": "שער",
+        "user": "משתמש",
+        "authToken": "Auth אסימון נוצר",
+        "requestUrl": "בקש כתובת אתר - URL",
+        "requestMethod": "שיטת בקשה",
+        "authTokenIsActive": "אסימון פעיל",
+        "authenticationMethod": "שיטת אימות"
+    },
+    "links": {
+        "authToken": "אסימון נוצר",
+        "user": "משתמש",
+        "portal": "שער",
+        "actionHistoryRecords": "היסטוריית פעילות"
+    },
+    "presetFilters": {
+        "denied": "נדחתה",
+        "accepted": "התקבל"
+    },
+    "options": {
+        "denialReason": {
+            "CREDENTIALS": "אישורים לא חוקיים",
+            "WRONG_CODE": "קוד שגוי",
+            "INACTIVE_USER": "משתמש לא פעיל",
+            "IS_PORTAL_USER": "פורטל משתמש",
+            "IS_NOT_PORTAL_USER": "לא משתמש בפורטל",
+            "USER_IS_NOT_IN_PORTAL": "המשתמש אינו קשור לפורטל",
+            "IS_SYSTEM_USER": "משתמש במערכת",
+            "FORBIDDEN": "אסור"
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "status": "סטטוס",
+        "executeTime": "לביצוע בתאריך",
+        "executedAt": "בוצע בתאריך",
+        "startedAt": "התחיל בתאריך",
+        "attempts": "נסיונות שנותרו",
+        "failedAttempts": "נסיונות כושלים",
+        "serviceName": "שירות",
+        "method": "שיטה (לא בשימוש)",
+        "methodName": "שיטה",
+        "scheduledJob": "משימה מתוזמנת",
+        "scheduledJobJob": "שם המשימה המתוזמנת",
+        "data": "נתונים",
+        "targetType": "סוג יעד",
+        "targetId": "מזהה יעד",
+        "number": "מספר",
+        "queue": "תור",
+        "group": "קבוצה",
+        "className": "שם מחלקה",
+        "targetGroup": "קבוצת יעד",
+        "job": "משימה"
+    },
+    "options": {
+        "status": {
+            "Pending": "ממתין",
+            "Success": "הצלחה",
+            "Running": "פועל",
+            "Failed": "כישלון"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "role": "תפקיד",
+        "related": "קשור",
+        "file": "קובץ",
+        "type": "סוג",
+        "field": "שדה",
+        "sourceId": "מזהה מקור",
+        "storage": "אחסון",
+        "size": "גודל (בייטים)",
+        "isBeingUploaded": "נמצא בתהליך העלאה"
+    },
+    "options": {
+        "role": {
+            "Attachment": "קובץ מצורף",
+            "Inline Attachment": "קובץ מצורף מוטמע",
+            "Import File": "קובץ ייבוא",
+            "Export File": "קובץ ייצוא",
+            "Mail Merge": "מיזוג דואר",
+            "Mass Pdf": "PDF המוני"
+        }
+    },
+    "insertFromSourceLabels": {
+        "Document": "הוסף מסמך"
+    },
+    "presetFilters": {
+        "orphan": "יתום"
+    }
+}

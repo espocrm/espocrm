@@ -1,0 +1,45 @@
+{
+    "fields": {
+        "title": "כותרת",
+        "dateFrom": "מתאריך",
+        "dateTo": "עד תאריך",
+        "autorefreshInterval": "מרווח רענון אוטומטי",
+        "displayRecords": "הצג רשומות",
+        "isDoubleHeight": "גובה כפול",
+        "mode": "מצב תצוגה",
+        "enabledScopeList": "מה להציג",
+        "users": "משתמשים",
+        "entityType": "סוג ישות",
+        "primaryFilter": "מסנן ראשי",
+        "boolFilterList": "מסננים נוספים",
+        "sortBy": "מיון לפי (שדה)",
+        "sortDirection": "מיון לפי (כיוון)",
+        "expandedLayout": "פריסה",
+        "skipOwn": "אל תציג רשומות שלי",
+        "url": "כתובת URL",
+        "dateFilter": "סינון לפי תאריך",
+        "text": "טקסט",
+        "folder": "תיקייה",
+        "includeShared": "כלול משותפים"
+    },
+    "options": {
+        "mode": {
+            "agendaWeek": "שבוע (יומן)",
+            "basicWeek": "שבוע",
+            "month": "חודש",
+            "basicDay": "יום",
+            "agendaDay": "יום (יומן)",
+            "timeline": "ציר זמן"
+        },
+        "sortDirection": {
+            "asc": "סדר עולה",
+            "desc": "סדר יורד"
+        }
+    },
+    "messages": {
+        "selectEntityType": "בחר סוג ישות באפשרויות הדשלט."
+    },
+    "tooltips": {
+        "skipOwn": "פעולות שבוצעו על ידי חשבון המשתמש שלך לא יוצגו."
+    }
+}
