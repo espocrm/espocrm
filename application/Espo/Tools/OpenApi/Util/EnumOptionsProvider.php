@@ -59,6 +59,10 @@ class EnumOptionsProvider
             $this->metadata->get($path) :
             $fieldDefs->getParam('options');
 
+        if (!is_array($optionList)) {
+            return null;
+        }
+
         return $optionList;
     }
 }
