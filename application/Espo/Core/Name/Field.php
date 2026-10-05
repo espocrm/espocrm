@@ -65,4 +65,9 @@ class Field
      * @since 10.0.0
      */
     public const string PIPELINE_STAGE = 'pipelineStage';
+
+    /**
+     * @since 10.10.0
+     */
+    public const string ATTACHMENTS = 'attachments';
 }
