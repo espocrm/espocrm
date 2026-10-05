@@ -1270,6 +1270,10 @@
                     "type": "boolean",
                     "description": "Disables the ability perform mass-update on the field. As of v8.4."
                 },
+                "aclDisabled": {
+                    "type": "boolean",
+                    "description": "Disables field-level ACL for the field. As of v10.1."
+                },
                 "apiSpecDisabled": {
                     "type": "boolean",
                     "description": "Do not print the field in the API specification. As of v9.3."

@@ -402,7 +402,8 @@
             "type": "attachmentMultiple",
             "sourceList": ["Document"],
             "layoutDefaultSidePanelDisabled": true,
-            "massUpdateDisabled": true
+            "massUpdateDisabled": true,
+            "aclDisabled": true
         },
         "hasAttachment": {
             "type": "bool",

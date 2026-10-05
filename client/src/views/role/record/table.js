@@ -690,6 +690,13 @@ class RoleRecordTableView extends View {
                     return;
                 }
 
+                /** @type {Record} */
+                const fieldDefs = this.getMetadata().get(`entityDefs.${scope}.fields.${field}`) ?? {};
+
+                if (fieldDefs.aclDisabled) {
+                    return;
+                }
+
                 const list = [];
 
                 this.fieldActionList.forEach(action => {

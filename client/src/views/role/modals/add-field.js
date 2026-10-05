@@ -95,6 +95,7 @@ class RoleAddFieldModalView extends ModalView {
 
         this.headerText = this.translate(scope, 'scopeNamesPlural') + ' · ' + this.translate('Add Field');
 
+        /** @type {Record<string, Record>} */
         const fields = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
         const fieldList = [];
 
@@ -102,6 +103,10 @@ class RoleAddFieldModalView extends ModalView {
 
         Object.keys(fields).filter(field => !ignoreFieldList.includes(field)).forEach(field => {
             if (!this.getFieldManager().isEntityTypeFieldAvailable(scope, field)) {
+                return;
+            }
+
+            if (fields[field].aclDisabled) {
                 return;
             }
 
