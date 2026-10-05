@@ -200,6 +200,10 @@ class ConvertService
                 }
 
                 if ($type === FieldType::ATTACHMENT_MULTIPLE) {
+                    if (!$this->acl->checkField(Lead::ENTITY_TYPE, $field)) {
+                        continue;
+                    }
+
                     /** @var Collection<Attachment> & Countable $attachmentList */
                     $attachmentList = $this->entityManager
                         ->getRelation($lead, $leadField)

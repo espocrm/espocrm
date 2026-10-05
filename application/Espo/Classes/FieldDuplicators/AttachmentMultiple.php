@@ -29,37 +29,42 @@
 
 namespace Espo\Classes\FieldDuplicators;
 
+use Espo\Core\Acl;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\Duplicator\FieldDuplicator;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
-
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\Attachment;
-
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class AttachmentMultiple implements FieldDuplicator
 {
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Acl $acl,
+    ) {}
 
     public function duplicate(Entity $entity, string $field): stdClass
     {
-        $valueMap = (object) [];
+        if (!$this->acl->checkField($entity->getEntityType(), Field::ATTACHMENTS)) {
+            return (object) [];
+        }
 
-        /** @var \Espo\ORM\Collection<Attachment> $attachmentList */
+        /** @var EntityCollection<Attachment> $attachmentList */
         $attachmentList = $this->entityManager
-            ->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, $field)
             ->find();
 
-        if (is_countable($attachmentList) && !count($attachmentList)) {
-            return $valueMap;
+        if (!count($attachmentList)) {
+            return (object) [];
         }
+
+        $valueMap = (object) [];
 
         $idList = [];
         $nameHash = (object) [];
