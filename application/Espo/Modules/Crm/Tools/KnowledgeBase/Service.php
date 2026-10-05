@@ -34,11 +34,11 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
-use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Entities\Attachment;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\EntityManager;
@@ -72,6 +72,10 @@ class Service
 
         if (!$entity) {
             throw new NotFound();
+        }
+
+        if (!$this->acl->checkField(KnowledgeBaseArticle::ENTITY_TYPE, Field::ATTACHMENTS)) {
+            return [];
         }
 
         $this->attachmentAccessChecker->check($fieldData);
