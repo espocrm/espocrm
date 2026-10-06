@@ -345,46 +345,52 @@ class Metadata
      */
     public function save(): bool
     {
-        $path = $this->customPath;
-
         $result = true;
+        $problemPath = null;
 
-        if (!empty($this->changedData)) {
+        if ($this->changedData) {
             foreach ($this->changedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $data) {
                     if (empty($data)) {
                         continue;
                     }
 
-                    $filePath = "$path/$key1/$key2.json";
+                    $filePath = "$this->customPath/$key1/$key2.json";
 
-                    $result &= $this->fileManager->mergeJsonContents($filePath, $data);
+                    $itemResult = $this->fileManager->mergeJsonContents($filePath, $data);
+
+                    $result &= $itemResult;
+
+                    if (!$itemResult && !$problemPath) {
+                        $problemPath = $filePath;
+                    }
                 }
             }
         }
 
-        if (!empty($this->deletedData)) {
+        if ($this->deletedData) {
             foreach ($this->deletedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $unsetData) {
                     if (empty($unsetData)) {
                         continue;
                     }
 
-                    $filePath = "$path/$key1/$key2.json";
+                    $filePath = "$this->customPath/$key1/$key2.json";
 
                     $rowResult = $this->fileManager->unsetJsonContents($filePath, $unsetData);
 
                     if (!$rowResult) {
-                        throw new LogicException(
-                            "Metadata items $key1.$key2 can be deleted for custom code only."
-                        );
+                        throw new LogicException("Metadata items $key1.$key2 can be deleted for custom code only.");
                     }
                 }
             }
         }
 
         if (!$result) {
-            throw new RuntimeException("Error while saving metadata. See log file for details.");
+            $message = "Error while saving metadata. Usually it's a file permission problem. " .
+                "First problem path: `$problemPath`.";
+
+            throw new RuntimeException($message);
         }
 
         $this->clearChanges();
