@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\ORM;
 
+use Espo\ORM\Exceptions\DeadlockException;
 use Espo\ORM\Executor\DefaultSqlExecutor;
 use Espo\ORM\PDO\PDOProvider;
 
@@ -40,7 +41,7 @@ use RuntimeException;
 
 class SqlExecutorTest extends TestCase
 {
-    private $pdo;
+    private ?PDO $pdo = null;
     private $sth;
     private $executor;
 
@@ -138,7 +139,7 @@ class SqlExecutorTest extends TestCase
 
         $e = new PDOException;
 
-        $e->errorInfo = [40001, 1213];
+        $e->errorInfo = ['40001', 1213];
 
         $invokedCount = $this->exactly(2);
 
@@ -160,5 +161,29 @@ class SqlExecutorTest extends TestCase
         $sth = $this->executor->execute($sql, true);
 
         $this->assertInstanceOf(PDOStatement::class, $sth);
+    }
+
+    public function testExecuteDeadlockInTransaction(): void
+    {
+        $sql = "SOME QUERY";
+
+        $e = new PDOException();
+        $e->errorInfo = ['40001', 1213];
+
+        $this->pdo
+            ->expects($this->once())
+            ->method('inTransaction')
+            ->willReturn(true);
+
+        $this->expectException(DeadlockException::class);
+
+        $this->pdo
+            ->expects($this->once())
+            ->method('query')
+            ->willReturnCallback(function () use ($e) {
+                throw $e;
+            });
+
+        $this->executor->execute($sql, true);
     }
 }

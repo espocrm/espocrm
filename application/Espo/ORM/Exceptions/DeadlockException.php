@@ -27,22 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Executor;
+namespace Espo\ORM\Exceptions;
 
-use Espo\ORM\Exceptions\DeadlockException;
-use Espo\ORM\Query\Query;
-
-use PDOStatement;
+use RuntimeException;
 
 /**
- * Executes queries by given query params instances.
+ * @since 10.1.0
  */
-interface QueryExecutor
-{
-    /**
-     * Execute a query.
-     *
-     * @throws DeadlockException
-     */
-    public function execute(Query $query): PDOStatement;
-}
+class DeadlockException extends RuntimeException
+{}
