@@ -764,6 +764,31 @@ class EvaluatorTest extends TestCase
         $this->assertEquals($value, $result);
     }
 
+    public function testJsonRetrieveNonNumericKeyOnArray(): void
+    {
+        $value = (object) [
+            'items' => [
+                (object) ['id' => 'test'],
+            ],
+        ];
+
+        $expression = "json\\retrieve(\$value, 'items.id')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertNull($result);
+
+        $expression = "json\\retrieve(\$value, 'items.1a')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertNull($result);
+    }
+
     public function testNegate1()
     {
         $expression = "!string\contains('hello', 'test')";

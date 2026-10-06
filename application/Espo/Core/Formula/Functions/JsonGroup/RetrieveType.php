@@ -104,9 +104,11 @@ class RetrieveType extends BaseFunction
         $key = array_shift($path);
 
         if (is_array($item)) {
-            $key = intval($key);
+            if (!ctype_digit($key)) {
+                return null;
+            }
 
-            $subItem = $item[$key] ?? null;
+            $subItem = $item[(int) $key] ?? null;
 
             if (is_null($subItem)) {
                 return null;
