@@ -29,6 +29,7 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Exceptions\DeadlockException;
 use Espo\ORM\QueryComposer\QueryComposer;
 
 use PDO;
@@ -40,6 +41,8 @@ use Closure;
 class TransactionManager
 {
     private int $level = 0;
+
+    private const int MAX_ATTEMPT_COUNT = 4;
 
     public function __construct(private PDO $pdo, private QueryComposer $queryComposer)
     {}
@@ -65,20 +68,38 @@ class TransactionManager
      *
      * @return mixed A function result.
      */
-    public function run(Closure $function)
+    public function run(Closure $function): mixed
     {
+        return $this->runInternal($function);
+    }
+
+    /**
+     * @throws PDOException
+     */
+    private function runInternal(Closure $function, ?int $counter = null): mixed
+    {
+        $counter ??= self::MAX_ATTEMPT_COUNT;
+
         $this->start();
 
         try {
             $result = $function();
 
             $this->commit();
+        } catch (DeadlockException $e) {
+            $this->level --;
+            $counter --;
+
+            if ($counter === 0) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                throw $e->getPrevious() ?? new RuntimeException();
+            }
+
+            return $this->runInternal($function, $counter);
         } catch (Throwable $e) {
             $this->rollback();
 
-            /**
-             * @var PDOException $e
-             */
+            /** @var PDOException $e */
             throw $e;
         }
 

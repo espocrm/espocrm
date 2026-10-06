@@ -29,9 +29,11 @@
 
 namespace tests\unit\Espo\ORM;
 
+use Espo\ORM\Exceptions\DeadlockException;
 use Espo\ORM\QueryComposer\MysqlQueryComposer;
 use Espo\ORM\TransactionManager;
 use PDO;
+use PDOException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -272,5 +274,32 @@ class TransactionManagerTest extends TestCase
                 }
             );
         } catch (RuntimeException $e) {}
+    }
+
+    public function testDeadlock(): void
+    {
+        $this->pdo
+            ->expects($this->exactly(4))
+            ->method('beginTransaction');
+
+        $this->pdo
+            ->expects($this->never())
+            ->method('rollback');
+
+        $counter = 0;
+        $thrown = false;
+
+        try {
+            $this->manager->run(function () use (&$counter) {
+                $counter ++;
+
+                throw new DeadlockException(previous: new PDOException());
+            });
+        } catch (PDOException) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertEquals(4, $counter);
     }
 }

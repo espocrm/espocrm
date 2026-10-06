@@ -29,6 +29,7 @@
 
 namespace Espo\ORM\Executor;
 
+use Espo\ORM\Exceptions\DeadlockException;
 use Espo\ORM\PDO\PDOProvider;
 use Psr\Log\LoggerInterface;
 
@@ -73,14 +74,26 @@ class DefaultSqlExecutor implements SqlExecutor
     {
         $counter = $counter ?? self::MAX_ATTEMPT_COUNT;
 
+        $inTransaction = $this->pdo->inTransaction();
+
         try {
             $sth = $this->pdo->query($sql);
         } catch (Exception $e) {
             $counter--;
 
-            if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {
+            $isDeadlock = $this->isExceptionIsDeadlock($e);
+
+            if (
+                $counter === 0 ||
+                !$isDeadlock ||
+                $inTransaction
+            ) {
                 if ($this->logFailed) {
                     $this->logger?->error("SQL failed: " . $sql, ['isSql' => true]);
+                }
+
+                if ($isDeadlock) {
+                    throw new DeadlockException(previous: $e);
                 }
 
                 /** @var PDOException $e */
@@ -99,10 +112,16 @@ class DefaultSqlExecutor implements SqlExecutor
 
     private function isExceptionIsDeadlock(Exception $e): bool
     {
-        if (!$e instanceof PDOException) {
+        if (!$e instanceof PDOException || !$e->errorInfo) {
             return false;
         }
 
-        return isset($e->errorInfo) && $e->errorInfo[0] == 40001 && $e->errorInfo[1] == 1213;
+        $state = $e->errorInfo[0] ?? null;
+
+        if ($state === '40P01') {
+            return true;
+        }
+
+        return $state === '40001' && (int) $e->errorInfo[1] === 1213;
     }
 }
