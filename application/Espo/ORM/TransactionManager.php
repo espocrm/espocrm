@@ -80,6 +80,8 @@ class TransactionManager
     {
         $counter ??= self::MAX_ATTEMPT_COUNT;
 
+        $isOutermost = $this->level === 0;
+
         $this->start();
 
         try {
@@ -87,7 +89,16 @@ class TransactionManager
 
             $this->commit();
         } catch (DeadlockException $e) {
+            // The entire transaction is aborted, including save points.
+
             $this->level --;
+
+            if (!$isOutermost) {
+                throw $e;
+            }
+
+            $this->forceRollback();
+
             $counter --;
 
             if ($counter === 0) {
@@ -188,5 +199,14 @@ class TransactionManager
         $sql = $this->queryComposer->composeRollbackToSavepoint($this->getCurrentSavepoint());
 
         $this->pdo->exec($sql);
+    }
+
+    private function forceRollback(): void
+    {
+        try {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+        } catch (PDOException) {}
     }
 }
