@@ -96,7 +96,7 @@ class DefaultSqlExecutor implements SqlExecutor
                 }
 
                 if ($isDeadlock) {
-                    throw new DeadlockException(previous: $e);
+                    throw new DeadlockException($e->getMessage(), previous: $e);
                 }
 
                 /** @var PDOException $e */
