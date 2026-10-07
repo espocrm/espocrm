@@ -125,6 +125,10 @@ class DefaultSqlExecutor implements SqlExecutor
             return true;
         }
 
+        if ($state === 'HY000' && (int) $e->errorInfo[1] === 1020) {
+            return true;
+        }
+
         return $state === '40001' && (int) $e->errorInfo[1] === 1213;
     }
 }
