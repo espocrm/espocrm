@@ -102,8 +102,7 @@ class TransactionManager
             $counter --;
 
             if ($counter === 0) {
-                /** @noinspection PhpUnhandledExceptionInspection */
-                throw $e->getPrevious() ?? new RuntimeException();
+                throw $e;
             }
 
             return $this->runInternal($function, $counter);
