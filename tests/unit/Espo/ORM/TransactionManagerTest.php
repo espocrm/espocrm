@@ -295,7 +295,7 @@ class TransactionManagerTest extends TestCase
 
                 throw new DeadlockException(previous: new PDOException());
             });
-        } catch (PDOException) {
+        } catch (DeadlockException) {
             $thrown = true;
         }
 
