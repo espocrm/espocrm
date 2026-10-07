@@ -70,6 +70,9 @@ class DefaultSqlExecutor implements SqlExecutor
         return $this->executeSqlWithDeadlockHandling($sql);
     }
 
+    /**
+     * @throws DeadlockException
+     */
     private function executeSqlWithDeadlockHandling(string $sql, ?int $counter = null): PDOStatement
     {
         $counter = $counter ?? self::MAX_ATTEMPT_COUNT;
