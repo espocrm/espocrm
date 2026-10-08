@@ -29,7 +29,16 @@
 
 namespace Espo\Entities;
 
-class ArrayValue extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class ArrayValue extends Entity
 {
-    public const ENTITY_TYPE = 'ArrayValue';
+    public const string ENTITY_TYPE = 'ArrayValue';
+
+    public const string FIELD_VALUE = 'value';
+
+    public function getValue(): ?string
+    {
+        return $this->get(self::FIELD_VALUE);
+    }
 }
