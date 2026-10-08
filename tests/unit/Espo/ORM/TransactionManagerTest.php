@@ -309,4 +309,44 @@ class TransactionManagerTest extends TestCase
         $this->assertTrue($thrown);
         $this->assertEquals($expectedCount, $counter);
     }
+
+    public function testNestedDeadlock(): void
+    {
+        $expectedCount = 4;
+
+        $this->pdo
+            ->expects($this->exactly($expectedCount))
+            ->method('beginTransaction');
+
+        $this->pdo
+            ->expects($this->exactly($expectedCount))
+            ->method('inTransaction')
+            ->willReturn(false);
+
+        $this->pdo
+            ->expects($this->never())
+            ->method('rollBack');
+
+        $counter = 0;
+        $outermostCounter = 0;
+        $thrown = false;
+
+        try {
+            $this->manager->run(function () use (&$counter, &$outermostCounter) {
+                $outermostCounter ++;
+
+                $this->manager->run(function () use (&$counter, &$outermostCounter) {
+                    $counter ++;
+
+                    throw new DeadlockException(previous: new PDOException());
+                });
+            });
+
+        } catch (DeadlockException) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertEquals($expectedCount, $counter);
+    }
 }
