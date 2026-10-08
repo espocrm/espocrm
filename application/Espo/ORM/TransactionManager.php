@@ -176,7 +176,7 @@ class TransactionManager
 
     private function getCurrentSavepoint(): string
     {
-        return 'POINT_' . (string) $this->level;
+        return 'POINT_' . $this->level;
     }
 
     private function createSavepoint(): void
