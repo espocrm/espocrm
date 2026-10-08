@@ -39,8 +39,8 @@ use RuntimeException;
 
 class TransactionManagerTest extends TestCase
 {
-    private $pdo;
-    private $manager;
+    private ?PDO $pdo = null;
+    private ?TransactionManager $manager = null;
 
     protected function setUp() : void
     {
@@ -273,7 +273,7 @@ class TransactionManagerTest extends TestCase
                     throw new RuntimeException();
                 }
             );
-        } catch (RuntimeException $e) {}
+        } catch (RuntimeException) {}
     }
 
     public function testDeadlock(): void
