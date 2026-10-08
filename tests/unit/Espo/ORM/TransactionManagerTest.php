@@ -278,13 +278,20 @@ class TransactionManagerTest extends TestCase
 
     public function testDeadlock(): void
     {
+        $expectedCount = 4;
+
         $this->pdo
-            ->expects($this->exactly(4))
+            ->expects($this->exactly($expectedCount))
             ->method('beginTransaction');
 
         $this->pdo
+            ->expects($this->exactly($expectedCount))
+            ->method('inTransaction')
+            ->willReturn(false);
+
+        $this->pdo
             ->expects($this->never())
-            ->method('rollback');
+            ->method('rollBack');
 
         $counter = 0;
         $thrown = false;
@@ -300,6 +307,6 @@ class TransactionManagerTest extends TestCase
         }
 
         $this->assertTrue($thrown);
-        $this->assertEquals(4, $counter);
+        $this->assertEquals($expectedCount, $counter);
     }
 }
