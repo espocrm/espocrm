@@ -56,23 +56,9 @@ class DatabasePopulator
 
         $currencyRates = $this->prepareRates($defaultCurrency, $baseCurrency);
 
-        $this->entityManager->getTransactionManager()->start();
-
-        $delete = $this->entityManager->getQueryBuilder()
-            ->delete()
-            ->from(Currency::ENTITY_TYPE)
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($delete);
-
-        foreach ($currencyRates as $currencyName => $rate) {
-            $this->entityManager->createEntity(Currency::ENTITY_TYPE, [
-                Attribute::ID => $currencyName,
-                Currency::FIELD_RATE => $rate,
-            ]);
-        }
-
-        $this->entityManager->getTransactionManager()->commit();
+        $this->entityManager
+            ->getTransactionManager()
+            ->run(fn () => $this->processInTransaction($currencyRates));
     }
 
     /**
@@ -117,5 +103,25 @@ class DatabasePopulator
         $currencyRates[$defaultCurrency] = 1.00;
 
         return $currencyRates;
+    }
+
+    /**
+     * @param array<string, float> $currencyRates
+     */
+    private function processInTransaction(array $currencyRates): void
+    {
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from(Currency::ENTITY_TYPE)
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($delete);
+
+        foreach ($currencyRates as $currencyName => $rate) {
+            $this->entityManager->createEntity(Currency::ENTITY_TYPE, [
+                Attribute::ID => $currencyName,
+                Currency::FIELD_RATE => $rate,
+            ]);
+        }
     }
 }
