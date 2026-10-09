@@ -32,44 +32,17 @@ namespace Espo\Core\Mail\Importer;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
-use PDOException;
 
 /**
  * @internal
  */
 class EmailSaver
 {
-    private const int SAVE_RETRY_COUNT = 2;
-
     public function __construct(
         private EntityManager $entityManager,
     ) {}
 
     public function save(Email $email): void
-    {
-        for ($i = 0; $i < self::SAVE_RETRY_COUNT; $i ++) {
-            try {
-                $this->saveInternal($email);
-            } catch (PDOException $e) {
-                $code = (int) ($e->errorInfo[1] ?? '0');
-
-                // Handles a snapshot isolation conflict.
-                if ($code === 1020) {
-                    if ($i === self::SAVE_RETRY_COUNT - 1) {
-                        throw $e;
-                    }
-
-                    continue;
-                }
-
-                throw $e;
-            }
-
-            break;
-        }
-    }
-
-    private function saveInternal(Email $email): void
     {
         $this->entityManager->getTransactionManager()->run(function () use ($email) {
             $this->entityManager
