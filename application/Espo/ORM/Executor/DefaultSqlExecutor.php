@@ -41,7 +41,7 @@ use RuntimeException;
 
 class DefaultSqlExecutor implements SqlExecutor
 {
-    private const MAX_ATTEMPT_COUNT = 4;
+    private const int MAX_ATTEMPT_COUNT = 4;
 
     private PDO $pdo;
 
