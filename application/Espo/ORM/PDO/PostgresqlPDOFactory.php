@@ -66,7 +66,7 @@ class PostgresqlPDOFactory implements PDOFactory
             $dsn .= ';' . 'dbname=' . $dbname;
         }
 
-        $dsn .= ';' . 'options=' . "'--client_encoding={$charset}'";
+        $dsn .= ';' . 'client_encoding=' . $charset;
 
         $options = Options::getOptionsFromDatabaseParams($databaseParams);
 
