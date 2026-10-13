@@ -50,6 +50,7 @@ class Params
     private ?Direction $direction = null;
     private bool $login = false;
     private ?SecurityParams $securityParams = null;
+    private bool $useRouter = false;
 
     /**
      * @param ?array<string, mixed> $data
@@ -77,6 +78,17 @@ class Params
     {
         $obj = clone $this;
         $obj->data = $data;
+
+        return $obj;
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function withUserRouter(bool $useRouter = true): self
+    {
+        $obj = clone $this;
+        $obj->useRouter = $useRouter;
 
         return $obj;
     }
@@ -245,5 +257,13 @@ class Params
     public function getSecurityParams(): ?SecurityParams
     {
         return $this->securityParams;
+    }
+
+    /**
+     * @since 10.1.0
+     */
+    public function useRouter(): bool
+    {
+        return $this->useRouter;
     }
 }

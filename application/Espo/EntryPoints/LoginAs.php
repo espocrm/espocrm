@@ -60,6 +60,7 @@ class LoginAs implements EntryPoint
                     'anotherUser' => $anotherUser,
                     'username' => $request->getQueryParam('username'),
                 ])
+                ->withUserRouter()
                 ->withInitAuth()
         );
     }

@@ -59,6 +59,7 @@ class ActionRenderer
             theme: $params->getTheme(),
             direction: $params->getDirection(),
             login: $params->login(),
+            useRouter: $params->useRouter(),
         );
 
         $securityParams = $params->getSecurityParams();
@@ -88,6 +89,7 @@ class ActionRenderer
         ?string $theme,
         ?Direction $direction,
         bool $login,
+        bool $useRouter,
     ): string {
 
         $encodedData = Json::encode($data);
@@ -122,7 +124,7 @@ class ActionRenderer
             pageTitle: $pageTitle,
             theme: $theme,
             direction: $direction,
-            useRouter: false,
+            useRouter: $useRouter,
         );
 
         return $this->clientManager->render($params);
