@@ -292,11 +292,11 @@ class LoginView extends View {
             this.enableForm();
 
             if (xhr.status === 401) {
-                const data = JSON.parse(xhr.responseText);
-
                 const statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                 if (statusReason === 'second-step-required') {
+                    const data = JSON.parse(xhr.responseText);
+
                     xhr.errorIsHandled = true;
                     this.onSecondStepRequired(initialHeaders, userName, password, data);
 
