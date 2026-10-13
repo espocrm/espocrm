@@ -188,6 +188,8 @@ const Utils = {
 
         let fired = false;
 
+        handler = actionData.handler ?? handler ?? null;
+
         if (handler) {
             event.preventDefault();
             event.stopPropagation();
