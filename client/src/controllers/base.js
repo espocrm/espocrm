@@ -164,7 +164,11 @@ class BaseController extends Controller {
     logout() {
         const title = this.getConfig().get('applicationName') || 'EspoCRM';
 
-        $('head title').text(title);
+        const titleElement = document.querySelector('head title');
+
+        if (titleElement) {
+            titleElement.textContent = title;
+        }
 
         this.trigger('logout');
     }
