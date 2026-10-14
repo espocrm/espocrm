@@ -265,15 +265,13 @@ class Pusher implements WampServerInterface
 
         $command = $this->phpExecutablePath . " command.php " . $data['accessCheckCommand'];
 
+        $replace = [];
+
         foreach ($params as $key => $value) {
-            $command = str_replace(
-                ':' . $key,
-                escapeshellarg($value),
-                $command
-            );
+            $replace[':' . $key] = escapeshellarg($value);
         }
 
-        return $command;
+        return strtr($command, $replace);
     }
 
     /**
