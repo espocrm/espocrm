@@ -287,6 +287,11 @@ class LayoutDetailView extends LayoutGridView {
         });
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     * @param {Record[]} layout
+     */
     readDataFromLayout(model, layout) {
         const allFields = [];
 
@@ -321,6 +326,12 @@ class LayoutDetailView extends LayoutGridView {
         }
     }
 
+    /**
+     * @private
+     * @param {import('model').default} model
+     * @param {string} name
+     * @return {boolean}
+     */
     isFieldEnabled(model, name) {
         if (this.hasDefaultPanel()) {
             if (this.defaultPanelFieldList.includes(name)) {
