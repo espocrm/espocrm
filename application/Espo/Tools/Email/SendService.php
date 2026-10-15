@@ -425,8 +425,7 @@ class SendService
             throw new NotFound("User not found.");
         }
 
-        /** @var Email $email */
-        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
         $email
             ->setSubject('EspoCRM: Test Email')
