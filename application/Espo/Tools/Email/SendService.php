@@ -429,6 +429,7 @@ class SendService
 
         $email
             ->setSubject('EspoCRM: Test Email')
+            ->setBody('Email sending test.')
             ->setIsHtml(false)
             ->addToAddress($emailAddress);
 
