@@ -1,5 +1,7 @@
 {
-    "globalMiddlewareClassNameList": [],
+    "globalMiddlewareClassNameList": [
+        "Espo\\Tools\\Api\\Guard\\Middleware"
+    ],
     "routeMiddlewareClassNameListMap": {},
     "controllerMiddlewareClassNameListMap": {},
     "controllerActionMiddlewareClassNameListMap": {}

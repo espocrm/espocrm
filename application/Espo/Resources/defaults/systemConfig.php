@@ -114,6 +114,8 @@ return [
         'authUsernameFailedAttemptsDelay',
         'authUsernameFailedAttemptsPeriod',
         'ipAddressServerParam',
+        'guardEnabled',
+        'guard',
         'jobNoTableLocking',
         'passwordRecoveryRequestLifetime',
         'passwordChangeRequestNewUserLifetime',
