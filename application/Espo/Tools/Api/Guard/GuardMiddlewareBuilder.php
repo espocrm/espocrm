@@ -127,7 +127,7 @@ class GuardMiddlewareBuilder
 
     private function buildRedis(SecurityConfig $config): RedisHandler
     {
-        $url = parse_url($config->redisUrl);
+        $url = $this->parseRedisUrl($config->redisUrl);
 
         return new RedisHandler(
             enableRedis: $config->enableRedis,
@@ -138,6 +138,32 @@ class GuardMiddlewareBuilder
             healthCheckInterval: $config->redisHealthCheckInterval,
             maxConnections: $config->redisMaxConnections,
         );
+    }
+
+    /**
+     * The engine connects by host and port only, so any other part of the URL is rejected rather than ignored.
+     *
+     * @return array{host?: string, port?: int}
+     */
+    private function parseRedisUrl(string $redisUrl): array
+    {
+        $url = parse_url($redisUrl);
+
+        if ($url === false || ($url['scheme'] ?? null) !== 'redis' || !isset($url['host'])) {
+            throw new InvalidArgumentException("Guard redisUrl must be redis://host[:port], got '$redisUrl'.");
+        }
+
+        foreach (['pass' => 'a password', 'user' => 'a user', 'query' => 'a query', 'fragment' => 'a fragment'] as $part => $name) {
+            if (isset($url[$part])) {
+                throw new InvalidArgumentException("Guard redisUrl with $name is not supported, use redis://host[:port].");
+            }
+        }
+
+        if (isset($url['path']) && $url['path'] !== '' && $url['path'] !== '/') {
+            throw new InvalidArgumentException("Guard redisUrl with a database index is not supported, use redis://host[:port].");
+        }
+
+        return $url;
     }
 
     /**

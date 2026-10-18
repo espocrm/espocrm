@@ -32,6 +32,9 @@ namespace Espo\Tools\Api\Guard;
 /**
  * The policy applied when `guardEnabled` is true: passive mode, screening on, and route policies for the
  * endpoints that are internet facing or credential related. Operator config overrides it key by key.
+ *
+ * Redis is off by default, and without it route rate limits, behavior rules and auto-bans keep state per request only,
+ * so under PHP-FPM they never trigger across requests until `enableRedis` is set.
  */
 class DefaultPolicy
 {

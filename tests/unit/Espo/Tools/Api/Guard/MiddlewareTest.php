@@ -39,6 +39,7 @@ use Espo\Tools\Api\Guard\RouteConfigBuilder;
 use Espo\Tools\Api\Guard\SecurityConfigBuilder;
 use InvalidArgumentException;
 use Monolog\Handler\TestHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -379,6 +380,42 @@ class MiddlewareTest extends TestCase
             $this->assertSame('status:401', $rule['pattern']);
             $this->assertSame('ban', $rule['action']);
         }
+    }
+
+    public function testRedisIsOffByDefault(): void
+    {
+        $this->assertFalse((new DefaultPolicy())->merge([])['enableRedis']);
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function unsupportedRedisUrlProvider(): array
+    {
+        return [
+            'user' => ['redis://bob@127.0.0.1:6379', 'a user'],
+            'password' => ['redis://:secret@127.0.0.1:6379', 'a password'],
+            'database index' => ['redis://127.0.0.1:6379/2', 'a database index'],
+            'tls scheme' => ['rediss://127.0.0.1:6379', 'redis://host[:port]'],
+        ];
+    }
+
+    #[DataProvider('unsupportedRedisUrlProvider')]
+    public function testUnsupportedRedisUrlFailsLoudly(string $url, string $expected): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage($expected);
+
+        $this->createMiddleware(['redisUrl' => $url])
+            ->process($this->createRequest('GET', '/'), $this->createHandler());
+    }
+
+    public function testPlainRedisUrlIsAccepted(): void
+    {
+        $response = $this->createMiddleware(['redisUrl' => 'redis://127.0.0.1:6420'])
+            ->process($this->createRequest('GET', '/'), $this->createHandler());
+
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testOperatorSettingsOverrideDefaultsKeyByKey(): void
