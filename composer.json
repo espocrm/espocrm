@@ -59,13 +59,15 @@
         "php-amqplib/php-amqplib": "^3.7",
         "predis/predis": "^3.5",
         "psr/cache": "^3.0",
-        "league/oauth2-server": "^9.4"
+        "league/oauth2-server": "^9.4",
+        "rennf93/psr15-guard": "^1.6.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
         "phpstan/phpstan": "^2.1"
     },
     "suggest": {
+        "rennf93/guard-agent-php": "Telemetry agent and dashboard dynamic rules for the opt-in Guard Core API middleware (guard config key agent).",
         "ext-pdo_mysql": "*",
         "ext-pdo_pgsql": "*",
         "ext-bcmath": "*",

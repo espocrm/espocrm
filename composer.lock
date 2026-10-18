@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1f0cdefbb364e6f2ea6d2b69a9700c5",
+    "content-hash": "426308fced06b26d3453922e35d3428e",
     "packages": [
         {
             "name": "async-aws/core",
@@ -6190,6 +6190,112 @@
             "time": "2018-05-18T15:27:55+00:00"
         },
         {
+            "name": "rennf93/guard-core-php",
+            "version": "v4.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guard-Core/guard-core-php.git",
+                "reference": "2e3f8296fbc804027acbc5939728100b345c01af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guard-Core/guard-core-php/zipball/2e3f8296fbc804027acbc5939728100b345c01af",
+                "reference": "2e3f8296fbc804027acbc5939728100b345c01af",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-pcre": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/php-code-coverage": "^11.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RenzoFranceschini\\GuardCore\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP port of guard-core: behavioral WAF engine (detection engine conformance milestone)",
+            "support": {
+                "issues": "https://github.com/Guard-Core/guard-core-php/issues",
+                "source": "https://github.com/Guard-Core/guard-core-php/tree/v4.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/renzof93",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/rennf93",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-15T19:21:18+00:00"
+        },
+        {
+            "name": "rennf93/psr15-guard",
+            "version": "v1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guard-Core/psr15-guard.git",
+                "reference": "c8a172a00e6c69a6eb334fc536494c545e151371"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guard-Core/psr15-guard/zipball/c8a172a00e6c69a6eb334fc536494c545e151371",
+                "reference": "c8a172a00e6c69a6eb334fc536494c545e151371",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1|^2.0",
+                "psr/http-server-handler": "^1.0",
+                "psr/http-server-middleware": "^1.0",
+                "rennf93/guard-core-php": "^4.4.0"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.8",
+                "phpunit/php-code-coverage": "^11.0"
+            },
+            "suggest": {
+                "rennf93/guard-agent-php": "Telemetry agent: ships security events and metrics to the Guard Core App and delivers dynamic rules (pass it as the agentHandler argument)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RenzoFranceschini\\GuardCorePsr15\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PSR-15 middleware adapter for guard-core-php: translates PSR-7 server requests to the guard-core engine and block verdicts back to PSR-7 responses",
+            "support": {
+                "issues": "https://github.com/Guard-Core/psr15-guard/issues",
+                "source": "https://github.com/Guard-Core/psr15-guard/tree/v1.6.1"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/renzof93",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/rennf93",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-17T00:59:03+00:00"
+        },
+        {
             "name": "robthree/twofactorauth",
             "version": "1.8.2",
             "source": {
@@ -10677,9 +10783,9 @@
         "ext-pdo": "*",
         "ext-ctype": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.3.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
