@@ -55,7 +55,7 @@ class CheckCorrectness implements AdditionalBuilder
             $hasEntityDefs = is_object($data->entityDefs->$scope ?? null);
 
             if (!$isEntity && !$hasEntityDefs) {
-                //throw new RuntimeException("Unexpected scope '$scope' entityAcl. Entity '$scope' is not defined.");
+                throw new RuntimeException("Unexpected scope '$scope' entityAcl. Entity '$scope' is not defined.");
             }
         }
     }
