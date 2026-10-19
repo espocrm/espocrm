@@ -136,7 +136,7 @@ span.ok {
 }
 
 .main-header.panel-heading {
-    background-color: var(--navbar-inverse-bg) !important;
+    background-color: var(--login-panel-heading-bg) !important;
     padding: 0 2px;
     border-bottom-width: 0;
 }
