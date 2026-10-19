@@ -44,8 +44,8 @@ use Espo\ORM\Query\UpdateBuilder;
 
 class AfterUpgrade implements Script
 {
-    private const LEGACY_THEME = 'EspoRtl';
-    private const THEME = 'Espo';
+    private const string LEGACY_THEME = 'EspoRtl';
+    private const string THEME = 'Espo';
 
     public function __construct(
         private EntityManager $entityManager,
