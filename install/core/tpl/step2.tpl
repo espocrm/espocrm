@@ -11,7 +11,7 @@
                         <div class="field field-db-platform">
                             <select
                                 name="db-platform"
-                                class="main-element form-control"
+                                class="main-element native-select form-control"
                             >
                             {foreach from=$platforms item=lbl key=val}
                                 {if $val == $fields['db-platform'].value}

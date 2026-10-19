@@ -78,7 +78,7 @@
                             {$langs['fields']['smtpSecurity']}
                         </label>
                         <div class="field field-smtpSecurity">
-                            <select name="smtpSecurity" class="form-control main-element">
+                            <select name="smtpSecurity" class="form-control native-select main-element">
                                 {foreach from=$defaultSettings['smtpSecurity'].options item=lbl key=val}
                                     {if $val == $fields['smtpSecurity'].value}
                                     <option selected="selected" value="{$val}">{$lbl}</option>

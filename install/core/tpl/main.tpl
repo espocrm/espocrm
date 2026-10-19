@@ -17,7 +17,7 @@
             <div class="cell cell-language col-md-4">
                 <label class="field-label-language control-label">{$langs['fields']['Choose your language']}</label>
                 <div class="field field-language">
-                    <select name="user-lang" class="form-control">
+                    <select name="user-lang" class="form-control native-select">
                         {foreach from=$languageList item=lbl key=val}
                             {if $val == $fields['user-lang'].value}
                                 <option selected="selected" value="{$val}">{$lbl}</option>
@@ -32,7 +32,7 @@
             <div class="cell cell-theme col-md-4">
                 <label class="field-label-theme control-label">{$themeLabel}</label>
                 <div class="field field-language">
-                    <select name="theme" class="form-control">
+                    <select name="theme" class="form-control native-select">
                         {foreach from=$themes item=lbl key=val}
                             {if $val == $fields['theme'].value}
                                 <option selected="selected" value="{$val}">{$lbl}</option>
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="cell cell-website col-md-4" style="padding-top: 24px; text-align: right;">
+            <div class="cell cell-website col-md-4" style="padding-top: 32px; text-align: right;">
                 <a
                     target="_blank"
                     href="https://www.espocrm.com/documentation/administration/installation/"

@@ -9,7 +9,7 @@
                             {$langs['fields']['Date Format']}
                         </label>
                         <div class="field field-dateFormat">
-                            <select name="dateFormat" class="form-control main-element">
+                            <select name="dateFormat" class="form-control native-select main-element">
                                 {foreach from=$fields['dateFormat'].options item=val}
                                     {if $val == $fields['dateFormat'].value}
                                         <option selected="selected" value="{$val}">{$val}</option>
@@ -26,7 +26,7 @@
                             {$langs['fields']['Time Format']}
                         </label>
                         <div class="field field-timeFormat">
-                            <select name="timeFormat" class="form-control main-element">
+                            <select name="timeFormat" class="form-control native-select main-element">
                                 {foreach from=$fields['timeFormat'].options item=val}
                                     {if $val == $fields['timeFormat'].value}
                                         <option selected="selected" value="{$val}">{$val}</option>
@@ -45,7 +45,7 @@
                             {$langs['fields']['Time Zone']}
                         </label>
                         <div class="field field-timeZone">
-                            <select name="timeZone" class="form-control main-element">
+                            <select name="timeZone" class="form-control native-select main-element">
                                 {foreach from=$defaultSettings['timeZone'].options item=lbl key=val}
                                     {if $val == $fields['timeZone'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
@@ -62,7 +62,7 @@
                             {$langs['fields']['First Day of Week']}
                         </label>
                         <div class="field field-weekStart">
-                            <select name="weekStart" class="form-control main-element">
+                            <select name="weekStart" class="form-control native-select main-element">
                                 {foreach from=$defaultSettings['weekStart'].options item=lbl key=val}
                                     {if $val == $fields['weekStart'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
@@ -81,7 +81,7 @@
                             {$langs['fields']['Default Currency']}
                         </label>
                         <div class="field field-defaultCurrency">
-                            <select name="defaultCurrency" class="form-control main-element">
+                            <select name="defaultCurrency" class="form-control native-select main-element">
                                 {foreach from=$defaultSettings['defaultCurrency'].options item=lbl key=val}
                                     {if $val == $fields['defaultCurrency'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
@@ -119,7 +119,7 @@
                             {$langs['fields']['Language']}
                         </label>
                         <div class="field field-language">
-                            <select name="language" class="form-control main-element">
+                            <select name="language" class="form-control native-select main-element">
                                 {foreach from=$defaultSettings['language'].options item=lbl key=val}
                                     {if $val == $fields['language'].value}
                                         <option selected="selected" value="{$val}">{$lbl}</option>
