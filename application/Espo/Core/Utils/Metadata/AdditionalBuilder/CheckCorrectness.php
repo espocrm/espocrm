@@ -38,7 +38,6 @@ use stdClass;
  */
 class CheckCorrectness implements AdditionalBuilder
 {
-
     public function build(stdClass $data): void
     {
         $entityAcl = $data->entityAcl ?? null;
@@ -53,15 +52,10 @@ class CheckCorrectness implements AdditionalBuilder
             }
 
             $isEntity = $data->scopes?->$scope->entity ?? null;
-            $isCustom = $data->scopes?->$scope->isCustom ?? null;
             $hasEntityDefs = is_object($data->entityDefs->$scope ?? null);
 
-            if ($isCustom) {
-                continue;
-            }
-
             if (!$isEntity && !$hasEntityDefs) {
-                throw new RuntimeException("Unexpected scope '$scope' entityAcl. Entity '$scope' is not defined.");
+                //throw new RuntimeException("Unexpected scope '$scope' entityAcl. Entity '$scope' is not defined.");
             }
         }
     }
