@@ -39,8 +39,7 @@ const exec = cp.exec;
 /**
  * Builds upgrade packages.
  *
- * Parameters:
- * `--targetVersion` – overrides the target version.
+
  */
 class Diff
 {
