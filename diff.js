@@ -59,6 +59,7 @@ let isAll = false;
 let withVendor = true;
 let forceScripts = false;
 let isClosest = false;
+let targetVersion = null;
 
 if (process.argv.length > 1) {
     for (const i in process.argv) {
@@ -86,6 +87,10 @@ if (process.argv.length > 1) {
         if (~process.argv[i].indexOf('--acceptedVersion=')) {
             acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
         }
+
+        if (process.argv[i].includes('--targetVersion=')) {
+            targetVersion = process.argv[i].substr(('--targetVersion=').length);
+        }
     }
 }
 
@@ -100,6 +105,7 @@ const diff = new Diff(espoPath, {
     withVendor: withVendor,
     forceScripts: forceScripts,
     acceptedVersionName: acceptedVersionName,
+    targetVersion: targetVersion,
 });
 
 (() => {

@@ -38,6 +38,9 @@ const exec = cp.exec;
 
 /**
  * Builds upgrade packages.
+ *
+ * Parameters:
+ * `--targetVersion` – overrides the target version.
  */
 class Diff
 {
@@ -74,7 +77,7 @@ class Diff
     _getPreviousVersionList(closest) {
         const dirInitial = process.cwd();
 
-        const version = (require(this.espoPath + '/package.json') || {}).version;
+        const version = this.getTargetVersion();
 
         process.chdir(this.espoPath);
 
@@ -146,6 +149,10 @@ class Diff
         return versionFromList;
     }
 
+    getTargetVersion() {
+        return this.params.targetVersion ?? (require(this.espoPath + '/package.json') || {}).version;
+    }
+
     buildMultipleUpgradePackages(versionFromList) {
         const params = this.params;
         const espoPath = this.espoPath;
@@ -179,7 +186,7 @@ class Diff
             const withVendor = params.withVendor ?? true;
             const forceScripts = params.forceScripts;
 
-            const version = (require(espoPath + '/package.json') || {}).version;
+            const version = this.getTargetVersion();
             const composerData = require(espoPath + '/composer.json') || {};
 
             const currentPath = espoPath;
