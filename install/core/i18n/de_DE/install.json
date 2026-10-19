@@ -104,7 +104,7 @@
     "mysqlSettingError": "EspoCRM erfordert, dass die MySQL Einstellung \"{NAME}\"  auf {VALUE} gesetzt ist",
     "requiredMariadbVersion": "Ihre MariaDB-Version wird von EspoCRM nicht unterstützt, bitte aktualisieren Sie mindestens auf MariaDB {minVersion}",
     "Ajax failed": "Es ist ein unerwarteter Fehler aufgetreten",
-    "Bad init Permission": "Die Zugriff auf das Verzeichnis \"{*}\" wurde verweigert. Bitte setzen Sie 775 für \"{*}\" oder führen Sie diesen Befehl einfach im Terminal aus <pre><b>{C}</b></pre> Operation ist nicht erlaubt? Versuchen Sie diesen: {CSU}",
+    "Bad init Permission": "Die Zugriff auf das Verzeichnis \"{*}\" wurde verweigert. Bitte setzen Sie 775 für \"{*}\" oder führen Sie diesen Befehl einfach im Terminal aus <pre>{C}</pre> Operation ist nicht erlaubt? Versuchen Sie diesen: <pre>{CSU}</pre>",
     "permissionInstruction": "<br>Führen Sie diesen Befehl im Terminal aus:<pre><b>\"{C}\"</b></pre>",
     "operationNotPermitted": "Operation ist nicht erlaubt? Versuchen Sie diese: <br><<br>{CSU}"
   },

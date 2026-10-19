@@ -88,7 +88,7 @@
         "smtpPassword": "Password"
     },
     "messages": {
-        "Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal <pre><b>{C}</b></pre> Operation is not permitted? Try this one: {CSU}",
+        "Bad init Permission": "Permission denied for \"{*}\" directory. Please set 775 for \"{*}\" or just execute this command in the terminal: <pre>{C}</pre> Operation is not permitted? Try this one: <pre>{CSU}</pre>",
         "Some errors occurred!": "Some errors occurred!",
         "phpVersion": "Your PHP version is not supported by EspoCRM, please update to PHP {minVersion} at least",
         "requiredMysqlVersion": "Your MySQL version is not supported by EspoCRM, please update to MySQL {minVersion} at least",
