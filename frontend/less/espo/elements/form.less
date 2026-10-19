@@ -598,6 +598,30 @@ input[type="radio"].form-radio {
 select.form-control.native-select {
     min-height: var(--input-height-base);
 
+    > option {
+        color: var(--text-color);
+
+        &.text-success {
+            color: var(--state-success-text);
+        }
+
+        &.text-danger {
+            color: var(--state-danger-text);
+        }
+
+        &.text-warning {
+            color: var(--state-warning-text);
+        }
+
+        &.text-primary {
+            color: var(--state-primary-text);
+        }
+
+        &.text-info {
+            color: var(--state-info-text);
+        }
+    }
+
     &.input-sm {
         min-height: var(--input-height-small);
     }
