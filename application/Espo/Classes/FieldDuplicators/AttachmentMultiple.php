@@ -51,7 +51,7 @@ class AttachmentMultiple implements FieldDuplicator
 
     public function duplicate(Entity $entity, string $field): stdClass
     {
-        if (!$this->acl->checkField($entity->getEntityType(), Field::ATTACHMENTS)) {
+        if (!$this->acl->checkField($entity->getEntityType(), $field)) {
             return (object) [];
         }
 
