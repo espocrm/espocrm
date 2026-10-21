@@ -39,10 +39,12 @@ use Espo\Tools\OAuthServer\League\AuthorizationRequestStorage;
 use Espo\Tools\OAuthServer\League\AuthorizationServerFactory;
 use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
 use Espo\Tools\OAuthServer\League\Entities\UserEntity;
+use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
 use Espo\Tools\OAuthServer\Scope\ScopeSorter;
 use Espo\Tools\OAuthServer\Utils\UriUtil;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -53,6 +55,7 @@ class AuthorizationService
         private ApplicationState $applicationState,
         private AuthorizationRequestStorage $authorizationRequestStorage,
         private ScopeSorter $scopeSorter,
+        private ClientRepositoryInternal $clientRepository,
     ) {}
 
     /**
@@ -64,11 +67,13 @@ class AuthorizationService
 
         try {
             $authRequest = $server->validateAuthorizationRequest($request);
+
+            $clientId = $authRequest->getClient()->getIdentifier();
+
+            $this->validateScopes($clientId, $request, $authRequest);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
-
-        $clientId = $authRequest->getClient()->getIdentifier();
 
         $this->authorizationRequestStorage->store($clientId, $authRequest);
 
@@ -180,6 +185,28 @@ class AuthorizationService
 
         if (array_diff($scopes, $storedScopes)) {
             throw new Forbidden("Scope mismatch.");
+        }
+    }
+
+    /**
+     * @throws OAuthServerException
+     */
+    private function validateScopes(
+        string $clientId,
+        ServerRequestInterface $request,
+        AuthorizationRequestInterface $authRequest,
+    ): void {
+
+        $client = $this->clientRepository->getActiveByIdentifier($clientId);
+
+        if (!$client) {
+            throw OAuthServerException::invalidClient($request);
+        }
+
+        foreach ($authRequest->getScopes() as $scope) {
+            if (!in_array($scope->getIdentifier(), $client->getScopes())) {
+                throw OAuthServerException::invalidScope($scope->getIdentifier());
+            }
         }
     }
 }
