@@ -120,6 +120,7 @@ class DefaultParentFinder implements ParentFinder
             if (
                 !$this->config->get('b2cMode') &&
                 $this->isEntityTypeAllowed(Account::ENTITY_TYPE) &&
+                $contact->get('accountIsInactive') === false &&
                 $contact->getAccount()
             ) {
                 return $contact->getAccount();
