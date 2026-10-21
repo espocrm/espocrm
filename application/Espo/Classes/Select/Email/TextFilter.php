@@ -40,6 +40,7 @@ use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\Entities\Email;
 use Espo\Entities\EmailAddress;
 
 /**
@@ -47,6 +48,8 @@ use Espo\Entities\EmailAddress;
  */
 class TextFilter implements Filter
 {
+    private const ID_PREFETCH_THRESHOLD = 500;
+
     public function __construct(
         private DefaultFilter $defaultFilter,
         private ConfigProvider $config,
@@ -86,6 +89,19 @@ class TextFilter implements Filter
             return;
         }
 
+        // Performance optimization. On MariaDB, the query with the OR condition below performs slowly.
+        $emailIds = $this->getEmailIds($emailAddressId);
+
+        if ($emailIds !== null) {
+            $queryBuilder->where(
+                $emailIds ?
+                    Cond::in(Expr::column(Attribute::ID), $emailIds) :
+                    Cond::equal(Expr::column(Attribute::ID), null)
+            );
+
+            return;
+        }
+
         $orGroupBuilder
             ->add(
                 Cond::equal(
@@ -109,6 +125,49 @@ class TextFilter implements Filter
             );
 
         $queryBuilder->where($orGroupBuilder->build());
+    }
+
+    /**
+     * @return ?string[]
+     */
+    private function getEmailIds(string $emailAddressId): ?array
+    {
+        $queryList = [
+            SelectBuilder::create()
+                ->from('EmailEmailAddress')
+                ->select('emailId')
+                ->where([
+                    'emailAddressId' => $emailAddressId,
+                    Attribute::DELETED => false,
+                ])
+                ->limit(0, self::ID_PREFETCH_THRESHOLD + 1)
+                ->build(),
+            SelectBuilder::create()
+                ->from(Email::ENTITY_TYPE)
+                ->select(Attribute::ID)
+                ->where([
+                    'fromEmailAddressId' => $emailAddressId,
+                    Attribute::DELETED => false,
+                ])
+                ->limit(0, self::ID_PREFETCH_THRESHOLD + 1)
+                ->build(),
+        ];
+
+        $idMap = [];
+
+        foreach ($queryList as $query) {
+            $sth = $this->entityManager->getQueryExecutor()->execute($query);
+
+            while (($id = $sth->fetchColumn()) !== false) {
+                $idMap[$id] = true;
+            }
+
+            if (count($idMap) > self::ID_PREFETCH_THRESHOLD) {
+                return null;
+            }
+        }
+
+        return array_keys($idMap);
     }
 
     private function getEmailAddressIdByValue(string $value): ?string
