@@ -1,5 +1,6 @@
 {
     "controller": "controllers/notification",
+    "textFilterDisabled": true,
     "acl": "acl/notification",
     "aclPortal": "acl-portal/notification",
     "model": "models/notification",

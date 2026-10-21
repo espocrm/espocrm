@@ -14,7 +14,21 @@
             "orderDisabled": true
         },
         "type": {
-            "type": "varchar"
+            "type": "enum",
+            "options": [
+                "Assign",
+                "Collaborating",
+                "EntityRemoved",
+                "Note",
+                "MentionInPost",
+                "UserReaction",
+                "EmailReceived",
+                "EmailInbox",
+                "Message",
+                "System"
+            ],
+            "suppressValidationList": ["valid"],
+            "sanitizerClassNameList": ["Espo\\Classes\\FieldSanitizers\\StringTrim"]
         },
         "read": {
             "type": "bool"
@@ -34,11 +48,13 @@
         },
         "related": {
             "type": "linkParent",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/notification/fields/related"
         },
         "relatedParent": {
             "type": "linkParent",
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/notification/fields/related"
         },
         "actionId": {
             "type": "varchar",
