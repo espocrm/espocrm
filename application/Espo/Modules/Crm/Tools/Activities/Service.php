@@ -669,7 +669,9 @@ class Service
                         ::create(
                             $query->getSelect()[2]->getExpression()
                         )
-                        ->withDesc()
+                        ->withDirection(
+                            $query->getSelect()[3]->getExpression()
+                        )
                 );
 
                 $newQueryList[] = $subBuilder->build();
@@ -702,8 +704,11 @@ class Service
 
             $totalCount = $row['count'];
         }
+        
+        $orderBy = $params->getOrderBy() ?? 'dateStart';
+        $order = $params->getOrder() ?? 'DESC';
 
-        $builder->order('dateStart', 'DESC');
+        $builder->order($orderBy, $order);
 
         if ($scope === User::ENTITY_TYPE) {
             $maxSizeQ++;
