@@ -161,11 +161,7 @@ class AuthorizationService
             return;
         }
 
-        $redirectUri = $authorizationRequest->getRedirectUri();
-
-        if ($redirectUri && $authorizationRequest->getState()) {
-            $redirectUri = UriUtil::makeRedirectUri($redirectUri, $authorizationRequest->getState());
-        }
+        $redirectUri = $this->prepareRedirectUri($authorizationRequest);
 
         throw OAuthServerException::accessDenied("User is not allowed.", $redirectUri);
     }
@@ -208,5 +204,16 @@ class AuthorizationService
                 throw OAuthServerException::invalidScope($scope->getIdentifier());
             }
         }
+    }
+
+    private function prepareRedirectUri(AuthorizationRequest $authorizationRequest): ?string
+    {
+        $redirectUri = $authorizationRequest->getRedirectUri();
+
+        if ($redirectUri && $authorizationRequest->getState()) {
+            $redirectUri = UriUtil::makeRedirectUri($redirectUri, $authorizationRequest->getState());
+        }
+
+        return $redirectUri;
     }
 }
