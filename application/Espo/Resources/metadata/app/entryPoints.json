@@ -12,7 +12,8 @@
     },
     "oAuthAuthorizeComplete": {
         "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\AuthorizeComplete",
-        "allowedMethods": ["post"]
+        "allowedMethods": ["post"],
+        "apiAuthForbidden": true
     },
     "oAuthToken": {
         "className": "Espo\\Tools\\OAuthServer\\EntryPoints\\Token",

@@ -34,11 +34,14 @@ use Espo\Core\Api\Method;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\ApplicationState;
+use Espo\Core\Authentication\Logins\ApiKey;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\EntryPoint\OutputEmitter;
 use Espo\Core\EntryPoint\RequestFactory;
 use Espo\Core\EntryPoint\ResponseFactory;
 use Espo\Core\EntryPoint\Starter;
+use Espo\Core\Utils\Util;
+use Espo\Entities\User;
 use tests\integration\Core\BaseTestCase;
 
 class EntryPointTest extends BaseTestCase
@@ -345,6 +348,116 @@ class EntryPointTest extends BaseTestCase
         $errorOutput
             ->expects(self::never())
             ->method('processWithBodyPrinting');
+
+        $starter->start();
+
+        $applicationState = $this->getContainer()->getByClass(ApplicationState::class);
+
+        $this->assertTrue($applicationState->hasUser());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testApiAuthForbiddenFail(): void
+    {
+        $em = $this->getEntityManager();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew()
+            ->setUserName('api')
+            ->setType(User::TYPE_API)
+            ->setApiKey(Util::generateApiKey())
+            ->setAuthMethod(ApiKey::NAME);
+
+        $em->saveEntity($user);
+
+        $metadata = $this->getMetadata();
+        $metadata->set('app', 'entryPoints', [
+            'test' => [
+                'className' => 'Espo\\EntryPoints\\Avatar',
+                'apiAuthForbidden' => true,
+            ],
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $outputEmitter = $this->createMock(OutputEmitter::class);
+        $errorOutput = $this->createMock(ErrorOutput::class);
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'entryPoint' => 'test',
+            ],
+            headers: [
+                'X-Api-Key' => $user->getApiKey(),
+            ],
+        );
+
+        $response = $this->createMock(ResponseWrapper::class);
+
+        $starter = $this->createStarter(
+            request: $request,
+            response: $response,
+            outputEmitter: $outputEmitter,
+            errorOutput: $errorOutput,
+        );
+
+        $starter->start();
+
+        $applicationState = $this->getContainer()->getByClass(ApplicationState::class);
+
+        $this->assertFalse($applicationState->hasUser());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testApiAuthNotForbiddenSuccess(): void
+    {
+        $em = $this->getEntityManager();
+
+        $user = $em->getRDBRepositoryByClass(User::class)->getNew()
+            ->setUserName('api')
+            ->setType(User::TYPE_API)
+            ->setApiKey(Util::generateApiKey())
+            ->setAuthMethod(ApiKey::NAME);
+
+        $em->saveEntity($user);
+
+        $metadata = $this->getMetadata();
+        $metadata->set('app', 'entryPoints', [
+            'test' => [
+                'className' => 'Espo\\EntryPoints\\Avatar',
+                'apiAuthForbidden' => false,
+            ],
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $outputEmitter = $this->createMock(OutputEmitter::class);
+        $errorOutput = $this->createMock(ErrorOutput::class);
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            queryParams: [
+                'entryPoint' => 'test',
+            ],
+            headers: [
+                'X-Api-Key' => $user->getApiKey(),
+            ],
+        );
+
+        $response = $this->createMock(ResponseWrapper::class);
+
+        $starter = $this->createStarter(
+            request: $request,
+            response: $response,
+            outputEmitter: $outputEmitter,
+            errorOutput: $errorOutput,
+        );
 
         $starter->start();
 

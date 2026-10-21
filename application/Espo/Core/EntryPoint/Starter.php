@@ -123,6 +123,7 @@ class Starter
             request: $request,
             response: $response,
             authRequired: $authRequired,
+            apiAuthForbidden: $this->entryPointManager->getMetaParams($name)->apiAuthForbidden,
         );
 
         $this->outputEmitter->emit($response);
@@ -133,6 +134,7 @@ class Starter
         RequestWrapper $request,
         ResponseWrapper $response,
         bool $authRequired,
+        bool $apiAuthForbidden,
     ): void {
 
         try {
@@ -141,9 +143,9 @@ class Starter
                 request: $request,
                 response: $response,
                 authRequired: $authRequired,
+                apiAuthForbidden: $apiAuthForbidden,
             );
         } catch (Exception $exception) {
-            print_r($exception->getMessage());
             $this->errorOutput->processWithBodyPrinting($request, $response, $exception);
         }
     }
@@ -151,12 +153,14 @@ class Starter
     /**
      * @throws NotFound
      * @throws BadRequest
+     * @throws Exception
      */
     private function processRequestInternal(
         string $entryPoint,
         RequestWrapper $request,
         ResponseWrapper $response,
         bool $authRequired,
+        bool $apiAuthForbidden,
     ): void {
 
         $authentication = $this->authenticationFactory->create();
@@ -164,6 +168,7 @@ class Starter
         $apiAuth = $this->authBuilderFactory->create()
             ->setAuthentication($authentication)
             ->setAuthRequired($authRequired)
+            ->setApiAuthForbidden($apiAuthForbidden)
             ->forEntryPoint()
             ->build();
 
@@ -179,7 +184,13 @@ class Starter
 
         ob_start();
 
-        $this->entryPointManager->run($entryPoint, $request, $response);
+        try {
+            $this->entryPointManager->run($entryPoint, $request, $response);
+        } catch (Exception $e) {
+            ob_end_clean();
+
+            throw $e;
+        }
 
         $contents = ob_get_clean();
 

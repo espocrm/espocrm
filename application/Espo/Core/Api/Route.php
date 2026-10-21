@@ -46,6 +46,7 @@ class Route
         private bool $noAuth,
         private ?array $consumes,
         private ?string $actionClassName,
+        private bool $apiAuthForbidden,
     ) {
         $this->method = strtoupper($method);
     }
@@ -101,5 +102,15 @@ class Route
     public function getConsumes(): ?array
     {
         return $this->consumes;
+    }
+
+    /**
+     * Forbid API authentication.
+     *
+     * @since 10.1.0
+     */
+    public function apiAuthForbidden(): bool
+    {
+        return $this->apiAuthForbidden;
     }
 }

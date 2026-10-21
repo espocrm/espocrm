@@ -45,5 +45,6 @@ readonly class MetaParams
         public bool $noAuth = false,
         public ?array $allowedMethods = null,
         public ?array $consumes = null,
+        public bool $apiAuthForbidden = false,
     ) {}
 }
