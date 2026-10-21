@@ -68,6 +68,7 @@ class RouteProcessorTest extends TestCase
                 ContentType::APPLICATION_JSON,
             ],
             actionClassName: null,
+            apiAuthForbidden: false,
         );
 
         $errorOutput = $this->createMock(ErrorOutput::class);

@@ -86,7 +86,8 @@
     {
         "route": "OAuthServer/consentData",
         "method": "get",
-        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\GetConsentData"
+        "actionClassName": "Espo\\Tools\\OAuthServer\\Api\\GetConsentData",
+        "apiAuthForbidden": true
     },
     {
         "route": "/LeadCapture/form/:id",
@@ -466,12 +467,14 @@
     {
         "route": "/User/:id/connectedApps",
         "method": "get",
-        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetConnectedApps"
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetConnectedApps",
+        "apiAuthForbidden": true
     },
     {
         "route": "/User/:id/connectedApps/:appId",
         "method": "delete",
-        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\DeleteConnectedApp"
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\DeleteConnectedApp",
+        "apiAuthForbidden": true
     },
     {
         "route": "/UserSecurity/apiKey/generate",
