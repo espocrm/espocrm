@@ -31,6 +31,7 @@ namespace Espo\Tools\OAuthServer;
 
 use Espo\Core\Acl\Scope;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config\ApplicationConfig;
 use Espo\Core\Utils\Language;
@@ -53,14 +54,18 @@ class ConsentDataService
         private AuthorizationRequestStorage $authorizationRequestStorage,
         private UserAvailableScopesFilter $userAvailableScopesFilter,
         private ScopeSorter $scopeSorter,
+        private UserValidation $userValidation,
     ) {}
 
     /**
      * @throws NotFound
      * @throws Error
+     * @throws Forbidden
      */
     public function getData(string $clientId): stdClass
     {
+        $this->userValidation->assertValid($this->user);
+
         $client = $this->getClient($clientId);
 
         return (object) [

@@ -56,6 +56,7 @@ class AuthorizationService
         private AuthorizationRequestStorage $authorizationRequestStorage,
         private ScopeSorter $scopeSorter,
         private ClientRepositoryInternal $clientRepository,
+        private UserValidation $userValidation,
     ) {}
 
     /**
@@ -157,13 +158,17 @@ class AuthorizationService
      */
     private function assertUser(User $user, AuthorizationRequest $authorizationRequest): void
     {
+        try {
+            $this->userValidation->assertValid($user);
+        } catch (Forbidden) {
+            $this->throwUserIsNotAllowed($authorizationRequest);
+        }
+
         if ($user->isRegular() || $user->getType() === User::TYPE_ADMIN) {
             return;
         }
 
-        $redirectUri = $this->prepareRedirectUri($authorizationRequest);
-
-        throw OAuthServerException::accessDenied("User is not allowed.", $redirectUri);
+        $this->throwUserIsNotAllowed($authorizationRequest);
     }
 
     /**
@@ -215,5 +220,15 @@ class AuthorizationService
         }
 
         return $redirectUri;
+    }
+
+    /**
+     * @throws OAuthServerException
+     */
+    private function throwUserIsNotAllowed(AuthorizationRequest $authorizationRequest): void
+    {
+        $redirectUri = $this->prepareRedirectUri($authorizationRequest);
+
+        throw OAuthServerException::accessDenied("User is not allowed.", $redirectUri);
     }
 }
