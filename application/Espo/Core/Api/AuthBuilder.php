@@ -43,6 +43,7 @@ class AuthBuilder
 {
     private bool $authRequired = false;
     private bool $isEntryPoint = false;
+    private bool $apiForbidden = false;
     private ?Authentication $authentication = null;
 
     public function __construct(private InjectableFactory $injectableFactory)
@@ -58,6 +59,13 @@ class AuthBuilder
     public function setAuthRequired(bool $authRequired): self
     {
         $this->authRequired = $authRequired;
+
+        return $this;
+    }
+
+    public function setApiForbidden(bool $apiForbidden): self
+    {
+        $this->apiForbidden = $apiForbidden;
 
         return $this;
     }
@@ -83,9 +91,12 @@ class AuthBuilder
                 ->inContext(Auth::class, function (ContextualBinder $binder) {
                     $binder
                         ->bindValue('$authRequired', $this->authRequired)
+                        ->bindValue('$apiForbidden', $this->apiForbidden)
                         ->bindValue('$isEntryPoint', $this->isEntryPoint);
                 })
                 ->build()
         );
     }
+
+
 }

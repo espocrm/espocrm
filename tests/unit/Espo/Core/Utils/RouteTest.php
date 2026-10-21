@@ -196,6 +196,7 @@ class RouteTest extends TestCase
                     noAuth: $item['noAuth'] ?? false,
                     consumes: null,
                     actionClassName: null,
+                    apiAuthForbidden: false,
                 );
             },
             $expected
@@ -300,6 +301,7 @@ class RouteTest extends TestCase
                     noAuth: $item['noAuth'] ?? false,
                     consumes: null,
                     actionClassName: null,
+                    apiAuthForbidden: false,
                 );
             },
             $expected
@@ -404,6 +406,7 @@ class RouteTest extends TestCase
                     noAuth: $item['noAuth'] ?? false,
                     consumes: null,
                     actionClassName: null,
+                    apiAuthForbidden: false,
                 );
             },
             $expected

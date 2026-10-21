@@ -106,11 +106,13 @@ class RouteProcessor
         $this->assertContentTypeAllowed($processData, $request);
 
         $authRequired = !$processData->getRoute()->noAuth();
+        $apiAuthForbidden = $processData->getRoute()->apiAuthForbidden();
 
         $apiAuth = $this->authBuilderFactory
             ->create()
             ->setAuthentication($this->authenticationFactory->create())
             ->setAuthRequired($authRequired)
+            ->setApiForbidden($apiAuthForbidden)
             ->build();
 
         $authResult = $apiAuth->process($request, $response);

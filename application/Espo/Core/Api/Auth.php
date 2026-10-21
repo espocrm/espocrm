@@ -57,6 +57,7 @@ class Auth
         private MethodResolver $methodResolver,
         private bool $authRequired = true,
         private bool $isEntryPoint = false,
+        private bool $apiForbidden = false,
     ) {}
 
     /**
@@ -69,6 +70,12 @@ class Auth
         $password = null;
 
         $authenticationMethod = $this->methodResolver->resolve($request);
+
+        if ($authenticationMethod && $this->apiForbidden) {
+            $this->handleUnauthorized($response);
+
+            return AuthResult::createNotResolved();
+        }
 
         if (!$authenticationMethod) {
             [$username, $password] = $this->obtainUsernamePasswordFromRequest($request);

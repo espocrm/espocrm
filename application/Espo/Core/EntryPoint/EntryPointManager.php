@@ -118,7 +118,8 @@ class EntryPointManager
          *     notExposed?: bool,
          *     noAuth?: bool,
          *     allowedMethods?: ?string[],
-         *     consumes?: ?string[]
+         *     consumes?: ?string[],
+         *     apiAuthForbidden?: bool,
          * } $params
          */
         $params = $this->metadata->get("app.entryPoints.$name") ?? [];
@@ -129,6 +130,7 @@ class EntryPointManager
             noAuth: $params['noAuth'] ?? false,
             allowedMethods: $params['allowedMethods'] ?? null,
             consumes: $params['consumes'] ?? null,
+            apiAuthForbidden: $params['apiAuthForbidden'] ?? false,
         );
     }
 }

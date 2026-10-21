@@ -28,6 +28,10 @@
                 "type": "boolean",
                 "description": "Makes the route not requiring authentication."
             },
+            "apiAuthForbidden": {
+                "type": "boolean",
+                "description": "Forbids API authentication, such as the API user, OAuth. Since 10.1."
+            },
             "actionClassName": {
                 "type": "string",
                 "description": "An action class. Should implement the interface Espo\\Core\\Api\\Action."

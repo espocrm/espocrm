@@ -57,6 +57,7 @@ class Route extends BaseRoute
                 noAuth: $route->noAuth(),
                 consumes: $route->getConsumes(),
                 actionClassName: $route->getActionClassName(),
+                apiAuthForbidden: $route->apiAuthForbidden(),
             );
 
             $newRouteList[] = $newRoute;
