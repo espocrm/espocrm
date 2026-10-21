@@ -186,7 +186,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         $codeChallenge = PkceUtil::generateCodeVerifier();
 
-        $this->obtainCodeInitital(
+        $this->obtainCodeInitial(
             client: $client,
             redirectUri: $redirectUri,
             codeChallenge: $codeChallenge,
@@ -676,7 +676,7 @@ class AuthorizationServerTest extends BaseTestCase
         User $user,
     ): string {
 
-        $this->obtainCodeInitital(
+        $this->obtainCodeInitial(
             client: $client,
             redirectUri: $redirectUri,
             codeChallenge: $codeChallenge,
@@ -1415,7 +1415,7 @@ class AuthorizationServerTest extends BaseTestCase
     /**
      * @noinspection PhpUnhandledExceptionInspection
      */
-    private function obtainCodeInitital(
+    private function obtainCodeInitial(
         Client $client,
         string $redirectUri,
         string $codeChallenge,
