@@ -30,6 +30,7 @@
 namespace Espo\Tools\OAuthServer\League\Repositories;
 
 use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
+use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
 use Espo\Tools\OAuthServer\Scope\UserAvailableScopesFilter;
 use Espo\Tools\OAuthServer\Scope\ScopeValidator;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -40,6 +41,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     public function __construct(
         private ScopeValidator $scopeValidator,
         private UserAvailableScopesFilter $userAvailableScopesProvider,
+        private ClientRepositoryInternal $clientRepository,
     ) {}
 
     /**
@@ -65,6 +67,15 @@ class ScopeRepository implements ScopeRepositoryInterface
         ?string $authCodeId = null,
     ): array {
 
+        $client = $this->clientRepository->getActiveByIdentifier($clientEntity->getIdentifier());
+
+        if (!$client) {
+            return [];
+        }
+
+        $scopes = array_filter($scopes, fn ($scope) => in_array($scope->getIdentifier(), $client->getScopes()));
+        $scopes = array_values($scopes);;
+
         if (!$userIdentifier) {
             return $scopes;
         }
@@ -73,9 +84,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 
         $availableIds = $this->userAvailableScopesProvider->filter($userIdentifier, $ids);
 
-        $scopes = array_filter($scopes, function ($scope) use ($availableIds) {
-            return in_array($scope->getIdentifier(), $availableIds);
-        });
+        $scopes = array_filter($scopes, fn ($scope) => in_array($scope->getIdentifier(), $availableIds));
 
         return array_values($scopes);
     }
