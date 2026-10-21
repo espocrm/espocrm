@@ -44,8 +44,6 @@ class Client extends Entity
     public const string FIELD_SCOPES = 'scopes';
     public const string FIELD_REDIRECT_URIS = 'redirectUris';
 
-    public const string LINK_SECRETS = 'secrets';
-
     public const string STATUS_ACTIVE = 'Active';
     public const string STATUS_INACTIVE = 'Inactive';
 
