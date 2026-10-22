@@ -300,15 +300,8 @@ class DefaultTable implements Table
 
             $table->$scope = (object) [];
 
-            $actionList = $this->metadata->get(
-                ['scopes', $scope, $this->type . 'ActionList'],
-                $this->actionList
-            );
-
-            $highest = $this->metadata->get(
-                ['scopes', $scope, $this->type . 'HighestLevel'],
-                self::LEVEL_ALL
-            );
+            $actionList = $this->metadata->get(['scopes', $scope, $this->type . 'ActionList'], $this->actionList);
+            $highest = $this->metadata->get(['scopes', $scope, $this->type . 'HighestLevel'], self::LEVEL_ALL);
 
             foreach ($actionList as $action) {
                 $table->$scope->$action = $highest;
@@ -342,8 +335,7 @@ class DefaultTable implements Table
             $table->$scope = $value;
         }
 
-        $defaultFieldData = $this->metadata
-            ->get(['app', $this->type, 'strictDefault', 'fieldLevel']) ?? [];
+        $defaultFieldData = $this->metadata->get(['app', $this->type, 'strictDefault', 'fieldLevel']) ?? [];
 
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) {
