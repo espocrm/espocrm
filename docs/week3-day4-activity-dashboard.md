@@ -26,18 +26,18 @@ FROM (
       AND date_start >= :from
     UNION ALL
     SELECT parent_id, 'Meeting' AS activity_type
-    FROM meeting
+    FROM `meeting`
     WHERE deleted = 0 AND parent_type = 'Account'
       AND date_start >= :from
     UNION ALL
     SELECT parent_id, 'Email' AS activity_type
-    FROM email
+    FROM `email`
     WHERE deleted = 0 AND parent_type = 'Account'
       AND date_sent >= :from
 ) AS x
 JOIN `account` a ON a.id = x.parent_id AND a.deleted = 0
 GROUP BY a.id, a.name
-ORDER BY total DESC, a.name ASC
+ORDER BY COUNT(*) DESC, a.name ASC
 LIMIT 10;
 ```
 

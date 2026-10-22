@@ -8,14 +8,16 @@
                 "required": true
             }
         },
-        "layout": {
-            "rows": [
+        "layout": [
+            {
+                "rows": [
                 [
                     {"name": "title"},
                     false
                 ]
-            ]
-        },
+                ]
+            }
+        ],
         "defaults": {}
     }
 }
