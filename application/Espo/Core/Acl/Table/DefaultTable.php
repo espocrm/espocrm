@@ -32,7 +32,6 @@ namespace Espo\Core\Acl\Table;
 use Espo\Core\Acl\Scope;
 use Espo\Core\Utils\Config\SystemConfig;
 use Espo\Entities\User;
-
 use Espo\Core\Acl\FieldData;
 use Espo\Core\Acl\ScopeData;
 use Espo\Core\Acl\Table;
@@ -47,7 +46,7 @@ use RuntimeException;
  */
 class DefaultTable implements Table
 {
-    private const LEVEL_NOT_SET = 'not-set';
+    private const string LEVEL_NOT_SET = 'not-set';
 
     protected string $type = 'acl';
 
@@ -111,8 +110,8 @@ class DefaultTable implements Table
             throw new RuntimeException('User must be fetched before ACL check.');
         }
 
-        $this->valuePermissionList = $this->metadata
-            ->get(['app', $this->type, 'valuePermissionList'], []);
+
+        $this->valuePermissionList = $this->metadata->get("app.$this->type.valuePermissionList", []);
 
         $this->cacheKey = $cacheKeyProvider->get();
 
@@ -610,7 +609,7 @@ class DefaultTable implements Table
         $actionList = $this->metadata
             ->get(['scopes', $scope, $this->type . 'ActionList']) ?? $this->actionList;
 
-        foreach ($actionList as $i => $action) {
+        foreach ($actionList as $action) {
             if (isset($row->$action)) {
                 $level = $row->$action;
 
