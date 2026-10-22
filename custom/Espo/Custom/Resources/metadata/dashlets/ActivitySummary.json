@@ -1,0 +1,21 @@
+{
+    "view": "custom:views/dashlets/activity-summary",
+    "aclScope": "Account",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            }
+        },
+        "layout": {
+            "rows": [
+                [
+                    {"name": "title"},
+                    false
+                ]
+            ]
+        },
+        "defaults": {}
+    }
+}
