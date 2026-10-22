@@ -32,11 +32,12 @@ class Report
         }
 
         $from = (new \DateTimeImmutable('-30 days'))->format('Y-m-d H:i:s');
+        $to = (new \DateTimeImmutable())->format('Y-m-d H:i:s');
         $countMap = [];
 
-        $this->collectCounts($countMap, 'Call', 'dateStart', $from);
-        $this->collectCounts($countMap, 'Meeting', 'dateStart', $from);
-        $this->collectCounts($countMap, 'Email', 'dateSent', $from);
+        $this->collectCounts($countMap, 'Call', 'dateStart', $from, $to);
+        $this->collectCounts($countMap, 'Meeting', 'dateStart', $from, $to);
+        $this->collectCounts($countMap, 'Email', 'dateSent', $from, $to);
 
         if ($countMap === []) {
             return (object) ['from' => $from, 'dataList' => []];
@@ -77,7 +78,13 @@ class Report
     }
 
     /** @param array<string, array{Call: int, Meeting: int, Email: int}> $countMap */
-    private function collectCounts(array &$countMap, string $entityType, string $dateField, string $from): void
+    private function collectCounts(
+        array &$countMap,
+        string $entityType,
+        string $dateField,
+        string $from,
+        string $to
+    ): void
     {
         $queryBuilder = $this->selectBuilderFactory
             ->create()
@@ -90,6 +97,7 @@ class Report
             ->where([
                 'parentType' => 'Account',
                 $dateField . '>=' => $from,
+                $dateField . '<=' => $to,
             ])
             ->group('parentId');
 

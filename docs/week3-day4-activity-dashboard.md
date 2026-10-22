@@ -11,7 +11,7 @@ The report uses dateStart for Calls and Meetings and dateSent for Emails. Activi
 
 ## SQL for Report Builder review
 
-The EspoCRM ORM report endpoint uses the equivalent grouped queries below. This version is written for MariaDB/MySQL and is suitable for manually checking the report totals in a database console. Use the same `from` timestamp for the three date filters.
+The EspoCRM ORM report endpoint uses the equivalent grouped queries below. This version is written for MariaDB/MySQL and is suitable for manually checking the report totals in a database console. Use the same `from` and `to` timestamps for the three date filters.
 
 ```sql
 SELECT a.name AS account,
@@ -23,17 +23,17 @@ FROM (
     SELECT parent_id, 'Call' AS activity_type
     FROM `call`
     WHERE deleted = 0 AND parent_type = 'Account'
-      AND date_start >= :from
+      AND date_start BETWEEN :from AND :to
     UNION ALL
     SELECT parent_id, 'Meeting' AS activity_type
     FROM `meeting`
     WHERE deleted = 0 AND parent_type = 'Account'
-      AND date_start >= :from
+      AND date_start BETWEEN :from AND :to
     UNION ALL
     SELECT parent_id, 'Email' AS activity_type
     FROM `email`
     WHERE deleted = 0 AND parent_type = 'Account'
-      AND date_sent >= :from
+      AND date_sent BETWEEN :from AND :to
 ) AS x
 JOIN `account` a ON a.id = x.parent_id AND a.deleted = 0
 GROUP BY a.id, a.name
@@ -41,7 +41,7 @@ ORDER BY COUNT(*) DESC, a.name ASC
 LIMIT 10;
 ```
 
-Run it with `:from` set to the timestamp from 30 days ago. The custom API intentionally uses the EspoCRM query builder instead of executing raw SQL, so ACL rules are applied to each entity query.
+Run it with `:from` set to the timestamp from 30 days ago and `:to` set to the current timestamp. The custom API intentionally uses the EspoCRM query builder instead of executing raw SQL, so ACL rules are applied to each entity query.
 
 ## Manual verification
 
