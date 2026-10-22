@@ -34,17 +34,17 @@ namespace Espo\Core\Acl;
  */
 interface Table
 {
-    public const LEVEL_YES = 'yes';
-    public const LEVEL_NO = 'no';
-    public const LEVEL_ALL = 'all';
-    public const LEVEL_TEAM = 'team';
-    public const LEVEL_OWN = 'own';
+    public const string LEVEL_YES = 'yes';
+    public const string LEVEL_NO = 'no';
+    public const string LEVEL_ALL = 'all';
+    public const string LEVEL_TEAM = 'team';
+    public const string LEVEL_OWN = 'own';
 
-    public const ACTION_READ = 'read';
-    public const ACTION_STREAM = 'stream';
-    public const ACTION_EDIT = 'edit';
-    public const ACTION_DELETE = 'delete';
-    public const ACTION_CREATE = 'create';
+    public const string ACTION_READ = 'read';
+    public const string ACTION_STREAM = 'stream';
+    public const string ACTION_EDIT = 'edit';
+    public const string ACTION_DELETE = 'delete';
+    public const string ACTION_CREATE = 'create';
 
     /**
      * Get scope data.
