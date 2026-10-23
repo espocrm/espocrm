@@ -79,8 +79,7 @@ class Service
             throw new Forbidden();
         }
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
+        $user = $this->entityManager->getRepositoryByClass(User::class)->getById($id);
 
         if (!$user) {
             throw new NotFound();
@@ -162,8 +161,7 @@ class Service
         #[SensitiveParameter] ?string $currentPassword = null
     ): void {
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getRepositoryByClass(User::class)->getById($userId);
 
         if (!$user) {
             throw new NotFound();
@@ -264,10 +262,7 @@ class Service
             throw new Forbidden();
         }
 
-        /** @var ?User $user */
-        $user = $this->serviceContainer
-            ->get(User::ENTITY_TYPE)
-            ->getEntity($id);
+        $user = $this->serviceContainer->getByClass(User::class)->getEntity($id);
 
         if (!$user) {
             throw new NotFound();
