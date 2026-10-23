@@ -78,13 +78,34 @@ class Diff
 
         process.chdir(this.espoPath);
 
-        const tagList = this._getTagList();
-
         const versionFromList = [];
 
+        const majorVersionNumber = version.split('.')[0];
         const minorVersionNumber = version.split('.')[1];
         const hotfixVersionNumber = version.split('.')[2];
-        const majorVersionNumber = version.split('.')[0];
+
+        const tagList = this._getTagList()
+            .filter(it => {
+                const itMajor = parseInt(it.split('.')[0]);
+                const itMinor = parseInt(it.split('.')[1]);
+
+                if (Number.isNaN(itMajor) || Number.isNaN(itMinor)) {
+                    return false;
+                }
+
+                if (itMajor > parseInt(majorVersionNumber)) {
+                    return false;
+                }
+
+                if (
+                    itMajor === parseInt(majorVersionNumber) &&
+                    itMinor > parseInt(minorVersionNumber)
+                ) {
+                    return false;
+                }
+
+                return true;
+            });
 
         for (let i = 0; i < tagList.length; i++) {
             const tag = tagList[i];
