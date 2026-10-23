@@ -106,8 +106,7 @@ class Service
 
         $isReset = $data->reset ?? false;
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
+        $user = $this->entityManager->getRepositoryByClass(User::class)->getById($id);
 
         if (!$user) {
             throw new NotFound();

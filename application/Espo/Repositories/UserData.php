@@ -40,19 +40,19 @@ use Espo\Core\Repositories\Database;
  */
 class UserData extends Database
 {
+    private const string ATTR_USER_ID = 'userId';
+
     public function getByUserId(string $userId): ?UserDataEntity
     {
         $userData = $this
-            ->where(['userId' => $userId])
+            ->where([self::ATTR_USER_ID => $userId])
             ->findOne();
 
         if ($userData) {
             return $userData;
         }
 
-        $user = $this->entityManager
-            ->getRepository(UserEntity::ENTITY_TYPE)
-            ->getById($userId);
+        $user = $this->entityManager->getRepositoryByClass(UserEntity::class)->getById($userId);
 
         if (!$user) {
             return null;
@@ -60,7 +60,7 @@ class UserData extends Database
 
         $userData = $this->getNew();
 
-        $userData->set('userId', $userId);
+        $userData->set(self::ATTR_USER_ID, $userId);
 
         $this->save($userData, [
             SaveOption::SILENT => true,
