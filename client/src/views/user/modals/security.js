@@ -163,10 +163,10 @@ class UserSecurityModalView extends ModalView {
     }
 
     /**
-     * @return {module:views/record/edit}
+     * @return {import('views/record/edit').default}
      */
     getRecordView() {
-        return this.getView('record');
+        return /** @type {import('views/record/edit').default} */this.getView('record');
     }
 
     apply(reset) {
