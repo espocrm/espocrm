@@ -103,12 +103,7 @@ class Service
      */
     public function getTwoFactorUserSetupData(string $id, stdClass $data): stdClass
     {
-        if (
-            !$this->user->isEffectiveAdmin() &&
-            $id !== $this->user->getId()
-        ) {
-            throw new Forbidden();
-        }
+        $this->assertUserWriteAccess($id);
 
         $isReset = $data->reset ?? false;
 
@@ -187,9 +182,7 @@ class Service
      */
     public function update(string $id, stdClass $data): stdClass
     {
-        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
-            throw new Forbidden();
-        }
+        $this->assertUserWriteAccess($id);
 
         /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
@@ -307,5 +300,19 @@ class Service
     {
         /** @var UserDataRepository */
         return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function assertUserWriteAccess(string $id): void
+    {
+        if (!$this->user->isEffectiveAdmin() && $id !== $this->user->getId()) {
+            throw new Forbidden();
+        }
+
+        if ($this->user->getScopes() !== null) {
+            throw new Forbidden("Allowed only for an interactive user.");
+        }
     }
 }
