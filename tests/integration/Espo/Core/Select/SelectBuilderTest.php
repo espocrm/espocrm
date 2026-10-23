@@ -602,7 +602,7 @@ class SelectBuilderTest extends BaseTestCase
         $this->assertEquals($expectedWhereClause, $raw['whereClause']);
     }
 
-    public function testEmailInbox()
+    public function testEmailInbox(): void
     {
         $app = $this->initTest();
 
@@ -642,10 +642,7 @@ class SelectBuilderTest extends BaseTestCase
             Email::ALIAS_INBOX . '.userId' => $userId,
             [
                 'status' => ['Archived', 'Sent'],
-                'OR' => [
-                    'groupFolderId' => null,
-                    'groupFolderId!=' => [],
-                ]
+                'groupFolderId' => null,
             ],
             'fromEmailAddressId!=' => [$emailAddressId],
             [
