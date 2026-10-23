@@ -55,7 +55,7 @@ class Service
         private Config $config,
         private LoginFactory $authLoginFactory,
         private TwoFactorUserSetupFactory $twoFactorUserSetupFactory,
-        private Log $log
+        private Log $log,
     ) {}
 
     /**
@@ -68,8 +68,7 @@ class Service
             throw new Forbidden();
         }
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
+        $user = $this->entityManager->getRepositoryByClass(User::class)->getById($id);
 
         if (!$user) {
             throw new NotFound();
@@ -91,8 +90,8 @@ class Service
         }
 
         return (object) [
-            'auth2FA' => $userData->get('auth2FA'),
-            'auth2FAMethod' => $userData->get('auth2FAMethod'),
+            'auth2FA' => $userData->getAuth2FA(),
+            'auth2FAMethod' => $userData->getAuth2FAMethod(),
         ];
     }
 
@@ -184,8 +183,7 @@ class Service
     {
         $this->assertUserWriteAccess($id);
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $id);
+        $user = $this->entityManager->getRepositoryByClass(User::class)->getById($id);
 
         if (!$user) {
             throw new NotFound();
@@ -235,15 +233,15 @@ class Service
         }
 
         if (
-            $userData->get('auth2FA') &&
-            $userData->get('auth2FAMethod') &&
+            $userData->getAuth2FA() &&
+            $userData->getAuth2FAMethod() &&
             ($userData->isAttributeChanged('auth2FA') || $userData->isAttributeChanged('auth2FAMethod')) &&
             (
                 !$user->isPortal() ||
                 $this->config->get('auth2FAInPortal')
             )
         ) {
-            $auth2FAMethod = $userData->get('auth2FAMethod');
+            $auth2FAMethod = $userData->getAuth2FAMethod();
 
             if (!in_array($auth2FAMethod, $this->config->get('auth2FAMethodList', []))) {
                 throw new Forbidden('Not allowed 2FA auth method.');
@@ -261,8 +259,8 @@ class Service
         $this->entityManager->saveEntity($userData);
 
         return (object) [
-            'auth2FA' => $userData->get('auth2FA'),
-            'auth2FAMethod' => $userData->get('auth2FAMethod'),
+            'auth2FA' => $userData->getAuth2FA(),
+            'auth2FAMethod' => $userData->getAuth2FAMethod(),
         ];
     }
 
@@ -271,19 +269,14 @@ class Service
      */
     private function checkPassword(string $id, string $password): void
     {
-        $user = $this->entityManager
-            ->getRDBRepository(User::ENTITY_TYPE)
-            ->where([
-                'id' => $id,
-            ])
-            ->findOne();
+        $user = $this->entityManager->getRepositoryByClass(User::class)->getById($id);
 
         if (!$user) {
             throw new Forbidden('User is not found.');
         }
 
         $loginData = LoginData::createBuilder()
-            ->setUsername($user->get('userName'))
+            ->setUsername($user->getUserName())
             ->setPassword($password)
             ->build();
 
