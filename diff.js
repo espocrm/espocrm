@@ -32,7 +32,7 @@
 
  * Examples:
  * * `node diff 5.9.0` - builds an upgrade from 5.9.0 to the current version;
- * * `node diff --all` - builds all upgrades needed for a release.
+ * * `node diff --all` - builds all possible upgrades for the release.
  *
  * Parameters:
  * `--targetVersion` – overrides the target version.
