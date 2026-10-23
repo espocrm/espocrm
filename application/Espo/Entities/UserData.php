@@ -29,9 +29,11 @@
 
 namespace Espo\Entities;
 
-class UserData extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class UserData extends Entity
 {
-    public const ENTITY_TYPE = 'UserData';
+    public const string ENTITY_TYPE = 'UserData';
 
     public function getAuth2FA(): bool
     {
