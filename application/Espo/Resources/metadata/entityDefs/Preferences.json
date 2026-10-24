@@ -70,7 +70,10 @@
         },
         "language": {
             "type": "enum",
-            "view": "views/preferences/fields/language"
+            "view": "views/preferences/fields/language",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Preferences\\Language\\Valid"
+            ]
         },
         "exportDelimiter": {
             "type": "varchar",

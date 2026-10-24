@@ -262,7 +262,10 @@
             "type": "enum",
             "default": "en_US",
             "view": "views/settings/fields/language",
-            "isSorted": true
+            "isSorted": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\Language\\Valid"
+            ]
         },
         "globalSearchEntityList": {
             "type": "multiEnum",
