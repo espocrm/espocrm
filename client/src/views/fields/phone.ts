@@ -31,11 +31,6 @@ import Select from 'ui/select';
 import {BaseOptions, BaseParams, BaseViewSchema, FieldValidator} from 'views/fields/base';
 import intlTelInput from 'intl-tel-input';
 
-// @ts-ignore
-import intlTelInputUtils from 'intl-tel-input-utils';
-// @ts-ignore
-import intlTelInputGlobals from 'intl-tel-input-globals';
-
 /**
  * Parameters.
  */
@@ -87,7 +82,7 @@ class PhoneFieldView<
 
     private useInternational: boolean
 
-    private intlTelInputMap: Map<HTMLInputElement, intlTelInput.Plugin & any>
+    private intlTelInputMap: Map<HTMLInputElement, typeof intlTelInput & any>
 
     protected allowExtensions: boolean
 
@@ -105,7 +100,7 @@ class PhoneFieldView<
 
     private preferredCountryList: string[]
 
-    private _codeNames: string[]
+    private _codeNames: Record<string, string>
 
     private _itemJustRemoved: boolean
 
@@ -223,7 +218,7 @@ class PhoneFieldView<
 
         const intlObj = this.intlTelInputMap.get(element);
 
-        const isPossible = intlObj && intlObj.isPossibleNumber();
+        const isPossible = intlObj && intlObj.isValidNumber();
 
         if (intlObj && !isPossible) {
             notValid = true;
@@ -397,11 +392,7 @@ class PhoneFieldView<
             return value;
         }
 
-        return intlTelInputUtils.formatNumber(
-            value,
-            null,
-            intlTelInputUtils.numberFormat.INTERNATIONAL
-        );
+        return intlTelInput.utils!.formatNumber(value, undefined, intlTelInput.NUMBER_FORMAT.INTERNATIONAL);
     }
 
     private addPhoneNumber() {
@@ -442,24 +433,38 @@ class PhoneFieldView<
         if (this.useInternational) {
             const inputElements = this.element.querySelectorAll<HTMLInputElement>('input.phone-number');
 
+            const modalBodyElement = this.element?.closest('.modal-body');
+
+            const parent = modalBodyElement ? modalBodyElement : document.body;
+
+
             inputElements.forEach(inputElement => {
                 // noinspection JSUnusedGlobalSymbols
                 const obj = intlTelInput(inputElement, {
-                    nationalMode: false,
-                    autoInsertDialCode: false,
                     separateDialCode: true,
                     showFlags: false,
-                    preferredCountries: this.preferredCountryList,
-                    localizedCountries: this._codeNames,
+                    initialCountry: this.preferredCountryList[0] ?? null,
+                    countryOrder: this.preferredCountryList,
+                    countryNameOverrides: this._codeNames,
+                    dropdownParent: parent,
+                    classNames: {
+                        searchInput: 'form-control input-sm',
+                    },
+                    uiTranslations: {
+                        searchPlaceholder: '',
+                        searchEmptyState: '',
+                    },
+                    allowNumberExtensions: this.allowExtensions,
+                    strictMode: !this.allowExtensions,
                     customPlaceholder: (placeholder: string) => {
                         return placeholder.replace(/[0-9]/g, '0');
                     },
-                } as any) as intlTelInput.Plugin & any;
+                } as any) as typeof intlTelInput & any;
 
                 this.intlTelInputMap.set(inputElement, obj);
 
                 inputElement.addEventListener('blur', () => {
-                    if (!obj.isPossibleNumber()) {
+                    if (!obj.isValidNumber()) {
                         return;
                     }
 
@@ -564,7 +569,7 @@ class PhoneFieldView<
         this.maxCount = this.getConfig().get('phoneNumberMaxCount');
 
         if (this.useInternational && !this.isListMode() && !this.isSearchMode()) {
-            this._codeNames = intlTelInputGlobals.getCountryData()
+            this._codeNames = intlTelInput.getAllCountries()
                 .reduce((map: any, item: any) => {
                     map[item.iso2] = item.iso2.toUpperCase();
 

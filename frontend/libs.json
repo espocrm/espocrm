@@ -110,19 +110,10 @@
         "amdId": "autonumeric"
     },
     {
-        "src": "node_modules/intl-tel-input/build/js/intlTelInput.js",
+        "src": "node_modules/intl-tel-input/dist/js/intlTelInputWithUtils.js",
         "bundle": true,
         "amdId": "intl-tel-input",
         "suppressAmd": true
-    },
-    {
-        "src": "node_modules/intl-tel-input/build/js/utils.js",
-        "bundle": true,
-        "amdId": "intl-tel-input-utils"
-    },
-    {
-        "bundle": true,
-        "amdId": "intl-tel-input-globals"
     },
     {
         "src": "client/lib/original/shopify-draggable.js",

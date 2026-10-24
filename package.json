@@ -33,7 +33,6 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
-    "@types/intl-tel-input": "^18.1.4",
     "@types/jquery": "^4.0.0",
     "@types/marked": "^4.3.2",
     "@types/underscore": "^1.13.0",
@@ -83,7 +82,7 @@
     "getobject": ">=1.0.0",
     "gridstack": "github:yurikuzn/gridstack.js#5.1.1.e3",
     "handlebars": "^4.7.10",
-    "intl-tel-input": "^18.2.1",
+    "intl-tel-input": "^29.5.6",
     "jquery": "^3.7.1",
     "jquery-ui-espo": "github:yurikuzn/jquery-ui-espo#0.2.3",
     "jquery-ui-touch-punch": "^0.2.3",

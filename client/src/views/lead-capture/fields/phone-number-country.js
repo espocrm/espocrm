@@ -27,15 +27,14 @@
  ************************************************************************/
 
 import EnumFieldView from 'views/fields/enum';
-// noinspection NpmUsedModulesInstalled
-import intlTelInputGlobals from 'intl-tel-input-globals';
+import intlTelInput from 'intl-tel-input';
 
 class LeadCapturePhoneNumberCountry extends EnumFieldView {
 
     setupOptions() {
-        this.params.options = ['', ...intlTelInputGlobals.getCountryData().map(item => item.iso2)];
+        this.params.options = ['', ...intlTelInput.getAllCountries().map(item => item.iso2)];
 
-        this.translatedOptions = intlTelInputGlobals.getCountryData()
+        this.translatedOptions = intlTelInput.getAllCountries()
             .reduce((map, item) => {
                 map[item.iso2] = `${item.iso2.toUpperCase()} +${item.dialCode}`;
 
