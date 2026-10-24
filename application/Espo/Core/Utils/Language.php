@@ -431,6 +431,10 @@ class Language
         $cacheKey = $this->getCacheKey($language);
 
         if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
+            if ($language !== basename($language)) {
+                throw new RuntimeException("Bad language value.");
+            }
+
             $readerParams = ResourceReaderParams
                 ::create()
                 ->withNoCustom($this->noCustom);
