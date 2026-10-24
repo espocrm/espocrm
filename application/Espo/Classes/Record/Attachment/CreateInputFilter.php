@@ -150,7 +150,7 @@ class CreateInputFilter implements Filter
 
         $maxSize = $this->detailsObtainer->getUploadMaxSize($dummy);
 
-        if ($maxSize && $size > $maxSize * 1024 * 1024) {
+        if ($maxSize && $size > $maxSize) {
             throw new BadRequest("File size should not exceed $maxSize Mb.");
         }
     }
