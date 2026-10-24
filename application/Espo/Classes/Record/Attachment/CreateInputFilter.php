@@ -140,12 +140,13 @@ class CreateInputFilter implements Filter
 
         $dummy = $this->entityManager->getRepositoryByClass(Attachment::class)->getNew();
 
-        $dummy->set([
-            'parentType' => $data->get('parentType'),
-            'relatedType' => $data->get('relatedType'),
-            'field' => $field,
-            'role' => $role,
-        ]);
+        $dummy
+            ->setTargetField($field)
+            ->setRole($role)
+            ->setMultiple([
+                'parentType' => $data->get('parentType'),
+                'relatedType' => $data->get('relatedType'),
+            ]);
 
         $maxSize = $this->detailsObtainer->getUploadMaxSize($dummy);
 
