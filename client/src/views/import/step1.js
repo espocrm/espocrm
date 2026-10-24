@@ -28,8 +28,7 @@
 
 import View from 'view';
 import Model from 'model';
-// noinspection NpmUsedModulesInstalled
-import intlTelInputGlobals from 'intl-tel-input-globals';
+import intlTelInput from 'intl-tel-input';
 
 class Step1ImportView extends View {
 
@@ -364,9 +363,9 @@ class Step1ImportView extends View {
             name: 'phoneNumberCountry',
             mode: 'edit',
             params: {
-                options: ['', ...intlTelInputGlobals.getCountryData().map(item => item.iso2)],
+                options: ['', ...intlTelInput.getAllCountries().map(item => item.iso2)],
             },
-            translatedOptions: intlTelInputGlobals.getCountryData()
+            translatedOptions: intlTelInput.getAllCountries()
                 .reduce((map, item) => {
                     map[item.iso2] = `${item.iso2.toUpperCase()} +${item.dialCode}`;
 

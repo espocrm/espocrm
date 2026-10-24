@@ -27,14 +27,13 @@
  ************************************************************************/
 
 import MultiEnumFieldView from 'views/fields/multi-enum';
-// noinspection NpmUsedModulesInstalled
-import intlTelInputGlobals from 'intl-tel-input-globals';
+import intlTelInput from 'intl-tel-input';
 
 class SettingsPhoneNumberPreferredCountryListFieldView extends MultiEnumFieldView {
 
     setupOptions() {
         try {
-            const dataList = intlTelInputGlobals.getCountryData();
+            const dataList = intlTelInput.getAllCountries();
 
             this.params.options = dataList
                 .map(item => item.iso2);
@@ -44,8 +43,7 @@ class SettingsPhoneNumberPreferredCountryListFieldView extends MultiEnumFieldVie
 
                 return map;
             }, {});
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e);
         }
     }
