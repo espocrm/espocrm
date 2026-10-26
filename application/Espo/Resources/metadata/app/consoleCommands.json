@@ -145,5 +145,15 @@
             "limit",
             "queue"
         ]
+    },
+    "oauthServer:revokeTokens": {
+        "className": "Espo\\Tools\\OAuthServer\\Commands\\RevokeTokens",
+        "listed": true,
+        "allowedOptions": [
+            "username"
+        ],
+        "allowedFlags": [
+            "adminOnly"
+        ]
     }
 }
