@@ -63,11 +63,11 @@ use Espo\Tools\UserSecurity\Password\Recovery\UrlValidator;
 class RecoveryService
 {
     /** Milliseconds. */
-    private const REQUEST_DELAY = 3000;
-    private const REQUEST_LIFETIME = '3 hours';
-    private const NEW_USER_REQUEST_LIFETIME = '2 days';
-    private const EXISTING_USER_REQUEST_LIFETIME = '2 days';
-    private const INTERNAL_SMTP_INTERVAL_PERIOD = '1 hour';
+    private const int REQUEST_DELAY = 3000;
+    private const string REQUEST_LIFETIME = '3 hours';
+    private const string NEW_USER_REQUEST_LIFETIME = '2 days';
+    private const string EXISTING_USER_REQUEST_LIFETIME = '2 days';
+    private const string INTERNAL_SMTP_INTERVAL_PERIOD = '1 hour';
 
     public function __construct(
         private EntityManager $entityManager,
