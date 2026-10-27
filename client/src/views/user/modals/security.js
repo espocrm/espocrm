@@ -65,11 +65,20 @@ class UserSecurityModalView extends ModalView {
 
         this.userModel = this.options.userModel;
 
-        this.$header = $('<span>').append(
-            $('<span>').text(this.translate('Security')),
-            ' <span class="chevron-right"></span> ',
-            $('<span>').text(this.userModel.get('userName'))
-        );
+        this.headerHtml =
+            (() => {
+                const span = document.createElement('span');
+                span.textContent = this.translate('Security');
+
+                return span.outerHTML;
+            })() +
+            ` <span class="chevron-right"></span> ` +
+            (() => {
+                const span = document.createElement('span');
+                span.textContent = this.userModel.get('userName');
+
+                return span.outerHTML;
+            })();
 
         const model = this.model = new Model();
 
