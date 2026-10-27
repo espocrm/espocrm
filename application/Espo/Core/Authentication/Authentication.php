@@ -408,7 +408,7 @@ class Authentication
         }
 
         if ($this->configDataProvider->preventConcurrentAuthToken()) {
-            $this->authTokenManager->inactiveOther($authToken);
+            $this->authTokenManager->inactivateOther($authToken);
         }
 
         return $authToken;

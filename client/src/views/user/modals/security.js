@@ -1,4 +1,5 @@
 /************************************************************************
+/************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM – Open Source CRM application.
@@ -29,6 +30,8 @@
 import ModalView from 'views/modal';
 import Model from 'model';
 import Utils from 'utils';
+import Ajax from 'ajax';
+import Ui from 'ui';
 
 class UserSecurityModalView extends ModalView {
 
@@ -84,6 +87,13 @@ class UserSecurityModalView extends ModalView {
                 onClick: () => this.reset(),
             },
         ];
+
+        this.addButton({
+            name: 'revokeAllTokens',
+            labelTranslation: 'User.strings.revokeAllAuthenticationTokens',
+            position: 'right',
+            onClick: () => this.processRevokeAllTokens(),
+        });
 
         this.userModel = this.options.userModel;
 
@@ -312,6 +322,27 @@ class UserSecurityModalView extends ModalView {
                 Espo.Ui.success(this.translate('Done'));
             })
             .catch(() => this.showActionItem('apply'));
+    }
+
+    /**
+     * @private
+     */
+    async processRevokeAllTokens() {
+        await this.confirm({
+            message: this.translate('confirmation', 'messages'),
+        });
+
+        await this.disableButton('revokeAllTokens');
+
+        try {
+            await Ajax.postRequest(`User/${this.userModel.id}/revokeAllAuthenticationTokens`);
+        } catch (e) {
+            await this.enableButton('revokeAllTokens');
+
+            return;
+        }
+
+        Ui.success(this.translate('Done'));
     }
 }
 

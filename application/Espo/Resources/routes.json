@@ -477,6 +477,12 @@
         "apiAuthForbidden": true
     },
     {
+        "route": "/User/:id/revokeAllAuthenticationTokens",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostRevokeAllAuthenticationTokens",
+        "apiAuthForbidden": true
+    },
+    {
         "route": "/UserSecurity/apiKey/generate",
         "method": "post",
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\PostApiKeyGenerate"

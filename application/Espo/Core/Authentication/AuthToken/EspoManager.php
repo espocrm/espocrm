@@ -127,10 +127,26 @@ class EspoManager implements Manager
         $this->repository->save($authToken);
     }
 
-    public function inactiveOther(AuthToken $authToken): void
+    public function inactivateOther(AuthToken $authToken): void
     {
         foreach ($this->findConcurrent($authToken) as $other) {
             $this->inactivate($other);
+        }
+    }
+
+    public function inactivateAllForUser(string $userId): void
+    {
+        $tokens = $this->repository
+            ->select([Attribute::ID])
+            ->where([
+                AuthTokenEntity::ATTR_USER_ID => $userId,
+                AuthTokenEntity::FIELD_IS_ACTIVE => true,
+            ])
+            ->sth()
+            ->find();
+
+        foreach ($tokens as $token) {
+            $this->inactivate($token);
         }
     }
 
