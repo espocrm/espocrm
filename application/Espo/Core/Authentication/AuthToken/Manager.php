@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Authentication\AuthToken;
 
-use Espo\Entities\User;
-
 /**
  * Fetches and stores auth tokens.
  *
