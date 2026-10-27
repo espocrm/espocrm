@@ -217,9 +217,7 @@ class Service
             throw new Forbidden("Password exceeds max length.");
         }
 
-        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
-
-        $this->entityManager->saveEntity($user);
+        $this->savePassword($user, $password);
     }
 
     /**
@@ -301,14 +299,14 @@ class Service
 
     private function savePassword(User $user, #[SensitiveParameter] string $password): void
     {
-        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
+        $this->setPassword($user, $password);
 
         $this->entityManager->saveEntity($user);
     }
 
     private function savePasswordSilent(User $user, #[SensitiveParameter] string $password): void
     {
-        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
+        $this->setPassword($user, $password);
 
         $this->entityManager->saveEntity($user, [SaveOption::SILENT => true]);
     }
@@ -325,5 +323,10 @@ class Service
         return $this->applicationState->isPortal() &&
             $this->authenticationMethodProvider->get() === LdapLogin::NAME &&
             !$this->config->get('ldapPortalUserLdapAuth');
+    }
+
+    private function setPassword(User $user, #[SensitiveParameter] string $password): void
+    {
+        $user->set(User::FIELD_PASSWORD, $this->passwordHash->hash($password));
     }
 }
