@@ -831,8 +831,10 @@ class RoleRecordTableView extends View {
         this.$quickSearch = this.$el.find('input[data-name="quick-search"]');
 
         if (this.mode === 'edit' || this.mode === 'detail') {
-            this.initStickyHeader('scope');
-            this.initStickyHeader('field');
+            setTimeout(() => {
+                this.initStickyHeader('scope');
+                this.initStickyHeader('field');
+            }, 0);
         }
     }
 
@@ -1068,15 +1070,34 @@ class RoleRecordTableView extends View {
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
         const stickyHeader = this.element.querySelector(`.sticky-header-${type}`);
+
+        const modalElement = this.element.closest('.modal');
+
         const buttonContainer = document.querySelector('.detail-button-container');
         const table = this.element.querySelector(`table.${type}-level`);
 
-        if (!buttonContainer || !table) {
+        if (!table) {
             return;
         }
 
-        const navbarHeight = this.getThemeManager().getParam('navbarHeight') *
+        if (!modalElement && !buttonContainer) {
+            return;
+        }
+
+        let navbarOffset = this.getThemeManager().getParam('navbarHeight') *
             this.getThemeManager().getFontSizeFactor();
+
+        let stickTopPositionStatic = null;
+
+        if (modalElement) {
+            stickTopPositionStatic =
+                modalElement.querySelector('.modal-header')?.offsetHeight +
+                modalElement.querySelector('.modal-footer')?.offsetHeight;
+
+            navbarOffset = 0;
+        }
+
+        const scrollable = modalElement ? modalElement.querySelector('.modal-body') : window;
 
         const handler = () => {
             if (window.innerWidth < screenWidthXs) {
@@ -1085,11 +1106,13 @@ class RoleRecordTableView extends View {
                 return;
             }
 
-            const stickTopPosition = buttonContainer.offsetTop + buttonContainer.offsetHeight;
+            const offsetHeight = modalElement ? 0 : buttonContainer.offsetHeight;
 
-            const topEdge = table.offsetTop - buttonContainer.offsetHeight - navbarHeight;
-            const bottomEdge = topEdge + table.offsetHeight - buttonContainer.offsetHeight;
-            const scrollTop = window.scrollY;
+            const stickTopPosition = stickTopPositionStatic ?? buttonContainer.offsetTop + offsetHeight;
+
+            const topEdge = table.offsetTop - offsetHeight - navbarOffset;
+            const bottomEdge = topEdge + table.offsetHeight - offsetHeight;
+            const scrollTop = modalElement ? scrollable.scrollTop : window.scrollY;
 
             const width = table.clientWidth;
 
@@ -1110,7 +1133,7 @@ class RoleRecordTableView extends View {
             stickyHeader.classList.remove('hidden');
         };
 
-        this.bindWindowEvents(type, handler);
+        this.bindScrollEvents(type, handler, scrollable);
 
         handler();
     }
@@ -1119,8 +1142,9 @@ class RoleRecordTableView extends View {
      * @private
      * @param {string} type
      * @param {function} handler
+     * @param {HTMLElement | window} scrollable
      */
-    bindWindowEvents(type, handler) {
+    bindScrollEvents(type, handler, scrollable) {
         this.windowListeners.get(type)?.abort();
 
         const controller = new AbortController();
@@ -1132,7 +1156,7 @@ class RoleRecordTableView extends View {
             passive: true
         };
 
-        window.addEventListener('scroll', handler, options);
+        scrollable.addEventListener('scroll', handler, options);
         window.addEventListener('resize', handler, options);
     }
 
