@@ -28,16 +28,113 @@
 
 import View from 'view';
 import Model from 'model';
+import Ajax from 'ajax';
 
 export default class extends View {
 
-    template = 'user/password-change-request'
+    // language=Handlebars
+    templateContent = `
+        <div class="container content">
+            <div class="block-center">
+                <div class="panel panel-default password-change">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{translate 'Change Password' scope='User'}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        {{#if hasForm}}
+                            <div class="row">
+                                <div class="cell form-group col-sm-6">
+                                    <label
+                                        for="login"
+                                        class="control-label"
+                                    >{{translate 'newPassword' category='fields' scope='User'}}</label>
+                                    <div class="field" data-name="password">{{{password}}}</div>
+                                </div>
+                                <div class="cell form-group col-sm-6">
+                                    <label
+                                        class="control-label"
+                                    >&nbsp;</label>
+                                    <div class="field" data-name="generatePassword">{{{generatePassword}}}</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="cell form-group col-sm-6">
+                                    <label
+                                        for="login"
+                                        class="control-label"
+                                    >{{translate 'newPasswordConfirm' category='fields' scope='User'}}</label>
+                                    <div class="field" data-name="passwordConfirm">{{{passwordConfirm}}}</div>
+                                </div>
+                                <div class="cell form-group col-sm-6">
+                                    {{#if hasPasswordPreview}}
+                                        <label
+                                            class="control-label"
+                                        >&nbsp;</label>
+                                        <div
+                                            class="field detail-field-container"
+                                            data-name="passwordPreview"
+                                        >{{{passwordPreview}}}</div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div>
+                                <button
+                                    type="button"
+                                    class="btn btn-danger btn-s-wide"
+                                    id="btn-submit"
+                                >{{translate 'Submit'}}</button>
+                            </div>
+                        {{/if}}
+
+                        {{#if notFound}}
+                            <div class="complex-text">{{complexText notFoundMessage}}</div>
+                        {{/if}}
+
+                        {{#if isFinished}}
+                            <div
+                                class="alert alert-success"
+                            >{{complexText finishMessage}}</div>
+                            <div class="margin-top-2x">
+                                <a
+                                    class="btn btn-link"
+                                    href="{{followUrl}}"
+                                >{{translate 'Login' scope='User'}}</a>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    isFinished = false
+
+    /**
+     * @private
+     * @type {string | null}
+     */
+    followUrl = null
 
     data() {
+        const finishMessage = this.isFinished ?
+            this.translate('passwordChangedByRequest', 'messages', 'User') :
+            null;
+
+        console.log(finishMessage);
+
         return {
             requestId: this.options.requestId,
             notFound: this.options.notFound,
+            hasForm: !this.options.notFound && !this.isFinished,
             notFoundMessage: this.notFoundMessage,
+            hasPasswordPreview: this.model.attributes.passwordPreview != null,
+            isFinished: this.isFinished,
+            followUrl: this.followUrl,
+            finishMessage: finishMessage,
         };
     }
 
@@ -51,12 +148,10 @@ export default class extends View {
             model: model,
             mode: 'edit',
             selector: '.field[data-name="password"]',
-            defs: {
-                name: 'password',
-                params: {
-                    required: true,
-                    maxLength: 255,
-                },
+            name: 'password',
+            params: {
+                required: true,
+                maxLength: 255,
             },
             strengthParams: this.options.strengthParams,
         });
@@ -65,12 +160,10 @@ export default class extends View {
             model: model,
             mode: 'edit',
             selector: '.field[data-name="passwordConfirm"]',
-            defs: {
-                name: 'passwordConfirm',
-                params: {
-                    required: true,
-                    maxLength: 255,
-                },
+            name: 'passwordConfirm',
+            params: {
+                required: true,
+                maxLength: 255,
             },
         });
 
@@ -79,19 +172,18 @@ export default class extends View {
             mode: 'detail',
             readOnly: true,
             selector: '.field[data-name="generatePassword"]',
-            defs: {
-                name: 'generatePassword',
-            },
+            name: 'generatePassword',
             strengthParams: this.options.strengthParams,
         });
 
-        this.createView('passwordPreview', 'views/fields/base', {
+        this.createView('passwordPreview', 'views/fields/varchar', {
             model: model,
             mode: 'detail',
             readOnly: true,
             selector: '.field[data-name="passwordPreview"]',
-            defs: {
-                name: 'passwordPreview',
+            name: 'passwordPreview',
+            params: {
+                copyToClipboard: true,
             },
         });
 
@@ -111,7 +203,10 @@ export default class extends View {
         return /** @type {import('views/fields/base').default} */this.getView(name);
     }
 
-    submit() {
+    /**
+     * @private
+     */
+    async submit() {
         this.getFieldView('password').fetchToModel();
         this.getFieldView('passwordConfirm').fetchToModel();
 
@@ -119,40 +214,34 @@ export default class extends View {
             this.getFieldView('password').validate() ||
             this.getFieldView('passwordConfirm').validate();
 
-        const password = this.model.get('password');
+        const password = this.model.attributes.password;
 
         if (notValid) {
             return;
         }
 
-        const $submit = this.$el.find('.btn-submit');
+        const button = this.element.querySelector('#btn-submit')
 
-        $submit.addClass('disabled');
+        button.classList.add('disabled');
+        button.setAttribute('disabled', 'disabled');
 
-        Espo.Ajax
-            .postRequest('User/changePasswordByRequest', {
+        let data;
+
+        try {
+            data = await Ajax.postRequest('User/changePasswordByRequest', {
                 requestId: this.options.requestId,
                 password: password,
-            })
-            .then(data => {
-                this.$el.find('.password-change').remove();
-
-                const url = data.url || this.baseUrl;
-
-                const a = document.createElement('a');
-                a.href = url;
-                a.innerText = this.translate('Login', 'labels', 'User');
-
-                const message = this.translate('passwordChangedByRequest', 'messages', 'User');
-
-                const html = this.getHelper().escapeString(message) + ' ' + a.outerHTML;
-
-                this.$el.find('.msg-box')
-                    .removeClass('hidden')
-                    .html('<span class="text-success">' + html + '</span>');
-            })
-            .catch(() => {
-                return $submit.removeClass('disabled');
             });
+        } catch (e) {
+            button.classList.remove('disabled');
+            button.removeAttribute('disabled');
+
+            return;
+        }
+
+        this.isFinished = true;
+        this.followUrl = data.url ?? this.baseUrl;
+
+        await this.reRender();
     }
 }
