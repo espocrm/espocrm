@@ -28,16 +28,38 @@
 
 import ModalView from 'views/modal';
 import Model from 'model';
+import Utils from 'utils';
 
 class UserSecurityModalView extends ModalView {
 
-    templateContent = '<div class="record no-side-margin">{{{record}}}</div>'
+    // language=Handlebars
+    templateContent = `
+        <div class="record no-side-margin">{{{record}}}</div>
+    `
 
     className = 'dialog dialog-record'
 
     shortcutKeys = {
         'Control+Enter': 'apply',
     }
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    auth2FAIsSystemEnabled
+
+    /**
+     * @private
+     * @type {import('views/record/edit').default}
+     */
+    recordView
+
+    /**
+     * @private
+     * @type {import('models/user').default}
+     */
+    userModel
 
     setup() {
         this.buttonList = [
@@ -51,7 +73,7 @@ class UserSecurityModalView extends ModalView {
             {
                 name: 'cancel',
                 label: 'Close',
-            }
+            },
         ];
 
         this.dropdownItemList = [
@@ -86,33 +108,37 @@ class UserSecurityModalView extends ModalView {
         model.id = this.userModel.id;
         model.url = 'UserSecurity/' + this.userModel.id;
 
-        const auth2FAMethodList = this.getConfig().get('auth2FAMethodList') || [];
+        const auth2FAMethodList = this.getConfig().get('auth2FAMethodList') ?? [];
+
+        this.auth2FAIsSystemEnabled = this.userModel.isPortal() ?
+            (this.getConfig().get('auth2FAInPortal') ?? false) :
+            (this.getConfig().get('auth2FA') ?? false);
 
         model.setDefs({
             fields: {
-                'auth2FA': {
+                auth2FA: {
                     type: 'bool',
                     labelText: this.translate('auth2FAEnable', 'fields', 'User'),
                 },
-                'auth2FAMethod': {
+                auth2FAMethod: {
                     type: 'enum',
                     options: auth2FAMethodList,
                     translation: 'Settings.options.auth2FAMethodList',
                 },
-            }
-        });
+            }}
+        );
 
         this.wait(
-            model.fetch().then(() => {
-                this.initialAttributes = Espo.Utils.cloneDeep(model.attributes);
+            (async () => {
+                await model.fetch();
 
-                if (model.get('auth2FA')) {
-                    this.showActionItem('reset');
+                this.initialAttributes = Utils.cloneDeep(model.attributes);
+
+                if (model.attributes.auth2FA && this.auth2FAIsSystemEnabled) {
+                    await this.showActionItem('reset');
                 }
 
-                this.createView('record', 'views/record/edit-for-modal', {
-                    scope: 'None',
-                    selector: '.record',
+                this.recordView = await this.createView('record', 'views/record/edit-for-modal', {
                     model: this.model,
                     detailLayout: [
                         {
@@ -130,14 +156,11 @@ class UserSecurityModalView extends ModalView {
                             ]
                         }
                     ],
-                }, (view) => {
-                    this.controlFieldsVisibility(view);
-
-                    this.listenTo(this.model, 'change:auth2FA', () => {
-                        this.controlFieldsVisibility(view);
-                    });
                 });
-            })
+
+                this.controlFieldsVisibility();
+                this.listenTo(this.model, 'change:auth2FA', () => this.controlFieldsVisibility());
+            })()
         );
 
         this.listenTo(this.model, 'change', () => {
@@ -149,20 +172,32 @@ class UserSecurityModalView extends ModalView {
         });
     }
 
-    controlFieldsVisibility(view) {
-        if (this.model.get('auth2FA')) {
-            view.showField('auth2FAMethod');
-            view.setFieldRequired('auth2FAMethod');
+    /**
+     * @private
+     */
+    controlFieldsVisibility() {
+        if (this.model.attributes.auth2FA) {
+            this.recordView.showField('auth2FAMethod');
+            this.recordView.setFieldRequired('auth2FAMethod');
+        } else {
+            this.recordView.hideField('auth2FAMethod');
+            this.recordView.setFieldNotRequired('auth2FAMethod');
         }
-        else {
-            view.hideField('auth2FAMethod');
-            view.setFieldNotRequired('auth2FAMethod');
+
+        if (!this.auth2FAIsSystemEnabled) {
+            if (!this.model.attributes.auth2FA) {
+                this.recordView.setFieldReadOnly('auth2FA');
+                this.recordView.hideField('auth2FA');
+            }
+
+            this.recordView.setFieldReadOnly('auth2FAMethod');
+            this.recordView.setFieldNotRequired('auth2FAMethod');
         }
     }
 
     isChanged() {
-        return this.initialAttributes.auth2FA !== this.model.get('auth2FA') ||
-            this.initialAttributes.auth2FAMethod !== this.model.get('auth2FAMethod')
+        return this.initialAttributes.auth2FA !== this.model.attributes.auth2FA ||
+            this.initialAttributes.auth2FAMethod !== this.model.attributes.attributes
     }
 
     reset() {
@@ -178,7 +213,11 @@ class UserSecurityModalView extends ModalView {
         return /** @type {import('views/record/edit').default} */this.getView('record');
     }
 
-    apply(reset) {
+    /**
+     * @private
+     * @param {boolean} reset
+     */
+    apply(reset = false) {
         const data = this.getRecordView().processFetch();
 
         if (!data) {
@@ -204,7 +243,11 @@ class UserSecurityModalView extends ModalView {
         }).then(() => this.processApply(reset));
     }
 
-    processApply(reset) {
+    /**
+     * @private
+     * @param {boolean} reset
+     */
+    processApply(reset = false) {
         if (this.model.get('auth2FA')) {
             const auth2FAMethod = this.model.get('auth2FAMethod');
 
@@ -255,6 +298,9 @@ class UserSecurityModalView extends ModalView {
         this.processSave();
     }
 
+    /**
+     * @private
+     */
     processSave() {
         this.hideActionItem('apply');
 

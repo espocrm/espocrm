@@ -55,16 +55,9 @@ class UserDetailRecordView extends DetailRecordView {
             });
         }
 
-        const isPortalUser = this.model.isPortal() ||
-            this.model.id === this.getUser().id && this.getUser().isPortal();
-
         if (
             (this.model.id === this.getUser().id || this.getUser().isAdmin()) &&
-            this.getConfig().get('auth2FA') &&
-            (
-                (this.model.isRegular() || this.model.isAdmin()) ||
-                isPortalUser && this.getConfig().get('auth2FAInPortal')
-            )
+            (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal())
         ) {
             this.addButton({
                 name: 'viewSecurity',
