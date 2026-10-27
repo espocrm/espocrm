@@ -39,6 +39,9 @@ use Espo\Core\Api\Response;
 use Espo\ORM\EntityManager;
 use Espo\Tools\UserSecurity\Password\ConfigProvider;
 
+/**
+ * @noinspection PhpUnused
+ */
 class ChangePassword implements EntryPoint
 {
     use NoAuth;
@@ -58,9 +61,9 @@ class ChangePassword implements EntryPoint
         }
 
         $passwordChangeRequest = $this->entityManager
-            ->getRDBRepository(PasswordChangeRequest::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(PasswordChangeRequest::class)
             ->where([
-                'requestId' => $requestId,
+                PasswordChangeRequest::FIELD_REQUEST_ID => $requestId,
             ])
             ->findOne();
 

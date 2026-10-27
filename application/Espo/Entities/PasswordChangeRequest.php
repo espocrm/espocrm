@@ -34,26 +34,46 @@ use UnexpectedValueException;
 
 class PasswordChangeRequest extends Entity
 {
-    public const ENTITY_TYPE = 'PasswordChangeRequest';
+    public const string ENTITY_TYPE = 'PasswordChangeRequest';
+
+    public const string FIELD_REQUEST_ID = 'requestId';
+    private const string FIELD_URL = 'url';
+
+    public const string ATTR_USER_ID = 'userId';
 
     public function getUrl(): ?string
     {
-        return $this->get('url');
+        return $this->get(self::FIELD_URL);
     }
 
     public function getRequestId(): string
     {
-        return $this->get('requestId');
+        return $this->get(self::FIELD_REQUEST_ID);
     }
 
     public function getUserId(): string
     {
-        $userId = $this->get('userId');
+        $userId = $this->get(self::ATTR_USER_ID);
 
         if ($userId === null) {
             throw new UnexpectedValueException();
         }
 
         return $userId;
+    }
+
+    public function setRequestId(string $requestId): self
+    {
+        return $this->set(self::FIELD_REQUEST_ID, $requestId);
+    }
+
+    public function setUserId(string $userId): self
+    {
+        return $this->set(self::ATTR_USER_ID, $userId);
+    }
+
+    public function setUrl(?string $url): self
+    {
+        return $this->set(self::FIELD_URL, $url);
     }
 }

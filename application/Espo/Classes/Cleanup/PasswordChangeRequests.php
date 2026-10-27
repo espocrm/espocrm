@@ -30,25 +30,23 @@
 namespace Espo\Classes\Cleanup;
 
 use Espo\Core\Cleanup\Cleanup;
+use Espo\Core\Name\Field;
 use Espo\Core\Utils\Config;
 use Espo\Core\Field\DateTime;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\PasswordChangeRequest;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PasswordChangeRequests implements Cleanup
 {
-    private Config $config;
-    private EntityManager $entityManager;
-
     private string $cleanupPeriod = '30 days';
 
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Config $config,
+        private EntityManager $entityManager,
+    ) {}
 
     public function process(): void
     {
@@ -63,7 +61,7 @@ class PasswordChangeRequests implements Cleanup
             ->delete()
             ->from(PasswordChangeRequest::ENTITY_TYPE)
             ->where([
-                'createdAt<' => $before,
+                Field::CREATED_AT . '<' => $before,
             ])
             ->build();
 
