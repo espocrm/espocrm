@@ -1058,7 +1058,6 @@ class RoleRecordTableView extends View {
 
         this.$quickSearch.val(searchText);
         this.processQuickSearch(searchText);
-
     }
 
     /**
