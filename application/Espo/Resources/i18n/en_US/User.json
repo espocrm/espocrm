@@ -171,5 +171,8 @@
     },
     "actions": {
         "changePosition": "Change Position"
+    },
+    "strings": {
+        "revokeAllAuthenticationTokens": "Revoke all authentication tokens"
     }
 }

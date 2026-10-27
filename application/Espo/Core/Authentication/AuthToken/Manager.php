@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication\AuthToken;
 
+use Espo\Entities\User;
+
 /**
  * Fetches and stores auth tokens.
  *
@@ -70,5 +72,12 @@ interface Manager
      * @param TAuthToken $authToken
      * @since 10.1.0
      */
-    public function inactiveOther(AuthToken $authToken): void;
+    public function inactivateOther(AuthToken $authToken): void;
+
+    /**
+     * Inactivate all auth tokens for a user.
+     *
+     * @since 10.1.0
+     */
+    public function inactivateAllForUser(string $userId): void;
 }
