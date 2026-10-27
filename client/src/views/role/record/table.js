@@ -150,6 +150,12 @@ class RoleRecordTableView extends View {
      */
     fieldTableDataList
 
+    /**
+     * @type {Map<string, AbortController>}
+     * @private
+     */
+    windowListeners
+
     data() {
         const data = {};
 
@@ -372,11 +378,11 @@ class RoleRecordTableView extends View {
         }
 
         this.once('remove', () => {
-            $(window).off('scroll.scope-' + this.cid);
-            $(window).off('resize.scope-' + this.cid);
-            $(window).off('scroll.field-' + this.cid);
-            $(window).off('resize.field-' + this.cid);
+            this.windowListeners?.forEach(controller => controller.abort());
+            this.windowListeners?.clear();
         });
+
+        this.windowListeners ??= new Map();
     }
 
     /**
@@ -1060,68 +1066,75 @@ class RoleRecordTableView extends View {
      * @param {string} type
      */
     initStickyHeader(type) {
-        const $sticky = this.$el.find(`.sticky-header-${type}`);
-
         const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-        const $buttonContainer = $('.detail-button-container');
-        const $table = this.$el.find(`table.${type}-level`);
+        const stickyHeader = this.element.querySelector(`.sticky-header-${type}`);
+        const buttonContainer = document.querySelector('.detail-button-container');
+        const table = this.element.querySelector(`table.${type}-level`);
 
-        if (!$table.length) {
-            return;
-        }
-
-        if (!$buttonContainer.length) {
+        if (!buttonContainer || !table) {
             return;
         }
 
         const navbarHeight = this.getThemeManager().getParam('navbarHeight') *
             this.getThemeManager().getFontSizeFactor();
 
-        const handle = () => {
+        const handler = () => {
             if (window.innerWidth < screenWidthXs) {
-                $sticky.addClass('hidden');
+                stickyHeader.classList.add('hidden');
 
                 return;
             }
 
-            const stickTopPosition = $buttonContainer.get(0).getBoundingClientRect().top +
-                $buttonContainer.outerHeight();
+            const stickTopPosition = buttonContainer.offsetTop + buttonContainer.offsetHeight;
 
-            let topEdge = $table.position().top;
-
-            topEdge -= $buttonContainer.height();
-            topEdge += $table.find('tr > th').height();
-            topEdge -= navbarHeight;
-
-            const bottomEdge = topEdge + $table.outerHeight(true) - $buttonContainer.height();
+            const topEdge = table.offsetTop - buttonContainer.offsetHeight - navbarHeight;
+            const bottomEdge = topEdge + table.offsetHeight - buttonContainer.offsetHeight;
             const scrollTop = window.scrollY;
-            const width = $table.width();
 
-            if (scrollTop > topEdge && scrollTop < bottomEdge) {
-                $sticky.css({
-                    position: 'fixed',
-                    marginTop: stickTopPosition + 'px',
-                    top: 0,
-                    width: width + 'px',
-                    marginLeft: '1px',
-                });
+            const width = table.clientWidth;
 
-                $sticky.removeClass('hidden');
-            } else {
-                $sticky.addClass('hidden');
+            if (scrollTop <= topEdge || scrollTop >= bottomEdge) {
+                stickyHeader.classList.add('hidden');
+
+                return;
             }
+
+            Object.assign(stickyHeader.style, {
+                position: 'fixed',
+                marginTop: stickTopPosition + 'px',
+                top: '0',
+                width: width + 'px',
+                marginLeft: 'var(--1px)',
+            });
+
+            stickyHeader.classList.remove('hidden');
         };
 
-        const $window = $(window);
+        this.bindWindowEvents(type, handler);
 
-        $window.off(`scroll.${type}-${this.cid}`);
-        $window.on(`scroll.${type}-${this.cid}`, handle);
+        handler();
+    }
 
-        $window.off(`resize.${type}-${this.cid}`);
-        $window.on(`resize.${type}-${this.cid}`, handle);
+    /**
+     * @private
+     * @param {string} type
+     * @param {function} handler
+     */
+    bindWindowEvents(type, handler) {
+        this.windowListeners.get(type)?.abort();
 
-        handle();
+        const controller = new AbortController();
+
+        this.windowListeners.set(type, controller);
+
+        const options = {
+            signal: controller.signal,
+            passive: true
+        };
+
+        window.addEventListener('scroll', handler, options);
+        window.addEventListener('resize', handler, options);
     }
 
     /**
