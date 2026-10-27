@@ -76,9 +76,9 @@ class UsernameFailedAttemptsLimit implements BeforeLogin
         $repo = $this->entityManager->getRDBRepositoryByClass(AuthLogRecord::class);
 
         $where = [
-            'username' => $data->getUsername(),
-            'requestTime>' => $this->getTimeFrom($request, $failedAttemptsPeriod)->format('U'),
-            'isDenied' => true,
+            AuthLogRecord::FIELD_USERNAME => $data->getUsername(),
+            AuthLogRecord::FIELD_REQUEST_TIME . '>' => $this->getTimeFrom($request, $failedAttemptsPeriod)->format('U'),
+            AuthLogRecord::FIELD_IS_DENIED => true,
         ];
 
         $wasFailed = (bool) $repo
@@ -103,9 +103,9 @@ class UsernameFailedAttemptsLimit implements BeforeLogin
             $repo
                 ->select([Attribute::ID])
                 ->where([
-                    'username' => $data->getUsername(),
-                    'ipAddress' => $ipAddress,
-                    'isDenied' => false,
+                    AuthLogRecord::FIELD_USERNAME => $data->getUsername(),
+                    AuthLogRecord::FIELD_IP_ADDRESS => $ipAddress,
+                    AuthLogRecord::FIELD_IS_DENIED => false,
                 ])
                 ->findOne()
         ) {

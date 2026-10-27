@@ -33,30 +33,34 @@ use Espo\Core\ORM\Entity;
 
 class AuthLogRecord extends Entity
 {
-    public const ENTITY_TYPE = 'AuthLogRecord';
+    public const string ENTITY_TYPE = 'AuthLogRecord';
 
-    public const DENIAL_REASON_CREDENTIALS = 'CREDENTIALS';
-    public const DENIAL_REASON_WRONG_CODE = 'WRONG_CODE';
-    public const DENIAL_REASON_INACTIVE_USER = 'INACTIVE_USER';
-    public const DENIAL_REASON_IS_PORTAL_USER = 'IS_PORTAL_USER';
-    public const DENIAL_REASON_IS_NOT_PORTAL_USER = 'IS_NOT_PORTAL_USER';
-    public const DENIAL_REASON_USER_IS_NOT_IN_PORTAL = 'USER_IS_NOT_IN_PORTAL';
-    public const DENIAL_REASON_IS_SYSTEM_USER = 'IS_SYSTEM_USER';
-    public const DENIAL_REASON_FORBIDDEN = 'FORBIDDEN';
+    public const string DENIAL_REASON_CREDENTIALS = 'CREDENTIALS';
+    public const string DENIAL_REASON_WRONG_CODE = 'WRONG_CODE';
+    public const string DENIAL_REASON_INACTIVE_USER = 'INACTIVE_USER';
+    public const string DENIAL_REASON_IS_PORTAL_USER = 'IS_PORTAL_USER';
+    public const string DENIAL_REASON_IS_NOT_PORTAL_USER = 'IS_NOT_PORTAL_USER';
+    public const string DENIAL_REASON_USER_IS_NOT_IN_PORTAL = 'USER_IS_NOT_IN_PORTAL';
+    public const string DENIAL_REASON_IS_SYSTEM_USER = 'IS_SYSTEM_USER';
+    public const string DENIAL_REASON_FORBIDDEN = 'FORBIDDEN';
 
     public const string ATTR_AUTH_TOKEN_ID = 'authTokenId';
     public const string FIELD_REQUEST_TIME = 'requestTime';
+    public const string FIELD_USERNAME = 'username';
+    public const string FIELD_IP_ADDRESS = 'ipAddress';
+    public const string FIELD_IS_DENIED = 'isDenied';
+    public const string FIELD_DENIAL_REASON = 'denialReason';
 
     public function setUsername(?string $username): self
     {
-        $this->set('username', $username);
+        $this->set(self::FIELD_USERNAME, $username);
 
         return $this;
     }
 
     public function setIpAddress(?string $ipAddress): self
     {
-        $this->set('ipAddress', $ipAddress);
+        $this->set(self::FIELD_IP_ADDRESS, $ipAddress);
 
         return $this;
     }
@@ -112,14 +116,14 @@ class AuthLogRecord extends Entity
 
     public function setIsDenied(bool $isDenied = true): self
     {
-        $this->set('isDenied', $isDenied);
+        $this->set(self::FIELD_IS_DENIED, $isDenied);
 
         return $this;
     }
 
     public function setDenialReason(?string $denialReason): self
     {
-        $this->set('denialReason', $denialReason);
+        $this->set(self::FIELD_DENIAL_REASON, $denialReason);
 
         return $this;
     }

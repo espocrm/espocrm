@@ -39,6 +39,9 @@ use Espo\Core\Authentication\Util\IpAddressUtil;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Config;
 
+/**
+ * @noinspection PhpUnused
+ */
 class IpAddressWhitelist implements OnLogin
 {
     public function __construct(
