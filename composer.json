@@ -35,7 +35,7 @@
         "guzzlehttp/psr7": "^2.13",
         "michelf/php-markdown": "^1.9",
         "robthree/twofactorauth": "^1.8",
-        "phpoffice/phpspreadsheet": "^5.7",
+        "phpoffice/phpspreadsheet": "^5.10",
         "doctrine/dbal": "^4.4",
         "league/flysystem-async-aws-s3": "^3.0",
         "johngrogg/ics-parser": "^3.0",
