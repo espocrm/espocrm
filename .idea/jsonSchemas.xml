@@ -8,7 +8,7 @@
             <SchemaInfo>
               <option name="name" value="JSON Schema version 7" />
               <option name="relativePathToSchema" value="http://json-schema.org/draft-07/schema" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>
@@ -42,7 +42,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="autoload" />
               <option name="relativePathToSchema" value="schema/autoload.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -55,13 +55,29 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="composer.json">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="composer.json" />
+              <option name="relativePathToSchema" value="https://getcomposer.org/schema.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="composer.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="layouts/detail">
           <value>
             <SchemaInfo>
               <option name="generatedName" value="New Schema" />
               <option name="name" value="layouts/detail" />
               <option name="relativePathToSchema" value="schema/layouts/detail.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -90,7 +106,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="layouts/list" />
               <option name="relativePathToSchema" value="schema/layouts/list.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -119,7 +135,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/aclDefs" />
               <option name="relativePathToSchema" value="schema/metadata/aclDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -138,7 +154,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/acl" />
               <option name="relativePathToSchema" value="schema/metadata/app/acl.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -157,7 +173,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/aclPortal" />
               <option name="relativePathToSchema" value="schema/metadata/app/aclPortal.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -176,7 +192,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/actions" />
               <option name="relativePathToSchema" value="schema/metadata/app/actions.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -195,7 +211,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/addressFormats" />
               <option name="relativePathToSchema" value="schema/metadata/app/addressFormats.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -214,7 +230,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/adminPanel" />
               <option name="relativePathToSchema" value="schema/metadata/app/adminPanel.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -233,7 +249,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/api" />
               <option name="relativePathToSchema" value="schema/metadata/app/api.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -252,7 +268,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/appParams" />
               <option name="relativePathToSchema" value="schema/metadata/app/appParams.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -271,7 +287,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/authentication" />
               <option name="relativePathToSchema" value="schema/metadata/app/authentication.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -290,7 +306,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/authentication2FAMethods" />
               <option name="relativePathToSchema" value="schema/metadata/app/authentication2FAMethods.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -309,7 +325,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/cleanup" />
               <option name="relativePathToSchema" value="schema/metadata/app/cleanup.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -328,7 +344,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/client" />
               <option name="relativePathToSchema" value="schema/metadata/app/client.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -347,12 +363,31 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/clientIcons" />
               <option name="relativePathToSchema" value="schema/metadata/app/clientIcons.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/Resources/metadata/app/clientIcons.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/clientNavbar">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/clientNavbar" />
+              <option name="relativePathToSchema" value="schema/metadata/app/clientNavbar.json" />
+              <option name="schemaVersion" value="JSON Schema 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/clientNavbar.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>
@@ -366,7 +401,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/clientRecord" />
               <option name="relativePathToSchema" value="schema/metadata/app/clientRecord.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -385,7 +420,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/clientRoutes" />
               <option name="relativePathToSchema" value="schema/metadata/app/clientRoutes.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -404,7 +439,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/complexExpression" />
               <option name="relativePathToSchema" value="schema/metadata/app/complexExpression.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -423,7 +458,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/config" />
               <option name="relativePathToSchema" value="schema/metadata/app/config.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -442,7 +477,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/consoleCommands" />
               <option name="relativePathToSchema" value="schema/metadata/app/consoleCommands.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -461,7 +496,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/containerServices" />
               <option name="relativePathToSchema" value="schema/metadata/app/containerServices.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -480,7 +515,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/currency" />
               <option name="relativePathToSchema" value="schema/metadata/app/currency.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -499,7 +534,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/currencyConversion" />
               <option name="relativePathToSchema" value="schema/metadata/app/currencyConversion.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -518,7 +553,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/databasePlatforms" />
               <option name="relativePathToSchema" value="schema/metadata/app/databasePlatforms.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -537,7 +572,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/dateTime" />
               <option name="relativePathToSchema" value="schema/metadata/app/dateTime.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -556,7 +591,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/defaultDashboardLayouts" />
               <option name="relativePathToSchema" value="schema/metadata/app/defaultDashboardLayouts.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -575,7 +610,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/defaultDashboardOptions" />
               <option name="relativePathToSchema" value="schema/metadata/app/defaultDashboardOptions.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -594,12 +629,31 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/emailTemplate" />
               <option name="relativePathToSchema" value="schema/metadata/app/emailTemplate.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/Resources/metadata/app/emailTemplate.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/entityManager">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/entityManager" />
+              <option name="relativePathToSchema" value="schema/metadata/app/entityManager.json" />
+              <option name="schemaVersion" value="JSON Schema 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/entityManager.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>
@@ -613,7 +667,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/entityManagerParams" />
               <option name="relativePathToSchema" value="schema/metadata/app/entityManagerParams.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -632,7 +686,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/entityTemplateList" />
               <option name="relativePathToSchema" value="schema/metadata/app/entityTemplateList.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -651,7 +705,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/entityTemplates" />
               <option name="relativePathToSchema" value="schema/metadata/app/entityTemplates.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -670,7 +724,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/entryPoints" />
               <option name="relativePathToSchema" value="schema/metadata/app/entryPoints.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -689,7 +743,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/export" />
               <option name="relativePathToSchema" value="schema/metadata/app/export.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -708,7 +762,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/fieldProcessing" />
               <option name="relativePathToSchema" value="schema/metadata/app/fieldProcessing.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -727,7 +781,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/file" />
               <option name="relativePathToSchema" value="schema/metadata/app/file.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -746,7 +800,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/fileStorage" />
               <option name="relativePathToSchema" value="schema/metadata/app/fileStorage.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -765,7 +819,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/formula" />
               <option name="relativePathToSchema" value="schema/metadata/app/formula.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -784,7 +838,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/hook" />
               <option name="relativePathToSchema" value="schema/metadata/app/hook.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -803,7 +857,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/image" />
               <option name="relativePathToSchema" value="schema/metadata/app/image.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -822,7 +876,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/jsLibs" />
               <option name="relativePathToSchema" value="schema/metadata/app/jsLibs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -841,7 +895,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/language" />
               <option name="relativePathToSchema" value="schema/metadata/app/language.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -860,7 +914,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/layouts" />
               <option name="relativePathToSchema" value="schema/metadata/app/layouts.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -879,31 +933,12 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/linkManager" />
               <option name="relativePathToSchema" value="schema/metadata/app/linkManager.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/Resources/metadata/app/linkManager.json" />
-                    <option name="mappingKind" value="Pattern" />
-                  </Item>
-                </list>
-              </option>
-            </SchemaInfo>
-          </value>
-        </entry>
-        <entry key="metadata/app/entityManager">
-          <value>
-            <SchemaInfo>
-              <option name="generatedName" value="New Schema" />
-              <option name="name" value="metadata/app/entityManager" />
-              <option name="relativePathToSchema" value="schema/metadata/app/entityManager.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
-              <option name="patterns">
-                <list>
-                  <Item>
-                    <option name="pattern" value="true" />
-                    <option name="path" value="*/Resources/metadata/app/entityManager.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>
@@ -917,7 +952,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/mapProviders" />
               <option name="relativePathToSchema" value="schema/metadata/app/mapProviders.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -936,7 +971,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/massActions" />
               <option name="relativePathToSchema" value="schema/metadata/app/massActions.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -955,31 +990,12 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/metadata" />
               <option name="relativePathToSchema" value="schema/metadata/app/metadata.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/Resources/metadata/app/metadata.json" />
-                    <option name="mappingKind" value="Pattern" />
-                  </Item>
-                </list>
-              </option>
-            </SchemaInfo>
-          </value>
-        </entry>
-        <entry key="metadata/app/clientNavbar">
-          <value>
-            <SchemaInfo>
-              <option name="generatedName" value="New Schema" />
-              <option name="name" value="metadata/app/clientNavbar" />
-              <option name="relativePathToSchema" value="schema/metadata/app/clientNavbar.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
-              <option name="patterns">
-                <list>
-                  <Item>
-                    <option name="pattern" value="true" />
-                    <option name="path" value="*/Resources/metadata/app/clientNavbar.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>
@@ -993,7 +1009,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/orm" />
               <option name="relativePathToSchema" value="schema/metadata/app/orm.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1012,7 +1028,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/pdfEngines" />
               <option name="relativePathToSchema" value="schema/metadata/app/pdfEngines.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1031,7 +1047,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/popupNotifications" />
               <option name="relativePathToSchema" value="schema/metadata/app/popupNotifications.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1050,7 +1066,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/portalContainerServices" />
               <option name="relativePathToSchema" value="schema/metadata/app/portalContainerServices.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1069,7 +1085,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/reactions" />
               <option name="relativePathToSchema" value="schema/metadata/app/reactions.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1088,7 +1104,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/rebuild" />
               <option name="relativePathToSchema" value="schema/metadata/app/rebuild.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1107,7 +1123,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/record" />
               <option name="relativePathToSchema" value="schema/metadata/app/record.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1126,7 +1142,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/recordId" />
               <option name="relativePathToSchema" value="schema/metadata/app/recordId.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1145,7 +1161,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/regExpPatterns" />
               <option name="relativePathToSchema" value="schema/metadata/app/regExpPatterns.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1164,7 +1180,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/relationships" />
               <option name="relativePathToSchema" value="schema/metadata/app/relationships.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1183,7 +1199,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/scheduledJobs" />
               <option name="relativePathToSchema" value="schema/metadata/app/scheduledJobs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1202,7 +1218,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/select" />
               <option name="relativePathToSchema" value="schema/metadata/app/select.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1221,7 +1237,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/smsProviders" />
               <option name="relativePathToSchema" value="schema/metadata/app/smsProviders.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1240,7 +1256,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/templateHelpers" />
               <option name="relativePathToSchema" value="schema/metadata/app/templateHelpers.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1259,7 +1275,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/templates" />
               <option name="relativePathToSchema" value="schema/metadata/app/templates.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1278,7 +1294,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/app/webSocket" />
               <option name="relativePathToSchema" value="schema/metadata/app/webSocket.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1297,7 +1313,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/authenticationMethods" />
               <option name="relativePathToSchema" value="schema/metadata/authenticationMethods.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1316,7 +1332,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/clientDefs" />
               <option name="relativePathToSchema" value="schema/metadata/clientDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1335,7 +1351,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/dashlets" />
               <option name="relativePathToSchema" value="schema/metadata/dashlets.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1354,7 +1370,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/entityAcl" />
               <option name="relativePathToSchema" value="schema/metadata/entityAcl.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1373,7 +1389,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/entityDefs" />
               <option name="relativePathToSchema" value="schema/metadata/entityDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1392,7 +1408,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/fields" />
               <option name="relativePathToSchema" value="schema/metadata/fields.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1411,7 +1427,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/integrations" />
               <option name="relativePathToSchema" value="schema/metadata/integrations.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1430,7 +1446,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/logicDefs" />
               <option name="relativePathToSchema" value="schema/metadata/logicDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1449,7 +1465,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/notificationDefs" />
               <option name="relativePathToSchema" value="schema/metadata/notificationDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1468,7 +1484,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/pdfDefs" />
               <option name="relativePathToSchema" value="schema/metadata/pdfDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1487,7 +1503,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/recordDefs" />
               <option name="relativePathToSchema" value="schema/metadata/recordDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1506,7 +1522,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/scopes" />
               <option name="relativePathToSchema" value="schema/metadata/scopes.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1525,7 +1541,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/selectDefs" />
               <option name="relativePathToSchema" value="schema/metadata/selectDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1544,7 +1560,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="metadata/streamDefs" />
               <option name="relativePathToSchema" value="schema/metadata/streamDefs.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1563,7 +1579,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="module" />
               <option name="relativePathToSchema" value="schema/module.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -1582,7 +1598,7 @@
               <option name="generatedName" value="New Schema" />
               <option name="name" value="routes" />
               <option name="relativePathToSchema" value="schema/routes.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
