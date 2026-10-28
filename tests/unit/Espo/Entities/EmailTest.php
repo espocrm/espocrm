@@ -498,7 +498,7 @@ class EmailTest extends TestCase
         $this->email->setIsHtml();
         $bodyPlain = $this->email->getBodyPlain();
 
-        $this->assertEquals("  \r\n &", $bodyPlain);
+        $this->assertEquals("  \r\n &", $bodyPlain);
     }
 
     public function testBodyPlainWithoutQuotePart(): void
