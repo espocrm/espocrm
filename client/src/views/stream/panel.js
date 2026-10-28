@@ -243,7 +243,7 @@ class PanelStreamView extends RelationshipPanelView {
 
             if (storedAttachments) {
                 this.hasStoredAttachments = true;
-                this.seed.set({
+                this.seed.setMultiple({
                     attachmentsIds: storedAttachments.idList,
                     attachmentsNames: storedAttachments.names,
                     attachmentsTypes: storedAttachments.types,
