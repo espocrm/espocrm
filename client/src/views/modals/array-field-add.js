@@ -106,7 +106,7 @@ class ArrayFieldAddModalView extends ModalView {
             },
         ];
 
-        if (this.options.checkAllButton && this.optionList.length) {
+        if (this.options.checkAll && this.optionList.length) {
             this.addButton({
                 name: 'checkAll',
                 label: 'Check All',
