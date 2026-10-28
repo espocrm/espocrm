@@ -90,6 +90,47 @@ class HostCheckTest extends TestCase
             ['fe80::1', false],
             ['fc00::1', false],
             ['::1', false],
+
+            ['::', false],
+            // Carrier-grade NAT, incl. Alibaba Cloud metadata.
+            ['100.100.100.200', false],
+            ['100.64.0.1', false],
+            ['100.127.255.255', false],
+            ['100.63.255.255', true],
+            ['100.128.0.1', true],
+            // Other special-purpose IPv4.
+            ['192.0.0.192', false],
+            ['192.0.2.1', false],
+            ['198.18.0.1', false],
+            ['198.19.255.255', false],
+            ['198.51.100.1', false],
+            ['203.0.113.1', false],
+            ['224.0.0.1', false],
+            ['239.255.255.250', false],
+            ['255.255.255.255', false],
+            ['169.254.169.254', false],
+            ['8.8.8.8', true],
+            // IPv4 embedded in IPv6.
+            ['::ffff:100.100.100.200', false],
+            ['::FFFF:100.100.100.200', false],
+            ['0:0:0:0:0:ffff:6464:64c8', false],
+            ['::ffff:8.8.8.8', true],
+            ['64:ff9b::6464:64c8', false],
+            ['2002:6464:64c8::', false],
+            ['2001:0000:4136:e378:8000:0000:9b9b:9b37', false],
+            ['::100.100.100.200', false],
+            ['64:ff9b:1::a00:1', false],
+            // Non-global IPv6.
+            ['fd00:ec2::254', false],
+            ['fec0::1', false],
+            ['ff02::1', false],
+            ['ff0e::1', false],
+            ['100::1', false],
+            ['2001:db8::1', false],
+            ['3fff::1', false],
+            // Malformed.
+            ['fe80::1%eth0', false],
+            ['not-an-ip', false],
         ];
     }
 
