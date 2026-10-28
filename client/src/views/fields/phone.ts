@@ -453,6 +453,10 @@ class PhoneFieldView<
                     uiTranslations: {
                         searchPlaceholder: '',
                         searchEmptyState: '',
+                        noCountrySelected: '',
+                        closeCountrySelectorAriaLabel: '',
+                        countryListAriaLabel: '',
+                        selectedCountryAriaLabel: '',
                     },
                     allowNumberExtensions: this.allowExtensions,
                     strictMode: !this.allowExtensions,
