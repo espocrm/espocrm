@@ -111,6 +111,7 @@ class Client
             ),
             'allow_redirects' => false,
             'http_errors' => false,
+            'stream' => $this->options->stream,
         ];
 
         if ($this->options->redirect->allow) {
