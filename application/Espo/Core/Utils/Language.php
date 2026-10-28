@@ -454,6 +454,10 @@ class Language
         $cacheKey = $this->getCacheKey($language);
 
         if (!$reload && $this->useCache && $this->dataCache->has($cacheKey)) {
+            if ($language !== basename($language)) {
+                throw new RuntimeException("Bad language value.");
+            }
+
             /** @var ?array<string, mixed> $cachedData */
             $cachedData = $this->dataCache->get($cacheKey);
 

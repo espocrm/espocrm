@@ -187,7 +187,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 $number = strval(intval($value));
 
                 $dtTo->modify('+'.$number.' day');
-                $dtTo->setTime(24, 59, 59);
+                $dtTo->setTime(23, 59, 59);
                 $dtTo->setTimezone(new DateTimeZone('UTC'));
 
                 $to = $dtTo->format($format);

@@ -48,6 +48,8 @@ use const PATHINFO_EXTENSION;
 class UploadUrlService
 {
 
+    private const int CHUNK_SIZE = 8 * 1024;
+
     public function __construct(
         private AccessChecker $accessChecker,
         private Metadata $metadata,
@@ -71,28 +73,29 @@ class UploadUrlService
             throw new ForbiddenSilent("Not allowed URL.");
         }
 
-        $attachment = $this->getAttachmentRepository()->getNew();
-
         $this->accessChecker->check($data);
 
-        [$type, $contents] = $this->getImageDataByUrl($url) ?? [null, null];
+        $attachment = $this->getAttachmentRepository()->getNew()
+            ->setName($url)
+            ->setTargetField($data->getField());
+
+        $maxSize = $this->detailsObtainer->getUploadMaxSize($attachment);
+
+        [$type, $contents] = $this->getImageDataByUrl($url, $maxSize) ?? [null, null];
 
         if (!$type || !$contents) {
             throw new ErrorSilent("Bad image data.");
         }
 
         $attachment
-            ->setName($url)
             ->setType($type)
             ->setContents($contents)
-            ->setRole(Attachment::ROLE_ATTACHMENT)
-            ->setTargetField($data->getField());
+            ->setRole(Attachment::ROLE_ATTACHMENT);
 
         $attachment->set('parentType', $data->getParentType());
         $attachment->set('relatedType', $data->getRelatedType());
 
         $size = mb_strlen($contents, '8bit');
-        $maxSize = $this->detailsObtainer->getUploadMaxSize($attachment);
 
         if ($maxSize && $size > $maxSize) {
             throw new Error("File size should not exceed {$maxSize}Mb.");
@@ -110,7 +113,7 @@ class UploadUrlService
      * @return ?array{string, string} A type and contents.
      * @throws Error
      */
-    private function getImageDataByUrl(string $url): ?array
+    private function getImageDataByUrl(string $url, int $maxSize): ?array
     {
         $client = $this->clientFactory->create(
             new Options(
@@ -121,6 +124,7 @@ class UploadUrlService
                 internalHostRestriction: new HttpClient\Options\InternalHostRestriction(
                     restrict: true,
                 ),
+                stream: true,
             )
         );
 
@@ -137,7 +141,6 @@ class UploadUrlService
         if ($type) {
             $type = trim(explode(';', $type)[0]);
         }
-
 
         if (!$type) {
             /** @var string $extension */
@@ -157,7 +160,21 @@ class UploadUrlService
             return null;
         }
 
-        return [$type, (string) $response->getBody()];
+        $body = $response->getBody();
+
+        $contents = '';
+
+        while (!$body->eof()) {
+            $contents .= $body->read(self::CHUNK_SIZE);
+
+            if ($maxSize && strlen($contents) > $maxSize) {
+                $body->close();
+
+                throw new Error("Image size should not exceed {$maxSize}Mb.");
+            }
+        }
+
+        return [$type, $contents];
     }
 
     private function getAttachmentRepository(): AttachmentRepository

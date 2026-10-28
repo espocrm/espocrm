@@ -243,7 +243,7 @@ class PanelStreamView extends RelationshipPanelView {
 
             if (storedAttachments) {
                 this.hasStoredAttachments = true;
-                this.seed.set({
+                this.seed.setMultiple({
                     attachmentsIds: storedAttachments.idList,
                     attachmentsNames: storedAttachments.names,
                     attachmentsTypes: storedAttachments.types,
@@ -392,7 +392,10 @@ class PanelStreamView extends RelationshipPanelView {
             }
         }
 
-        const attachmentIdList = this.seed.get('attachmentsIds') || [];
+        /** @type {string[]} */
+        const attachmentIdList = (this.seed.get('attachmentsIds') ?? [])
+            // Null items are possible if error occurred.
+            .filter(it => it != null);
 
         if (attachmentIdList.length) {
             this.getSessionStorage().set(this.storageAttachmentsKey, {
@@ -402,8 +405,7 @@ class PanelStreamView extends RelationshipPanelView {
             });
 
             isNotEmpty = true;
-        }
-        else {
+        } else {
             if (this.hasStoredAttachments) {
                 this.getSessionStorage().clear(this.storageAttachmentsKey);
             }

@@ -39,6 +39,7 @@ readonly class Options
      * Use named parameters when calling.
      *
      * @param Protocol[] $protocols
+     * @param bool $stream To stream the response body. As of v10.0.12.
      */
     public function __construct(
         public array $protocols = [Protocol::https, Protocol::http],
@@ -46,5 +47,6 @@ readonly class Options
         public ?int $timeout = null,
         public ?int $connectTimeout = null,
         public InternalHostRestriction $internalHostRestriction = new InternalHostRestriction(),
+        public bool $stream = false,
     ) {}
 }
