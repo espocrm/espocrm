@@ -105,6 +105,29 @@ class ArrayFieldAddModalView extends ModalView {
                 label: 'Cancel',
             },
         ];
+
+        if (this.options.checkAllButton && this.optionList.length) {
+            this.addButton({
+                name: 'checkAll',
+                label: 'Check All',
+                position: 'right',
+                onClick: () => {
+                    this.checkedList = [];
+
+                    for (const it of this.optionList) {
+                        this.checkedList.push(it);
+
+                        this.element.querySelectorAll('input[data-value]').forEach(input => {
+                            input.checked = true;
+                        });
+
+                        this.checkedList.length ?
+                            this.enableButton('select') :
+                            this.disableButton('select');
+                    }
+                },
+            });
+        }
     }
 
     afterRender() {
