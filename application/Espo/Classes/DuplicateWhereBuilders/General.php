@@ -238,7 +238,7 @@ class General implements WhereBuilder
      */
     private function getEmailAddressList(CoreEntity $entity): array
     {
-        if ($entity->get('emailAddressData')) {
+        if ($entity->get('emailAddressData') && $entity->isAttributeChanged('emailAddressData')) {
             /** @var EmailAddressGroup $eaGroup */
             $eaGroup = $entity->getValueObject('emailAddress');
 
@@ -259,7 +259,7 @@ class General implements WhereBuilder
      */
     private function getPhoneNumberList(CoreEntity $entity): array
     {
-        if ($entity->get('phoneNumberData')) {
+        if ($entity->get('phoneNumberData') && $entity->isAttributeChanged('phoneNumberData')) {
             /** @var PhoneNumberGroup $eaGroup */
             $eaGroup = $entity->getValueObject('phoneNumber');
 
