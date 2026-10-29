@@ -324,6 +324,10 @@ class MultiEnumFieldView<
 
         return false;
     }
+
+    protected validateNoInputValue(): boolean {
+        return false;
+    }
 }
 
 export default MultiEnumFieldView;

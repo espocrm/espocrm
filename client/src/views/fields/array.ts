@@ -307,9 +307,7 @@ class ArrayFieldView<
             this.allowCustomOptions = false;
         }
 
-        if (this.type === 'array') {
-            this.validations.push('noInputValue')
-        }
+        this.validations.push(() => this.validateNoInputValue());
     }
 
     /**
@@ -1077,7 +1075,6 @@ class ArrayFieldView<
 
     }
 
-    // noinspection JSUnusedGlobalSymbols
     protected validateNoInputValue(): boolean {
         if (!this.element) {
             return false;
