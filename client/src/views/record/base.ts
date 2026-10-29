@@ -1103,6 +1103,16 @@ class BaseRecordView<S extends BaseRecordViewSchema = BaseRecordViewSchema> exte
 
         const setAttributes = this.getChangedAttributes(Object.keys(fetchedAttributes));
 
+        if (this.validate()) {
+            this.afterNotValid();
+
+            this.lastSaveCancelReason = 'invalid';
+
+            this.trigger('cancel:save', {reason: 'invalid'});
+
+            return Promise.reject('invalid');
+        }
+
         if (Object.keys(setAttributes).length === 0) {
             if (!options.skipNotModifiedWarning) {
                 this.afterNotModified();
@@ -1113,16 +1123,6 @@ class BaseRecordView<S extends BaseRecordViewSchema = BaseRecordViewSchema> exte
             this.trigger('cancel:save', {reason: 'notModified'});
 
             return Promise.reject('notModified');
-        }
-
-        if (this.validate()) {
-            this.afterNotValid();
-
-            this.lastSaveCancelReason = 'invalid';
-
-            this.trigger('cancel:save', {reason: 'invalid'});
-
-            return Promise.reject('invalid');
         }
 
         if (options.afterValidate) {
