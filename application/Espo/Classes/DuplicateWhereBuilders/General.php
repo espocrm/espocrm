@@ -245,7 +245,7 @@ class General implements WhereBuilder
             return $eaGroup->getAddressList();
         }
 
-        if ($entity->get('emailAddress')) {
+        if ($entity->get('emailAddress') && $entity->isAttributeChanged('emailAddress')) {
             return [
                 $entity->get('emailAddress')
             ];
@@ -266,7 +266,7 @@ class General implements WhereBuilder
             return $eaGroup->getNumberList();
         }
 
-        if ($entity->get('phoneNumber')) {
+        if ($entity->get('phoneNumber') && $entity->isAttributeChanged('phoneNumber')) {
             return [$entity->get('phoneNumber')];
         }
 
