@@ -1,8 +1,15 @@
 {{#if emailAddressData}}
     {{#each emailAddressData}}
         <div>
-            {{#unless invalid}}
-            {{#unless erased}}
+            {{~#if invalid~}}
+                <span
+                    class="fas fa-exclamation-circle fa-sm text-muted"
+                    title="{{translate 'Invalid' scope='EmailAddress'}}"
+                ></span>
+                {{~null~}}<span style="user-select: none">&nbsp;</span>{{~null~}}
+            {{/if~}}
+            {{~#unless invalid}}
+            {{~#unless erased}}
             <a
                 role="button"
                 tabindex="0"
@@ -10,9 +17,11 @@
                 data-action="mailTo"
                 class="selectable"
             >
-            {{/unless}}
-            {{/unless}}
-            <span {{#if lineThrough}}style="text-decoration: line-through"{{/if}}>{{emailAddress}}</span>
+            {{~/unless~}}
+            {{~/unless~}}
+            <span
+                class="{{#if optOut}} text-strikethrough {{/if}}"
+            >{{emailAddress}}</span>
             {{#unless invalid}}
             {{#unless erased}}
             </a>
