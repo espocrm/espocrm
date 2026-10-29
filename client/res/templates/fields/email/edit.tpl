@@ -6,6 +6,7 @@
             class="form-control email-address{{#if optOut}} text-strikethrough{{/if}}{{#if invalid}} text-danger{{/if}}"
             value="{{emailAddress}}" autocomplete="espo-{{../name}}"
             maxlength={{../itemMaxLength}}
+            spellcheck="false"
         >
         {{#unless ../onlyPrimary}}
         <span class="input-group-btn">
