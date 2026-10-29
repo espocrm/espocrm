@@ -576,7 +576,7 @@ class Util
      */
     public static function generateId(): string
     {
-        return uniqid() . substr(md5((string) rand()), 0, 4);
+        return substr(bin2hex(random_bytes(9)), 0, 17);
     }
 
     /**
