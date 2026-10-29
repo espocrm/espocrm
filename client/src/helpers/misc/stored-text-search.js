@@ -26,20 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-/** @module helpers/misc/stored-text-search */
+import {inject} from 'di';
+import Storage from 'storage';
 
-export default class {
+export default class StoredTextSearchHelper {
+
     /**
-     * @param {module:storage} storage
-     * @param {string} scope
+     * @private
+     * @type {Storage}
+     */
+    @inject(Storage)
+    storage
+
+    /**
+     * @param {string} key
      * @param {Number} [maxCount]
      */
-    constructor(scope, storage, maxCount) {
-        this.scope = scope;
-        this.storage = storage;
-        this.key = 'textSearches';
+    constructor(key, maxCount) {
+        /**
+         * @private
+         * @type {string}
+         */
+        this.key = key;
+
+        /**
+         * @private
+         * @type {string}
+         */
+        this.categoryKey = 'textSearches';
+
+        /**
+         * @private
+         * @type {Number|number}
+         */
         this.maxCount = maxCount || 100;
-        /** @type {string[]|null} */
+
+        /**
+         * @type {string[]|null}
+         * @private
+         */
         this.list = null;
     }
 
@@ -89,7 +114,7 @@ export default class {
      */
     getFromStorage() {
         /** @var {string[]} */
-        return this.storage.get(this.key, this.scope) || [];
+        return this.storage.get(this.categoryKey, this.key) || [];
     }
 
     /**
@@ -115,7 +140,7 @@ export default class {
         }
 
         this.list = list;
-        this.storage.set(this.key, this.scope, list);
+        this.storage.set(this.categoryKey, this.key, list);
     }
 
     /**
@@ -137,6 +162,6 @@ export default class {
         list.splice(index, 1);
 
         this.list = list;
-        this.storage.set(this.key, this.scope, list);
+        this.storage.set(this.categoryKey, this.key, list);
     }
 }

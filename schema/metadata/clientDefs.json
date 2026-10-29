@@ -534,6 +534,10 @@
                         },
                         "description": "Attributes to carry over to a related record when creating. Mapping Parent => Related."
                     },
+                    "recordSpecificSearchStorage": {
+                        "type": "boolean",
+                        "description": "Record specific search storage. As of v10.1."
+                    },
                     "buttonList": {
                         "type": "array",
                         "items": {

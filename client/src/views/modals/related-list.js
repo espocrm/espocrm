@@ -53,6 +53,12 @@ class RelatedListModalView extends ModalView {
     mandatorySelectAttributeList = null
     layoutName = 'listSmall'
 
+    /**
+     * @private
+     * @type {Record}
+     */
+    defs
+
     /** @inheritDoc */
     shortcutKeys = {
         /** @this RelatedListModalView */
@@ -407,6 +413,9 @@ class RelatedListModalView extends ModalView {
         }
 
         if (this.searchPanel) {
+            const storageKey = this.defs.recordSpecificSearchStorage ?
+                this.model.entityType + '-' + this.model.id + '-' + this.link : null;
+
             this.createView('search', 'views/record/search', {
                 collection: this.collection,
                 fullSelector: this.containerSelector + ' .search-container',
@@ -414,6 +423,7 @@ class RelatedListModalView extends ModalView {
                 disableSavePreset: true,
                 filterList: filterList,
                 filtersLayoutName: this.options.filtersLayoutName,
+                storageKey: storageKey,
             }, view => {
                 this.listenTo(view, 'reset', () => {});
             });

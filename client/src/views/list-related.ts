@@ -390,6 +390,9 @@ class ListRelatedView<S extends ListRelatedViewSchema = ListRelatedViewSchema> e
             filterList = [];
         }
 
+        const storageKey = this.panelDefs.recordSpecificSearchStorage ?
+            this.model.entityType + '-' + this.model.id + '-' + this.link : null;
+
         const view = await this.createView<SearchView>('search', this.searchView, {
             collection: this.collection,
             fullSelector: '#main > .search-container',
@@ -399,6 +402,7 @@ class ListRelatedView<S extends ListRelatedViewSchema = ListRelatedViewSchema> e
             viewModeList: this.viewModeList,
             isWide: true,
             filterList: filterList,
+            storageKey: storageKey,
         });
 
         if (this.viewModeList.length > 1) {
