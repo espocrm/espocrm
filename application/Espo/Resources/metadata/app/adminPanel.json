@@ -315,7 +315,8 @@
                 "url": "#Admin/oAuthClients",
                 "labelTranslation": "Global.scopeNamesPlural.OAuthClient",
                 "iconClass": "fas fa-user-lock",
-                "description": "oAuthClients"
+                "description": "oAuthClients",
+                "tabQuickSearch": true
             }
         ],
         "order": 24
