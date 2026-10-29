@@ -408,7 +408,8 @@ class GlobalSearchView extends SiteNavbarItemView {
              *         itemList: {
              *             url: string,
              *             tabQuickSearch: boolean,
-             *             label: string,
+             *             label?: string,
+             *             labelTranslation?: string,
              *         }[]
              *     }>
              * } panels */
@@ -420,13 +421,15 @@ class GlobalSearchView extends SiteNavbarItemView {
                 .filter(it => it.itemList) // For bc.
                 .forEach(it => {
                     it.itemList
-                        .filter(it => it.tabQuickSearch && it.label)
+                        .filter(it => it.tabQuickSearch && (it.label || it.labelTranslation))
                         .filter(it => !list.find(subIt => subIt.url === it.url))
                         .forEach(it => {
-                            const label = this.translate(it.label, 'labels', 'Admin');
+                            const label = it.labelTranslation ?
+                                this.getLanguage().translatePath(it.labelTranslation) :
+                                this.translate(it.label, 'labels', 'Admin');
 
                             list.push({
-                                label: this.translate(it.label, 'labels', 'Admin'),
+                                label: label,
                                 url: it.url,
                                 lowerLabel: label.toLowerCase(),
                                 words: label.split(' ').map(it => it.toLowerCase()),
