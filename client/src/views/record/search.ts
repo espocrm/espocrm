@@ -879,10 +879,20 @@ class SearchView extends View<ViewSchema> {
                     autocomplete.hide();
                     // 200 is hardcoded in autocomplete lib.
 
-                    setTimeout(() => this.textFilterInputElement?.focus(), 201);
+                    setTimeout(() => {
+                        if (this.textFilterInputElement && document.activeElement === this.textFilterInputElement) {
+                            $(this.textFilterInputElement).triggerHandler('focus.autocomplete');
+
+                            return;
+                        }
+
+                        this.textFilterInputElement?.focus();
+                    }, 201);
                 });
             },
         });
+
+        this.textFilterInputElement.addEventListener('focus', () => console.log('native focus'));
 
         this.once('render remove', () => autocomplete.dispose());
     }
