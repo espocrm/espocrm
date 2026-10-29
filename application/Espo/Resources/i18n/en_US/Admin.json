@@ -349,7 +349,7 @@
         "labelManager": "language,translation",
         "appSecrets": "key,keys,password",
         "leadCapture": "web forms",
-        "oauthClients": "oauth,api,authentication"
+        "oAuthClients": "oauth,api,authentication"
     },
     "options": {
         "previewSize": {
