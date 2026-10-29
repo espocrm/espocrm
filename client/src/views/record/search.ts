@@ -68,6 +68,7 @@ interface SearchViewOptions {
     viewMode: string;
     viewModeList?: string[];
     filterList?: string[];
+    storageKey?: string | null,
 }
 
 interface ViewSchema {
@@ -222,7 +223,7 @@ class SearchView extends View<ViewSchema> {
 
         this.searchManager = this.options.searchManager;
 
-        this.storedTextSearchHelper = new StoredTextSearch(this.scope, this.getHelper().storage);
+        this.storedTextSearchHelper = new StoredTextSearch(this.options.storageKey ?? this.scope);
 
         this.textSearchStoringDisabled = this.getPreferences().get('textSearchStoringDisabled');
 
@@ -891,8 +892,6 @@ class SearchView extends View<ViewSchema> {
                 });
             },
         });
-
-        this.textFilterInputElement.addEventListener('focus', () => console.log('native focus'));
 
         this.once('render remove', () => autocomplete.dispose());
     }
