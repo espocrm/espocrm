@@ -412,11 +412,19 @@ class WysiwygFieldView <
             return;
         }
 
-        $iframe.on('load', () => {
-            $iframe.contents().find('a').attr('target', '_blank');
-        });
-
         const documentElement = iframeElement.contentWindow.document;
+
+        $iframe.on('load', () => {
+            documentElement.querySelectorAll('a').forEach(a => {
+                const href = a.getAttribute('href');
+
+                if (href && href.startsWith('#')) {
+                    return;
+                }
+
+                a.setAttribute('target', '_blank');
+            });
+        });
 
         let bodyHtml = this.getValueForIframe();
 
