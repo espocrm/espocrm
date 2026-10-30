@@ -183,10 +183,8 @@ class RebuildTest extends BaseTestCase
         $this->assertEquals(null, $entity->get('testSecond'));
 
         //
-        if ($this->getPlatform() === Platform::POSTGRESQL) {
-            $entity->set('testSecond', 4);
-            $em->saveEntity($entity);
-        }
+        $entity->set('testSecond', 4);
+        $em->saveEntity($entity);
 
         // Enable autoincrement back.
 
