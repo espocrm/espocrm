@@ -50,6 +50,7 @@ use Espo\Entities\Note;
 use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
+use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
 use stdClass;
 
@@ -208,7 +209,8 @@ class Merger
 
         /** @var iterable<PhoneNumber> $collection */
         $collection = $this->entityManager
-            ->getRelation($entity, 'phoneNumbers')
+            ->getRelation($entity, Link::PHONE_NUMBERS)
+            ->order('@relation.primary', Order::DESC)
             ->find();
 
         foreach ($collection as $entity) {
@@ -228,6 +230,7 @@ class Merger
         /** @var iterable<EmailAddress> $collection */
         $collection = $this->entityManager
             ->getRelation($entity, Link::EMAIL_ADDRESSES)
+            ->order('@relation.primary', Order::DESC)
             ->find();
 
         foreach ($collection as $entity) {

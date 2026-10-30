@@ -376,6 +376,8 @@ class RDBRelationSelectBuilder
      */
     public function order($orderBy = Attribute::ID, $direction = null): self
     {
+        $orderBy = $this->applyRelationToOrderBy($orderBy);
+
         $this->builder->order($orderBy, $direction);
 
         return $this;
@@ -550,5 +552,24 @@ class RDBRelationSelectBuilder
         }
 
         return $entityDefs->getRelation($this->relationName)->getParam($param);
+    }
+
+    /**
+     * @param Order|Order[]|Expression|string|array<int, string[]>|string[] $orderBy
+     * @return Order|Order[]|Expression|string|array<int, string[]>|string[]
+     */
+    private function applyRelationToOrderBy(mixed $orderBy): mixed
+    {
+        if (!$this->isManyMany()) {
+            return $orderBy;
+        }
+
+        if (is_string($orderBy) && str_contains($orderBy, '@relation.')) {
+            $alias = $this->getMiddleTableAlias();
+
+            return str_replace('@relation.', $alias . '.', $orderBy);
+        }
+
+        return $orderBy;
     }
 }

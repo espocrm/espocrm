@@ -1497,6 +1497,7 @@ class RDBRepositoryTest extends TestCase
                 ],
                 'deleted' => false,
             ])
+            ->order('entityTeam.deleted', OrderExpr::DESC)
             ->build();
 
         $this->mapper
@@ -1514,6 +1515,7 @@ class RDBRepositoryTest extends TestCase
                 ],
                 'deleted' => false,
             ])
+            ->order('@relation.deleted', OrderExpr::DESC)
             ->find();
     }
 
