@@ -62,3 +62,14 @@ jobs:
 
     - name: Integration testing
       run: vendor/bin/phpunit tests/integration
+
+    - name: Print log
+      if: failure()
+      run: cat build/test/data/logs/*.log || true
+
+    - name: Upload logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: espo-logs-${{ matrix.php-versions }}
+        path: build/test/data/logs/
