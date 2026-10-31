@@ -483,7 +483,6 @@ class CalendarView extends View {
     }
 
     /**
-     * @private
      * @return {string}
      */
     getTitle() {
