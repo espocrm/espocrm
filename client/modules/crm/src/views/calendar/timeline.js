@@ -370,14 +370,17 @@ class TimelineView extends View {
         this.getStorage().set('state', key, enabledScopeList);
     }
 
+    /**
+     * @todo Revise for removal? Not used anywhere?
+     * @private
+     * @return {string}
+     */
     getTitle() {
         let title = '';
 
         if (this.options.userId && this.options.userName) {
             title += ' (' + this.options.userName + ')';
         }
-
-        title = this.getHelper().escapeString(title);
 
         return title;
     }

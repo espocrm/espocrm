@@ -60,7 +60,7 @@ class CalendarDashletView extends BaseDashletView {
                 userList: userList,
                 enabledScopeList: this.getOption('enabledScopeList'),
                 suppressLoadingAlert: true,
-            }, view => {
+            }).then(/** import('modules/crm/views/calendar/timelint').default */view => {
                 view.render();
             });
 
@@ -85,7 +85,7 @@ class CalendarDashletView extends BaseDashletView {
             teamIdList: teamIdList,
             scrollToNowSlots: 3,
             suppressLoadingAlert: true,
-        }, view => {
+        }).then(/** import('modules/crm/views/calendar/calendar').default */view => {
             this.listenTo(view, 'view', () => {
                 if (this.getOption('mode') === 'month') {
                     const title = this.getOption('title');
