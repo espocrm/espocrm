@@ -64,6 +64,12 @@ class ReplaceManyType implements Func
                 throw BadArgumentValue::create(2, "Replacement strings must be scalar.");
             }
 
+            if (is_bool($v)) {
+                $v = $v ? 'true' : 'false';
+            } else if ($v === null) {
+                $v = 'null';
+            }
+
             $pairs[$k] = (string) $v;
         }
 

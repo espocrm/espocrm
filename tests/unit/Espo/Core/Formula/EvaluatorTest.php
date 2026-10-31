@@ -373,15 +373,19 @@ class EvaluatorTest extends TestCase
             \$map['0'] = 'zero';
             \$map['true'] = 'TRUE';
             \$map['false'] = 'FALSE';
+            \$map['{scalarInt}'] = 1;
+            \$map['{scalarTrue}'] = true;
+            \$map['{scalarFalse}'] = false;
+            \$map['{scalarNull}'] = null;
 
-            \$input = "Test {one} {two} 3 0 true false.";
+            \$input = "Test {one} {two} 3 0 true false {scalarInt} {scalarTrue} {scalarFalse} {scalarNull}.";
 
             string\\replaceMany(\$input, \$map);
             EOF;
 
         $actual = $this->evaluator->process($expression);
 
-        $this->assertEquals('Test one two three zero TRUE FALSE.', $actual);
+        $this->assertEquals('Test one two three zero TRUE FALSE 1 true false null.', $actual);
     }
 
     public function testStringReplaceManyError1(): void
