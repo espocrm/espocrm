@@ -382,8 +382,6 @@ class TimelineView extends View {
             title += ' (' + this.options.userName + ')';
         }
 
-        title = this.getHelper().escapeString(title);
-
         return title;
     }
 
