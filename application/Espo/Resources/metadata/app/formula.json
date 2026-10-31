@@ -84,6 +84,11 @@
             "returnType": "string"
         },
         {
+            "name": "string\\replaceMany",
+            "insertText": "string\\replace(STRING, MAP)",
+            "returnType": "string"
+        },
+        {
             "name": "string\\split",
             "insertText": "string\\split(STRING, SEPARATOR)",
             "returnType": "string[]"

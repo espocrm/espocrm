@@ -34,6 +34,7 @@ use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\FieldProcessing\SpecificFieldLoader;
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\GeneralError;
 use Espo\Core\Formula\Exceptions\UndefinedKey;
 use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\Formula\Utils\EntityUtil;
@@ -360,6 +361,53 @@ class EvaluatorTest extends TestCase
         $expression = "string\\replace('hello {test} hello', '{test}', 'hello')";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals('hello hello hello', $actual);
+    }
+
+    public function testStringReplaceMany(): void
+    {
+        $expression = <<<EOF
+            \$map = object\\create();
+            \$map['{one}'] = 'one';
+            \$map['{two}'] = 'two';
+            \$map['3'] = 'three';
+            \$map['0'] = 'zero';
+            \$map['true'] = 'TRUE';
+            \$map['false'] = 'FALSE';
+
+            \$input = "Test {one} {two} 3 0 true false.";
+
+            string\\replaceMany(\$input, \$map);
+            EOF;
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals('Test one two three zero TRUE FALSE.', $actual);
+    }
+
+    public function testStringReplaceManyError1(): void
+    {
+        $expression = <<<EOF
+            \$input = "Test {one} {two}.";
+
+            string\\replaceMany("Test");
+            EOF;
+
+        $this->expectException(GeneralError::class);
+
+        $this->evaluator->process($expression);
+    }
+
+    public function testStringReplaceManyError2(): void
+    {
+        $expression = <<<EOF
+            \$input = "Test {one} {two}.";
+
+            string\\replaceMany("Test", list());
+            EOF;
+
+        $this->expectException(GeneralError::class);
+
+        $this->evaluator->process($expression);
     }
 
     public function testArrayAt()
