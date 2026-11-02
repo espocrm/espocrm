@@ -210,7 +210,7 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
                 break;
 
             case Type::AFTER_X_DAYS:
-                $where['type'] = Type::GREATER_THAN_OR_EQUALS;
+                $where['type'] = Type::GREATER_THAN;
 
                 $number = strval(intval($value));
 
