@@ -41,8 +41,8 @@ use RuntimeException;
  */
 class Item
 {
-    public const TYPE_AND = Item\Type::AND;
-    public const TYPE_OR = Item\Type::OR;
+    public const string TYPE_AND = Item\Type::AND;
+    public const string TYPE_OR = Item\Type::OR;
 
     private ?string $attribute = null;
     private mixed $value = null;
