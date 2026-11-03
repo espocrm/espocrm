@@ -62,9 +62,9 @@ export function onModelChange(params) {
      */
     function callCallback(o) {
         callback({
-            ui: o.ui ?? null,
-            action: o.action ?? null,
-            fromView: o.fromView ?? null,
+            ui: o?.ui ?? null,
+            action: o?.action ?? null,
+            fromView: o?.fromView ?? null,
         });
     }
 
@@ -118,7 +118,7 @@ export function onSync(params) {
      */
     function wrappedCallback(o, response) {
         callback({
-            action: o.action ?? null,
+            action: o?.action ?? null,
             response: response,
         });
     }
