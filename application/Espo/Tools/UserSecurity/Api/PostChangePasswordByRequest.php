@@ -38,6 +38,8 @@ use Espo\Tools\UserSecurity\Password\Service;
 
 /**
  * Changes a password in a recovery process.
+ *
+ * @noinspection PhpUnused
  */
 class PostChangePasswordByRequest implements Action
 {
