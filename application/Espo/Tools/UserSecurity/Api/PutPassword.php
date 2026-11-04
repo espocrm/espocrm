@@ -40,12 +40,14 @@ use SensitiveParameter;
 
 /**
  * Changes own user password.
+ *
+ * @noinspection PhpUnused
  */
 class PutPassword implements Action
 {
     public function __construct(
         private Service $service,
-        private User $user
+        private User $user,
     ) {}
 
     public function process(#[SensitiveParameter] Request $request): Response

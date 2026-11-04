@@ -40,12 +40,14 @@ use Espo\Tools\UserSecurity\Password\Service;
 
 /**
  * Sends password-change link to a specific user.
+ *
+ * @noinspection PhpUnused
  */
 class PostPasswordRecovery implements Action
 {
     public function __construct(
         private Service $service,
-        private User $user
+        private User $user,
     ) {}
 
     public function process(Request $request): Response
