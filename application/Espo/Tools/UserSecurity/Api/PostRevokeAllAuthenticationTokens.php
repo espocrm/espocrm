@@ -38,6 +38,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\EntityProvider;
 use Espo\Entities\User;
+use Espo\Tools\UserSecurity\RevokeAuthenticationTokensService;
 
 /**
  * @noinspection PhpUnused

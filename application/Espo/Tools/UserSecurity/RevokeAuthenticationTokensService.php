@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\UserSecurity\Api;
+namespace Espo\Tools\UserSecurity;
 
 use Espo\Core\Authentication\AuthToken\Manager;
 use Espo\Entities\User;
