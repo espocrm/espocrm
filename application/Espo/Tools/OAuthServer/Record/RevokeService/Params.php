@@ -31,9 +31,9 @@ namespace Espo\Tools\OAuthServer\Record\RevokeService;
 
 readonly class Params
 {
-
     public function __construct(
         public bool $adminOnly = false,
         public ?string $userName = null,
+        public ?string $userId = null,
     ) {}
 }

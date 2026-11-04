@@ -46,6 +46,7 @@ use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
 use Espo\ORM\Defs\Params\FieldParam;
 use Espo\ORM\EntityManager;
+use Espo\Tools\UserSecurity\RevokeAuthenticationTokensService;
 use SensitiveParameter;
 
 class Service
@@ -64,6 +65,7 @@ class Service
         private Checker $checker,
         private AuthenticationMethodProvider $authenticationMethodProvider,
         private ApplicationState $applicationState,
+        private RevokeAuthenticationTokensService $revokeAuthenticationTokensService,
     ) {}
 
     /**
@@ -117,6 +119,8 @@ class Service
 
         $this->changePassword($request->getUserId(), $password);
         $this->recovery->removeRequest($requestId);
+
+        $this->revokeAuthenticationTokensService->revokeAll($request->getUserId());
 
         return $request->getUrl();
     }

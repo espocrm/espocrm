@@ -30,7 +30,6 @@
 namespace Espo\Tools\UserSecurity;
 
 use Espo\Core\Authentication\AuthToken\Manager;
-use Espo\Entities\User;
 use Espo\Tools\OAuthServer\Record\RevokeService;
 
 /**
@@ -43,10 +42,10 @@ class RevokeAuthenticationTokensService
         private RevokeService $oAuthRevokeService,
     ) {}
 
-    public function revokeAll(User $user): void
+    public function revokeAll(string $userId): void
     {
-        $this->authTokenManager->inactivateAllForUser($user->getId());
+        $this->authTokenManager->inactivateAllForUser($userId);
 
-        $this->oAuthRevokeService->revoke(new RevokeService\Params(userName: $user->getUserName()));
+        $this->oAuthRevokeService->revoke(new RevokeService\Params(userId: $userId));
     }
 }

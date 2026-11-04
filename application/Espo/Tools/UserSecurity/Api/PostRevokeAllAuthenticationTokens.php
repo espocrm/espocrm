@@ -55,7 +55,7 @@ class PostRevokeAllAuthenticationTokens implements Action
     {
         $user = $this->fetchUser($request);
 
-        $this->service->revokeAll($user);
+        $this->service->revokeAll($user->getId());
 
         return ResponseComposer::json(true);
     }

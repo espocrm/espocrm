@@ -63,6 +63,32 @@ class RevokeServiceTest extends BaseTestCase
         $this->assertFalse($data['accessToken1']->isRevoked());
     }
 
+    public function testRevokeByUserId(): void
+    {
+        $data = $this->prepareData();
+
+        $service = $this->getInjectableFactory()->create(RevokeService::class);
+
+        $service->revoke(
+            new RevokeService\Params(
+                userId: $data['user2']->getId(),
+            ),
+        );
+
+        $em = $this->getEntityManager();
+
+        $em->refreshEntity($data['refreshToken2']);
+        $em->refreshEntity($data['accessToken2']);
+        $em->refreshEntity($data['refreshToken1']);
+        $em->refreshEntity($data['accessToken1']);
+
+        $this->assertTrue($data['refreshToken2']->isRevoked());
+        $this->assertTrue($data['accessToken2']->isRevoked());
+
+        $this->assertFalse($data['refreshToken1']->isRevoked());
+        $this->assertFalse($data['accessToken1']->isRevoked());
+    }
+
     public function testRevokeAdmin(): void
     {
         $data = $this->prepareData();

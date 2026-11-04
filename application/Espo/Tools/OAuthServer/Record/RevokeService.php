@@ -50,33 +50,7 @@ class RevokeService
      */
     public function revoke(Params $params): void
     {
-        $where = [];
-
-        if ($params->userName !== null) {
-            if ($params->adminOnly) {
-                throw new RuntimeException("Parameter admin-only cannot be used with username.");
-            }
-
-            $user = $this->entityManager
-                ->getRDBRepositoryByClass(User::class)
-                ->where([
-                    User::FIELD_USER_NAME => $params->userName
-                ])
-                ->findOne();
-
-            if (!$user) {
-                throw new RuntimeException("User not found.");
-            }
-
-            $where[RefreshToken::FIELD_USER . 'Id'] = $user->getId();
-        }
-
-        if ($params->adminOnly) {
-            $where[RefreshToken::FIELD_USER . '.' . User::FIELD_TYPE] = [
-                User::TYPE_ADMIN,
-                User::TYPE_SUPER_ADMIN,
-            ];
-        }
+        $where = $this->prepareWhere($params);
 
         $this->revokeRefreshTokens($where, $params->adminOnly);
         $this->revokeAccessTokens($where, $params->adminOnly);
@@ -132,5 +106,53 @@ class RevokeService
 
             $this->entityManager->saveEntity($token);
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function prepareWhere(Params $params): array
+    {
+        $where = [];
+
+        if ($params->userName !== null) {
+            if ($params->adminOnly) {
+                throw new RuntimeException("Parameter adminOnly cannot be used with username.");
+            }
+
+            if ($params->userId) {
+                throw new RuntimeException("Parameter userId cannot be used with username.");
+            }
+
+            $user = $this->entityManager
+                ->getRDBRepositoryByClass(User::class)
+                ->where([
+                    User::FIELD_USER_NAME => $params->userName
+                ])
+                ->findOne();
+
+            if (!$user) {
+                throw new RuntimeException("User not found.");
+            }
+
+            $where[RefreshToken::FIELD_USER . 'Id'] = $user->getId();
+        }
+
+        if ($params->userId !== null) {
+            if ($params->adminOnly) {
+                throw new RuntimeException("Parameter adminOnly cannot be used with userId.");
+            }
+
+            $where[RefreshToken::FIELD_USER . 'Id'] = $params->userId;
+        }
+
+        if ($params->adminOnly) {
+            $where[RefreshToken::FIELD_USER . '.' . User::FIELD_TYPE] = [
+                User::TYPE_ADMIN,
+                User::TYPE_SUPER_ADMIN,
+            ];
+        }
+
+        return $where;
     }
 }
