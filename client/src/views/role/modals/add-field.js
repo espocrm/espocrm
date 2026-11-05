@@ -86,7 +86,7 @@ class RoleAddFieldModalView extends ModalView {
                 label: 'Cancel',
                 onClick: () => this.actionCancel(),
             },
-        ]
+        ];
 
         /** @type {string[]} */
         this.checkedList = [];
@@ -128,6 +128,27 @@ class RoleAddFieldModalView extends ModalView {
                 name: field,
                 label: this.translate(field, 'fields', this.scope),
             };
+        });
+
+        this.addButton({
+            name: 'checkAll',
+            label: 'Check All',
+            position: 'right',
+            onClick: () => {
+                this.checkedList = [];
+
+                for (const it of this.fieldList) {
+                    this.checkedList.push(it);
+
+                    this.element.querySelectorAll('input[data-name]').forEach(input => {
+                        input.checked = true;
+                    });
+
+                    this.checkedList.length ?
+                        this.enableButton('select') :
+                        this.disableButton('select');
+                }
+            },
         });
     }
 
