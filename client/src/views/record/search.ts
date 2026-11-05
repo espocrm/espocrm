@@ -602,9 +602,7 @@ class SearchView extends View<ViewSchema> {
         this.element.querySelector(`ul.filter-list li[data-name="${name}"]`)
             ?.classList.remove('hidden');
 
-        //
         const container = this.getView(`filter-${name}`)?.element?.closest('div.filter');
-            //.$el.closest('div.filter');
 
         this.clearView(`filter-${name}`);
 
