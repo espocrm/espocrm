@@ -25,8 +25,8 @@
                     <li>
                         <a role="button" tabindex="0" data-action="toggleCalendarType" data-name="{{type}}">
                             <span
-                                class="fas fa-check calendar-type-check-icon pull-right{{#if disabled}} hidden{{/if}}"
-                            ></span> {{label}}
+                                class="fas fa-check check-icon calendar-type-check-icon pull-right {{#if disabled}} hidden {{/if}} "
+                            ></span><div class="item-text">{{label}}</div>
                         </a>
                     </li>
                 {{/each}}
