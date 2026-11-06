@@ -32,6 +32,8 @@ import EditForModalRecordView from 'views/record/edit-for-modal';
 import EnumFieldView from 'views/fields/enum';
 import VarcharFieldView from 'views/fields/varchar';
 import CalendarSharedViewTeamsFieldView from 'crm:views/calendar/fields/teams';
+import Ui from 'ui';
+import Utils from 'utils';
 
 export default class CalendarEditViewModal extends ModalView {
 
@@ -74,7 +76,7 @@ export default class CalendarEditViewModal extends ModalView {
 
         this.isNew = !id;
 
-        const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+
 
         if (this.isNew) {
             this.buttonList.unshift({
@@ -105,7 +107,7 @@ export default class CalendarEditViewModal extends ModalView {
         const modelData = {};
 
         if (!this.isNew) {
-            calendarViewDataList.forEach(item => {
+            this.getCalendarViewDataList().forEach(item => {
                 if (id === item.id) {
                     modelData.teamsIds = item.teamIdList || [];
                     modelData.teamsNames = item.teamNames || {};
@@ -115,27 +117,13 @@ export default class CalendarEditViewModal extends ModalView {
                 }
             });
         } else {
-            modelData.name = this.translate('Shared', 'labels', 'Calendar');
-
-            let foundCount = 0;
-
-            calendarViewDataList.forEach(item => {
-                if (item.name.indexOf(modelData.name) === 0) {
-                    foundCount++;
-                }
-            });
-
-            if (foundCount) {
-                modelData.name += ' ' + foundCount;
-            }
-
             modelData.id = id;
 
             modelData.teamsIds = this.getUser().get('teamsIds') || [];
             modelData.teamsNames = this.getUser().get('teamsNames') || {};
         }
 
-        model.set(modelData);
+        model.setMultiple(modelData);
 
         this.recordView = new EditForModalRecordView({
             model: model,
@@ -197,10 +185,24 @@ export default class CalendarEditViewModal extends ModalView {
 
         const modelData = this.recordView.fetch();
 
-        const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+        let name = modelData.name;
+
+        const calendarViewDataList = this.getCalendarViewDataList();
+
+        let foundCount = 0;
+
+        calendarViewDataList.forEach(it => {
+            if (it.name.indexOf(modelData.name) === 0) {
+                foundCount++;
+            }
+        });
+
+        if (foundCount) {
+            name += ' ' + foundCount;
+        }
 
         const data = {
-            name: modelData.name,
+            name: name,
             teamIdList: modelData.teamsIds,
             teamNames: modelData.teamsNames,
             mode: modelData.mode,
@@ -221,26 +223,21 @@ export default class CalendarEditViewModal extends ModalView {
             });
         }
 
-        Espo.Ui.notify(this.translate('saving', 'messages'));
+        Ui.notify(this.translate('saving', 'messages'));
 
-        this.disableButton('save');
-        this.disableButton('remove');
+        await this.disableButton('save');
+        await this.disableButton('remove');
 
         try {
-            await this.getPreferences().save(
-                {
-                    calendarViewDataList: calendarViewDataList,
-                },
-                {patch: true}
-            )
+            await this.getPreferences().save({calendarViewDataList: calendarViewDataList}, {patch: true})
         } catch (e) {
-            this.enableButton('remove');
-            this.enableButton('save');
+            await this.enableButton('remove');
+            await this.enableButton('save');
 
             return;
         }
 
-        Espo.Ui.notify();
+        Ui.notify();
 
         this.trigger('after:save', data);
 
@@ -251,11 +248,28 @@ export default class CalendarEditViewModal extends ModalView {
         this.close();
     }
 
+    /**
+     * @private
+     * @return {{
+     *     name: string,
+     *     mode: string,
+     *     id: string,
+     *     teamIdList: string[],
+     *     teamNames: Record<string, string>,
+     * }[]}
+     */
+    getCalendarViewDataList() {
+        return Utils.cloneDeep(this.getPreferences().get('calendarViewDataList') ?? []);
+    }
+
+    /**
+     * @private
+     */
     async actionRemove() {
         await this.confirm(this.translate('confirmation', 'messages'));
 
-        this.disableButton('save');
-        this.disableButton('remove');
+        await this.disableButton('save');
+        await this.disableButton('remove');
 
         const id = this.options.id;
 
@@ -265,28 +279,24 @@ export default class CalendarEditViewModal extends ModalView {
 
         const newCalendarViewDataList = [];
 
-        const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-
-        calendarViewDataList.forEach(item => {
-            if (item.id !== id) {
-                newCalendarViewDataList.push(item);
+        this.getCalendarViewDataList().forEach(it => {
+            if (it.id !== id) {
+                newCalendarViewDataList.push(it);
             }
         });
 
-        Espo.Ui.notifyWait();
+        Ui.notifyWait();
 
         try {
-            await this.getPreferences().save({
-                calendarViewDataList: newCalendarViewDataList,
-            }, {patch: true})
+            await this.getPreferences().save({calendarViewDataList: newCalendarViewDataList}, {patch: true})
         } catch (e) {
-            this.enableButton('remove');
-            this.enableButton('save');
+            await this.enableButton('remove');
+            await this.enableButton('save');
 
             return;
         }
 
-        Espo.Ui.notify();
+        Ui.notify();
 
         this.trigger('after:remove');
 
