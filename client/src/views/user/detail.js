@@ -74,6 +74,7 @@ export default class extends DetailView {
                         action: 'externalAccounts',
                         link: '#ExternalAccount',
                         onClick: () => this.actionExternalAccounts(),
+                        style: 'text',
                     });
                 }
             }
@@ -104,6 +105,7 @@ export default class extends DetailView {
                 link: `#Calendar/show/userId=${this.model.id}` +
                     `&userName=${encodeURIComponent(this.model.attributes.name)}`,
                 hidden: !showActivities,
+                style: 'text',
             })
         }
 
