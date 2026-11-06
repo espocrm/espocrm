@@ -145,7 +145,7 @@
         </div>
     </div>
     <div class="form-group{{#if isWide}} col-lg-5{{/if}} col-md-2 col-sm-2">
-        {{#if hasViewModeSwitcher}}
+        {{~#if hasViewModeSwitcher}}
         <div class="btn-group view-mode-switcher-buttons-group">
             {{#each viewModeDataList}}
             <button
@@ -158,7 +158,7 @@
             ><span class="{{iconClass}}"></span></button>
             {{/each}}
         </div>
-        {{/if}}
+        {{/if~}}
     </div>
 </div>
 
