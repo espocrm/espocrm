@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import Utils from 'utils';
 
 /** @module modules/crm/views/calendar/mode-buttons */
 
@@ -34,28 +35,27 @@ class CalendarModeButtons extends View {
 
     template = 'crm:calendar/mode-buttons'
 
-    visibleModeListCount = 3
-
     data() {
-        const scopeFilterList = Espo.Utils.clone(this.scopeList);
+        const scopeFilterList = Utils.clone(this.scopeList);
         scopeFilterList.unshift('all');
 
         const scopeFilterDataList = [];
 
         this.scopeList.forEach(scope => {
-            const o = {scope: scope};
-
-            if (!this.getCalendarParentView().enabledScopeList.includes(scope)) {
-                o.disabled = true;
-            }
-
-            scopeFilterDataList.push(o);
+            scopeFilterDataList.push({
+                scope,
+                disabled: !this.getCalendarParentView().enabledScopeList.includes(scope),
+                iconClass: this.getMetadata().get(`clientDefs.${scope}.iconClass`),
+            });
         });
+
+        const modeData = this.getModeDataList().find(it => it.mode === this.mode);
+        const modeLabel = modeData?.label;
 
         return {
             mode: this.mode,
-            visibleModeDataList: this.getVisibleModeDataList(),
-            hiddenModeDataList: this.getHiddenModeDataList(),
+            modeLabel,
+            modeDataList: this.getModeDataList(),
             scopeFilterDataList: scopeFilterDataList,
             isCustomViewAvailable: this.isCustomViewAvailable,
             hasMoreItems: this.isCustomViewAvailable,
@@ -83,7 +83,7 @@ class CalendarModeButtons extends View {
 
     /**
      * @param {boolean} [originalOrder]
-     * @return {Object.<string, *>[]}
+     * @return {{mode: string, label: string, labelShort: string}[]}
      */
     getModeDataList(originalOrder) {
         const list = [];
@@ -100,11 +100,12 @@ class CalendarModeButtons extends View {
 
         if (this.isCustomViewAvailable) {
             (this.getPreferences().get('calendarViewDataList') || []).forEach(item => {
-                item = Espo.Utils.clone(item);
+                item = Utils.clone(item);
 
                 item.mode = 'view-' + item.id;
                 item.label = item.name;
                 item.labelShort = (item.name || '').substring(0, 2);
+
                 list.push(item);
             });
         }
@@ -119,36 +120,6 @@ class CalendarModeButtons extends View {
             if (item.mode === this.mode) {
                 currentIndex = i;
             }
-        });
-
-        return list;
-    }
-
-    getVisibleModeDataList() {
-        const fullList = this.getModeDataList();
-
-        const current = fullList.find(it => it.mode === this.mode);
-
-        const list = fullList.slice(0, this.visibleModeListCount);
-
-        if (current && !list.find(it => it.mode === this.mode)) {
-            list.push(current);
-        }
-
-        return list;
-    }
-
-    getHiddenModeDataList() {
-        const fullList = this.getModeDataList();
-
-        const list = [];
-
-        fullList.forEach((o, i) => {
-            if (i < this.visibleModeListCount) {
-                return;
-            }
-
-            list.push(o);
         });
 
         return list;

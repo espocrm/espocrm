@@ -942,13 +942,13 @@ class TimelineView extends View {
         this.groupsDataSet = new DataSet(list);
     }
 
+    /**
+     * @private
+     * @param {string} id
+     * @param {string} name
+     * @return {string}
+     */
     getGroupContent(id, name) {
-        if (this.calendarType === 'single') {
-            return $('<span>')
-                .text(name)
-                .get(0).outerHTML;
-        }
-
         let avatarHtml = this.getAvatarHtml(id);
 
         if (avatarHtml) {
@@ -963,6 +963,11 @@ class TimelineView extends View {
                 .get(0).outerHTML;
     }
 
+    /**
+     * @private
+     * @param {string} id
+     * @return {string}
+     */
     getAvatarHtml(id) {
         if (this.getConfig().get('avatarsDisabled')) {
             return '';

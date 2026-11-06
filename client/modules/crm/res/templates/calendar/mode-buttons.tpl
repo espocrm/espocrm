@@ -1,10 +1,11 @@
-{{#each visibleModeDataList}}
-<button class="btn btn-text strong{{#ifEqual mode ../mode}} active{{/ifEqual}}" data-action="mode" data-mode="{{mode}}" title="{{label}}"><span class="hidden-md hidden-sm hidden-xs">{{label}}</span><span class="visible-md visible-sm visible-xs">{{labelShort}}</span></button>
-{{/each}}
 <div class="btn-group" role="group">
-    <button type="button" class="btn btn-text dropdown-toggle" data-toggle="dropdown"><span class="fas fa-ellipsis-h"></span></button>
+    <button
+        type="button"
+        class="btn btn-text dropdown-toggle"
+        data-toggle="dropdown"
+    >{{modeLabel}}&nbsp;<span class="caret"></span></button>
     <ul class="dropdown-menu pull-right">
-        {{#each hiddenModeDataList}}
+        {{#each modeDataList}}
             <li>
                 <a
                     role="button"
@@ -12,10 +13,10 @@
                     class="{{#ifEqual mode ../mode}} active{{/ifEqual}}"
                     data-action="mode"
                     data-mode="{{mode}}"
-                >{{label}}</a>
+                ><span class="item-text">{{label}}</span></a>
             </li>
         {{/each}}
-        {{#if hiddenModeDataList.length}}
+        {{#if modeDataList.length}}
             <li class="divider"></li>
         {{/if}}
         {{#each scopeFilterDataList}}
@@ -26,9 +27,13 @@
                     data-action="toggleScopeFilter"
                     data-name="{{scope}}"
                 >
-                    <span class="fas fa-check filter-check-icon check-icon pull-right{{#if disabled}} hidden{{/if}}"></span>
-                    <div>{{translate scope category='scopeNamesPlural'}}</div>
-
+                    <span class="fas fa-check filter-check-icon check-icon pull-right{{#if disabled}} hidden {{/if}}"></span>
+                    <div>
+                        {{~#if iconClass~}}
+                            <span class="item-icon {{iconClass}}"></span>
+                        {{~/if~}}
+                        <span class="item-text">{{translate scope category='scopeNamesPlural'}}</span>
+                    </div>
                 </a>
             </li>
         {{/each}}
@@ -41,12 +46,18 @@
                     role="button"
                     tabindex="0"
                     data-action="createCustomView"
-                >{{translate 'Create Shared View' scope='Calendar'}}</a>
+                >
+                    <span class="item-icon fas fa-plus"></span>
+                    {{~null~}}
+                    <span class="item-text">{{translate 'Create Shared View' scope='Calendar'}}</span>
+                </a>
             </li>
         {{/if}}
         {{#if hasWorkingTimeCalendarLink}}
             <li>
-                <a href="#WorkingTimeCalendar">{{translate 'WorkingTimeCalendar' category='scopeNamesPlural'}}</a>
+                <a href="#WorkingTimeCalendar">
+                    <span class="item-text">{{translate 'WorkingTimeCalendar' category='scopeNamesPlural'}}</span>
+                </a>
             </li>
         {{/if}}
     </ul>

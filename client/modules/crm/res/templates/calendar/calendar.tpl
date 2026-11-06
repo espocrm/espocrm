@@ -11,11 +11,6 @@
         </button>
         </div>
 
-        <button
-            class="btn btn-text{{#unless isCustomView}} hidden{{/unless}} btn-icon"
-            data-action="editCustomView"
-            title="{{translate 'Edit'}}"
-        ><span class="fas fa-pencil-alt fa-sm"></span></button>
     </div>
 
     <div class="date-title col-sm-4 col-xs-7">
@@ -24,6 +19,14 @@
     <div class="col-sm-4 col-xs-12">
         <div class="btn-group pull-right mode-buttons">
             {{{modeButtons}}}
+        </div>
+
+        <div class="btn-group pull-right">
+            <button
+                class="btn btn-text {{#unless isCustomView}} hidden{{/unless}} btn-icon"
+                data-action="editCustomView"
+                title="{{translate 'Edit'}}"
+            ><span class="fas fa-user-gear fa-sm"></span></button>
         </div>
     </div>
 </div>

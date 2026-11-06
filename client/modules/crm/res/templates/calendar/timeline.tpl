@@ -13,32 +13,7 @@
                 class="btn btn-text"
                 data-action="today"
             >{{translate 'Today' scope='Calendar'}}</button>
-        </div>{{#if calendarTypeSelectEnabled}}<div class="btn-group calendar-type-button-group">
-        <div class="btn-group " role="group">
-            <button
-                type="button"
-                class="btn btn-text dropdown-toggle"
-                data-toggle="dropdown"
-            ><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                {{#each calendarTypeDataList}}
-                    <li>
-                        <a role="button" tabindex="0" data-action="toggleCalendarType" data-name="{{type}}">
-                            <span
-                                class="fas fa-check check-icon calendar-type-check-icon pull-right {{#if disabled}} hidden {{/if}} "
-                            ></span><div class="item-text">{{label}}</div>
-                        </a>
-                    </li>
-                {{/each}}
-            </ul>
         </div>
-        <button
-            class="btn btn-text{{#ifNotEqual calendarType 'shared'}} hidden{{/ifNotEqual}} btn-icon"
-            data-action="showSharedCalendarOptions"
-            title="{{translate 'Shared Mode Options' scope='Calendar'}}"
-        ><span class="fas fa-pencil-alt fa-sm"></span></button>
-        </div>
-        {{/if}}
     </div>
 
     <div class="date-title col-sm-4 hidden-xs">
@@ -48,6 +23,33 @@
         <div class="btn-group pull-right mode-buttons">
             {{{modeButtons}}}
         </div>
+        {{#if calendarTypeSelectEnabled}}
+        <div class="btn-group calendar-type-button-group pull-right">
+            <button
+                class="btn btn-text {{#ifNotEqual calendarType 'shared'}} hidden {{/ifNotEqual}} btn-icon"
+                data-action="showSharedCalendarOptions"
+                title="{{translate 'Shared Mode Options' scope='Calendar'}}"
+            ><span class="fas fa-user-cog fa-sm"></span></button>
+            <div class="btn-group " role="group">
+                <button
+                    type="button"
+                    class="btn btn-text dropdown-toggle"
+                    data-toggle="dropdown"
+                ><span class="calendar-type-label">{{calendarTypeLabel}}</span> <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    {{#each calendarTypeDataList}}
+                        <li>
+                            <a role="button" tabindex="0" data-action="toggleCalendarType" data-name="{{type}}">
+                                <span
+                                    class="fas fa-check check-icon calendar-type-check-icon pull-right {{#if disabled}} hidden {{/if}} "
+                                ></span><div class="item-text">{{label}}</div>
+                            </a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{/if}}
     </div>
 </div>
 {{/if}}
