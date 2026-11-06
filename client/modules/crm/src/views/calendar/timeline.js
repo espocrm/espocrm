@@ -371,21 +371,6 @@ class TimelineView extends View {
     }
 
     /**
-     * @todo Revise for removal? Not used anywhere?
-     * @private
-     * @return {string}
-     */
-    getTitle() {
-        let title = '';
-
-        if (this.options.userId && this.options.userName) {
-            title += ' (' + this.options.userName + ')';
-        }
-
-        return title;
-    }
-
-    /**
      * @param {Object.<string, *>} o
      * @return {Object}
      */

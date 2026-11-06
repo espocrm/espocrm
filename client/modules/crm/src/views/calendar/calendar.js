@@ -514,7 +514,7 @@ class CalendarView extends View {
         }
 
         if (this.options.userId && this.options.userName) {
-            title += ' (' + this.options.userName + ')';
+            title += ' · ' + this.options.userName;
         }
 
         return title;
