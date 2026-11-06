@@ -36,6 +36,7 @@ use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
 use Espo\Entities\Note;
@@ -366,6 +367,17 @@ class UserRecordService
             return;
         }
 
+        // Performance optimization. On MariaDB, if the user follows no accounts, the query
+        // walks the whole note table in the 'number' order before returning an empty result.
+        $aclManager = $this->getUserAclManager($user);
+
+        if (
+            ($aclManager && !$aclManager->checkScope($user, Account::ENTITY_TYPE, Table::ACTION_STREAM)) ||
+            !$this->hasAccountSubscription($user)
+        ) {
+            return;
+        }
+
         $ignoreWhereClause = $this->getSubscriptionIgnoreWhereClause($user);
 
         $builder = clone $baseBuilder;
@@ -403,6 +415,18 @@ class UserRecordService
             ->where($ignoreWhereClause);
 
         $this->buildAccessQueries($user, $builder, $queryList);
+    }
+
+    private function hasAccountSubscription(User $user): bool
+    {
+        return (bool) $this->entityManager
+            ->getRDBRepository(StreamSubscription::ENTITY_TYPE)
+            ->select([Attribute::ID])
+            ->where([
+                'userId' => $user->getId(),
+                'entityType' => Account::ENTITY_TYPE,
+            ])
+            ->findOne();
     }
 
     /**
