@@ -258,9 +258,11 @@ class CalendarPage extends View {
             return;
         }
 
-        this.webSocketManager.subscribe('calendarUpdate', () => this.webSocketDebounceHelper.process());
+        const handler = () => this.webSocketDebounceHelper.process();
 
-        this.on('remove', () => this.webSocketManager.unsubscribe('calendarUpdate'));
+        this.webSocketManager.subscribe('calendarUpdate', handler);
+
+        this.once('remove', () => this.webSocketManager.unsubscribe('calendarUpdate', handler));
     }
 
     /**
