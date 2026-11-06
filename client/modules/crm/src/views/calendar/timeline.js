@@ -626,6 +626,7 @@ class TimelineView extends View {
                 margin: {
                     item: {
                         vertical: 12,
+                        horizontal: 0,
                     },
                     axis: 6,
                 },
