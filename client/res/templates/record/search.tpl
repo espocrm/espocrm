@@ -1,6 +1,6 @@
 
 <div class="row search-row">
-    <div class="form-group{{#if isWide}} col-lg-7{{/if}} col-md-8 col-sm-9">
+    <div class="form-group {{#if isWide}} col-lg-7 {{/if}} col-md-10 col-sm-10">
         <div class="input-group">
             <div class="input-group-btn left-dropdown{{#unless leftDropdown}} hidden{{/unless}}">
                 <button
@@ -144,7 +144,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group{{#if isWide}} col-lg-5{{/if}} col-md-4 col-sm-3">
+    <div class="form-group{{#if isWide}} col-lg-5{{/if}} col-md-2 col-sm-2">
         {{#if hasViewModeSwitcher}}
         <div class="btn-group view-mode-switcher-buttons-group">
             {{#each viewModeDataList}}
@@ -161,6 +161,8 @@
         {{/if}}
     </div>
 </div>
+
+<div class="bool-filters">{{{boolFilters}}}</div>
 
 <div class="advanced-filters hidden grid-auto-fill-sm">
 {{#each filterDataList}}

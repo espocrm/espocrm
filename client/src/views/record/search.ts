@@ -38,6 +38,7 @@ import SaveFiltersModalView from 'views/modals/save-filters';
 import _ from 'underscore';
 import type Model from 'model';
 import type Collection from 'collection';
+import {fragment, h, VNode} from 'bullbone';
 
 interface BoolFilterDefs {
     name?: string;
@@ -179,6 +180,8 @@ class SearchView extends View<ViewSchema> {
     private textFilterInputElement: HTMLInputElement | null;
 
     private advancedFiltersPanelElement: HTMLElement;
+
+    private boolFiltersView: BoolFiltersView;
 
     protected data(): Record<string, any> {
         return {
@@ -356,6 +359,21 @@ class SearchView extends View<ViewSchema> {
         this.wait(
             this.getHelper().processSetupHandlers(this, 'record/search')
         );
+
+        this.boolFiltersView = new BoolFiltersView({
+            listProvider: () => {
+                return this.boolFilterList
+                    .filter(it => this.bool?.[it])
+                    .map(it => {
+                        return {
+                            name: it,
+                            label: this.translate(it, 'boolFilters', this.entityType),
+                        };
+                    });
+            },
+        });
+
+        this.assignView('boolFilters', this.boolFiltersView);
     }
 
     private setupEventHandlers() {
@@ -425,6 +443,8 @@ class SearchView extends View<ViewSchema> {
 
             this.search();
             this.manageLabels();
+
+            this.boolFiltersView.reRender();
         });
 
         this.addActionHandler('switchViewMode', (_, target) => {
@@ -933,7 +953,6 @@ class SearchView extends View<ViewSchema> {
         this.currentFilterLabelList = [];
 
         this.managePresetFilters();
-        this.manageBoolFilters();
 
         if (!this.filtersLabel) {
             return;
@@ -1050,7 +1069,6 @@ class SearchView extends View<ViewSchema> {
                 'text-warning',
             ]);
 
-
         if (filterStyle !== 'default') {
             this.filtersButton.classList.add(`text-${filterStyle}`);
         }
@@ -1060,16 +1078,6 @@ class SearchView extends View<ViewSchema> {
         this.$el
             .find('ul.filter-menu a.preset[data-name="'+presetName+'"]')
             .prepend('<span class="fas fa-check check-icon pull-right"></span>');
-    }
-
-    manageBoolFilters() {
-        (this.boolFilterList ?? []).forEach((item) => {
-            if (this.bool && this.bool[item]) {
-                const label = this.translate(item, 'boolFilters', this.entityType);
-
-                this.currentFilterLabelList!.push(label);
-            }
-        });
     }
 
     search() {
@@ -1496,3 +1504,30 @@ class SearchView extends View<ViewSchema> {
 }
 
 export default SearchView;
+
+class BoolFiltersView extends View<{
+    options: {
+        listProvider: () => {
+            name: string,
+            label: string,
+        }[],
+    },
+}> {
+
+    readonly useVirtualDom = true
+
+    content(): VNode {
+        const elements = this.options.listProvider().map(it => {
+            return h('span', {
+                props: {
+                    className: 'label label-default label-state',
+                },
+                dataset: {
+                    name: it.label,
+                },
+            }, it.label);
+        });
+
+        return fragment(elements);
+    }
+}

@@ -311,6 +311,25 @@ img.image-preview {
     .left-dropdown > .btn.filters-button {
         margin-right: 0;
         z-index: 3;
+
+        max-width: var(--200px);
+
+        > .filters-label {
+            display: inline-block;
+            max-width: calc(100% - var(--11px));
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: top;
+        }
+
+        @media screen and (max-width: @screen-sm-max) {
+            max-width: var(--120px);
+        }
+
+        @media screen and (max-width: @screen-xs-max) {
+            max-width: var(--120px);
+        }
     }
 
     .filters-button {
@@ -3704,6 +3723,22 @@ table.table-admin-panel {
 
 .search-container {
     margin-bottom: var(--padding-base-vertical);
+
+    > .bool-filters {
+        > .label {
+            margin-bottom: var(--2px);
+            display: inline-block;
+            margin-inline-end: var(--6px);
+            user-select: none;
+            padding: var(--6px) var(--6px);
+
+            color: var(--btn-text-color);
+        }
+
+        &:not(:empty) {
+            margin-bottom: var(--8px);
+        }
+    }
 }
 
 .search-row {
