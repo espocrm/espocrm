@@ -42,6 +42,25 @@ class CalendarUsersFieldView extends LinkMultipleFieldView {
     getSelectPrimaryFilterName() {
         return 'active';
     }
+
+    /**
+     * @inheritDoc
+     */
+    prepareEditItemElement(id, name) {
+        const itemElement = super.prepareEditItemElement(id, name);
+
+        const avatarHtml = this.getHelper().getAvatarHtml(id, 'small', 18, 'avatar-link');
+
+        if (avatarHtml) {
+            const img = new DOMParser().parseFromString(avatarHtml, 'text/html').body.childNodes[0];
+
+            const textElement = itemElement.querySelector('.text');
+
+            textElement?.prepend(img);
+        }
+
+        return itemElement;
+    }
 }
 
 export default CalendarUsersFieldView;
