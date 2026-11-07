@@ -61,7 +61,7 @@ class RelationConverter
         RelationParam::RELATION_NAME,
         RelationParam::CONDITIONS,
         RelationParam::ADDITIONAL_COLUMNS,
-        'noJoin',
+        RelationParam::NO_JOIN,
         RelationParam::INDEXES,
     ];
 
@@ -74,7 +74,7 @@ class RelationConverter
     public function __construct(
         private Metadata $metadata,
         private InjectableFactory $injectableFactory,
-        private Log $log
+        private Log $log,
     ) {}
 
     /**
