@@ -212,6 +212,21 @@
                                         "type": "contains",
                                         "attribute": "oidcJwtSignatureAlgorithmList",
                                         "value": "RS512"
+                                    },
+                                    {
+                                        "type": "contains",
+                                        "attribute": "oidcJwtSignatureAlgorithmList",
+                                        "value": "ES256"
+                                    },
+                                    {
+                                        "type": "contains",
+                                        "attribute": "oidcJwtSignatureAlgorithmList",
+                                        "value": "ES384"
+                                    },
+                                    {
+                                        "type": "contains",
+                                        "attribute": "oidcJwtSignatureAlgorithmList",
+                                        "value": "ES512"
                                     }
                                 ]
                             }
