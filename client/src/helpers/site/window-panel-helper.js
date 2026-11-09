@@ -90,17 +90,18 @@ export default class WindowPanelHelper {
         const windowWidth = window.innerWidth;
 
         const panelBody = this.view.element?.querySelector('.panel-body');
-        const heading = this.view.element?.querySelector('.panel-heading');
 
         if (!(panelBody instanceof HTMLElement)) {
             return;
         }
 
-        const diffHeight = heading?.outerHeight ?? 0;
-
         const cssParams = {};
 
         if (windowWidth <= this.xsWidth) {
+            const heading = this.view.element?.querySelector('.panel-heading');
+
+            const diffHeight = heading instanceof HTMLElement ? heading.offsetHeight : 0;
+
             cssParams.height = (windowHeight - diffHeight) + 'px';
             cssParams.overflow = 'auto';
 
@@ -109,10 +110,10 @@ export default class WindowPanelHelper {
             this.overflowWasHidden = true;
         } else {
             cssParams.height = 'unset';
-            cssParams.overflow = 'none';
+            cssParams.overflow = '';
 
             if (this.overflowWasHidden) {
-                panelBody.style.overflow = 'unset';
+                document.body.style.overflow = 'unset';
 
                 this.overflowWasHidden = false;
             }

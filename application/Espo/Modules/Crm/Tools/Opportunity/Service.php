@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\EmailAddress;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Modules\Crm\Entities\Account;
@@ -40,12 +41,12 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\Tools\Email\EmailAddressEntityPair;
 use RuntimeException;
 
 class Service
 {
-
     public function __construct(
         private ServiceContainer $serviceContainer,
         private Acl $acl,
@@ -59,10 +60,11 @@ class Service
      */
     public function getEmailAddressList(string $id): array
     {
-        /** @var Opportunity $entity */
-        $entity = $this->serviceContainer
-            ->get(Opportunity::ENTITY_TYPE)
-            ->getEntity($id);
+        $entity = $this->serviceContainer->getByClass(Opportunity::class)->getEntity($id);
+
+        if (!$entity) {
+            return [];
+        }
 
         $list = [];
 
@@ -118,6 +120,10 @@ class Service
             return null;
         }
 
+        if (!$this->acl->checkField(Account::ENTITY_TYPE, Field::EMAIL_ADDRESS)) {
+            return null;
+        }
+
         foreach ($dataList as $item) {
             if ($item->getEmailAddress()->getAddress() === $emailAddress) {
                 return null;
@@ -140,7 +146,7 @@ class Service
             return [];
         }
 
-        if (!$this->acl->checkField(Contact::ENTITY_TYPE, 'emailAddress')) {
+        if (!$this->acl->checkField(Contact::ENTITY_TYPE, Field::EMAIL_ADDRESS)) {
             return [];
         }
 
@@ -155,12 +161,12 @@ class Service
                 ->withStrictAccessControl()
                 ->buildQueryBuilder()
                 ->select([
-                    'id',
-                    'emailAddress',
-                    'name',
+                    Attribute::ID,
+                    Field::EMAIL_ADDRESS,
+                    Field::NAME,
                 ])
                 ->where([
-                    'id' => $contactIdList,
+                    Attribute::ID => $contactIdList,
                 ])
                 ->build();
         } catch (BadRequest|Forbidden $e) {
