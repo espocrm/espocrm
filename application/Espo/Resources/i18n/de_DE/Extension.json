@@ -1,5 +1,7 @@
 {
   "fields": {
+    "name": "Name",
+    "version": "Version",
     "description": "Beschreibung",
     "isInstalled": "Installiert",
     "checkVersionUrl": "Eine URL zum Überprüfen neuer Versionen"

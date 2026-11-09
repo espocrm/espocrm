@@ -2,11 +2,14 @@
   "fields": {
     "name": "Naam",
     "emailAddress": "E-mail",
+    "website": "Website",
     "phoneNumber": "Telefoon",
     "billingAddress": "Factuuradres",
     "shippingAddress": "Vestigingsadres",
     "description": "Beschrijving",
+    "sicCode": "Sic Code",
     "industry": "Industrie",
+    "type": "Type",
     "contactRole": "Titel",
     "campaign": "Campagne",
     "targetLists": "Doellijsten",
@@ -34,16 +37,19 @@
     "type": {
       "Customer": "Klant",
       "Investor": "Investeerder",
+      "Partner": "Partner",
       "Reseller": "Wederverkoper"
     },
     "industry": {
       "Agriculture": "Landbouw",
       "Advertising": "Reclame",
       "Apparel & Accessories": "Kleding & Accessoires",
+      "Automotive": "Automotive",
       "Banking": "Bankwezen",
       "Biotechnology": "Biotechnologie",
       "Building Materials & Equipment": "Bouwmaterialen en -apparatuur",
       "Chemical": "Chemisch",
+      "Computer": "Computer",
       "Education": "Onderwijs",
       "Electronics": "Elektronica",
       "Energy": "Energie",
@@ -57,7 +63,9 @@
       "Manufacturing": "Productie",
       "Publishing": "Uitgeverij",
       "Real Estate": "Vastgoed",
+      "Service": "Service",
       "Sports": "Sport",
+      "Software": "Software",
       "Technology": "Technologie",
       "Telecommunications": "Telecommunicatie",
       "Television": "Televisie",
@@ -75,11 +83,14 @@
       "Mass Media": "Media",
       "Mining": "Mijnbouw",
       "Music": "Muziek",
+      "Marketing": "Marketing",
+      "Petroleum": "Petroleum",
       "Retail": "Retailhandel",
       "Shipping": "Scheepvaart",
       "Support": "Ondersteuning",
       "Testing, Inspection & Certification": "Testen, inspectie en certificering",
       "Wholesale": "Groothandel",
+      "Water": "Water",
       "Travel": "Reizen"
     }
   },
@@ -90,6 +101,11 @@
   },
   "presetFilters": {
     "customers": "Klanten",
+    "partners": "Partners",
     "recentlyCreated": "Recent gecreëerd"
+  },
+  "tabs": {
+    "Account": "Account",
+    "Support": "Support"
   }
 }

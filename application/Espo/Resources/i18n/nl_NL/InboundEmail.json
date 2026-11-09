@@ -2,7 +2,9 @@
   "fields": {
     "name": "Naam",
     "emailAddress": "E-mailadres",
+    "status": "Status",
     "assignToUser": "Toewijzen aan gebruiker",
+    "host": "Host",
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
     "port": "Poort",
@@ -25,6 +27,7 @@
     "useSmtp": "Gebruik SMTP",
     "smtpHost": "SMTP-host",
     "smtpPort": "SMTP-poort",
+    "smtpAuth": "SMTP Auth",
     "smtpSecurity": "SMTP-beveiliging",
     "smtpUsername": "SMTP-gebruikersnaam",
     "smtpPassword": "SMTP-wachtwoord",
@@ -59,6 +62,12 @@
     "smtpIsShared": "Indien ingeschakeld, kunnen gebruikers E-mails verzenden met behulp van deze SMTP. De beschikbaarheid wordt bepaald door functies via de toestemming van de groep e-mailaccounts.",
     "smtpIsForMassEmail": "Indien ingeschakeld, is SMTP beschikbaar voor verzamel e-mail."
   },
+  "links": {
+    "filters": "Filters",
+    "emails": "E-mails",
+    "assignToUser": "Toewijzen aan gebruiker",
+    "groupEmailFolder": "Groep e-mail map"
+  },
   "options": {
     "status": {
       "Active": "Actief",
@@ -72,21 +81,26 @@
     },
     "smtpAuthMechanism": {
       "plain": "Plat",
-      "login": "Login"
+      "login": "Login",
+      "crammd5": "CRAM-MD5"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
+    },
+    "security": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   },
   "labels": {
     "Create InboundEmail": "Creëer E-mail Account",
+    "IMAP": "IMAP",
     "Actions": "Acties",
     "Main": "Hoofd"
   },
   "messages": {
     "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
     "imapNotConnected": "Kan geen verbinding maken met groeps [IMAP-account](#InboundEmail/view/{id})."
-  },
-  "links": {
-    "emails": "E-mails",
-    "assignToUser": "Toewijzen aan gebruiker",
-    "groupEmailFolder": "Groep e-mail map"
   }
 }

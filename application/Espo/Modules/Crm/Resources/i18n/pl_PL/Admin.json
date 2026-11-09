@@ -1,9 +1,12 @@
 {
   "layouts": {
+    "detailConvert": "Przekształcenie potencjalnego kontaktu",
+    "listForAccount": "Lista (dla klienta)",
     "listForContact": "Lista (dla Kontakt)"
   },
   "templates": {
     "invitation": "Zaproszenie",
-    "reminder": "Przypomnienie"
+    "reminder": "Przypomnienie",
+    "cancellation": "Odwołanie"
   }
 }

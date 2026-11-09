@@ -2,6 +2,7 @@
   "fields": {
     "type": "Typ",
     "validationFailures": "Validierungsfehler",
+    "import": "Import",
     "rowIndex": "Zeilenindex",
     "exportRowIndex": "Exportiere Zeilenindex",
     "lineNumber": "Zeilennummer",

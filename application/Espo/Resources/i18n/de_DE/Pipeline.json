@@ -4,6 +4,7 @@
   },
   "fields": {
     "order": "Reihenfolge",
+    "status": "Status",
     "entityType": "Entitätstyp",
     "field": "Feld",
     "isAvailableForAll": "Für alle verfügbar",

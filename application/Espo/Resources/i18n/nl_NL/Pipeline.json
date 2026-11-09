@@ -4,6 +4,7 @@
   },
   "fields": {
     "order": "Bestelling",
+    "status": "Status",
     "entityType": "Entiteitstype",
     "field": "Veld",
     "isAvailableForAll": "Voor iedereen beschikbaar",

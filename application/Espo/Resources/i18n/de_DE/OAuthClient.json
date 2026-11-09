@@ -1,0 +1,43 @@
+{
+  "labels": {
+    "Create OAuthClient": "OAuth-Client registrieren"
+  },
+  "fields": {
+    "status": "Status",
+    "clientType": "Client-Typ",
+    "identifier": "Client-ID",
+    "redirectUris": "Weiterleitungs-URIs",
+    "scopes": "Geltungsbereiche"
+  },
+  "links": {
+    "secrets": "Client-Geheimnis"
+  },
+  "options": {
+    "clientType": {
+      "Confidential": "Vertraulich",
+      "Public": "Öffentlich"
+    },
+    "status": {
+      "Active": "Aktiv",
+      "Inactive": "Inaktiv"
+    }
+  },
+  "strings": {
+    "allow": "Zugriff gewähren",
+    "authorizationCodes": "Autorisierungscodes",
+    "accessTokens": "Zugriffstoken",
+    "refreshTokens": "Aktualisierungstoken",
+    "revoke": "Widerrufen"
+  },
+  "scopeDescriptions": {
+    "Global": "Zugang auf alles.",
+    "GlobalAdmin": "Zugriff auf alles (mit Ausnahme von Administratorrechten).",
+    "Admin": "Zugriff auf die Administratorrechte."
+  },
+  "tooltips": {
+    "scopes": "Spezielle Berechtigungsbereiche:\n\n- `Global` – Gewährt alle möglichen Berechtigungsbereiche mit Ausnahme von „Admin“.\n- `Admin` – Administratorrechte. Gilt nur für Admin-Benutzer. Verfügt ein Admin-Benutzer nicht über diesen Berechtigungsbereich, werden ihm seine Administratorrechte entzogen."
+  },
+  "messages": {
+    "allowAccessInfo": "**{clientName}** möchte als *{username}* auf **{applicationName}** zugreifen. Durch die Erteilung des Zugriffs gestatten Sie {clientName} den Zugriff auf die unten aufgeführten Bereiche."
+  }
+}

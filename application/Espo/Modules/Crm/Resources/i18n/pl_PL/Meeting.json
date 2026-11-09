@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nazwa",
     "parent": "Rodzic",
+    "status": "Status",
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zakończenia",
     "duration": "Czas",
@@ -14,7 +15,11 @@
     "acceptanceStatus": "Status akceptacji",
     "dateStartDate": "Data rozpoczęcia (cały dzień)",
     "dateEndDate": "Data zakończenia (cały dzień)",
-    "isAllDay": "Cały dzień"
+    "isAllDay": "Cały dzień",
+    "sourceEmail": "E-mail źródłowy",
+    "uid": "UID",
+    "joinUrl": "Link do dołączenia",
+    "externalService": "Lokalizacja online"
   },
   "options": {
     "status": {
@@ -40,7 +45,9 @@
     "Send Invitations": "Wyślij Powiadomienie",
     "on time": "na czas",
     "before": "przed",
-    "All-Day": "Cały dzień"
+    "All-Day": "Cały dzień",
+    "Send Cancellation": "Wyślij odwołanie",
+    "Acceptance": "Akceptacja"
   },
   "presetFilters": {
     "planned": "Planowane",
@@ -49,6 +56,9 @@
   },
   "messages": {
     "nothingHasBeenSent": "Nic nie zostało wysłane",
-    "selectAcceptanceStatus": "Ustaw swój status akceptacji."
+    "selectAcceptanceStatus": "Ustaw swój status akceptacji.",
+    "sendInvitationsToSelectedAttendees": "Zaproszenia e-mail zostaną wysłane do wybranych uczestników.",
+    "sendCancellationsToSelectedAttendees": "Wiadomości e-mail o odwołaniu zostaną wysłane do wybranych uczestników.",
+    "invitationsSentTo": "Zaproszenia zostały wysłane do: {recipients}.\n\nNie udało się wysłać do: {failedRecipients}."
   }
 }

@@ -5,6 +5,7 @@
     "Invalid": "Ungültig"
   },
   "fields": {
+    "optOut": "Opted Out",
     "invalid": "Ungültig",
     "lower": "Name in Kleinbuchstaben"
   },

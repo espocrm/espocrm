@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "roles": "Rollen",
     "assignmentPermission": "Berechtigung: Zuweisung",
     "userPermission": "Berechtigung: Benutzer",
@@ -18,13 +19,15 @@
     "lockPermission": "Berechtigung: Sperren"
   },
   "links": {
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "teams": "Teams"
   },
   "labels": {
     "Access": "Berechtigungen",
     "Create Role": "Rolle erstellen",
     "Scope Level": "Berechtigungsumfang",
-    "Field Level": "Feldebene"
+    "Field Level": "Feldebene",
+    "Baseline": "Baseline"
   },
   "options": {
     "accessList": {

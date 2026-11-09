@@ -3,10 +3,13 @@
     "Fields": "Felder",
     "Relationships": "Beziehungen",
     "Schedule": "Geplant",
+    "Log": "Log",
     "Formula": "Formel",
+    "Layouts": "Layouts",
     "Parameters": "Parameter"
   },
   "fields": {
+    "name": "Name",
     "type": "Typ",
     "labelSingular": "Bezeichnung Einzahl",
     "labelPlural": "Bezeichnung Mehrzahl",
@@ -15,6 +18,7 @@
     "linkType": "Verknüpfungstyp",
     "entityForeign": "Fremdentität",
     "linkForeign": "Fremdrelation",
+    "link": "Link",
     "labelForeign": "Fremdbezeichnung",
     "relationName": "Mittlerer Tabellenname",
     "linkMultipleField": "Mehrere Felder verknüpfen",
@@ -28,6 +32,7 @@
     "color": "Farbe",
     "kanbanViewMode": "Kanban-Ansicht",
     "kanbanStatusIgnoreList": "Ignorierte Gruppen in der Kanban-Ansicht",
+    "iconClass": "Icon",
     "fullTextSearch": "Volltextsuche",
     "countDisabled": "Deaktivieren der Datensatzzählung",
     "parentEntityTypeList": "Übergeordnete Entitätstypen",
@@ -37,8 +42,10 @@
     "beforeSaveApiScript": "API-Skript vor dem Speichern",
     "updateDuplicateCheck": "Duplikatsprüfung bei Aktualisierung",
     "duplicateCheckFieldList": "Duplikatsprüfung der Felder",
+    "layout": "Layout",
     "author": "Autor",
     "module": "Modul",
+    "version": "Version",
     "selectFilter": "Filter auswählen",
     "primaryFilters": "Primäre Filter",
     "stars": "Sterne",
@@ -51,13 +58,16 @@
     "sortDirection": "Standard-Sortierrichtung",
     "categories": "Kategorien",
     "lockable": "Sperrbar",
-    "transactionalSave": "Transaktionales Speichern"
+    "transactionalSave": "Transaktionales Speichern",
+    "pipelines": "Pipelines"
   },
   "options": {
     "type": {
       "": "Kein(e)",
       "Base": "Basis",
+      "Person": "Person",
       "CategoryTree": "Kategoriebaum",
+      "Event": "Event",
       "BasePlus": "Basis Plus",
       "Company": "Firma"
     },

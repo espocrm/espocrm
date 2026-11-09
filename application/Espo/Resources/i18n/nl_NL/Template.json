@@ -21,6 +21,7 @@
     "printHeader": "Kop afdrukken",
     "title": "Titel",
     "style": "Stijl",
+    "status": "Status",
     "filename": "Bestandsnaam"
   },
   "labels": {

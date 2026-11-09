@@ -13,7 +13,9 @@
     "documents": "Dokumenty",
     "account": "Klient",
     "opportunity": "Szansa sprzedaży",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "meetingsChildren": "Spotkania podrzędne",
+    "callsChildren": "Rozmowy podrzędne"
   },
   "scopeNames": {
     "Account": "Klient",
@@ -36,7 +38,8 @@
     "Activities": "Aktywności",
     "KnowledgeBaseArticle": "Artykuł bazy wiedzy",
     "KnowledgeBaseCategory": "Kategoria bazy wiedzy",
-    "CampaignLogRecord": "Zapis dziennika kampanii"
+    "CampaignLogRecord": "Zapis dziennika kampanii",
+    "TargetListCategory": "Kategoria listy docelowej"
   },
   "scopeNamesPlural": {
     "Account": "Klienci",
@@ -59,7 +62,8 @@
     "Activities": "Aktywności",
     "KnowledgeBaseArticle": "Baza wiedzy",
     "KnowledgeBaseCategory": "Kategorie bazy wiedzy",
-    "CampaignLogRecord": "Zapisy dziennika kampanii"
+    "CampaignLogRecord": "Zapisy dziennika kampanii",
+    "TargetListCategory": "Kategorie list docelowych"
   },
   "dashlets": {
     "Leads": "Moje Potencjalne Kontakty",
@@ -88,7 +92,9 @@
     "Archive Email": "Archiwizuj e-mail",
     "Create Task": "Utwórz zadanie",
     "Tasks": "Zadania",
-    "Scheduler": "Harmonogram"
+    "Scheduler": "Harmonogram",
+    "Schedule": "Zaplanuj",
+    "Log": "Zarejestruj"
   },
   "fields": {
     "billingAddressCity": "Miasto",
@@ -105,6 +111,7 @@
     "addressMap": "Mapa",
     "shippingAddressCity": "Miasto (dostawy)",
     "shippingAddressStreet": "Ulica (dostawy)",
+    "shippingAddressCountry": "Kraj (dostawy)",
     "shippingAddressState": "Województwo (dostawy)",
     "shippingAddressPostalCode": "Kod pocztowy (dostawy)",
     "shippingAddressMap": "Mapa (Dostawa)"
@@ -114,5 +121,16 @@
       "Popup": "Wyskakujące okienko",
       "Email": "E-mail"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} dodał Cię do uczestników: {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} potwierdził udział: {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} odmówił udziału: {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} wstępnie potwierdził udział: {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} potwierdził udział",
+    "eventConfirmationDeclinedThis": "{invitee} odmówił udziału",
+    "eventConfirmationTentativeThis": "{invitee} wstępnie potwierdził udział"
   }
 }

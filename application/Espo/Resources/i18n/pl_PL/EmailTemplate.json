@@ -1,29 +1,40 @@
 {
   "fields": {
     "name": "Nazwa",
+    "status": "Status",
     "body": "Treść",
     "subject": "Temat",
     "attachments": "Załączniki",
+    "oneOff": "Jednorazowy",
     "category": "Kategoria",
-    "insertField": "Symbole zastępcze"
+    "insertField": "Symbole zastępcze",
+    "isHtml": "HTML"
   },
   "labels": {
     "Create EmailTemplate": "Utwórz Szkic wiadomości",
+    "Info": "Informacje",
     "Available placeholders": "Dostępne symbole zastępcze"
   },
   "tooltips": {
     "oneOff": "Sprawdź czy będziesz używać tego szablonu tylko raz. N.p. w poczcie masowej."
   },
-  "presetFilters": {
-    "actual": "Bieżący"
-  },
   "placeholderTexts": {
     "optOutLink": "link do rezygnacji z subskrypcji",
     "today": "Dzisiejsza data",
     "now": "Obecna data i czas",
-    "currentYear": "Aktualny rok"
+    "currentYear": "Aktualny rok",
+    "optOutUrl": "URL linku do rezygnacji z subskrypcji"
   },
   "messages": {
     "infoText": "Dostępne symbole zastępcze:\n\n{optOutUrl} &#8211; URL linku do rezygnacji z subskrypcji;\n\n{optOutLink} &#8211; link do rezygnacji z subskrypcji."
+  },
+  "options": {
+    "status": {
+      "Active": "Aktywny",
+      "Inactive": "Nieaktywny"
+    }
+  },
+  "presetFilters": {
+    "actual": "Aktywne"
   }
 }

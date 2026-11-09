@@ -4,10 +4,19 @@
     "roles": "Rola",
     "assignmentPermission": "Uprawnienia przypisania",
     "userPermission": "Uprawnienia użytkownika",
+    "portalPermission": "Uprawnienia do portalu",
     "groupEmailAccountPermission": "Uprawnienia do grupowego konta e-mail",
     "exportPermission": "Eksportuj uprawnienia",
     "dataPrivacyPermission": "Uprawnienia do danych osobowych",
-    "massUpdatePermission": "Uprawnienie do masowej aktualizacji"
+    "massUpdatePermission": "Uprawnienie do masowej aktualizacji",
+    "followerManagementPermission": "Uprawnienia do zarządzania obserwatorami",
+    "data": "Dane",
+    "fieldData": "Dane pól",
+    "messagePermission": "Uprawnienia do wysyłania wiadomości",
+    "auditPermission": "Uprawnienia do audytu",
+    "mentionPermission": "Uprawnienia do wzmianek",
+    "userCalendarPermission": "Uprawnienia do kalendarzy użytkowników",
+    "lockPermission": "Uprawnienia do blokowania"
   },
   "links": {
     "users": "Użytkownik",
@@ -15,7 +24,10 @@
   },
   "labels": {
     "Access": "Dostęp",
-    "Create Role": "Utwórz Role"
+    "Create Role": "Utwórz Role",
+    "Scope Level": "Poziom modułów",
+    "Field Level": "Poziom pól",
+    "Baseline": "Bazowa"
   },
   "options": {
     "accessList": {
@@ -27,6 +39,7 @@
       "all": "wszystko",
       "team": "zespół",
       "account": "Klient",
+      "contact": "kontakt",
       "own": "własny",
       "no": "nie",
       "yes": "tak",
@@ -37,12 +50,25 @@
     "read": "Przeczytany",
     "edit": "Edytuj",
     "delete": "Usuń",
+    "stream": "Komunikator",
     "create": "Utwórz"
   },
   "messages": {
     "changesAfterClearCache": "Wszystkie zmiany w dostępie zostaną aktywowany w momencie wyczyszczenia pamięci."
   },
   "tooltips": {
-    "dataPrivacyPermission": "Zezwól na przeglądanie oraz czyszczenie danych osobowych."
+    "dataPrivacyPermission": "Zezwól na przeglądanie oraz czyszczenie danych osobowych.",
+    "followerManagementPermission": "Pozwala zarządzać obserwatorami określonych rekordów.",
+    "messagePermission": "Pozwala wysyłać wiadomości do innych użytkowników.\n\n* wszystko – może wysyłać do wszystkich\n* zespół – może wysyłać tylko do członków swoich zespołów\n* nie – nie może wysyłać",
+    "assignmentPermission": "Pozwala przypisywać rekordy innym użytkownikom.\n\n* wszystko – bez ograniczeń\n* zespół – może przypisywać tylko członkom swoich zespołów\n* nie – może przypisywać tylko sobie",
+    "portalPermission": "Dostęp do informacji o portalach, możliwość publikowania wiadomości dla użytkowników portalu.",
+    "groupEmailAccountPermission": "Dostęp do grupowych kont e-mail, możliwość wysyłania wiadomości e-mail przez grupowy SMTP.",
+    "exportPermission": "Pozwala eksportować rekordy.",
+    "massUpdatePermission": "Możliwość masowej aktualizacji rekordów.",
+    "auditPermission": "Pozwala przeglądać dziennik audytu.",
+    "mentionPermission": "Pozwala wspominać innych użytkowników w Komunikatorze.\n\n* wszystko – może wspominać wszystkich\n* zespół – może wspominać tylko członków swoich zespołów\n* nie – nie może wspominać",
+    "userPermission": "Pozwala przeglądać Komunikator innych użytkowników. Pozwala użytkownikom sprawdzać poziomy dostępu innych użytkowników do określonych rekordów.",
+    "userCalendarPermission": "Pozwala przeglądać kalendarze innych użytkowników.",
+    "lockPermission": "Pozwala blokować i odblokowywać rekordy."
   }
 }

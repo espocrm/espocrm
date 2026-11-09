@@ -1,19 +1,24 @@
 {
   "fields": {
     "name": "Nazwa",
+    "status": "Status",
     "storeSentEmails": "Zapisz wysłane wiadomości",
     "startAt": "Data rozpoczęcia",
     "fromAddress": "Z adresu",
     "fromName": "Od",
+    "replyToAddress": "Adres do odpowiedzi",
+    "replyToName": "Nazwa adresu do odpowiedzi",
     "campaign": "Kampania",
     "emailTemplate": "Szablon wiadomości",
     "inboundEmail": "Konto pocztowe",
     "targetLists": "Listy docelowe",
+    "excludingTargetLists": "Wykluczone listy docelowe",
     "optOutEntirely": "Wypisz się całkowicie",
     "smtpAccount": "Konto SMTP"
   },
   "links": {
     "targetLists": "Listy docelowe",
+    "excludingTargetLists": "Wykluczone listy docelowe",
     "queueItems": "Elementy kolejki",
     "campaign": "Kampania",
     "emailTemplate": "Szablon wiadomości",
@@ -33,6 +38,7 @@
     "Create MassEmail": "Utwórz wiadomość masową",
     "Send Test": "Wyślij test",
     "System SMTP": "Systemowe konto SMTP",
+    "system": "system",
     "group": "grupa"
   },
   "messages": {
@@ -40,12 +46,13 @@
     "testSent": "Testowe emaile które mają zostać wysłane"
   },
   "tooltips": {
+    "optOutEntirely": "Adresy e-mail odbiorców, którzy zrezygnowali z subskrypcji, zostaną oznaczone jako wypisane i nie będą już otrzymywać żadnej poczty masowej.",
     "targetLists": "Adresaci, którzy powinni otrzymać wiadomości.",
     "excludingTargetLists": "Adresaci, którzy nie powinni otrzymać wiadomości.",
     "storeSentEmails": "Wiadomości e-mail będą przechowywane w EspoCRM."
   },
   "presetFilters": {
-    "actual": "Obecne",
-    "complete": "Ukończone"
+    "complete": "Ukończone",
+    "actual": "Aktywne"
   }
 }

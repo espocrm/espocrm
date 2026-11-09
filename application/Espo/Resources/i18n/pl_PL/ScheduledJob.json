@@ -1,8 +1,12 @@
 {
   "fields": {
     "name": "Nazwa",
+    "status": "Status",
     "job": "Zadanie",
     "scheduling": "Planowanie"
+  },
+  "links": {
+    "log": "Dziennik"
   },
   "labels": {
     "Create ScheduledJob": "Utwórz zaplanowane działania",
@@ -17,12 +21,14 @@
       "AuthTokenControl": "Kontrola tokenu uwierzytelniającego",
       "SendEmailNotifications": "Wysyłaj powiadomienia e-mail",
       "CheckNewVersion": "Sprawdź nową wersję",
-      "ProcessWebhookQueue": "Kolejka Webhook procesów"
+      "ProcessWebhookQueue": "Kolejka Webhook procesów",
+      "SendScheduledEmails": "Wyślij zaplanowane wiadomości e-mail"
     },
     "cronSetup": {
       "linux": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
       "mac": "Uwaga: Dodaj tą linię do pliku crontab, aby uruchomić zaplanowane zadania Espo:",
-      "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:"
+      "windows": "Uwaga: Utwórz plik wsadowy z następujących poleceń, aby uruchomić zaplanowane zadania Espo w systemie Windows:",
+      "default": "Uwaga: dodaj to polecenie do zadania cron (zaplanowanego zadania):"
     },
     "status": {
       "Active": "Aktywny",

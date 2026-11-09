@@ -5,24 +5,36 @@
     "subject": "Temat",
     "bodyContains": "Treść zawiera",
     "action": "Akcja",
-    "isGlobal": "Globalny"
+    "isGlobal": "Globalny",
+    "emailFolder": "Folder",
+    "groupEmailFolder": "Grupowy folder e-mail",
+    "markAsRead": "Oznacz jako przeczytane",
+    "bodyContainsAll": "Treść zawiera wszystkie",
+    "skipNotification": "Pomiń powiadomienie"
   },
   "labels": {
     "Create EmailFilter": "Utwórz filtr poczty",
     "Emails": "Wiadomości"
   },
-  "tooltips": {
-    "from": "Wiadomości zostaną wysłane z podanym adresem. Zostaw pole puste, jeśli niepotrzebne. Możesz użyć maski *.",
-    "to": "Wiadomości zostaną wysłane na podany adres. Zostaw pole puste, jeśli niepotrzebne. Możesz użyć maski *.",
-    "name": "Nazwa tego filtra.",
-    "bodyContains": "Treść wiadomości zawiera dowolne z podanych słów lub zwrotów.",
-    "isGlobal": "Stosuje ten filtr do wszystkich e-maili przychodzących do systemu.",
-    "subject": "Użyj symbolu wieloznacznego *:\n\n  * `text *` - zaczyna się od tekstu,\n  * `* text *` - zawiera tekst,\n  * `* text` - kończy się tekstem."
-  },
   "options": {
     "action": {
       "Skip": "Ignoruj",
-      "Move to Folder": "Upuść w folderze"
+      "Move to Folder": "Upuść w folderze",
+      "None": "Brak",
+      "Move to Group Folder": "Umieść w folderze grupowym"
     }
+  },
+  "tooltips": {
+    "name": "Nazwa tego filtra.",
+    "bodyContains": "Treść wiadomości zawiera dowolne z podanych słów lub zwrotów.",
+    "isGlobal": "Stosuje ten filtr do wszystkich e-maili przychodzących do systemu.",
+    "bodyContainsAll": "Treść wiadomości e-mail zawiera wszystkie podane słowa lub frazy.",
+    "subject": "Użyj symbolu wieloznacznego (`*`): \n\n * `text*` – zaczyna się od „text”\n * `*text*` – zawiera „text”\n * `*text` – kończy się na „text”",
+    "from": "Filtrowane będą wiadomości wysłane z podanego adresu. Pozostaw puste, jeśli nie jest potrzebne. Można użyć symbolu wieloznacznego (`*`).",
+    "to": "Filtrowane będą wiadomości wysłane na podany adres. Pozostaw puste, jeśli nie jest potrzebne. Można użyć symbolu wieloznacznego (`*`)."
+  },
+  "links": {
+    "emailFolder": "Folder",
+    "groupEmailFolder": "Grupowy folder e-mail"
   }
 }

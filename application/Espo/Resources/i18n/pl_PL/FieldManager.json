@@ -3,7 +3,8 @@
     "Dynamic Logic": "Logika dynamiczna",
     "Name": "Nazwa",
     "Label": "Etykieta",
-    "Type": "Typ"
+    "Type": "Typ",
+    "View Details": "Wyświetl szczegóły"
   },
   "options": {
     "dateTimeDefault": {
@@ -59,10 +60,25 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 miesięcy",
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 miesięcy",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 miesięcy",
-      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 rok"
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 rok",
+      "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 dni"
     },
     "barcodeType": {
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "EAN5": "EAN-5",
+      "EAN2": "EAN-2",
+      "UPC": "UPC (A)",
+      "UPCE": "UPC (E)",
+      "pharmacode": "Pharmacode",
       "QRcode": "Kod QR"
+    },
+    "globalRestrictions": {
+      "forbidden": "Zabronione",
+      "internal": "Wewnętrzne",
+      "onlyAdmin": "Tylko dla administratorów",
+      "readOnly": "Tylko do odczytu",
+      "nonAdminReadOnly": "Tylko do odczytu (poza administratorami)"
     }
   },
   "tooltips": {
@@ -71,7 +87,6 @@
     "default": "Wartość domyślna zostanie ustawiona po utworzeniu.",
     "min": "Minimalna akceptowalna wartość.",
     "max": "Maksymalna akceptowalna wartość.",
-    "seeMoreDisabled": "Jeśli nie jest zaznaczone, długie teksty zostaną skrócone.",
     "lengthOfCut": "Jak długi może być tekst, zanim zostanie wycięty.",
     "maxLength": "Maksymalna akceptowalna długość pola testowego.",
     "before": "Wartość daty powinna być wcześniejsza niż wartość daty określonego pola.",
@@ -80,7 +95,24 @@
     "maxFileSize": "Jesli pusty lub 0 to bez limitu.",
     "fileAccept": "Jakie typy plików akceptować. Istnieje możliwość dodania niestandardowych elementów.",
     "barcodeLastChar": "Dla typu EAN-13.",
-    "conversionDisabled": "Przeliczanie waluty nie zostanie zastosowane do tego pola."
+    "conversionDisabled": "Przeliczanie waluty nie zostanie zastosowane do tego pola.",
+    "cutHeight": "Tekst o wysokości większej niż określona wartość zostanie przycięty i pojawi się przycisk 'pokaż więcej'.",
+    "urlStrip": "Usuń protokół i końcowy ukośnik.",
+    "pattern": "Wyrażenie regularne, z którym porównywana jest wartość pola. Zdefiniuj wyrażenie lub wybierz predefiniowane.",
+    "options": "Lista możliwych wartości i ich etykiet.",
+    "optionsArray": "Lista możliwych wartości i ich etykiet. Jeśli jest pusta, pole pozwoli wprowadzać własne wartości.",
+    "maxCount": "Maksymalna liczba elementów, które można wybrać.",
+    "displayAsList": "Każdy element w osobnym wierszu.",
+    "optionsVarchar": "Lista wartości autouzupełniania.",
+    "currencyDecimal": "Używa typu bazy danych Decimal. W aplikacji wartości będą reprezentowane jako ciągi znaków. Zaznacz ten parametr, jeśli wymagana jest precyzja.",
+    "optionsReference": "Użyj opcji z innego pola.",
+    "readOnlyAfterCreate": "Wartość pola można określić podczas tworzenia nowego rekordu. Następnie pole staje się tylko do odczytu. Nadal może być obliczane przez formułę.",
+    "linkReadOnly": "Wartość pola nie może być określona przez użytkownika, ale może być obliczana przez formułę.\n\nWyłącza to również możliwość tworzenia powiązanego rekordu z paneli relacji.",
+    "relateOnImport": "Podczas importu z użyciem tego pola rekord zostanie automatycznie powiązany z pasującym rekordem obcym. Funkcji należy używać tylko wtedy, gdy pole obce jest uznawane za unikalne.",
+    "preview": "Pokaż przycisk podglądu. Ma zastosowanie, jeśli włączony jest Markdown.",
+    "itemsEditable": "Elementy można edytować. Dotyczy tylko sytuacji, gdy nie określono opcji.",
+    "seeMoreDisabled": "Jeśli nie zaznaczono, długie teksty będą skracane.",
+    "imageCapture": "Określa, której kamery użyć do przechwytywania obrazu."
   },
   "fieldParts": {
     "address": {
@@ -131,6 +163,20 @@
     "phone": "Zbiór numerów telefonów wraz z ich parametrami: Typ, Zrezygnowano, Nieprawidłowy, Główny.",
     "foreign": "Pole pokrewnego rekordu. Tylko do odczytu.",
     "link": "Rekord związany z relacją należą-do (wiele-do-jednego lub jeden-do-jednego).",
-    "linkParent": "Rekord związany z relacją należy-do-rodzica. Mogą mieć różne typy jednostek."
+    "linkParent": "Rekord związany z relacją należy-do-rodzica. Mogą mieć różne typy jednostek.",
+    "linkMultiple": "Zbiór rekordów powiązanych relacją Has-Many (wiele-do-wielu lub jeden-do-wielu). Nie wszystkie relacje mają swoje pola link-multiple. Mają je tylko te, w których włączono parametr Link-Multiple.",
+    "urlMultiple": "Wiele adresów URL.",
+    "decimal": "Liczba dziesiętna stałoprzecinkowa."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Nazwa pola '{field}' jest niedozwolona.",
+    "fieldAlreadyExists": "Pole '{field}' już istnieje w encji '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Łącze o nazwie '{field}' już istnieje w encji '{entityType}'.",
+    "confirmRemove": "Czy na pewno usunąć pole *{field}*?\n\nUsunięcie pola nie usuwa danych z bazy danych. Dane zostaną usunięte z bazy danych po wykonaniu pełnej przebudowy (hard rebuild).",
+    "fieldCreatedAddToLayouts": "Pole zostało utworzone. Teraz można dodać je do [układów]({link})",
+    "namingFieldLinkConflict": "Nazwa '{field}' koliduje z łączem."
+  },
+  "otherFields": {
+    "attributes": "Atrybuty"
   }
 }

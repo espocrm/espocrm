@@ -16,8 +16,10 @@
     "passwordConfirm": "Bevestig wachtwoord",
     "newPassword": "Nieuw wachtwoord",
     "newPasswordConfirm": "Bevestig nieuw wachtwoord",
+    "avatar": "Avatar",
     "isActive": "Is actief",
     "isPortalUser": "Is portaalgebruiker",
+    "contact": "Contact",
     "accounts": "Relaties",
     "account": "Relatie (Primair)",
     "sendAccessInfo": "Verzend e-mail met inlog informatie naar gebruiker",
@@ -28,6 +30,7 @@
     "passwordPreview": "Wachtwoord voorbeeld",
     "isSuperAdmin": "Is Superbeheerder",
     "lastAccess": "Laatste toegang",
+    "type": "Type",
     "apiKey": "API sleutel",
     "secretKey": "Geheime sleutel",
     "authMethod": "Authenticatie methode",
@@ -36,6 +39,7 @@
     "auth2FAEnable": "2-Factor authenticatie inschakelen",
     "auth2FAMethod": "2FA-methode",
     "auth2FATotpSecret": "2FA TOTP-geheim",
+    "auth2FA": "2FA",
     "workingTimeCalendar": "Werktijd Kalender",
     "layoutSet": "Lay-out Set",
     "avatarColor": "Avatar Kleur"
@@ -46,6 +50,7 @@
     "notes": "Notities",
     "portals": "Portalen",
     "portalRoles": "Portaal functies",
+    "contact": "Contact",
     "accounts": "Relaties",
     "account": "Relatie (Primair)",
     "tasks": "Taken",
@@ -73,9 +78,11 @@
     "Proceed w/o Contact": "Ga verder zonder contact",
     "Generate New API Key": "Genereer nieuwe API sleutel",
     "Generate New Password": "Genereer een nieuw wachtwoord",
+    "Code": "Code",
     "Back to login form": "Terug naar het inlogformulier",
     "Requirements": "Eisen",
     "Security": "Beveiliging",
+    "Reset 2FA": "Reset 2FA",
     "Secret": "Geheim",
     "Send Password Change Link": "Stuur wachtwoordwijzigingslink",
     "Send Code": "Code verzenden",
@@ -110,7 +117,6 @@
     "passwordStrengthBothCases": "Moet zowel hoofdletters als kleine letters bevatten.",
     "wrongCode": "Verkeerde code",
     "codeIsRequired": "Code is vereist",
-    "enterTotpCode": "Voer een code van uw authenticatie-app in.",
     "verifyTotpCode": "Scan de QR-code met uw mobiele authenticator app. Als je problemen hebt met scannen, kun je het geheim handmatig invoeren. Daarna ziet u een 6-cijferige code in uw applicatie. Voer deze code in het onderstaande veld in.",
     "generateAndSendNewPassword": "Een nieuw wachtwoord zal worden gegenereerd en naar het e-mailadres van de gebruiker worden verzonden.",
     "security2FaResetConfirmation": "Weet u zeker dat u de huidige 2FA-instellingen wilt resetten?",
@@ -153,10 +159,12 @@
       "admin": "Beheerder",
       "portal": "Portaal",
       "system": "Systeem",
-      "super-admin": "Superbeheerder"
+      "super-admin": "Superbeheerder",
+      "api": "API"
     },
     "authMethod": {
-      "ApiKey": "API sleutel"
+      "ApiKey": "API sleutel",
+      "Hmac": "HMAC"
     }
   },
   "actions": {

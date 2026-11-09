@@ -25,6 +25,7 @@
       "Opted Out": "Wypisany",
       "Bounced": "Odrzucone",
       "Clicked": "Kliknięte",
+      "Lead Created": "Utworzono potencjalny kontakt",
       "Opted In": "Włączono"
     }
   },
@@ -37,6 +38,7 @@
     "optedOut": "Wypisany",
     "bounced": "Odrzucone",
     "clicked": "Kliknięte",
+    "leadCreated": "Utworzono potencjalny kontakt",
     "optedIn": "Włączono"
   }
 }

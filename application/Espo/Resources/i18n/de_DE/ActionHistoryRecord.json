@@ -5,11 +5,13 @@
     "createdAt": "Datum",
     "target": "Ziel",
     "targetType": "Zieltyp",
+    "authToken": "Auth Token",
     "ipAddress": "IP-Adresse",
     "authLogRecord": "Auth Log-Datensatz",
     "userType": "Benutzer-Typ"
   },
   "links": {
+    "authToken": "Auth Token",
     "user": "Benutzer",
     "target": "Ziel",
     "authLogRecord": "Auth Log-Datensatz"

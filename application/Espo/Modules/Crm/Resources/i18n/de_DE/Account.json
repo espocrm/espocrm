@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "emailAddress": "E-Mail",
     "website": "Webseite",
     "phoneNumber": "Telefon",
@@ -35,6 +36,8 @@
   "options": {
     "type": {
       "Customer": "Kunde",
+      "Investor": "Investor",
+      "Partner": "Partner",
       "Reseller": "Wiederverkäufer"
     },
     "industry": {
@@ -62,23 +65,25 @@
       "Real Estate": "Immobilien",
       "Service": "Dienstleistung",
       "Sports": "Sport",
+      "Software": "Software",
       "Technology": "Technologie",
       "Telecommunications": "Telekommunikation",
       "Television": "Fernsehen",
       "Transportation": "Transportwesen",
       "Venture Capital": "Risikokapital",
       "Aerospace": "Luft- und Raumfahrt",
-      "Architecture": "Architekten",
+      "Architecture": "Architektur",
       "Construction": "Konstruktion",
       "Defense": "Verteidigung",
       "Creative": "Kreative",
       "Culture": "Kultur",
       "Consulting": "Beratung",
       "Electric Power": "Elektroenergie",
-      "Hospitality": "Gastronomie",
+      "Hospitality": "Gastgewerbe",
       "Mass Media": "Massenmedien",
       "Mining": "Bergbau",
       "Music": "Musik",
+      "Marketing": "Marketing",
       "Petroleum": "Öl Industrie",
       "Retail": "Verkauf",
       "Shipping": "Versand und Transport",
@@ -86,7 +91,7 @@
       "Testing, Inspection & Certification": "Test, Inspektion & Zertifizierung",
       "Wholesale": "Großhandel",
       "Water": "Wasserwesen",
-      "Travel": "Reisen"
+      "Travel": "Tourismusbranche"
     }
   },
   "labels": {
@@ -100,6 +105,7 @@
     "recentlyCreated": "Kürzlich erstellt"
   },
   "tabs": {
-    "Account": "Firma"
+    "Account": "Firma",
+    "Support": "Support"
   }
 }

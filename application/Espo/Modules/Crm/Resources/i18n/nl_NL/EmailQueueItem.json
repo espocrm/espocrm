@@ -1,11 +1,13 @@
 {
   "fields": {
     "name": "Naam",
+    "status": "Status",
     "target": "Doel",
     "sentAt": "Datum verzonden",
     "attemptCount": "Pogingen",
     "emailAddress": "E-mailadres",
-    "massEmail": "Verzamel e-mail"
+    "massEmail": "Verzamel e-mail",
+    "isTest": "Is Test"
   },
   "links": {
     "target": "Doel",

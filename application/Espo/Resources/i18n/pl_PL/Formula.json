@@ -6,6 +6,18 @@
   "fields": {
     "target": "Obiekt",
     "targetType": "Typ obiektu",
-    "script": "Skrypt"
+    "script": "Skrypt",
+    "output": "Wynik",
+    "error": "Błąd"
+  },
+  "messages": {
+    "runSuccess": "Wykonano pomyślnie.",
+    "runError": "Błąd.",
+    "checkSyntaxSuccess": "Składnia jest poprawna.",
+    "checkSyntaxError": "Błąd składni.",
+    "emptyScript": "Skrypt jest pusty."
+  },
+  "tooltips": {
+    "output": "Wartości można wypisać funkcją `output\\printLine`."
   }
 }

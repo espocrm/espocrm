@@ -1,11 +1,16 @@
 {
   "fields": {
     "event": "Ereignis",
+    "webhook": "Webhook",
     "target": "Ziel",
     "data": "Daten",
+    "status": "Status",
     "processedAt": "Verarbeitet am",
     "attempts": "Versuche",
     "processAt": "Verarbeitung um"
+  },
+  "links": {
+    "webhook": "Webhook"
   },
   "options": {
     "status": {

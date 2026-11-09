@@ -18,20 +18,26 @@
     "twitter": "Twitter",
     "forum": "Forum",
     "Installation Guide": "Installationshandbuch",
+    "admin": "admin",
+    "localhost": "localhost",
+    "port": "3306",
     "Locale": "Lokale Einstellungen",
     "Outbound Email Configuration": "Einstellungen für ausgehende E-Mails",
+    "SMTP": "SMTP",
+    "Start": "Start",
     "Back": "Zurück",
     "Next": "Weiter",
     "Go to EspoCRM": "Zu EspoCRM",
     "Re-check": "Überprüfung wiederholen",
+    "Version": "Version",
     "Test settings": "Verbindung überprüfen",
-    "Database Settings Description": "Geben Sie die Verbindungsinformationen für Ihre MySQL Datenbank ein (Hostname, Benutzername und Passwort). Ein abweichender Port kann im Format  localhost:3306 im Hostnamen-Feld definiert werden.",
     "Install": "Installieren",
     "Configuration Instructions": "Konfigurationsanleitung",
     "phpVersion": "PHP Version",
     "dbHostName": "Hostname",
     "dbName": "Datenbankname",
     "dbUserName": "Datenbankbenutzer",
+    "OK": "OK",
     "SetupConfirmation page title": "Systemanforderungen",
     "PHP Configuration": "PHP Einstellungen",
     "MySQL Configuration": "Datenbank-Einstellungen",
@@ -40,15 +46,20 @@
     "Fail": "Fehlgeschlagen",
     "is recommended": "wird empfohlen",
     "extension is missing": "Erweiterung fehlt",
+    "headerTitle": "EspoCRM Installation",
     "Crontab setup instructions": "Ohne die Ausführung geplanter Jobs werden eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht funktionieren. Hier können Sie die {SETUP_INSTRUCTIONS} lesen.",
     "Setup instructions": "Setup-Anweisungen",
+    "requiredMysqlVersion": "MySQL Version",
     "requiredMariadbVersion": "MariaDB Version",
-    "requiredPostgresqlVersion": "PostgreSQL Version"
+    "requiredPostgresqlVersion": "PostgreSQL Version",
+    "Database Settings Description": "Geben Sie die Daten der Datenbankverbindung ein. Sie können den Server-Port für den Hostnamen angeben, zum Beispiel `localhost:3306`."
   },
   "fields": {
     "Choose your language": "Wählen Sie Ihre Sprache",
     "Database Name": "Datenbankname",
     "Host Name": "Hostname",
+    "Port": "Port",
+    "smtpPort": "Port",
     "Database User Name": "Datenbankbenutzer",
     "Database User Password": "Datenbankpasswort",
     "Database driver": "Datenbanktreiber",
@@ -68,6 +79,7 @@
     "Default Currency": "Standardwährung",
     "Currency List": "Währungsliste",
     "Language": "Sprache",
+    "smtpServer": "Server",
     "smtpAuth": "Authentifizierung",
     "smtpSecurity": "Transportsicherheit",
     "smtpUsername": "Benutzername",
@@ -104,19 +116,15 @@
     "mysqlSettingError": "EspoCRM erfordert, dass die MySQL Einstellung \"{NAME}\"  auf {VALUE} gesetzt ist",
     "requiredMariadbVersion": "Ihre MariaDB-Version wird von EspoCRM nicht unterstützt, bitte aktualisieren Sie mindestens auf MariaDB {minVersion}",
     "Ajax failed": "Es ist ein unerwarteter Fehler aufgetreten",
-    "Bad init Permission": "Die Zugriff auf das Verzeichnis \"{*}\" wurde verweigert. Bitte setzen Sie 775 für \"{*}\" oder führen Sie diesen Befehl einfach im Terminal aus <pre>{C}</pre> Operation ist nicht erlaubt? Versuchen Sie diesen: <pre>{CSU}</pre>",
     "permissionInstruction": "<br>Führen Sie diesen Befehl im Terminal aus:<pre><b>\"{C}\"</b></pre>",
-    "operationNotPermitted": "Operation ist nicht erlaubt? Versuchen Sie diese: <br><<br>{CSU}"
-  },
-  "systemRequirements": {
-    "host": "Hostname",
-    "dbname": "Datenbankname ",
-    "user": "Benutzername",
-    "writable": "Überschreibbar",
-    "readable": "Lesbar",
-    "requiredMariadbVersion": "MariaDB Version"
+    "operationNotPermitted": "Operation ist nicht erlaubt? Versuchen Sie diese: <br><<br>{CSU}",
+    "Bad init Permission": "Zugriff auf das Verzeichnis „{*}“ verweigert. Bitte setzen Sie die Berechtigung für „{*}“ auf 775 oder führen Sie einfach diesen Befehl im Terminal aus: <pre>{C}</pre> Der Vorgang ist nicht zulässig? Versuchen Sie es mit diesem Befehl: <pre>{CSU}</pre>"
   },
   "options": {
+    "db driver": {
+      "mysqli": "MySQLi",
+      "pdo_mysql": "PDO MySQL"
+    },
     "modRewriteTitle": {
       "apache": "<h3>API-Fehler:  EspoCRM API ist nicht verfügbar.</h3><br>Führen Sie nur notwendigen Schritte aus. Prüfen Sie nach jedem Schritt, ob das Problem gelöst ist.",
       "nginx": "<h3>API-Fehler: EspoCRM API ist nicht verfügbar.</h3>",
@@ -132,5 +140,15 @@
         "linux": "<br> Fügen Sie diesen Code <code>{NGINX_PATH}</code> in Ihre Nginx-Serverkonfigurationsdatei im Abschnitt \"server\" ein:<br><br><pre>{NGINX}</pre> <br> Für weitere Informationen besuchen Sie bitte den Leitfaden <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
       }
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP Version",
+    "requiredMysqlVersion": "MySQL Version",
+    "host": "Hostname",
+    "dbname": "Datenbankname ",
+    "user": "Benutzername",
+    "writable": "Überschreibbar",
+    "readable": "Lesbar",
+    "requiredMariadbVersion": "MariaDB Version"
   }
 }

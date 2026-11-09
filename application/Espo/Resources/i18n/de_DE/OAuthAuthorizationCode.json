@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "hash": "Hash",
+    "status": "Status",
+    "client": "Client",
+    "user": "Benutzer",
+    "expiresAt": "Läuft ab am",
+    "redirectUri": "Weiterleitungs-URI",
+    "scopes": "Geltungsbereiche"
+  },
+  "links": {
+    "client": "Client",
+    "user": "Benutzer"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Revoked": "Widerrufen",
+      "Expired": "Abgelaufen"
+    }
+  },
+  "massActions": {
+    "revoke": "Widerrufen"
+  }
+}

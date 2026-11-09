@@ -45,6 +45,7 @@
   "options": {
     "opportunityRole": {
       "Decision Maker": "Beslisser",
+      "Evaluator": "Evaluator",
       "Influencer": "Beïnvloeder"
     }
   },

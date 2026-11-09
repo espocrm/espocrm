@@ -2,10 +2,14 @@
   "fields": {
     "name": "Naam",
     "number": "Nummer",
+    "status": "Status",
     "account": "Relatie",
+    "contact": "Contact",
     "contacts": "Contacten",
     "priority": "Prioriteit",
+    "type": "Type",
     "description": "Beschrijving",
+    "lead": "Lead",
     "attachments": "Bijlagen",
     "inboundEmail": "Groep e-mailaccount",
     "originalEmail": "Originele e-mail",
@@ -20,6 +24,7 @@
     "tasks": "Taken",
     "emails": "E-mails",
     "articles": "Kennisbank artikelen",
+    "lead": "Lead",
     "attachments": "Bijlagen",
     "inboundEmail": "Groep e-mailaccount"
   },
@@ -35,10 +40,12 @@
     "priority": {
       "Low": "Laag",
       "Normal": "Normaal",
-      "High": "Hoog"
+      "High": "Hoog",
+      "Urgent": "Urgent"
     },
     "type": {
       "Question": "Vraag",
+      "Incident": "Incident",
       "Problem": "Probleem"
     }
   },
@@ -50,6 +57,7 @@
     "Rejected": "Afgewezen"
   },
   "presetFilters": {
+    "open": "Open",
     "closed": "Gesloten"
   }
 }

@@ -3,6 +3,7 @@
     "parent": "Behorende bij",
     "contacts": "Contacten",
     "opportunities": "Kansen",
+    "leads": "Leads",
     "meetings": "Vergaderingen",
     "calls": "Gesprekken",
     "tasks": "Taken",
@@ -12,11 +13,14 @@
     "documents": "Documenten",
     "account": "Relatie",
     "opportunity": "Kans",
+    "contact": "Contact",
     "meetingsChildren": "Bijeenkomsten voor kinderen",
     "callsChildren": "Bel kinderen"
   },
   "scopeNames": {
     "Account": "Relatie",
+    "Contact": "Contact",
+    "Lead": "Lead",
     "Target": "Doel",
     "Opportunity": "Kans",
     "Meeting": "Vergadering",
@@ -24,10 +28,13 @@
     "Call": "Gesprek",
     "Task": "Taak",
     "Case": "Ticket",
+    "Document": "Document",
     "DocumentFolder": "Document map",
     "Campaign": "Campagne",
+    "TargetList": "Target List",
     "MassEmail": "Verzamel e-mail",
     "EmailQueueItem": "E-mail wachtrij item",
+    "CampaignTrackingUrl": "Tracking URL",
     "Activities": "Activiteiten",
     "KnowledgeBaseArticle": "Kennisbank artikel",
     "KnowledgeBaseCategory": "Kennisbank categorie",
@@ -37,6 +44,7 @@
   "scopeNamesPlural": {
     "Account": "Relaties",
     "Contact": "Contacten",
+    "Lead": "Leads",
     "Target": "Doelen",
     "Opportunity": "Kansen",
     "Meeting": "Vergaderingen",
@@ -50,6 +58,7 @@
     "TargetList": "Doellijsten",
     "MassEmail": "Verzamel e-mails",
     "EmailQueueItem": "E-mail wachtrij items",
+    "CampaignTrackingUrl": "Tracking URLs",
     "Activities": "Activiteiten",
     "KnowledgeBaseArticle": "Kennisbank",
     "KnowledgeBaseCategory": "Kennisbank categorieën",
@@ -84,7 +93,8 @@
     "Create Task": "Creëer Taak",
     "Tasks": "Taken",
     "Scheduler": "Planner",
-    "Schedule": "Schema"
+    "Schedule": "Schema",
+    "Log": "Log"
   },
   "fields": {
     "billingAddressCity": "Plaats",

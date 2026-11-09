@@ -2,12 +2,14 @@
   "fields": {
     "name": "Naam",
     "parent": "Behorende bij",
+    "status": "Status",
     "dateStart": "Start datum",
     "dateEnd": "Eind datum",
     "duration": "Duur",
     "description": "Beschrijving",
     "users": "Gebruikers",
     "contacts": "Contacten",
+    "leads": "Leads",
     "reminders": "Herinneringen",
     "account": "Relatie",
     "acceptanceStatus": "Acceptatiestatus",
@@ -15,6 +17,7 @@
     "dateEndDate": "Datum einde (hele dag)",
     "isAllDay": "Is de hele dag",
     "sourceEmail": "Bron E-mail",
+    "uid": "UID",
     "joinUrl": "Aanmeld URL",
     "externalService": "Online locatie"
   },
@@ -55,6 +58,7 @@
     "nothingHasBeenSent": "Er is niets verzonden",
     "selectAcceptanceStatus": "Stel uw acceptatiestatus in.",
     "sendInvitationsToSelectedAttendees": "De geselecteerde deelnemers krijgen een uitnodiging per e-mail.",
-    "sendCancellationsToSelectedAttendees": "Annuleringsmails zullen naar de geselecteerde deelnemers worden gestuurd."
+    "sendCancellationsToSelectedAttendees": "Annuleringsmails zullen naar de geselecteerde deelnemers worden gestuurd.",
+    "invitationsSentTo": "Een uitnodigingsmail is verzonden aan: {recipients}.\n\nKon niet verzonden worden aan: {failedRecipients}."
   }
 }

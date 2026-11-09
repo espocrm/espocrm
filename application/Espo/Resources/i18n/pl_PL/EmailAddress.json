@@ -6,7 +6,8 @@
   },
   "fields": {
     "optOut": "Zrezygnowano",
-    "invalid": "Nieważny"
+    "invalid": "Nieważny",
+    "lower": "Nazwa małymi literami"
   },
   "presetFilters": {
     "orphan": "Sierota"

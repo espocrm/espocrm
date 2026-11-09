@@ -30,6 +30,9 @@
     "What to do?": "Was soll gemacht werden?",
     "Header Row": "Kopfzeile",
     "Person Name Format": "Namensformat Person",
+    "John Smith": "John Smith",
+    "Smith John": "Smith John",
+    "Smith, John": "Smith, John",
     "Field Delimiter": "Feldbegrenzer",
     "Date Format": "Datumsformat",
     "Decimal Mark": "Dezimaltrennzeichen",
@@ -52,6 +55,7 @@
     "Silent Mode": "Silent-Modus",
     "New import with same params": "Neuer Import mit gleichen Parametern",
     "Run Manually": "Manuell ausführen",
+    "Export": "Export",
     "Parameters": "Parameter"
   },
   "messages": {
@@ -72,13 +76,15 @@
     "entityType": "Entitätstyp",
     "imported": "Importierte Datensätze",
     "duplicates": "Doppelte Datensätze",
-    "updated": "Aktualisierte Datensätze"
+    "updated": "Aktualisierte Datensätze",
+    "status": "Status"
   },
   "options": {
     "status": {
       "Failed": "Fehler",
       "In Process": "In Arbeit",
       "Complete": "Fertig",
+      "Standby": "Standby",
       "Pending": "Ausstehend"
     },
     "personNameFormat": {

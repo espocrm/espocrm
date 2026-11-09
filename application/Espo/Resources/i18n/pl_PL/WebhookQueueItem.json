@@ -1,0 +1,22 @@
+{
+  "fields": {
+    "event": "Wydarzenie",
+    "webhook": "Webhook",
+    "target": "Cel",
+    "data": "Dane",
+    "status": "Status",
+    "processedAt": "Przetworzono",
+    "attempts": "Próby",
+    "processAt": "Przetwórz o"
+  },
+  "links": {
+    "webhook": "Webhook"
+  },
+  "options": {
+    "status": {
+      "Pending": "Oczekiwanie",
+      "Success": "Sukces",
+      "Failed": "Niepowodzenie"
+    }
+  }
+}

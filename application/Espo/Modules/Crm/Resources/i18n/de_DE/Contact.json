@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "emailAddress": "E-Mail",
     "accountRole": "Funktion",
     "account": "Firma",

@@ -6,6 +6,7 @@
     "createdAt": "Zeitstempel",
     "isDenied": "Verweigert",
     "denialReason": "Verweigerungsgrund",
+    "portal": "Portal",
     "user": "Benutzer",
     "authToken": "Auth Token erstellt",
     "requestUrl": "Anforderungs-URL",
@@ -16,6 +17,7 @@
   "links": {
     "authToken": "Auth Token erstellt",
     "user": "Benutzer",
+    "portal": "Portal",
     "actionHistoryRecords": "Aktionsverlauf"
   },
   "presetFilters": {

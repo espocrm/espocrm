@@ -2,6 +2,7 @@
   "scopeNames": {
     "Email": "E-Mail",
     "User": "Benutzer",
+    "Team": "Team",
     "Role": "Rolle",
     "EmailTemplate": "E-Mail Vorlage",
     "EmailAccount": "Persönliches E-Mail-Konto",
@@ -10,9 +11,13 @@
     "ScheduledJob": "Geplante Aufgabe",
     "ExternalAccount": "Externes Konto",
     "Extension": "Erweiterung",
+    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppen-E-Mail-Konto",
     "Stream": "Ereignisse",
+    "Import": "Import",
+    "Job": "Job",
     "EmailFilter": "E-Mail Filter",
+    "Portal": "Portal",
     "PortalRole": "Portal-Rolle",
     "Attachment": "Anhang",
     "EmailFolder": "E-Mail Ordner",
@@ -20,15 +25,19 @@
     "ScheduledJobLogRecord": "Geplante Aufgabe-Logeintrag",
     "PasswordChangeRequest": "Anforderung zur Passwortänderung",
     "ActionHistoryRecord": "Aktionsverlaufseintrag",
+    "AuthToken": "Auth Token",
     "UniqueId": "eindeutige ID",
     "LastViewed": "Zuletzt angezeigt",
     "Settings": "Einstellungen",
     "FieldManager": "Feldmanager",
+    "Integration": "Integration",
     "LayoutManager": "Layout-Manager",
     "EntityManager": "Entitätsmanager",
     "Export": "Exportieren",
     "DynamicLogic": "Dynamische Logik",
     "DashletOptions": "Dashlet Optionen",
+    "Admin": "Admin",
+    "Global": "Global",
     "Preferences": "Benutzereinstellungen",
     "EmailAddress": "E-Mail Adresse",
     "PhoneNumber": "Telefonnummer",
@@ -40,6 +49,7 @@
     "ArrayValue": "Array-Wert",
     "ApiUser": "API-Benutzer",
     "DashboardTemplate": "Dashboard-Vorlage",
+    "Webhook": "Webhook",
     "Currency": "Währung",
     "LayoutSet": "Layout-Satz",
     "Mass Action": "Massenaktionen",
@@ -58,13 +68,21 @@
     "OAuthAccount": "OAuth-Konto",
     "WebhookEventQueueItem": "Webhook-Ereigniswarteschlange-Element",
     "Template": "PDF-Vorlage",
+    "OpenApi": "OpenAPI",
     "CurrencyRecord": "Währungsdatensatz",
     "CurrencyRecordRate": "Wechselkurs",
-    "PipelineStage": "Pipeline-Phase"
+    "Pipeline": "Pipeline",
+    "PipelineStage": "Pipeline-Phase",
+    "OAuthClient": "OAuth-Client",
+    "OAuthClientSecret": "OAuth-Client-Secret",
+    "OAuthAuthorizationCode": "OAuth-Autorisierungscode",
+    "OAuthAccessToken": "OAuth-Zugriffstoken",
+    "OAuthRefreshToken": "OAuth-Aktualisierungstoken"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
     "User": "Benutzer",
+    "Team": "Teams",
     "Role": "Rollen",
     "EmailTemplate": "E-Mail Vorlagen",
     "EmailAccount": "Persönliche E-Mail-Konten",
@@ -73,8 +91,10 @@
     "ScheduledJob": "Geplante Jobs",
     "ExternalAccount": "Externe Konten",
     "Extension": "Erweiterungen",
+    "Dashboard": "Dashboard",
     "InboundEmail": "Gruppen-E-Mail-Konten",
     "Stream": "Ereignisse",
+    "Job": "Jobs",
     "EmailFilter": "E-Mail Filter",
     "Portal": "Portale",
     "PortalRole": "Portal-Rollen",
@@ -84,16 +104,19 @@
     "ScheduledJobLogRecord": "Geplante Aufgabe-Logeinträge",
     "PasswordChangeRequest": "Anforderungen zur Passwortänderung",
     "ActionHistoryRecord": "Aktionsverlauf",
+    "AuthToken": "Auth Tokens",
     "UniqueId": "eindeutige IDs",
     "LastViewed": "Zuletzt angezeigt",
     "AuthLogRecord": "Auth-Protokoll",
     "AuthFailLogRecord": "Auth-Fehlerprotokoll",
     "EmailTemplateCategory": "E-Mail Vorlagenkategorien",
+    "Import": "Import",
     "LeadCapture": "Erfassung des Interessenten",
     "LeadCaptureLogRecord": "Erfassung des Interessenten Log",
     "ArrayValue": "Array-Werte",
     "ApiUser": "API-Benutzer",
     "DashboardTemplate": "Dashboard-Vorlagen",
+    "Webhook": "Webhooks",
     "EmailAddress": "E-Mail-Adressen",
     "PhoneNumber": "Telefonnummern",
     "Currency": "Währung",
@@ -105,6 +128,7 @@
     "AuthenticationProvider": "Authentifizierungsanbieter",
     "GlobalStream": "Globale Ereignisse",
     "WebhookQueueItem": "Webhook-Warteschlangenelemente",
+    "AppLogRecord": "App Log",
     "WorkingTimeRange": "Arbeitszeitausnahmen",
     "AddressCountry": "Adresse Länder",
     "AppSecret": "App-Geheimnisse",
@@ -112,14 +136,22 @@
     "OAuthAccount": "OAuth-Konten",
     "WebhookEventQueueItem": "Webhook-Ereigniswarteschlange-Elemente",
     "Template": "PDF-Vorlagen",
+    "OpenApi": "OpenAPI",
     "CurrencyRecord": "Währungen",
     "CurrencyRecordRate": "Wechselkurse",
-    "PipelineStage": "Pipeline-Phasen"
+    "Pipeline": "Pipelines",
+    "PipelineStage": "Pipeline-Phasen",
+    "OAuthClient": "OAuth-Clients",
+    "OAuthClientSecret": "OAuth-Client-Geheimnisse",
+    "OAuthAuthorizationCode": "OAuth-Autorisierungscodes",
+    "OAuthAccessToken": "OAuth-Zugriffstoken",
+    "OAuthRefreshToken": "OAuth-Aktualisierungstoken"
   },
   "labels": {
     "Misc": "Verschiedenes",
     "Merge": "Zusammenführen",
     "None": "Kein(e)",
+    "Home": "Home",
     "by": "nach",
     "Saved": "Gespeichert.",
     "Error": "Fehler",
@@ -152,8 +184,10 @@
     "Create": "Erstellen",
     "create": "erstellen",
     "Overview": "Überblick",
+    "Details": "Details",
     "Add Field": "Feld hinzufügen",
     "Add Dashlet": "Dashlet hinzufügen",
+    "Filter": "Filter",
     "Edit Dashboard": "Dashboard bearbeiten",
     "Add": "Hinzufügen",
     "Add Item": "Eintrag hinzufügen",
@@ -163,6 +197,7 @@
     "Search": "Suchen",
     "Only My": "Nur meine",
     "Open": "Offen",
+    "Admin": "Admin",
     "About": "Über",
     "Refresh": "Aktualisieren",
     "Remove": "Löschen",
@@ -204,14 +239,17 @@
     "Dashlet Options": "Dashlet Optionen",
     "Full Form": "Komplettes Formular",
     "Insert": "Einfügen",
+    "Person": "Person",
     "First Name": "Vorname",
     "Last Name": "Nachname",
+    "Original": "Original",
     "You": "Sie",
     "you": "Sie",
     "change": "ändern",
     "Change": "Ändern",
     "Primary": "Primär",
     "Save Filter": "Filter speichern",
+    "Administration": "Administration",
     "Run Import": "Import durchführen",
     "Duplicate": "Duplizieren",
     "Notifications": "Benachrichtigungen",
@@ -271,6 +309,7 @@
     "Field": "Feld",
     "Resolution": "Auflösung",
     "Resolve Conflict": "Löse Konflikt",
+    "Download": "Download",
     "Sort": "Sortieren",
     "Log in": "Anmelden",
     "Log in as": "Anmelden als",
@@ -316,7 +355,9 @@
     "Lock": "Sperren",
     "Unlock": "Entsperren",
     "Assigned": "Zugewiesen",
-    "Notification": "Benachrichtigung"
+    "Notification": "Benachrichtigung",
+    "Disconnect": "Trennen",
+    "Check All": "Alle ankreuzen"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -475,6 +516,7 @@
     "unlock": "Entsperren"
   },
   "fields": {
+    "name": "Name",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "salutationName": "Anrede",
@@ -482,6 +524,7 @@
     "assignedUsers": "Zugewiesene Benutzer",
     "emailAddress": "E-Mail",
     "assignedUserName": "Zugewiesener Benutzername",
+    "teams": "Teams",
     "createdAt": "Erstellt am",
     "modifiedAt": "Geändert am",
     "createdBy": "Erstellt von",
@@ -497,8 +540,10 @@
     "order": "Reihenfolge",
     "parent": "Bezieht sich auf",
     "children": "Kinder",
+    "id": "ID",
     "emailAddressData": "E-Mail-Adressdaten",
     "phoneNumberData": "Telefonnummer Daten",
+    "ids": "IDs",
     "names": "Namen",
     "emailAddressIsOptedOut": "E-Mail-Adresse ist Opted-Out gesetzt",
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
@@ -514,25 +559,31 @@
     "streamUpdatedAt": "Ereignisverlauf aktualisiert um",
     "category": "Kategorie",
     "isLocked": "Entsperren",
+    "pipeline": "Pipeline",
     "pipelineStage": "Pipeline-Phase"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
     "createdBy": "Erstellt von",
     "modifiedBy": "Geändert von",
+    "team": "Team",
     "roles": "Rollen",
+    "teams": "Teams",
     "users": "Benutzer",
     "parent": "Bezieht sich auf",
     "children": "Kinder",
     "assignedUsers": "Zugewiesene Benutzer",
     "collaborators": "Mitarbeiter",
     "category": "Kategorie",
+    "pipeline": "Pipeline",
     "pipelineStage": "Pipeline-Phase"
   },
   "dashlets": {
     "Stream": "Ereignisse",
     "Emails": "Mein Posteingang",
-    "Records": "Datensatzliste"
+    "Records": "Datensatzliste",
+    "Iframe": "Iframe",
+    "Memo": "Memo"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} wurde Ihnen zugewiesen",
@@ -544,6 +595,7 @@
     "addedToCollaborators": "{user} hat Sie als Mitwirkenden zu {entityType} {entity} hinzugefügt",
     "groupUpdatesMultiple": "{entityType} {entity} – {number} neue Aktivitäten",
     "groupUpdatesOne": "{entityType} {entity} – neue Aktivität",
+    "groupUpdates": "{entityType} {entity}",
     "groupEmailsReceivedNew": "Eingegangene E-Mails – {number} neue",
     "groupEmailsReceived": "Eingegangene E-Mails"
   },
@@ -671,7 +723,8 @@
     "salutationName": {
       "Mr.": "Hr.",
       "Mrs.": "Frau",
-      "Ms.": "Fr."
+      "Ms.": "Fr.",
+      "Dr.": "Dr."
     },
     "dateSearchRanges": {
       "on": "Am",
@@ -750,12 +803,14 @@
     "phoneNumber": {
       "Mobile": "Telefon Mobil",
       "Office": "Telefon Büro",
+      "Fax": "Fax",
       "Home": "Telefon Privat",
       "Other": "Telefon Andere"
     },
     "saveConflictResolution": {
       "current": "Derzeitige",
-      "actual": "Tatsächlich"
+      "actual": "Tatsächlich",
+      "original": "Original"
     }
   },
   "sets": {
@@ -786,6 +841,7 @@
         "remove": "Grafik entfernen"
       },
       "link": {
+        "link": "Link",
         "insert": "Link einfügen",
         "unlink": "Link entfernen",
         "edit": "Bearbeiten",
@@ -794,7 +850,10 @@
         "openInNewWindow": "In einem neuen Fenster öffnen"
       },
       "video": {
+        "video": "Video",
+        "videoLink": "Video Link",
         "insert": "Video einfügen",
+        "url": "Video URL?",
         "providers": "(YouTube, Vimeo, Vine, Instagram oder DailyMotion)"
       },
       "table": {
@@ -805,6 +864,7 @@
       },
       "style": {
         "style": "Stil",
+        "normal": "Normal",
         "blockquote": "Zitat",
         "pre": "Quellcode",
         "h1": "Überschrift 1",
@@ -869,10 +929,12 @@
     "s": "S"
   },
   "listViewModes": {
-    "list": "Liste"
+    "list": "Liste",
+    "kanban": "Kanban"
   },
   "themes": {
     "Dark": "Dunkel",
+    "Espo": "Espo",
     "Sakura": "Kirschblüten",
     "Violet": "Violett",
     "Hazyblue": "Blassblau",
@@ -890,6 +952,7 @@
     "pattern": "Musterabgleich",
     "emailAddress": "Gültige E-Mail-Adresse",
     "phoneNumber": "Gültige Telefonnummer",
+    "array": "Array",
     "arrayOfString": "Array von Zeichenketten",
     "noEmptyString": "Keine leere Zeichenkette",
     "max": "Maximal Wert",
@@ -915,6 +978,10 @@
     "phone_valid": "Die Telefonnummer ist ungültig. Dies kann durch eine falsche oder leere Landesvorwahl verursacht werden."
   },
   "navbarTabs": {
+    "Business": "Business",
+    "Marketing": "Marketing",
+    "Support": "Support",
+    "CRM": "CRM",
     "Activities": "Aktivitäten"
   },
   "wysiwygLabels": {
@@ -940,6 +1007,9 @@
       "bottom": "Unten"
     }
   },
+  "detailViewModes": {
+    "detail": "Detail"
+  },
   "strings": {
     "yesterdayShort": "Gestern"
   },
@@ -962,5 +1032,9 @@
   },
   "tabs": {
     "Stream": "Ereignisse"
+  },
+  "themeDirections": {
+    "ltr": "LTR",
+    "rtl": "RTL"
   }
 }

@@ -11,6 +11,7 @@
     "Install": "Instaluj"
   },
   "messages": {
-    "uninstalled": "Rozszerzenie {name} zostało usunięte"
+    "uninstalled": "Rozszerzenie {name} zostało usunięte",
+    "fileExceedsMaxUploadSize": "Rozmiar pliku przekracza maksymalny rozmiar przesyłania {maxSize}. Należy rozważyć zwiększenie `post_max_size` lub zainstalować rozszerzenie przez CLI."
   }
 }

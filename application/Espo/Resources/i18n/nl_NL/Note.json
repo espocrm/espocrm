@@ -1,35 +1,37 @@
 {
   "fields": {
+    "post": "Post",
     "attachments": "Bijlagen",
     "targetType": "Doel",
     "teams": "Groepen",
     "users": "Gebruikers",
+    "portals": "Portals",
+    "type": "Type",
     "isGlobal": "Is globaal",
     "isInternal": "Is intern (voor interne gebruikers)",
     "related": "Verwant",
     "createdByGender": "Gemaakt door geslacht",
+    "data": "Data",
     "number": "Nummer",
     "isPinned": "Is vastgemaakt"
   },
   "filters": {
     "all": "Alle",
     "posts": "Berichten",
+    "updates": "Updates",
     "activity": "Activiteit"
   },
   "messages": {
     "writeMessage": "Schrijf je bericht hier",
     "pinnedMaxCountExceeded": "Kan geen notities meer vastpinnen. Het maximaal toegestane aantal is {count}."
   },
-  "links": {
-    "superParent": "Behorende bij",
-    "related": "Verwant",
-    "portals": "Portalen",
-    "attachments": "Bijlagen"
-  },
   "options": {
     "type": {
+      "Post": "Post",
       "Create": "Creër",
       "CreateRelated": "Gerelateerde creëren",
+      "Update": "Update",
+      "Status": "Status",
       "Assign": "Toewijzen",
       "Relate": "Koppel",
       "Unrelate": "Ontkoppel",
@@ -39,13 +41,21 @@
     "targetType": {
       "self": "Zelf",
       "users": "Gebruikers",
+      "teams": "Teams",
       "all": "Alle interne gebruikers",
       "portals": "Portaal Gebruikers"
     }
   },
+  "links": {
+    "superParent": "Behorende bij",
+    "related": "Verwant",
+    "portals": "Portalen",
+    "attachments": "Bijlagen"
+  },
   "labels": {
     "View Posts": "Posts bekijken",
     "View Activity": "Activiteit bekijken",
+    "Pin": "Pin",
     "Unpin": "Ontpin",
     "Pinned": "Vastgezet",
     "Quote Reply": "Quote Beantwoorden",

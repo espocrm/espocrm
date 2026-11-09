@@ -13,7 +13,8 @@
     "scopeSeparator": "Zugriffsbereichunterteiler",
     "hasAccessToken": "Hat Zugriffstoken",
     "authorizationPrompt": "Autorisierungspromt",
-    "authorizationParams": "Autorisierungsparameter"
+    "authorizationParams": "Autorisierungsparameter",
+    "authorizationPkce": "PKCE verwenden"
   },
   "links": {
     "accounts": "Konten"

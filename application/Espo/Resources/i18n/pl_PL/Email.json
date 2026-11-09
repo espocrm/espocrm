@@ -1,6 +1,7 @@
 {
   "fields": {
     "parent": "Powiązanie",
+    "status": "Status",
     "dateSent": "Data wysłania",
     "from": "Od",
     "to": "Do",
@@ -27,6 +28,8 @@
     "name": "Nazwa (Temat)",
     "isReplied": "Odpowiedziano",
     "isNotReplied": "Nie odpowiedziano",
+    "folder": "Folder",
+    "folderString": "Folder",
     "inboundEmails": "Konto grupowe",
     "emailAccounts": "Konto osobiste",
     "hasAttachment": "Załącznik",
@@ -40,13 +43,26 @@
     "fromName": "Pochodzi od",
     "fromString": "Od String",
     "isSystem": "Czy system",
-    "toEmailAddresses": "Do AdresyEmail",
-    "bccEmailAddresses": "Adresy e-mail BCC",
-    "replyToEmailAddresses": "Adresy e-mail Reply-To",
     "personStringData": "Dane String osoby",
     "fromEmailAddress": "Od adresu (link)",
     "replyToName": "Odpowiedz-Do Nazwa",
-    "replyToAddress": "Odpowiedz-Do Adres"
+    "replyToAddress": "Odpowiedz-Do Adres",
+    "icsContents": "Zawartość ICS",
+    "icsEventData": "Dane wydarzenia ICS",
+    "icsEventUid": "UID wydarzenia ICS",
+    "createdEvent": "Utworzone wydarzenie",
+    "event": "Wydarzenie",
+    "icsEventDateStart": "Data rozpoczęcia wydarzenia ICS",
+    "isHtml": "HTML",
+    "groupFolder": "Folder grupowy",
+    "isUsersSent": "Wysłany przez użytkownika",
+    "inArchive": "W archiwum",
+    "groupStatusFolder": "Status w folderze grupowym",
+    "sendAt": "Wyślij o",
+    "toEmailAddresses": "Adresy e-mail Do",
+    "bccEmailAddresses": "Adresy e-mail UDW",
+    "replyToEmailAddresses": "Adresy e-mail do odpowiedzi",
+    "isAutoReply": "Automatyczna odpowiedź"
   },
   "links": {
     "replied": "Odpowiedziano",
@@ -57,19 +73,25 @@
     "sentBy": "Wysłane przez",
     "attachments": "Załączniki",
     "fromEmailAddress": "Pochodzi z adresu e-mail",
-    "toEmailAddresses": "Do AdresyEmail",
-    "ccEmailAddresses": "DW AdresyEmail",
-    "bccEmailAddresses": "UDW AdresyEmail",
-    "replyToEmailAddresses": "Adresy e-mail Reply-To"
+    "groupFolder": "Folder grupowy",
+    "createdEvent": "Utworzone wydarzenie",
+    "toEmailAddresses": "Adresy e-mail Do",
+    "ccEmailAddresses": "Adresy e-mail DW",
+    "bccEmailAddresses": "Adresy e-mail UDW",
+    "replyToEmailAddresses": "Adresy e-mail do odpowiedzi"
   },
   "options": {
     "status": {
       "Draft": "Szkic",
       "Sending": "Wysyłanie",
       "Sent": "Wysłano",
-      "Archived": "Zarchiwizowany",
       "Received": "Otrzymane",
-      "Failed": "Niepowodzenie"
+      "Failed": "Niepowodzenie",
+      "Archived": "Zaimportowany"
+    },
+    "groupStatusFolder": {
+      "Archive": "Archiwum",
+      "Trash": "Kosz"
     }
   },
   "labels": {
@@ -101,7 +123,16 @@
     "Folders": "Foldery",
     "View Users": "Wyświetl użytkowników",
     "No Subject": "Brak Tematu",
-    "Insert Field": "Wstaw pole"
+    "Insert Field": "Wstaw pole",
+    "Event": "Wydarzenie",
+    "Group Folders": "Foldery grupowe",
+    "View Attachments": "Pokaż załączniki",
+    "Import EML": "Importuj EML",
+    "Moved to Archive": "Przeniesiono do archiwum",
+    "Moved to Trash": "Przeniesiono do kosza",
+    "Retrieved from Trash": "Przywrócono z kosza",
+    "No Records Moved": "Nie przeniesiono żadnych rekordów",
+    "Schedule Send": "Zaplanuj wysyłkę"
   },
   "messages": {
     "testEmailSent": "Testowa wiadomość została wysłana",
@@ -109,17 +140,30 @@
     "savedAsDraft": "Zapisz jako szablon",
     "confirmInsertTemplate": "Treść wiadomości e-mail zostanie utracona. Czy na pewno chcesz wstawić szablon?",
     "noSmtpSetup": "SMTP nie jest skonfigurowany: {link}",
+    "confirmSend": "Wysłać e-mail?",
     "sendConfirm": "Wysłać e-mail?",
     "removeSelectedRecordsConfirmation": "Czy na pewno chcesz usunąć wybrane maile?\n\nZostaną również usunięte dla innych użytkowników.",
-    "removeRecordConfirmation": "Czy na pewno chcesz usunąć ten e-mail?\n\nZostanie również usunięty dla innych użytkowników."
+    "removeRecordConfirmation": "Czy na pewno chcesz usunąć ten e-mail?\n\nZostanie również usunięty dla innych użytkowników.",
+    "invalidCredentials": "Nieprawidłowe dane logowania.",
+    "unknownError": "Nieznany błąd.",
+    "recipientAddressRejected": "Adres odbiorcy został odrzucony.",
+    "alreadyImported": "[E-mail]({link}) już istnieje w systemie.",
+    "couldNotSentScheduledEmail": "Nie można wysłać zaplanowanego [e-maila]({link})",
+    "notEditAccess": "Brak uprawnień do edycji e-maila.",
+    "groupFolderNoAccess": "Brak dostępu do folderu grupowego.",
+    "groupMoveOutNoEditAccess": "Nie można przenieść z folderu grupowego. Brak uprawnień do edycji e-maila.",
+    "groupMoveToNoEditAccess": "Nie można przenieść do folderu grupowego. Brak uprawnień do edycji e-maila.",
+    "groupMoveToTrashNoEditAccess": "Nie można przenieść e-maila z folderu grupowego do kosza. Brak uprawnień do edycji e-maila.",
+    "groupMoveToArchiveNoEditAccess": "Nie można przenieść z folderu grupowego do archiwum. Brak uprawnień do edycji e-maila."
   },
   "presetFilters": {
     "sent": "Wysłane",
-    "archived": "Zarchiwizowany",
     "inbox": "Przychodzące",
     "drafts": "Szkice",
     "trash": "Kosz",
-    "important": "Ważne"
+    "important": "Ważne",
+    "archived": "Zaimportowane",
+    "archive": "Archiwum"
   },
   "massActions": {
     "markAsRead": "Oznacz jako przeczytane",
@@ -128,9 +172,17 @@
     "markAsNotImportant": "Oznacz jako normalne",
     "moveToTrash": "Przenieś do kosza",
     "moveToFolder": "Przenieś do folderu",
-    "retrieveFromTrash": "Przywróć z kosza"
+    "retrieveFromTrash": "Przywróć z kosza",
+    "moveToArchive": "Archiwizuj"
   },
   "strings": {
-    "sendingFailed": "Błąd wysyłania maila"
+    "sendingFailed": "Błąd wysyłania maila",
+    "group": "Folder grupowy"
+  },
+  "actions": {
+    "moveToArchive": "Archiwizuj"
+  },
+  "otherFields": {
+    "file": "Plik"
   }
 }

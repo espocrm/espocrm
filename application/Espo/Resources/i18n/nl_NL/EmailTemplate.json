@@ -1,15 +1,18 @@
 {
   "fields": {
     "name": "Naam",
+    "status": "Status",
     "body": "Inhoud",
     "subject": "Onderwerp",
     "attachments": "Bijlagen",
     "oneOff": "Eenmalig",
     "category": "Categorie",
-    "insertField": "Positiehouders"
+    "insertField": "Positiehouders",
+    "isHtml": "HTML"
   },
   "labels": {
     "Create EmailTemplate": "Creëer E-mail Template",
+    "Info": "Info",
     "Available placeholders": "Beschikbare aanduidingen"
   },
   "tooltips": {

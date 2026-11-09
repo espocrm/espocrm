@@ -1,6 +1,9 @@
 {
   "fields": {
     "name": "Naam",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
     "portalRoles": "Functies",
     "isActive": "Is actief",
     "isDefault": "Is standaard",

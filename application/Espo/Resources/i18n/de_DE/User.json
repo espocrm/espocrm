@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "userName": "Benutzername",
     "title": "Funktion",
     "isAdmin": "Ist Admin",
@@ -9,17 +10,20 @@
     "roles": "Rollen",
     "portals": "Portale",
     "portalRoles": "Portal-Rollen",
+    "teamRole": "Position",
     "password": "Passwort",
     "currentPassword": "Aktuelles Passwort",
     "passwordConfirm": "Passwort bestätigen",
     "newPassword": "Neues Passwort",
     "newPasswordConfirm": "Neues Passwort bestätigen",
+    "avatar": "Avatar",
     "isActive": "Ist aktiv",
     "isPortalUser": "Ist Portalbenutzer",
     "contact": "Kontakt",
     "accounts": "Firmen",
     "account": "Benutzerkonto (Primär)",
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
+    "portal": "Portal",
     "gender": "Geschlecht",
     "position": "Position im Team",
     "ipAddress": "IP-Adresse",
@@ -35,11 +39,13 @@
     "auth2FAEnable": "2-Faktor-Authentifizierung aktivieren",
     "auth2FAMethod": "2FA Methode",
     "auth2FATotpSecret": "2FA TOTP Geheimnis",
+    "auth2FA": "2FA",
     "workingTimeCalendar": "Arbeitszeitkalender",
     "layoutSet": "Layout-Satz",
     "avatarColor": "Farbe des Avatars"
   },
   "links": {
+    "teams": "Teams",
     "roles": "Rollen",
     "notes": "Notizen",
     "portals": "Portale",
@@ -67,10 +73,12 @@
     "Email Address": "E-Mail Adresse",
     "External Accounts": "Externe Konten",
     "Email Accounts": "E-Mail-Konten",
+    "Portal": "Portal",
     "Create Portal User": "Portalbenutzer erstellen",
     "Proceed w/o Contact": "Weiter mit Kontakt",
     "Generate New API Key": "Neuen API-Schlüssel erstellen",
     "Generate New Password": "Neues Passwort generieren",
+    "Code": "Code",
     "Back to login form": "Zurück zum Anmeldeformular",
     "Requirements": "Anforderungen",
     "Security": "Sicherheit",
@@ -78,7 +86,8 @@
     "Secret": "Geheimnis",
     "Send Password Change Link": "Passwort ändern Link versenden",
     "Send Code": "Code senden",
-    "Login Link": "Anmeldelink"
+    "Login Link": "Anmeldelink",
+    "Connected Apps": "Verbundene Apps"
   },
   "tooltips": {
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
@@ -109,7 +118,6 @@
     "passwordStrengthBothCases": "Muss sowohl Groß- als auch Kleinbuchstaben enthalten.",
     "wrongCode": "Falscher Code",
     "codeIsRequired": "Code ist erforderlich",
-    "enterTotpCode": "Geben Sie den Code aus Ihrer Authenticator-App ein.",
     "verifyTotpCode": "Scannen Sie den QR-Code mit Ihrer mobilen Authentifizierungs-App. Wenn Sie Probleme mit dem Scannen haben, können Sie den Schlüssel auch manuell eingeben. Danach sehen Sie einen 6-stelligen Code in Ihrer Anwendung. Geben Sie diesen Code in das Feld unten ein.",
     "generateAndSendNewPassword": "Es wird ein neues Passwort generiert und an die E-Mail-Adresse des Benutzers geschickt.",
     "security2FaResetConfirmation": "Sind Sie sicher, dass Sie die aktuellen 2FA-Einstellungen zurücksetzen möchten?",
@@ -129,7 +137,8 @@
     "2faMethodNotConfigured": "Die 2FA-Methode ist im System nicht vollständig konfiguriert.",
     "loginError": "Ein Fehler ist aufgetreten",
     "defaultTeamIsNotUsers": "Das Standardteam sollte eines der Teams des Benutzers sein",
-    "passwordStrengthSpecialCharacterCount": "Muss mindestens {count} Sonderzeichen enthalten."
+    "passwordStrengthSpecialCharacterCount": "Muss mindestens {count} Sonderzeichen enthalten.",
+    "enterTotpCode": "Geben Sie den Code aus Ihrer Authentifizierungs-App ein."
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team",
@@ -144,16 +153,26 @@
     "gender": {
       "": "Nicht gesetzt",
       "Male": "Männlich",
-      "Female": "Weiblich"
+      "Female": "Weiblich",
+      "Neutral": "Neutral"
     },
     "type": {
-      "regular": "Regulär"
+      "regular": "Regulär",
+      "admin": "Admin",
+      "portal": "Portal",
+      "system": "System",
+      "super-admin": "Super-Admin",
+      "api": "API"
     },
     "authMethod": {
-      "ApiKey": "API-Schlüssel"
+      "ApiKey": "API-Schlüssel",
+      "Hmac": "HMAC"
     }
   },
   "actions": {
     "changePosition": "Position ändern"
+  },
+  "strings": {
+    "revokeAllAuthenticationTokens": "Alle Authentifizierungstoken widerrufen"
   }
 }

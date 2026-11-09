@@ -1,5 +1,6 @@
 {
   "fields": {
+    "status": "Status",
     "executeTime": "Ausführen um",
     "attempts": "Verbleibende Versuche",
     "failedAttempts": "Fehlgeschlagene Versuche",
@@ -12,9 +13,11 @@
     "targetId": "Ziel ID",
     "number": "Nummer",
     "queue": "Warteschlange",
+    "job": "Job",
     "group": "Gruppe",
     "className": "Klassenname",
-    "targetGroup": "Zielgruppe"
+    "targetGroup": "Zielgruppe",
+    "pid": "PID"
   },
   "options": {
     "status": {

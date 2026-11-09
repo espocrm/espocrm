@@ -2,10 +2,12 @@
   "fields": {
     "name": "Nazwa",
     "description": "Opis",
+    "status": "Status",
     "type": "Typ",
     "startDate": "Data rozpoczęcia",
     "endDate": "Data zakończenia",
     "targetLists": "Listy docelowe",
+    "excludingTargetLists": "Wykluczone listy docelowe",
     "sentCount": "Wysłano",
     "openedCount": "Otwarty",
     "clickedCount": "Kliknięte",
@@ -13,6 +15,7 @@
     "bouncedCount": "Odrzucone",
     "hardBouncedCount": "Twarde odrzucenie",
     "softBouncedCount": "Miękkie odrzucenie",
+    "leadCreatedCount": "Utworzone potencjalne kontakty",
     "revenue": "Zwrot",
     "revenueConverted": "Zwrot (skonwertowany)",
     "budget": "Budżet",
@@ -27,10 +30,12 @@
   },
   "links": {
     "targetLists": "Listy docelowe",
+    "excludingTargetLists": "Wykluczone listy docelowe",
     "accounts": "Klienci",
     "contacts": "Kontakty",
     "leads": "Potencjalne kontakty",
     "opportunities": "Szanse sprzedaży",
+    "campaignLogRecords": "Dziennik",
     "massEmails": "Poczta masowa",
     "trackingUrls": "Adresy śledzenia",
     "contactsTemplate": "Szablon kontaktów",
@@ -43,7 +48,10 @@
       "Email": "E-mail",
       "Web": "Strona internetowa",
       "Television": "Telewizja",
-      "Mail": "Wiadomość"
+      "Radio": "Radio",
+      "Newsletter": "Newsletter",
+      "Mail": "Wiadomość",
+      "Informational Email": "E-mail informacyjny"
     },
     "status": {
       "Planning": "Planowanie",
@@ -72,7 +80,8 @@
   },
   "messages": {
     "unsubscribed": "Zostałeś wypisany z naszej listy mailingowej.",
-    "subscribedAgain": "Jesteś ponownie subskrybowany."
+    "subscribedAgain": "Jesteś ponownie subskrybowany.",
+    "cannotChangeType": "Nie można zmienić typu."
   },
   "tooltips": {
     "targetLists": "Adresaci, którzy powinni otrzymać wiadomości.",

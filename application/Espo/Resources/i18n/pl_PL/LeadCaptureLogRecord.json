@@ -1,6 +1,7 @@
 {
   "fields": {
     "number": "Numer",
+    "data": "Dane",
     "target": "Cel",
     "leadCapture": "Przechwycenie Leada",
     "createdAt": "Wszedł o",

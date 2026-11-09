@@ -15,7 +15,8 @@
     "runError": "Fehler.",
     "checkSyntaxSuccess": "Syntax ist richtig.",
     "checkSyntaxError": "Syntax Fehler.",
-    "emptyScript": "Skript ist leer."
+    "emptyScript": "Skript ist leer.",
+    "checkSyntaxErrorPosition": "Zeile: `{line}`\nSpalte: `{column}`"
   },
   "tooltips": {
     "output": "Werte können mit der Funktion `output\\printLine` ausgegeben werden."

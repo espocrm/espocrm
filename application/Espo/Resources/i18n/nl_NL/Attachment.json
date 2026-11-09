@@ -6,6 +6,7 @@
     "role": "Rol",
     "related": "Verwant",
     "file": "Bestand",
+    "type": "Type",
     "field": "Veld",
     "sourceId": "Bron ID",
     "storage": "Opslagruimte",
@@ -18,7 +19,8 @@
       "Inline Attachment": "Inline bijlage",
       "Import File": "Importeer bestand",
       "Export File": "Export bestand",
-      "Mail Merge": "Mailmerge"
+      "Mail Merge": "Mailmerge",
+      "Mass Pdf": "Mass Pdf"
     }
   },
   "presetFilters": {

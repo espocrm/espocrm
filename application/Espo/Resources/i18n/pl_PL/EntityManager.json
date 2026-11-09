@@ -5,20 +5,24 @@
     "Schedule": "Harmonogram",
     "Log": "Dziennik",
     "Formula": "Formuła",
-    "Layouts": "Układy"
+    "Layouts": "Układy",
+    "Parameters": "Parametry"
   },
   "fields": {
     "name": "Nazwa",
     "type": "Typ",
+    "labelSingular": "Etykieta (liczba pojedyncza)",
+    "labelPlural": "Etykieta (liczba mnoga)",
+    "stream": "Komunikator",
     "label": "Etykieta",
     "linkType": "Typ linku",
     "entityForeign": "Encja obca",
     "linkForeign": "Link obcy",
+    "link": "Link",
     "labelForeign": "Etykieta obca",
-    "sortBy": "Domyślna kolejność (pole)",
-    "sortDirection": "Domyślna kolejność (kierunek)",
     "relationName": "Nazwa tabeli łączącej",
     "linkMultipleField": "Połącz kilka pól",
+    "linkMultipleFieldForeign": "Pole wielokrotnego linku w encji obcej",
     "disabled": "Wyłączony",
     "textFilterFields": "Pole filtrowania tekstowego",
     "audited": "Audytowane",
@@ -32,11 +36,35 @@
     "fullTextSearch": "Wyszukiwanie pełnotekstowe",
     "countDisabled": "Wyłącz liczbę rekordów",
     "parentEntityTypeList": "Nadrzędne rodzaje jednostek",
-    "foreignLinkEntityTypeList": "Linki zagraniczne"
+    "foreignLinkEntityTypeList": "Linki zagraniczne",
+    "entity": "Encja",
+    "optimisticConcurrencyControl": "Optymistyczna kontrola współbieżności",
+    "beforeSaveApiScript": "Skrypt API przed zapisem",
+    "updateDuplicateCheck": "Sprawdzanie duplikatów przy aktualizacji",
+    "duplicateCheckFieldList": "Pola sprawdzania duplikatów",
+    "layout": "Układ",
+    "author": "Autor",
+    "module": "Moduł",
+    "version": "Wersja",
+    "selectFilter": "Filtr wyboru",
+    "primaryFilters": "Filtry główne",
+    "stars": "Gwiazdki",
+    "preserveAuditLog": "Zachowaj dziennik audytu",
+    "assignedUsers": "Wielu przypisanych użytkowników",
+    "collaborators": "Współpracownicy",
+    "aclContactLink": "Łącze ACL z kontaktem",
+    "aclAccountLink": "Łącze ACL z klientem",
+    "sortBy": "Domyślne pole sortowania",
+    "sortDirection": "Domyślny kierunek sortowania",
+    "categories": "Kategorie",
+    "lockable": "Blokowanie",
+    "transactionalSave": "Zapis transakcyjny",
+    "pipelines": "Lejki"
   },
   "options": {
     "type": {
       "": "Brak",
+      "Base": "Baza",
       "Person": "Osoba",
       "CategoryTree": "Drzewo kategorii",
       "Event": "Wydarzenie",
@@ -44,30 +72,68 @@
       "Company": "Firma"
     },
     "linkType": {
+      "manyToMany": "Wiele-do-wielu",
       "oneToMany": "Jeden-do-wielu",
+      "manyToOne": "Wiele-do-jednego",
+      "parentToChildren": "Rodzic-do-dzieci",
+      "childrenToParent": "Dzieci-do-rodzica",
       "oneToOneRight": "Jeden-do-jednego Prawo",
       "oneToOneLeft": "Jeden-do-jednego Lewo"
     },
     "sortDirection": {
       "asc": "Rosnąco",
       "desc": "Malejąco"
+    },
+    "module": {
+      "Custom": "Niestandardowy"
     }
   },
   "messages": {
     "entityCreated": "Jednostka została utworzona",
     "linkAlreadyExists": "Konflikt nazw linku.",
     "linkConflict": "Konflikt nazw: pole ze wskazaną nazwą już istnieje.",
-    "confirmRemove": "Czy na pewno chcesz usunąć typ jednostki z systemu?"
+    "confirmRemove": "Czy na pewno chcesz usunąć typ jednostki z systemu?",
+    "beforeSaveCustomScript": "Skrypt wywoływany za każdym razem przed zapisaniem encji. Służy do ustawiania pól obliczanych.",
+    "beforeSaveApiScript": "Skrypt wywoływany przy żądaniach API tworzenia i aktualizacji przed zapisaniem encji. Służy do własnej walidacji i sprawdzania duplikatów.",
+    "nameIsAlreadyUsed": "Nazwa '{name}' jest już używana.",
+    "nameIsNotAllowed": "Nazwa '{name}' jest niedozwolona.",
+    "nameIsTooLong": "Nazwa jest zbyt długa.",
+    "confirmRemoveLink": "Czy na pewno usunąć relację *{link}*?",
+    "urlHashCopiedToClipboard": "Fragment URL filtra *{name}* został skopiowany do schowka. Można go dodać do paska nawigacji.",
+    "cannotEnablePipelinesWithNoStatusField": "Nie można włączyć lejków, ponieważ typ encji nie ma pola statusu. W razie potrzeby utwórz pole typu Enum dla statusu, a następnie wybierz je w parametrze „Pole statusu”.",
+    "cannotEnableCategoriesWithKanbanViewMode": "Kategorie nie są zgodne z widokiem Kanban. Wyłącz jedno lub drugie."
   },
   "tooltips": {
     "statusField": "Aktualizacje tego pola są rejestrowane w strumieniu.",
     "textFilterFields": "Pola używane przez wyszukiwarkę tekstową.",
-    "stream": "Czy jednostka ma strumień.",
     "disabled": "Sprawdź czy nie potrzebujesz tego modułu w swoim systemie.",
     "linkAudited": "Utworzenie powiązanego rekordu i połączenie z istniejącym rekordem zostanie zarejestrowane w strumieniu.",
     "linkMultipleField": "Pole Link Multiple zapewnia wygodny sposób edycji relacji. Nie używaj go, jeśli możesz mieć dużą liczbę powiązanych rekordów.",
     "entityType": "Base Plus - posiada Aktywności, Historie i Zadania.\n\nWydarzenie - dostępne w panelu Kalendarz i Działania.",
     "fullTextSearch": "Wymagane jest przeładowanie całej aplikacji.",
-    "countDisabled": "Całkowita liczba nie będzie wyświetlana w widoku listy. Może skrócić czas ładowania, gdy tabela bazy danych jest duża."
+    "countDisabled": "Całkowita liczba nie będzie wyświetlana w widoku listy. Może skrócić czas ładowania, gdy tabela bazy danych jest duża.",
+    "optimisticConcurrencyControl": "Zapobiega konfliktom zapisu.",
+    "duplicateCheckFieldList": "Pola sprawdzane podczas wyszukiwania duplikatów.",
+    "updateDuplicateCheck": "Sprawdzanie duplikatów podczas aktualizacji rekordu.",
+    "linkSelectFilter": "Filtr główny stosowany domyślnie przy wyborze rekordu.",
+    "stars": "Możliwość oznaczania rekordów gwiazdką. Użytkownicy mogą używać gwiazdek jako zakładek do rekordów.",
+    "aclContactLink": "Łącze z kontaktem używane przy stosowaniu kontroli dostępu dla użytkowników portalu.",
+    "aclAccountLink": "Łącze z klientem używane przy stosowaniu kontroli dostępu dla użytkowników portalu.",
+    "collaborators": "Możliwość udostępniania rekordów określonym użytkownikom.",
+    "assignedUsers": "Możliwość przypisania wielu użytkowników do rekordu.\n\nPo włączeniu parametru dotychczas przypisani użytkownicy nie zostaną przeniesieni do nowego pola *Przypisani użytkownicy*.",
+    "preserveAuditLog": "Wyłącza czyszczenie dziennika audytu. Parametr ma zastosowanie tylko wtedy, gdy Komunikator jest wyłączony. Przy włączonym Komunikatorze wpisy dziennika audytu nie są usuwane.",
+    "stream": "Czy encja ma Komunikator.",
+    "linkParamReadOnly": "Łącza tylko do odczytu nie można edytować za pomocą żądań API *link* i *unlink*. Nie będzie możliwe powiązywanie i odłączanie rekordów w panelu relacji. Nadal można edytować łącza tylko do odczytu za pomocą pól typu link i link-multiple.",
+    "pipelines": "Umożliwia korzystanie z wielu lejków. Lejki można skonfigurować w sekcji Administracja > Lejki.",
+    "transactionalSave": "Zapisy i usunięcia rekordów będą wykonywane w transakcjach bazy danych.",
+    "lockable": "Włącza możliwość blokowania rekordów.",
+    "categories": "Włącz drzewo kategorii. Rekordy można umieszczać w kategoriach.",
+    "linkParamCascadeRemoval": "Jeśli włączone, po usunięciu rekordu nadrzędnego powiązane rekordy również zostaną usunięte."
+  },
+  "entityNameParts": {
+    "Category": "Kategoria"
+  },
+  "entityNamePartsPlural": {
+    "Category": "Kategorie"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "message": "Komunikat",
+    "code": "Kod",
+    "level": "Poziom",
+    "exceptionClass": "Klasa wyjątku",
+    "file": "Plik",
+    "line": "Wiersz",
+    "requestMethod": "Metoda żądania",
+    "requestResourcePath": "Ścieżka zasobu żądania"
+  },
+  "presetFilters": {
+    "errors": "Błędy"
+  }
+}

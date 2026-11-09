@@ -1,9 +1,13 @@
 {
   "fields": {
+    "name": "Name",
     "emailAddress": "E-Mail Adresse",
+    "status": "Status",
     "assignToUser": "Mit Benutzer verknüpfen",
+    "host": "Host",
     "username": "Benutzername",
     "password": "Passwort",
+    "port": "Port",
     "monitoredFolders": "Überwachte Ordner",
     "trashFolder": "Papierkorb",
     "createCase": "Fall erstellen",
@@ -74,10 +78,24 @@
       "Direct-Assignment": "Direkte Zuordnung",
       "Round-Robin": "Umlauf-Verfahren",
       "Least-Busy": "Geringste Auslastung"
+    },
+    "smtpAuthMechanism": {
+      "plain": "PLAIN",
+      "login": "LOGIN",
+      "crammd5": "CRAM-MD5"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
+    },
+    "security": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   },
   "labels": {
     "Create InboundEmail": "E-Mail-Konto erstellen",
+    "IMAP": "IMAP",
     "Actions": "Aktionen",
     "Main": "Hauptteil"
   },

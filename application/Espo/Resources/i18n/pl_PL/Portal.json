@@ -1,6 +1,9 @@
 {
   "fields": {
     "name": "Nazwa",
+    "logo": "Logo",
+    "companyLogo": "Logo",
+    "url": "URL",
     "portalRoles": "Role",
     "isActive": "Jest aktywny",
     "isDefault": "Jest domyślny",
@@ -8,6 +11,7 @@
     "quickCreateList": "Szybkie tworzenie listy",
     "theme": "Motyw",
     "language": "Język",
+    "dashboardLayout": "Układ pulpitu",
     "dateFormat": "Format daty",
     "timeFormat": "Format czasu",
     "timeZone": "Strefa czasowa",
@@ -15,19 +19,27 @@
     "defaultCurrency": "Domyślna waluta",
     "customUrl": "Inny URL",
     "customId": "Własny ID",
-    "layoutSet": "Zestaw układu"
+    "layoutSet": "Zestaw układu",
+    "authenticationProvider": "Dostawca uwierzytelniania",
+    "authTokenLifetime": "Czas ważności tokenu uwierzytelniającego (w godzinach)",
+    "authTokenMaxIdleTime": "Maks. czas bezczynności tokenu uwierzytelniającego (w godzinach)",
+    "applicationName": "Nazwa aplikacji"
   },
   "links": {
     "users": "Użytkownicy",
     "portalRoles": "Role",
     "notes": "Notatki",
-    "layoutSet": "Zestaw układu"
-  },
-  "labels": {
-    "User Interface": "Interfejs użytkownika",
-    "Settings": "Ustawienia"
+    "layoutSet": "Zestaw układu",
+    "authenticationProvider": "Dostawca uwierzytelniania"
   },
   "tooltips": {
+    "portalRoles": "Wskazane role portalu zostaną zastosowane do wszystkich użytkowników tego portalu.",
     "layoutSet": "Zapewnia możliwość posiadania układów różniących się od standardowych."
+  },
+  "labels": {
+    "Create Portal": "Utwórz portal",
+    "User Interface": "Interfejs użytkownika",
+    "General": "Ogólne",
+    "Settings": "Ustawienia"
   }
 }

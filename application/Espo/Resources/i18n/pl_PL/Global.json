@@ -11,11 +11,13 @@
     "ScheduledJob": "Zaplanowane zadanie",
     "ExternalAccount": "Konto zewnętrzne",
     "Extension": "Rozszerzenie",
+    "Dashboard": "Pulpit",
     "InboundEmail": "Poczta Przychodząca",
+    "Stream": "Komunikator",
     "Import": "Importuj",
-    "Template": "Szablon",
     "Job": "Zadanie",
     "EmailFilter": "Filtr wiadomości",
+    "Portal": "Portal",
     "PortalRole": "Rola portalu",
     "Attachment": "Załącznik",
     "EmailFolder": "Folder wiadomości",
@@ -34,6 +36,7 @@
     "Export": "Eksport",
     "DynamicLogic": "Dynamiczna logika",
     "DashletOptions": "Opcje dashletu",
+    "Admin": "Administrator",
     "Global": "Globalny",
     "Preferences": "Preferencje",
     "EmailAddress": "Adres e-mail",
@@ -46,8 +49,30 @@
     "ArrayValue": "Wartość Array",
     "ApiUser": "Użytkownik API",
     "DashboardTemplate": "Szablon pulpitu",
+    "Webhook": "Webhook",
     "Currency": "Waluta",
-    "LayoutSet": "Zestaw układu"
+    "LayoutSet": "Zestaw układu",
+    "Mass Action": "Masowa akcja",
+    "Note": "Notatka",
+    "ImportError": "Błąd importu",
+    "WorkingTimeCalendar": "Kalendarz czasu pracy",
+    "GroupEmailFolder": "Grupowy folder e-mail",
+    "AuthenticationProvider": "Dostawca uwierzytelniania",
+    "GlobalStream": "Globalny strumień",
+    "WebhookQueueItem": "Element kolejki webhooków",
+    "AppLogRecord": "Wpis dziennika aplikacji",
+    "WorkingTimeRange": "Wyjątek od czasu pracy",
+    "AddressCountry": "Kraj adresu",
+    "AppSecret": "Sekret aplikacji",
+    "OAuthProvider": "Dostawca OAuth",
+    "OAuthAccount": "Konto OAuth",
+    "WebhookEventQueueItem": "Element kolejki zdarzeń webhooka",
+    "Template": "Szablon PDF",
+    "OpenApi": "OpenAPI",
+    "CurrencyRecord": "Waluta",
+    "CurrencyRecordRate": "Kurs waluty",
+    "Pipeline": "Lejek",
+    "PipelineStage": "Etap lejka"
   },
   "scopeNamesPlural": {
     "Email": "Wiadomości",
@@ -61,8 +86,9 @@
     "ScheduledJob": "Zaplanowane zadania",
     "ExternalAccount": "Konta zewnętrzne",
     "Extension": "Rozszerzenia",
+    "Dashboard": "Pulpit",
     "InboundEmail": "Poczta Przychodząca",
-    "Template": "Szablony",
+    "Stream": "Komunikator",
     "Job": "Zadania",
     "EmailFilter": "Filtry wiadomości",
     "Portal": "Portale",
@@ -89,9 +115,31 @@
     "EmailAddress": "Adresy e-mail",
     "PhoneNumber": "Numery telefonów",
     "Currency": "Waluty",
-    "LayoutSet": "Zestawy układów"
+    "LayoutSet": "Zestawy układów",
+    "Note": "Notatki",
+    "ImportError": "Błędy importu",
+    "WorkingTimeCalendar": "Kalendarze czasu pracy",
+    "GroupEmailFolder": "Grupowe foldery e-mail",
+    "AuthenticationProvider": "Dostawcy uwierzytelniania",
+    "GlobalStream": "Globalny strumień",
+    "WebhookQueueItem": "Elementy kolejki webhooków",
+    "AppLogRecord": "Dziennik aplikacji",
+    "WorkingTimeRange": "Wyjątki od czasu pracy",
+    "AddressCountry": "Kraje adresów",
+    "AppSecret": "Sekrety aplikacji",
+    "OAuthProvider": "Dostawcy OAuth",
+    "OAuthAccount": "Konta OAuth",
+    "WebhookEventQueueItem": "Elementy kolejki zdarzeń webhooka",
+    "Template": "Szablony PDF",
+    "OpenApi": "OpenAPI",
+    "CurrencyRecord": "Waluty",
+    "CurrencyRecordRate": "Kursy walut",
+    "Pipeline": "Lejki",
+    "PipelineStage": "Etapy lejka"
   },
   "labels": {
+    "Misc": "Różne",
+    "Merge": "Połącz",
     "None": "Brak",
     "Home": "Pulpit",
     "by": "przez",
@@ -107,6 +155,8 @@
     "Merged": "Połączono",
     "Removed": "Usunięty",
     "Posted": "Opublikowany",
+    "Linked": "Powiązano",
+    "Unlinked": "Odłączono",
     "Done": "Gotowe",
     "Access denied": "Dostęp zabroniony",
     "Not found": "Nie znaleziono",
@@ -128,18 +178,23 @@
     "Add Field": "Dodaj pole",
     "Add Dashlet": "Dodaj podgląd",
     "Filter": "Filtr",
+    "Edit Dashboard": "Edytuj pulpit",
     "Add": "Dodaj",
     "Add Item": "Dodaj element",
+    "Reset": "Resetuj",
+    "Menu": "Menu",
     "More": "Więcej",
     "Search": "Szukaj",
     "Only My": "Tylko Moje",
-    "Open": "Otwórz",
+    "Open": "Otwarte",
+    "Admin": "Administrator",
     "About": "O programie",
     "Refresh": "Odśwież",
     "Remove": "Usuń",
     "Options": "Opcje",
     "Username": "Użytkownik",
     "Password": "Hasło",
+    "Login": "Zaloguj",
     "Log Out": "Wyloguj się",
     "Preferences": "Preferencje",
     "State": "Województwo",
@@ -159,6 +214,7 @@
     "View": "Pokaż",
     "Cancel": "Anuluj",
     "Apply": "Zatwierdź",
+    "Unlink": "Odłącz",
     "Mass Update": "Masowa Aktualizacja",
     "Export": "Eksportuj",
     "No Data": "Brak Danych",
@@ -225,7 +281,7 @@
     "Manage Categories": "Zarządzaj kategoriami",
     "Manage Folders": "Zarządzaj folderami",
     "Convert to": "Przekonwertuj do",
-    "View Personal Data": "Zobacz dane osobwe",
+    "View Personal Data": "Zobacz dane osobowe",
     "Personal Data": "Dane osobowe",
     "Erase": "Wyczyść",
     "Move Over": "Przesuń nad",
@@ -235,8 +291,61 @@
     "Middle Name": "Drugie imię",
     "View on Map": "Wyświetl na mapie",
     "Proceed": "Kontynuuj",
-    "Attached": "Przywiązany",
-    "Preview": "Podgląd"
+    "Attached": "Załączony",
+    "Preview": "Podgląd",
+    "Up": "W górę",
+    "Save & Continue Editing": "Zapisz i kontynuuj edycję",
+    "Save & New": "Zapisz i utwórz nowy",
+    "Field": "Pole",
+    "Resolution": "Rozwiązanie",
+    "Resolve Conflict": "Rozwiąż konflikt",
+    "Download": "Pobierz",
+    "Sort": "Sortuj",
+    "Log in": "Zaloguj",
+    "Log in as": "Zaloguj jako",
+    "Sign in": "Zaloguj się",
+    "Global Search": "Wyszukiwanie globalne",
+    "Navigation Panel": "Pokaż panel nawigacji",
+    "Print": "Drukuj",
+    "Copy to Clipboard": "Kopiuj do schowka",
+    "Copied to clipboard": "Skopiowano do schowka",
+    "Audit Log": "Dziennik audytu",
+    "View Audit Log": "Audyt",
+    "Previous Page": "Poprzednia strona",
+    "Next Page": "Następna strona",
+    "First Page": "Pierwsza strona",
+    "Last Page": "Ostatnia strona",
+    "Page": "Strona",
+    "Star": "Oznacz gwiazdką",
+    "Unstar": "Usuń gwiazdkę",
+    "Starred": "Ulubione",
+    "Remove Filter": "Usuń filtr",
+    "Ready": "Gotowe",
+    "Column Resize": "Zmiana szerokości kolumn",
+    "General": "Ogólne",
+    "Send": "Wyślij",
+    "Timeout": "Przekroczono limit czasu",
+    "No internet": "Brak połączenia z internetem",
+    "Scheduled": "Zaplanowano",
+    "Now": "Teraz",
+    "Expanded": "Rozwinięte",
+    "Collapsed": "Zwinięte",
+    "Top Level": "Najwyższy poziom",
+    "Fields": "Pola",
+    "View User Access": "Pokaż dostęp użytkowników",
+    "Reacted": "Dodano reakcje",
+    "Reaction Removed": "Usunięto reakcję",
+    "Reactions": "Reakcje",
+    "Network error": "Błąd sieci",
+    "Edit Item": "Edytuj element",
+    "Bad request": "Błędne żądanie",
+    "Conflict": "Konflikt",
+    "Internal server error": "Wewnętrzny błąd serwera",
+    "Mark read": "Oznacz jako przeczytane",
+    "Lock": "Zablokuj",
+    "Unlock": "Odblokuj",
+    "Assigned": "Przypisane",
+    "Notification": "Powiadomienie"
   },
   "messages": {
     "pleaseWait": "Proszę czekać...",
@@ -300,32 +409,99 @@
     "fieldInvalid": "{field} jest nieprawidłowy",
     "fieldPhoneInvalid": "{field} jest nieprawidłowy",
     "resolveSaveConflict": "Pozycja została zmodyfikowana. Zanim zapiszesz zmiany, musisz rozwiązać konflikt.",
+    "massActionProcessed": "Masowa akcja została przetworzona.",
+    "fieldUrlExceedsMaxLength": "Zakodowany URL przekracza maksymalną długość {maxLength}",
+    "fieldNotMatchingPattern": "{field} nie pasuje do wzorca `{pattern}`",
     "fieldNotMatchingPattern$noBadCharacters": "{field} zawiera nie dozwolone znaki",
+    "fieldNotMatchingPattern$noAsciiSpecialCharacters": "Pole {field} nie powinno zawierać znaków specjalnych ASCII",
     "fieldNotMatchingPattern$latinLetters": "{field} może zawierać tylko litery",
     "fieldNotMatchingPattern$latinLettersDigits": "{field} może zawierać tylko litery lub cyfry",
+    "fieldNotMatchingPattern$latinLettersDigitsWhitespace": "{field} może zawierać tylko litery łacińskie, cyfry i spacje",
+    "fieldNotMatchingPattern$latinLettersWhitespace": "{field} może zawierać tylko litery łacińskie i spacje",
     "fieldNotMatchingPattern$digits": "{field} może zawierać tylko cyfry",
-    "fieldShouldBeLess": "{field} nie powinna być większa niż {value}"
+    "fieldPhoneInvalidCharacters": "Dozwolone są tylko cyfry, litery łacińskie i znaki `-+_@:#().`",
+    "arrayItemMaxLength": "Element nie powinien mieć więcej znaków niż {max}",
+    "validationFailure": "Błąd walidacji po stronie serwera.\n\nPole: `{field}`\nWalidacja: `{type}`",
+    "confirmAppRefresh": "Aplikacja została zaktualizowana. Zaleca się odświeżenie strony, aby zapewnić jej prawidłowe działanie.",
+    "error404": "Nie można obsłużyć żądanego adresu URL.",
+    "extensionLicenseInvalid": "Nieprawidłowa licencja rozszerzenia '{name}'.",
+    "extensionLicenseExpired": "Subskrypcja licencji rozszerzenia '{name}' wygasła.",
+    "extensionLicenseSoftExpired": "Subskrypcja licencji rozszerzenia '{name}' wygasła.",
+    "loggedOutLeaveOut": "Wylogowano. Sesja jest nieaktywna. Po odświeżeniu strony niezapisane dane formularza mogą zostać utracone. Warto zrobić kopię.",
+    "noAccessToRecord": "Operacja wymaga dostępu `{action}` do rekordu.",
+    "noAccessToForeignRecord": "Operacja wymaga dostępu `{action}` do powiązanego rekordu.",
+    "fieldShouldBeNumber": "Wartość pola {field} powinna być prawidłową liczbą",
+    "maintenanceModeError": "Aplikacja jest obecnie w trybie konserwacji.",
+    "cannotRelateNonExisting": "Nie można powiązać z nieistniejącym rekordem {foreignEntityType}.",
+    "cannotRelateForbidden": "Nie można powiązać z niedostępnym rekordem {foreignEntityType}. Wymagany dostęp `{action}`.",
+    "cannotRelateForbiddenLink": "Brak dostępu do powiązania '{link}'.",
+    "emptyMassUpdate": "Brak pól dostępnych do masowej aktualizacji.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} musi być prawidłowym adresem URL",
+    "fieldShouldBeLess": "{field} nie powinna być większa niż {value}",
+    "fieldShouldBeGreater": "Wartość pola {field} nie powinna być mniejsza niż {value}",
+    "cannotUnrelateRequiredLink": "Nie można odłączyć wymaganego łącza.",
+    "fieldPhoneInvalidCode": "Nieprawidłowy numer kierunkowy kraju",
+    "fieldPhoneTooShort": "Numer w polu {field} jest zbyt krótki",
+    "fieldPhoneTooLong": "Numer w polu {field} jest zbyt długi",
+    "barcodeInvalid": "Wartość pola {field} nie jest prawidłowym kodem {type}",
+    "noLinkAccess": "Nie można powiązać z rekordem {foreignEntityType} przez łącze '{link}'. Brak dostępu.",
+    "attemptIntervalFailure": "Operacja jest niedozwolona w określonym przedziale czasu. Odczekaj chwilę przed kolejną próbą.",
+    "confirmRestoreFromAudit": "Poprzednie wartości zostaną wstawione do formularza. Następnie można zapisać rekord, aby przywrócić poprzednie wartości.",
+    "pageNumberIsOutOfBound": "Numer strony jest poza zakresem",
+    "fieldPhoneExtensionTooLong": "Numer wewnętrzny nie powinien być dłuższy niż {maxLength}",
+    "cannotLinkAlreadyLinked": "Nie można powiązać już powiązanego rekordu.",
+    "starsLimitExceeded": "Przekroczono limit gwiazdek.",
+    "select2OrMoreRecords": "Wybierz 2 lub więcej rekordów",
+    "selectNotMoreThanNumberRecords": "Liczba wybranych rekordów nie może przekraczać {number}",
+    "selectAtLeastOneRecord": "Wybierz co najmniej jeden rekord",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} zawiera znaki niedozwolone w numerze telefonu",
+    "duplicateConflict": "Rekord już istnieje.",
+    "confirmMassUpdate": "Czy na pewno masowo zaktualizować wybrane rekordy?",
+    "cannotRemoveCategoryWithChildCategory": "Nie można usunąć kategorii, która ma kategorię podrzędną.",
+    "cannotRemoveNotEmptyCategory": "Nie można usunąć niepustej kategorii.",
+    "arrayInputNotEmpty": "Element został wpisany, ale nie dodany",
+    "error403": "Brak dostępu do tego obszaru.",
+    "sameRecordIsAlreadyBeingEdited": "Rekord jest już edytowany.",
+    "changesLossConfirmation": "Niezapisane zmiany zostaną utracone. Czy na pewno kontynuować?",
+    "cannotRemoveUsed": "Nie można usunąć rekordu, ponieważ jest używany.",
+    "checkLogsForDetails": "Szczegóły w logach.",
+    "confirmMassLock": "Czy na pewno zablokować wybrane rekordy?",
+    "confirmMassUnlock": "Czy na pewno odblokować wybrane rekordy?",
+    "locked": "Rekord zablokowany",
+    "unlocked": "Rekord odblokowany",
+    "massLockDone": "Zablokowano: {count}",
+    "massUnlockDone": "Odblokowano: {count}",
+    "cannotModifyLockedRecord": "Nie można zmienić pola *{field}*. Rekord jest zablokowany.",
+    "cannotRemoveLockedRecord": "Nie można usunąć zablokowanego rekordu.",
+    "noPipeline": "Brak lejka."
   },
   "boolFilters": {
     "onlyMy": "Tylko Moje",
     "followed": "Obserwowany",
-    "onlyMyTeam": "Mój zespół"
+    "onlyMyTeam": "Mój zespół",
+    "shared": "Udostępnione"
   },
   "presetFilters": {
     "followed": "Obserwowany",
-    "all": "Wszystko"
+    "all": "Wszystko",
+    "starred": "Ulubione",
+    "active": "Aktywne"
   },
   "massActions": {
     "remove": "Usuń",
     "merge": "Połącz",
     "massUpdate": "Masowa aktualizacja",
     "export": "Eksport",
-    "follow": "Śledź",
-    "unfollow": "Nie śledź",
+    "follow": "Obserwuj",
+    "unfollow": "Nie obserwuj",
     "convertCurrency": "Konwertuj walutę",
     "printPdf": "Drukuj do PDF",
     "unlink": "Odłącz",
-    "recalculateFormula": "Przelicz formułę"
+    "recalculateFormula": "Przelicz formułę",
+    "update": "Aktualizuj",
+    "delete": "Usuń",
+    "lock": "Zablokuj",
+    "unlock": "Odblokuj"
   },
   "fields": {
     "name": "Nazwa",
@@ -351,6 +527,8 @@
     "phoneNumberOther": "Telefon (inny)",
     "order": "Kolejność",
     "parent": "Rodzic",
+    "children": "Elementy podrzędne",
+    "id": "ID",
     "emailAddressData": "Dane adresu e-mail",
     "phoneNumberData": "Dane numeru telefonu",
     "ids": "Id",
@@ -360,7 +538,17 @@
     "type": "Typ",
     "phoneNumberIsOptedOut": "Numer telefonu został wypisany",
     "types": "Typy",
-    "middleName": "Drugie imię"
+    "middleName": "Drugie imię",
+    "emailAddressIsInvalid": "Adres e-mail jest nieprawidłowy",
+    "phoneNumberIsInvalid": "Numer telefonu jest nieprawidłowy",
+    "users": "Użytkownicy",
+    "childList": "Lista elementów podrzędnych",
+    "collaborators": "Współpracownicy",
+    "streamUpdatedAt": "Ostatnia aktualizacja Komunikatora",
+    "category": "Kategoria",
+    "isLocked": "Zablokowany",
+    "pipeline": "Lejek",
+    "pipelineStage": "Etap lejka"
   },
   "links": {
     "assignedUser": "Przypisany użytkownik",
@@ -370,17 +558,34 @@
     "roles": "Role",
     "teams": "Zespoły",
     "users": "Użytkownik",
-    "parent": "Rodzic"
+    "parent": "Rodzic",
+    "children": "Elementy podrzędne",
+    "assignedUsers": "Przypisani użytkownicy",
+    "collaborators": "Współpracownicy",
+    "category": "Kategoria",
+    "pipeline": "Lejek",
+    "pipelineStage": "Etap lejka"
   },
   "dashlets": {
     "Stream": "Komunikator",
     "Emails": "Skrzynka odbiorcza",
-    "Records": "Lista rekordów"
+    "Records": "Lista rekordów",
+    "Iframe": "Iframe",
+    "Memo": "Notatka"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} zostało do ciebie przypisane",
     "emailReceived": "Wiadomość otrzymana od {from}",
-    "entityRemoved": "{user} usunął {entityType} {entity}"
+    "entityRemoved": "{user} usunął {entityType} {entity}",
+    "emailInbox": "{user} dodał e-mail {entity} do Twojej skrzynki odbiorczej",
+    "userPostReaction": "{user} zareagował na Twój {post}",
+    "userPostInParentReaction": "{user} zareagował na Twój {post} w rekordzie: {entityType} {entity}",
+    "addedToCollaborators": "{user} dodał Cię jako współpracownika: {entityType} {entity}",
+    "groupUpdatesMultiple": "{entityType} {entity} – nowe aktywności: {number}",
+    "groupUpdatesOne": "{entityType} {entity} – nowa aktywność",
+    "groupUpdates": "{entityType} {entity}",
+    "groupEmailsReceivedNew": "Odebrane wiadomości e-mail – nowe: {number}",
+    "groupEmailsReceived": "Odebrane wiadomości e-mail"
   },
   "streamMessages": {
     "post": "{user} opublikował {entityType} {entity}",
@@ -407,6 +612,7 @@
     "createAssigned": "{user} utworzył {entityType} {entity} przydzielone do {assignee}",
     "assign": "{user} przypisał {entityType} {entity} do {assignee}",
     "assignThis": "{user} przypisz to {entityType} do {assignee}",
+    "assignMultiAddThis": "{user} przypisz to {entityType} do {assignee}",
     "postThis": "{user} opublikował",
     "attachThis": "{user} załączył",
     "statusThis": "{user} zaktualizował {field}",
@@ -419,7 +625,11 @@
     "emailReceivedInitialFromThis": "Wiadomość od {from}, to {entityType} zostało utworzone",
     "emailReceivedThis": "Otrzymano email",
     "emailReceivedInitialThis": "Wiadomość otrzymana, to {entityType} zostało utworzone",
+    "emailReceivedFrom": "Otrzymano e-mail od: {from}, dotyczy: {entityType} {entity}",
+    "emailReceivedFromInitial": "Otrzymano e-mail od: {from}, utworzono: {entityType} {entity}",
+    "emailReceivedInitialFrom": "Otrzymano e-mail od: {from}, utworzono: {entityType} {entity}",
     "emailReceived": "Otrzymano e-mail dotyczącą {entityType} {entity}",
+    "emailReceivedInitial": "Otrzymano e-mail, utworzono: {entityType} {entity}",
     "emailSent": "{by} wysłał wiadomość e-mail w sprawie {entityType} {entity}",
     "emailSentThis": "{by} wysłał wiadomość e-mail",
     "postTargetSelf": "{user} opublikował dla siebie",
@@ -431,7 +641,14 @@
     "assignThisVoid": "{user} cofnął przypisanie {entityType}",
     "assignVoid": "{user} cofnął przypisanie {entityType} {entity}",
     "assignThisSelf": "{user} przypisał sam do siebie ten {entityType}",
-    "assignSelf": "{user} przypisał do siebie {entityType} {entity}"
+    "assignSelf": "{user} przypisał do siebie {entityType} {entity}",
+    "unrelate": "{user} odłączył rekord {relatedEntityType} {relatedEntity} od rekordu {entityType} {entity}",
+    "unrelateThis": "{user} odłączył rekord {relatedEntityType} {relatedEntity} od tego rekordu ({entityType})",
+    "assignMultiAdd": "{user} przypisał rekord {entity} do: {assignee}",
+    "assignMultiRemove": "{user} cofnął przypisanie rekordu {entity} do: {removedAssignee}",
+    "assignMultiAddRemove": "{user} przypisał rekord {entity} do: {assignee}; cofnął przypisanie do: {removedAssignee}",
+    "assignMultiRemoveThis": "{user} cofnął przypisanie tego rekordu ({entityType}) do: {removedAssignee}",
+    "assignMultiAddRemoveThis": "{user} przypisał ten rekord ({entityType}) do: {assignee}; cofnął przypisanie do: {removedAssignee}"
   },
   "lists": {
     "monthNames": [
@@ -494,7 +711,8 @@
     "salutationName": {
       "Mr.": "Pan.",
       "Mrs.": "Pani.",
-      "Ms.": "Pani"
+      "Ms.": "Pani",
+      "Dr.": "Dr"
     },
     "dateSearchRanges": {
       "on": "Włączony",
@@ -541,13 +759,15 @@
       "equals": "Równy",
       "like": "Podobieństwo (%)",
       "startsWith": "Zaczyna sie od",
-      "endsWith": "Kończy się znakiem",
+      "endsWith": "Kończy się na",
       "contains": "Zawiera",
       "isEmpty": "Jest Puste",
       "isNotEmpty": "Nie jest puste",
       "notLike": "Nie jest podobne (%)",
       "notContains": "Nie zawiera",
-      "notEquals": "Nie jest równe"
+      "notEquals": "Nie jest równe",
+      "anyOf": "Którykolwiek z",
+      "noneOf": "Żaden z"
     },
     "intSearchRanges": {
       "equals": "Równy",
@@ -574,6 +794,11 @@
       "Fax": "Faks",
       "Home": "Pulpit",
       "Other": "Inny"
+    },
+    "saveConflictResolution": {
+      "current": "Bieżąca",
+      "actual": "Najnowsza",
+      "original": "Oryginalna"
     }
   },
   "sets": {
@@ -597,18 +822,27 @@
         "resizeQuarter": "Przeskaluj do 1/4 rozmiaru",
         "floatLeft": "Równaj do lewej",
         "floatRight": "Równaj do prawej",
+        "floatNone": "Równo z tekstem",
         "dragImageHere": "Upuść obraz tutaj",
         "selectFromFiles": "Wybierz plik z dysku",
         "url": "Adres do Obrazu",
         "remove": "Usuń Obraz"
       },
       "link": {
+        "link": "Link",
+        "insert": "Wstaw link",
+        "unlink": "Usuń link",
         "edit": "Edytuj",
         "textToDisplay": "Tekst do wyświetlenia",
+        "url": "Do jakiego adresu URL ma prowadzić ten link?",
         "openInNewWindow": "Otwórz w nowym oknie"
       },
       "video": {
-        "insert": "Wstaw Video"
+        "video": "Wideo",
+        "videoLink": "Link do wideo",
+        "insert": "Wstaw Video",
+        "url": "Adres URL wideo",
+        "providers": "(YouTube, Vimeo, Vine, Instagram lub DailyMotion)"
       },
       "table": {
         "table": "Tabela"
@@ -620,6 +854,7 @@
         "style": "Styl",
         "normal": "Normalny",
         "blockquote": "Cytat",
+        "pre": "Kod",
         "h1": "Nagłówek 1",
         "h2": "Nagłówek 2",
         "h3": "Nagłówek 3",
@@ -648,11 +883,12 @@
       "color": {
         "recent": "Ostatni Kolor",
         "more": "Więcej Kolorów",
-        "background": "Kolor Tła",
-        "foreground": "Kolor Czcionki",
         "transparent": "Przeźroczystość",
         "setTransparent": "Ustaw przeźroczystość",
-        "resetToDefault": "Domyślnie"
+        "reset": "Resetuj",
+        "resetToDefault": "Domyślnie",
+        "background": "Kolor tła",
+        "foreground": "Kolor czcionki"
       },
       "shortcut": {
         "shortcuts": "Skróty klawiaturowe",
@@ -663,7 +899,8 @@
         "documentStyle": "Style dokumentu"
       },
       "history": {
-        "undo": "Cofnij"
+        "undo": "Cofnij",
+        "redo": "Ponów"
       }
     }
   },
@@ -673,10 +910,115 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} wysłał do {target} i do siebie"
   },
+  "durationUnits": {
+    "d": "d",
+    "h": "h",
+    "m": "m",
+    "s": "s"
+  },
   "listViewModes": {
-    "list": "Lista"
+    "list": "Lista",
+    "kanban": "Kanban"
   },
   "themes": {
-    "Dark": "Ciemny"
+    "Dark": "Ciemny",
+    "Espo": "Espo",
+    "Sakura": "Sakura",
+    "Violet": "Fioletowy",
+    "Hazyblue": "Szaroniebieski",
+    "Glass": "Szklany",
+    "Light": "Jasny"
+  },
+  "themeNavbars": {
+    "side": "Boczny pasek nawigacji",
+    "top": "Górny pasek nawigacji"
+  },
+  "fieldValidations": {
+    "required": "Wymagane",
+    "maxCount": "Maksymalna liczba",
+    "maxLength": "Maksymalna długość",
+    "pattern": "Zgodność ze wzorcem",
+    "emailAddress": "Prawidłowy adres e-mail",
+    "phoneNumber": "Prawidłowy numer telefonu",
+    "array": "Tablica",
+    "arrayOfString": "Tablica ciągów znaków",
+    "noEmptyString": "Niepusty ciąg znaków",
+    "max": "Maksymalna wartość",
+    "min": "Minimalna wartość",
+    "valid": "Poprawność"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Nieprawidłowa wartość URL.",
+    "currency_valid": "Nieprawidłowa wartość kwoty.",
+    "currency_validCurrency": "Kod waluty jest nieprawidłowy lub niedozwolony.",
+    "varchar_pattern": "Prawdopodobnie wartość zawiera niedozwolone znaki.",
+    "email_emailAddress": "Nieprawidłowy adres e-mail.",
+    "phone_phoneNumber": "Nieprawidłowy numer telefonu.",
+    "datetimeOptional_valid": "Nieprawidłowa wartość daty i godziny.",
+    "datetime_valid": "Nieprawidłowa wartość daty i godziny.",
+    "date_valid": "Nieprawidłowa wartość daty.",
+    "enum_valid": "Nieprawidłowa wartość wyliczenia (enum). Wartość musi być jedną ze zdefiniowanych opcji. Pusta wartość jest dozwolona tylko wtedy, gdy pole ma pustą opcję.",
+    "multiEnum_valid": "Nieprawidłowa wartość wielokrotnego wyliczenia (multi-enum). Każda wartość musi być jedną ze zdefiniowanych opcji pola.",
+    "int_valid": "Nieprawidłowa wartość liczby całkowitej.",
+    "float_valid": "Nieprawidłowa wartość liczbowa.",
+    "valid": "Nieprawidłowa wartość.",
+    "maxLength": "Długość wartości przekracza dozwolone maksimum.",
+    "phone_valid": "Numer telefonu jest nieprawidłowy. Przyczyną może być błędny lub pusty numer kierunkowy kraju."
+  },
+  "navbarTabs": {
+    "Business": "Biznes",
+    "Marketing": "Marketing",
+    "Support": "Wsparcie",
+    "CRM": "CRM",
+    "Activities": "Aktywności"
+  },
+  "wysiwygLabels": {
+    "cell": "Komórka",
+    "align": "Wyrównanie",
+    "width": "Szerokość",
+    "height": "Wysokość",
+    "borderWidth": "Szerokość obramowania",
+    "borderColor": "Kolor obramowania",
+    "cellPadding": "Dopełnienie komórki",
+    "backgroundColor": "Kolor tła",
+    "verticalAlign": "Wyrównanie pionowe"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Do lewej",
+      "center": "Do środka",
+      "right": "Do prawej"
+    },
+    "verticalAlign": {
+      "top": "Do góry",
+      "middle": "Do środka",
+      "bottom": "Do dołu"
+    }
+  },
+  "detailViewModes": {
+    "detail": "Detale"
+  },
+  "strings": {
+    "yesterdayShort": "Wcz."
+  },
+  "reactions": {
+    "Smile": "Uśmiech",
+    "Surprise": "Zaskoczenie",
+    "Laugh": "Śmiech",
+    "Meh": "Obojętność",
+    "Sad": "Smutek",
+    "Love": "Uwielbiam",
+    "Like": "Lubię to",
+    "Dislike": "Nie lubię tego"
+  },
+  "recordActions": {
+    "create": "Tworzenie",
+    "read": "Odczyt",
+    "edit": "Edycja",
+    "delete": "Usuwanie",
+    "stream": "Komunikator"
+  },
+  "tabs": {
+    "Stream": "Komunikator"
   }
 }

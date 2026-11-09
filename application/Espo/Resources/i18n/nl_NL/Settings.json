@@ -14,6 +14,7 @@
     "language": "Taal",
     "companyLogo": "Bedrijfslogo",
     "ldapPort": "Poort",
+    "ldapAuth": "Auth",
     "ldapSecurity": "Beveiliging",
     "emailAddress": "E-mail",
     "ldapPassword": "Wachtwoord",
@@ -26,6 +27,7 @@
     "exportDelimiter": "Scheidingsteken export",
     "globalSearchEntityList": "Globaal zoeken in entiteit lijst",
     "authenticationMethod": "Authenticatie methode",
+    "ldapHost": "Host",
     "ldapAccountCanonicalForm": "Account canonieke vorm",
     "ldapAccountDomainName": "Domeinnaam account",
     "ldapTryUsernameSplit": "Probeer gesplitste gebruikersnaam",
@@ -34,6 +36,7 @@
     "ldapAccountDomainNameShort": "Korte gebruikers domein naam",
     "ldapOptReferrals": "Opt Referentie",
     "exportDisabled": "Exporteren uitschakelen (Uitsluitend toegestaan voor beheerder)",
+    "b2cMode": "B2C Mode",
     "avatarsDisabled": "Avatar uitschakelen",
     "displayListViewRecordCount": "Totaal aantal tonen (in lijstweergave)",
     "theme": "Thema",
@@ -44,6 +47,7 @@
     "authTokenLifetime": "Geldigheid Auth sleutel (uren)",
     "authTokenMaxIdleTime": "Auth sleutel max. inactief (uren)",
     "dashboardLayout": "Dashboard lay-out (standaard)",
+    "siteUrl": "Site URL",
     "addressPreview": "Adres voorbeeld",
     "addressFormat": "Adresformaat",
     "applicationName": "Applicatie naam",
@@ -95,6 +99,7 @@
     "jobRunInParallel": "Parallel gelijktijdige opdrachten",
     "jobMaxPortion": "Opdrachten Max. portie",
     "jobPoolConcurrencyNumber": "Gelijktijdige aantal actieve taken",
+    "daemonInterval": "Daemon Interval",
     "daemonMaxProcessNumber": "Daemon max aantal processen",
     "daemonProcessTimeout": "Daemon proces timeout",
     "addressCityList": "Automatisch aanvullen plaats lijst",
@@ -140,9 +145,12 @@
     "oidcUsernameClaim": "OIDC gebruikersnaam Claim",
     "oidcTeams": "OIDC teams",
     "oidcSync": "OIDC synchronisatie",
+    "oidcSyncTeams": "OIDC Sync Teams",
+    "oidcFallback": "OIDC Fallback Login",
     "oidcAllowRegularUserFallback": "OIDC fallback login toestaan voor gewone gebruikers",
     "oidcAllowAdminUser": "OIDC Inlog OIDC toestaan voor admin-gebruikers",
     "oidcLogoutUrl": "OIDC Uitlog URL",
+    "pdfEngine": "PDF Engine",
     "recordsPerPageKanban": "Records per pagina (Kanban)",
     "auth2FAInPortal": "Sta 2FA toe in portalen",
     "massEmailMaxPerBatchCount": "Max aantal verzonden e-mails per batch",
@@ -257,6 +265,7 @@
   "labels": {
     "System": "Systeem",
     "Locale": "Lokaal",
+    "SMTP": "SMTP",
     "Configuration": "Configuratie",
     "In-app Notifications": "In-app notificaties",
     "Email Notifications": "E-mail notificaties",
@@ -277,6 +286,7 @@
     "Divider": "Scheider",
     "General": "Algemeen",
     "Navbar": "Navigatiebalk",
+    "Dashboard": "Dashboard",
     "Phone Numbers": "Telefoonnummers",
     "Access": "Toegang",
     "Strength": "Sterkte",
@@ -298,14 +308,23 @@
       "Status": "Status-updates",
       "EmailReceived": "Ontvangen e-mails"
     },
+    "auth2FAMethodList": {
+      "Totp": "TOTP",
+      "Email": "E-mail",
+      "Sms": "SMS"
+    },
     "personNameFormat": {
       "firstLast": "Voornaam Achternaam",
       "lastFirst": "Achternaam Voornaam",
       "firstMiddleLast": "Voornaam tussenvoegsel Achternaam",
       "lastFirstMiddle": "Achternaam Voornaam Tussenvoegsel"
     },
-    "auth2FAMethodList": {
-      "Email": "E-mail"
+    "authenticationMethod": {
+      "Oidc": "OIDC"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   }
 }

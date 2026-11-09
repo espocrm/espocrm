@@ -1,8 +1,17 @@
 {
+  "fields": {
+    "status": "Status",
+    "processedCount": "Liczba przetworzonych rekordów"
+  },
   "options": {
     "status": {
+      "Pending": "Oczekiwanie",
+      "Running": "W trakcie",
       "Success": "Sukces",
       "Failed": "Błąd"
     }
+  },
+  "messages": {
+    "infoText": "Masowa akcja jest przetwarzana w tle przez cron. Może to potrwać. Zamknięcie tego okna dialogowego nie wpłynie na przetwarzanie."
   }
 }

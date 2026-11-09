@@ -68,6 +68,7 @@
     "followCreatedEntityTypeList": "Wanneer nieuwe records van geselecteerde entiteittypes worden aanmaakt, worden deze automatisch gevolgd zelfs als ze aan een andere gebruiker worden toegewezen."
   },
   "tabFields": {
+    "label": "Label",
     "iconClass": "Icoon",
     "color": "Kleur"
   }

@@ -15,24 +15,43 @@
     "apiKey": "Klucz API",
     "targetTeam": "Docelowy zespół",
     "exampleRequestMethod": "Metoda",
+    "exampleRequestUrl": "URL",
+    "exampleRequestPayload": "Treść żądania",
     "createLeadBeforeOptInConfirmation": "Utwórz potencjalnego klienta przed potwierdzeniem",
     "duplicateCheck": "Duplikat sprawdzania",
     "skipOptInConfirmationIfSubscribed": "Pomiń potwierdzenie jeśli Lead jest już na liście celów",
     "smtpAccount": "Konto SMTP",
-    "inboundEmail": "Grupowe konto e-mail"
+    "inboundEmail": "Grupowe konto e-mail",
+    "exampleRequestHeaders": "Nagłówki",
+    "phoneNumberCountry": "Numer kierunkowy kraju",
+    "fieldParams": "Parametry pól",
+    "formId": "ID formularza",
+    "formEnabled": "Formularz internetowy",
+    "formUrl": "URL formularza",
+    "formSuccessText": "Tekst wyświetlany po wysłaniu formularza",
+    "formText": "Tekst wyświetlany w formularzu",
+    "formSuccessRedirectUrl": "URL przekierowania po wysłaniu formularza",
+    "formLanguage": "Język formularza",
+    "formFrameAncestors": "Dozwolone hosty do osadzania formularza",
+    "formCaptcha": "Używaj Captcha",
+    "formTitle": "Tytuł formularza",
+    "formTheme": "Motyw formularza"
   },
   "links": {
     "targetList": "Lista docelowa",
     "campaign": "Kampania",
     "optInConfirmationEmailTemplate": "Szablon e-mail z potwierdzeniem subskrypcji",
     "targetTeam": "Docelowy zespół",
+    "logRecords": "Dziennik",
     "inboundEmail": "Grupowe konto e-mail"
   },
   "labels": {
     "Create LeadCapture": "Utwórz punkt wejściowy(entry point)",
     "Generate New API Key": "Generuj nowy klucz API",
     "Request": "Żądanie",
-    "Confirm Opt-In": "Potwierdź subskrypcje"
+    "Confirm Opt-In": "Potwierdź subskrypcje",
+    "Generate New Form ID": "Wygeneruj nowe ID formularza",
+    "Web Form": "Formularz internetowy"
   },
   "messages": {
     "generateApiKey": "Utwórz nowy klucz API",
@@ -40,6 +59,7 @@
     "optInIsConfirmed": "Subskrypcja potwierdzona."
   },
   "tooltips": {
-    "optInConfirmationSuccessMessage": "Markdown jest wspierany."
+    "optInConfirmationSuccessMessage": "Markdown jest wspierany.",
+    "formCaptcha": "Aby używać Captcha, należy ją skonfigurować w sekcji **Administracja** > **Integracje**."
   }
 }

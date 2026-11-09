@@ -13,6 +13,7 @@
     "currencyList": "Währungsliste",
     "language": "Sprache",
     "companyLogo": "Firmenlogo",
+    "ldapPort": "Port",
     "ldapAuth": "Authentifizierung",
     "ldapSecurity": "Transportsicherheit",
     "emailAddress": "E-Mail",
@@ -26,12 +27,14 @@
     "exportDelimiter": "Export Trennzeichen",
     "globalSearchEntityList": "Entitäten für globale Suche",
     "authenticationMethod": "Authentifizierungs Methode",
+    "ldapHost": "Host",
     "ldapAccountCanonicalForm": "Kanonische Form des Kontos",
     "ldapAccountDomainName": "Domain Name Konto",
     "ldapTryUsernameSplit": "Benutzernamen Split versuchen",
     "ldapCreateEspoUser": "Benutzer in EspoCRM erstellen",
     "ldapUserLoginFilter": "Login Filter benutzen",
     "ldapAccountDomainNameShort": "Domain Name Konto kurz",
+    "ldapOptReferrals": "Opt Referrals",
     "exportDisabled": "Export deaktivieren (nur Admin ist berechtigt)",
     "b2cMode": "B2C Modus",
     "avatarsDisabled": "Avatare deaktivieren",
@@ -140,12 +143,14 @@
     "oidcGroupClaim": "OIDC Gruppen-Claim",
     "oidcCreateUser": "OIDC-Benutzer erstellen",
     "oidcUsernameClaim": "OIDC Benutzername-Claim",
+    "oidcTeams": "OIDC Teams",
     "oidcSync": "OIDC-Synchronisation",
     "oidcSyncTeams": "OIDC Teams synchronisieren",
     "oidcFallback": "OIDC Fallback-Anmeldung",
     "oidcAllowRegularUserFallback": "OIDC Fallback-Anmeldung für reguläre Benutzer zulassen",
     "oidcAllowAdminUser": "OIDC OIDC-Anmeldung für Admin-Benutzer zulassen",
     "oidcLogoutUrl": "OIDC Abmelde-URL",
+    "pdfEngine": "PDF Engine",
     "recordsPerPageKanban": "Einträge pro Seite (Kanban)",
     "auth2FAInPortal": "2FA in Portalen erlauben",
     "massEmailMaxPerBatchCount": "Maximale Anzahl von E-Mails pro Batch",
@@ -258,7 +263,9 @@
     "quickSearchFullTextAppendWildcard": "Fügt einen Platzhalter an die Autovervollständigung-Suchanfrage an, wenn die Volltextsuche aktiviert ist. Verringert die Suchleistung."
   },
   "labels": {
+    "System": "System",
     "Locale": "Lokale Einstellungen",
+    "SMTP": "SMTP",
     "Configuration": "Konfiguration",
     "In-app Notifications": "In-App Benachrichtigungen",
     "Email Notifications": "E-Mail Benachrichtigungen",
@@ -279,6 +286,7 @@
     "Divider": "Trenner",
     "General": "Allgemein",
     "Navbar": "Navigationsleiste",
+    "Dashboard": "Dashboard",
     "Phone Numbers": "Telefonnummern",
     "Access": "Zugriff",
     "Strength": "Stärke",
@@ -290,10 +298,20 @@
     "confirmBaselineRoleChange": "Sind Sie sicher, dass Sie die Baseline-Rolle ändern möchten? Eine unüberlegte Änderung kann allen Benutzern unbeabsichtigte Berechtigungen gewähren."
   },
   "options": {
+    "currencyFormat": {
+      "1": "10 USD",
+      "2": "$10",
+      "3": "10 $"
+    },
     "streamEmailNotificationsTypeList": {
       "Post": "Notizen",
       "Status": "Statusaktualisierungen",
       "EmailReceived": "Empfangene E-Mails"
+    },
+    "auth2FAMethodList": {
+      "Totp": "TOTP",
+      "Email": "E-Mail",
+      "Sms": "SMS"
     },
     "personNameFormat": {
       "firstLast": "Vorname Nachname",
@@ -301,8 +319,12 @@
       "firstMiddleLast": "Vorname 2. Vorname Nachname",
       "lastFirstMiddle": "Nachname Vorname 2. Vorname"
     },
-    "auth2FAMethodList": {
-      "Email": "E-Mail"
+    "authenticationMethod": {
+      "Oidc": "OIDC"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   }
 }

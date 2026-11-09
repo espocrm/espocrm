@@ -9,6 +9,8 @@
     "Move to Bottom": "zum Ende"
   },
   "fields": {
+    "name": "Name",
+    "status": "Status",
     "type": "Typ",
     "attachments": "Anhänge",
     "publishDate": "Veröffentlichungsdatum",
@@ -17,7 +19,9 @@
     "body": "Inhalt",
     "categories": "Kategorien",
     "language": "Sprache",
-    "portals": "Portale"
+    "portals": "Portale",
+    "bodyPlain": "Body Plain",
+    "isHtml": "HTML"
   },
   "links": {
     "cases": "Fälle",

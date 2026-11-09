@@ -17,14 +17,21 @@
     "fontFace": "Czcionka",
     "pageWidth": "Szerokość strony(mm)",
     "pageHeight": "Wysokość strony(mm)",
-    "headerPosition": "Pozycja nagłówka"
+    "headerPosition": "Pozycja nagłówka",
+    "printHeader": "Drukuj nagłówek",
+    "title": "Tytuł",
+    "style": "Styl",
+    "status": "Status",
+    "filename": "Nazwa pliku"
   },
   "labels": {
     "Create Template": "Utwórz szablon"
   },
   "tooltips": {
     "footer": "Użyj {pageNumber} aby wydrukować numer strony.",
-    "variables": "Skopiuj i wklej potrzebny symbol zastępczy do nagłówka, treści lub stopki."
+    "variables": "Skopiuj i wklej potrzebny symbol zastępczy do nagłówka, treści lub stopki.",
+    "filename": "Opcjonalna nazwa pliku. Atrybuty encji mogą być używane jako symbole zastępcze.\n\nDodatkowy symbol zastępczy:\n- `{{today}}`\n\nPrzykład:\n`Document_{{today}}_{{name}}`",
+    "body": "Zobacz [dokumentację](https://docs.espocrm.com/user-guide/printing-to-pdf/#templates).\n\nDo precyzyjnej edycji znaczników użyj widoku źródła.\n\nDodatkowe atrybuty znaczników:\n- `x-if`\n- `iterate`"
   },
   "options": {
     "pageOrientation": {
@@ -38,6 +45,10 @@
     },
     "pageFormat": {
       "Custom": "Niestandardowe"
+    },
+    "status": {
+      "Active": "Aktywny",
+      "Inactive": "Nieaktywny"
     }
   }
 }

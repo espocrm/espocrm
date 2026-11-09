@@ -5,6 +5,7 @@
     "couldNotAddFollowerUserHasNoAccessToStream": "Kon de gebruiker '{userName}' niet toevoegen aan de volgers. De gebruiker heeft geen 'stream' toegang tot het record."
   },
   "syntaxItems": {
+    "code": "code",
     "multilineCode": "meerregelige code",
     "strongText": "vette tekst",
     "emphasizedText": "benadrukte tekst",

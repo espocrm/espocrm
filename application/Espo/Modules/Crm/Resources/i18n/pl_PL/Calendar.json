@@ -15,8 +15,9 @@
     "current": "obecne",
     "time": "czas",
     "User List": "Lista użytkowników",
-    "Manage Users": "Zarządzaj użytkownikami",
     "View Calendar": "Zobacz kalendarz",
-    "Create Shared View": "Utwórz widok udostępniony"
+    "Create Shared View": "Utwórz widok udostępniony",
+    "Edit Shared View": "Edytuj widok udostępniony",
+    "Shared Mode Options": "Opcje trybu udostępnionego"
   }
 }

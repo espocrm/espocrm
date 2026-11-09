@@ -10,6 +10,8 @@
   },
   "fields": {
     "name": "Naam",
+    "status": "Status",
+    "type": "Type",
     "attachments": "Bijlagen",
     "publishDate": "Publicatiedatum",
     "expirationDate": "Vervaldatum",

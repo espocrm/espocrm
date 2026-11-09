@@ -39,6 +39,7 @@
       "all": "alle",
       "team": "groep",
       "account": "relatie",
+      "contact": "contact",
       "own": "eigen",
       "no": "nee",
       "yes": "ja",
@@ -49,6 +50,7 @@
     "read": "Lees",
     "edit": "Bewerken",
     "delete": "Verwijder",
+    "stream": "Stream",
     "create": "Creëer"
   },
   "messages": {

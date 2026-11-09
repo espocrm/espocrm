@@ -2,8 +2,10 @@
   "labels": {
     "Enabled": "Włączony",
     "Disabled": "Wyłączony",
+    "System": "System",
     "Users": "Użytkownicy",
     "Email": "E-mail",
+    "Data": "Dane",
     "Customization": "Dostosowywanie",
     "Available Fields": "Dostępne Pola",
     "Layout": "Układ",
@@ -17,6 +19,7 @@
     "Rebuild": "Przebuduj",
     "Teams": "Zespoły",
     "Roles": "Role",
+    "Portal": "Portal",
     "Portals": "Portale",
     "Portal Roles": "Role w Portalu",
     "Outbound Emails": "Poczta Wychodząca",
@@ -24,6 +27,7 @@
     "Personal Email Accounts": "Osobiste konta pocztowe",
     "Inbound Emails": "Wiadomości przychodzące",
     "Email Templates": "Szablony wiadomości",
+    "Import": "Import",
     "Layout Manager": "Menadżer układu",
     "User Interface": "Interfejs Użytkownika",
     "Auth Tokens": "Tokeny autoryzacji",
@@ -71,7 +75,21 @@
     "Dashboard Templates": "Szablony pulpitu",
     "Email Addresses": "Adres e-mail",
     "Phone Numbers": "Numery telefonów",
-    "Layout Sets": "Zestawy układów"
+    "Layout Sets": "Zestawy układów",
+    "Messaging": "Komunikacja",
+    "Misc": "Różne",
+    "Job Settings": "Ustawienia zadań",
+    "Configuration Instructions": "Instrukcje konfiguracji",
+    "Formula Sandbox": "Piaskownica formuł",
+    "Working Time Calendars": "Kalendarze czasu pracy",
+    "Group Email Folders": "Grupowe foldery e-mail",
+    "Authentication Providers": "Dostawcy uwierzytelniania",
+    "Setup": "Konfiguracja",
+    "App Log": "Dziennik aplikacji",
+    "Address Countries": "Kraje adresów",
+    "App Secrets": "Sekrety aplikacji",
+    "OAuth Providers": "Dostawcy OAuth",
+    "Pipelines": "Lejki"
   },
   "layouts": {
     "list": "Lista",
@@ -90,6 +108,7 @@
     "listSmallPortal": "Lista (Mała, Portal)",
     "listPortal": "Lista (Portal)",
     "relationshipsPortal": "Panele relacji (Portal)",
+    "kanban": "Kanban",
     "defaultSidePanel": "Pola panelu bocznego",
     "bottomPanelsDetail": "Panele dolne",
     "bottomPanelsEdit": "Dolne panele (edycja)",
@@ -138,7 +157,10 @@
     "datetimeOptional": "Data/Data-Godzina",
     "checklist": "Lista kontrolna",
     "linkOne": "Linkuj jeden",
-    "barcode": "Kod kreskowy"
+    "barcode": "Kod kreskowy",
+    "urlMultiple": "Wiele adresów URL",
+    "base": "Podstawowe",
+    "decimal": "Liczba dziesiętna (Decimal)"
   },
   "fields": {
     "type": "Rodzaj",
@@ -166,7 +188,6 @@
     "minHeight": "Minimalna wysokość (px)",
     "provider": "Dostawca",
     "typeList": "Lista typów",
-    "rows": "Ilość wierwszy w polu tekstowym",
     "lengthOfCut": "Długość cięcia",
     "sourceList": "Lista źródłowa",
     "tooltipText": "Tekst w dymku podpowiedzi",
@@ -200,11 +221,39 @@
     "codeType": "Typ kodu",
     "lastChar": "Ostatni znak",
     "listPreviewSize": "Rozmiar podglądu w widoku listy",
-    "onlyDefaultCurrency": "Tylko domyślna waluta"
+    "onlyDefaultCurrency": "Tylko domyślna waluta",
+    "dynamicLogicInvalid": "Warunki czyniące pole nieprawidłowym",
+    "conversionDisabled": "Wyłącz przeliczanie waluty",
+    "decimalPlaces": "Miejsca dziesiętne",
+    "pattern": "Wzorzec",
+    "globalRestrictions": "Globalne ograniczenia",
+    "decimal": "Typ Decimal",
+    "optionsReference": "Odwołanie do opcji",
+    "copyToClipboard": "Przycisk kopiowania do schowka",
+    "rows": "Maksymalna liczba wierszy",
+    "readOnlyAfterCreate": "Tylko do odczytu po utworzeniu",
+    "createButton": "Przycisk tworzenia",
+    "autocompleteOnEmpty": "Autouzupełnianie przy pustym polu",
+    "relateOnImport": "Powiązanie przy imporcie",
+    "aclScope": "Zakres ACL",
+    "onlyAdmin": "Tylko dla administratora",
+    "activeOptions": "Aktywne opcje",
+    "labelType": "Typ etykiety",
+    "preview": "Podgląd",
+    "attachmentField": "Pole załącznika",
+    "dynamicLogicReadOnlySaved": "Warunki zapisanego stanu czyniące pole tylko do odczytu",
+    "notStorable": "Nieprzechowywane",
+    "itemsEditable": "Edytowalne elementy",
+    "dynamicLogicCascading": "Wybór kaskadowy",
+    "capture": "Przechwytywanie",
+    "openInNewTab": "Otwórz w nowej karcie",
+    "notLockable": "Wyłączone z blokady",
+    "protocolRequired": "Wymagany protokół",
+    "cascadeRemoval": "Usuwanie kaskadowe"
   },
   "messages": {
     "selectEntityType": "Wybierz jednostkę z menu po lewej stonie.",
-    "selectUpgradePackage": "Wypierz paczkę do aktualizacji",
+    "selectUpgradePackage": "Wybierz paczkę do aktualizacji",
     "selectLayout": "Wybierz interesujący Cię układ z menu po lewej stronie i zacznij go edytować.",
     "selectExtensionPackage": "Wybierz paczkę rozszerzeń",
     "extensionInstalled": "Rozszerzenie {name} {version} zostało zainstalowane.",
@@ -222,7 +271,10 @@
     "upgradeRecommendation": "Najlepszym sposobem jest aktualizacja przez wiersz poleceń CLI. Nie zalecamy aktualizowania EspoCRM przez panel web.",
     "newVersionIsAvailable": "Dostępna jest nowa wersja EspoCRM {latestVersion}. Postępuj zgodnie z [instrukcjami] (https://www.espocrm.com/documentation/administration/upgrading/) aby zaktualizować swoją instancję.",
     "formulaFunctions": "Więcej funkcji można znaleźć w [dokumentacji] ({DocumentationUrl}).",
-    "rebuildRequired": "Musisz uruchomić rebuild z CLI."
+    "rebuildRequired": "Musisz uruchomić rebuild z CLI.",
+    "cronIsDisabled": "Cron jest wyłączony, aplikacja nie działa w pełni. Włącz cron w [ustawieniach](#Admin/settings).",
+    "cacheIsDisabled": "Pamięć podręczna jest wyłączona, aplikacja będzie działać wolno. Włącz pamięć podręczną w [ustawieniach](#Admin/settings).",
+    "noPipelinesEnabled": "Żaden typ encji nie ma włączonych lejków."
   },
   "descriptions": {
     "settings": "Ustawienia systemu dla aplikacji.",
@@ -255,7 +307,6 @@
     "actionHistory": "Historia czynności użytkownika.",
     "labelManager": "Dostosuj etykiety w aplikacji.",
     "authLog": "Historia logowania.",
-    "leadCapture": "API entrypointy dla zdobywania leadów(tzw. Web-to-Lead)",
     "attachments": "Wszystkie załączniki przechowywane w EspoCRM",
     "templateManager": "Dostosuj szablony wiadomości",
     "systemRequirements": "Wymagania systemowe dla EspoCRM",
@@ -267,7 +318,18 @@
     "phoneNumbers": "Wszystkie numery telefonów przechowywane w EspoCRM",
     "emailAddresses": "Wszystkie adresy e-mail przechowywane w systemie.",
     "layoutSets": "Kolekcje układów które można przypisać do zespołów i portali.",
-    "sms": "Ustawienia SMS"
+    "jobsSettings": "Ustawienia przetwarzania zadań. Zadania wykonują operacje w tle.",
+    "sms": "Ustawienia SMS",
+    "formulaSandbox": "Pisanie i testowanie skryptów formuł.",
+    "workingTimeCalendars": "Harmonogram pracy.",
+    "groupEmailFolders": "Foldery e-mail udostępniane zespołom.",
+    "authenticationProviders": "Dodatkowi dostawcy uwierzytelniania dla portali.",
+    "appLog": "Dziennik aplikacji.",
+    "addressCountries": "Kraje dostępne dla pól adresowych.",
+    "appSecrets": "Przechowuj poufne informacje, takie jak klucze API, hasła i inne sekrety.",
+    "leadCapture": "Punkty końcowe przechwytywania potencjalnych kontaktów i formularze internetowe.",
+    "oAuthProviders": "Dostawcy OAuth dla integracji.",
+    "pipelines": "Konfiguracja wielu lejków."
   },
   "options": {
     "previewSize": {
@@ -276,6 +338,14 @@
       "medium": "Średnie",
       "large": "Duże",
       "": "Domyślny"
+    },
+    "labelType": {
+      "state": "Stan",
+      "regular": "Zwykła"
+    },
+    "capture": {
+      "user": "Kamera przednia",
+      "environment": "Kamera tylna"
     }
   },
   "logicalOperators": {
@@ -291,7 +361,8 @@
     "user": "Nazwa Użytkownika",
     "writable": "Zapisywalny",
     "readable": "Czytelny",
-    "requiredMariadbVersion": "Wersja MariaDB"
+    "requiredMariadbVersion": "Wersja MariaDB",
+    "requiredPostgresqlVersion": "Wersja PostgreSQL"
   },
   "templates": {
     "accessInfo": "Informacje dostępowe",
@@ -302,18 +373,29 @@
     "notePostNoParent": "Uwaga o wpisie (bez rodzica)",
     "noteStatus": "Uwaga dotycząca aktualizacji statusu",
     "passwordChangeLink": "Link do zmiany hasła",
-    "noteEmailReceived": "Notatka o otrzymanej wiadomości e-mail"
+    "noteEmailReceived": "Notatka o otrzymanej wiadomości e-mail",
+    "twoFactorCode": "Kod 2FA"
   },
   "strings": {
     "rebuildRequired": "Wymagany jest rebuild"
   },
   "keywords": {
+    "settings": "system",
     "userInterface": "ui,wygląd,zakładki,logo,pulpit",
     "scheduledJob": "cron,zadania",
     "integrations": "google,mapy,mapy google",
     "authLog": "dziennik,historia",
     "authTokens": "historia,dostęp,dziennik",
     "entityManager": "pola,relacje,związki",
-    "templateManager": "powiadomienia"
+    "templateManager": "powiadomienia",
+    "jobs": "cron",
+    "authentication": "hasło,bezpieczeństwo,ldap,password,security",
+    "labelManager": "język,tłumaczenie,language,translation",
+    "appSecrets": "klucz,klucze,hasło,key,keys,password",
+    "leadCapture": "formularze internetowe,web forms"
+  },
+  "tooltips": {
+    "tabUrl": "Może zaczynać się od `#`, aby przejść do strony aplikacji.",
+    "tabUrlAclScope": "Zakładka będzie dostępna dla użytkowników mających dostęp do wskazanego zakresu."
   }
 }

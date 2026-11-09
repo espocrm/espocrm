@@ -1,1 +1,31 @@
-{}
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Utwórz kalendarz"
+  },
+  "fields": {
+    "timeZone": "Strefa czasowa",
+    "timeRanges": "Harmonogram dnia roboczego",
+    "weekday0": "Nd",
+    "weekday1": "Pn",
+    "weekday2": "Wt",
+    "weekday3": "Śr",
+    "weekday4": "Cz",
+    "weekday5": "Pt",
+    "weekday6": "Sb",
+    "weekday0TimeRanges": "Harmonogram - niedziela",
+    "weekday1TimeRanges": "Harmonogram - poniedziałek",
+    "weekday2TimeRanges": "Harmonogram - wtorek",
+    "weekday3TimeRanges": "Harmonogram - środa",
+    "weekday4TimeRanges": "Harmonogram - czwartek",
+    "weekday5TimeRanges": "Harmonogram - piątek",
+    "weekday6TimeRanges": "Harmonogram - sobota",
+    "isDefault": "Domyślny"
+  },
+  "links": {
+    "ranges": "Wyjątki",
+    "users": "Użytkownicy"
+  },
+  "tooltips": {
+    "isDefault": "Wskazuje, czy ten kalendarz jest domyślnym kalendarzem systemowym. Domyślny kalendarz czasu pracy można skonfigurować w sekcji: Administracja > Ustawienia > Kalendarz czasu pracy."
+  }
+}

@@ -4,5 +4,8 @@
     "Connected": "Połączono",
     "Disconnect": "Odłącz",
     "Disconnected": "Odłączono"
+  },
+  "messages": {
+    "externalAccountNoConnectDisabled": "Konto zewnętrzne dla integracji '{integration}' zostało wyłączone z powodu braku możliwości połączenia."
   }
 }

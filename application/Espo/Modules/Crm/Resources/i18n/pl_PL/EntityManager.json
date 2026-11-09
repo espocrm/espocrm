@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "activityStatusList": "Statusy aktywności",
+    "historyStatusList": "Statusy historii",
+    "completedStatusList": "Statusy ukończenia",
+    "canceledStatusList": "Statusy anulowania"
+  },
+  "tooltips": {
+    "activityStatusList": "Wartości statusu, przy których rekord aktywności jest wyświetlany w panelu Aktywności i traktowany jako aktualny.",
+    "historyStatusList": "Wartości statusu, przy których rekord aktywności jest wyświetlany w panelu Historia.",
+    "completedStatusList": "Wartości statusu oznaczające, że aktywność została ukończona.",
+    "canceledStatusList": "Wartości statusu oznaczające, że aktywność została anulowana i nie będzie uwzględniana w przedziałach dostępności (wolny/zajęty)."
+  }
+}

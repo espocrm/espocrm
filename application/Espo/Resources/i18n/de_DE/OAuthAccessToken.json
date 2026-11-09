@@ -1,0 +1,27 @@
+{
+  "fields": {
+    "identifier": "Kennung",
+    "status": "Status",
+    "client": "Client",
+    "user": "Benutzer",
+    "expiresAt": "Läuft ab am",
+    "scopes": "Geltungsbereiche"
+  },
+  "links": {
+    "client": "Client",
+    "user": "Benutzer"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktiv",
+      "Revoked": "Widerrufen",
+      "Expired": "Abgelaufen"
+    }
+  },
+  "massActions": {
+    "revoke": "Widerrufen"
+  },
+  "messages": {
+    "massRevokeDone": "{count} wiederufen"
+  }
+}

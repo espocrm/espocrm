@@ -1,13 +1,22 @@
 {
   "fields": {
+    "link": "Link",
     "notSortable": "Niesortowalne",
     "align": "Wyrównanie",
     "panelName": "Nazwa panelu",
     "style": "Styl",
-    "sticked": "Przypięty",
     "isLarge": "Duży rozmiar czcionki",
     "dynamicLogicVisible": "Warunki powodujące widoczność panelu",
-    "hidden": "Ukryty"
+    "hidden": "Ukryty",
+    "dynamicLogicStyled": "Warunki powodujące zastosowanie stylu",
+    "noLabel": "Bez etykiety",
+    "tabLabel": "Etykieta karty",
+    "tabBreak": "Podział na karty",
+    "width": "Szerokość",
+    "noteText": "Tekst notatki",
+    "noteStyle": "Styl notatki",
+    "isMuted": "Stonowany kolor",
+    "sticked": "Przypnij na górze"
   },
   "options": {
     "align": {
@@ -29,6 +38,21 @@
   },
   "tooltips": {
     "link": "Jeśli zaznaczone, wartość pola zostanie wyświetlona jako łącze wskazujące na szczegółowy widok rekordu. Zwykle jest używany dla pól *Imię*.",
-    "hiddenPanel": "Aby zobaczyć panel, należy kliknąć 'pokaż więcej'."
+    "hiddenPanel": "Aby zobaczyć panel, należy kliknąć 'pokaż więcej'.",
+    "sticked": "Panel zostanie przyklejony do panelu powyżej. Bez odstępu między panelami.",
+    "panelStyle": "Kolor panelu.",
+    "dynamicLogicVisible": "Jeśli ustawiono, panel będzie ukryty, gdy warunek nie jest spełniony.",
+    "dynamicLogicStyled": "Kolor zostanie zastosowany, jeśli określony warunek zostanie spełniony. Kolor jest definiowany parametrem *Styl*.",
+    "tabBreak": "Osobna karta dla panelu i wszystkich kolejnych paneli aż do następnego podziału na karty.",
+    "noLabel": "Nie wyświetlaj etykiety kolumny w nagłówku.",
+    "notSortable": "Wyłącza możliwość sortowania według kolumny.",
+    "width": "Szerokość kolumny. Zaleca się pozostawienie jednej kolumny bez określonej szerokości, zwykle powinno to być pole *Nazwa*.",
+    "noteText": "Tekst wyświetlany w panelu. Obsługiwany jest Markdown."
+  },
+  "messages": {
+    "cantBeEmpty": "Układ nie może być pusty.",
+    "fieldsIncompatible": "Te pola nie mogą być razem w układzie: {fields}.",
+    "alreadyExists": "Układ `{name}` już istnieje.",
+    "createInfo": "Niestandardowe układy listy mogą być używane w panelach relacji."
   }
 }

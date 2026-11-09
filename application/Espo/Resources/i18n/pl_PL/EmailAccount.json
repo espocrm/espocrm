@@ -1,8 +1,11 @@
 {
   "fields": {
     "name": "Nazwa",
+    "status": "Status",
+    "host": "Host",
     "username": "Nazwa użytkownika",
     "password": "Hasło",
+    "port": "Port",
     "monitoredFolders": "Monitorowane katalogi",
     "fetchSince": "Od dnia",
     "emailAddress": "Adres e-mail",
@@ -19,7 +22,9 @@
     "smtpPassword": "Hasło SMTP",
     "useImap": "Pobierz wiadomości e-mail",
     "smtpAuthMechanism": "Mechanizm autoryzacji SMTP",
-    "security": "Bezpieczeństwo"
+    "security": "Bezpieczeństwo",
+    "connectedAt": "Połączono",
+    "folderMap": "Mapowanie folderów"
   },
   "links": {
     "filters": "Filtry",
@@ -29,22 +34,43 @@
     "status": {
       "Active": "Aktywne",
       "Inactive": "Nieaktywny"
+    },
+    "smtpAuthMechanism": {
+      "plain": "PLAIN",
+      "login": "LOGIN",
+      "crammd5": "CRAM-MD5"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
+    },
+    "security": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   },
   "labels": {
     "Create EmailAccount": "Utwórz konto pocztowe",
+    "IMAP": "IMAP",
     "Main": "Główne",
     "Test Connection": "Test połączenia",
-    "Send Test Email": "Wyślij wiadomość testową"
+    "Send Test Email": "Wyślij wiadomość testową",
+    "SMTP": "SMTP"
   },
   "messages": {
     "couldNotConnectToImap": "Nie można połączyć z serwerem IMAP",
-    "connectionIsOk": "Połączenie OK"
+    "connectionIsOk": "Połączenie OK",
+    "imapNotConnected": "Nie można połączyć z [kontem IMAP](#EmailAccount/view/{id}).",
+    "noFolder": "Zmapowany folder nie istnieje.",
+    "resetFetchData": "Wiadomości zostaną ponownie pobrane od podanej daty. Istniejące wiadomości nie zostaną zduplikowane."
   },
   "tooltips": {
-    "monitoredFolders": "Wiele folderów należy oddzielić przecinkami.\n\nMożesz dodać folder 'Wysłane' aby synchronizować maile wysyłane z zewnętrznego klienta poczty.",
     "storeSentEmails": "Wysłane wiadomości będą przechowywane na serwerze IMAP. Adres e-mail powinien być taki jak podany w wiadomości wychodzącej.",
     "useSmtp": "Możliwość wysyłania maili.",
-    "emailAddress": "Rekord użytkownika (przypisanego użytkownika) powinien mieć ten sam adres e-mail, aby móc używać tego konta e-mail do wysyłania."
+    "emailAddress": "Rekord użytkownika (przypisanego użytkownika) powinien mieć ten sam adres e-mail, aby móc używać tego konta e-mail do wysyłania.",
+    "monitoredFolders": "Wybierz foldery IMAP do importu. Opcjonalnie można je zmapować na foldery Espo.\n\nMożna dodać folder 'Sent', aby synchronizować wiadomości wysłane z zewnętrznego klienta poczty."
+  },
+  "presetFilters": {
+    "active": "Aktywne"
   }
 }

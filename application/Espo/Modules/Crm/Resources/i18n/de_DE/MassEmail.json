@@ -1,5 +1,7 @@
 {
   "fields": {
+    "name": "Name",
+    "status": "Status",
     "storeSentEmails": "Gesendete E-Mails speichern",
     "startAt": "Startdatum",
     "fromAddress": "Absenderadresse",

@@ -1,13 +1,31 @@
 {
   "fields": {
     "fieldList": "Lista pól",
-    "exportAllFields": "Eksportuj wszystkie pola"
+    "exportAllFields": "Eksportuj wszystkie pola",
+    "format": "Format",
+    "status": "Status",
+    "xlsxLite": "Tryb uproszczony",
+    "xlsxRecordLinks": "Linki do rekordów",
+    "xlsxTitle": "Tytuł"
   },
   "options": {
+    "format": {
+      "csv": "CSV",
+      "xlsx": "XLSX · Arkusz kalkulacyjny"
+    },
     "status": {
       "Pending": "Oczekuje",
+      "Running": "W trakcie",
       "Success": "Sukces",
       "Failed": "Błąd"
     }
+  },
+  "messages": {
+    "exportProcessed": "Eksport został przetworzony. Pobierz [plik]({url}).",
+    "infoText": "Eksport jest przetwarzany w tle przez cron. Może to potrwać. Zamknięcie tego okna dialogowego nie wpłynie na przetwarzanie."
+  },
+  "tooltips": {
+    "xlsxLite": "Zużywa znacznie mniej pamięci. Zalecane przy eksporcie dużej liczby rekordów.",
+    "xlsxTitle": "Umieść tytuł i bieżącą datę w nagłówku."
   }
 }

@@ -18,10 +18,12 @@
     "newPasswordConfirm": "Potwierdź nowe hasło",
     "avatar": "Awatar",
     "isActive": "Jest aktywny",
+    "isPortalUser": "Jest użytkownikiem portalu",
     "contact": "Kontakt",
     "accounts": "Klienci",
     "account": "Konto (Podstawowe)",
     "sendAccessInfo": "Wyślij użytkownikowi wiadomość z danymi dostępu",
+    "portal": "Portal",
     "gender": "Płeć",
     "position": "Pozycja w drużynie",
     "ipAddress": "Adres IP",
@@ -36,19 +38,28 @@
     "dashboardTemplate": "Szablon pulpitu",
     "auth2FAEnable": "Włącz dwuetapową weryfikację",
     "auth2FAMethod": "Metoda 2FA",
-    "auth2FATotpSecret": "2FA TOTP Sekret"
+    "auth2FATotpSecret": "2FA TOTP Sekret",
+    "auth2FA": "2FA",
+    "workingTimeCalendar": "Kalendarz czasu pracy",
+    "layoutSet": "Zestaw układów",
+    "avatarColor": "Kolor awatara"
   },
   "links": {
     "teams": "Zespoły",
     "roles": "Rola",
     "notes": "Notatki",
+    "portals": "Portale",
+    "portalRoles": "Role portalu",
     "contact": "Kontakt",
     "accounts": "Klienci",
     "account": "Konto (podstawowe)",
     "tasks": "Zadania",
     "defaultTeam": "Domyślny Zespół",
     "dashboardTemplate": "Szablon pulpitu",
-    "userData": "Dane użytkownika"
+    "userData": "Dane użytkownika",
+    "workingTimeCalendar": "Kalendarz czasu pracy",
+    "layoutSet": "Zestaw układów",
+    "workingTimeRanges": "Wyjątki od czasu pracy"
   },
   "labels": {
     "Create User": "Utwórz Użytkownika",
@@ -62,6 +73,7 @@
     "Email Address": "Adres e-mail",
     "External Accounts": "Konta zewnętrzne",
     "Email Accounts": "Konta pocztowe",
+    "Portal": "Portal",
     "Create Portal User": "Utwórz użytkownika portalu",
     "Proceed w/o Contact": "Kontynuuj bez kontaktu",
     "Generate New API Key": "Generuj nowy klucz API",
@@ -71,13 +83,21 @@
     "Requirements": "Wymagania",
     "Security": "Bezpieczeństwo",
     "Reset 2FA": "Resetuj dwuetapową weryfikację",
-    "Secret": "Sekret"
+    "Secret": "Sekret",
+    "Send Password Change Link": "Wyślij link do zmiany hasła",
+    "Send Code": "Wyślij kod",
+    "Login Link": "Link do logowania"
   },
   "tooltips": {
     "defaultTeam": "Wszystkie dane utworzone przez tego użytkownika zostaną przypisane do domyślnego zespołu.",
     "isAdmin": "Administrator ma dostęp do wszystkiego.",
-    "isActive": "Jeśli odznaczone użytkownik nie będzie mógł się zalogować.",
-    "teams": "Zespoły, do których ten użytkownik należy. Poziom dostępu jest dziedziczony z rol zespołów."
+    "teams": "Zespoły, do których ten użytkownik należy. Poziom dostępu jest dziedziczony z rol zespołów.",
+    "roles": "Dodatkowe role dostępu. Należy ich użyć, jeśli użytkownik nie należy do żadnego zespołu lub trzeba rozszerzyć poziom kontroli dostępu wyłącznie dla tego użytkownika.",
+    "portalRoles": "Dodatkowe role portalu. Należy ich użyć, aby rozszerzyć poziom kontroli dostępu wyłącznie dla tego użytkownika.",
+    "portals": "Portale, do których ten użytkownik ma dostęp.",
+    "userName": "Dozwolone znaki: `a-z`, `0-9`, `-_@.`.",
+    "isActive": "Jeśli nie zaznaczono, użytkownik nie będzie mógł się zalogować.",
+    "layoutSet": "Dla użytkownika zostaną zastosowane układy z określonego zestawu układów. Układy domyślne zostaną zastąpione."
   },
   "messages": {
     "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkownika.",
@@ -97,20 +117,34 @@
     "passwordStrengthBothCases": "Musi zawierać zarówno duże, jak i małe litery.",
     "wrongCode": "Błędny kod",
     "codeIsRequired": "Kod jest wymagany",
-    "enterTotpCode": "Wprowadź kod z aplikacji.",
     "verifyTotpCode": "Zeskanuj kod QR za pomocą aplikacji mobilnego uwierzytelniania. Jeśli masz problemy ze skanowaniem, możesz ręcznie wprowadzić sekret. Następnie zobaczysz w aplikacji 6-cyfrowy kod. Wpisz ten kod w polu poniżej.",
     "generateAndSendNewPassword": "Nowe hasło zostanie wygenerowane i wysłane na adres e-mail użytkownika.",
     "security2FaResetConfirmation": "Czy na pewno chcesz zresetować bieżące ustawienia 2FA?",
     "ldapUserInEspoNotFound": "Nie znaleziono użytkownika w EspoCRM. Skontaktuj się z administratorem aby utworzyć użytkownika.",
     "passwordRecoverySentIfMatched": "Zakładając, że wprowadzone dane pasują do dowolnego konta użytkownika.",
     "auth2FARequiredHeader": "Wymagane uwierzytelnianie dwuetapowe",
-    "auth2FARequired": "Musisz skonfigurować uwierzytelnianie dwuskładnikowe. Użyj aplikacji uwierzytelniającej na swoim telefonie komórkowym (n.p. Google Authenticator)."
+    "auth2FARequired": "Musisz skonfigurować uwierzytelnianie dwuskładnikowe. Użyj aplikacji uwierzytelniającej na swoim telefonie komórkowym (n.p. Google Authenticator).",
+    "sendPasswordChangeLinkConfirmation": "Do użytkownika zostanie wysłana wiadomość e-mail z unikalnym linkiem umożliwiającym zmianę hasła. Link wygaśnie po określonym czasie.",
+    "yourAuthenticationCode": "Kod uwierzytelniający: {code}.",
+    "choose2FaSmsPhoneNumber": "Wybierz numer telefonu, który będzie używany do 2FA.",
+    "choose2FaEmailAddress": "Wybierz adres e-mail, który będzie używany do 2FA. Zdecydowanie zaleca się użycie adresu innego niż podstawowy.",
+    "enterCodeSentInEmail": "Wprowadź kod wysłany na adres e-mail.",
+    "enterCodeSentBySms": "Wprowadź kod wysłany SMS-em na numer telefonu.",
+    "passwordChangeRequestNotFound": "Nie znaleziono żądania zmiany hasła. Mogło wygasnąć. Spróbuj ponownie rozpocząć odzyskiwanie hasła ze [strony logowania]({url}).",
+    "loginAs": "Otwórz link do logowania w oknie incognito, aby zachować bieżącą sesję. Do zalogowania użyj danych uwierzytelniających administratora.",
+    "failedToLogIn": "Nie udało się zalogować",
+    "2faMethodNotConfigured": "Metoda 2FA nie jest w pełni skonfigurowana w systemie.",
+    "loginError": "Wystąpił błąd",
+    "defaultTeamIsNotUsers": "Domyślny zespół musi być jednym z zespołów użytkownika",
+    "passwordStrengthSpecialCharacterCount": "Musi zawierać znaki specjalne (co najmniej {count})."
   },
   "boolFilters": {
-    "onlyMyTeam": "Tylko mój zespół"
+    "onlyMyTeam": "Tylko mój zespół",
+    "onlyMe": "Tylko ja"
   },
   "presetFilters": {
     "active": "Aktywny",
+    "activePortal": "Aktywni użytkownicy portalu",
     "activeApi": "API jest aktywne"
   },
   "options": {
@@ -121,10 +155,19 @@
       "Neutral": "Neutralne"
     },
     "type": {
-      "regular": "Standardowy"
+      "regular": "Standardowy",
+      "admin": "Administrator",
+      "portal": "Portal",
+      "system": "System",
+      "super-admin": "Superadministrator",
+      "api": "API"
     },
     "authMethod": {
-      "ApiKey": "Klucz API"
+      "ApiKey": "Klucz API",
+      "Hmac": "HMAC"
     }
+  },
+  "actions": {
+    "changePosition": "Zmień stanowisko"
   }
 }

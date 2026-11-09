@@ -1,6 +1,8 @@
 {
   "modes": {
     "month": "Maand",
+    "week": "Week",
+    "agendaWeek": "Week",
     "day": "Dag",
     "agendaDay": "Dag",
     "timeline": "Tijdlijn"

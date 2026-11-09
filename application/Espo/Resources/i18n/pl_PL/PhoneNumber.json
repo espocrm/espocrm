@@ -2,7 +2,8 @@
   "fields": {
     "type": "Typ",
     "optOut": "Zrezygnowano",
-    "invalid": "Nieważny"
+    "invalid": "Nieważny",
+    "numeric": "Wartość liczbowa"
   },
   "presetFilters": {
     "orphan": "Sierota"

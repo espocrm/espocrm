@@ -1,7 +1,11 @@
 {
   "fields": {
     "type": "Typ",
+    "optOut": "Opted Out",
     "invalid": "Ungültig",
     "numeric": "Numerischer Wert"
+  },
+  "presetFilters": {
+    "orphan": "Orphan"
   }
 }

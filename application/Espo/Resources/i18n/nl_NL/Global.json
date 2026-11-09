@@ -11,8 +11,11 @@
     "ScheduledJob": "Geplande Opdracht",
     "ExternalAccount": "Extern Account",
     "Extension": "Extensie",
+    "Dashboard": "Dashboard",
     "InboundEmail": "Groep e-mailaccount",
+    "Stream": "Stream",
     "Import": "Importeren",
+    "Job": "Job",
     "EmailFilter": "E-mail filter",
     "Portal": "Portaal",
     "PortalRole": "Portaal rol",
@@ -26,6 +29,7 @@
     "UniqueId": "Unieke ID",
     "LastViewed": "Laatst bekeken",
     "Settings": "Instellingen",
+    "FieldManager": "Field Manager",
     "Integration": "Integratie",
     "LayoutManager": "Lay-out Manager",
     "EntityManager": "Entiteit beheerder",
@@ -45,6 +49,7 @@
     "ArrayValue": "Reeks waarde",
     "ApiUser": "API gebruiker",
     "DashboardTemplate": "Dashboard sjabloon",
+    "Webhook": "Webhook",
     "Currency": "Valuta",
     "LayoutSet": "Lay-out set",
     "Mass Action": "Massa-actie",
@@ -59,9 +64,11 @@
     "WorkingTimeRange": "Werktijd uitzondering",
     "AddressCountry": "Adres Land",
     "AppSecret": "App Geheim",
+    "OAuthProvider": "OAuth Provider",
     "OAuthAccount": "OAuth account",
     "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitem",
     "Template": "PDF-sjabloon",
+    "OpenApi": "OpenAPI",
     "CurrencyRecord": "Valuta-overzicht",
     "CurrencyRecordRate": "Wisselkoers",
     "Pipeline": "Pijpleiding",
@@ -79,7 +86,10 @@
     "ScheduledJob": "Geplande Opdrachten",
     "ExternalAccount": "Externe Accounts",
     "Extension": "Extensies",
+    "Dashboard": "Dashboard",
     "InboundEmail": "Groep e-mailaccounts",
+    "Stream": "Stream",
+    "Job": "Jobs",
     "EmailFilter": "E-mail filter",
     "Portal": "Portalen",
     "PortalRole": "Portaal functies",
@@ -101,6 +111,7 @@
     "ArrayValue": "Reeks waarden",
     "ApiUser": "API gebruikers",
     "DashboardTemplate": "Dashboard Sjablonen",
+    "Webhook": "Webhooks",
     "EmailAddress": "E-mailadressen",
     "PhoneNumber": "Telefoonnummers",
     "Currency": "Valuta",
@@ -112,12 +123,15 @@
     "AuthenticationProvider": "Authenticatie aanbieders",
     "GlobalStream": "Globale stroming",
     "WebhookQueueItem": "Webhook wachtrij items",
+    "AppLogRecord": "App Log",
     "WorkingTimeRange": "Werktijd uitzonderingen",
     "AddressCountry": "Adres Landen",
     "AppSecret": "App Geheimen",
+    "OAuthProvider": "OAuth Providers",
     "OAuthAccount": "OAuth accounts",
     "WebhookEventQueueItem": "Webhook-gebeurteniswachtrijitems",
     "Template": "PDF-sjablonen",
+    "OpenApi": "OpenAPI",
     "CurrencyRecord": "Valuta’s",
     "CurrencyRecordRate": "Wisselkoersen",
     "Pipeline": "Pijpleidingen",
@@ -127,6 +141,7 @@
     "Misc": "Overig",
     "Merge": "Samenvoegen",
     "None": "Geen",
+    "Home": "Home",
     "by": "door",
     "Saved": "Opgeslagen",
     "Error": "Fout",
@@ -159,14 +174,19 @@
     "Create": "Creëer",
     "create": "creëer",
     "Overview": "Overzicht",
+    "Details": "Details",
     "Add Field": "Veld toevoegen",
     "Add Dashlet": "Dashlet toevoegen",
+    "Filter": "Filter",
     "Edit Dashboard": "Bewerk Dashboard",
     "Add": "Toevoegen",
     "Add Item": "Item toevoegen",
+    "Reset": "Reset",
+    "Menu": "Menu",
     "More": "Meer",
     "Search": "Zoeken",
     "Only My": "Alleen mijn",
+    "Open": "Open",
     "Admin": "Beheerder",
     "About": "Over",
     "Refresh": "Vernieuwen",
@@ -174,6 +194,7 @@
     "Options": "Opties",
     "Username": "Gebruikersnaam",
     "Password": "Wachtwoord",
+    "Login": "Login",
     "Log Out": "Uitloggen",
     "Preferences": "Voorkeuren",
     "State": "Provincie",
@@ -187,8 +208,10 @@
     "Clear Local Cache": "Lokale Cache Schonen",
     "Actions": "Acties",
     "Delete": "Verwijder",
+    "Update": "Update",
     "Save": "Opslaan",
     "Edit": "Bewerken",
+    "View": "View",
     "Cancel": "Annuleren",
     "Apply": "Toepassen",
     "Unlink": "Ontkoppel",
@@ -200,6 +223,8 @@
     "Active": "Actief",
     "Inactive": "Inactief",
     "Write your comment here": "Schrijf hier uw opmerkingen",
+    "Post": "Post",
+    "Stream": "Stream",
     "Show more": "Toon meer",
     "Dashlet Options": "Dashlet opties",
     "Full Form": "Volledig Formulier",
@@ -227,9 +252,12 @@
     "Close": "Afsluiten",
     "Yes": "Ja",
     "No": "Nee",
+    "Value": "Value",
     "Current version": "Huidige versie",
+    "List View": "List View",
     "Tree View": "Structuur overzicht",
     "Unlink All": "Ontkoppel alle",
+    "Total": "Total",
     "Print to PDF": "Print als PDF",
     "Default": "Standaard",
     "Number": "Nummer",
@@ -271,12 +299,14 @@
     "Field": "Veld",
     "Resolution": "Resolutie",
     "Resolve Conflict": "Conflict oplossen",
+    "Download": "Download",
     "Sort": "Sorteer",
     "Log in": "Inloggen",
     "Log in as": "Log in als",
     "Sign in": "Aanmelden",
     "Global Search": "Uitgebreid zoeken",
     "Navigation Panel": "Toon navigatiepaneel",
+    "Print": "Print",
     "Copy to Clipboard": "Kopiëren naar klembord",
     "Copied to clipboard": "Gekopieerd naar klembord",
     "Audit Log": "Controlelog",
@@ -290,6 +320,7 @@
     "Unstar": "Ontster",
     "Starred": "Sterren",
     "Remove Filter": "Verwijder filter",
+    "Ready": "Ready",
     "Column Resize": "Kolom wijzigen",
     "General": "Algemeen",
     "Send": "Stuur",
@@ -308,6 +339,7 @@
     "Network error": "Netwerk error",
     "Edit Item": "Item bewerken",
     "Bad request": "Ongeldig verzoek",
+    "Conflict": "Conflict",
     "Internal server error": "Interne serverfout",
     "Mark read": "Mark las",
     "Lock": "Vergrendelen",
@@ -466,6 +498,7 @@
     "printPdf": "Print als PDF",
     "unlink": "Ontkoppel",
     "recalculateFormula": "Formule herberekenen",
+    "update": "Update",
     "delete": "Verwijder",
     "lock": "Vergrendelen",
     "unlock": "Ontgrendelen"
@@ -495,11 +528,14 @@
     "order": "Sortering",
     "parent": "Behorende bij",
     "children": "Onderliggend",
+    "id": "ID",
     "emailAddressData": "E-mailadresgegevens",
     "phoneNumberData": "Telefoonnummergegevens",
+    "ids": "IDs",
     "names": "Namen",
     "emailAddressIsOptedOut": "E-mailadres is niet-aangemeld",
     "targetListIsOptedOut": "Is afgemeld (doellijst)",
+    "type": "Type",
     "phoneNumberIsOptedOut": "Telefoonnummer is niet-aangemeld",
     "types": "Typen",
     "middleName": "Tussenvoegsel",
@@ -531,8 +567,11 @@
     "pipelineStage": "Pijplijnfase"
   },
   "dashlets": {
+    "Stream": "Stream",
     "Emails": "Mijn inbox",
-    "Records": "Recordlijst"
+    "Records": "Recordlijst",
+    "Iframe": "Iframe",
+    "Memo": "Memo"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} is aan jou toegewezen",
@@ -544,6 +583,7 @@
     "addedToCollaborators": "{user} heeft je toegevoegd als medewerker aan {entityType} {entity}",
     "groupUpdatesMultiple": "{entityType} {entity} – {number} nieuwe activiteiten",
     "groupUpdatesOne": "{entityType} {entity} – nieuwe activiteit",
+    "groupUpdates": "{entityType} {entity}",
     "groupEmailsReceivedNew": "Ontvangen e-mails – {aantal} nieuwe",
     "groupEmailsReceived": "Ontvangen e-mails"
   },
@@ -602,8 +642,10 @@
     "assignVoid": "{user} niet-toegewezen {entityType} {entity}",
     "assignThisSelf": "{user} heeft dit {entityType} zelf toegewezen",
     "assignSelf": "{user} zichzelf toegewezen {entityType} {entity}",
+    "unrelate": "{user} unlinked {relatedEntityType} {relatedEntity} from {entityType} {entity}",
     "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} van deze {entityType}",
     "assignMultiAdd": "{user} heeft {entity} toegewezen aan {assignee}",
+    "assignMultiRemove": "{user} unassigned {entity} from {removedAssignee}",
     "assignMultiAddRemove": "{user} heeft {entity} toegewezen aan {assignee} en niet toegewezen aan {removedAssignee}",
     "assignMultiRemoveThis": "{user} heeft deze {entityType} toegewezen aan {removedAssignee}",
     "assignMultiAddRemoveThis": "{user} heeft deze {entityType} toegewezen aan {assignee} en niet toegewezen aan {removedAssignee}"
@@ -669,7 +711,8 @@
     "salutationName": {
       "Mr.": "Dhr.",
       "Mrs.": "Mevr.",
-      "Ms.": "Mej."
+      "Ms.": "Mej.",
+      "Dr.": "Dr."
     },
     "dateSearchRanges": {
       "on": "Op",
@@ -687,6 +730,7 @@
       "currentYear": "Huidige jaar",
       "lastYear": "Vorig Jaar",
       "lastSevenDays": "Laatste 7 dagen",
+      "lastXDays": "Last X Days",
       "nextXDays": "Volgende X Days",
       "ever": "Altijd",
       "isEmpty": "Is leeg",
@@ -699,6 +743,7 @@
       "lastFiscalQuarter": "Laatste financieel kwartaal"
     },
     "searchRanges": {
+      "is": "Is",
       "isEmpty": "Is leeg",
       "isNotEmpty": "Is niet leeg",
       "isFromTeams": "Is lid van groep",
@@ -746,6 +791,8 @@
     "phoneNumber": {
       "Mobile": "Mobiel",
       "Office": "Kantoor",
+      "Fax": "Fax",
+      "Home": "Home",
       "Other": "Overig"
     },
     "saveConflictResolution": {
@@ -759,6 +806,7 @@
       "NOTICE": "U kunt hier de vertaling vinden: https://github.com/summernote/summernote/tree/develop/lang",
       "font": {
         "bold": "Vet",
+        "italic": "Italic",
         "underline": "Onderstreept",
         "strike": "Doorhalen",
         "clear": "Verwijder opmaak lettertype",
@@ -781,6 +829,7 @@
         "remove": "Afbeelding verwijderen"
       },
       "link": {
+        "link": "Link",
         "insert": "Link invoegen",
         "unlink": "Ontkoppel",
         "edit": "Bewerken",
@@ -789,8 +838,10 @@
         "openInNewWindow": "In nieuw scherm openen"
       },
       "video": {
+        "video": "Video",
         "videoLink": "Video link",
         "insert": "Video invoegen",
+        "url": "Video URL?",
         "providers": "(YouTube, Vimeo, Vine, Instagram of DailyMotion)"
       },
       "table": {
@@ -803,6 +854,7 @@
         "style": "Stijl",
         "normal": "Normaal",
         "blockquote": "Citaat",
+        "pre": "Code",
         "h1": "Koptekst 1",
         "h2": "Koptekst 2",
         "h3": "Koptekst 3",
@@ -833,6 +885,7 @@
         "more": "Meer kleur",
         "transparent": "Transparant",
         "setTransparent": "Transparant instellen",
+        "reset": "Reset",
         "resetToDefault": "Standaardinstellingen terugzetten",
         "background": "Achtergrondkleur",
         "foreground": "Letterkleur"
@@ -858,13 +911,22 @@
     "postTargetSelfAndOthers": "{user} gepost op {target} en zichzelf"
   },
   "durationUnits": {
-    "h": "u"
+    "d": "d",
+    "h": "u",
+    "m": "m",
+    "s": "s"
   },
   "listViewModes": {
-    "list": "Lijst"
+    "list": "Lijst",
+    "kanban": "Kanban"
   },
   "themes": {
     "Dark": "Donker",
+    "Espo": "Espo",
+    "Sakura": "Sakura",
+    "Violet": "Violet",
+    "Hazyblue": "Hazyblue",
+    "Glass": "Glass",
     "Light": "Licht"
   },
   "themeNavbars": {
@@ -905,6 +967,9 @@
   },
   "navbarTabs": {
     "Business": "Zakelijk",
+    "Marketing": "Marketing",
+    "Support": "Support",
+    "CRM": "CRM",
     "Activities": "Activiteiten"
   },
   "wysiwygLabels": {
@@ -929,6 +994,22 @@
       "middle": "Midden",
       "bottom": "Onder"
     }
+  },
+  "detailViewModes": {
+    "detail": "Detail"
+  },
+  "strings": {
+    "yesterdayShort": "Yest"
+  },
+  "reactions": {
+    "Smile": "Smile",
+    "Surprise": "Surprise",
+    "Laugh": "Laugh",
+    "Meh": "Meh",
+    "Sad": "Sad",
+    "Love": "Love",
+    "Like": "Like",
+    "Dislike": "Dislike"
   },
   "recordActions": {
     "create": "Maak",

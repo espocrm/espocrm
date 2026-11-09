@@ -1,6 +1,8 @@
 {
   "fields": {
     "name": "Naam",
+    "status": "Status",
+    "host": "Host",
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
     "port": "Poort",
@@ -14,6 +16,7 @@
     "useSmtp": "Gebruik SMTP",
     "smtpHost": "SMTP host",
     "smtpPort": "SMTP poort",
+    "smtpAuth": "SMTP Auth",
     "smtpSecurity": "SMTP beveiliging",
     "smtpUsername": "SMTP gebruikersnaam",
     "smtpPassword": "SMTP wachtwoord",
@@ -23,6 +26,10 @@
     "connectedAt": "Verbonden op",
     "folderMap": "Maptoewijzing"
   },
+  "links": {
+    "filters": "Filters",
+    "emails": "E-mails"
+  },
   "options": {
     "status": {
       "Active": "Actief",
@@ -30,14 +37,25 @@
     },
     "smtpAuthMechanism": {
       "plain": "Plat",
-      "login": "Login"
+      "login": "Login",
+      "crammd5": "CRAM-MD5"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
+    },
+    "security": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   },
   "labels": {
     "Create EmailAccount": "Creëer E-mail Account",
+    "IMAP": "IMAP",
     "Main": "Hoofd",
     "Test Connection": "Test verbinding",
-    "Send Test Email": "Verzend test e-mail"
+    "Send Test Email": "Verzend test e-mail",
+    "SMTP": "SMTP"
   },
   "messages": {
     "couldNotConnectToImap": "Kan geen verbinding maken met IMAP server",
@@ -45,9 +63,6 @@
     "imapNotConnected": "Kan geen verbinding maken met [IMAP-account](#EmailAccount/view/{id}).",
     "noFolder": "De toegewezen map bestaat niet.",
     "resetFetchData": "E-mails worden vanaf de opgegeven datum opnieuw opgehaald. Bestaande e-mails worden niet gedupliceerd."
-  },
-  "links": {
-    "emails": "E-mails"
   },
   "tooltips": {
     "storeSentEmails": "Verzonden E-mails worden opgeslagen op de IMAP server. E-mailadres veld moet overeenkomen met het E-mailadres waarvan verzonden wordt.",

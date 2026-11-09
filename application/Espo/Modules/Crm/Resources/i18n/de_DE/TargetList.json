@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "description": "Beschreibung",
     "entryCount": "Eingabezähler",
     "campaigns": "Kampagnen",
@@ -24,7 +25,10 @@
   "options": {
     "type": {
       "Email": "E-Mail",
-      "Television": "Fernsehen"
+      "Web": "Web",
+      "Television": "Fernsehen",
+      "Radio": "Radio",
+      "Newsletter": "Newsletter"
     },
     "targetStatus": {
       "Opted Out": "Opt-Out gesetzt",
@@ -34,6 +38,7 @@
   "labels": {
     "Create TargetList": "Kontaktliste erstellen",
     "Opted Out": "Opt-Out gesetzt",
-    "Cancel Opt-Out": "Opt-Out zurücksetzen"
+    "Cancel Opt-Out": "Opt-Out zurücksetzen",
+    "Opt-Out": "Opt-Out"
   }
 }

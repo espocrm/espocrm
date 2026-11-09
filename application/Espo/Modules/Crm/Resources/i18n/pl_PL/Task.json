@@ -2,6 +2,7 @@
   "fields": {
     "name": "Nazwa",
     "parent": "Rodzic",
+    "status": "Status",
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zwrotu",
     "dateStartDate": "Data rozpoczęcia",
@@ -13,12 +14,14 @@
     "dateCompleted": "Data ukończenia",
     "attachments": "Załączniki",
     "reminders": "Przypomnienia",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "originalEmail": "Oryginalny e-mail"
   },
   "links": {
     "attachments": "Załączniki",
     "account": "Klient",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "email": "E-mail"
   },
   "options": {
     "status": {
@@ -41,10 +44,13 @@
     "overdue": "zaległy"
   },
   "presetFilters": {
-    "actual": "Bieżący",
     "completed": "Ukończone",
     "todays": "Dzisiaj",
     "overdue": "Przegrzane",
-    "deferred": "Opóźniony"
+    "deferred": "Opóźniony",
+    "actual": "Otwarte"
+  },
+  "nameOptions": {
+    "replyToEmail": "Odpowiedz na e-mail"
   }
 }

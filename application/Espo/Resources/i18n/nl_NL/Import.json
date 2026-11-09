@@ -54,7 +54,9 @@
     "Import Results": "Resultaten importeren",
     "Silent Mode": "Stille modus",
     "New import with same params": "Nieuwe import met dezelfde parameters",
-    "Run Manually": "Handmatig uitvoeren"
+    "Run Manually": "Handmatig uitvoeren",
+    "Export": "Export",
+    "Parameters": "Parameters"
   },
   "messages": {
     "utf8": "Moet UTF-8 gecodeerd zijn",
@@ -74,7 +76,8 @@
     "entityType": "Type entiteit",
     "imported": "Geïmporteerd records",
     "duplicates": "Dubbele Records",
-    "updated": "Bijgewerkte records"
+    "updated": "Bijgewerkte records",
+    "status": "Status"
   },
   "options": {
     "status": {

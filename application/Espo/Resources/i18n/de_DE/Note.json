@@ -3,6 +3,7 @@
     "post": "Nachricht",
     "attachments": "Anhänge",
     "targetType": "Ziel",
+    "teams": "Teams",
     "users": "Benutzer",
     "portals": "Portale",
     "type": "Typ",
@@ -30,6 +31,7 @@
       "Create": "Erstellen",
       "CreateRelated": "Verknüpft erstellen",
       "Update": "Aktualisieren",
+      "Status": "Status",
       "Assign": "Zuweisen",
       "Relate": "Verknüpfen",
       "Unrelate": "Verknüpfung lösen",
@@ -39,6 +41,7 @@
     "targetType": {
       "self": "Selbst",
       "users": "Benutzer",
+      "teams": "Teams",
       "all": "Alle interne Benutzer",
       "portals": "Portalbenutzer"
     }

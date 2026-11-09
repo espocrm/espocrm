@@ -1,7 +1,10 @@
 {
   "fields": {
+    "code": "Code",
+    "status": "Status",
     "label": "Etiket",
     "symbol": "Symbool",
+    "isBase": "Is Base",
     "rate": "Tarief",
     "rateDate": "Rentevoet Datum"
   },

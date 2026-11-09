@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "Create AddressCountry": "Utwórz kraj adresu",
+    "Populate": "Wypełnij"
+  },
+  "fields": {
+    "code": "Kod",
+    "isPreferred": "Preferowany"
+  },
+  "tooltips": {
+    "code": "Kod ISO 3166-1 alpha-2.",
+    "isPreferred": "Preferowane kraje są wyświetlane na początku listy wyboru."
+  },
+  "messages": {
+    "confirmPopulateDefaults": "Wszystkie istniejące kraje zostaną usunięte, a następnie zostanie utworzona domyślna lista krajów. Tej operacji nie będzie można cofnąć.\n\nCzy na pewno?"
+  },
+  "strings": {
+    "populateDefaults": "Wypełnij domyślną listą krajów"
+  }
+}

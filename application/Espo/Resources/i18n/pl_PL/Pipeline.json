@@ -1,0 +1,22 @@
+{
+  "labels": {
+    "Create Pipeline": "Utwórz lejek"
+  },
+  "fields": {
+    "order": "Kolejność",
+    "status": "Status",
+    "entityType": "Typ encji",
+    "field": "Pole",
+    "isAvailableForAll": "Dostępny dla wszystkich",
+    "color": "Kolor"
+  },
+  "links": {
+    "stages": "Etapy"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktywny",
+      "Inactive": "Nieaktywny"
+    }
+  }
+}

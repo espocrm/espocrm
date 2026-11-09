@@ -1,16 +1,26 @@
 {
   "fields": {
     "enabled": "Włączony",
-    "apiKey": "Klucz API"
+    "clientId": "ID klienta",
+    "clientSecret": "Sekret klienta",
+    "redirectUri": "Adres URI przekierowania",
+    "apiKey": "Klucz API",
+    "siteKey": "Klucz witryny",
+    "secretKey": "Tajny klucz",
+    "scoreThreshold": "Próg wyniku",
+    "mapId": "ID mapy"
   },
   "messages": {
+    "selectIntegration": "Wybierz integrację z menu.",
     "noIntegrations": "Nie ma dostępnych integracji."
   },
   "titles": {
-    "GoogleMaps": "Mapy Google"
+    "GoogleMaps": "Mapy Google",
+    "GoogleReCaptcha": "Google reCAPTCHA"
   },
   "help": {
     "Google": "**Uzyskaj poświadczenia OAuth 2.0 z Google Developers Console.**\n\nOdwiedź [Google Developers Console] (https://console.developers.google.com/project) aby uzyskać dane uwierzytelniające OAuth 2.0, takie jak identyfikator klienta i klucz tajny klienta, które są potrzebne zarówno Google, jak i aplikacji EspoCRM.",
-    "GoogleMaps": "Uzyskaj klucz API [tutaj] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
+    "GoogleMaps": "Uzyskaj klucz API [tutaj] (https://developers.google.com/maps/documentation/javascript/get-api-key).",
+    "GoogleReCaptcha": "Klucz witryny i tajny klucz można uzyskać w serwisie [Google](https://www.google.com/recaptcha/)."
   }
 }

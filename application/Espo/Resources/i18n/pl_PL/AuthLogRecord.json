@@ -6,6 +6,7 @@
     "createdAt": "Zażądano o",
     "isDenied": "Odmówiono",
     "denialReason": "Powód odmowy",
+    "portal": "Portal",
     "user": "Użytkownik",
     "authToken": "Utworzony token autoryzacyjny",
     "requestUrl": "Zażądany URL",
@@ -16,6 +17,7 @@
   "links": {
     "authToken": "Token został utworzony",
     "user": "Użytkownik",
+    "portal": "Portal",
     "actionHistoryRecords": "Historia czynności"
   },
   "presetFilters": {
@@ -28,7 +30,10 @@
       "INACTIVE_USER": "Nieaktywny użytkownik",
       "IS_PORTAL_USER": "Użytkownik portalu",
       "IS_NOT_PORTAL_USER": "Użytkownik nie jest użytkownikiem portalu",
-      "USER_IS_NOT_IN_PORTAL": "Użytkownik nie jest powiązany z portalem"
+      "USER_IS_NOT_IN_PORTAL": "Użytkownik nie jest powiązany z portalem",
+      "IS_SYSTEM_USER": "Użytkownik systemowy",
+      "FORBIDDEN": "Dostęp zabroniony",
+      "WRONG_CODE": "Błędny kod"
     }
   }
 }

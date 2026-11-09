@@ -14,22 +14,30 @@
     "Congratulation! Welcome to EspoCRM": "Gefeliciteerd! EspoCRM is succesvol geïnstalleerd.",
     "More Information": "Voor meer informatie, bezoek onze {BLOG}, volg ons op {TWITTER}.<br><br> Vragen of verzoeken kunt u vermelden op het {FORUM}.",
     "share": "Tevreden over EspoCRM, deel dit dan met je vrienden. Informeer ze over ons product.",
+    "blog": "blog",
+    "twitter": "twitter",
+    "forum": "forum",
     "Installation Guide": "Installatiegids",
     "admin": "beheerder",
+    "localhost": "localhost",
+    "port": "3306",
     "Locale": "Lokaal",
     "Outbound Email Configuration": "Uitgaande E-mail Configuratie",
+    "SMTP": "SMTP",
+    "Start": "Start",
     "Back": "Terug",
     "Next": "Volgende",
     "Go to EspoCRM": "Ga naar EspoCRM",
+    "Re-check": "Re-check",
     "Version": "Versie",
     "Test settings": "Test verbinding",
-    "Database Settings Description": "Voer uw MySQL database gegevens (hostnaam, gebruikersnaam en wachtwoord) in.  U kunt de server poort opgeven voor hostnaam zoals localhost: 3306.",
     "Install": "Installeren",
     "Configuration Instructions": "Configuratie Instructies",
     "phpVersion": "PHP versie",
     "dbHostName": "Hostnaam",
     "dbName": "Database naam",
     "dbUserName": "Database gebruikersnaam",
+    "OK": "OK",
     "SetupConfirmation page title": "Systeemeisen",
     "PHP Configuration": "PHP-instellingen",
     "MySQL Configuration": "Database instellingen",
@@ -53,6 +61,7 @@
     "smtpPort": "Poort",
     "Database User Name": "Database gebruikersnaam",
     "Database User Password": "Database gebruikersnaam wachtwoord",
+    "Database driver": "Database driver",
     "User Name": "Gebruikersnaam",
     "Password": "Wachtwoord",
     "smtpPassword": "Wachtwoord",
@@ -69,9 +78,12 @@
     "Default Currency": "Standaard Valuta",
     "Currency List": "Valuta Lijst",
     "Language": "Taal",
+    "smtpServer": "Server",
+    "smtpAuth": "Auth",
     "smtpSecurity": "Beveiliging",
     "smtpUsername": "Gebruikersnaam",
-    "emailAddress": "E-mail"
+    "emailAddress": "E-mail",
+    "Platform": "Platform"
   },
   "messages": {
     "1045": "Geen rechten voor de gebruiker",
@@ -103,23 +115,18 @@
     "mysqlSettingError": "EspoCRM vraagde MySQL instelling \"{NAME}\" in te stellen op {VALUE}",
     "requiredMariadbVersion": "Uw MariaDB-versie wordt niet ondersteund door EspoCRM, update ten minste naar MariaDB {minVersion}",
     "Ajax failed": "Er is een onverwachte fout opgetreden",
-    "Bad init Permission": "Toestemming geweigerd voor \"{*}\" directory. Stel 775 in op \"{*}\" of voer dit commando gewoon uit in de terminal <pre><b>{C}</b></pre> Bediening is niet toegestaan? Probeer deze: {CSU}",
     "permissionInstruction": "<br>Voer dit commando uit in Terminal:<pre><b>\"{C}\"</b></pre>",
     "operationNotPermitted": "Operatie is niet toegestaan? Probeer deze eens: <br><br>{CSU}"
   },
-  "systemRequirements": {
-    "requiredPhpVersion": "PHP versie",
-    "requiredMysqlVersion": "MySQL Versie",
-    "host": "Hostnaam",
-    "dbname": "Database naam",
-    "user": "Gebruikersnaam",
-    "writable": "Schrijfbaar",
-    "readable": "Leesbaar",
-    "requiredMariadbVersion": "MariaDB-versie"
-  },
   "options": {
+    "db driver": {
+      "mysqli": "MySQLi",
+      "pdo_mysql": "PDO MySQL"
+    },
     "modRewriteTitle": {
+      "apache": "<h3>API Error: EspoCRM API is unavailable.</h3><br>Do only necessary steps. After each step check if the issue is solved.",
       "nginx": "<h3>API Fout: EspoCRM API is niet beschikbaar.</h3>",
+      "microsoft-iis": "<h3>API Error: EspoCRM API is unavailable.</h3><br> Possible problem: disabled \"URL Rewrite\". Please check and enable \"URL Rewrite\" Module in IIS server",
       "default": "<h3>API-fout: EspoCRM API is niet beschikbaar.</h3><br> Mogelijke problemen: uitgeschakeld Rewrite Module. Controleer en activeer de Rewrite Module in uw server (b.v. mod_rewrite in Apache) en .htaccess ondersteuning."
     },
     "modRewriteInstruction": {
@@ -131,5 +138,15 @@
         "linux": "<br> Voeg deze code toe aan uw Nginx server config bestand <code>{NGINX_PATH}</code> in de \"server\" sectie:<br><br><pre>{NGINX}</pre> <br> Voor meer informatie, zie de richtlijn <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuratie voor EspoCRM</a>.<br><br>"
       }
     }
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "PHP versie",
+    "requiredMysqlVersion": "MySQL Versie",
+    "host": "Hostnaam",
+    "dbname": "Database naam",
+    "user": "Gebruikersnaam",
+    "writable": "Schrijfbaar",
+    "readable": "Leesbaar",
+    "requiredMariadbVersion": "MariaDB-versie"
   }
 }

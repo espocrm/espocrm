@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "roles": "Rollen",
     "positionList": "Positionsbezeichnungen",
     "layoutSet": "Layout-Satz",

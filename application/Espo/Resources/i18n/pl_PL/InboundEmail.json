@@ -2,9 +2,12 @@
   "fields": {
     "name": "Nazwa",
     "emailAddress": "Adres e-mail",
+    "status": "Status",
     "assignToUser": "Przydzielone do użytkownika",
+    "host": "Host",
     "username": "Nazwa użytkownika",
     "password": "Hasło",
+    "port": "Port",
     "monitoredFolders": "Monitorowane katalogi",
     "trashFolder": "Katalog kosza",
     "createCase": "Utwórz sprawę",
@@ -15,6 +18,7 @@
     "replyToAddress": "Odpowiedz do",
     "replyFromName": "Nazwa nadawcy",
     "targetUserPosition": "Pozycja użytkownika docelowego",
+    "fetchSince": "Pobieraj od",
     "addAllTeamUsers": "Dla wszystkich członków zespołu",
     "team": "Zespół",
     "teams": "Zespoły",
@@ -33,26 +37,36 @@
     "useImap": "Pobierz wiadomości e-mail",
     "keepFetchedEmailsUnread": "Zachowaj nieprzeczytane pobrane maile",
     "smtpAuthMechanism": "Mechanizm SMTP Auth",
-    "security": "Bezpieczeństwo"
+    "security": "Bezpieczeństwo",
+    "groupEmailFolder": "Grupowy folder e-mail",
+    "connectedAt": "Połączono",
+    "excludeFromReply": "Wyklucz z odpowiedzi",
+    "isSystem": "Systemowe"
   },
   "tooltips": {
     "reply": "Powiadamiaj nadawcę o dostarczeniu jego wiadomości.\n\nZostanie wysłana tylko jedna wiadomość na jednego odbiorcę w jednostce czasu aby ustrzec przed powstaniem pętli.",
-    "createCase": "Automatycznie twórz Sprawę z przychodzących emaili.",
+    "caseDistribution": "Sposób przydzielania spraw: bezpośrednio do użytkownika lub w ramach zespołu.",
     "assignToUser": "Wiadomości użytkownika/sprawy zostaną przypisane do.",
     "team": "Zespołowe wiadomości/sprawy będą powiązane z.",
     "teams": "E-maile zespołów zostaną przypisane.",
     "addAllTeamUsers": "Emails will appear in Inbox of all users of a specified team.",
     "targetUserPosition": "Define the position of users which will be destributed with cases.",
     "monitoredFolders": "Wiele folderów należy oddzielić przecinkami.",
-    "smtpIsShared": "Jeśli zaznaczone, użytkownicy będą mogli wysyłać e-maile przy użyciu tego SMTP. Dostępność jest kontrolowana przez role poprzez uprawnienie grupowego konta e-mail.",
-    "smtpIsForMassEmail": "Jeśli zaznaczone, konto SMTP będzie dostępne dla masowej wysyłki",
     "storeSentEmails": "Wysłane e-maile będą przechowywane na serwerze IMAP.",
-    "useSmtp": "Możliwość wysyłania e-maili."
+    "useSmtp": "Możliwość wysyłania e-maili.",
+    "groupEmailFolder": "Umieszczaj przychodzące wiadomości e-mail w folderze grupowym.",
+    "excludeFromReply": "Przy odpowiadaniu na e-maile wysłane na adres tego konta jego adres e-mail nie zostanie dodany do DW.\n\nPo włączeniu tego parametru adres e-mail tego konta będzie widoczny dla użytkowników z uprawnieniem do wysyłania e-maili.",
+    "isSystem": "Systemowe konto e-mail.",
+    "createCase": "Automatycznie twórz sprawy z wiadomości przychodzących.",
+    "replyToAddress": "Aby kierować odpowiedzi na to konto pocztowe, podaj adres e-mail tego konta.",
+    "smtpIsShared": "Jeśli zaznaczono, użytkownicy będą mogli wysyłać wiadomości przez ten serwer SMTP. Dostępność kontrolują role poprzez uprawnienie do grupowego konta pocztowego.",
+    "smtpIsForMassEmail": "Jeśli zaznaczono, SMTP będzie dostępny dla poczty masowej."
   },
   "links": {
     "filters": "Filtry",
     "emails": "Wiadomości",
-    "assignToUser": "Przypisz do użytkownika"
+    "assignToUser": "Przypisz do użytkownika",
+    "groupEmailFolder": "Grupowy folder e-mail"
   },
   "options": {
     "status": {
@@ -60,11 +74,33 @@
       "Inactive": "Nieaktywny"
     },
     "caseDistribution": {
-      "": "Brak"
+      "": "Brak",
+      "Direct-Assignment": "Przydział bezpośredni",
+      "Round-Robin": "Przydział rotacyjny",
+      "Least-Busy": "Najmniej obciążony"
+    },
+    "smtpAuthMechanism": {
+      "plain": "PLAIN",
+      "login": "LOGIN",
+      "crammd5": "CRAM-MD5"
+    },
+    "smtpSecurity": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
+    },
+    "security": {
+      "SSL": "SSL/TLS",
+      "TLS": "STARTTLS"
     }
   },
   "labels": {
     "Create InboundEmail": "Utwórz konto pocztowe",
-    "Actions": "Akcje"
+    "IMAP": "IMAP",
+    "Actions": "Akcje",
+    "Main": "Główne"
+  },
+  "messages": {
+    "couldNotConnectToImap": "Nie można połączyć się z serwerem IMAP",
+    "imapNotConnected": "Nie można połączyć z grupowym [kontem IMAP](#InboundEmail/view/{id})."
   }
 }

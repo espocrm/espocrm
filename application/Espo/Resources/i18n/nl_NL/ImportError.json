@@ -1,6 +1,8 @@
 {
   "fields": {
+    "type": "Type",
     "validationFailures": "Validatiefouten",
+    "import": "Import",
     "rowIndex": "Rij index",
     "exportRowIndex": "Rij index exporteren",
     "lineNumber": "Lijnnummer",

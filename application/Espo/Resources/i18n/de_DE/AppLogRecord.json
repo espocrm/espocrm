@@ -1,6 +1,7 @@
 {
   "fields": {
     "message": "Nachricht",
+    "code": "Code",
     "level": "Stufe",
     "exceptionClass": "Ausnahmeklasse",
     "file": "Datei",

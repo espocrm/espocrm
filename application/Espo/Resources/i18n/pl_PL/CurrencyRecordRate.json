@@ -1,0 +1,15 @@
+{
+  "labels": {
+    "Create CurrencyRecordRate": "Utwórz kurs waluty"
+  },
+  "fields": {
+    "record": "Waluta",
+    "baseCode": "Waluta bazowa",
+    "date": "Data",
+    "rate": "Kurs",
+    "number": "Numer"
+  },
+  "links": {
+    "record": "Waluta"
+  }
+}

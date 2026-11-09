@@ -1,7 +1,8 @@
 {
   "fields": {
     "billingAddress": "Factuuradres",
-    "shippingAddress": "Vestigingsadres"
+    "shippingAddress": "Vestigingsadres",
+    "website": "Website"
   },
   "links": {
     "meetings": "Vergaderingen",

@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "Create PipelineStage": "Utwórz etap"
+  },
+  "fields": {
+    "order": "Kolejność",
+    "pipeline": "Lejek",
+    "mappedStatus": "Zmapowany status"
+  },
+  "links": {
+    "pipeline": "Lejek"
+  }
+}

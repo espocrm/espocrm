@@ -1,1 +1,31 @@
-{}
+{
+  "labels": {
+    "Calendars": "Kalendarze",
+    "Create WorkingTimeRange": "Utwórz wyjątek"
+  },
+  "fields": {
+    "timeRanges": "Harmonogram",
+    "dateStart": "Data rozpoczęcia",
+    "dateEnd": "Data zakończenia",
+    "type": "Typ",
+    "calendars": "Kalendarze",
+    "users": "Użytkownicy"
+  },
+  "links": {
+    "calendars": "Kalendarze",
+    "users": "Użytkownicy"
+  },
+  "options": {
+    "type": {
+      "Non-working": "Wolne od pracy",
+      "Working": "Pracujące"
+    }
+  },
+  "presetFilters": {
+    "actual": "Aktualne"
+  },
+  "tooltips": {
+    "calendars": "Kalendarze, do których ma zostać zastosowany wyjątek. Wyjątek zostanie zastosowany do wszystkich użytkowników wybranych kalendarzy.\n\nPozostaw pole puste, jeśli wyjątek ma dotyczyć tylko określonych użytkowników.",
+    "users": "Określeni użytkownicy, do których ma zostać zastosowany wyjątek."
+  }
+}

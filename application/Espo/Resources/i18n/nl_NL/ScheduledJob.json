@@ -1,7 +1,12 @@
 {
   "fields": {
     "name": "Naam",
+    "status": "Status",
+    "job": "Job",
     "scheduling": "Planning (crontab notatie)"
+  },
+  "links": {
+    "log": "Log"
   },
   "labels": {
     "Create ScheduledJob": "Creëer geplande opdracht",

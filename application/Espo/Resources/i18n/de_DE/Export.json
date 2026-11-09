@@ -2,18 +2,22 @@
   "fields": {
     "fieldList": "Feldliste",
     "exportAllFields": "Exportieren alle Felder",
+    "format": "Format",
+    "status": "Status",
+    "xlsxLite": "Lite",
     "xlsxRecordLinks": "Datensatzverknüpfungen",
     "xlsxTitle": "Titel"
   },
   "options": {
+    "format": {
+      "csv": "CSV",
+      "xlsx": "XLSX · Tabelle"
+    },
     "status": {
       "Pending": "Ausstehend",
       "Running": "In Bearbeitung",
       "Success": "Erfolgreich",
       "Failed": "Fehlgeschlagen"
-    },
-    "format": {
-      "xlsx": "XLSX · Tabelle"
     }
   },
   "messages": {

@@ -29,15 +29,19 @@
     "targetLists": "Listy docelowe",
     "campaignLogRecords": "Log kampanii",
     "campaign": "Kampania",
-    "originalLead": "Źródłowy lead"
+    "portalUsers": "Użytkownicy portalu",
+    "originalLead": "Źródłowy lead",
+    "contactsPrimary": "Kontakty (główne)"
   },
   "options": {
     "type": {
       "Customer": "Klient",
       "Investor": "Inwestor",
+      "Partner": "Partner",
       "Reseller": "Sprzedawca"
     },
     "industry": {
+      "Agriculture": "Rolnictwo",
       "Advertising": "Reklamy",
       "Apparel & Accessories": "Wystrój i akcesoria",
       "Automotive": "Motoryzacja",
@@ -55,7 +59,9 @@
       "Grocery": "Sklep spożywczy",
       "Healthcare": "Opieka zdrowotna",
       "Insurance": "Ubezpieczenia",
+      "Legal": "Usługi prawne",
       "Manufacturing": "Produkcja",
+      "Publishing": "Wydawnictwa",
       "Real Estate": "Nieruchomości",
       "Service": "Usługi",
       "Sports": "Sport",
@@ -64,6 +70,7 @@
       "Telecommunications": "Telekomunikacja",
       "Television": "Telewizja",
       "Transportation": "Transport",
+      "Venture Capital": "Venture capital",
       "Aerospace": "Lotnictwo",
       "Architecture": "Architektura",
       "Construction": "Budowa",
@@ -76,6 +83,7 @@
       "Mass Media": "Media",
       "Mining": "Kopalnie",
       "Music": "Muzyka",
+      "Marketing": "Marketing",
       "Petroleum": "Ropa naftowa",
       "Retail": "Handel detaliczny",
       "Shipping": "Dostawa",
@@ -95,5 +103,9 @@
     "customers": "Klienci",
     "partners": "Partnerzy",
     "recentlyCreated": "Ostatnio utworzone"
+  },
+  "tabs": {
+    "Account": "Klient",
+    "Support": "Wsparcie"
   }
 }

@@ -1,5 +1,6 @@
 {
   "fields": {
+    "name": "Name",
     "body": "Inhalt",
     "entityType": "Entitätstyp",
     "header": "Kopfzeile",
@@ -19,6 +20,8 @@
     "headerPosition": "Kopfzeilen-Position",
     "printHeader": "Header ausgeben",
     "title": "Titel",
+    "style": "Style",
+    "status": "Status",
     "filename": "Dateiname"
   },
   "labels": {

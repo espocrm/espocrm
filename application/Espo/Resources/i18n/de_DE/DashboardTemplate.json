@@ -1,5 +1,6 @@
 {
   "fields": {
+    "layout": "Layout",
     "append": "Anhängen (Tabs der Benutzer nicht entfernen)"
   },
   "labels": {

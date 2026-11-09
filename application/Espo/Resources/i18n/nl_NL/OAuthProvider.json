@@ -1,4 +1,7 @@
 {
+  "labels": {
+    "Create OAuthProvider": "Create OAuth Provider"
+  },
   "fields": {
     "isActive": "Is actief",
     "clientId": "Klant ID",
@@ -7,9 +10,13 @@
     "tokenEndpoint": "Token Eindpunt",
     "authorizationRedirectUri": "Autorisatie omleiding URI",
     "scopes": "Scopen",
+    "scopeSeparator": "Scope Separator",
     "hasAccessToken": "Heeft toegangstoken",
     "authorizationPrompt": "Autorisatievraag",
     "authorizationParams": "Autorisatieparameters"
+  },
+  "links": {
+    "accounts": "Accounts"
   },
   "tooltips": {
     "authorizationParams": "Extra queryparameters die naar het autorisatie-eindpunt moeten worden gestuurd. Opgegeven in JSON-formaat."

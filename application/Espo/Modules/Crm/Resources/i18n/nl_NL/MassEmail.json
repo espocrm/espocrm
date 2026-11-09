@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Naam",
+    "status": "Status",
     "storeSentEmails": "Opslaan verzonden E-mails",
     "startAt": "Start Datum",
     "fromAddress": "Van Adres",

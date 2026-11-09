@@ -3,10 +3,16 @@
     "fieldList": "Lijst met velden",
     "exportAllFields": "Exporteer alle velden",
     "format": "Formaat",
+    "status": "Status",
+    "xlsxLite": "Lite",
     "xlsxRecordLinks": "Record links",
     "xlsxTitle": "Titel"
   },
   "options": {
+    "format": {
+      "csv": "CSV",
+      "xlsx": "XLSX · Spreadsheet"
+    },
     "status": {
       "Pending": "In behandeling",
       "Running": "Actief",

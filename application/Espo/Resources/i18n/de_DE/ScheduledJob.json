@@ -1,5 +1,8 @@
 {
   "fields": {
+    "name": "Name",
+    "status": "Status",
+    "job": "Job",
     "scheduling": "Planung"
   },
   "links": {

@@ -4,6 +4,10 @@
   },
   "fields": {
     "order": "Reihenfolge",
+    "pipeline": "Pipeline",
     "mappedStatus": "Zugeordneter Status"
+  },
+  "links": {
+    "pipeline": "Pipeline"
   }
 }

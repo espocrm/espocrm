@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "event": "Wydarzenie",
+    "target": "Cel",
+    "data": "Dane",
+    "isProcessed": "Przetworzony",
+    "user": "Użytkownik"
+  },
+  "links": {
+    "target": "Cel",
+    "user": "Użytkownik"
+  }
+}

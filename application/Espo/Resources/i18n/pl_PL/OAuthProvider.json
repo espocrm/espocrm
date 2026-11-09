@@ -1,0 +1,24 @@
+{
+  "labels": {
+    "Create OAuthProvider": "Utwórz dostawcę OAuth"
+  },
+  "fields": {
+    "isActive": "Aktywny",
+    "clientId": "ID klienta",
+    "clientSecret": "Sekret klienta",
+    "authorizationEndpoint": "Endpoint autoryzacji",
+    "tokenEndpoint": "Endpoint tokenu",
+    "authorizationRedirectUri": "URI przekierowania autoryzacji",
+    "scopes": "Zakresy",
+    "scopeSeparator": "Separator zakresów",
+    "hasAccessToken": "Ma token dostępu",
+    "authorizationPrompt": "Monit autoryzacji",
+    "authorizationParams": "Parametry autoryzacji"
+  },
+  "links": {
+    "accounts": "Konta"
+  },
+  "tooltips": {
+    "authorizationParams": "Dodatkowe parametry zapytania wysyłane do endpointu autoryzacji. Podawane w formacie JSON."
+  }
+}

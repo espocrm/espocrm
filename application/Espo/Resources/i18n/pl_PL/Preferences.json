@@ -15,6 +15,7 @@
     "tabList": "Lista zakładek",
     "defaultReminders": "Domyślne powiadomienia",
     "theme": "Motyw",
+    "useCustomTabList": "Własna lista zakładek",
     "receiveAssignmentEmailNotifications": "Prześlij wiadomość po przypisaniu",
     "receiveMentionEmailNotifications": "Powiadomienia e-mail o wzmiankach w postach",
     "receiveStreamEmailNotifications": "Powiadomienia e-mail o wpisach i aktualizacjach statusu",
@@ -27,15 +28,29 @@
     "followCreatedEntities": "Automatycznie obserwuj utworzone rekordy",
     "followCreatedEntityTypeList": "Automatyczne obserwuj utworzone rekordy określonych typów jednostek",
     "emailUseExternalClient": "Użyj zewnętrznego klienta pocztowego",
-    "scopeColorsDisabled": "Wyłącz kolory ikonek",
-    "tabColorsDisabled": "Wyłącz kolory w menu",
     "assignmentNotificationsIgnoreEntityTypeList": "Powiadomienia w aplikacji",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Powiadomienia e-mailem"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Powiadomienia e-mailem",
+    "dashboardLocked": "Zablokuj pulpit",
+    "textSearchStoringDisabled": "Wyłącz zapamiętywanie filtru tekstowego",
+    "calendarSlotDuration": "Długość przedziału czasu w kalendarzu",
+    "calendarScrollHour": "Przewiń kalendarz do godziny",
+    "defaultRemindersTask": "Domyślne przypomnienia dla zadań",
+    "addCustomTabs": "Dodaj własne zakładki",
+    "reactionNotifications": "Powiadomienia w aplikacji o reakcjach",
+    "pageContentWidth": "Szerokość treści",
+    "reactionNotificationsNotFollowed": "Powiadomienia o reakcjach w nieobserwowanych rekordach",
+    "followAsCollaborator": "Automatycznie obserwuj po dodaniu jako współpracownika",
+    "notificationGrouping": "Grupuj powiadomienia",
+    "notificationSound": "Dźwięk powiadomienia"
   },
   "options": {
     "weekStart": {
       "0": "Niedziela",
       "1": "Poniedziałek"
+    },
+    "pageContentWidth": {
+      "": "Normalna",
+      "Wide": "Szeroka"
     }
   },
   "labels": {
@@ -47,8 +62,14 @@
   },
   "tooltips": {
     "autoFollowEntityTypeList": "Automatycznie śledź WSZYSTKIE nowe rekordy (utworzone przez dowolnego użytkownika) wybranych typów jednostek, aby móc przeglądać informacje w strumieniu i otrzymywać powiadomienia o wszystkich rekordach w systemie.",
-    "doNotFillAssignedUserIfNotRequired": "Podczas tworzenia rekordu przypisany użytkownik nie zostanie wypełniony własnym użytkownikiem, chyba że pole jest wymagane.",
-    "followCreatedEntities": "Podczas tworzenia nowych rekordów będą one automatycznie obserwowane, nawet jeśli zostaną przypisane do innego użytkownika.",
-    "followCreatedEntityTypeList": "Podczas tworzenia nowych rekordów wybranych opcji będą one automatycznie obserwowane, nawet jeśli zostaną przypisane do innego użytkownika."
+    "addCustomTabs": "Jeśli zaznaczone, własne zakładki zostaną dodane do domyślnych. W przeciwnym razie własne zakładki zastąpią domyślne.",
+    "doNotFillAssignedUserIfNotRequired": "Podczas tworzenia nowego rekordu pole „Przypisany użytkownik” nie będzie wstępnie wypełniane bieżącym użytkownikiem. Jeśli to pole jest wymagane, ten parametr nie ma zastosowania.",
+    "followCreatedEntities": "Utworzone rekordy będą automatycznie obserwowane, niezależnie od tego, komu zostały przypisane.",
+    "followCreatedEntityTypeList": "Rekordy wybranych typów encji będą automatycznie obserwowane, niezależnie od tego, komu zostały przypisane. Użyj tego parametru, aby obserwować tylko określone typy encji."
+  },
+  "tabFields": {
+    "label": "Etykieta",
+    "iconClass": "Ikona",
+    "color": "Kolor"
   }
 }

@@ -2,6 +2,7 @@
   "labels": {
     "Enabled": "Aktiv",
     "Disabled": "Inaktiv",
+    "System": "System",
     "Users": "Benutzer",
     "Email": "E-Mail",
     "Data": "Daten",
@@ -16,7 +17,9 @@
     "Upgrade": "Aktualisierung",
     "Clear Cache": "Cache leeren",
     "Rebuild": "Neu aufbauen",
+    "Teams": "Teams",
     "Roles": "Rollen",
+    "Portal": "Portal",
     "Portals": "Portale",
     "Portal Roles": "Portal-Rollen",
     "Outbound Emails": "Ausgehende E-Mails",
@@ -24,8 +27,10 @@
     "Personal Email Accounts": "Persönliche E-Mail-Konten",
     "Inbound Emails": "Eingehende E-Mails",
     "Email Templates": "E-Mail Vorlagen",
+    "Import": "Import",
     "Layout Manager": "Layout-Manager",
     "User Interface": "Benutzeroberfläche",
+    "Auth Tokens": "Auth Tokens",
     "Authentication": "Authentifizierung",
     "Currency": "Währung",
     "Integrations": "Integrationen",
@@ -46,6 +51,7 @@
     "Create Link": "Verknüpfung erstellen",
     "Edit Link": "Verknüpfung bearbeiten",
     "Notifications": "Benachrichtigungen",
+    "Jobs": "Jobs",
     "Reset to Default": "Zurücksetzen auf Standard",
     "Email Filters": "E-Mail Filter",
     "Portal Users": "Portalbenutzer",
@@ -65,6 +71,7 @@
     "is recommended": "wird empfohlen",
     "extension is missing": "Erweiterung fehlt",
     "PDF Templates": "PDF-Vorlagen",
+    "Webhooks": "Webhooks",
     "Dashboard Templates": "Dashboard-Vorlagen",
     "Email Addresses": "E-Mail-Adressen",
     "Phone Numbers": "Telefonnummern",
@@ -78,9 +85,11 @@
     "Group Email Folders": "E-Mail Gruppenordner",
     "Authentication Providers": "Authentifizierungsanbieter",
     "Setup": "Einrichtung",
+    "App Log": "App Log",
     "Address Countries": "Länderliste",
     "App Secrets": "App-Geheimnisse",
-    "OAuth Providers": "OAuth-Anbieter"
+    "OAuth Providers": "OAuth-Anbieter",
+    "Pipelines": "Pipelines"
   },
   "layouts": {
     "list": "Liste",
@@ -99,6 +108,7 @@
     "listSmallPortal": "Liste (Klein, Portal)",
     "listPortal": "Liste (Portal)",
     "relationshipsPortal": "Beziehungen (Portal)",
+    "kanban": "Kanban",
     "defaultSidePanel": "Felder des seitlichen Panel",
     "bottomPanelsDetail": "Untere Felder",
     "bottomPanelsEdit": "Untere Felder (Bearbeiten)",
@@ -111,6 +121,7 @@
     "foreign": "Fremdbezug",
     "duration": "Dauer",
     "password": "Passwort",
+    "personName": "Person Name",
     "autoincrement": "Automatisch hochzählen",
     "bool": "Bool",
     "currency": "Währung",
@@ -120,6 +131,7 @@
     "enumInt": "Einfachauswahl Ganzzahlwerte",
     "enumFloat": "Einfachauswahl Fließkommawerte",
     "float": "Fließkomma",
+    "link": "Link",
     "linkMultiple": "Mehrfachlinks",
     "linkParent": "Übergeordneter Link",
     "phone": "Telefon",
@@ -139,17 +151,20 @@
     "colorpicker": "Farbwähler",
     "int": "Ganzzahl",
     "number": "Nummer",
+    "jsonArray": "Json Array",
     "jsonObject": "Json Objekt",
     "datetime": "Datum-Uhrzeit",
     "datetimeOptional": "Datum/Datum-Uhrzeit",
     "checklist": "Checkliste",
     "linkOne": "Link Eins",
+    "barcode": "Barcode",
     "urlMultiple": "URL - Mehrere",
     "base": "Basis",
     "decimal": "Dezimal"
   },
   "fields": {
     "type": "Typ",
+    "name": "Name",
     "label": "Bezeichnung",
     "required": "Erforderlich",
     "default": "Standard",
@@ -157,7 +172,10 @@
     "options": "Optionen",
     "after": "Nach (Feld)",
     "before": "Vor (Feld)",
+    "link": "Link",
     "field": "Feld",
+    "min": "Min",
+    "max": "Max",
     "translation": "Übersetzung",
     "previewSize": "Vorschau Größe",
     "defaultType": "Standardtyp",
@@ -168,9 +186,12 @@
     "trim": "Abschneiden",
     "height": "Höhe (px)",
     "minHeight": "Mindesthöhe (px)",
+    "provider": "Provider",
     "typeList": "Typenliste",
     "lengthOfCut": "Angezeigte Textlänge",
     "sourceList": "Quellenliste",
+    "tooltipText": "Tooltip Text",
+    "prefix": "Prefix",
     "nextNumber": "Nächste Nummer",
     "padLength": "Länge auffüllen",
     "disableFormatting": "Formatierung deaktivieren",
@@ -185,6 +206,7 @@
     "isPersonalData": "Enthält personenbezogene Daten",
     "useIframe": "Iframe verwenden",
     "useNumericFormat": "Verwenden Sie das numerische Format",
+    "strip": "Strip",
     "cutHeight": "Höhe abkürzen",
     "minuteStep": "Minutenschritte",
     "inlineEditDisabled": "Inline Editierung abschalten",
@@ -307,7 +329,8 @@
     "appSecrets": "Speichert sensible Informationen wie API-Schlüssel, Kennwörter und andere Geheimnisse.",
     "leadCapture": "Endpunkte zur Interessenten-Erfassung und Webformulare.",
     "oAuthProviders": "OAuth-Anbieter für Integrationen.",
-    "pipelines": "Konfigurieren Sie mehrere Pipelines."
+    "pipelines": "Konfigurieren Sie mehrere Pipelines.",
+    "oAuthClients": "Registrieren Sie Anwendungen für den API-Zugriff über OAuth."
   },
   "options": {
     "previewSize": {
@@ -326,7 +349,14 @@
       "environment": "Umgebung"
     }
   },
+  "logicalOperators": {
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT"
+  },
   "systemRequirements": {
+    "requiredPhpVersion": "PHP Version",
+    "requiredMysqlVersion": "MySQL Version",
     "host": "Hostname",
     "dbname": "Datenbankname",
     "user": "Benutzername",
@@ -344,18 +374,27 @@
     "notePostNoParent": "Hinweis zum Beitrag (no Parent)",
     "noteStatus": "Benachrichtigung über Statusupdates",
     "passwordChangeLink": "Link zum Ändern des Passwords",
-    "noteEmailReceived": "Hinweis zu empfangenen E-Mails"
+    "noteEmailReceived": "Hinweis zu empfangenen E-Mails",
+    "twoFactorCode": "2FA Code"
   },
   "strings": {
     "rebuildRequired": "Neuaufbau ist erforderlich"
   },
   "keywords": {
     "settings": "System",
+    "userInterface": "ui,theme,tabs,logo,dashboard",
+    "scheduledJob": "cron,jobs",
+    "integrations": "google,maps,google maps",
+    "authLog": "log,history",
+    "authTokens": "history,access,log",
+    "entityManager": "fields,relations,relationships",
     "templateManager": "Benachrichtigungen",
+    "jobs": "cron",
     "authentication": "Passwort,Sicherheit,LDAP",
     "labelManager": "Sprache,Übersetzung",
     "appSecrets": "Schlüssel,Passwort",
-    "leadCapture": "Webformulare"
+    "leadCapture": "Webformulare",
+    "oAuthClients": "oauth,api,authentifizierung"
   },
   "tooltips": {
     "tabUrl": "Kann mit `#` beginnen, um zu einer Anwendungsseite zu navigieren.",

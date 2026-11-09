@@ -19,10 +19,18 @@
       "contains": "Zawiera",
       "has": "Zawiera",
       "notContains": "Nie zawiera",
-      "notHas": "Nie zawiera"
+      "notHas": "Nie zawiera",
+      "startsWith": "Zaczyna się od",
+      "endsWith": "Kończy się na",
+      "matches": "Pasuje (wyrażenie regularne)"
     }
   },
   "labels": {
     "Field": "Pole"
+  },
+  "fields": {
+    "localField": "Pole lokalne",
+    "foreignField": "Pole obce",
+    "matchRequired": "Wymagane dopasowanie"
   }
 }

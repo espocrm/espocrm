@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Napisz **@nazwaużytkownika** żeby o nim wspomnieć we wpisie.",
-    "infoSyntax": "Dostępna składnia markdown"
+    "infoSyntax": "Dostępna składnia markdown",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Nie można dodać użytkownika '{userName}' do obserwatorów. Użytkownik nie ma dostępu do Komunikatora tego rekordu."
   },
   "syntaxItems": {
     "code": "kod",
@@ -9,6 +10,7 @@
     "strongText": "wytłuszczony tekst",
     "emphasizedText": "wyróżniony tekst",
     "deletedText": "przekreślony tekst",
-    "blockquote": "cytat"
+    "blockquote": "cytat",
+    "link": "tekst linku"
   }
 }

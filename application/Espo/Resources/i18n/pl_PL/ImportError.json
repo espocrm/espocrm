@@ -1,1 +1,24 @@
-{}
+{
+  "fields": {
+    "type": "Typ",
+    "validationFailures": "Błędy walidacji",
+    "import": "Import",
+    "rowIndex": "Indeks wiersza",
+    "exportRowIndex": "Indeks wiersza eksportu",
+    "lineNumber": "Numer linii",
+    "exportLineNumber": "Numer linii eksportu",
+    "row": "Wiersz",
+    "entityType": "Typ encji"
+  },
+  "options": {
+    "type": {
+      "Validation": "Walidacja",
+      "Access": "Dostęp",
+      "Not-Found": "Nie znaleziono"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Numer linii w oryginalnym pliku CSV.",
+    "exportLineNumber": "Numer linii w eksportowanym pliku CSV."
+  }
+}

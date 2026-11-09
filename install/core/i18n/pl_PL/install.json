@@ -12,10 +12,19 @@
     "Errors page title": "Błędy",
     "Finish page title": "Instalacja została ukończona",
     "Congratulation! Welcome to EspoCRM": "Gratuluje! EspoCRM zostało pomyślnie zainstalowane.",
+    "More Information": "Aby dowiedzieć się więcej, odwiedź nasz {BLOG} i obserwuj nas w serwisie {TWITTER}.<br><br>Jeśli masz sugestie lub pytania, napisz na naszym {FORUM}.",
     "share": "Jeśli lubisz EspoCRM, podziel się nim ze znajomymi. Poinformuj ich o tym produkcie.",
+    "blog": "blog",
+    "twitter": "Twitter",
+    "forum": "forum",
     "Installation Guide": "Instrukcja instalacji",
+    "admin": "admin",
+    "localhost": "localhost",
+    "port": "3306",
     "Locale": "Lokalne",
     "Outbound Email Configuration": "Ustawienia poczty wychodzącej",
+    "SMTP": "SMTP",
+    "Start": "Rozpocznij",
     "Back": "Wróć",
     "Next": "Następny",
     "Go to EspoCRM": "Idź do EspoCRM",
@@ -25,10 +34,10 @@
     "Install": "Instaluj",
     "Configuration Instructions": "Instrukcje konfiguracji",
     "phpVersion": "Wersja PHP",
-    "requiredMysqlVersion": "Wersja MySQL",
     "dbHostName": "Nazwa hosta",
     "dbName": "Nazwa Bazy Danych",
     "dbUserName": "Nazwa Użytkownika Bazy Danych",
+    "OK": "OK",
     "SetupConfirmation page title": "Wymagania systemowe",
     "PHP Configuration": "Ustawienia PHP",
     "MySQL Configuration": "Ustawienia bazy danych",
@@ -39,14 +48,20 @@
     "extension is missing": "brakuje rozszerzenia",
     "headerTitle": "Instalacja EspoCRM",
     "Crontab setup instructions": "Bez uruchamiania zaplanowanych zadań przychodzące wiadomości e-mail, powiadomienia i przypomnienia nie będą działać. Tutaj możesz przeczytać {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "Instrukcji instalacji"
+    "Setup instructions": "Instrukcji instalacji",
+    "requiredMysqlVersion": "Wersja MySQL",
+    "requiredMariadbVersion": "Wersja MariaDB",
+    "requiredPostgresqlVersion": "Wersja PostgreSQL"
   },
   "fields": {
     "Choose your language": "Wybierz swój język",
     "Database Name": "Nazwa Bazy Danych",
     "Host Name": "Nazwa hosta",
+    "Port": "Port",
+    "smtpPort": "Port",
     "Database User Name": "Nazwa Użytkownika Bazy Danych",
     "Database User Password": "Hasło Użytkownika Bazy Danych",
+    "Database driver": "Sterownik bazy danych",
     "User Name": "Nazwa Użytkownika",
     "Password": "Hasło",
     "smtpPassword": "Hasło",
@@ -63,9 +78,12 @@
     "Default Currency": "Domyślna waluta",
     "Currency List": "Domyślana Lista",
     "Language": "Język",
+    "smtpServer": "Serwer",
+    "smtpAuth": "Uwierzytelnianie",
     "smtpSecurity": "Zabezpieczenia",
     "smtpUsername": "Użytkownik",
-    "emailAddress": "E-mail"
+    "emailAddress": "E-mail",
+    "Platform": "Platforma"
   },
   "messages": {
     "1045": "Dostęp zabroniony dla użytkownika",
@@ -74,6 +92,7 @@
     "Some errors occurred!": "Wystąpiły błędy!",
     "phpVersion": "Wersja PHP nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji PHP {minVersion}",
     "requiredMysqlVersion": "Wersja MySQL nie jest wspierana przez EspoCRM, proszę wykonać aktualizację do minimalnej wersji MySQL {minVersion}",
+    "The PHP extension was not found...": "Błąd PHP: nie znaleziono rozszerzenia <b>{extName}</b>.",
     "All Settings correct": "Wszystkie ustawienia są poprawne",
     "Failed to connect to database": "Błąd połączenia z bazą danych",
     "PHP version": "Wersja PHP",
@@ -82,6 +101,9 @@
     "Enable mod_rewrite in Apache server": "Włącz mod_rewrite na serwerze Apache",
     "checkWritable error": "Sprawdź zapisane błędy",
     "applySett error": "Akceptuj ustawienia błędów",
+    "buildDatabase error": "Błąd buildDatabase",
+    "createUser error": "Błąd createUser",
+    "checkAjaxPermission error": "Błąd checkAjaxPermission",
     "Cannot create user": "Nie można utworzyć użytkownika",
     "Permission denied": "Dostęp zabroniony",
     "Permission denied to": "Dostęp zabroniony",
@@ -93,9 +115,29 @@
     "mysqlSettingError": "EspoCRM wymaga aby ustawienie MySQL \"{NAME}\" było zmienione na {VALUE}",
     "requiredMariadbVersion": "Twoja wersja MariaDB nie jest obsługiwana przez EspoCRM, zaktualizuj MariaDB co najmniej do {minVersion}",
     "Ajax failed": "Wystąpił nieoczekiwany błąd",
-    "Bad init Permission": "Odmowa dostępu do katalogu „{*}”. Ustaw 775 dla \"{*}\" lub po prostu wykonaj to polecenie w terminalu <pre><b>{C}</b> </pre> Operacja nie jest dozwolona? Spróbuj tego: {CSU}",
     "permissionInstruction": "<br> Uruchom to polecenie w Terminalu: <pre> <b> „{C}” </b> </pre>",
     "operationNotPermitted": "Operacja nie jest dozwolona? Spróbuj tego: <br> <br> {CSU}\n"
+  },
+  "options": {
+    "db driver": {
+      "mysqli": "MySQLi",
+      "pdo_mysql": "PDO MySQL"
+    },
+    "modRewriteTitle": {
+      "apache": "<h3>Błąd API: API EspoCRM jest niedostępne.</h3><br>Wykonaj tylko niezbędne kroki. Po każdym kroku sprawdź, czy problem został rozwiązany.",
+      "nginx": "<h3>Błąd API: API EspoCRM jest niedostępne.</h3>",
+      "microsoft-iis": "<h3>Błąd API: API EspoCRM jest niedostępne.</h3><br> Możliwy problem: wyłączony moduł \"URL Rewrite\". Sprawdź i włącz moduł \"URL Rewrite\" na serwerze IIS",
+      "default": "<h3>Błąd API: API EspoCRM jest niedostępne.</h3><br> Możliwe problemy: wyłączony moduł Rewrite. Sprawdź i włącz moduł Rewrite na serwerze (np. mod_rewrite w Apache) oraz obsługę .htaccess."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Włącz \"mod_rewrite\".</h4>Aby włączyć <i>mod_rewrite</i>, uruchom w terminalu następujące polecenia:<br><br><pre>{APACHE1}</pre><hr><h4>2. Jeśli poprzedni krok nie pomógł, spróbuj włączyć obsługę .htaccess.</h4> Dodaj/edytuj ustawienia konfiguracji serwera <code>{APACHE2_PATH1}</code> lub <code>{APACHE2_PATH2}</code> (lub <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n Następnie uruchom w terminalu to polecenie:<br><br><pre>{APACHE3}</pre><hr><h4>3. Jeśli poprzedni krok nie pomógł, spróbuj dodać ścieżkę RewriteBase.</h4>Otwórz plik <code>{API_PATH}.htaccess</code> i zamień następującą linię:<br><br><pre>{APACHE4}</pre>na<br><br><pre>{APACHE5}</pre><hr>Więcej informacji znajduje się w przewodniku <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Znajdź plik httpd.conf.</h4>Zwykle znajduje się w folderze o nazwie \"conf\", \"config\" lub podobnej.<br><br><h4>2. Edytuj plik httpd.conf.</h4> W pliku httpd.conf odkomentuj linię <code>{WINDOWS_APACHE1}</code> (usuń znak '#' z początku linii).<br><br><h4>3. Sprawdź pozostałe parametry.</h4>Sprawdź również, czy linia <code>ClearModuleList</code> jest odkomentowana, i upewnij się, że linia <code>AddModule mod_rewrite.c</code> nie jest zakomentowana.\n"
+      },
+      "nginx": {
+        "linux": "<br> Dodaj ten kod do pliku konfiguracyjnego serwera Nginx <code>{NGINX_PATH}</code> w sekcji \"server\":<br><br><pre>{NGINX}</pre> <br> Więcej informacji znajduje się w przewodniku <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
+      }
+    }
   },
   "systemRequirements": {
     "requiredPhpVersion": "Wersja PHP",

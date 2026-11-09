@@ -1,6 +1,7 @@
 {
   "labels": {
     "Dynamic Logic": "Dynamische Logik",
+    "Name": "Name",
     "Label": "Bezeichnung",
     "Type": "Typ",
     "View Details": "Details anzeigen"
@@ -63,6 +64,13 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(30, 'days');": "+30 Tage"
     },
     "barcodeType": {
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "EAN5": "EAN-5",
+      "EAN2": "EAN-2",
+      "UPC": "UPC (A)",
+      "UPCE": "UPC (E)",
+      "pharmacode": "Pharmacode",
       "QRcode": "QR Code"
     },
     "globalRestrictions": {
@@ -104,7 +112,8 @@
     "preview": "Die Schaltfläche Vorschau anzeigen. Anwendbar, wenn Markdown aktiviert ist.",
     "itemsEditable": "Elemente können bearbeitet werden. Gilt nur, wenn keine Optionen angegeben sind.",
     "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt.",
-    "imageCapture": "Legt fest, welche Kamera für die Erfassung von Bilddaten verwendet werden soll."
+    "imageCapture": "Legt fest, welche Kamera für die Erfassung von Bilddaten verwendet werden soll.",
+    "notLockable": "Wenn diese Option aktiviert ist, bleibt dieses Feld auch dann bearbeitbar, wenn der Datensatz gesperrt ist."
   },
   "fieldParts": {
     "address": {

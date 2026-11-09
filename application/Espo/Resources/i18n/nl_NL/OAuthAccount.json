@@ -7,7 +7,8 @@
     "provider": "Aanbieder",
     "hasAccessToken": "Heeft toegangstoken",
     "user": "Gebruiker",
-    "providerIsActive": "Aanbieder is actief"
+    "providerIsActive": "Aanbieder is actief",
+    "data": "Data"
   },
   "links": {
     "provider": "Aanbieder"

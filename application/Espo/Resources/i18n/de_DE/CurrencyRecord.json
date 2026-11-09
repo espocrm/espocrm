@@ -1,6 +1,9 @@
 {
   "fields": {
+    "code": "Code",
+    "status": "Status",
     "label": "Beschriftung",
+    "symbol": "Symbol",
     "isBase": "Ist Basis",
     "rate": "Kurs",
     "rateDate": "Kursdatum"

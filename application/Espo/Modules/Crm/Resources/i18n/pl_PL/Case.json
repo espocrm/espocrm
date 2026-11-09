@@ -2,23 +2,29 @@
   "fields": {
     "name": "Nazwa",
     "number": "Numer",
+    "status": "Status",
     "account": "Klient",
     "contact": "Kontakty",
     "contacts": "Kontakty",
     "priority": "Priorytet",
     "type": "Rodzaj",
     "description": "Opis",
+    "lead": "Potencjalny kontakt",
     "attachments": "Załączniki",
-    "inboundEmail": "Grupowe Konto Email"
+    "inboundEmail": "Grupowe Konto Email",
+    "originalEmail": "Oryginalny e-mail",
+    "isInternal": "Ukryta w portalu"
   },
   "links": {
     "account": "Klient",
+    "contact": "Kontakt (główny)",
     "Contacts": "Kontakty",
     "meetings": "Spotkania",
     "calls": "Rozmowy",
     "tasks": "Zadania",
     "emails": "Wiadomości",
     "articles": "Artykuły bazy wiedzy",
+    "lead": "Potencjalny kontakt",
     "attachments": "Załączniki",
     "inboundEmail": "Grupowe Konto Email"
   },
@@ -39,7 +45,8 @@
     },
     "type": {
       "Question": "Pytanie",
-      "Incident": "Zdarzenie"
+      "Incident": "Zdarzenie",
+      "Problem": "Problem"
     }
   },
   "labels": {
@@ -50,7 +57,7 @@
     "Rejected": "Odrzucony"
   },
   "presetFilters": {
-    "open": "Otwórz",
+    "open": "Otwarte",
     "closed": "Zamknięty"
   }
 }

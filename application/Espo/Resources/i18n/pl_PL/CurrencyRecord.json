@@ -1,0 +1,20 @@
+{
+  "fields": {
+    "code": "Kod",
+    "status": "Status",
+    "label": "Etykieta",
+    "symbol": "Symbol",
+    "isBase": "Bazowa",
+    "rate": "Kurs",
+    "rateDate": "Data kursu"
+  },
+  "links": {
+    "rates": "Kursy"
+  },
+  "options": {
+    "status": {
+      "Active": "Aktywny",
+      "Inactive": "Nieaktywny"
+    }
+  }
+}

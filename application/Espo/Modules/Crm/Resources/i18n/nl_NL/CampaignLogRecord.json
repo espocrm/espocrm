@@ -2,16 +2,20 @@
   "fields": {
     "action": "Actie",
     "actionDate": "Datum",
+    "data": "Data",
     "campaign": "Campagne",
     "parent": "Doel",
+    "object": "Object",
     "application": "Applicatie",
     "queueItem": "Wachtrij item",
     "stringData": "Stringgegevens",
-    "stringAdditionalData": "Extra stringgegevens"
+    "stringAdditionalData": "Extra stringgegevens",
+    "isTest": "Is Test"
   },
   "links": {
     "queueItem": "Wachtrij item",
     "parent": "Behorende bij",
+    "object": "Object",
     "campaign": "Campagne"
   },
   "options": {
@@ -19,6 +23,7 @@
       "Sent": "Verzonden",
       "Opened": "Geopend",
       "Opted Out": "Afgemeld",
+      "Bounced": "Bounced",
       "Clicked": "Geklikt",
       "Lead Created": "Lead gecreëerd",
       "Opted In": "Aangemeld"
@@ -31,6 +36,7 @@
     "sent": "Verzonden",
     "opened": "Geopend",
     "optedOut": "Afgemeld",
+    "bounced": "Bounced",
     "clicked": "Geklikt",
     "leadCreated": "Lead gecreëerd",
     "optedIn": "Aangemeld"
