@@ -621,6 +621,7 @@ class RecordService
             ->create()
             ->from(Notification::ENTITY_TYPE)
             ->withSearchParams($searchParams)
+            ->withComplexExpressionsForbidden()
             ->buildQueryBuilder()
             ->where([Notification::ATTR_USER_ID => $user->getId()])
             ->order(Notification::ATTR_NUMBER, SearchParams::ORDER_DESC);
@@ -660,6 +661,7 @@ class RecordService
         $builder = $this->selectBuilderFactory
             ->create()
             ->from(Notification::ENTITY_TYPE)
+            ->withComplexExpressionsForbidden()
             ->withSearchParams($searchParams)
             ->buildQueryBuilder()
             ->select([
@@ -783,6 +785,7 @@ class RecordService
             ->create()
             ->from(Notification::ENTITY_TYPE)
             ->withSearchParams($searchParams)
+            ->withComplexExpressionsForbidden()
             ->buildQueryBuilder()
             ->select([
                 Selection::create(
@@ -888,6 +891,7 @@ class RecordService
             ->create()
             ->from(Notification::ENTITY_TYPE)
             ->withSearchParams($searchParams)
+            ->withComplexExpressionsForbidden()
             ->buildQueryBuilder()
             ->select([
                 Selection::create(

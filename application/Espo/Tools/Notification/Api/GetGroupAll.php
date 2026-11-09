@@ -35,6 +35,7 @@ use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Record\SearchParamsFetcher;
+use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Entities\Notification;
 use Espo\Tools\Notification\GroupAllService;
@@ -55,6 +56,8 @@ class GetGroupAll implements Action
         $id = $request->getQueryParam('id') ?? throw new BadRequest("No `id`.");
 
         $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $searchParams = $searchParams->withWhere(Item::createBuilder()->setType(Item::TYPE_AND)->build());
 
         $beforeNumber = $request->getQueryParam('beforeNumber');
 
