@@ -85,18 +85,16 @@ class Saver implements SaverInterface
         foreach ($matches[1] as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
-            if (!$attachment) {
+            if (
+                !$attachment ||
+                $attachment->getRole() !== Attachment::ROLE_INLINE_ATTACHMENT ||
+                $attachment->getRelated() ||
+                $attachment->getParent()
+            ) {
                 continue;
             }
 
-            if ($attachment->getRelated()) {
-                continue;
-            }
-
-            $attachment->setMultiple([
-                'relatedId' => $entity->getId(),
-                'relatedType' => $entity->getEntityType(),
-            ]);
+            $attachment->setRelated($entity);
 
             $this->entityManager->saveEntity($attachment);
         }

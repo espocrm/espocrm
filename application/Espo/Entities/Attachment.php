@@ -31,11 +31,12 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Name\Field;
-use Espo\Core\ORM\Entity;
+use Espo\Core\ORM\Entity as CoreEntity;
 
 use Espo\Core\Field\LinkParent;
+use Espo\ORM\Entity;
 
-class Attachment extends Entity
+class Attachment extends CoreEntity
 {
     public const ENTITY_TYPE = 'Attachment';
 
