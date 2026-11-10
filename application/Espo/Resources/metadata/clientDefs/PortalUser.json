@@ -54,6 +54,9 @@
         "activePortal"
     ],
     "boolFilterList": [],
+    "defaultFilterData": {
+        "primary": "activePortal"
+    },
     "selectDefaultFilters": {
         "filter": "activePortal"
     },

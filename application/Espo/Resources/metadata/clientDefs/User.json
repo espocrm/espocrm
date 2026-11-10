@@ -119,6 +119,9 @@
     "boolFilterList": [
         "onlyMyTeam"
     ],
+    "defaultFilterData": {
+        "primary": "active"
+    },
     "selectDefaultFilters": {
         "filter": "active"
     },
