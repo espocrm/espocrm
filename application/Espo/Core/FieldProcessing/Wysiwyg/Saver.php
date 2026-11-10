@@ -93,7 +93,7 @@ class Saver implements SaverInterface
                 continue;
             }
 
-            $attachment->set([
+            $attachment->setMultiple([
                 'relatedId' => $entity->getId(),
                 'relatedType' => $entity->getEntityType(),
             ]);
