@@ -176,6 +176,11 @@ class DefaultImporter implements Importer
             $email->setParent($parentFound);
         }
 
+        // @todo Consider refactoring so that the same logic is not called again for a duplicate.
+        if ($email->getGroupFolder()) {
+            $this->applyGroupFolder($email, $email->getGroupFolder()->getId());
+        }
+
         if (!$duplicate) {
             $this->entityManager->getLocker()->lockExclusive(Email::ENTITY_TYPE);
 
@@ -201,10 +206,6 @@ class DefaultImporter implements Importer
             $this->processDuplicate($duplicate, $data, $email->getGroupFolder()?->getId());
 
             return $duplicate;
-        }
-
-        if ($email->getGroupFolder()) {
-            $this->applyGroupFolder($email, $email->getGroupFolder()->getId());
         }
 
         if (!$email->getMessageId()) {
