@@ -9,18 +9,21 @@
             "type": "wysiwyg",
             "view": "views/template/fields/body",
             "tooltip": true,
-            "useIframe": true
+            "useIframe": true,
+            "massUpdateDisabled": true
         },
         "header": {
             "type": "wysiwyg",
             "view": "views/template/fields/body",
-            "useIframe": true
+            "useIframe": true,
+            "massUpdateDisabled": true
         },
         "footer": {
             "type": "wysiwyg",
             "view": "views/template/fields/body",
             "tooltip": true,
-            "useIframe": true
+            "useIframe": true,
+            "massUpdateDisabled": true
         },
         "entityType": {
             "type": "enum",
