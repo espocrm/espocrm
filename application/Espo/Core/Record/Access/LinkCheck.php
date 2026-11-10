@@ -40,6 +40,7 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Record\Access\LinkCheck\WysiwygCheck;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\Entities\User;
@@ -86,6 +87,7 @@ class LinkCheck
         private Metadata $metadata,
         private InjectableFactory $injectableFactory,
         private User $user,
+        private WysiwygCheck $wysiwygCheck,
     ) {}
 
     /**
@@ -97,6 +99,7 @@ class LinkCheck
     {
         $this->processLinkMultipleFields($entity);
         $this->processLinkFields($entity);
+        $this->wysiwygCheck->process($entity);
     }
 
     /**

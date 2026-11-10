@@ -44,6 +44,11 @@ class Saver implements SaverInterface
     /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
+    /**
+     * @internal
+     */
+    public const string REG_EXP_INLINE_ATTACHMENT = "/\?entryPoint=attachment&amp;id=([^&=\"']+)/";
+
     public function __construct(private EntityManager $entityManager)
     {}
 
@@ -72,7 +77,7 @@ class Saver implements SaverInterface
 
         $matches = [];
 
-        $matchResult = preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $contents, $matches);
+        $matchResult = preg_match_all(self::REG_EXP_INLINE_ATTACHMENT, $contents, $matches);
 
         if (!$matchResult) {
             return;
