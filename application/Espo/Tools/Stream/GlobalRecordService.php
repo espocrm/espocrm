@@ -48,8 +48,8 @@ use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class GlobalRecordService
 {
-    public const SCOPE_NAME = 'GlobalStream';
-    private const ITERATION_LIMIT = 50;
+    public const string SCOPE_NAME = 'GlobalStream';
+    private const int ITERATION_LIMIT = 50;
 
     public function __construct(
         private Acl $acl,

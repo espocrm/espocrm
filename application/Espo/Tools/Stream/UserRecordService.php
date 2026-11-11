@@ -58,7 +58,7 @@ use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class UserRecordService
 {
-    private const FILTER_POSTS = 'posts';
+    private const string FILTER_POSTS = 'posts';
 
     public function __construct(
         private EntityManager $entityManager,
