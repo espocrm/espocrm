@@ -41,6 +41,7 @@ use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
 use Espo\Tools\OAuthServer\League\Entities\UserEntity;
 use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
 use Espo\Tools\OAuthServer\Scope\ScopeSorter;
+use Espo\Tools\OAuthServer\Scope\ScopeValidator;
 use Espo\Tools\OAuthServer\Utils\UriUtil;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
@@ -57,6 +58,7 @@ class AuthorizationService
         private ScopeSorter $scopeSorter,
         private ClientRepositoryInternal $clientRepository,
         private UserValidation $userValidation,
+        private ScopeValidator $scopeValidator,
     ) {}
 
     /**
@@ -72,6 +74,7 @@ class AuthorizationService
             $clientId = $authRequest->getClient()->getIdentifier();
 
             $this->validateScopes($clientId, $request, $authRequest);
+            $this->applyDefaultScopes($clientId, $request, $authRequest);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
@@ -209,6 +212,34 @@ class AuthorizationService
                 throw OAuthServerException::invalidScope($scope->getIdentifier());
             }
         }
+    }
+
+    /**
+     * If the request has no scopes (clients that rely on metadata discovery may not send any),
+     * the scopes configured for the client are used.
+     *
+     * @throws OAuthServerException
+     */
+    private function applyDefaultScopes(
+        string $clientId,
+        ServerRequestInterface $request,
+        AuthorizationRequestInterface $authRequest,
+    ): void {
+
+        if ($authRequest->getScopes() !== []) {
+            return;
+        }
+
+        $client = $this->clientRepository->getActiveByIdentifier($clientId);
+
+        if (!$client) {
+            throw OAuthServerException::invalidClient($request);
+        }
+
+        $scopes = array_filter($client->getScopes(), fn ($it) => $this->scopeValidator->validate($it));
+        $scopes = array_map(fn ($it) => new ScopeEntity($it), array_values($scopes));
+
+        $authRequest->setScopes($scopes);
     }
 
     private function prepareRedirectUri(AuthorizationRequest $authorizationRequest): ?string

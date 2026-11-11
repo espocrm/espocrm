@@ -59,6 +59,7 @@ use Espo\Tools\OAuthServer\EntryPoints\Authorize;
 use Espo\Tools\OAuthServer\EntryPoints\AuthorizeComplete;
 use Espo\Tools\OAuthServer\EntryPoints\Token;
 use Espo\Tools\OAuthServer\EntryPoints\TokenRevoke;
+use Espo\Tools\OAuthServer\Metadata\AuthorizationServerMetadataProvider;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
 use Slim\Psr7\Response;
 use tests\integration\Core\BaseTestCase;
@@ -67,6 +68,11 @@ class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';
     private const string USER_USERNAME = 'test';
+
+    /**
+     * @var string[]
+     */
+    private array $consentScopeNames = [];
 
     /**
      * @noinspection PhpUnhandledExceptionInspection
@@ -216,6 +222,62 @@ class AuthorizationServerTest extends BaseTestCase
             scopes: [...$this->getScopes(), Contact::ENTITY_TYPE],
             expectedErrorCode: 400,
         );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testAuthorizeWithoutScopeUsesClientScopes(): void
+    {
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createClient(ClientType::Public);
+        $user = $this->createUserForTest();
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $this->obtainCodeInitial(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+            scopes: [],
+        );
+
+        // The admin scope is not available for a regular user.
+        $this->assertEqualsCanonicalizing([Scope::GLOBAL, Account::ENTITY_TYPE], $this->consentScopeNames);
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'clientId' => $client->getIdentifier(),
+                'approved' => 'true',
+                'scopes' => implode(' ', $this->consentScopeNames),
+            ]),
+            resourcePath: '?entryPoint=oAuthAuthorizeComplete',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $this->getInjectableFactory()->create(AuthorizeComplete::class)->run($request, $response);
+
+        $location = $response->getHeader('Location');
+
+        $this->assertIsString($location);
+        $this->assertStringStartsWith($redirectUri, $location);
+        $this->assertStringContainsString('code=', $location);
+    }
+
+    public function testAuthorizationServerMetadata(): void
+    {
+        $data = $this->getInjectableFactory()
+            ->create(AuthorizationServerMetadataProvider::class)
+            ->get();
+
+        $this->assertEquals(['S256'], $data->code_challenge_methods_supported);
     }
 
     /**
@@ -1465,16 +1527,22 @@ class AuthorizationServerTest extends BaseTestCase
             $scopesString = $this->getScopesString();
         }
 
+        $queryParams = [
+            'client_id' => $client->getIdentifier(),
+            'redirect_uri' => $redirectUri,
+            'response_type' => 'code',
+            'scope' => $scopesString,
+            'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
+            'code_challenge_method' => 'S256',
+        ];
+
+        if ($scopes === []) {
+            unset($queryParams['scope']);
+        }
+
         $request = $this->createRequest(
             method: Method::GET,
-            queryParams: [
-                'client_id' => $client->getIdentifier(),
-                'redirect_uri' => $redirectUri,
-                'response_type' => 'code',
-                'scope' => $scopesString,
-                'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
-                'code_challenge_method' => 'S256',
-            ],
+            queryParams: $queryParams,
             resourcePath: '/oauth/authorize',
         );
 
@@ -1540,6 +1608,8 @@ class AuthorizationServerTest extends BaseTestCase
         $data = $consentDataService->getData($client->getIdentifier());
 
         $this->assertIsArray($data->scopeDataList);
+
+        $this->consentScopeNames = array_map(fn ($it) => $it->name, $data->scopeDataList);
     }
 
     private function createUserForTest(): User
