@@ -284,8 +284,12 @@ class Dialog {
         this.$el.on('shown.bs.modal', () => {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
 
-            const headerHeight = this.$el.find('.modal-header').outerHeight() || 0;
-            const footerHeight = this.$el.find('.modal-footer').outerHeight() || 0;
+            const getHeight = (selector: string): number => {
+                return this.el?.querySelector(selector)?.getBoundingClientRect().height || 0;
+            };
+
+            const headerHeight = getHeight('.modal-header');
+            const footerHeight = getHeight('.modal-footer');
 
             let diffHeight = headerHeight + footerHeight;
 
@@ -312,8 +316,13 @@ class Dialog {
                         overflow: 'auto',
                     } as Record<string, any>;
 
+                    const viewportSlack = Number.isInteger(window.devicePixelRatio) ? 0 : 1;
+
+                    // Subtract 1 to prevent unwanted scroll on a zoomed viewport.
+                    const bodyHeight = Math.floor(windowHeight - diffHeight) - viewportSlack;
+
                     if (options.fullHeight) {
-                        cssParams.height = (windowHeight - diffHeight) + 'px';
+                        cssParams.height = bodyHeight + 'px';
 
                         this.$el.css('paddingRight', 0);
                     } else {
@@ -323,7 +332,7 @@ class Dialog {
                         ) {
                             cssParams.maxHeight = 'none';
                         } else {
-                            cssParams.maxHeight = (windowHeight - diffHeight) + 'px';
+                            cssParams.maxHeight = bodyHeight + 'px';
                         }
                     }
 
