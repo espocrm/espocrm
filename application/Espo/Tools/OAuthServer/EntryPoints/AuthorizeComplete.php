@@ -75,6 +75,10 @@ class AuthorizeComplete implements EntryPoint
     {
         $scopesRaw = $request->getParsedBody()->scopes ?? throw new BadRequest("No 'scopes'.");
 
+        if ($scopesRaw === '') {
+            return [];
+        }
+
         $scopes = explode(' ', $scopesRaw);
 
         foreach ($scopes as $scope) {
