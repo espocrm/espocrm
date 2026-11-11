@@ -306,6 +306,10 @@ class EntityManager
 
         $entity->setMultiple($fetchedMap);
         $entity->setAsFetched();
+
+        if ($entity instanceof BaseEntity) {
+            $entity->setAsNotPartiallyLoaded();
+        }
     }
 
     /**

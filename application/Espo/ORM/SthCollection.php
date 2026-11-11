@@ -56,6 +56,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     private ?SelectQuery $query = null;
     private ?PDOStatement $sth = null;
     private ?string $sql = null;
+    private bool $isPartiallyLoaded = false;
 
     private function __construct(private EntityManager $entityManager)
     {}
@@ -87,6 +88,10 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
                 $entity->setMultiple($row);
                 $entity->setAsFetched();
+
+                if ($this->isPartiallyLoaded && $entity instanceof BaseEntity) {
+                    $entity->setAsPartiallyLoaded();
+                }
 
                 $this->prepareEntity($entity);
 
@@ -185,6 +190,12 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
         $obj->entityType = $entityType;
         $obj->query = $query;
+
+        $select = $query->getSelect();
+
+        if ($select !== [] && !array_find($select, fn ($it) => $it->getExpression()->getValue() === '*')) {
+            $obj->isPartiallyLoaded = true;
+        }
 
         return $obj;
     }

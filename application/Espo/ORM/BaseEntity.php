@@ -42,10 +42,10 @@ use Espo\ORM\Relation\Relations;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueAccessor;
-
 use stdClass;
 use InvalidArgumentException;
 use RuntimeException;
+use Throwable;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -74,6 +74,8 @@ class BaseEntity implements Entity
     private array $fetchedValuesContainer = [];
     /** @var array<string, mixed> */
     private array $valuesContainer = [];
+    /** @var array<string, true>  */
+    private array $clearedMap = [];
 
     private bool $isPartiallyLoaded = false;
 
@@ -141,6 +143,8 @@ class BaseEntity implements Entity
     public function clear(string $attribute): void
     {
         unset($this->valuesContainer[$attribute]);
+
+        $this->clearedMap[$attribute] = true;
     }
 
     /**
@@ -149,6 +153,8 @@ class BaseEntity implements Entity
     public function reset(): void
     {
         $this->valuesContainer = [];
+        $this->clearedMap = [];
+        $this->isPartiallyLoaded = false;
 
         $this->relations->resetAll();
     }
@@ -700,6 +706,8 @@ class BaseEntity implements Entity
 
     /**
      * Get values.
+     *
+     * If the entity is partially loaded and the value is not set, the attribute will be omitted.
      */
     public function getValueMap(): stdClass
     {
@@ -711,6 +719,10 @@ class BaseEntity implements Entity
 
         foreach ($this->getAttributeList() as $attribute) {
             if ($attribute === Attribute::ID) {
+                continue;
+            }
+
+            if ($this->isPartiallyLoaded && !$this->hasInContainer($attribute)) {
                 continue;
             }
 
@@ -836,9 +848,7 @@ class BaseEntity implements Entity
             return $this->id;
         }
 
-        if ($this->checkAttributeFetchedToFullyLoad($attribute)) {
-            $this->loadPartiallyLoaded();
-        }
+        $this->prepareFetched($attribute);
 
         if ($this->hasInFetchedContainer($attribute)) {
             return $this->getFromFetchedContainer($attribute);
@@ -856,9 +866,7 @@ class BaseEntity implements Entity
             return !is_null($this->id);
         }
 
-        if ($this->checkAttributeFetchedToFullyLoad($attribute)) {
-            $this->loadPartiallyLoaded();
-        }
+        $this->prepareFetched($attribute);
 
         return $this->hasInFetchedContainer($attribute);
     }
@@ -895,6 +903,47 @@ class BaseEntity implements Entity
     public function setAsPartiallyLoaded(): void
     {
         $this->isPartiallyLoaded = true;
+
+        $this->clearedMap = [];
+    }
+
+    /**
+     * Set as not partially loaded. For internal use.
+     *
+     * @internal
+     * @since 10.2.0
+     */
+    public function setAsNotPartiallyLoaded(): void
+    {
+        $this->isPartiallyLoaded = false;
+
+        $this->clearedMap = [];
+    }
+
+    /**
+     * Is partially loaded.
+     *
+     * @internal
+     * @since 10.2.0
+     */
+    public function isPartiallyLoaded(): bool
+    {
+        return $this->isPartiallyLoaded;
+    }
+
+    /**
+     * Ensure is fully loaded.
+     *
+     * @internal
+     * @since 10.2.0
+     */
+    public function ensureFullyLoaded(): void
+    {
+        if (!$this->isPartiallyLoaded) {
+            return;
+        }
+
+        $this->loadPartiallyLoaded();
     }
 
     /**
@@ -1070,7 +1119,8 @@ class BaseEntity implements Entity
             !$this->isNew() &&
             $this->isPartiallyLoaded &&
             $this->hasAttribute($attribute) &&
-            !$this->hasInContainer($attribute);
+            !$this->hasInContainer($attribute) &&
+            !($this->clearedMap[$attribute] ?? false);
     }
 
     private function checkAttributeFetchedToFullyLoad(string $attribute): bool
@@ -1082,11 +1132,23 @@ class BaseEntity implements Entity
             !$this->hasInFetchedContainer($attribute);
     }
 
+    /**
+     * Fully load the entity. Cleared attributes are skipped which establishes access control filtering
+     * with `clear` – after clearing attributes won't be re-loaded.
+     */
     private function loadPartiallyLoaded(): void
     {
+        $previous = $this->isPartiallyLoaded;
+
         $this->isPartiallyLoaded = false;
 
-        $this->loader->load($this);
+        try {
+            $this->loader->load($this, $this->clearedMap);
+        } catch (Throwable $e) {
+            $this->isPartiallyLoaded = $previous;
+
+            throw $e;
+        }
     }
 
     private function prepareAttributeValueDecimal(string $attribute, mixed $value): ?string
@@ -1109,5 +1171,14 @@ class BaseEntity implements Entity
         }
 
         return $value;
+    }
+
+    private function prepareFetched(string $attribute): void
+    {
+        if (!$this->checkAttributeFetchedToFullyLoad($attribute)) {
+            return;
+        }
+
+        $this->loadPartiallyLoaded();
     }
 }
