@@ -51,25 +51,15 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private const EDIT_PERIOD = '7 days';
-    private const DELETE_PERIOD = '1 month';
-
-    private DefaultAccessChecker $defaultAccessChecker;
-    private AclManager $aclManager;
-    private EntityManager $entityManager;
-    private Config $config;
+    private const string EDIT_PERIOD = '7 days';
+    private const string DELETE_PERIOD = '1 month';
 
     public function __construct(
-        DefaultAccessChecker $defaultAccessChecker,
-        AclManager $aclManager,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->defaultAccessChecker = $defaultAccessChecker;
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private DefaultAccessChecker $defaultAccessChecker,
+        private AclManager $aclManager,
+        private EntityManager $entityManager,
+        private Config $config,
+    ) {}
 
     /**
      * @param Note $entity
@@ -159,7 +149,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($dt->format('U') > (new DateTime($createdAt))->format('U')) {
                 return false;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
@@ -196,7 +186,7 @@ class AccessChecker implements AccessEntityCREDChecker
             if ($dt->format('U') > (new DateTime($createdAt))->format('U')) {
                 return false;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 
