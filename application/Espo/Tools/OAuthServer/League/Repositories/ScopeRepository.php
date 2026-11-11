@@ -74,7 +74,7 @@ class ScopeRepository implements ScopeRepositoryInterface
         }
 
         $scopes = array_filter($scopes, fn ($scope) => in_array($scope->getIdentifier(), $client->getScopes()));
-        $scopes = array_values($scopes);;
+        $scopes = array_values($scopes);
 
         if (!$userIdentifier) {
             return $scopes;
