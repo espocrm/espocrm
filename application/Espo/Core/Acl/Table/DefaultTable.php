@@ -110,6 +110,9 @@ class DefaultTable implements Table
             throw new RuntimeException('User must be fetched before ACL check.');
         }
 
+        if (!$this->user->has(User::FIELD_TYPE)) {
+            throw new RuntimeException('User does not have type.');
+        }
 
         $this->valuePermissionList = $this->metadata->get("app.$this->type.valuePermissionList", []);
 

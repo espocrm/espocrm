@@ -119,6 +119,14 @@ class UsersAccessService
      */
     private function prepareQuery(SearchParams $params): Select
     {
+        if ($params->getSelect() !== null && !in_array(User::FIELD_TYPE, $params->getSelect())) {
+            $select = $params->getSelect();
+
+            $select[] = User::FIELD_TYPE;
+
+            $params = $params->withSelect($select);
+        }
+
         $queryBuilder = $this->selectBuilderFactory
             ->create()
             ->from(User::ENTITY_TYPE)
