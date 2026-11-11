@@ -836,6 +836,10 @@ class BaseEntity implements Entity
             return $this->id;
         }
 
+        if ($this->checkAttributeFetchedToFullyLoad($attribute)) {
+            $this->loadPartiallyLoaded();
+        }
+
         if ($this->hasInFetchedContainer($attribute)) {
             return $this->getFromFetchedContainer($attribute);
         }
