@@ -31,7 +31,13 @@ namespace Espo\ORM\DataLoader;
 
 use Espo\ORM\Entity;
 
+/**
+ * @internal
+ */
 interface Loader
 {
-    public function load(Entity $entity): void;
+    /**
+     * @param array<string, true> $clearedMap
+     */
+    public function load(Entity $entity, array $clearedMap): void;
 }

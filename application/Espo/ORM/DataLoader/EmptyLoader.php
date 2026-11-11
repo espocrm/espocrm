@@ -33,6 +33,6 @@ use Espo\ORM\Entity;
 
 class EmptyLoader implements Loader
 {
-    public function load(Entity $entity): void
+    public function load(Entity $entity, array $clearedMap): void
     {}
 }

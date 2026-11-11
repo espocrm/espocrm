@@ -38,7 +38,7 @@ class RDBLoader implements Loader
         private EntityManager $entityManager,
     ) {}
 
-    public function load(Entity $entity): void
+    public function load(Entity $entity, array $clearedMap): void
     {
         $loaded = $this->entityManager->getEntityById($entity->getEntityType(), $entity->getId());
 
@@ -57,7 +57,7 @@ class RDBLoader implements Loader
                 $entity->setFetched($attribute, $value);
             }
 
-            if (!$entity->has($attribute)) {
+            if (!$entity->has($attribute) && !($clearedMap[$attribute] ?? false)) {
                 $entity->set($attribute, $value);
             }
         }
