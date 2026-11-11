@@ -379,7 +379,7 @@ class GlobalRecordService
         SelectBuilder $builder,
         array &$queryList,
         array $entityTypeList,
-        array $ignoreList
+        array $ignoreList,
     ): void {
 
         $ignoreWhere = [];
