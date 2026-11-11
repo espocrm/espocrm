@@ -87,7 +87,6 @@ class AuthorizationService
      * @throws Error
      * @throws Forbidden
      * @throws BadRequest
-     * @noinspection PhpRedundantCatchClauseInspection
      */
     public function authorizeComplete(
         string $clientId,
