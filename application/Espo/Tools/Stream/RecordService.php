@@ -54,7 +54,7 @@ use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class RecordService
 {
-    private const PINNED_MAX_SIZE = 100;
+    private const int PINNED_MAX_SIZE = 100;
 
     public function __construct(
         private EntityManager $entityManager,
