@@ -194,7 +194,7 @@ class BaseEntity implements Entity
                 $value = null;
             }
 
-            if ($name == Attribute::ID) {
+            if ($name === Attribute::ID) {
                 $this->id = $value;
             }
 
@@ -364,7 +364,7 @@ class BaseEntity implements Entity
      */
     public function has(string $attribute): bool
     {
-        if ($attribute == Attribute::ID) {
+        if ($attribute === Attribute::ID) {
             return (bool) $this->id;
         }
 

@@ -43,9 +43,9 @@ class Util
      */
     public static function prepareValue(?string $type, mixed $value): mixed
     {
-        if ($type == Entity::JSON_ARRAY && is_array($value)) {
+        if ($type === Entity::JSON_ARRAY && is_array($value)) {
             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
-        } else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof stdClass)) {
+        } else if ($type === Entity::JSON_OBJECT && (is_array($value) || $value instanceof stdClass)) {
             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         } else {
             if (is_array($value) || is_object($value)) {

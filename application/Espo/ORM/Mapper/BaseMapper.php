@@ -374,7 +374,7 @@ class BaseMapper implements RDBMapper
                     ->from($relEntityType, $alias)
                     ->where([$foreignKey => $entity->get($key)]);
 
-                if ($relType == Entity::HAS_CHILDREN) {
+                if ($relType === Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'] ?? null;
 
                     if ($foreignType === null) {
@@ -390,7 +390,7 @@ class BaseMapper implements RDBMapper
                     $builder->where($relConditions);
                 }
 
-                if ($relType == Entity::HAS_ONE) {
+                if ($relType === Entity::HAS_ONE) {
                     $builder->limit(0, 1);
                 }
 
@@ -409,7 +409,7 @@ class BaseMapper implements RDBMapper
                     return (int) $row['value'];
                 }
 
-                if ($relType == Entity::HAS_ONE) {
+                if ($relType === Entity::HAS_ONE) {
                     $sth = $this->queryExecutor->execute($select);
                     $row = $sth->fetch();
 
@@ -708,15 +708,15 @@ class BaseMapper implements RDBMapper
 
         $value = $row['value'];
 
-        if ($columnType == Entity::BOOL) {
+        if ($columnType === Entity::BOOL) {
             return (bool) $value;
         }
 
-        if ($columnType == Entity::INT) {
+        if ($columnType === Entity::INT) {
             return (int) $value;
         }
 
-        if ($columnType == Entity::FLOAT) {
+        if ($columnType === Entity::FLOAT) {
             return (float) $value;
         }
 
@@ -829,7 +829,7 @@ class BaseMapper implements RDBMapper
 
         $relType = $entity->getRelationType($relationName);
 
-        if ($relType == Entity::BELONGS_TO_PARENT && !$relEntity) {
+        if ($relType === Entity::BELONGS_TO_PARENT && !$relEntity) {
             throw new RuntimeException("Bad foreign passed.");
         }
 
@@ -974,7 +974,7 @@ class BaseMapper implements RDBMapper
 
                 $set = [$foreignKey => $entity->getId()];
 
-                if ($relType == Entity::HAS_CHILDREN) {
+                if ($relType === Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'] ?? null;
 
                     if ($foreignType === null) {
@@ -1433,13 +1433,13 @@ class BaseMapper implements RDBMapper
         $valueMap = [];
 
         foreach ($this->toValueMap($entity) as $attribute => $value) {
-            if ($attribute == Attribute::ID) {
+            if ($attribute === Attribute::ID) {
                 continue;
             }
 
             $type = $entity->getAttributeType($attribute);
 
-            if ($type == Entity::FOREIGN) {
+            if ($type === Entity::FOREIGN) {
                 continue;
             }
 
@@ -1460,7 +1460,7 @@ class BaseMapper implements RDBMapper
     {
         $valueMap = $this->getValueMapForUpdate($entity);
 
-        if (count($valueMap) == 0) {
+        if (count($valueMap) === 0) {
             return;
         }
 

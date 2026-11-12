@@ -2025,7 +2025,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $field = $item;
 
                 if (is_array($item)) {
-                    if (count($item) == 0) {
+                    if (count($item) === 0) {
                         continue;
                     }
 
@@ -2035,12 +2035,12 @@ abstract class BaseQueryComposer implements QueryComposer
                 /** @var string $field */
 
                 if (
-                    $entity->getAttributeType($field) == AttributeType::FOREIGN &&
+                    $entity->getAttributeType($field) === AttributeType::FOREIGN &&
                     $this->getAttributeParam($entity, $field, AttributeParam::RELATION)
                 ) {
                     $relationsToJoin[] = $this->getAttributeParam($entity, $field, AttributeParam::RELATION);
                 } else if (
-                    $this->getAttributeParam($entity, $field, 'fieldType') == FieldType::LINK_ONE &&
+                    $this->getAttributeParam($entity, $field, 'fieldType') === FieldType::LINK_ONE &&
                     $this->getAttributeParam($entity, $field, AttributeParam::RELATION)
                 ) {
                     $relationsToJoin[] = $this->getAttributeParam($entity, $field, AttributeParam::RELATION);
@@ -2390,7 +2390,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     $wsCount = 0;
 
                     foreach ($foreign as $i => $value) {
-                        if ($value == ' ') {
+                        if ($value === ' ') {
                             $foreign[$i] = '\' \'';
 
                             $wsCount ++;
@@ -2757,7 +2757,7 @@ abstract class BaseQueryComposer implements QueryComposer
         if (
             is_bool($value) &&
             in_array($operator, ['=', '<>']) &&
-            $attributeType == Entity::BOOL
+            $attributeType === Entity::BOOL
         ) {
             if ($value) {
                 $operatorKey = $operator === '=' ?
@@ -2767,15 +2767,15 @@ abstract class BaseQueryComposer implements QueryComposer
                     '= FALSE' : '= TRUE';
             }
         } else if (is_array($value)) {
-            if ($operator == '=') {
+            if ($operator === '=') {
                 $operatorKey = 'IN';
-            } else if ($operator == '<>') {
+            } else if ($operator === '<>') {
                 $operatorKey = 'NOT IN';
             }
         } else if (is_null($value)) {
-            if ($operator == '=') {
+            if ($operator === '=') {
                 $operatorKey = 'IS NULL';
-            } else if ($operator == '<>') {
+            } else if ($operator === '<>') {
                 $operatorKey = 'IS NOT NULL';
             }
         }
