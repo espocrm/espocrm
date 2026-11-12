@@ -40,8 +40,10 @@ use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 
@@ -50,7 +52,8 @@ class QueryHelper
     public function __construct(
         private EntityManager $entityManager,
         private SelectBuilderFactory $selectBuilderFactory,
-        private AclManager $aclManager
+        private AclManager $aclManager,
+        private Helper $helper,
     ) {}
 
     /**
@@ -233,5 +236,116 @@ class QueryHelper
                 'isGlobal' => true,
             ])
             ->build();
+    }
+
+    /**
+     * Split into tree queries for all, team and own.
+     * Note that only notes with 'related' and 'superParent' are subject
+     * to access control. Notes with only 'parent' don't have teams and
+     * users set.
+     *
+     * @param Select[] $queryList
+     * @param bool $super True for 'superParent'.
+     */
+    public function buildAccessQueries(
+        User $user,
+        SelectBuilder $baseBuilder,
+        array &$queryList,
+        bool $super = false,
+    ): void {
+
+        $onlyTeamEntityTypeList = $this->helper->getOnlyTeamEntityTypeList($user);
+        $onlyOwnEntityTypeList = $this->helper->getOnlyOwnEntityTypeList($user);
+
+        $allBuilder = clone $baseBuilder;
+
+        $orWhere = [
+            [
+                'relatedId!=' => null,
+                'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
+            ],
+        ];
+
+        $orWhere[] = $super ?
+            [
+                'relatedId=' => null,
+                'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
+            ] :
+            ['relatedId=' => null];
+
+        $allBuilder->where(['OR' => $orWhere]);
+
+        $queryList[] = $allBuilder->build();
+
+        if ($onlyTeamEntityTypeList !== []) {
+            $teamBuilder = clone $baseBuilder;
+
+            $orWhere = [
+                ['relatedType=' => $onlyTeamEntityTypeList],
+            ];
+
+            if ($super) {
+                $orWhere[] = [
+                    'relatedId=' => null,
+                    'parentType=' => $onlyTeamEntityTypeList,
+                ];
+            }
+
+            $teamBuilder
+                ->where(['OR' => $orWhere])
+                ->where(
+                    // Separate sub-queries perform faster that a single with two LEFT JOINs inside.
+                    OrGroup::create(
+                        Cond::in(
+                            Expr::column(Attribute::ID),
+                            SelectBuilder::create()
+                                ->from('NoteTeam')
+                                ->select('noteId')
+                                ->where(['teamId' => $user->getTeamIdList()])
+                                ->build()
+                        ),
+                        Cond::in(
+                            Expr::column(Attribute::ID),
+                            SelectBuilder::create()
+                                ->from('NoteUser')
+                                ->select('noteId')
+                                ->where(['userId' => $user->getId()])
+                                ->build()
+                        ),
+                    )
+                );
+
+            $queryList[] = $teamBuilder->build();
+        }
+
+        if ($onlyOwnEntityTypeList !== []) {
+            $ownBuilder = clone $baseBuilder;
+
+            $orWhere = [
+                ['relatedType=' => $onlyOwnEntityTypeList],
+            ];
+
+            if ($super) {
+                $orWhere[] = [
+                    'relatedId=' => null,
+                    'parentType=' => $onlyOwnEntityTypeList,
+                ];
+            }
+
+            $ownBuilder
+                ->where(['OR' => $orWhere])
+                ->where(
+                    Cond::in(
+                        Expr::column(Attribute::ID),
+                        SelectBuilder::create()
+                            ->from('NoteUser')
+                            ->select('noteId')
+                            ->where(['userId' => $user->getId()])
+                            ->build()
+                    )
+                );
+
+            $queryList[] = $ownBuilder->build();
+        }
     }
 }

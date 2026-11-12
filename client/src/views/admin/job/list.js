@@ -43,16 +43,6 @@ export default class extends ListView {
         }
     }
 
-    getHeader() {
-        return this.buildHeaderHtml([
-            $('<a>')
-                .attr('href', '#Admin')
-                .text(this.translate('Administration')),
-            $('<span>')
-                .text(this.getLanguage().translate('Jobs', 'labels', 'Admin')),
-        ]);
-    }
-
     updatePageTitle() {
         this.setPageTitle(this.getLanguage().translate('Jobs', 'labels', 'Admin'));
     }

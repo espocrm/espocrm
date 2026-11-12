@@ -35,12 +35,14 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Entities\User;
+use Espo\Tools\OAuthServer\Entities\Client;
 use Espo\Tools\OAuthServer\League\AuthorizationRequestStorage;
 use Espo\Tools\OAuthServer\League\AuthorizationServerFactory;
 use Espo\Tools\OAuthServer\League\Entities\ScopeEntity;
 use Espo\Tools\OAuthServer\League\Entities\UserEntity;
 use Espo\Tools\OAuthServer\Repository\ClientRepository as ClientRepositoryInternal;
 use Espo\Tools\OAuthServer\Scope\ScopeSorter;
+use Espo\Tools\OAuthServer\Scope\ScopeValidator;
 use Espo\Tools\OAuthServer\Utils\UriUtil;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
@@ -57,6 +59,7 @@ class AuthorizationService
         private ScopeSorter $scopeSorter,
         private ClientRepositoryInternal $clientRepository,
         private UserValidation $userValidation,
+        private ScopeValidator $scopeValidator,
     ) {}
 
     /**
@@ -70,8 +73,10 @@ class AuthorizationService
             $authRequest = $server->validateAuthorizationRequest($request);
 
             $clientId = $authRequest->getClient()->getIdentifier();
+            $client = $this->getClient($clientId, $request);
 
-            $this->validateScopes($clientId, $request, $authRequest);
+            $this->validateScopes($client, $authRequest);
+            $this->applyDefaultScopes($client, $request, $authRequest);
         } catch (OAuthServerException $e) {
             return $e->generateHttpResponse($response);
         }
@@ -87,7 +92,6 @@ class AuthorizationService
      * @throws Error
      * @throws Forbidden
      * @throws BadRequest
-     * @noinspection PhpRedundantCatchClauseInspection
      */
     public function authorizeComplete(
         string $clientId,
@@ -192,18 +196,8 @@ class AuthorizationService
     /**
      * @throws OAuthServerException
      */
-    private function validateScopes(
-        string $clientId,
-        ServerRequestInterface $request,
-        AuthorizationRequestInterface $authRequest,
-    ): void {
-
-        $client = $this->clientRepository->getActiveByIdentifier($clientId);
-
-        if (!$client) {
-            throw OAuthServerException::invalidClient($request);
-        }
-
+    private function validateScopes(Client $client, AuthorizationRequestInterface $authRequest): void
+    {
         foreach ($authRequest->getScopes() as $scope) {
             if (!in_array($scope->getIdentifier(), $client->getScopes())) {
                 throw OAuthServerException::invalidScope($scope->getIdentifier());
@@ -230,5 +224,38 @@ class AuthorizationService
         $redirectUri = $this->prepareRedirectUri($authorizationRequest);
 
         throw OAuthServerException::accessDenied("User is not allowed.", $redirectUri);
+    }
+
+    private function applyDefaultScopes(
+        Client $client,
+        ServerRequestInterface $request,
+        AuthorizationRequestInterface $authRequest,
+    ): void {
+
+        $requestedScope = $request->getQueryParams()['scope'] ?? null;
+
+        if ($requestedScope !== null || $authRequest->getScopes() !== []) {
+            return;
+        }
+
+        $scopes = array_map(fn (string $it) => new ScopeEntity($it), $client->getScopes());
+        $scopes = array_filter($scopes, fn ($it) => $this->scopeValidator->validate($it->getIdentifier()));
+        $scopes = array_values($scopes);
+
+        $authRequest->setScopes($scopes);
+    }
+
+    /**
+     * @throws OAuthServerException
+     */
+    private function getClient(string $clientId, ServerRequestInterface $request): Client
+    {
+        $client = $this->clientRepository->getActiveByIdentifier($clientId);
+
+        if (!$client) {
+            throw OAuthServerException::invalidClient($request);
+        }
+
+        return $client;
     }
 }

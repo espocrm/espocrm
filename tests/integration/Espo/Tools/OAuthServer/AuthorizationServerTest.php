@@ -174,6 +174,101 @@ class AuthorizationServerTest extends BaseTestCase
         );
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testFallbackScopesSuccess(): void
+    {
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createClient();
+
+        $user = $this->createUserForTest();
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $data = $this->obtainCodeInitial(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+        );
+
+        // 'Admin' is filtered out.
+        $this->assertEquals([Scope::GLOBAL, Account::ENTITY_TYPE], $data['scopes']);
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'clientId' => $client->getIdentifier(),
+                'approved' => 'true',
+                'scopes' => implode(' ', [Scope::GLOBAL, Account::ENTITY_TYPE]),
+            ]),
+            resourcePath: '?entryPoint=oAuthAuthorizeComplete',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $completeEntryPoint = $this->getInjectableFactory()->create(AuthorizeComplete::class);
+
+        $completeEntryPoint->run($request, $response);
+
+        $this->assertResponseWithCode($response);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testEmptyScopesSuccess(): void
+    {
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createClient();
+
+        $user = $this->createUserForTest();
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $data = $this->obtainCodeInitial(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+            scopes: [],
+        );
+
+        // 'Admin' is filtered out.
+        $this->assertEquals([], $data['scopes']);
+
+        $request = $this->createRequest(
+            method: Method::POST,
+            headers: [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            body: http_build_query([
+                'clientId' => $client->getIdentifier(),
+                'approved' => 'true',
+                'scopes' => implode(' ', []),
+            ]),
+            resourcePath: '?entryPoint=oAuthAuthorizeComplete',
+        );
+
+        $response = $this->createResponseWrapper();
+
+        $completeEntryPoint = $this->getInjectableFactory()->create(AuthorizeComplete::class);
+
+        $completeEntryPoint->run($request, $response);
+
+        $this->assertResponseWithCode($response);
+    }
+
     public function testExtraScopesNotAllowed(): void
     {
         $redirectUri = self::REDIRECT_URI;
@@ -191,6 +286,7 @@ class AuthorizationServerTest extends BaseTestCase
             redirectUri: $redirectUri,
             codeChallenge: $codeChallenge,
             user: $user,
+            scopes: $this->getScopes(),
         );
 
         $this->authorizeCompleteScopeMismatch($client);
@@ -703,6 +799,7 @@ class AuthorizationServerTest extends BaseTestCase
             redirectUri: $redirectUri,
             codeChallenge: $codeChallenge,
             user: $user,
+            scopes: $this->getScopes(),
         );
 
         $request = $this->createRequest(
@@ -1436,6 +1533,7 @@ class AuthorizationServerTest extends BaseTestCase
 
     /**
      * @param ?string[] $scopes
+     * @return ?array{scopes: string[]}
      * @noinspection PhpUnhandledExceptionInspection
      */
     private function obtainCodeInitial(
@@ -1445,7 +1543,7 @@ class AuthorizationServerTest extends BaseTestCase
         User $user,
         ?array $scopes = null,
         ?int $expectedErrorCode = null,
-    ): void {
+    ): ?array {
 
         $session = $this->createMock(Session::class);
 
@@ -1459,22 +1557,21 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
+        $queryParams = [
+            'client_id' => $client->getIdentifier(),
+            'redirect_uri' => $redirectUri,
+            'response_type' => 'code',
+            'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
+            'code_challenge_method' => 'S256',
+        ];
+
         if ($scopes !== null) {
-            $scopesString = implode(' ', $scopes);
-        } else {
-            $scopesString = $this->getScopesString();
+            $queryParams['scope'] = implode(' ', $scopes);
         }
 
         $request = $this->createRequest(
             method: Method::GET,
-            queryParams: [
-                'client_id' => $client->getIdentifier(),
-                'redirect_uri' => $redirectUri,
-                'response_type' => 'code',
-                'scope' => $scopesString,
-                'code_challenge' => PkceUtil::hashAndEncodeCodeVerifier($codeChallenge),
-                'code_challenge_method' => 'S256',
-            ],
+            queryParams: $queryParams,
             resourcePath: '/oauth/authorize',
         );
 
@@ -1506,7 +1603,7 @@ class AuthorizationServerTest extends BaseTestCase
         if ($expectedErrorCode !== null) {
             $this->assertEquals($expectedErrorCode, $response->getStatusCode());
 
-            return;
+            return null;
         }
 
         //
@@ -1540,6 +1637,10 @@ class AuthorizationServerTest extends BaseTestCase
         $data = $consentDataService->getData($client->getIdentifier());
 
         $this->assertIsArray($data->scopeDataList);
+
+        return [
+            'scopes' => array_map(fn ($it) => $it->name, $data->scopeDataList),
+        ];
     }
 
     private function createUserForTest(): User
@@ -1556,5 +1657,18 @@ class AuthorizationServerTest extends BaseTestCase
                 ],
             ],
         );
+    }
+
+    private function assertResponseWithCode(ResponseWrapper $response): void
+    {
+        $this->assertEquals(302, $response->getStatusCode());
+
+        $location = $response->getHeader('Location');
+
+        $this->assertIsString($location);
+
+        $urlData = parse_url($location);
+        parse_str($urlData['query'], $queryParams);
+        $this->assertIsString($queryParams['code']);
     }
 }
