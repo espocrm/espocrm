@@ -40,7 +40,6 @@ use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
 use Espo\Entities\Note;
 use Espo\Entities\Email;
-use Espo\Core\Utils\Metadata;
 use Espo\Core\Acl;
 use Espo\Core\AclManager;
 use Espo\Core\Acl\Table;
@@ -63,7 +62,6 @@ class UserRecordService
     public function __construct(
         private EntityManager $entityManager,
         private User $user,
-        private Metadata $metadata,
         private Acl $acl,
         private UserAclManagerProvider $userAclManagerProvider,
         private NoteAccessControl $noteAccessControl,
@@ -212,41 +210,6 @@ class UserRecordService
     }
 
     /**
-     * @return string[]
-     */
-    private function getNotAllEntityTypeList(User $user): array
-    {
-        if (!$user->isPortal()) {
-            return [];
-        }
-
-        $aclManager = $this->getUserAclManager($user);
-
-        $list = [];
-
-        $scopes = $this->metadata->get('scopes', []);
-
-        foreach ($scopes as $scope => $item) {
-            if ($scope === User::ENTITY_TYPE) {
-                continue;
-            }
-
-            if (empty($item['entity']) || empty($item['object'])) {
-                continue;
-            }
-
-            if (
-                !$aclManager ||
-                $aclManager->getLevel($user, $scope, Table::ACTION_READ) !== Table::LEVEL_ALL
-            ) {
-                $list[] = $scope;
-            }
-        }
-
-        return $list;
-    }
-
-    /**
      * @param Select[] $queryList
      */
     private function buildSubscriptionQueriesPortal(
@@ -263,15 +226,13 @@ class UserRecordService
             'isInternal' => false,
         ]);
 
-        $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
-
         $orGroup = [
             [
                 'relatedId' => null,
             ],
             [
                 'relatedId!=' => null,
-                'relatedType!=' => $notAllEntityTypeList,
+                'relatedType!=' => $this->helper->getNotAllEntityTypeList($user),
             ],
         ];
 

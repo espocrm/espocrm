@@ -344,15 +344,13 @@ class RecordService
             return;
         }
 
-        $notAllEntityTypeList = $this->helper->getNotAllEntityTypeList($this->user);
-
         $orGroup = [
             [
                 'relatedId' => null,
             ],
             [
                 'relatedId!=' => null,
-                'relatedType!=' => $notAllEntityTypeList,
+                'relatedType!=' => $this->helper->getNotAllEntityTypeList($this->user),
             ],
         ];
 
