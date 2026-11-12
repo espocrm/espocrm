@@ -393,9 +393,14 @@ class GlobalRecordService
             ];
         }
 
-        $queryList[] = (clone $builder)
+        $baseBuilder = (clone $builder)
             ->where(['parentType' => $entityTypeList])
-            ->where($ignoreWhere)
-            ->build();
+            ->where($ignoreWhere);
+
+        $this->queryHelper->buildAccessQueries(
+            user: $this->user,
+            baseBuilder: $baseBuilder,
+            queryList: $queryList,
+        );
     }
 }
