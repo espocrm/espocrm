@@ -258,7 +258,6 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      * @param Closure(TEntity): bool $callback A filter callback.
      * @return ?TEntity
      * @since 9.1.0
-     * @noinspection PhpDocSignatureInspection
      */
     public function find(Closure $callback): ?Entity
     {

@@ -33,6 +33,7 @@ use Espo\ORM\Name\Attribute;
 use Iterator;
 use Countable;
 use ArrayAccess;
+use ReturnTypeWillChange;
 use SeekableIterator;
 use RuntimeException;
 use OutOfBoundsException;
@@ -82,7 +83,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * @return TEntity
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->getEntityByOffset($this->position);
@@ -91,7 +92,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * @return int
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->position;
@@ -147,7 +148,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
      * @param mixed $offset
      * @return ?TEntity
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!isset($this->dataList[$offset])) {
@@ -456,7 +457,6 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
      * @param Closure(TEntity): bool $callback A filter callback.
      * @return ?TEntity
      * @since 9.1.0
-     * @noinspection PhpDocSignatureInspection
      */
     public function find(Closure $callback): ?Entity
     {

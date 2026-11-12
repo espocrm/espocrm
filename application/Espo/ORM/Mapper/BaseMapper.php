@@ -46,14 +46,10 @@ use Espo\ORM\EntityFactory;
 use Espo\ORM\CollectionFactory;
 use Espo\ORM\Metadata;
 use Espo\ORM\Query\Select;
-
 use Espo\ORM\Type\AttributeType;
 use PDO;
-use stdClass;
 use LogicException;
 use RuntimeException;
-
-use const JSON_UNESCAPED_UNICODE;
 
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
@@ -62,9 +58,9 @@ use const JSON_UNESCAPED_UNICODE;
  */
 class BaseMapper implements RDBMapper
 {
-    private const ATTR_ID = Attribute::ID;
-    private const ATTR_DELETED = Attribute::DELETED;
-    private const FUNC_COUNT = 'COUNT';
+    private const string ATTR_ID = Attribute::ID;
+    private const string ATTR_DELETED = Attribute::DELETED;
+    private const string FUNC_COUNT = 'COUNT';
 
     private Helper $helper;
 
@@ -605,11 +601,7 @@ class BaseMapper implements RDBMapper
                     throw new RuntimeException("Bad relation key.");
                 }
 
-                $update = [];
-
-                foreach ($columnData as $column => $value) {
-                    $update[$column] = $value;
-                }
+                $update = array_map(fn ($value) => $value, $columnData);
 
                 /** @phpstan-ignore-next-line */
                 if (empty($update)) {
@@ -1160,7 +1152,6 @@ class BaseMapper implements RDBMapper
                     $where[$key] = $id;
                 }
 
-                /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set($key, null);
                 $entity->setFetched($key, null);
 
