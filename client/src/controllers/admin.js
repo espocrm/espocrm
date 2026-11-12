@@ -381,19 +381,7 @@ class AdminController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionAuthTokens() {
-        this.collectionFactory.create('AuthToken', collection => {
-            const searchManager = new SearchManager(collection, {storageKey: 'list'});
-
-            searchManager.loadStored();
-            collection.where = searchManager.getWhere();
-            collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-
-            this.main('views/admin/auth-token/list', {
-                scope: 'AuthToken',
-                collection: collection,
-                searchManager: searchManager
-            });
-        });
+        this.getRouter().dispatch('AuthToken', 'list', {fromAdmin: true});
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -429,20 +417,7 @@ class AdminController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionAuthLog() {
-        this.collectionFactory.create('AuthLogRecord', collection => {
-            const searchManager = new SearchManager(collection, {storageKey: 'list'});
-
-            searchManager.loadStored();
-
-            collection.where = searchManager.getWhere();
-            collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-
-            this.main('views/admin/auth-log-record/list', {
-                scope: 'AuthLogRecord',
-                collection: collection,
-                searchManager: searchManager
-            });
-        });
+        this.getRouter().dispatch('AuthLogRecord', 'list', {fromAdmin: true});
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -469,26 +444,16 @@ class AdminController extends Controller {
                 scope: 'Job',
                 collection: collection,
                 searchManager: searchManager,
+                params: {
+                    fromAdmin: true,
+                },
             });
         });
     }
 
     // noinspection JSUnusedGlobalSymbols
     actionAppLog() {
-        this.collectionFactory.create('AppLogRecord', collection => {
-            const searchManager = new SearchManager(collection, {storageKey: 'list'});
-
-            searchManager.loadStored();
-
-            collection.where = searchManager.getWhere();
-            collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
-
-            this.main('views/list', {
-                scope: 'AppLogRecord',
-                collection: collection,
-                searchManager: searchManager
-            });
-        });
+        this.getRouter().dispatch('AppLogRecord', 'list', {fromAdmin: true});
     }
 
     // noinspection JSUnusedGlobalSymbols
