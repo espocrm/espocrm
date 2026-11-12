@@ -386,6 +386,14 @@ class Note extends Entity
     }
 
     /**
+     * @since 10.1.2
+     */
+    public function getRelated(): ?OrmEntity
+    {
+        return $this->relations->getOne('related');
+    }
+
+    /**
      * @return EntityCollection<Attachment>
      */
     public function getAttachments(): EntityCollection
