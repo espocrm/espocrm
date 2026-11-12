@@ -135,12 +135,8 @@ class Integration extends Entity
         return parent::isAttributeChanged($name);
     }
 
-    protected function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
+    protected function populateFromArray(array $data, bool $onlyAccessible = true): void
     {
-        if ($reset) {
-            $this->reset();
-        }
-
         foreach ($data as $attribute => $value) {
             if (!is_string($attribute)) {
                 continue;

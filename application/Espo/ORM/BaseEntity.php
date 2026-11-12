@@ -1085,12 +1085,8 @@ class BaseEntity implements Entity
     /**
      * @param array<string, mixed> $data
      */
-    protected function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
+    protected function populateFromArray(array $data, bool $onlyAccessible = true): void
     {
-        if ($reset) {
-            $this->reset();
-        }
-
         foreach ($this->getAttributeList() as $attribute) {
             if (!array_key_exists($attribute, $data)) {
                 continue;
