@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -42,6 +43,7 @@ class WysiwygCheck
     public function __construct(
         private EntityManager $entityManager,
         private Acl $acl,
+        private Metadata $metadata,
     ) {}
 
     /**
@@ -66,7 +68,10 @@ class WysiwygCheck
      */
     private function checkField(Entity $entity, string $field): void
     {
-        if (!$entity->isAttributeChanged($field)) {
+        if (
+            !$entity->isAttributeChanged($field) ||
+            $this->getParam($entity->getEntityType(), $field, 'linkCheckDisabled')
+        ) {
             return;
         }
 
@@ -117,5 +122,13 @@ class WysiwygCheck
         }
 
         return $ids;
+    }
+
+    /**
+     * @noinspection PhpSameParameterValueInspection
+     */
+    private function getParam(string $entityType, string $link, string $param): mixed
+    {
+        return $this->metadata->get(['recordDefs', $entityType, 'relationships', $link, $param]);
     }
 }
