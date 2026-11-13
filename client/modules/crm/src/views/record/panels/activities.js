@@ -64,10 +64,12 @@ class ActivitiesPanelView extends RelationshipPanelView {
             [
                 {
                     name: 'dateStart',
-                    soft: true
+                    soft: true,
+                    small: true,
                 },
                 {
                     name: 'assignedUser',
+                    small: true,
                 }
             ]
         ]

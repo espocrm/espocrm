@@ -68,14 +68,22 @@ export default class TasksRelationshipPanelView extends RelationshipPanelView {
             ],
             [
                 {
-                    name: 'isOverdue'
+                    name: 'isOverdue',
+                    small: true,
                 },
-                {name: 'assignedUser'},
+                {
+                    name: 'assignedUser',
+                    small: true,
+                },
                 {
                     name: 'dateEnd',
-                    soft: true
+                    soft: true,
+                    small: true,
                 },
-                {name: 'status'},
+                {
+                    name: 'status',
+                    small: true,
+                },
             ]
         ]
     }

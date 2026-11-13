@@ -52,14 +52,17 @@ class HistoryPanelView extends ActivitiesPanelView {
                 [
                     {
                         name: 'dateSent',
-                        soft: true
+                        soft: true,
+                        small: true,
                     },
                     {
                         name: 'from',
+                        small: true,
                     },
                     {
                         name: 'hasAttachment',
-                        view: 'views/email/fields/has-attachment'
+                        view: 'views/email/fields/has-attachment',
+                        small: true,
                     },
                 ],
             ]
