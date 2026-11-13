@@ -126,9 +126,7 @@ class EntityFactory implements EntityFactoryInterface
 
         $entity = $this->injectableFactory->createWithBinding($className, $bindingContainer);
 
-        if ($relations instanceof RDBRelations) {
-            $relations->setEntity($entity);
-        }
+        $relations->setEntity($entity);
 
         $this->relationsMap->set($entity, $relations);
 

@@ -117,7 +117,7 @@ class EntityManager
         $this->queryExecutor = $queryExecutor ??
             new DefaultQueryExecutor($this->sqlExecutor, $this->getQueryComposer());
         $this->queryBuilder = new QueryBuilder();
-        $this->collectionFactory = new CollectionFactory($this);
+        $this->collectionFactory = new CollectionFactory($this, $this->relationsMap);
         $this->transactionManager = new TransactionManager($this->pdoProvider->get(), $this->queryComposer);
 
         $this->initLocker();

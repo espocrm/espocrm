@@ -39,6 +39,9 @@ class EmptyRelations implements Relations
     /** @var array<string, Entity|null> */
     private array $setData = [];
 
+    /** @var array<string, Entity|null> */
+    private array $data = [];
+
     public function __construct() {}
 
     public function resetAll(): void
@@ -49,6 +52,11 @@ class EmptyRelations implements Relations
     public function reset(string $relation): void
     {
         unset($this->setData[$relation]);
+    }
+
+    public function setLoaded(string $relation, ?Entity $related): void
+    {
+        $this->data[$relation] = $related;
     }
 
     /**
@@ -78,7 +86,7 @@ class EmptyRelations implements Relations
 
     public function getOne(string $relation): ?Entity
     {
-        $entity = $this->setData[$relation] ?? null;
+        $entity = $this->setData[$relation] ?? $this->data[$relation] ?? null;
 
         if ($entity instanceof EntityCollection) {
             throw new LogicException("Not an entity.");
@@ -92,7 +100,7 @@ class EmptyRelations implements Relations
      */
     public function getMany(string $relation): EntityCollection
     {
-        $collection = $this->setData[$relation] ?? new EntityCollection();
+        $collection = $this->setData[$relation] ?? $this->data[$relation] ?? new EntityCollection();
 
         if (!$collection instanceof EntityCollection) {
             throw new LogicException("Not a collection.");

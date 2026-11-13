@@ -65,4 +65,12 @@ class Util
             $type === RelationType::BELONGS_TO && $foreignType === RelationType::HAS_ONE ||
             $type === RelationType::HAS_MANY && $foreignType === RelationType::BELONGS_TO;
     }
+
+    /**
+     * @internal
+     */
+    public static function composeEagerSelectAlias(string $relation, string $attribute): string
+    {
+        return $relation . '__' . $attribute;
+    }
 }
