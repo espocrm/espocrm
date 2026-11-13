@@ -55,5 +55,10 @@
     ],
     "afterUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\AfterUpdate"
-    ]
+    ],
+    "relationships": {
+        "body": {
+            "linkCheckDisabled": true
+        }
+    }
 }

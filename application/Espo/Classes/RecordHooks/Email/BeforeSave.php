@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\Email;
 use Espo\ORM\Entity;
+use Espo\Tools\Email\BodyCheck;
 use Espo\Tools\Email\Util;
 
 /**
@@ -40,6 +41,10 @@ use Espo\Tools\Email\Util;
  */
 class BeforeSave implements SaveHook
 {
+    public function __construct(
+        private BodyCheck $bodyCheck,
+    ) {}
+
     public function process(Entity $entity): void
     {
         if (
@@ -51,6 +56,8 @@ class BeforeSave implements SaveHook
         }
 
         $this->processBodyPlain($entity);
+
+        $this->bodyCheck->assert($entity);
     }
 
     private function processBodyPlain(Email $entity): void

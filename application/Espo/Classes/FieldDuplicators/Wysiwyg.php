@@ -103,7 +103,8 @@ class Wysiwyg implements FieldDuplicator
         $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
         foreach ($attachmentList as $attachment) {
-            $copiedAttachment = $attachmentRepository->getCopiedAttachment($attachment);
+            $copiedAttachment = $attachmentRepository
+                ->getCopiedAttachment($attachment, Attachment::ROLE_INLINE_ATTACHMENT);
 
             $copiedAttachment->setTargetField($field);
 

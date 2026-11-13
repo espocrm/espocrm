@@ -82,8 +82,8 @@ class WysiwygCheck
             return;
         }
 
-        $ids = $this->parseIds($contents);
-        $previousIds = $this->parseIds($previousContents ?? '');
+        $ids = WysiwygCheck::parseIds($contents);
+        $previousIds = WysiwygCheck::parseIds($previousContents ?? '');
 
         foreach (array_diff($ids, $previousIds) as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -104,8 +104,9 @@ class WysiwygCheck
 
     /**
      * @return string[]
+     * @internal
      */
-    private function parseIds(string $content): array
+    public static function parseIds(string $content): array
     {
         $ids = [];
 
