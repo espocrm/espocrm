@@ -344,7 +344,7 @@ class MailMimeParser implements Parser
                 $contentId = trim($contentId, '<>');
             }
 
-            if ($disposition === self::DISPOSITION_INLINE) {
+            if (strtolower($disposition ?? '') === self::DISPOSITION_INLINE) {
                 $attachment->setRole(Attachment::ROLE_INLINE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_BODY);
             } else {
