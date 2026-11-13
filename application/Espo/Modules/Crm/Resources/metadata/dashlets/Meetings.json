@@ -48,10 +48,12 @@
                     [
                         {
                             "name": "dateStart",
-                            "soft": true
+                            "soft": true,
+                            "small": true
                         },
                         {
-                            "name": "parent"
+                            "name": "parent",
+                            "small": true
                         }
                     ]
                 ]

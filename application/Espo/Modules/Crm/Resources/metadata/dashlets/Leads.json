@@ -48,13 +48,15 @@
                         {
                             "name": "name",
                             "link": true
-                        },                        {
-                        "name": "accountName"
-                    }
+                        },
+                        {
+                            "name": "accountName"
+                        }
                     ],
                     [
                         {
-                            "name": "status"
+                            "name": "status",
+                            "small": true
                         },
                         {
                             "name": "source",

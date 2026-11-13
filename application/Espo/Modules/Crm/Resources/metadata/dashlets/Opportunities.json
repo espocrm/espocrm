@@ -52,17 +52,21 @@
                     ],
                     [
                         {
-                            "name": "stage"
+                            "name": "stage",
+                            "small": true
                         },
                         {
-                            "name": "amount"
+                            "name": "amount",
+                            "small": true
                         },
                         {
                             "name": "closeDate",
-                            "soft": true
+                            "soft": true,
+                            "small": true
                         },
                         {
-                            "name": "account"
+                            "name": "account",
+                            "small": true
                         }
                     ]
                 ]

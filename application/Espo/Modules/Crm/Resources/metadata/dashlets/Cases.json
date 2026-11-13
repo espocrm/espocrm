@@ -53,19 +53,24 @@
                             "link": true
                         },
                         {
-                            "name": "type"
+                            "name": "type",
+                            "soft": true,
+                            "small": true
                         }
                     ],
                     [
                         {
-                            "name": "status"
+                            "name": "status",
+                            "small": true
                         },
                         {
                             "name": "priority",
-                            "soft": true
+                            "soft": true,
+                            "small": true
                         },
                         {
-                            "name": "account"
+                            "name": "account",
+                            "small": true
                         }
                     ]
                 ]

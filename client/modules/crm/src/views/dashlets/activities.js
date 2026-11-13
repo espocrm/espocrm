@@ -57,10 +57,12 @@ class ActivitiesDashletView extends BaseDashletView {
             [
                 {
                     name: 'dateStart',
-                    soft: true
+                    soft: true,
+                    small: true,
                 },
                 {
                     name: 'parent',
+                    small: true,
                 },
             ],
         ],
@@ -85,17 +87,21 @@ class ActivitiesDashletView extends BaseDashletView {
                 [
                     {
                         name: 'status',
+                        small: true,
                     },
                     {
                         name: 'dateEnd',
-                        soft: true
+                        soft: true,
+                        small: true,
                     },
                     {
                         name: 'priority',
                         view: 'crm:views/task/fields/priority-for-dashlet',
+                        small: true,
                     },
                     {
                         name: 'parent',
+                        small: true,
                     },
                 ],
             ]

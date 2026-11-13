@@ -41,14 +41,17 @@
                     ],
                     [
                         {
-                            "name": "status"
+                            "name": "status",
+                            "small": true
                         },
                         {
                             "name": "dateEnd",
-                            "soft": true
+                            "soft": true,
+                            "small": true
                         },
                         {
-                            "name": "parent"
+                            "name": "parent",
+                            "small": true
                         }
                     ]
                 ]
