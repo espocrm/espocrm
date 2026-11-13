@@ -32,6 +32,14 @@ export default class RoleDetailRecordView extends DetailRecordView {
 
     tableView = 'views/role/record/table'
 
+    /**
+     * @protected
+     * @type {'acl'|'aclPortal'}
+     */
+    aclType = 'acl'
+
+    hasModifyDetailLayout = true
+
     sideView = false
     isWide = true
     editModeDisabled = true
@@ -44,5 +52,68 @@ export default class RoleDetailRecordView extends DetailRecordView {
             selector: '.extra',
             model: this.model,
         });
+    }
+
+    modifyDetailLayout(layout) {
+        /** @type {string[]} */
+        const permissionList = this.getMetadata().get(['app', this.aclType, 'valuePermissionList']) || [];
+
+        const presentSet = new Set();
+
+        layout.forEach(panel => {
+            (panel.rows || []).forEach(row => {
+                (row || []).forEach(cell => {
+                    if (cell && cell.name) {
+                        presentSet.add(cell.name);
+                    }
+                });
+            });
+        });
+
+        const missingList = permissionList.filter(name => {
+            return !presentSet.has(name) &&
+                this.getMetadata().get(['entityDefs', this.entityType, 'fields', name]);
+        });
+
+        if (!missingList.length) {
+            return;
+        }
+
+        if (!layout[1]) {
+            layout[1] = {rows: []};
+        }
+
+        const panel = layout[1];
+
+        panel.rows = panel.rows || [];
+
+        const lastRow = panel.rows[panel.rows.length - 1];
+        const columnCount = lastRow && lastRow.length ? lastRow.length : 3;
+
+        if (lastRow) {
+            let index = lastRow.length;
+
+            while (index > 0 && !lastRow[index - 1]) {
+                index--;
+            }
+
+            while (index < lastRow.length && missingList.length) {
+                lastRow[index] = {name: missingList.shift()};
+
+                index++;
+            }
+        }
+
+        for (let i = 0; i < missingList.length; i += columnCount) {
+            const row = missingList
+                .slice(i, i + columnCount)
+                .map(name => ({name}));
+
+            while (row.length < columnCount) {
+                row.push(false);
+            }
+
+            panel.rows.push(row);
+        }
     }
 }
