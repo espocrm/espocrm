@@ -10,5 +10,5 @@
 </div>
 
 <div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
+    <span class="small">{{{createdAt}}}</span>
 </div>

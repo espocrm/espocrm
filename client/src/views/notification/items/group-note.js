@@ -52,7 +52,7 @@ export default class GroupNoteNotificationItemView extends BaseNotificationItemV
                 </div>
             {{/if}}
             <div class="stream-head-text-container">
-                <span class="text-muted message">{{{message}}}</span>
+                <span class="message">{{{message}}}</span>
             </div>
         </div>
         {{~#if isFeatured~}}
@@ -61,7 +61,7 @@ export default class GroupNoteNotificationItemView extends BaseNotificationItemV
             </div>
         {{~/if~}}
         <div class="stream-date-container">
-            <span class="text-muted small">{{{createdAt}}}</span>
+            <span class="small">{{{createdAt}}}</span>
         </div>
     `
 

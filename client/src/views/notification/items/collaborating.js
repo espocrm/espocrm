@@ -37,13 +37,13 @@ export default class CollaboratingNotificationItemView extends BaseNotificationI
             <div class="pull-left">
                 {{{avatar}}}
             </div>
-            <div class="stream-head-text-container text-muted">
+            <div class="stream-head-text-container">
                 {{#if iconHtml}}{{{iconHtml}}}{{/if}}<span class="message"">{{{message}}}</span>
             </div>
         </div>
 
         <div class="stream-date-container">
-            <span class="text-muted small">{{{createdAt}}}</span>
+            <span class="small">{{{createdAt}}}</span>
         </div>
     `
 

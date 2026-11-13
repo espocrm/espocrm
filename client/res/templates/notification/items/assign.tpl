@@ -2,10 +2,10 @@
     <div class="pull-left">
         {{{avatar}}}
     </div>
-	<div class="stream-head-text-container text-muted message">
+	<div class="stream-head-text-container message">
 		{{{message}}}
 	</div>
 </div>
 <div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
+    <span class="small">{{{createdAt}}}</span>
 </div>

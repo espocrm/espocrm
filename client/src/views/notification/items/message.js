@@ -52,7 +52,7 @@ class MessageNotificationItemView extends BaseNotificationItemView {
         this.messageTemplate = DOMPurify.sanitize(message, {}).toString();
 
         this.userId = data.userId;
-        this.style = data.style || 'text-muted';
+        this.style = data.style;
 
         this.messageData['entityType'] = this.translateEntityType(data.entityType);
 

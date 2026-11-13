@@ -44,11 +44,11 @@ class EmailInboxNotificationItemView extends BaseNotificationItemView {
                     data-action="quickView"
                     data-id="{{model.attributes.relatedId}}"
                     data-scope="Email"
-                ></span><span class="text-muted message">{{{message}}}</span>
+                ></span><span class="message">{{{message}}}</span>
             </div>
         </div>
         <div class="stream-date-container">
-            <span class="text-muted small">{{{createdAt}}}</span>
+            <span class="small">{{{createdAt}}}</span>
         </div>
     `
 

@@ -57,12 +57,12 @@ table.table,
 }
 
 table.table > thead th > a {
-    color: var(--text-muted-color);
+    color: var(--text-soft-color);
     font-weight: 400;
 }
 
 table.table > thead th {
-    color: var(--text-muted-color);
+    color: var(--text-soft-color);
 }
 
 th {
@@ -183,6 +183,18 @@ table td {
     td.cell {
         .text-bold {
             font-weight: 700;
+        }
+    }
+}
+
+.list {
+    > table.table {
+        > thead {
+            > tr {
+                th {
+                    font-size: var(--13px);
+                }
+            }
         }
     }
 }

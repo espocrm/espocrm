@@ -10,7 +10,7 @@
             data-action="quickView"
             data-id="{{emailId}}"
             data-scope="Email"
-        ></span><span class="message text-muted">{{{message}}}</span>
+        ></span><span class="message">{{{message}}}</span>
     </div>
 </div>
 
@@ -24,5 +24,5 @@
 </div>
 
 <div class="stream-date-container">
-    <span class="text-muted small">{{{createdAt}}}</span>
+    <span class="small">{{{createdAt}}}</span>
 </div>

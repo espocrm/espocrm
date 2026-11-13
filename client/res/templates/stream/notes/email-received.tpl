@@ -16,7 +16,7 @@
             data-action="quickView"
             data-id="{{emailId}}"
             data-scope="Email"
-        ></span><span class="message text-muted">{{{message}}}</span>
+        ></span><span class="message">{{{message}}}</span>
         {{#if hasExpand}}
             <a
                 role="button"
@@ -65,5 +65,5 @@
             <span class="fas fa-map-pin fa-sm" title="{{translate 'Pinned' scope='Note'}}"></span>
         </div>
     {{/if}}
-    <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
+    <a class="small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
 </div>

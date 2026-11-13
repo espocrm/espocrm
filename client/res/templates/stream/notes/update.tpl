@@ -9,7 +9,7 @@
         {{{avatar}}}
     </div>
     <div class="stream-head-text-container">
-        {{#if iconHtml}}{{{iconHtml}}}{{/if}}<span class="text-muted message">{{{message}}}</span>
+        {{#if iconHtml}}{{{iconHtml}}}{{/if}}<span class="message">{{{message}}}</span>
     </div>
 </div>
 
@@ -63,5 +63,5 @@
 </div>
 
 <div class="stream-date-container">
-    <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
+    <a class="small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
 </div>

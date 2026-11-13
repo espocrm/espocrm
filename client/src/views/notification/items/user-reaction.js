@@ -46,12 +46,12 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
                     data-action="quickView"
                     data-id="{{noteId}}"
                     data-scope="Note"
-                ></span><span class="text-muted message">{{{message}}}</span>
+                ></span><span class="message">{{{message}}}</span>
             </div>
         </div>
 
         <div class="stream-date-container">
-            <span class="text-muted small">{{{createdAt}}}</span>
+            <span class="small">{{{createdAt}}}</span>
         </div>
     `
 

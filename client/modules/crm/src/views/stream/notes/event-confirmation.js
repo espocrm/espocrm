@@ -44,14 +44,14 @@ class EventConfirmationNoteView extends NoteStreamView {
             </div>
             <div class="stream-head-text-container">
                 {{#if iconHtml}}{{{iconHtml}}}{{/if}}
-                <span class="text-muted message">{{{message}}}</span>
+                <span class="message">{{{message}}}</span>
             </div>
         </div>
         <div class="stream-post-container">
             <span class="{{statusIconClass}} text-{{style}}"></span>
         </div>
         <div class="stream-date-container">
-            <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
+            <a class="small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
         </div>
     `
 

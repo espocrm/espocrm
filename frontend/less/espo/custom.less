@@ -1588,6 +1588,7 @@ section {
     padding: 0;
     line-height: 1;
     height: var(--14px);
+    font-size: var(--14px);
 }
 
 .list .record-checkbox-container {
@@ -2250,6 +2251,8 @@ td > span.color-icon {
 }
 
 .stream-head-text-container {
+    min-height: var(--line-height-computed);
+
     span.label {
         position: relative;
         top: var(--minus-1px);
@@ -2309,6 +2312,9 @@ td > span.color-icon {
 }
 
 .stream-date-container {
+    color: var(--text-soft-color);
+    margin-top: var(--5px);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2321,6 +2327,13 @@ td > span.color-icon {
 
         > span {
             color: var(--text-muted-color);
+        }
+    }
+
+    > a {
+        &,
+        &:hover {
+            color: var(--text-soft-color);
         }
     }
 
@@ -2359,6 +2372,9 @@ td > span.color-icon {
 
 .stream-head-container {
     margin-bottom: var(--5px);
+
+    color: var(--text-soft-color);
+    font-size: var(--13px);
 
     > .stream-head-left-icon-container {
         width: var(--26px);
