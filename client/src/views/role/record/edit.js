@@ -27,10 +27,19 @@
  ************************************************************************/
 
 import EditRecordView from 'views/record/edit';
+import RoleDetailRecordView from 'views/role/record/detail';
 
 class RoleEditRecordView extends EditRecordView {
 
     tableView = 'views/role/record/table'
+
+    /**
+     * @protected
+     * @type {'acl'|'aclPortal'}
+     */
+    aclType = 'acl'
+
+    hasModifyDetailLayout = true
 
     sideView = false
     isWide = true
@@ -59,6 +68,10 @@ class RoleEditRecordView extends EditRecordView {
                 this.model.setMultiple(data, {ui: true});
             });
         });
+    }
+
+    modifyDetailLayout(layout) {
+        RoleDetailRecordView.prototype.modifyDetailLayout.call(this, layout);
     }
 
     /**

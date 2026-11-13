@@ -31,5 +31,6 @@ import RoleDetailRecordView from 'views/role/record/detail';
 export default class extends RoleDetailRecordView {
 
     tableView = 'views/portal-role/record/table'
+    aclType = 'aclPortal'
     stickButtonsContainerAllTheWay = true
 }
