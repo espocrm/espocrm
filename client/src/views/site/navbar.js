@@ -788,7 +788,7 @@ class NavbarSiteView extends View {
         });
 
         const updateSizeForSide = () => {
-            const windowHeight = window.innerHeight;
+            const windowHeight = window.innerHeight - this.getViewportSlack();
             const windowWidth = window.innerWidth;
 
             const navbarStaticItemsHeight = this.getStaticItemsHeight();
@@ -805,7 +805,7 @@ class NavbarSiteView extends View {
                 return;
             }
 
-            tabsElement.style.height = (windowHeight - navbarStaticItemsHeight) + 'px';
+            tabsElement.style.height = Math.floor(windowHeight - navbarStaticItemsHeight) + 'px';
 
             if (moreElement) {
                 moreElement.style.maxHeight = windowHeight + 'px';
@@ -819,6 +819,14 @@ class NavbarSiteView extends View {
 
         updateSizeForSide();
         this.adjustBodyMinHeight();
+    }
+
+    /**
+     * @private
+     * @return {number}
+     */
+    getViewportSlack() {
+        return Number.isInteger(window.devicePixelRatio) ? 0 : 1;
     }
 
     /**
@@ -901,7 +909,7 @@ class NavbarSiteView extends View {
             }
         });
 
-        document.body.style.minHeight = minHeight + 'px';
+        document.body.style.minHeight = Math.floor(minHeight) + 'px';
     }
 
     /**
@@ -949,7 +957,7 @@ class NavbarSiteView extends View {
             }
         });
 
-        document.body.style.minHeight = minHeight + 'px';
+        document.body.style.minHeight = Math.floor(minHeight) + 'px';
     }
 
     afterRender() {
