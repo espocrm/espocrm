@@ -597,6 +597,10 @@ class DefaultTable implements Table
             $data->$scope = (object) [];
         }
 
+        if ($data->$scope === true) {
+            return;
+        }
+
         if (!is_object($row)) {
             return;
         }
