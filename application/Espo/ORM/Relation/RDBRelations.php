@@ -120,6 +120,15 @@ class RDBRelations implements Relations
         return $this->setData[$relation];
     }
 
+    public function setLoaded(string $relation, ?Entity $related): void
+    {
+        if (!$this->entity) {
+            throw new LogicException("No entity set.");
+        }
+
+        $this->data[$relation] = $related;
+    }
+
     /**
      * @param Entity|null $related
      */
@@ -377,7 +386,7 @@ class RDBRelations implements Relations
             return null;
         }
 
-        $foreignEntity = $this->entityManager->getNewEntity($foreignEntityType);
+        $foreignEntity = $this->entityManager->getEntityFactory()->create($foreignEntityType);
 
         if (!$foreignEntity instanceof BaseEntity) {
             return null;

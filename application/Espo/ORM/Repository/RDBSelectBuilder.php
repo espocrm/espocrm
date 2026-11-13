@@ -45,6 +45,7 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Mapper\BaseMapper;
 
+use Espo\ORM\Type\RelationType;
 use LogicException;
 use RuntimeException;
 
@@ -62,10 +63,15 @@ class RDBSelectBuilder
 
     private bool $returnSthCollection = false;
 
+    /**
+     * @var array{string, string[]}[] $eagerItems
+     */
+    private array $eagerItems = [];
+
     public function __construct(
         private EntityManager $entityManager,
-        string $entityType,
-        ?Select $query = null
+        private string $entityType,
+        ?Select $query = null,
     ) {
 
         /** @var RDBRepository<TEntity> $repository */
@@ -100,6 +106,8 @@ class RDBSelectBuilder
     {
         $query = $this->builder->build();
 
+        $query = $this->applyEagerItemsToQuery($query);
+
         /** @var Collection<TEntity> $collection */
         $collection = $this->getMapper()->select($query);
 
@@ -115,6 +123,10 @@ class RDBSelectBuilder
         $query = $this->builder->build();
 
         $cloned = $this->repository->clone($query);
+
+        foreach ($this->eagerItems as $item) {
+            $cloned = $cloned->eager($item[0], $item[1]);
+        }
 
         $collection = $cloned
             ->sth()
@@ -390,6 +402,61 @@ class RDBSelectBuilder
     }
 
     /**
+     * Eager load related entities.
+     *
+     * @param string $relation A relation. Belongs-To and Has-One supported.
+     * @param string[] $select Attributes to select.
+     * @return RDBSelectBuilder<TEntity, TCollection>
+     *
+     * @since 10.2.0
+     */
+    public function eager(string $relation, array $select): RDBSelectBuilder
+    {
+        $relationDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->tryGetRelation($relation);
+
+        if (!$relationDefs) {
+            throw new LogicException("No relation '$relation'.");
+        }
+
+        $relationType = $relationDefs->getType();
+
+        if (!in_array($relationType, [RelationType::BELONGS_TO, RelationType::HAS_ONE])) {
+            throw new LogicException("Eager loading is not supported for '$relationType' type.");
+        }
+
+        $foreignEntityType = $relationDefs->getForeignEntityType();
+
+        $foreignEntityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($foreignEntityType);
+
+        foreach ($select as $it) {
+            if (!$foreignEntityDefs->hasAttribute($it)) {
+                throw new LogicException("Attribute '$it' does not exist in '$foreignEntityType'.");
+            }
+        }
+
+        $i = array_find_key($this->eagerItems, fn ($it) => $it[0] === $relation);
+
+        if ($i !== null) {
+            $item =& $this->eagerItems[$i];
+
+            $item[1] = array_merge($item[1], $select);
+            $item[1] = array_unique($item[1]);
+            $item[1] = array_values($item[1]);
+
+            return $this;
+        }
+
+        $this->eagerItems[] = [$relation, $select];
+
+        return $this;
+    }
+
+    /**
      * @param Collection<TEntity> $collection
      * @return EntityCollection<TEntity>|SthCollection<TEntity>
      */
@@ -403,11 +470,65 @@ class RDBSelectBuilder
             return $collection;
         }
 
+        if ($this->eagerItems !== []) {
+            /** @var SthCollection<TEntity> $collection */
+            $collection = $collection->withEagerItems($this->eagerItems);
+        }
+
         if ($this->returnSthCollection) {
             return $collection;
         }
 
         /** @var EntityCollection<TEntity> */
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
+    }
+
+    private function applyEagerItemsToQuery(Select $query): Select
+    {
+        if ($this->eagerItems === []) {
+            return $query;
+        }
+
+        $builder = SelectBuilder::create()->clone($query);
+
+        $selectMap = array_reduce($query->getSelect(), function ($map, $it) {
+            if ($it->getAlias() === null) {
+                return $map;
+            }
+
+            $map[$it->getAlias()] = true;
+
+            return $map;
+        }, []);
+
+        if ($query->getSelect() === []) {
+            $builder->select('*');
+        }
+
+        foreach ($this->eagerItems as $item) {
+            $relation = $item[0];
+            $select = $item[1];
+
+            if (!$builder->hasJoinAlias($relation)) {
+                $builder->leftJoin($relation);
+            }
+
+            if (!in_array(Attribute::ID, $select)) {
+                $select[] = Attribute::ID;
+            }
+
+            foreach ($select as $attribute) {
+                $expression = $relation . '.' . $attribute;
+                $alias = Util::composeEagerSelectAlias($relation, $attribute);
+
+                if (array_key_exists($alias, $selectMap)) {
+                    continue;
+                }
+
+                $builder->select($expression, $alias);
+            }
+        }
+
+        return $builder->build();
     }
 }

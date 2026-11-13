@@ -30,14 +30,17 @@
 namespace Espo\ORM;
 
 use Espo\ORM\Query\Select;
+use Espo\ORM\Relation\RelationsMap;
 
 /**
  * Creates collections.
  */
 class CollectionFactory
 {
-    public function __construct(protected EntityManager $entityManager)
-    {}
+    public function __construct(
+        protected EntityManager $entityManager,
+        private RelationsMap $relationsMap,
+    ) {}
 
     /**
      * Create.
@@ -57,7 +60,12 @@ class CollectionFactory
      */
     public function createFromSql(string $entityType, string $sql): SthCollection
     {
-        return SthCollection::fromSql($entityType, $sql, $this->entityManager);
+        return SthCollection::fromSql(
+            entityType: $entityType,
+            sql: $sql,
+            entityManager: $this->entityManager,
+            relationsMap: $this->relationsMap,
+        );
     }
 
     /**
@@ -67,7 +75,11 @@ class CollectionFactory
      */
     public function createFromQuery(Select $query): SthCollection
     {
-        return SthCollection::fromQuery($query, $this->entityManager);
+        return SthCollection::fromQuery(
+            query: $query,
+            entityManager: $this->entityManager,
+            relationsMap: $this->relationsMap,
+        );
     }
 
     /**
