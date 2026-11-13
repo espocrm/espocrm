@@ -321,7 +321,6 @@ trait SelectingBuilderTrait
     public function hasJoinAlias(string $alias): bool
     {
         return $this->hasJoinAliasInternal('joins', $alias) ||
-            // For bc.
             $this->hasJoinAliasInternal('leftJoins', $alias);
     }
 

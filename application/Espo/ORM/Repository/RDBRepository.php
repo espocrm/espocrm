@@ -546,6 +546,20 @@ class RDBRepository implements Repository
     }
 
     /**
+     * Eager load related entities.
+     *
+     * @param string $relation A relation. Belongs-To and Has-One supported.
+     * @param string[] $select Attributes to select.
+     * @return RDBSelectBuilder<TEntity, EntityCollection<TEntity>>
+     *
+     * @since 10.2.0
+     */
+    public function eager(string $relation, array $select): RDBSelectBuilder
+    {
+        return $this->createBuilder()->eager($relation, $select);
+    }
+
+    /**
      * Create a select builder.
      *
      * @return RDBSelectBuilder<TEntity, EntityCollection<TEntity>>
