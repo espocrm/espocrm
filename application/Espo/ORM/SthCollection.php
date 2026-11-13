@@ -29,7 +29,10 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Select as SelectQuery;
+use Espo\ORM\Relation\RelationsMap;
+use Espo\ORM\Repository\Util;
 use IteratorAggregate;
 use Countable;
 use Traversable;
@@ -58,8 +61,15 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     private ?string $sql = null;
     private bool $isPartiallyLoaded = false;
 
-    private function __construct(private EntityManager $entityManager)
-    {}
+    /**
+     * @var array{string, string[]}[] $eagerItems
+     */
+    private array $eagerItems = [];
+
+    private function __construct(
+        private EntityManager $entityManager,
+        private RelationsMap $relationsMap,
+    ) {}
 
     private function executeQuery(): void
     {
@@ -76,6 +86,20 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         $this->sth = $this->entityManager->getSqlExecutor()->execute($this->sql);
     }
 
+    /**
+     * @param array{string, string[]}[] $eagerItems
+     * @return self<TEntity>
+     * @internal
+     */
+    public function withEagerItems(array $eagerItems): self
+    {
+        $cloned = clone $this;
+
+        $cloned->eagerItems = $eagerItems;
+
+        return $cloned;
+    }
+
     public function getIterator(): Traversable
     {
         return (function () {
@@ -86,7 +110,10 @@ class SthCollection implements Collection, IteratorAggregate, Countable
             while ($row = $this->fetchRow()) {
                 $entity = $this->entityManager->getEntityFactory()->create($this->entityType);
 
-                $entity->setMultiple($row);
+                $entity->setMultiple($this->stripEagerColumns($row));
+
+                $this->applyEagerItemsToEntity($entity, $row);
+
                 $entity->setAsFetched();
 
                 if ($this->isPartiallyLoaded && $entity instanceof BaseEntity) {
@@ -177,10 +204,10 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      * @return self<Entity>
      * @internal
      */
-    public static function fromQuery(SelectQuery $query, EntityManager $entityManager): self
+    public static function fromQuery(SelectQuery $query, EntityManager $entityManager, RelationsMap $relationsMap): self
     {
         /** @var self<Entity> $obj */
-        $obj = new self($entityManager);
+        $obj = new self($entityManager, $relationsMap);
 
         $entityType = $query->getFrom();
 
@@ -206,10 +233,15 @@ class SthCollection implements Collection, IteratorAggregate, Countable
      * @return self<Entity>
      * @internal
      */
-    public static function fromSql(string $entityType, string $sql, EntityManager $entityManager): self
-    {
+    public static function fromSql(
+        string $entityType,
+        string $sql,
+        EntityManager $entityManager,
+        RelationsMap $relationsMap,
+    ): self {
+
         /** @var self<Entity> $obj */
-        $obj = new self($entityManager);
+        $obj = new self($entityManager, $relationsMap);
 
         $obj->entityType = $entityType;
         $obj->sql = $sql;
@@ -271,5 +303,108 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     {
         /** @var EntityCollection<TEntity> */
         return (new EntityCollection([...$this], $this->entityType));
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function applyEagerItemsToEntity(Entity $entity, array $row): void
+    {
+        if ($this->eagerItems === []) {
+            return;
+        }
+
+        foreach ($this->eagerItems as $item) {
+            $this->applyEagerItemToEntity($entity, $row, $item[0], $item[1]);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @param string[] $select
+     */
+    private function applyEagerItemToEntity(
+        Entity $entity,
+        array $row,
+        string $relation,
+        array $select,
+    ): void {
+
+        $idAlias = Util::composeEagerSelectAlias($relation, Attribute::ID);
+
+        if (!array_key_exists($idAlias, $row)) {
+            return;
+        }
+
+        $id = $row[$idAlias];
+
+        if (!is_string($id) && $id !== null) {
+            throw new RuntimeException("Bad ID value.");
+        }
+
+        $relations = $this->relationsMap->get($entity);
+
+        if (!$relations) {
+            throw new RuntimeException("Could not get relations for entity.");
+        }
+
+        if ($id === null) {
+            $relations->setLoaded($relation, null);
+
+            return;
+        }
+
+        $values = [Attribute::ID => $id];
+
+        foreach ($select as $attribute) {
+            $alias = Util::composeEagerSelectAlias($relation, $attribute);
+
+            if (!array_key_exists($alias, $row)) {
+                continue;
+            }
+
+            $values[$attribute] = $row[$alias];
+        }
+
+        $foreignEntityType = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->getRelation($relation)
+            ->getForeignEntityType();
+
+        $foreignEntity = $this->entityManager->getEntityFactory()->create($foreignEntityType);
+
+        if (!$foreignEntity instanceof BaseEntity) {
+            throw new RuntimeException("Not BaseEntity.");
+        }
+
+        $foreignEntity->setMultiple($values);
+        $foreignEntity->setAsPartiallyLoaded();
+        $foreignEntity->setAsFetched();
+
+        $relations->setLoaded($relation, $foreignEntity);
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @return array<string, mixed>
+     */
+    private function stripEagerColumns(array $row): array
+    {
+        if ($this->eagerItems === []) {
+            return $row;
+        }
+
+        foreach ($this->eagerItems as [$relation, $select]) {
+            unset($row[Util::composeEagerSelectAlias($relation, Attribute::ID)]);
+
+            foreach ($select as $attribute) {
+                $alias = Util::composeEagerSelectAlias($relation, $attribute);
+
+                unset($row[$alias]);
+            }
+        }
+
+        return $row;
     }
 }

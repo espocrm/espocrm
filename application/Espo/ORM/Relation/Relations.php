@@ -50,6 +50,11 @@ interface Relations
     /**
      * @param Entity|null $related
      */
+    public function setLoaded(string $relation, Entity|null $related): void;
+
+    /**
+     * @param Entity|null $related
+     */
     public function set(string $relation, Entity|null $related): void;
 
     /**

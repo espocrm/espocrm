@@ -44,6 +44,7 @@ use Espo\ORM\Query\Part\Join\JoinType;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Select;
 use Espo\ORM\QueryBuilder;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RDBRelationSelectBuilder;
 use Espo\ORM\Repository\RDBRepository as Repository;
@@ -58,7 +59,7 @@ class RDBRepositoryTest extends TestCase
     /** @var Repository */
     private $repository;
 
-    private $entityManager;
+    private ?EntityManager $entityManager = null;
     private $queryBuilder;
     private $metadata;
     private $collection;
@@ -67,14 +68,15 @@ class RDBRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $entityManager = $this->entityManager =
-            $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
+        $entityManager = $this->entityManager = $this->createMock(EntityManager::class);
 
         $entityFactory = $this->entityFactory =
 
         $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
 
-        $collectionFactory = new CollectionFactory($this->entityManager);
+        $relationsMap = $this->createMock(RelationsMap::class);
+
+        $collectionFactory = new CollectionFactory($this->entityManager, $relationsMap);
 
         $this->mapper = $this->getMockBuilder(BaseMapper::class)->disableOriginalConstructor()->getMock();
 
