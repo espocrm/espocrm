@@ -72,7 +72,7 @@ class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';
     private const string USER_USERNAME = 'test';
-    private const string USER_PASSWORD = '1';
+    private const string USER_PASSWORD = 'password';
 
     /**
      * @noinspection PhpUnhandledExceptionInspection
@@ -335,6 +335,7 @@ class AuthorizationServerTest extends BaseTestCase
         $user = $this->createUser(
             [
                 User::FIELD_USER_NAME => self::USER_USERNAME,
+                User::FIELD_PASSWORD => self::USER_PASSWORD,
             ],
         );
 
@@ -404,6 +405,7 @@ class AuthorizationServerTest extends BaseTestCase
         $user = $this->createUser(
             [
                 User::FIELD_USER_NAME => self::USER_USERNAME,
+                User::FIELD_PASSWORD => self::USER_PASSWORD,
             ],
         );
 
@@ -528,6 +530,7 @@ class AuthorizationServerTest extends BaseTestCase
         $user = $this->createUser(
             [
                 User::FIELD_USER_NAME => self::USER_USERNAME,
+                User::FIELD_PASSWORD => self::USER_PASSWORD,
             ],
         );
 
@@ -594,6 +597,7 @@ class AuthorizationServerTest extends BaseTestCase
         $user = $this->createUser(
             [
                 User::FIELD_USER_NAME => self::USER_USERNAME,
+                User::FIELD_PASSWORD => self::USER_PASSWORD,
             ],
         );
 
@@ -704,10 +708,11 @@ class AuthorizationServerTest extends BaseTestCase
             [
                 User::FIELD_USER_NAME => 'admin',
                 User::FIELD_TYPE => User::TYPE_ADMIN,
+                User::FIELD_PASSWORD => self::USER_PASSWORD,
             ],
         );
 
-        $this->authenticate('admin');
+        $this->authenticate('admin', password: self::USER_PASSWORD);
 
         $settingsService = $this->getInjectableFactory()->create(SettingsService::class);
 
@@ -1627,7 +1632,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
-        $this->auth($user->getUserName());
+        $this->auth($user->getUserName(), password: self::USER_PASSWORD);
 
         $this->reCreateApplication(
             reuse: true,

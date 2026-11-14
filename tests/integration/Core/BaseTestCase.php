@@ -244,9 +244,15 @@ abstract class BaseTestCase extends TestCase
         ?string $username = null,
         ?string $method = null,
         ?RequestWrapper $request = null,
+        ?string $password = null,
     ): void {
 
-        $this->auth($username, authenticationMethod: $method, request: $request);
+        $this->auth(
+            userName: $username,
+            password: $password,
+            authenticationMethod: $method,
+            request: $request,
+        );
 
         $this->getEntityManager()->getMetadata()->updateData();
 
