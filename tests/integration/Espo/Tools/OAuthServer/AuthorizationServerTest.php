@@ -38,7 +38,10 @@ use Espo\Core\Api\Method;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\AuthenticationData;
+use Espo\Core\Authentication\TwoFactor\Totp\Util as TotpUtil;
 use Espo\Core\Authentication\Oidc\PkceUtil;
+use Espo\Core\Authentication\TwoFactor\Totp\TotpLogin;
 use Espo\Core\Binding\Binder;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\Date;
@@ -60,13 +63,16 @@ use Espo\Tools\OAuthServer\EntryPoints\AuthorizeComplete;
 use Espo\Tools\OAuthServer\EntryPoints\Token;
 use Espo\Tools\OAuthServer\EntryPoints\TokenRevoke;
 use Espo\Tools\OAuthServer\Repository\AccessTokenRepository;
+use Espo\Tools\User\UserDataProvider;
 use Slim\Psr7\Response;
+
 use tests\integration\Core\BaseTestCase;
 
 class AuthorizationServerTest extends BaseTestCase
 {
     private const string REDIRECT_URI = 'http://localhost/oauth/callback';
     private const string USER_USERNAME = 'test';
+    private const string USER_PASSWORD = '1';
 
     /**
      * @noinspection PhpUnhandledExceptionInspection
@@ -685,7 +691,7 @@ class AuthorizationServerTest extends BaseTestCase
 
         //
 
-        $response =$this->processCodeRequestError($clientId, $redirectUri, $scope);
+        $response = $this->processCodeRequestError($clientId, $redirectUri, $scope);
 
         $location = $response->getHeader('Location');
         $this->assertIsString($location);
@@ -851,7 +857,7 @@ class AuthorizationServerTest extends BaseTestCase
     private function revokeFailDueWrongClientId(
         string $accessToken,
         ClientSecret $secret,
-    ): void  {
+    ): void {
 
         $tokenRevokeEntryPoint = $this->getInjectableFactory()->create(TokenRevoke::class);
         $accessTokenRepo = $this->getInjectableFactory()->create(AccessTokenRepository::class);
@@ -1648,6 +1654,7 @@ class AuthorizationServerTest extends BaseTestCase
         return $this->createUser(
             userData: [
                 User::FIELD_USER_NAME => self::USER_USERNAME,
+                User::FIELD_PASSWORD => self::USER_PASSWORD,
             ],
             role: [
                 Role::FIELD_DATA => [
@@ -1670,5 +1677,140 @@ class AuthorizationServerTest extends BaseTestCase
         $urlData = parse_url($location);
         parse_str($urlData['query'], $queryParams);
         $this->assertIsString($queryParams['code']);
+    }
+
+    public function testAuthorizeWithTwoFactorEnabled(): void
+    {
+        $this->setConfigParams([
+            'auth2FA' => true,
+            'auth2FAMethodList' => [TotpLogin::NAME],
+        ]);
+
+        $redirectUri = self::REDIRECT_URI;
+
+        $client = $this->createClient();
+        $secret = $this->createSecret($client);
+
+        $user = $this->createUserForTest();
+
+        //
+
+        $codeChallenge = PkceUtil::generateCodeVerifier();
+
+        $code = $this->processObtainCode(
+            client: $client,
+            redirectUri: $redirectUri,
+            codeChallenge: $codeChallenge,
+            user: $user,
+        );
+
+        //
+
+        $this->enableTwoFactorForUser($user);
+
+        $this->assertPasswordLoginRequiresSecondStep($user);
+
+        //
+
+        [$accessToken, $refreshToken] = $this->tokenWithAuthorizationCode(
+            client: $client,
+            secret: $secret,
+            redirectUri: $redirectUri,
+            code: $code,
+            codeChallenge: $codeChallenge,
+        );
+
+        $this->resourceSuccessWithTwoFactorEnabled($accessToken, $user);
+
+        //
+
+        [$accessToken] = $this->refreshTokenGrant(
+            refreshToken: $refreshToken,
+            client: $client,
+            secret: $secret,
+            redirectUri: $redirectUri,
+            accessToken: $accessToken,
+        );
+
+        $this->resourceSuccessWithTwoFactorEnabled($accessToken, $user);
+    }
+
+    private function enableTwoFactorForUser(User $user): void
+    {
+        $em = $this->getEntityManager();
+
+        $userData = $this->getInjectableFactory()->create(UserDataProvider::class)->get($user->getId());
+
+        $this->assertNotNull($userData);
+
+        $userData->setMultiple([
+            'auth2FA' => true,
+            'auth2FAMethod' => TotpLogin::NAME,
+            'auth2FATotpSecret' => (new TotpUtil())->createSecret(),
+        ]);
+
+        $em->saveEntity($userData);
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function assertPasswordLoginRequiresSecondStep(User $user): void
+    {
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $authentication = $this->getInjectableFactory()
+            ->createWith(Authentication::class, ['allowAnyAccess' => false]);
+
+        $result = $authentication->login(
+            data: AuthenticationData::create()
+                ->withUsername($user->getUserName())
+                ->withPassword(self::USER_PASSWORD),
+            request: $this->createRequest(Method::POST),
+            response: $this->createResponse(),
+        );
+
+        $this->assertFalse($result->isSuccess());
+        $this->assertTrue($result->isSecondStepRequired(), "Password login is expected to require 2FA.");
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function resourceSuccessWithTwoFactorEnabled(string $accessToken, User $user): void
+    {
+        $this->reCreateApplication(reuse: true, noUser: true);
+
+        $request = $this->createRequest(
+            method: Method::GET,
+            headers: [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        );
+
+        $auth = $this->prepareAuth();
+
+        $response = $this->createResponse();
+
+        $result = $auth->process($request, $response);
+
+        $this->assertNotEquals(
+            'second-step-required',
+            $response->getHeader('X-Status-Reason'),
+            "2FA must be bypassed when authenticating with an OAuth access token."
+        );
+
+        $this->assertTrue($result->isResolved());
+        $this->assertNotEquals(401, $response->getStatusCode());
+
+        $applicationState = $this->getContainer()->getByClass(ApplicationState::class);
+
+        $this->assertTrue($applicationState->hasUser());
+        $this->assertEquals($user->getId(), $applicationState->getUserId());
+
+        $this->assertEquals([
+            Scope::GLOBAL,
+            Account::ENTITY_TYPE,
+        ], $applicationState->getUser()->getScopes());
     }
 }
