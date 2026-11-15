@@ -724,11 +724,11 @@ body[data-navbar="side"] {
     }
 
     .stick-sub {
-        left: var(--navbar-width);
+        inset-inline-start: var(--navbar-width);
     }
 
     &.minimized .stick-sub {
-        left: var(--navbar-minimized-width);
+        inset-inline-start: var(--navbar-minimized-width);
     }
 
     .list-sticky-bar {
@@ -746,7 +746,7 @@ body[data-navbar="side"] {
     @media screen and (max-width: @screen-xs-max) {
         .stick-sub,
         &.minimized .stick-sub {
-            left: 0;
+            inset-inline-start: 0;
         }
 
         .list-sticky-bar,

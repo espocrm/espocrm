@@ -111,6 +111,6 @@ class OAuthLogin implements Login
 
         $user->setScopes($accessToken->getScopes());
 
-        return Result::success($user);
+        return Result::success($user)->withBypassSecondStep();
     }
 }
