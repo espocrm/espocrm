@@ -32,4 +32,6 @@ export default class extends RoleEditRecordView {
 
     tableView = 'views/portal-role/record/table'
     stickButtonsContainerAllTheWay = true
+
+    aclType = 'aclPortal'
 }

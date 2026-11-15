@@ -9,6 +9,7 @@
         ]
     },
     {
+        "name": "permissions",
         "rows": [
             [
                 {"name": "exportPermission"},

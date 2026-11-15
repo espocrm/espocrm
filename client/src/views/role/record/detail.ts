@@ -26,47 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import EditRecordView from 'views/record/edit';
+import DetailRecordView from 'views/record/detail';
+import {LayoutModifier} from 'helpers/misc/role/layout';
 
-class RoleEditRecordView extends EditRecordView {
+export default class RoleDetailRecordView extends DetailRecordView {
 
-    tableView = 'views/role/record/table'
+    protected tableView: string = 'views/role/record/table'
 
-    sideView = false
-    isWide = true
-    stickButtonsContainerAllTheWay = true
+    protected sideView = null
+    protected isWide = true
+    protected editModeDisabled = true
+    protected stickButtonsContainerAllTheWay = true
+    protected hasModifyDetailLayout = true
 
-    fetch() {
-        const data = super.fetch();
-
-        data['data'] = this.getTableView().fetchScopeData();
-        data['fieldData'] = this.getTableView().fetchFieldData();
-
-        return data;
-    }
+    protected aclType: 'acl' | 'aclPortal' = 'acl'
 
     setup() {
         super.setup();
 
         this.createView('extra', this.tableView, {
-            mode: 'edit',
             selector: '.extra',
             model: this.model,
-        }, view => {
-            this.listenTo(view, 'change', () => {
-                const data = this.fetch();
-
-                this.model.setMultiple(data, {ui: true});
-            });
         });
     }
 
-    /**
-     * @return {import('./table').default}
-     */
-    getTableView() {
-        return this.getView('extra');
+    protected modifyDetailLayout(layout: any) {
+        new LayoutModifier().modify(this.aclType, layout);
     }
 }
-
-export default RoleEditRecordView;

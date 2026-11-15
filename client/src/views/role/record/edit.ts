@@ -26,23 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DetailRecordView from 'views/record/detail';
+import EditRecordView from 'views/record/edit';
+import type TableView from 'views/role/record/table';
+import {LayoutModifier} from 'helpers/misc/role/layout';
 
-export default class RoleDetailRecordView extends DetailRecordView {
+export default class RoleEditRecordView extends EditRecordView {
 
-    tableView = 'views/role/record/table'
+    protected tableView: string = 'views/role/record/table'
 
-    sideView = false
-    isWide = true
-    editModeDisabled = true
-    stickButtonsContainerAllTheWay = true
+    protected sideView = null
+    protected isWide = true
+    protected stickButtonsContainerAllTheWay = true
+    protected hasModifyDetailLayout = true
+
+    protected aclType: 'acl' | 'aclPortal' = 'acl'
+
+    fetch() {
+        const data = super.fetch();
+
+        data['data'] = this.getTableView().fetchScopeData();
+        data['fieldData'] = this.getTableView().fetchFieldData();
+
+        return data;
+    }
 
     setup() {
         super.setup();
 
-        this.createView('extra', this.tableView, {
-            selector: '.extra',
-            model: this.model,
-        });
+        this.wait(
+            (async () => {
+                const view = await this.createView('extra', this.tableView, {
+                    mode: 'edit',
+                    selector: '.extra',
+                    model: this.model,
+                });
+
+                this.listenTo(view, 'change', () => {
+                    const data = this.fetch();
+
+                    this.model.setMultiple(data, {ui: true});
+                });
+            })()
+        )
+    }
+
+    protected getTableView(): TableView {
+        return this.getView('extra') as TableView;
+    }
+
+    protected modifyDetailLayout(layout: any) {
+        new LayoutModifier().modify(this.aclType, layout);
     }
 }

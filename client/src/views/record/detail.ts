@@ -185,7 +185,7 @@ type RowDefs = (CellDefs | false)[];
 /**
  * Cell definitions.
  */
-interface CellDefs {
+export interface CellDefs {
     /**
      * A name (usually a field name).
      */
