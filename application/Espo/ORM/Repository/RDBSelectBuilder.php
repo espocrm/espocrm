@@ -32,6 +32,7 @@ namespace Espo\ORM\Repository;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Name\Attribute;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\SthCollection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -252,11 +253,12 @@ class RDBSelectBuilder
     /**
      * Lock selected rows. To be used within a transaction.
      *
+     * @param LockWait $wait Wait mode. As of v10.2.0.
      * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
      */
-    public function forUpdate(): self
+    public function forUpdate(LockWait $wait = LockWait::Wait): self
     {
-        $this->builder->forUpdate();
+        $this->builder->forUpdate($wait);
         $this->sth();
 
         return $this;
@@ -265,13 +267,14 @@ class RDBSelectBuilder
     /**
      * Lock selected rows in share mode. To be used within a transaction.
      *
+     * @param LockWait $wait Wait mode. As of v10.2.0.
      * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
      *
      * @since 10.2.0
      */
-    public function forShare(): self
+    public function forShare(LockWait $wait = LockWait::Wait): self
     {
-        $this->builder->forShare();
+        $this->builder->forShare($wait);
         $this->sth();
 
         return $this;

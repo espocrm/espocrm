@@ -30,6 +30,7 @@
 namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\WhereItem;
 
@@ -253,28 +254,42 @@ class SelectBuilder implements Builder
 
     /**
      * Lock selected rows in shared mode. To be used within a transaction.
+     *
+     * @param LockWait $wait Wait mode. As of v10.2.0.
      */
-    public function forShare(): self
+    public function forShare(LockWait $wait = LockWait::Wait): self
     {
         if (isset($this->params['forUpdate'])) {
             throw new RuntimeException("Can't use two lock modes together.");
         }
 
         $this->params['forShare'] = true;
+        $this->params['lockWait'] = $wait;
+
+        if ($wait === LockWait::Wait) {
+            unset($this->params['lockWait']);
+        }
 
         return $this;
     }
 
     /**
      * Lock selected rows. To be used within a transaction.
+     *
+     * @param LockWait $wait Wait mode. As of v10.2.0.
      */
-    public function forUpdate(): self
+    public function forUpdate(LockWait $wait = LockWait::Wait): self
     {
         if (isset($this->params['forShare'])) {
             throw new RuntimeException("Can't use two lock modes together.");
         }
 
         $this->params['forUpdate'] = true;
+        $this->params['lockWait'] = $wait;
+
+        if ($wait === LockWait::Wait) {
+            unset($this->params['lockWait']);
+        }
 
         return $this;
     }

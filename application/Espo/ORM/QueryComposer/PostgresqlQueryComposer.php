@@ -36,6 +36,7 @@ use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\Insert as InsertQuery;
 use Espo\ORM\Query\LockTable as LockTableQuery;
 use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Update as UpdateQuery;
 use Espo\ORM\Query\UpdateBuilder;
@@ -605,12 +606,18 @@ class PostgresqlQueryComposer extends BaseQueryComposer
         $forShare = $params['forShare'] ?? null;
         $forUpdate = $params['forUpdate'] ?? null;
 
+        $waitPart = match ($params['lockWait'] ?? null) {
+            LockWait::NoWait => ' NOWAIT',
+            LockWait::SkipLocked => ' SKIP LOCKED',
+            default => '',
+        };
+
         if ($forShare) {
-            return "FOR SHARE";
+            return "FOR SHARE" . $waitPart;
         }
 
         if ($forUpdate) {
-            return "FOR UPDATE";
+            return "FOR UPDATE" . $waitPart;
         }
 
         return null;

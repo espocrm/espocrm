@@ -38,6 +38,7 @@ use Espo\ORM\Query\InsertBuilder;
 use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\ORM\QueryBuilder;
@@ -140,7 +141,7 @@ class PostgresqlQueryComposerTest extends TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testSelectForUpdate1()
+    public function testSelectForUpdate(): void
     {
         $query = SelectBuilder::create()
             ->from('Comment')
@@ -157,7 +158,7 @@ class PostgresqlQueryComposerTest extends TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testSelectForShare()
+    public function testSelectForShare(): void
     {
         $query = SelectBuilder::create()
             ->from('Comment')
@@ -170,6 +171,74 @@ class PostgresqlQueryComposerTest extends TestCase
         $expectedSql =
             'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
             'FROM "comment" WHERE "comment"."deleted" = false FOR SHARE';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForUpdateNoWait(): void
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->forUpdate(LockWait::NoWait)
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
+            'FROM "comment" WHERE "comment"."deleted" = false FOR UPDATE NOWAIT';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForShareNoWait(): void
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->forShare(LockWait::NoWait)
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
+            'FROM "comment" WHERE "comment"."deleted" = false FOR SHARE NOWAIT';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForUpdateSkipLocked(): void
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->forUpdate(LockWait::SkipLocked)
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
+            'FROM "comment" WHERE "comment"."deleted" = false FOR UPDATE SKIP LOCKED';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForShareSkipLocked(): void
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->forShare(LockWait::SkipLocked)
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
+            'FROM "comment" WHERE "comment"."deleted" = false FOR SHARE SKIP LOCKED';
 
         $this->assertEquals($expectedSql, $sql);
     }

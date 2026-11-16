@@ -41,8 +41,10 @@ use Espo\ORM\MetadataDataProvider;
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Join\JoinType;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\QueryBuilder;
 use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\RDBRelation;
@@ -583,20 +585,69 @@ class RDBRepositoryTest extends TestCase
         $this->repository->distinct()->find();
     }
 
-    public function testForUpdate()
+    public function testForUpdate(): void
     {
-        $paramsExpected = Select::fromRaw([
-            'from' => 'Test',
-            'forUpdate' => true,
-        ]);
+        $expected = SelectBuilder::create()
+            ->from('Test')
+            ->forUpdate()
+            ->build();
 
         $this->mapper
             ->expects($this->once())
             ->method('select')
             ->willReturn($this->collection)
-            ->with($paramsExpected);
+            ->with($expected);
 
         $this->repository->forUpdate()->find();
+    }
+
+    public function testForShare(): void
+    {
+        $expected = SelectBuilder::create()
+            ->from('Test')
+            ->forShare()
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->willReturn($this->collection)
+            ->with($expected);
+
+        $this->repository->forShare()->find();
+    }
+
+    public function testForUpdateNoWait(): void
+    {
+        $expected = SelectBuilder::create()
+            ->from('Test')
+            ->forUpdate(LockWait::NoWait)
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->willReturn($this->collection)
+            ->with($expected);
+
+        $this->repository->forUpdate(LockWait::NoWait)
+            ->find();
+    }
+
+    public function testForShareNoWait(): void
+    {
+        $expected = SelectBuilder::create()
+            ->from('Test')
+            ->forShare(LockWait::NoWait)
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->willReturn($this->collection)
+            ->with($expected);
+
+        $this->repository->forShare(LockWait::NoWait)->find();
     }
 
     public function testSth()

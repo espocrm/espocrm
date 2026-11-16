@@ -30,6 +30,7 @@
 namespace Espo\ORM\Repository;
 
 use Espo\ORM\Defs\Params\RelationParam;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Repository\Option\SaveContext;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\EntityCollection;
@@ -427,23 +428,25 @@ class RDBRepository implements Repository
     /**
      * Lock selected rows. To be used within a transaction.
      *
+     * @param LockWait $wait Wait mode. As of v10.2.0.
      * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
      */
-    public function forUpdate(): RDBSelectBuilder
+    public function forUpdate(LockWait $wait = LockWait::Wait): RDBSelectBuilder
     {
-        return $this->createBuilder()->forUpdate();
+        return $this->createBuilder()->forUpdate($wait);
     }
 
     /**
      * Lock selected rows in share mode. To be used within a transaction.
      *
+     * @param LockWait $wait Wait mode. As of v10.2.0.
      * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
      *
      * @since 10.2.0
      */
-    public function forShare(): RDBSelectBuilder
+    public function forShare(LockWait $wait = LockWait::Wait): RDBSelectBuilder
     {
-        return $this->createBuilder()->forShare();
+        return $this->createBuilder()->forShare($wait);
     }
 
     /**

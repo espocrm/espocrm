@@ -43,6 +43,7 @@ use Espo\ORM\Mapper\Helper;
 use Espo\ORM\Name\Attribute;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Join\JoinType;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Query\Query;
 use Espo\ORM\Query\SelectingQuery;
 use Espo\ORM\Query\Select;
@@ -97,6 +98,7 @@ abstract class BaseQueryComposer implements QueryComposer
         'forUpdate',
         'forShare',
         'withRecursive',
+        'lockWait',
     ];
 
     /** @var string[] */
@@ -1991,14 +1993,20 @@ abstract class BaseQueryComposer implements QueryComposer
     protected function getSelectTailPart(array $params): ?string
     {
         $forShare = $params['forShare'] ?? null;
-        $forUpdate = $params['forUpdate'] ?? null;
+        $forUpdate = $params['forUpdate'] ?? null;;
+
+        $waitPart = match ($params['lockWait'] ?? null) {
+            LockWait::NoWait => ' NOWAIT',
+            LockWait::SkipLocked => ' SKIP LOCKED',
+            default => '',
+        };
 
         if ($forShare) {
-            return "LOCK IN SHARE MODE";
+            return "LOCK IN SHARE MODE" . $waitPart;
         }
 
         if ($forUpdate) {
-            return "FOR UPDATE";
+            return "FOR UPDATE" . $waitPart;
         }
 
         return null;

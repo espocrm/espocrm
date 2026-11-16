@@ -31,6 +31,7 @@ namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\Query\Part\Condition as Cond;
 use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\Part\Lock\LockWait;
 use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\Where\Comparison;
 use Espo\ORM\Query\Part\WhereClause;
@@ -3237,6 +3238,94 @@ class MysqlQueryComposerTest extends TestCase
             "SELECT account.id AS `id` ".
             "FROM `account` ".
             "LOCK IN SHARE MODE";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForUpdateNoWait(): void
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb
+            ->select()
+            ->select('id')
+            ->from('Account')
+            ->withDeleted()
+            ->forUpdate(LockWait::NoWait)
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "FOR UPDATE NOWAIT";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForShareNoWait(): void
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb
+            ->select()
+            ->select('id')
+            ->from('Account')
+            ->withDeleted()
+            ->forShare(LockWait::NoWait)
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "LOCK IN SHARE MODE NOWAIT";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForUpdateSkipLocked(): void
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb
+            ->select()
+            ->select('id')
+            ->from('Account')
+            ->withDeleted()
+            ->forUpdate(LockWait::SkipLocked)
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "FOR UPDATE SKIP LOCKED";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForShareSkipLocked(): void
+    {
+        $qb = new QueryBuilder();
+
+        $query = $qb
+            ->select()
+            ->select('id')
+            ->from('Account')
+            ->withDeleted()
+            ->forShare(LockWait::SkipLocked)
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $expectedSql =
+            "SELECT account.id AS `id` ".
+            "FROM `account` ".
+            "LOCK IN SHARE MODE SKIP LOCKED";
 
         $this->assertEquals($expectedSql, $sql);
     }
