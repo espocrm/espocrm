@@ -50,7 +50,7 @@ export default class extends ModalView {
 
     data() {
         return {
-            valuePermissionDataList: this.getValuePermissionList(),
+            valuePermissionRowList: this.getValuePermissionRowList(),
             levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {},
             styleMap: this.styleMap,
         };
@@ -69,6 +69,22 @@ export default class extends ModalView {
         });
 
         return dataList;
+    }
+
+    /**
+     * @private
+     * @return {{name: string, value: string}[][]}
+     */
+    getValuePermissionRowList() {
+        const dataList = this.getValuePermissionList();
+        const columnCount = 4;
+        const rowList = [];
+
+        for (let i = 0; i < dataList.length; i += columnCount) {
+            rowList.push(dataList.slice(i, i + columnCount));
+        }
+
+        return rowList;
     }
 
     setup() {
