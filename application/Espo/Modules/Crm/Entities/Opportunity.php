@@ -47,6 +47,8 @@ class Opportunity extends Entity
     public const string FIELD_STAGE = 'stage';
     /** @since 10.0.0 */
     public const string FIELD_AMOUNT = 'amount';
+    /** @since 10.2.0 */
+    public const string FIELD_ACCOUNT = 'account';
 
     public const STAGE_CLOSED_WON = 'Closed Won';
     public const STAGE_CLOSED_LOST = 'Closed Lost';

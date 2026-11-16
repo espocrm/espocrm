@@ -47,6 +47,9 @@ class Contact extends Person
     /** @since v9.3.0. */
     public const string FIELD_ACCOUNT = 'account';
 
+    /** @since 10.2.0 */
+    public const string FIELD_PORTAL_USER = 'portalUser';
+
     /** @since v9.3.0. */
     public const string RELATIONSHIP_ACCOUNT_CONTACT = 'AccountContact';
 
