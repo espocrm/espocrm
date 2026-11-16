@@ -71,7 +71,7 @@ class Attachment extends Database implements
             $entity->setStorage($defaultStorage);
         }
 
-        $contents = $entity->get('contents');
+        $contents = $entity->get(AttachmentEntity::FIELD_CONTENTS);
 
         if (is_null($contents)) {
             return;

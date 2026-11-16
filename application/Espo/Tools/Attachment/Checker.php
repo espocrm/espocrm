@@ -35,6 +35,7 @@ use Espo\Core\Utils\File\MimeType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\Core\ORM\Type\FieldType;
+use finfo;
 
 class Checker
 {
@@ -135,7 +136,7 @@ class Checker
         }
 
         /** @var ?string $contents */
-        $contents = $attachment->get('contents');
+        $contents = $attachment->get(Attachment::FIELD_CONTENTS);
 
         if (!$contents && !$filePath) {
             return;
@@ -145,7 +146,7 @@ class Checker
 
         $mimeTypeList = $this->mimeType->getMimeTypeListByExtension($extension);
 
-        $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
+        $fileInfo = new finfo(FILEINFO_MIME_TYPE);
 
         $detectedMimeType = $filePath ?
             $fileInfo->file($filePath) :

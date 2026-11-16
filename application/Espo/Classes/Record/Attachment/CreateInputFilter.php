@@ -126,7 +126,7 @@ class CreateInputFilter implements Filter
             }
         }
 
-        $data->set('contents', $contents);
+        $data->set(Attachment::FIELD_CONTENTS, $contents);
 
         return $contents;
     }

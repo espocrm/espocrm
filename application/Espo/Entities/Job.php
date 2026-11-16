@@ -42,22 +42,22 @@ class Job extends Entity
 {
     public const string ENTITY_TYPE = 'Job';
 
-    /** @since v10.1.0  */
+    /** @since 10.1.0  */
     public const string FIELD_STATUS = 'status';
-    /** @since v10.1.0  */
+    /** @since 10.1.0  */
     public const string FIELD_TARGET_GROUP = 'targetGroup';
-    /** @since v10.1.0  */
+    /** @since 10.1.0  */
     public const string FIELD_GROUP = 'group';
-    /** @since v10.1.0  */
+    /** @since 10.1.0  */
     public const string FIELD_QUEUE = 'queue';
-    /** @since v10.1.0  */
+    /** @since 10.1.0  */
     public const string FIELD_EXECUTION_TIME = 'executeTime';
 
-    /** @since v10.1.0 */
+    /** @since 10.1.0 */
     public const string ATTR_SCHEDULED_JOB_ID = 'scheduledJobId';
-    /** @since v10.1.0 */
+    /** @since 10.1.0 */
     public const string ATTR_TARGET_ID = 'targetId';
-    /** @since v10.1.0 */
+    /** @since 10.1.0 */
     public const string ATTR_TARGET_TYPE = 'targetType';
 
     /**

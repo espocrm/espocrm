@@ -103,7 +103,7 @@ class UploadUrlService
 
         $this->getAttachmentRepository()->save($attachment);
 
-        $attachment->clear('contents');
+        $attachment->clear(Attachment::FIELD_CONTENTS);
 
         return $attachment;
     }

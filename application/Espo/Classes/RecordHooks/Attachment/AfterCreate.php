@@ -40,6 +40,6 @@ class AfterCreate implements SaveHook
 {
     public function process(Entity $entity): void
     {
-        $entity->clear('contents');
+        $entity->clear(Attachment::FIELD_CONTENTS);
     }
 }

@@ -95,7 +95,7 @@ interface Entity
      * Set multiple attributes.
      *
      * @param array<string, mixed>|stdClass $valueMap Values.
-     * @since v8.1.0.
+     * @since 8.1.0.
      */
     public function setMultiple(array|stdClass $valueMap): static;
 

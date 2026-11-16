@@ -32,17 +32,19 @@ namespace Espo\Entities;
 use Espo\Core\Field\Link;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Entity as CoreEntity;
-
 use Espo\Core\Field\LinkParent;
 use Espo\ORM\Entity;
 
 class Attachment extends CoreEntity
 {
-    public const ENTITY_TYPE = 'Attachment';
+    public const string ENTITY_TYPE = 'Attachment';
 
-    public const ROLE_ATTACHMENT = 'Attachment';
-    public const ROLE_INLINE_ATTACHMENT = 'Inline Attachment';
-    public const ROLE_EXPORT_FILE = 'Export File';
+    public const string ROLE_ATTACHMENT = 'Attachment';
+    public const string ROLE_INLINE_ATTACHMENT = 'Inline Attachment';
+    public const string ROLE_EXPORT_FILE = 'Export File';
+
+    /** @since 10.2.0 */
+    public const string FIELD_CONTENTS = 'contents';
 
     /**
      * Multiple attachment can refer to one file. Source ID is an original attachment.
@@ -196,7 +198,7 @@ class Attachment extends CoreEntity
 
     public function setContents(?string $contents): self
     {
-        $this->set('contents', $contents);
+        $this->set(self::FIELD_CONTENTS, $contents);
 
         return $this;
     }

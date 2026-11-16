@@ -40,20 +40,20 @@ class Contact extends Person
 {
     public const ENTITY_TYPE = 'Contact';
 
-    /** @since v9.3.0. */
+    /** @since 9.3.0. */
     public const string ATTR_ACCOUNT_ID = 'accountId';
-    /** @since v9.3.0. */
+    /** @since 9.3.0. */
     public const string FIELD_ACCOUNTS = 'accounts';
-    /** @since v9.3.0. */
+    /** @since 9.3.0. */
     public const string FIELD_ACCOUNT = 'account';
 
     /** @since 10.2.0 */
     public const string FIELD_PORTAL_USER = 'portalUser';
 
-    /** @since v9.3.0. */
+    /** @since 9.3.0. */
     public const string RELATIONSHIP_ACCOUNT_CONTACT = 'AccountContact';
 
-    /** @since v9.3.0. */
+    /** @since 9.3.0. */
     public const string COLUMN_ACCOUNTS_ROLE = 'role';
 
     /**
