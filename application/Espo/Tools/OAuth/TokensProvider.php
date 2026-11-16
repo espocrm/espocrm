@@ -103,12 +103,7 @@ class TokensProvider
 
         $account = $this->entityManager
             ->getRDBRepositoryByClass(OAuthAccount::class)
-            ->clone(
-                SelectBuilder::create()
-                    ->from(OAuthAccount::ENTITY_TYPE)
-                    ->forShare()
-                    ->build()
-            )
+            ->forShare()
             ->where([Attribute::ID => $id])
             ->findOne();
 

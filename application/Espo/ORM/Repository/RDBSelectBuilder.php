@@ -252,11 +252,26 @@ class RDBSelectBuilder
     /**
      * Lock selected rows. To be used within a transaction.
      *
-     * @return RDBSelectBuilder<TEntity, TCollection>
+     * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
      */
     public function forUpdate(): self
     {
         $this->builder->forUpdate();
+        $this->sth();
+
+        return $this;
+    }
+
+    /**
+     * Lock selected rows in share mode. To be used within a transaction.
+     *
+     * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
+     *
+     * @since 10.2.0
+     */
+    public function forShare(): self
+    {
+        $this->builder->forShare();
         $this->sth();
 
         return $this;

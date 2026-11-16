@@ -427,11 +427,23 @@ class RDBRepository implements Repository
     /**
      * Lock selected rows. To be used within a transaction.
      *
-     * @return RDBSelectBuilder<TEntity, EntityCollection<TEntity>>
+     * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
      */
     public function forUpdate(): RDBSelectBuilder
     {
         return $this->createBuilder()->forUpdate();
+    }
+
+    /**
+     * Lock selected rows in share mode. To be used within a transaction.
+     *
+     * @return RDBSelectBuilder<TEntity, SthCollection<TEntity>>
+     *
+     * @since 10.2.0
+     */
+    public function forShare(): RDBSelectBuilder
+    {
+        return $this->createBuilder()->forShare();
     }
 
     /**
