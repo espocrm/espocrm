@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\ORM\Repository;
 
+use Espo\Core\Name\Field;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
@@ -49,18 +50,18 @@ class EagerLoadTest extends BaseTestCase
         $em = $this->getEntityManager();
 
         $account = $em->createEntity(Account::ENTITY_TYPE, [
-            'name' => 'Acme',
+            Field::NAME => 'Acme',
             'website' => 'acme.com',
         ]);
 
         $opportunity = $em->createEntity(Opportunity::ENTITY_TYPE, [
-            'name' => 'Deal',
-            'accountId' => $account->getId(),
+            Field::NAME => 'Deal',
+            Opportunity::FIELD_ACCOUNT . 'Id' => $account->getId(),
         ]);
 
         $loaded = $em->getRDBRepository(Opportunity::ENTITY_TYPE)
-            ->eager('account', ['name'])
-            ->where(['id' => $opportunity->getId()])
+            ->eager(Opportunity::FIELD_ACCOUNT, [Field::NAME])
+            ->where([Attribute::ID => $opportunity->getId()])
             ->find();
 
         $this->assertCount(1, $loaded);
@@ -68,15 +69,15 @@ class EagerLoadTest extends BaseTestCase
         $loadedOpportunity = $loaded[0];
 
         // Changed after loading. If accessing the relation runs a query, the new name is returned.
-        $this->updateInDb(Account::ENTITY_TYPE, $account->getId(), ['name' => 'Changed']);
+        $this->updateInDb(Account::ENTITY_TYPE, $account->getId(), [Field::NAME => 'Changed']);
 
-        $loadedAccount = $this->getRelations($loadedOpportunity)->getOne('account');
+        $loadedAccount = $this->getRelations($loadedOpportunity)->getOne(Opportunity::FIELD_ACCOUNT);
 
         $this->assertInstanceOf(Account::class, $loadedAccount);
 
         $this->assertNotNull($loadedAccount);
         $this->assertEquals($account->getId(), $loadedAccount->getId());
-        $this->assertEquals('Acme', $loadedAccount->get('name'));
+        $this->assertEquals('Acme', $loadedAccount->get(Field::NAME));
 
         $loadedAccount->setAsNotPartiallyLoaded();
         $this->assertFalse($loadedAccount->has('website'));
@@ -86,25 +87,25 @@ class EagerLoadTest extends BaseTestCase
     {
         $em = $this->getEntityManager();
 
-        $account = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'Acme']);
+        $account = $em->createEntity(Account::ENTITY_TYPE, [Field::NAME => 'Acme']);
 
         $opportunity = $em->createEntity(Opportunity::ENTITY_TYPE, [
-            'name' => 'Deal',
-            'accountId' => $account->getId(),
+            Field::NAME => 'Deal',
+            Opportunity::FIELD_ACCOUNT . 'Id' => $account->getId(),
         ]);
 
         $oppRepo = $em->getRDBRepository(Opportunity::ENTITY_TYPE);
 
         $one = $oppRepo
-            ->eager('account', ['name'])
+            ->eager(Opportunity::FIELD_ACCOUNT, [Field::NAME])
             ->where([Attribute::ID => $opportunity->getId()])
             ->findOne();
 
         $this->assertNotNull($one);
-        $this->assertEquals('Acme', $this->getRelations($one)->getOne('account')?->get('name'));
+        $this->assertEquals('Acme', $this->getRelations($one)->getOne(Opportunity::FIELD_ACCOUNT)?->get(Field::NAME));
 
         $collection = $oppRepo
-            ->eager('account', ['name'])
+            ->eager(Opportunity::FIELD_ACCOUNT, [Field::NAME])
             ->sth()
             ->where([Attribute::ID => $opportunity->getId()])
             ->find();
@@ -112,7 +113,7 @@ class EagerLoadTest extends BaseTestCase
         $count = 0;
 
         foreach ($collection as $item) {
-            $this->assertEquals('Acme', $this->getRelations($item)->getOne('account')?->get('name'));
+            $this->assertEquals('Acme', $this->getRelations($item)->getOne(Opportunity::FIELD_ACCOUNT)?->get(Field::NAME));
 
             $count++;
         }
@@ -127,19 +128,19 @@ class EagerLoadTest extends BaseTestCase
         $contact = $em->createEntity(Contact::ENTITY_TYPE, ['lastName' => 'Test']);
 
         $user = $em->createEntity(User::ENTITY_TYPE, [
-            'userName' => 'eager-portal-user',
-            'type' => User::TYPE_PORTAL,
-            'contactId' => $contact->getId(),
+            User::FIELD_USER_NAME => 'eager-portal-user',
+            User::FIELD_TYPE => User::TYPE_PORTAL,
+            User::LINK_CONTACT . 'Id' => $contact->getId(),
         ]);
 
         $loadedContact = $em->getRDBRepositoryByClass(Contact::class)
-            ->eager('portalUser', ['userName'])
+            ->eager(Contact::FIELD_PORTAL_USER, [User::FIELD_USER_NAME])
             ->where([Attribute::ID => $contact->getId()])
             ->findOne();
 
         $this->assertNotNull($loadedContact);
 
-        $loadedUser = $this->getRelations($loadedContact)->getOne('portalUser');
+        $loadedUser = $this->getRelations($loadedContact)->getOne(Contact::FIELD_PORTAL_USER);
 
         $this->assertNotNull($loadedUser);
         $this->assertEquals($user->getId(), $loadedUser->getId());
@@ -153,7 +154,7 @@ class EagerLoadTest extends BaseTestCase
         $contact = $em->createEntity(Contact::ENTITY_TYPE, ['lastName' => 'Test']);
 
         $loadedContact = $em->getRDBRepositoryByClass(Contact::class)
-            ->eager('portalUser', [User::FIELD_USER_NAME])
+            ->eager(Contact::FIELD_PORTAL_USER, [User::FIELD_USER_NAME])
             ->where([Attribute::ID => $contact->getId()])
             ->findOne();
 
@@ -163,10 +164,10 @@ class EagerLoadTest extends BaseTestCase
         $em->createEntity(User::ENTITY_TYPE, [
             User::FIELD_USER_NAME => 'eager-portal-user',
             User::FIELD_TYPE => User::TYPE_PORTAL,
-            'contactId' => $contact->getId(),
+            User::LINK_CONTACT . 'Id' => $contact->getId(),
         ]);
 
-        $this->assertNull($this->getRelations($loadedContact)->getOne('portalUser'));
+        $this->assertNull($this->getRelations($loadedContact)->getOne(Contact::FIELD_PORTAL_USER));
     }
 
     public function testSaveDoesNotWriteEagerLoadedHasOne(): void
@@ -178,18 +179,18 @@ class EagerLoadTest extends BaseTestCase
         $user = $em->createEntity(User::ENTITY_TYPE, [
             User::FIELD_USER_NAME => 'eager-portal-user',
             User::FIELD_TYPE => User::TYPE_PORTAL,
-            'contactId' => $contact->getId(),
+            User::LINK_CONTACT . 'Id' => $contact->getId(),
         ]);
 
         $loadedContact = $em->getRDBRepositoryByClass(Contact::class)
-            ->eager('portalUser', [User::FIELD_USER_NAME])
+            ->eager(Contact::FIELD_PORTAL_USER, [User::FIELD_USER_NAME])
             ->where([Attribute::ID => $contact->getId()])
             ->findOne();
 
         $this->assertNotNull($loadedContact);
 
         // Unlinked after loading. If saving treats eager data as a pending change, the link is restored.
-        $this->updateInDb(User::ENTITY_TYPE, $user->getId(), ['contactId' => null]);
+        $this->updateInDb(User::ENTITY_TYPE, $user->getId(), [User::LINK_CONTACT . 'Id' => null]);
 
         $loadedContact->set('lastName', 'Changed');
 
@@ -198,7 +199,7 @@ class EagerLoadTest extends BaseTestCase
         $reloadedUser = $em->getEntityById(User::ENTITY_TYPE, $user->getId());
 
         $this->assertNotNull($reloadedUser);
-        $this->assertNull($reloadedUser->get('contactId'));
+        $this->assertNull($reloadedUser->get(User::LINK_CONTACT . 'Id'));
     }
 
     /**
