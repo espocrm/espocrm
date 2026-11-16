@@ -260,12 +260,12 @@ return [
         ],
         'attachmentsIds' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonArray',
         'notStorable' => true,
         ],
         'attachmentsNames' =>
         [
-        'type' => 'varchar',
+        'type' => 'jsonObject',
         'notStorable' => true,
         ],
         'parentId' =>

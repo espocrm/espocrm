@@ -33,6 +33,7 @@ use Espo\Core\Mail\Account\GroupAccount\BouncedRecognizer;
 use Espo\Core\Mail\MessageWrapper;
 use Espo\Core\Mail\Parsers\MailMimeParser;
 
+use Espo\Core\Utils\File\MimeType;
 use Espo\ORM\EntityManager;
 
 class BouncedRecognizerTest extends \PHPUnit\Framework\TestCase
@@ -48,7 +49,12 @@ class BouncedRecognizerTest extends \PHPUnit\Framework\TestCase
     {
         $entityManager = $this->createMock(EntityManager::class);
 
-        $parser = new MailMimeParser($entityManager);
+        $mimeType = $this->createMock(MimeType::class);
+
+        $parser = new MailMimeParser(
+            entityManager: $entityManager,
+            mimeTypeUtil: $mimeType,
+        );
 
         return new MessageWrapper(0, null, $parser, $contents);
     }

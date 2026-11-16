@@ -33,6 +33,9 @@ return [
         'type' => 'varchar',
         'len' => 36,
       ],
+        'field' => [
+            'type' => 'varchar',
+        ],
       'createdAt' =>
       [
         'type' => 'datetime',

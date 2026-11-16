@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Parsers;
 
+use Espo\Core\Utils\File\MimeType;
 use Espo\Entities\Email;
 use Espo\Entities\Attachment;
 use Espo\ORM\EntityManager;
@@ -36,7 +37,7 @@ use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Parser;
 use Espo\Core\Mail\Message\Part;
 use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
-
+use LogicException;
 use ZBateson\MailMimeParser\Header\AddressHeader;
 use ZBateson\MailMimeParser\Header\HeaderConsts;
 use ZBateson\MailMimeParser\IMessage;
@@ -86,16 +87,18 @@ class MailMimeParser implements Parser
     private const FIELD_BODY = 'body';
     private const FIELD_ATTACHMENTS = 'attachments';
 
-    private const DISPOSITION_INLINE = 'inline';
-
     public const TYPE_MESSAGE_RFC822 = 'message/rfc822';
     public const TYPE_OCTET_STREAM  = 'application/octet-stream';
+
+    private const string PATTERN_CID = '/\bcid:([^"\'\s<>()]++)/i';
 
     /** @var array<string, IMessage> */
     private array $messageHash = [];
 
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private MimeType $mimeTypeUtil,
+    ) {}
 
     private function getParser(): WrappeeParser
     {
@@ -308,6 +311,8 @@ class MailMimeParser implements Parser
             $email->setBody($email->getBodyPlain());
         }
 
+        $cidReferenceMap = $this->extractCidReferenceMap($email);
+
         $attachmentPartList = $this->getMessage($message)->getAllAttachmentParts();
 
         $inlineAttachmentMap = [];
@@ -321,7 +326,6 @@ class MailMimeParser implements Parser
 
             $filename = $this->extractFileName($attachmentPart, $i);
             $contentType = $this->detectAttachmentContentType($attachmentPart, $filename);
-            $disposition = $attachmentPart->getHeaderValue(HeaderConsts::CONTENT_DISPOSITION);
 
             if ($contentType) {
                 $contentType = strtolower($contentType);
@@ -344,75 +348,68 @@ class MailMimeParser implements Parser
                 $contentId = trim($contentId, '<>');
             }
 
-            if (strtolower($disposition ?? '') === self::DISPOSITION_INLINE) {
+            $attachment->setContents($content);
+
+            $isInline = false;
+
+            // We don't check for content-disposition inline as some clients and servers may neglect setting
+            // the proper value.
+
+            if (
+                $contentId &&
+                $email->isHtml() &&
+                array_key_exists($contentId, $cidReferenceMap)
+            ) {
+                $isInline = true;
+            }
+
+            if ($isInline && !$this->isAttachmentImage($attachment)) {
+                $isInline = false;
+            }
+
+            if ($contentId && array_key_exists($contentId, $inlineAttachmentMap)) {
+                // Prevent orphan duplicate.
+                $isInline = false;
+            }
+
+            if ($isInline) {
                 $attachment->setRole(Attachment::ROLE_INLINE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_BODY);
+
+                if (!$contentId) {
+                    throw new LogicException();
+                }
+
+                $inlineAttachmentMap[$contentId] = $attachment;
+                $inlineAttachmentList[] = $attachment;
             } else {
                 $attachment->setRole(Attachment::ROLE_ATTACHMENT);
                 $attachment->setTargetField(self::FIELD_ATTACHMENTS);
             }
 
-            $attachment->setContents($content);
-
             $this->entityManager->saveEntity($attachment);
 
-            if ($attachment->getRole() === Attachment::ROLE_ATTACHMENT) {
+            if (!$isInline) {
                 $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachment->getId());
-
-                if ($contentId) {
-                    $inlineAttachmentMap[$contentId] = $attachment;
-                }
-
-                continue;
             }
-
-            // Inline disposition.
-
-            if ($contentId) {
-                $inlineAttachmentMap[$contentId] = $attachment;
-
-                $inlineAttachmentList[] = $attachment;
-
-                continue;
-            }
-
-            // No ID found, fallback to attachment.
-            $attachment
-                ->setRole(Attachment::ROLE_ATTACHMENT)
-                ->setTargetField(self::FIELD_ATTACHMENTS);
-
-            $this->entityManager->saveEntity($attachment);
-
-            $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachment->getId());
         }
 
-        $body = $email->getBody();
+        if ($email->getBody()) {
+            $newBody = preg_replace_callback(self::PATTERN_CID, function ($matches) use ($inlineAttachmentMap) {
+                $id = $matches[1];
 
-        if ($body) {
-            foreach ($inlineAttachmentMap as $cid => $attachment) {
-                if (str_contains($body, 'cid:' . $cid)) {
-                    $body = str_replace(
-                        'cid:' . $cid,
-                        '?entryPoint=attachment&amp;id=' . $attachment->getId(),
-                        $body
-                    );
+                $attachment = $inlineAttachmentMap[$id] ?? null;
 
-                    continue;
+                if (!$attachment) {
+                    return $matches[0];
                 }
 
-                // Fallback to attachment.
-                if ($attachment->getRole() === Attachment::ROLE_INLINE_ATTACHMENT) {
-                    $attachment
-                        ->setRole(Attachment::ROLE_ATTACHMENT)
-                        ->setTargetField(self::FIELD_ATTACHMENTS);
+                return '?entryPoint=attachment&amp;id=' . $attachment->getId();
+            }, $email->getBody());
 
-                    $this->entityManager->saveEntity($attachment);
-
-                    $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachment->getId());
-                }
+            if ($newBody !== null) {
+                $email->setBody($newBody);
             }
-
-            $email->setBody($body);
         }
 
         /** @var ?MessagePart $textCalendarPart */
@@ -481,5 +478,24 @@ class MailMimeParser implements Parser
         }
 
         return $filename;
+    }
+
+    private function isAttachmentImage(Attachment $attachment): bool
+    {
+        return $attachment->getType() && $this->mimeTypeUtil->isImage($attachment->getType());
+    }
+
+    /**
+     * @return array<string, true>
+     */
+    private function extractCidReferenceMap(Email $email): array
+    {
+        if (!$email->isHtml()) {
+            return [];
+        }
+
+        preg_match_all(self::PATTERN_CID, $email->getBody() ?? '', $matches);
+
+        return array_fill_keys($matches[1], true);
     }
 }

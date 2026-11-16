@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
+use Espo\Core\Utils\File\MimeType;
 use Espo\Entities\Email;
 
 use Espo\Core\Notification\AssignmentNotificator;
@@ -85,12 +86,17 @@ class ImporterTest extends TestCase
 
         $this->parentFinder = $this->createMock(Importer\ParentFinder::class);
 
+        $mimeType = $this->createMock(MimeType::class);
+
         $this->parserFactory
             ->expects($this->any())
             ->method('create')
             ->willReturnCallback(
-                function () {
-                    return new MailMimeParser($this->entityManager);
+                function () use ($mimeType) {
+                    return new MailMimeParser(
+                        entityManager: $this->entityManager,
+                        mimeTypeUtil: $mimeType,
+                    );
                 }
             );
 

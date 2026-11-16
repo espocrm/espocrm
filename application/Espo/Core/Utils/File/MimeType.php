@@ -67,4 +67,21 @@ class MimeType
 
         return false;
     }
+
+    /**
+     * @since 10.2.0
+     */
+    public function isImage(string $mimeType): bool
+    {
+        return in_array($mimeType, $this->getImageTypeList(), true);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getImageTypeList(): array
+    {
+        /** @var string[]*/
+        return $this->metadata->get('app.image.allowedFileTypeList') ?? [];
+    }
 }

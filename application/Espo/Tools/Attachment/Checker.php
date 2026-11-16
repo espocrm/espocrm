@@ -41,7 +41,7 @@ class Checker
     public function __construct(
         private Metadata $metadata,
         private MimeType $mimeType,
-        private DetailsObtainer $detailsObtainer
+        private DetailsObtainer $detailsObtainer,
     ) {}
 
     /**
@@ -111,10 +111,7 @@ class Checker
 
         $mimeType = $this->mimeType->getMimeTypeByExtension($extension);
 
-        /** @var string[] $imageTypeList */
-        $imageTypeList = $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
-
-        if (!in_array($mimeType, $imageTypeList)) {
+        if (!$mimeType || !$this->mimeType->isImage($mimeType)) {
             throw new ForbiddenSilent("Not allowed file type.");
         }
 
