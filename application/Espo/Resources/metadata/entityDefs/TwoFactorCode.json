@@ -52,5 +52,6 @@
                 "createdAt"
             ]
         }
-    }
+    },
+    "hooksDisabled": true
 }
