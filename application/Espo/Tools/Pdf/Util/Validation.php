@@ -90,8 +90,8 @@ class Validation
      */
     private function assertContent(string $content, ?string $previous): void
     {
-        $previousIds = $this->parseIds($previous ?? '');
-        $ids = $this->parseIds($content);
+        $previousIds = InlineAttachmentUtil::extractIds($previous ?? '');
+        $ids = InlineAttachmentUtil::extractIds($content);
 
         foreach (array_diff($ids, $previousIds) as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -107,9 +107,10 @@ class Validation
     }
 
     /**
+     * @internal
      * @return string[]
      */
-    private function parseIds(string $content): array
+    public static function parseIds(string $content): array
     {
         $ids = [];
 

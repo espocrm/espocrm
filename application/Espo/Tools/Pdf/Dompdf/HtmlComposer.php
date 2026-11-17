@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Pdf\Dompdf;
 
+use Espo\Core\Htmlizer\TemplateRenderer;
 use Espo\Core\Htmlizer\TemplateRendererFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
@@ -36,7 +37,7 @@ use Espo\ORM\Entity;
 use Espo\Tools\Pdf\Data;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
-
+use Espo\Tools\Pdf\Util\InlineAttachmentUtil;
 use Espo\Tools\Pdf\Util\RegExp;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 use Picqer\Barcode\Exceptions\UnknownTypeException;
@@ -144,22 +145,27 @@ class HtmlComposer
             ->setData($data->getAdditionalTemplateData());
 
         if ($template->hasHeader()) {
-            $htmlHeader = $renderer->renderTemplate($template->getHeader());
-
-            $htmlHeader = $this->replaceHeadTags($htmlHeader, $params);
+            $htmlHeader = $this->renderHeaderOrFooter($renderer, $params, $template->getHeader());
 
             $html .= "<header>$htmlHeader</header>";
         }
 
         if ($template->hasFooter()) {
-            $htmlFooter = $renderer->renderTemplate($template->getFooter());
-
-            $htmlFooter = $this->replaceHeadTags($htmlFooter, $params);
+            $htmlFooter = $this->renderHeaderOrFooter($renderer, $params, $template->getFooter());
 
             $html .= "<footer>$htmlFooter</footer>";
         }
 
         return $html;
+    }
+
+    private function renderHeaderOrFooter(TemplateRenderer $renderer, Params $params, string $templateContent): string
+    {
+        $attachmentIds = InlineAttachmentUtil::extractIds($templateContent);
+
+        $output = $renderer->renderTemplate($templateContent);
+
+        return $this->replaceHeadTags($output, $params, $attachmentIds);
     }
 
     public function composeMain(
@@ -176,16 +182,19 @@ class HtmlComposer
             ->setSkipInlineAttachmentHandling()
             ->setData($data->getAdditionalTemplateData());
 
-        $bodyTemplate = $template->getBody();
+        $attachmentIds = InlineAttachmentUtil::extractIds($template->getBody());
 
-        $html = $renderer->renderTemplate($bodyTemplate);
+        $html = $renderer->renderTemplate($template->getBody());
 
-        $html = $this->replaceTags($html, $params);
+        $html = $this->replaceTags($html, $params, $attachmentIds);
 
         return "<main>$html</main>";
     }
 
-    private function replaceTags(string $html, Params $params): string
+    /**
+     * @param string[] $attachmentIds
+     */
+    private function replaceTags(string $html, Params $params, array $attachmentIds): string
     {
         /** @noinspection HtmlUnknownAttribute */
         $html = str_replace('<br pagebreak="true">', '<div style="page-break-after: always;"></div>', $html);
@@ -199,14 +208,17 @@ class HtmlComposer
             return $this->composeBarcode($data);
         }, $html) ?? '';
 
-        return preg_replace_callback(RegExp::INLINE_ATTACHMENT, function ($matches) use ($params) {
+        return preg_replace_callback(RegExp::INLINE_ATTACHMENT, function ($matches) use ($params, $attachmentIds) {
             $id = $matches[1];
 
             if (!$id) {
                 return '';
             }
 
-            $src = $this->imageSourceProvider->get($id, $params->applyAcl());
+            // Skip check for attachments referenced in the template.
+            $applyAcl = $params->applyAcl() && !in_array($id, $attachmentIds, true);
+
+            $src = $this->imageSourceProvider->get($id, $applyAcl);
 
             if (!$src) {
                 return '';
@@ -216,11 +228,14 @@ class HtmlComposer
         }, $html) ?? '';
     }
 
-    private function replaceHeadTags(string $html, Params $params): string
+    /**
+     * @param string[] $attachmentIds
+     */
+    private function replaceHeadTags(string $html, Params $params, array $attachmentIds): string
     {
         $html = str_replace('{pageNumber}', '<span class="page-number"></span>', $html);
 
-        return $this->replaceTags($html, $params);
+        return $this->replaceTags($html, $params, $attachmentIds);
     }
 
     /**

@@ -36,6 +36,7 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\Attachment;
 use Espo\Entities\Role;
 use Espo\Entities\Template;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\Tools\Pdf\Data;
 use Espo\Tools\Pdf\Dompdf\HtmlComposer;
@@ -50,6 +51,9 @@ class InlineAttachmentAclTest extends BaseTestCase
     private const string OTHER_IMAGE =
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYPgPAAEDAQAIicLsAAAAAElFTkSuQmCC';
 
+    private const string TEMPLATE_IMAGE =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNg+M8AAAICAQB7CYF4AAAAAElFTkSuQmCC';
+
     /**
      * An inline attachment reference that did not pass the save-time check (here, from a text field
      * output with triple braces) must not be embedded when the PDF is generated with ACL applied.
@@ -60,20 +64,7 @@ class InlineAttachmentAclTest extends BaseTestCase
     {
         $em = $this->getEntityManager();
 
-        $user = $this->createUser('test', [
-            Role::FIELD_DATA => [
-                KnowledgeBaseArticle::ENTITY_TYPE => [
-                    Table::ACTION_CREATE => Table::LEVEL_YES,
-                    Table::ACTION_READ => Table::LEVEL_ALL,
-                    Table::ACTION_EDIT => Table::LEVEL_ALL,
-                    Table::ACTION_DELETE => Table::LEVEL_NO,
-                ],
-                Template::ENTITY_TYPE => [
-                    Table::ACTION_READ => Table::LEVEL_ALL,
-                ],
-            ],
-        ]);
-
+        $user = $this->createTestUser();
         $otherUser = $this->createUser('other');
 
         $ownId = $this->createAttachment($user->getId(), self::OWN_IMAGE);
@@ -130,6 +121,72 @@ class InlineAttachmentAclTest extends BaseTestCase
         $this->assertStringContainsString(self::OTHER_IMAGE, $html);
     }
 
+    public function testTemplateImageEmbeddedWithoutAccess(): void
+    {
+        $this->createTestUser();
+        $otherUser = $this->createUser('other');
+
+        $templateImageId = $this->createAttachment($otherUser->getId(), self::TEMPLATE_IMAGE);
+        $otherId = $this->createAttachment($otherUser->getId(), self::OTHER_IMAGE);
+
+        $article = $this->getEntityManager()->createEntity(KnowledgeBaseArticle::ENTITY_TYPE, [
+            Field::NAME => 'Test',
+            Field::DESCRIPTION => "<img src=\"?entryPoint=attachment&id=$otherId\">",
+        ]);
+
+        $templateImage = "<img src=\"?entryPoint=attachment&amp;id=$templateImageId\">";
+
+        $template = $this->getEntityManager()->createEntity(Template::ENTITY_TYPE, [
+            Field::NAME => 'Test',
+            Template::FIELD_ENTITY_TYPE => KnowledgeBaseArticle::ENTITY_TYPE,
+            Template::FIELD_BODY => $templateImage . '{{{description}}}',
+            Template::FIELD_HEADER => $templateImage,
+            'printHeader' => true,
+        ]);
+
+        $this->authenticate('test');
+
+        $em = $this->getEntityManager();
+        $acl = $this->getContainer()->getByClass(Acl::class);
+
+        $templateAttachment = $em->getRDBRepositoryByClass(Attachment::class)->getById($templateImageId);
+
+        // To make it not accessible for the user.
+        $templateAttachment->setRelated(null);
+        $em->saveEntity($templateAttachment);
+
+        $this->assertNotNull($templateAttachment);
+        $this->assertFalse($acl->checkEntityRead($templateAttachment));
+
+        $em->refreshEntity($article);
+        $template = $em->getRDBRepositoryByClass(Template::class)->getById($template->getId());
+
+        $this->assertNotNull($article);
+        $this->assertNotNull($template);
+
+        $composer = $this->getInjectableFactory()->create(HtmlComposer::class);
+
+        $params = Params::create()->withAcl();
+
+        $main = $composer->composeMain(new TemplateWrapper($template), $article, $params, Data::create());
+
+        $this->assertStringContainsString(self::TEMPLATE_IMAGE, $main, 'Template image is not embedded in body.');
+        $this->assertStringNotContainsString(self::OTHER_IMAGE, $main, 'Inaccessible record image is embedded.');
+
+        $headerFooter = $composer->composeHeaderFooter(
+            template: new TemplateWrapper($template),
+            entity: $article,
+            params: $params,
+            data: Data::create(),
+        );
+
+        $this->assertStringContainsString(
+            self::TEMPLATE_IMAGE,
+            $headerFooter,
+            'Template image is not embedded in header.'
+        );
+    }
+
     private function createAttachment(string $createdById, string $base64Contents): string
     {
         $em = $this->getEntityManager();
@@ -146,6 +203,23 @@ class InlineAttachmentAclTest extends BaseTestCase
         $em->saveEntity($attachment, [SaveOption::CREATED_BY_ID => $createdById]);
 
         return $attachment->getId();
+    }
+
+    private function createTestUser(): User
+    {
+        return $this->createUser('test', [
+            Role::FIELD_DATA => [
+                KnowledgeBaseArticle::ENTITY_TYPE => [
+                    Table::ACTION_CREATE => Table::LEVEL_YES,
+                    Table::ACTION_READ => Table::LEVEL_ALL,
+                    Table::ACTION_EDIT => Table::LEVEL_ALL,
+                    Table::ACTION_DELETE => Table::LEVEL_NO,
+                ],
+                Template::ENTITY_TYPE => [
+                    Table::ACTION_READ => Table::LEVEL_ALL,
+                ],
+            ],
+        ]);
     }
 }
 
