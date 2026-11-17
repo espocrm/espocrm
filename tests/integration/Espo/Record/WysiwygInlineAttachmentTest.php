@@ -205,6 +205,39 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
         $this->assertRelated($allowedId, $id);
     }
 
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     * @noinspection HtmlRequiredAltAttribute
+     */
+    public function testCreateRawAmpersand(): void
+    {
+        $user = $this->createTestUser();
+        $otherUser = $this->createUser('other');
+
+        $noAccessId = $this->createAttachment($otherUser->getId(), Attachment::ROLE_INLINE_ATTACHMENT);
+        $allowedId = $this->createAttachment($user->getId(), Attachment::ROLE_INLINE_ATTACHMENT);
+
+        $this->authenticate('test');
+
+        $service = $this->getArticleService();
+
+        $this->assertForbidden(function () use ($service, $noAccessId) {
+            $service->create((object) [
+                Field::NAME => 'Test 1',
+                self::FIELD => "<img src=\"?entryPoint=attachment&id=$noAccessId\">",
+            ], CreateParams::create());
+        });
+
+        $this->assertNotRelated($noAccessId);
+
+        $article = $service->create((object) [
+            Field::NAME => 'Test 2',
+            self::FIELD => "<img src=\"?entryPoint=attachment&id=$allowedId\">",
+        ], CreateParams::create())->getEntity();
+
+        $this->assertRelated($allowedId, $article->getId());
+    }
+
     private function createTestUser(): User
     {
         return $this->createUser('test', [
