@@ -115,7 +115,6 @@ class InjectableFactory
             null;
 
         if (!$binding) {
-            /** @noinspection PhpUnhandledExceptionInspection */
             $class = new ReflectionClass($interfaceName);
 
             if ($class->isInterface()) {
@@ -164,18 +163,14 @@ class InjectableFactory
     ): object {
 
         if (!class_exists($className)) {
-            throw new RuntimeException("Class '$className' does not exist.");
+            throw new RuntimeException("Class `$className` does not exist.");
         }
 
         $class = new ReflectionClass($className);
 
         $injectionList = $this->getConstructorInjectionList($class, $with, $bindingContainer);
 
-        try {
-            $obj = $class->newInstanceArgs($injectionList);
-        } catch (ReflectionException $e) {
-            throw new RuntimeException("Reflection error.", previous: $e);
-        }
+        $obj = $class->newInstanceArgs($injectionList);
 
         $this->applyAwareInjections($class, $obj);
 
@@ -249,7 +244,7 @@ class InjectableFactory
                 // This trick allows to log syntax errors.
                 class_exists($badClassName);
 
-                throw new RuntimeException("InjectableFactory: " . $e->getMessage());
+                throw new RuntimeException($e->getMessage(), previous: $e);
             }
         }
 
@@ -285,16 +280,12 @@ class InjectableFactory
         }
 
         if (!$class) {
-            throw new RuntimeException(
-                "InjectableFactory: Could not resolve the dependency '$name' for a callback."
-            );
+            throw new RuntimeException("Could not resolve dependency '$name' for a callback.");
         }
 
         $className = $class->getName();
 
-        throw new RuntimeException(
-            "InjectableFactory: Could not create '$className', the dependency '$name' is not resolved."
-        );
+        throw new RuntimeException("Could not create `$className`. Dependency '$name' is not resolved.");
     }
 
     /**
@@ -308,11 +299,7 @@ class InjectableFactory
             $callback = $callback(...);
         }
 
-        try {
-            $function = new ReflectionFunction($callback);
-        } catch (ReflectionException $e) {
-            throw new RuntimeException("Reflection error.", previous: $e);
-        }
+        $function = new ReflectionFunction($callback);
 
         foreach ($function->getParameters() as $param) {
             $injectionList[] = $this->getMethodParamInjection(null, $param);
@@ -359,7 +346,7 @@ class InjectableFactory
             return $factory->create();
         }
 
-        throw new RuntimeException("InjectableFactory: Bad binding.");
+        throw new RuntimeException("Bad binding.");
     }
 
     /**
@@ -414,7 +401,7 @@ class InjectableFactory
     private function classHasDependencySetter(
         ReflectionClass $class,
         string $name,
-        bool $skipInstanceCheck = false
+        bool $skipInstanceCheck = false,
     ): bool {
 
         $methodName = 'set' . ucfirst($name);
