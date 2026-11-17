@@ -29,21 +29,34 @@
 
 namespace Espo\Tools\Pdf\Dompdf;
 
+use Espo\Core\AclManager;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
+use Espo\Core\Utils\Log;
 use Espo\Entities\Attachment;
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Attachment\Checker;
 
+/**
+ * @internal
+ * @todo Move to `Espo\Tools\Pdf\Util` in v10.2.0. Make not internal.
+ */
 class ImageSourceProvider
 {
     public function __construct(
         private EntityManager $entityManager,
         private Checker $checker,
         private FileStorageManager $fileStorageManager,
+        private User $user,
+        private AclManager $aclManager,
+        private Log $log,
     ) {}
 
-    public function get(string $id): ?string
+    /**
+     * No check against 'inline' role intentionally as it is also used for Image fields.
+     */
+    public function get(string $id, bool $applyAcl = false): ?string
     {
         $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
@@ -54,6 +67,12 @@ class ImageSourceProvider
         try {
             $this->checker->checkTypeImage($attachment);
         } catch (Forbidden) {
+            return null;
+        }
+
+        if ($applyAcl && !$this->aclManager->checkEntityRead($this->user, $attachment)) {
+            $this->log->notice("PDF: User does not have access to the image attachment '{$attachment->getId()}'.");
+
             return null;
         }
 

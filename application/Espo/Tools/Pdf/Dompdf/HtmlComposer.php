@@ -48,6 +48,9 @@ use chillerlan\QRCode\Output\QROutputInterface;
 
 use RuntimeException;
 
+/**
+ * If ever implementing passing a user (for ACL), then need to also pass it to the ImageSourceProvider.
+ */
 class HtmlComposer
 {
     public function __construct(
@@ -143,7 +146,7 @@ class HtmlComposer
         if ($template->hasHeader()) {
             $htmlHeader = $renderer->renderTemplate($template->getHeader());
 
-            $htmlHeader = $this->replaceHeadTags($htmlHeader);
+            $htmlHeader = $this->replaceHeadTags($htmlHeader, $params);
 
             $html .= "<header>$htmlHeader</header>";
         }
@@ -151,7 +154,7 @@ class HtmlComposer
         if ($template->hasFooter()) {
             $htmlFooter = $renderer->renderTemplate($template->getFooter());
 
-            $htmlFooter = $this->replaceHeadTags($htmlFooter);
+            $htmlFooter = $this->replaceHeadTags($htmlFooter, $params);
 
             $html .= "<footer>$htmlFooter</footer>";
         }
@@ -177,12 +180,12 @@ class HtmlComposer
 
         $html = $renderer->renderTemplate($bodyTemplate);
 
-        $html = $this->replaceTags($html);
+        $html = $this->replaceTags($html, $params);
 
         return "<main>$html</main>";
     }
 
-    private function replaceTags(string $html): string
+    private function replaceTags(string $html, Params $params): string
     {
         /** @noinspection HtmlUnknownAttribute */
         $html = str_replace('<br pagebreak="true">', '<div style="page-break-after: always;"></div>', $html);
@@ -196,14 +199,14 @@ class HtmlComposer
             return $this->composeBarcode($data);
         }, $html) ?? '';
 
-        return preg_replace_callback(RegExp::INLINE_ATTACHMENT, function ($matches) {
+        return preg_replace_callback(RegExp::INLINE_ATTACHMENT, function ($matches) use ($params) {
             $id = $matches[1];
 
             if (!$id) {
                 return '';
             }
 
-            $src = $this->imageSourceProvider->get($id);
+            $src = $this->imageSourceProvider->get($id, $params->applyAcl());
 
             if (!$src) {
                 return '';
@@ -213,11 +216,11 @@ class HtmlComposer
         }, $html) ?? '';
     }
 
-    private function replaceHeadTags(string $html): string
+    private function replaceHeadTags(string $html, Params $params): string
     {
         $html = str_replace('{pageNumber}', '<span class="page-number"></span>', $html);
 
-        return $this->replaceTags($html);
+        return $this->replaceTags($html, $params);
     }
 
     /**
