@@ -50,8 +50,8 @@ use RuntimeException;
  */
 class Container implements ContainerInterface
 {
-    private const ID_CONTAINER = 'container';
-    private const ID_INJECTABLE_FACTORY = 'injectableFactory';
+    private const string ID_CONTAINER = 'container';
+    private const string ID_INJECTABLE_FACTORY = 'injectableFactory';
 
     /** @var array<string, object> */
     private array $data = [];
@@ -73,7 +73,7 @@ class Container implements ContainerInterface
         string $configurationClassName,
         private BindingContainer $bindingContainer,
         array $loaderClassNames = [],
-        array $services = []
+        array $services = [],
     ) {
         $this->loaderClassNames = $loaderClassNames;
 
@@ -85,8 +85,12 @@ class Container implements ContainerInterface
             $this->setForced($name, $service);
         }
 
-        /** @var InjectableFactory $injectableFactory */
         $injectableFactory = $this->get(self::ID_INJECTABLE_FACTORY);
+
+        if (!$injectableFactory instanceof InjectableFactory) {
+            throw new RuntimeException("Bad 'injectableFactory'.");
+        }
+
         $this->injectableFactory = $injectableFactory;
 
         $this->configuration = $this->injectableFactory->create($configurationClassName);
@@ -121,9 +125,10 @@ class Container implements ContainerInterface
             return true;
         }
 
-        $loadMethodName = 'load' . ucfirst($id);
-
-        if (method_exists($this, $loadMethodName)) {
+        if (
+            $id === self::ID_CONTAINER ||
+            $id === self::ID_INJECTABLE_FACTORY
+        ) {
             return true;
         }
 
@@ -160,7 +165,7 @@ class Container implements ContainerInterface
         $id = $binding->getValue();
 
         if (!is_string($id)) {
-            throw new LogicException();
+            throw new LogicException("No binding value.");
         }
 
         /** @var T */
@@ -187,7 +192,6 @@ class Container implements ContainerInterface
         }
 
         if ($id === self::ID_CONTAINER) {
-            /** @var ReflectionClass<object> $object */
             $object = new ReflectionClass(Container::class);
 
             $this->classCache[$id] = $object;
@@ -196,7 +200,6 @@ class Container implements ContainerInterface
         }
 
         if ($id === self::ID_INJECTABLE_FACTORY) {
-            /** @var ReflectionClass<object> $object */
             $object = new ReflectionClass(InjectableFactory::class);
 
             $this->classCache[$id] = $object;
@@ -212,7 +215,9 @@ class Container implements ContainerInterface
             return;
         }
 
-        assert($this->configuration !== null);
+        if ($this->configuration === null) {
+            throw new LogicException();
+        }
 
         $className = $this->configuration->getServiceClassName($id);
 
@@ -225,7 +230,6 @@ class Container implements ContainerInterface
 
     /**
      * @param class-string<Loader> $loaderClassName
-     * @throws RuntimeException
      */
     private function initClassByLoader(string $id, string $loaderClassName): void
     {
@@ -234,13 +238,13 @@ class Container implements ContainerInterface
         $loadMethod = $loaderClass->getMethod('load');
 
         if (!$loadMethod->hasReturnType()) {
-            throw new RuntimeException("Loader method for service '$id' does not have a return type.");
+            throw new RuntimeException("Loader method for service '$id' does not have return type.");
         }
 
         $returnType = $loadMethod->getReturnType();
 
         if (!$returnType instanceof ReflectionNamedType) {
-            throw new RuntimeException("Loader method for service '$id' does not have a named return type.");
+            throw new RuntimeException("Loader method for service '$id' does not have named return type.");
         }
 
         /** @var class-string $className */
@@ -273,7 +277,9 @@ class Container implements ContainerInterface
      */
     public function set(string $id, object $object): void
     {
-        assert($this->configuration !== null);
+        if ($this->configuration === null) {
+            throw new LogicException();
+        }
 
         if (!$this->configuration->isSettable($id)) {
             throw new NotSettableException("Service '$id' is not settable.");
@@ -345,12 +351,18 @@ class Container implements ContainerInterface
             return;
         }
 
-        assert($this->configuration !== null);
+        if ($this->configuration === null) {
+            throw new LogicException();
+        }
 
         $className = $this->configuration->getServiceClassName($id);
 
-        if (!$className || !class_exists($className)) {
-            throw new RuntimeException("Could not load '$id' service.");
+        if (!$className) {
+            throw new NotFoundException("Service '$id' not found.");
+        }
+
+        if (!class_exists($className)) {
+            throw new RuntimeException("Could not load '$id' service. Class `$className` does not exist.");
         }
 
         $dependencyList = $this->configuration->getServiceDependencyList($id);
