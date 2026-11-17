@@ -71,9 +71,9 @@ class EmailLoginTest extends BaseTestCase
 
         $em->saveEntity($userData);
 
-        $this->setApplication(
-            $this->createApplication(reuse: true, noUser: true)
-        );
+        // Not reused, as the reused entity manager would create repositories and hooks with the previous
+        // container, where the user is set. Otherwise, the 'user' not being set bugs would be missed.
+        $this->reCreateApplication(noUser: true);
 
         $this->assertFalse($this->getContainer()->has('user'));
 
