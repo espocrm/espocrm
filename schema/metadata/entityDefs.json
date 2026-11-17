@@ -86,7 +86,7 @@
         },
         "deleteId": {
             "type": "boolean",
-            "description": "Adds `deletedId` attribute. An random ID is written there on soft-deletes. As of v8.4."
+            "description": "Adds `deleteId` attribute. An random ID is written there on soft-deletes. As of v8.4."
         },
         "hooksDisabled": {
             "type": "boolean",
