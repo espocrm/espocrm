@@ -330,7 +330,7 @@ class InjectableFactory
             try {
                 return $this->container->get($value);
             } catch (NotFoundExceptionInterface $e) {
-                throw new RuntimeException($e->getMessage());
+                throw new RuntimeException("Service '$value' not found.", previous: $e);
             }
         }
 
