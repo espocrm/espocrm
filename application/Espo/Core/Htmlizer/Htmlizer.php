@@ -79,8 +79,7 @@ class Htmlizer
     public function __construct(
         private DateTime $dateTime,
         private NumberUtil $number,
-        private SelectBuilderFactory $selectBuilderFactory,
-        private User $user,
+        private ?User $user,
         private EntityManager $entityManager,
         private Metadata $metadata,
         private Language $language,
@@ -239,11 +238,17 @@ class Htmlizer
                 ->getRelation($relation)
                 ->getForeignEntityType();
 
-            $selectBuilder = $this->selectBuilderFactory->create();
+            // Using lazy loading as the factory depends on the 'user' service.
+            $selectBuilderFactory = $this->injectableFactory->create(SelectBuilderFactory::class);
 
-            $selectBuilder->from($foreignEntityType);
+            $selectBuilder = $selectBuilderFactory->create()
+                ->from($foreignEntityType);
 
             if ($this->acl) {
+                if (!$this->user) {
+                    throw new RuntimeException("No 'user' passed.");
+                }
+
                 $selectBuilder
                     ->forUser($this->user)
                     ->withAccessControlFilter();

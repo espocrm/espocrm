@@ -276,7 +276,7 @@ class Util
         $subjectTpl = $this->templateFileManager->getTemplate('twoFactorCode', 'subject');
         $bodyTpl = $this->templateFileManager->getTemplate('twoFactorCode', 'body');
 
-        $htmlizer = $this->htmlizerFactory->create();
+        $htmlizer = $this->htmlizerFactory->createNoAcl();
 
         $data = [
             'code' => $code,
