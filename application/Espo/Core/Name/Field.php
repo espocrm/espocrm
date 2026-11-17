@@ -70,4 +70,9 @@ class Field
      * @since 10.10.0
      */
     public const string ATTACHMENTS = 'attachments';
+
+    /**
+     * @since 10.1.3
+     */
+    public const string DESCRIPTION = 'description';
 }
