@@ -52,6 +52,7 @@ class HtmlizerFactory
 
         if ($skipAcl) {
             $with['acl'] = null;
+            $with['user'] = null;
         }
 
         if ($timeZone) {

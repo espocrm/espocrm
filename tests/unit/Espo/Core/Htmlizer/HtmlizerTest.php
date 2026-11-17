@@ -33,7 +33,6 @@ use Espo\Core\AclManager;
 use Espo\Core\Currency\PrecisionProvider;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
@@ -103,7 +102,6 @@ class HtmlizerTest extends TestCase
         return new Htmlizer(
             dateTime: $this->dateTime,
             number: $this->number,
-            selectBuilderFactory: $this->createMock(SelectBuilderFactory::class),
             user: $this->createMock(User::class),
             entityManager: $this->entityManager,
             metadata: $this->createMock(Metadata::class),
