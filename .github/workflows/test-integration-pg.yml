@@ -58,7 +58,7 @@ jobs:
       run: npm install
 
     - name: Build
-      run: grunt test
+      run: npx grunt test
 
     - name: Integration testing
       run: vendor/bin/phpunit --testsuite integration-pg
