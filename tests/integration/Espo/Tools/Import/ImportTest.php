@@ -30,6 +30,8 @@
 namespace integration\Espo\Tools\Import;
 
 use Espo\Core\Acl\Table;
+use Espo\Core\Name\Field;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\Attachment;
 use Espo\Entities\Role;
 use Espo\Entities\User;
@@ -37,6 +39,7 @@ use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Tools\Import\Import;
 use Espo\Tools\Import\Params;
+use Espo\Tools\Import\Result;
 use tests\integration\Core\BaseTestCase;
 
 class ImportTest extends BaseTestCase
@@ -240,18 +243,179 @@ class ImportTest extends BaseTestCase
                 ])
             )
             ->setAttachmentId($attachment->getId())
-            ->setAttributeList(['name']);
+            ->setAttributeList([Field::NAME]);
 
         $import->run();
 
         //
 
         $account = $em->getRDBRepositoryByClass(Account::class)
-            ->where(['name' => 'Test'])
+            ->where([Field::NAME => 'Test'])
             ->findOne();
 
         $this->assertNotNull($account);
         $this->assertNull($account->getType());
         $this->assertEquals('Test.', $account->getDescription());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testUrlNonAscii(): void
+    {
+        $this->createImportUser();
+
+        $result = $this->runAccountImport(
+            <<<'EOT'
+            name,website
+            Test Umlaut,https://de.wikipedia.org/wiki/Straße
+            Test Host,müller-bäckerei.de
+            Test Cyrillic,https://ru.wikipedia.org/wiki/Москва
+            Test Ascii,https://www.example.com
+            Test Invalid,not a url
+            EOT,
+            ['name', 'website']
+        );
+
+        $this->assertEquals(4, $result->getCountCreated());
+        $this->assertEquals(1, $result->getCountError());
+
+        $this->assertEquals(
+            'https://de.wikipedia.org/wiki/Stra%C3%9Fe',
+            $this->findAccount('Test Umlaut')?->get('website')
+        );
+
+        $this->assertEquals(
+            'm%C3%BCller-b%C3%A4ckerei.de',
+            $this->findAccount('Test Host')?->get('website')
+        );
+
+        $this->assertEquals(
+            'https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0',
+            $this->findAccount('Test Cyrillic')?->get('website')
+        );
+
+        $this->assertEquals(
+            'https://www.example.com',
+            $this->findAccount('Test Ascii')?->get('website')
+        );
+
+        $this->assertNull($this->findAccount('Test Invalid'));
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testUrlMultipleNonAscii(): void
+    {
+        $metadata = $this->getMetadata();
+
+        $metadata->set('entityDefs', Account::ENTITY_TYPE, [
+            'fields' => [
+                'cWebsites' => [
+                    'type' => FieldType::URL_MULTIPLE,
+                ],
+            ],
+        ]);
+
+        $metadata->save();
+
+        $this->getDataManager()->rebuild();
+        $this->reCreateApplication();
+
+        $this->createImportUser();
+
+        $result = $this->runAccountImport(
+            <<<'EOT'
+            name,cWebsites
+            Test Umlaut,https://de.wikipedia.org/wiki/Straße
+            Test Multiple,"müller-bäckerei.de, https://ru.wikipedia.org/wiki/Москва"
+            Test Json,"[""https://el.wikipedia.org/wiki/Αθήνα""]"
+            Test Ascii,https://www.example.com
+            Test Invalid,not a url
+            EOT,
+            ['name', 'cWebsites']
+        );
+
+        $this->assertEquals(4, $result->getCountCreated());
+        $this->assertEquals(1, $result->getCountError());
+
+        $this->assertEquals(
+            ['https://de.wikipedia.org/wiki/Stra%C3%9Fe'],
+            $this->findAccount('Test Umlaut')?->get('cWebsites')
+        );
+
+        $this->assertEquals(
+            [
+                'm%C3%BCller-b%C3%A4ckerei.de',
+                'https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0',
+            ],
+            $this->findAccount('Test Multiple')?->get('cWebsites')
+        );
+
+        $this->assertEquals(
+            ['https://el.wikipedia.org/wiki/%CE%91%CE%B8%CE%AE%CE%BD%CE%B1'],
+            $this->findAccount('Test Json')?->get('cWebsites')
+        );
+
+        $this->assertEquals(
+            ['https://www.example.com'],
+            $this->findAccount('Test Ascii')?->get('cWebsites')
+        );
+
+        $this->assertNull($this->findAccount('Test Invalid'));
+    }
+
+    private function createImportUser(): void
+    {
+        $this->createUser('test', [
+            Role::FIELD_DATA => [
+                'Import' => true,
+                Account::ENTITY_TYPE => [
+                    Table::ACTION_CREATE => Table::LEVEL_YES,
+                    Table::ACTION_READ => Table::LEVEL_ALL,
+                ],
+            ],
+        ]);
+
+        $this->authenticate('test');
+    }
+
+    /**
+     * @param string[] $attributeList
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function runAccountImport(string $contents, array $attributeList): Result
+    {
+        $em = $this->getEntityManager();
+
+        $attachment = $em->getRDBRepositoryByClass(Attachment::class)->getNew();
+        $attachment
+            ->setName('test.csv')
+            ->setType('text/csv')
+            ->setRole(Import::FILE_ROLE)
+            ->setContents($contents);
+        $em->saveEntity($attachment);
+
+        $import = $this->getInjectableFactory()->create(Import::class);
+
+        return $import
+            ->setEntityType(Account::ENTITY_TYPE)
+            ->setParams(
+                Params::create()
+                    ->withHeaderRow()
+                    ->withSkipDuplicateChecking()
+            )
+            ->setAttachmentId($attachment->getId())
+            ->setAttributeList($attributeList)
+            ->run();
+    }
+
+    private function findAccount(string $name): ?Account
+    {
+        return $this->getEntityManager()
+            ->getRDBRepositoryByClass(Account::class)
+            ->where([Field::NAME => $name])
+            ->findOne();
     }
 }
