@@ -904,11 +904,15 @@ class Import
                     return [];
                 }
 
-                if ($value[0] === '[') {
-                    return Json::decode($value);
+                $list = $value[0] === '[' ?
+                    Json::decode($value) :
+                    array_map(fn ($it) => trim($it), explode(',', $value));
+
+                if (is_array($list) && $fieldDefs?->getType() === FieldType::URL_MULTIPLE) {
+                    $list = array_map(fn ($it) => is_string($it) ? self::encodeUrl($it) : $it, $list);
                 }
 
-                return array_map(fn ($it) => trim($it), explode(',', $value));
+                return $list;
         }
 
         return $this->prepareAttributeValue($entity, $attribute, $value);
