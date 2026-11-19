@@ -307,7 +307,7 @@ class Diff
 
             libData.filesToCopy.forEach(item => fileList.push(item));
 
-            fileList.push('application/Espo/Resources/defaults.php');
+            fileList.push('application/Espo/Resources/defaults/config.php');
 
             fileList.push('client/lib/espo.js');
             fileList.push('client/lib/espo.js.map');
