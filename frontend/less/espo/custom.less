@@ -312,11 +312,20 @@ img.image-preview {
         margin-right: 0;
         z-index: 3;
 
-        max-width: var(--200px);
+        --filters-button-max-width: var(--200px);
+
+        max-width: var(--filters-button-max-width);
 
         > .filters-label {
             display: inline-block;
-            max-width: calc(100% - var(--11px));
+            // Not a percentage: the button is sized by its content, so a percentage
+            // max-width here is cyclic and Firefox/some Edge versions collapse it.
+            max-width: calc(
+                var(--filters-button-max-width)
+                - 2 * var(--padding-base-horizontal)
+                - 2 * var(--1px)
+                - var(--11px)
+            );
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -324,11 +333,11 @@ img.image-preview {
         }
 
         @media screen and (max-width: @screen-sm-max) {
-            max-width: var(--120px);
+            --filters-button-max-width: var(--120px);
         }
 
         @media screen and (max-width: @screen-xs-max) {
-            max-width: var(--120px);
+            --filters-button-max-width: var(--120px);
         }
     }
 
