@@ -63,6 +63,7 @@ class AuthorizationServerMetadataProvider
             'token_endpoint' => $this->applicationConfig->getSiteUrl() . '/oauth/token',
             'revocation_endpoint' => $this->applicationConfig->getSiteUrl() . '/oauth/token/revoke',
             'code_challenge_methods_supported' => ['S256'],
+            'response_types_supported' => ['code'],
         ];
     }
 
