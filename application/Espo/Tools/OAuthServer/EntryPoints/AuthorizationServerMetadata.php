@@ -31,6 +31,7 @@ namespace Espo\Tools\OAuthServer\EntryPoints;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
+use Espo\Core\Api\Route\ContentType;
 use Espo\Core\EntryPoint\EntryPoint;
 use Espo\Core\Utils\Json;
 use Espo\Tools\OAuthServer\Metadata\AuthorizationServerMetadataProvider;
@@ -48,6 +49,8 @@ class AuthorizationServerMetadata implements EntryPoint
     {
         $data = $this->provider->get();
 
-        $response->writeBody(Json::encode($data, JSON_PRETTY_PRINT));
+        $response
+            ->setHeader('Content-Type', ContentType::APPLICATION_JSON)
+            ->writeBody(Json::encode($data, JSON_PRETTY_PRINT));
     }
 }
