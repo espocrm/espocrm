@@ -15,7 +15,7 @@
         "timeRanges": {
             "type": "jsonArray",
             "default": [
-                ["9:00", "17:00"]
+                ["09:00", "17:00"]
             ],
             "view": "views/working-time-calendar/fields/time-ranges",
             "required": true
