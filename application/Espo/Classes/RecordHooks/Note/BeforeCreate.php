@@ -31,6 +31,7 @@ namespace Espo\Classes\RecordHooks\Note;
 
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Hook\SaveHook;
 use Espo\Core\Utils\Metadata;
@@ -132,11 +133,16 @@ class BeforeCreate implements SaveHook
 
     /**
      * @throws Forbidden
+     * @throws BadRequest
      */
     private function checkParent(Note $entity): void
     {
         if (!$entity->getParentType() || !$entity->getParentId()) {
             return;
+        }
+
+        if ($entity->getTargetType()) {
+            throw new BadRequest("Target type is not allowed for notes with a parent.");
         }
 
         $parent = $this->entityManager->getEntityById($entity->getParentType(), $entity->getParentId());

@@ -30,13 +30,16 @@
 namespace tests\unit\Espo\Core\Select\Where;
 
 use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemBuilder;
 use Espo\Core\Select\Where\Scanner;
+use Espo\Entities\Note;
 use Espo\ORM\BaseEntity as Entity;
 use Espo\ORM\Entity as OrmEntity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Select as Query;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Type\RelationType;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ScannerTest extends TestCase
@@ -237,5 +240,50 @@ class ScannerTest extends TestCase
         ]);
 
         $this->assertFalse($scanner->hasRelatedMany('Test', $item));
+    }
+
+    #[DataProvider('hasAttributeDataProvider')]
+    public function testHasAttribute(Item $item, string $attribute, bool $expected): void
+    {
+        $scanner = new Scanner(
+            entityManager: $this->createMock(EntityManager::class),
+        );
+
+        $this->assertEquals($expected, $scanner->hasAttribute($item, $attribute));
+    }
+
+    /**
+     * @return array{Item, string, bool}[]
+     */
+    public static function hasAttributeDataProvider(): array
+    {
+        return [
+            [
+                ItemBuilder::create()
+                    ->setType(Item\Type::AND)
+                    ->setItemList([
+                        ItemBuilder::create()
+                            ->setAttribute(Note::FIELD_DATA)
+                            ->setType(Item\Type::IS_NULL)
+                            ->build()
+                    ])
+                    ->build(),
+                Note::FIELD_DATA,
+                true,
+            ],
+            [
+                ItemBuilder::create()
+                    ->setType(Item\Type::AND)
+                    ->setItemList([
+                        ItemBuilder::create()
+                            ->setAttribute(Note::FIELD_TYPE)
+                            ->setType(Item\Type::IS_NULL)
+                            ->build()
+                    ])
+                    ->build(),
+                Note::FIELD_DATA,
+                false,
+            ],
+        ];
     }
 }

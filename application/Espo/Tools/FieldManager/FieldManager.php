@@ -754,7 +754,7 @@ class FieldManager
     {
         $type = $fieldDefs[FieldParam::TYPE] ?? throw new RuntimeException("No type.");
 
-        $params = $this->prepareFieldParams($scope, $type, $fieldDefs);
+        $params = $this->prepareFieldParams($scope, $name, $type, $fieldDefs);
 
         $currentCustomFieldDefs = $this->getCustomFieldDefs($scope, $name) ?? [];
         $currentFieldDefs = $this->getFieldDefs($scope, $name) ?? [];
@@ -826,9 +826,11 @@ class FieldManager
             ];
         }
 
+        $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
+
+        // @todo Revise. Should be field type defs, not field defs. Fix and test.
         /** Save links for the field. */
         $linkDefs = $fieldDefs['linkDefs'] ?? null;
-        $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
 
         if (isset($linkDefs) || isset($metaLinkDefs)) {
             $metaLinkDefs = $metaLinkDefs ?? [];
@@ -957,35 +959,34 @@ class FieldManager
     }
 
     /**
-     * @param stdClass[] $additionalParamDefsList
+     * @param array{name: string, type: string}[] $defsList
      * @return array<string, mixed>
      */
-    private function getAdditionalParamList(string $scope, string $type, array $additionalParamDefsList): array
+    private function getAdditionalParams(string $scope, string $type, array $defsList): array
     {
-        $additionalParamList = $this->additionalParamList;
+        $output = $this->additionalParamList;
 
         if ($this->metadata->get("scopes.$scope.lockable") === true) {
-            $additionalParamList['notLockable'] = [
+            $output['notLockable'] = [
                 FieldParam::TYPE => FieldType::BOOL,
             ];
         }
 
-        foreach ($additionalParamDefsList as $additionalParam) {
-            $additionalParamList[$additionalParam->name] = [
-                FieldParam::TYPE => $additionalParam->type ?? $type,
+        foreach ($defsList as $it) {
+            $output[$it['name']] = [
+                FieldParam::TYPE => $it['type'] ?? $type,
             ];
         }
 
-        return $additionalParamList;
+        return $output;
     }
 
     /**
-     * @param array<string, mixed> $fieldDefs
      * @return array<string, mixed>[]
      */
-    private function getFieldTypeParamList(array $fieldDefs): mixed
+    private function getFieldTypeParamList(string $type): mixed
     {
-        $fieldTypeDefs = $this->metadataHelper->getFieldDefsByType($fieldDefs);
+        $fieldTypeDefs = $this->metadata->get("fields.$type") ?? [];
 
         return $fieldTypeDefs['params'] ?? [];
     }
@@ -994,15 +995,18 @@ class FieldManager
      * @param array<string, mixed> $fieldDefs
      * @return array<string, array<string, mixed>>
      */
-    private function prepareFieldParams(string $scope, string $type, array $fieldDefs): array
+    private function prepareFieldParams(string $scope, string $field, string $type, array $fieldDefs): array
     {
-        $additionalParamList = $this->getAdditionalParamList(
+        $additionalParamDefsList =
+            $this->metadata->get("entityDefs.$scope.fields.$field.fieldManagerAdditionalParamList") ?? [];
+
+        $additionalParamDefs = $this->getAdditionalParams(
             scope: $scope,
             type: $type,
-            additionalParamDefsList: $fieldDefs['fieldManagerAdditionalParamList'] ?? [],
+            defsList: $additionalParamDefsList,
         );
 
-        $paramDataList = $this->getFieldTypeParamList($fieldDefs);
+        $paramDataList = $this->getFieldTypeParamList($type);
 
         $params = [];
 
@@ -1010,7 +1014,7 @@ class FieldManager
             $params[$paramData['name']] = $paramData;
         }
 
-        foreach ($additionalParamList as $paramName => $paramValue) {
+        foreach ($additionalParamDefs as $paramName => $paramValue) {
             if (isset($params[$paramName])) {
                 continue;
             }
