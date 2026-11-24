@@ -48,36 +48,26 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private DefaultAccessChecker $defaultAccessChecker;
-    private AclManager $aclManager;
-    private EntityManager $entityManager;
-
     public function __construct(
-        DefaultAccessChecker $defaultAccessChecker,
-        AclManager $aclManager,
-        EntityManager $entityManager
-    ) {
-        $this->defaultAccessChecker = $defaultAccessChecker;
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
-    }
+        private DefaultAccessChecker $defaultAccessChecker,
+        private AclManager $aclManager,
+        private EntityManager $entityManager,
+    ) {}
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        /** @var Attachment $entity */
-
-        if ($entity->get('parentType') === Settings::ENTITY_TYPE) {
+        if ($entity->getParentType() === Settings::ENTITY_TYPE) {
             // Allow the logo.
             return true;
         }
 
         $parent = null;
 
-        $parentType = $entity->get('parentType');
-        $parentId = $entity->get('parentId');
+        $parentType = $entity->getParentType();
+        $parentId = $entity->getParentId();
 
-        $relatedType = $entity->get('relatedType');
-        $relatedId = $entity->get('relatedId');
+        $relatedType = $entity->getRelatedType();
+        $relatedId = $entity->getRelatedId();
 
         if ($parentId && $parentType) {
             $parent = $this->entityManager->getEntityById($parentType, $parentId);
@@ -86,7 +76,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if (!$parent) {
-            if ($entity->get('createdById') === $user->getId()) {
+            if ($entity->getCreatedBy()?->getId() === $user->getId()) {
                 return true;
             }
 
@@ -126,8 +116,8 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_PORTALS) {
             $intersect = array_intersect(
-                $note->getLinkMultipleIdList('portals'),
-                $user->getLinkMultipleIdList('portals')
+                $note->getLinkMultipleIdList(Note::LINK_PORTALS),
+                $user->getLinkMultipleIdList(User::LINK_PORTALS)
             );
 
             if (count($intersect)) {
@@ -139,8 +129,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_USERS) {
             $isRelated = $this->entityManager
-                ->getRDBRepository(Note::ENTITY_TYPE)
-                ->getRelation($note, 'users')
+                ->getRelation($note, Note::LINK_USERS)
                 ->isRelated($user);
 
             if ($isRelated) {

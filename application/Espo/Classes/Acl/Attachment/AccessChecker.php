@@ -50,12 +50,10 @@ class AccessChecker implements AccessEntityCREDChecker
     use DefaultAccessCheckerDependency;
 
     public function __construct(
-        DefaultAccessChecker $defaultAccessChecker,
+        private DefaultAccessChecker $defaultAccessChecker,
         private AclManager $aclManager,
         private EntityManager $entityManager
-    ) {
-        $this->defaultAccessChecker = $defaultAccessChecker;
-    }
+    ) {}
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
@@ -128,8 +126,7 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($note->getTargetType() === Note::TARGET_USERS) {
             $isRelated = $this->entityManager
-                ->getRDBRepository(Note::ENTITY_TYPE)
-                ->getRelation($note, 'users')
+                ->getRelation($note, Note::LINK_USERS)
                 ->isRelated($user);
 
             if ($isRelated) {
