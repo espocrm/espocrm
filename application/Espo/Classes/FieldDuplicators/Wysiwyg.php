@@ -63,7 +63,7 @@ class Wysiwyg implements FieldDuplicator
             return $valueMap;
         }
 
-        if ($this->hasBodyPlain($entity, $field) && !$entity->get(self::FIELD_IS_HTML)) {
+        if ($this->hasPlain($entity, $field) && !$entity->get(self::FIELD_IS_HTML)) {
             return $valueMap;
         }
 
@@ -128,12 +128,12 @@ class Wysiwyg implements FieldDuplicator
         return $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
     }
 
-    private function hasBodyPlain(Entity $entity, string $name): bool
+    private function hasPlain(Entity $entity, string $name): bool
     {
         return (bool) $this->entityManager
             ->getDefs()
             ->getEntity($entity->getEntityType())
             ->getField($name)
-            ->getParam('hasBodyPlain');
+            ->getParam('hasPlain');
     }
 }

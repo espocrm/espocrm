@@ -123,7 +123,7 @@
                 "tooltipText"
             ],
             "useIframe": true,
-            "hasBodyPlain": true
+            "hasPlain": true
         },
         "bodyPlain": {
             "type": "text",

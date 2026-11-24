@@ -63,9 +63,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        $hasBodyPlain = $this->hasBodyPlain($entity, $name);
-
-        if ($hasBodyPlain) {
+        if ($this->hasPlain($entity, $name)) {
             if (
                 !$entity->isAttributeChanged($name) &&
                 !$entity->isAttributeChanged(self::FIELD_IS_HTML)
@@ -136,12 +134,12 @@ class Saver implements SaverInterface
         return $list;
     }
 
-    private function hasBodyPlain(Entity $entity, string $name): bool
+    private function hasPlain(Entity $entity, string $name): bool
     {
         return (bool) $this->entityManager
             ->getDefs()
             ->getEntity($entity->getEntityType())
             ->getField($name)
-            ->getParam('hasBodyPlain');
+            ->getParam('hasPlain');
     }
 }

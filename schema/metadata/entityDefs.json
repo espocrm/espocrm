@@ -368,7 +368,7 @@
                                 "type": "string",
                                 "description": "An attachment-multiple field to connect with. As of v9.0."
                             },
-                            "hasBodyPlain": {
+                            "hasPlain": {
                                 "type": "boolean",
                                 "description": "Has a body plain field. As of v10.2.0."
                             }

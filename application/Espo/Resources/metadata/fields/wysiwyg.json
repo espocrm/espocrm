@@ -31,7 +31,7 @@
             "hidden": true
         },
         {
-            "name": "hasBodyPlain",
+            "name": "hasPlain",
             "type": "bool",
             "hidden": true
         },

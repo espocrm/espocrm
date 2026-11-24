@@ -373,7 +373,7 @@
             "layoutDefaultSidePanelDisabled": true,
             "layoutMassUpdateDisabled": true,
             "massUpdateDisabled": true,
-            "hasBodyPlain": true
+            "hasPlain": true
         },
         "isHtml": {
             "type": "bool",

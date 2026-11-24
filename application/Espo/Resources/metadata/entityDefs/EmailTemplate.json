@@ -15,7 +15,7 @@
             "useIframe": true,
             "attachmentField": "attachments",
             "audited": true,
-            "hasBodyPlain": true
+            "hasPlain": true
         },
         "isHtml": {
             "type": "bool",
