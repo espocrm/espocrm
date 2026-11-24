@@ -120,6 +120,26 @@ class Scanner
     }
 
     /**
+     * Checks whether the attribute is present. Sub-queries are not checked.
+     * @return bool
+     * @since 10.1.5
+     */
+    public function hasAttribute(Item $item, string $attribute): bool
+    {
+        if (in_array($item->getType(), $this->nestingTypeList)) {
+            foreach ($item->getItemList() as $subItem) {
+                if ($this->hasAttribute($subItem, $attribute)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return $item->getAttribute() === $attribute;
+    }
+
+    /**
      * Apply needed joins to a query builder.
      */
     public function apply(QueryBuilder $queryBuilder, Item $item): void

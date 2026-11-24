@@ -85,6 +85,9 @@ class Note extends Entity
     public const string FIELD_IS_INTERNAL = 'isInternal';
     public const string FIELD_IS_PINNED = 'isPinned';
 
+    /** @since 10.1.5 */
+    public const string FIELD_DATA = 'data';
+
     /**
      * @since 10.0.0
      */

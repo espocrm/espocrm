@@ -37,6 +37,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\Scanner;
 use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
@@ -54,6 +56,7 @@ class QueryHelper
         private SelectBuilderFactory $selectBuilderFactory,
         private AclManager $aclManager,
         private Helper $helper,
+        private Scanner $scanner,
     ) {}
 
     /**
@@ -66,6 +69,8 @@ class QueryHelper
             ->getQueryBuilder()
             ->select()
             ->from(Note::ENTITY_TYPE);
+
+        $this->checkWhere($searchParams->getWhere());
 
         if (
             $searchParams->getWhere() ||
@@ -346,6 +351,20 @@ class QueryHelper
                 );
 
             $queryList[] = $ownBuilder->build();
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkWhere(?Item $where): void
+    {
+        if (!$where) {
+            return;
+        }
+
+        if ($this->scanner->hasAttribute($where, Note::FIELD_DATA)) {
+            throw new Forbidden("Not allowed 'data' attribute in where.");
         }
     }
 }

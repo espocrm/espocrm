@@ -30,10 +30,13 @@
 namespace tests\integration\Espo\Stream;
 
 use Espo\Core\Acl\Table;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Select\SearchParams;
 use Espo\Entities\Note;
 use Espo\Entities\Portal;
+use Espo\Entities\Role;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\Tools\Stream\RecordService;
 use tests\integration\Core\BaseTestCase;
@@ -112,5 +115,44 @@ class RecordTest extends BaseTestCase
 
         $this->assertCount(1, $pinnedCollection);
         $this->assertEquals($notePinned->getId(), $collection[0]->getId());
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testWhereDataForbidden(): void
+    {
+        $em = $this->getEntityManager();
+
+        $this->createUser('tester', [
+            Role::FIELD_DATA => [
+                Account::ENTITY_TYPE => [
+                    Table::ACTION_READ => Table::LEVEL_ALL,
+                    Table::ACTION_STREAM => Table::LEVEL_ALL,
+                ],
+            ],
+        ]);
+
+        $account = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'Test']);
+
+        $this->auth(userName: 'tester');
+        $this->reCreateApplication(reuse: true);
+
+        $service = $this->getInjectableFactory()->create(RecordService::class);
+
+        $searchParams = SearchParams::fromRaw([
+            'where' => [
+                [
+                    'type' => 'contains',
+                    'attribute' => 'data',
+                    'value' => 'test',
+                ],
+            ],
+        ]);
+
+        $this->expectException(Forbidden::class);
+        $this->expectExceptionMessage("Not allowed 'data' attribute in where.");
+
+        $service->find(Account::ENTITY_TYPE, $account->getId(), $searchParams);
     }
 }
