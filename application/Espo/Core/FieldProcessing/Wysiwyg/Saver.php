@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\Wysiwyg;
 
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
@@ -44,10 +45,7 @@ class Saver implements SaverInterface
     /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
-    /**
-     * @internal
-     */
-    public const string REG_EXP_INLINE_ATTACHMENT = "/\?entryPoint=attachment(?:&|&amp;)id=([^&=\"']+)/";
+    private const string FIELD_IS_HTML = 'isHtml';
 
     public function __construct(private EntityManager $entityManager)
     {}
@@ -65,8 +63,23 @@ class Saver implements SaverInterface
             return;
         }
 
-        if (!$entity->isAttributeChanged($name)) {
-            return;
+        $hasBodyPlain = $this->hasBodyPlain($entity, $name);
+
+        if ($hasBodyPlain) {
+            if (
+                !$entity->isAttributeChanged($name) &&
+                !$entity->isAttributeChanged(self::FIELD_IS_HTML)
+            ) {
+                return;
+            }
+
+            if (!$entity->get(self::FIELD_IS_HTML)) {
+                return;
+            }
+        } else {
+            if (!$entity->isAttributeChanged($name)) {
+                return;
+            }
         }
 
         $contents = $entity->get($name);
@@ -75,19 +88,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        $matches = [];
-
-        $matchResult = preg_match_all(self::REG_EXP_INLINE_ATTACHMENT, $contents, $matches);
-
-        if (!$matchResult) {
-            return;
-        }
-
-        if (empty($matches[1]) || !is_array($matches[1])) {
-            return;
-        }
-
-        foreach ($matches[1] as $id) {
+        foreach (InlineAttachmentUtil::extractIds($contents) as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
             if (
@@ -133,5 +134,14 @@ class Saver implements SaverInterface
         $this->fieldListMapCache[$entityType] = $list;
 
         return $list;
+    }
+
+    private function hasBodyPlain(Entity $entity, string $name): bool
+    {
+        return (bool) $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getField($name)
+            ->getParam('hasBodyPlain');
     }
 }

@@ -35,7 +35,7 @@ namespace Espo\Core\Utils\InlineAttachment;
  */
 class InlineAttachmentUtil
 {
-    private const string REG_EXP_INLINE_ATTACHMENT = "/\?entryPoint=attachment&amp;id=([^&=\"']+)/";
+    private const string REG_EXP = "/\?entryPoint=attachment(?:&|&amp;)id=([^&=\"']+)/";
 
     /**
      * @internal
@@ -43,10 +43,58 @@ class InlineAttachmentUtil
      */
     public static function extractIds(string $body): array
     {
-        if (!preg_match_all(self::REG_EXP_INLINE_ATTACHMENT, $body, $matches)) {
+        if (!preg_match_all(self::REG_EXP, $body, $matches)) {
             return [];
         }
 
         return array_values(array_unique($matches[1]));
+    }
+
+    /**
+     * @internal
+     * @param array<string, string> $map Old ID => new ID.
+     */
+    public static function replaceIds(string $content, array $map): string
+    {
+        if (!$map) {
+            return $content;
+        }
+
+        $result = preg_replace_callback(self::REG_EXP, function ($matches) use ($map): string {
+            $id = $matches[1];
+
+            if (!isset($map[$id])) {
+                return $matches[0];
+            }
+
+            return substr($matches[0], 0, -strlen($id)) . $map[$id];
+        }, $content);
+
+        return $result ?? $content;
+    }
+
+    /**
+     * Replaces only if quoted.
+     * @internal
+     * @param callable(string $id): ?string $replacer
+     */
+    public static function replace(string $content, callable $replacer): string
+    {
+        $result = preg_replace_callback(self::REG_EXP, function ($matches) use ($content, $replacer): string {
+            [$whole, $offset] = $matches[0];
+
+            $before = $offset > 0 ? $content[$offset - 1] : '';
+            $after = $content[$offset + strlen($whole)] ?? '';
+
+            $isQuoted = ($before === '"' || $before === "'") && $before === $after;
+
+            if (!$isQuoted) {
+                return $whole;
+            }
+
+            return $replacer($matches[1][0]) ?? $whole;
+        }, $content, flags: PREG_OFFSET_CAPTURE);
+
+        return $result ?? $content;
     }
 }

@@ -46,6 +46,7 @@ use tests\integration\Core\BaseTestCase;
 class WysiwygInlineAttachmentTest extends BaseTestCase
 {
     private const string FIELD = 'body';
+    private const string FIELD_IS_HTML = 'isHtml';
 
     /**
      * @noinspection PhpUnhandledExceptionInspection
@@ -67,6 +68,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
             $service->create((object) [
                 Field::NAME => 'Test 1',
                 self::FIELD => $this->composeContents($notInlineId),
+                self::FIELD_IS_HTML => true,
             ], CreateParams::create());
         });
 
@@ -74,6 +76,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
             $service->create((object) [
                 Field::NAME => 'Test 2',
                 self::FIELD => $this->composeContents($noAccessId),
+                self::FIELD_IS_HTML => true,
             ], CreateParams::create());
         });
 
@@ -81,6 +84,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
             $service->create((object) [
                 Field::NAME => 'Test 3',
                 self::FIELD => $this->composeContents($allowedId, $noAccessId),
+                self::FIELD_IS_HTML => true,
             ], CreateParams::create());
         });
 
@@ -91,6 +95,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
         $article = $service->create((object) [
             Field::NAME => 'Test 4',
             self::FIELD => $this->composeContents($allowedId),
+            self::FIELD_IS_HTML => true,
         ], CreateParams::create())->getEntity();
 
         $this->assertRelated($allowedId, $article->getId());
@@ -115,6 +120,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
         $article = $service->create((object) [
             Field::NAME => 'Test',
             self::FIELD => 'Initial',
+            self::FIELD_IS_HTML => true,
         ], CreateParams::create())->getEntity();
 
         $id = $article->getId();
@@ -170,6 +176,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
         $article = $this->getEntityManager()->createEntity(KnowledgeBaseArticle::ENTITY_TYPE, [
             Field::NAME => 'Test',
             self::FIELD => $this->composeContents($existingId),
+            self::FIELD_IS_HTML => true,
         ]);
 
         $id = $article->getId();
@@ -225,6 +232,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
             $service->create((object) [
                 Field::NAME => 'Test 1',
                 self::FIELD => "<img src=\"?entryPoint=attachment&id=$noAccessId\">",
+                self::FIELD_IS_HTML => true,
             ], CreateParams::create());
         });
 
@@ -233,6 +241,7 @@ class WysiwygInlineAttachmentTest extends BaseTestCase
         $article = $service->create((object) [
             Field::NAME => 'Test 2',
             self::FIELD => "<img src=\"?entryPoint=attachment&id=$allowedId\">",
+            self::FIELD_IS_HTML => true,
         ], CreateParams::create())->getEntity();
 
         $this->assertRelated($allowedId, $article->getId());

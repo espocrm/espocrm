@@ -122,7 +122,8 @@
                 "readOnly",
                 "tooltipText"
             ],
-            "useIframe": true
+            "useIframe": true,
+            "hasBodyPlain": true
         },
         "bodyPlain": {
             "type": "text",

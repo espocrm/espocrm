@@ -34,13 +34,13 @@ namespace tests\integration\Espo\Email;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\DateTime;
-use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\Service;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\Role;
@@ -380,9 +380,7 @@ class BodyInlineAttachmentTest extends BaseTestCase
      */
     private function parseIds(string $contents): array
     {
-        preg_match_all(Saver::REG_EXP_INLINE_ATTACHMENT, $contents, $matches);
-
-        return array_values(array_unique($matches[1]));
+        return InlineAttachmentUtil::extractIds($contents);
     }
 
     /**

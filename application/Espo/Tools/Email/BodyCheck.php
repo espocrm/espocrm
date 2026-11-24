@@ -31,7 +31,7 @@ namespace Espo\Tools\Email;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Record\Access\LinkCheck\WysiwygCheck;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
@@ -42,6 +42,7 @@ use Espo\ORM\EntityManager;
 class BodyCheck
 {
     private const string FIELD_BODY = 'body';
+    private const string FIELD_IS_HTML = 'isHtml';
 
     public function __construct(
         private EntityManager $entityManager,
@@ -53,23 +54,31 @@ class BodyCheck
      */
     public function assert(Email $email): void
     {
-        if (!$email->isAttributeChanged(self::FIELD_BODY)) {
+        if (
+            !$email->isAttributeChanged(self::FIELD_BODY) &&
+            !$email->isAttributeChanged(self::FIELD_IS_HTML)
+        ) {
+            return;
+        }
+
+        if (!$email->isHtml()) {
             return;
         }
 
         $contents = $email->getBody();
         $previousContents = $email->getFetched(self::FIELD_BODY);
 
+        if (!$email->getFetched(self::FIELD_IS_HTML)) {
+            $previousContents = null;
+        }
+
         if (!is_string($contents)) {
             return;
         }
 
-        $ids = BodyCheck::parseIds($contents);
-        $previousIds = BodyCheck::parseIds($previousContents ?? '');
-
-        $repliedIds = $email->getReplied() ?
-            BodyCheck::parseIds($email->getReplied()->getBody() ?? '') :
-            [];
+        $ids = InlineAttachmentUtil::extractIds($contents);
+        $previousIds = InlineAttachmentUtil::extractIds($previousContents ?? '');
+        $repliedIds = self::getRepliedEmailAttachmentIds($email);
 
         foreach (array_diff($ids, $previousIds, $repliedIds) as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -90,10 +99,11 @@ class BodyCheck
 
     /**
      * @return string[]
-     * @internal
      */
-    public static function parseIds(string $content): array
+    private static function getRepliedEmailAttachmentIds(Email $email): array
     {
-        return WysiwygCheck::parseIds($content);
+        return $email->getReplied() && $email->getReplied()->isHtml() ?
+            InlineAttachmentUtil::extractIds($email->getReplied()->getBody() ?? '') :
+            [];
     }
 }

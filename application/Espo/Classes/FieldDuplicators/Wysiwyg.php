@@ -45,6 +45,8 @@ use stdClass;
  */
 class Wysiwyg implements FieldDuplicator
 {
+    private const string FIELD_IS_HTML = 'isHtml';
+
     public function __construct(
         private EntityManager $entityManager,
         private Acl $acl,
@@ -58,6 +60,10 @@ class Wysiwyg implements FieldDuplicator
         $contents = $entity->get($field);
 
         if (!$contents) {
+            return $valueMap;
+        }
+
+        if ($this->hasBodyPlain($entity, $field) && !$entity->get(self::FIELD_IS_HTML)) {
             return $valueMap;
         }
 
@@ -91,6 +97,8 @@ class Wysiwyg implements FieldDuplicator
         /** @var AttachmentRepository $attachmentRepository */
         $attachmentRepository = $this->entityManager->getRepository(Attachment::ENTITY_TYPE);
 
+        $map = [];
+
         foreach ($attachmentList as $attachment) {
             $copiedAttachment = $attachmentRepository
                 ->getCopiedAttachment($attachment, Attachment::ROLE_INLINE_ATTACHMENT);
@@ -104,14 +112,10 @@ class Wysiwyg implements FieldDuplicator
 
             $this->entityManager->saveEntity($copiedAttachment);
 
-            $contents = str_replace(
-                '?entryPoint=attachment&amp;id=' . $attachment->getId(),
-                '?entryPoint=attachment&amp;id=' . $copiedAttachment->getId(),
-                $contents
-            );
+            $map[$attachment->getId()] = $copiedAttachment->getId();
         }
 
-        $valueMap->$field = $contents;
+        $valueMap->$field = InlineAttachmentUtil::replaceIds($contents, $map);
 
         return $valueMap;
     }
@@ -122,5 +126,14 @@ class Wysiwyg implements FieldDuplicator
     private function getAllowedImageFileTypeList(): array
     {
         return $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
+    }
+
+    private function hasBodyPlain(Entity $entity, string $name): bool
+    {
+        return (bool) $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getField($name)
+            ->getParam('hasBodyPlain');
     }
 }

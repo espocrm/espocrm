@@ -243,22 +243,19 @@ class Email extends Entity
     {
         $body = $this->getBody() ?: '';
 
-        if ($body && $this->isHtml()) {
-            $attachmentList = $this->getInlineAttachmentList();
-
-            foreach ($attachmentList as $attachment) {
-                $id = $attachment->getId();
-                $partId = $id . '@espo';
-
-                $body = str_replace(
-                    "\"?entryPoint=attachment&amp;id=$id\"",
-                    "\"cid:$partId\"",
-                    $body
-                );
-            }
+        if (!$body || !$this->isHtml()) {
+            return $body;
         }
 
-        return $body;
+        $idMap = [];
+
+        foreach ($this->getInlineAttachmentList() as $attachment) {
+            $idMap[$attachment->getId()] = true;
+        }
+
+        return InlineAttachmentUtil::replace($body, function ($id) use ($idMap) {
+            return isset($idMap[$id]) ? "cid:$id@espo" : null;
+        });
     }
 
     /**

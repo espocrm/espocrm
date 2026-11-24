@@ -14,7 +14,8 @@
             "view": "views/email-template/fields/body",
             "useIframe": true,
             "attachmentField": "attachments",
-            "audited": true
+            "audited": true,
+            "hasBodyPlain": true
         },
         "isHtml": {
             "type": "bool",

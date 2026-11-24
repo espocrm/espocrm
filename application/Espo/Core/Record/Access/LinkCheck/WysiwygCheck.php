@@ -31,8 +31,8 @@ namespace Espo\Core\Record\Access\LinkCheck;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
@@ -82,8 +82,8 @@ class WysiwygCheck
             return;
         }
 
-        $ids = WysiwygCheck::parseIds($contents);
-        $previousIds = WysiwygCheck::parseIds($previousContents ?? '');
+        $ids = InlineAttachmentUtil::extractIds($contents);
+        $previousIds = InlineAttachmentUtil::extractIds($previousContents ?? '');
 
         foreach (array_diff($ids, $previousIds) as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -100,29 +100,6 @@ class WysiwygCheck
                 throw new Forbidden("No access to inline attachment '$id'.");
             }
         }
-    }
-
-    /**
-     * @return string[]
-     * @internal
-     */
-    public static function parseIds(string $content): array
-    {
-        $ids = [];
-
-        preg_match_all(Saver::REG_EXP_INLINE_ATTACHMENT, $content, $matches, PREG_SET_ORDER);
-
-        foreach ($matches as $match) {
-            $id = $match[1];
-
-            if (!$id) {
-                continue;
-            }
-
-            $ids[] = $id;
-        }
-
-        return $ids;
     }
 
     /**
