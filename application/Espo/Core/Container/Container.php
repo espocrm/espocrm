@@ -62,7 +62,7 @@ interface Container extends ContainerInterface
     /**
      * Get a class of a service.
      *
-     * @return ReflectionClass<object>
+     * @return ReflectionClass<covariant object>
      * @throws NotFoundExceptionInterface If not gettable.
      */
     public function getClass(string $id): ReflectionClass;

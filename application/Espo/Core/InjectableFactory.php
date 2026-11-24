@@ -36,7 +36,6 @@ use Espo\Core\Binding\Binding;
 use Espo\Core\Binding\Factory;
 use Espo\Core\Container\Container;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionParameter;
 use ReflectionFunction;
 use ReflectionNamedType;
@@ -351,7 +350,7 @@ class InjectableFactory
 
     /**
      * @param ReflectionClass<object> $paramHintClass
-     * @param ReflectionClass<object> $returnHintClass
+     * @param ReflectionClass<covariant object> $returnHintClass
      */
     private function areDependencyClassesMatching(
         ReflectionClass $paramHintClass,

@@ -44,7 +44,7 @@ class GeneralError extends Error
     public static function create(
         string $message,
         ?int $position = null,
-        Throwable $previous = null,
+        ?Throwable $previous = null,
     ): self {
 
         $object = new self($message, previous: $previous);

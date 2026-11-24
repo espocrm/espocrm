@@ -55,7 +55,7 @@ class Container implements ContainerInterface
 
     /** @var array<string, object> */
     private array $data = [];
-    /** @var array<string, ReflectionClass<object>> */
+    /** @var array<string, ReflectionClass<covariant object>> */
     private array $classCache = [];
     /** @var array<string, class-string<Loader>> */
     private array $loaderClassNames;
@@ -256,7 +256,7 @@ class Container implements ContainerInterface
     /**
      * Get a class of a service.
      *
-     * @return ReflectionClass<object>
+     * @return ReflectionClass<covariant object>
      * @throws RuntimeException If not gettable.
      */
     public function getClass(string $id): ReflectionClass
