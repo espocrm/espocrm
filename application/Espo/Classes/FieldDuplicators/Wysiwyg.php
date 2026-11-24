@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldDuplicators;
 
 use Espo\Core\Acl;
+use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Record\Duplicator\FieldDuplicator;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
@@ -62,7 +63,7 @@ class Wysiwyg implements FieldDuplicator
 
         $matches = [];
 
-        $matchResult = preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $contents, $matches);
+        $matchResult = preg_match_all(Saver::REG_EXP_INLINE_ATTACHMENT_READ, $contents, $matches);
 
         if (
             !$matchResult ||

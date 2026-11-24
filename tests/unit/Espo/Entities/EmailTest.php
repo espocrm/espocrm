@@ -457,7 +457,9 @@ class EmailTest extends TestCase
 
     public function testGetInlineAttachments(): void
     {
-        $this->email->set('body', 'test <img src="?entryPoint=attachment&amp;id=Id01">');
+        $this->email
+            ->setIsHtml()
+            ->setBody('test <img src="?entryPoint=attachment&amp;id=Id01">');
 
         $this->attachmentRepository
             ->expects($this->once())

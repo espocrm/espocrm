@@ -30,6 +30,7 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\LinkMultiple;
+use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Name\Field;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
@@ -265,7 +266,9 @@ class Email extends Entity
      */
     public function getInlineAttachmentList(): array
     {
-        $idList = [];
+        if (!$this->isHtml()) {
+            return [];
+        }
 
         $body = $this->getBody();
 
@@ -275,7 +278,7 @@ class Email extends Entity
 
         $matches = [];
 
-        if (!preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $body, $matches)) {
+        if (!preg_match_all(Saver::REG_EXP_INLINE_ATTACHMENT_READ, $body, $matches)) {
             return [];
         }
 
@@ -283,6 +286,7 @@ class Email extends Entity
             return [];
         }
 
+        $idList = [];
         $attachmentList = [];
 
         foreach ($matches[1] as $id) {
