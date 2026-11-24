@@ -49,11 +49,6 @@ class Saver implements SaverInterface
      */
     public const string REG_EXP_INLINE_ATTACHMENT = "/\?entryPoint=attachment(?:&|&amp;)id=([^&=\"']+)/";
 
-    /**
-     * @internal
-     */
-    public const string REG_EXP_INLINE_ATTACHMENT_READ = "/\?entryPoint=attachment&amp;id=([^&=\"']+)/";
-
     public function __construct(private EntityManager $entityManager)
     {}
 

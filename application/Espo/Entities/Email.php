@@ -30,8 +30,8 @@
 namespace Espo\Entities;
 
 use Espo\Core\Field\LinkMultiple;
-use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Name\Field;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
@@ -276,30 +276,19 @@ class Email extends Entity
             return [];
         }
 
-        $matches = [];
+        $idList = InlineAttachmentUtil::extractIds($body);
 
-        if (!preg_match_all(Saver::REG_EXP_INLINE_ATTACHMENT_READ, $body, $matches)) {
+        if (!$idList) {
             return [];
         }
 
-        if (empty($matches[1]) || !is_array($matches[1])) {
-            return [];
+        if (!$this->entityManager) {
+            throw new RuntimeException();
         }
 
-        $idList = [];
         $attachmentList = [];
 
-        foreach ($matches[1] as $id) {
-            if (in_array($id, $idList)) {
-                continue;
-            }
-
-            $idList[] = $id;
-
-            if (!$this->entityManager) {
-                throw new RuntimeException();
-            }
-
+        foreach ($idList as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
             if ($attachment) {

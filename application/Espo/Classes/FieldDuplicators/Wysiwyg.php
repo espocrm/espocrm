@@ -30,8 +30,8 @@
 namespace Espo\Classes\FieldDuplicators;
 
 use Espo\Core\Acl;
-use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Record\Duplicator\FieldDuplicator;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -61,19 +61,7 @@ class Wysiwyg implements FieldDuplicator
             return $valueMap;
         }
 
-        $matches = [];
-
-        $matchResult = preg_match_all(Saver::REG_EXP_INLINE_ATTACHMENT_READ, $contents, $matches);
-
-        if (
-            !$matchResult ||
-            empty($matches[1]) ||
-            !is_array($matches[1])
-        ) {
-            return $valueMap;
-        }
-
-        $attachmentIdList = $matches[1];
+        $attachmentIdList = InlineAttachmentUtil::extractIds($contents);
 
         /** @var Attachment[] $attachmentList */
         $attachmentList = [];
