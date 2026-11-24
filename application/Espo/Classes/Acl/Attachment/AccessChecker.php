@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Attachment;
 
+use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\Name\Field;
 use Espo\Entities\Attachment;
 use Espo\Entities\Note;
@@ -41,6 +42,7 @@ use Espo\Core\Acl\ScopeData;
 use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
 use Espo\Core\AclManager;
 use Espo\Core\ORM\EntityManager;
+use Espo\Tools\Stream\Service as StreamService;
 
 /**
  * @implements AccessEntityCREDChecker<Attachment>
@@ -52,7 +54,8 @@ class AccessChecker implements AccessEntityCREDChecker
     public function __construct(
         private DefaultAccessChecker $defaultAccessChecker,
         private AclManager $aclManager,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
+        private StreamService $streamService,
     ) {}
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
@@ -145,7 +148,21 @@ class AccessChecker implements AccessEntityCREDChecker
 
         $parent = $this->entityManager->getEntityById($note->getParentType(), $note->getParentId());
 
-        if ($parent && $this->aclManager->checkEntity($user, $parent)) {
+        if (!$parent) {
+            return null;
+        }
+
+        if ($this->streamService->checkIsEnabled($parent->getEntityType())) {
+            try {
+                if ($this->aclManager->checkEntityStream($user, $parent)) {
+                    return true;
+                }
+
+                return null;
+            } catch (NotImplemented) {}
+        }
+
+        if ($this->aclManager->checkEntity($user, $parent)) {
             return true;
         }
 

@@ -93,6 +93,10 @@ class Note extends Entity
      */
     public const string FIELD_RELATED = 'related';
 
+
+    /** @since 10.1.5 */
+    public const string FIELD_ATTACHMENTS = 'attachments';
+
     /** @since 10.1.5 */
     public const string LINK_USERS = 'users';
 
