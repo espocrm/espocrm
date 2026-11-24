@@ -31,7 +31,6 @@ namespace Espo\Tools\Email;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Record\Access\LinkCheck\WysiwygCheck;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
