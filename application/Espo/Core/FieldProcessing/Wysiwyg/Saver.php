@@ -43,6 +43,11 @@ use Espo\Core\ORM\EntityManager;
  */
 class Saver implements SaverInterface
 {
+    /**
+     * @internal
+     */
+    public const string SAVE_OPTION_SKIP_INLINE_ATTACHMENTS = 'skipInlineAttachments';
+
     /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
@@ -51,6 +56,10 @@ class Saver implements SaverInterface
 
     public function process(Entity $entity, Params $params): void
     {
+        if ($params->getOption(self::SAVE_OPTION_SKIP_INLINE_ATTACHMENTS)) {
+            return;
+        }
+
         foreach ($this->getFieldList($entity->getEntityType()) as $name) {
             $this->processItem($entity, $name);
         }

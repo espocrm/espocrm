@@ -51,6 +51,7 @@ use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\Saver\Params as SaverParams;
 use Espo\Core\Job\QueueName;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
@@ -157,6 +158,8 @@ class DefaultImporter implements Importer
 
         if (!$data->fetchOnlyHeader()) {
             $inlineAttachmentList = $parser->getInlineAttachmentList($message, $email);
+
+            $this->stripForeignInlineAttachments($email, $inlineAttachmentList);
 
             $toSkip = $this->processFilters($email, $data->getFilterList());
 
@@ -680,5 +683,36 @@ class DefaultImporter implements Importer
             ->setQueue(QueueName::Q1)
             ->setTime($dt)
             ->schedule();
+    }
+
+    /**
+     * @param Attachment[] $attachments
+     */
+    private function stripForeignInlineAttachments(Email $email, array $attachments): void
+    {
+        $body = $email->getBody();
+
+        if (!$email->isHtml() || !$body) {
+            return;
+        }
+
+        $map = [];
+
+        foreach ($attachments as $attachment) {
+            $map[$attachment->getId()] = true;
+        }
+
+        $body = InlineAttachmentUtil::neutralizeEncoded($body);
+
+        $body = InlineAttachmentUtil::replace($body, function ($id) use ($map) {
+            if (isset($map[$id])) {
+                return null;
+            }
+
+            /** @noinspection SpellCheckingInspection */
+            return "?entryPoint=%61ttachment&id=$id";
+        }, onlyQuoted: false);
+
+        $email->setBody($body);
     }
 }

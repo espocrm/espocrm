@@ -52,6 +52,9 @@ class Attachment extends CoreEntity
     /** @since 10.2.0 */
     public const string FIELD_RELATED = 'related';
 
+    /** @since 10.2.0 */
+    public const string FIELD_PARENT = 'parent';
+
     /**
      * Multiple attachment can refer to one file. Source ID is an original attachment.
      */

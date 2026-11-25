@@ -35,7 +35,18 @@ namespace Espo\Core\Utils\InlineAttachment;
  */
 class InlineAttachmentUtil
 {
-    private const string REG_EXP = "/\?entryPoint=attachment(?:&|&amp;)id=([^&=\"']+)/";
+    private const string REG_EXP = "/\?entryPoint=attachment(?:&|&amp;)id=([A-Za-z0-9\-]+)/";
+
+    private const string TOKEN = '?entryPoint=attachment';
+    /** @noinspection SpellCheckingInspection */
+    private const string NEUTRALIZED_TOKEN = '?entryPoint=%61ttachment';
+
+    private const array NAMED_REFS = [
+        '?' => 'quest',
+        '=' => 'equals',
+    ];
+
+    private static ?string $tolerantTokenPattern = null;
 
     /**
      * @internal
@@ -74,27 +85,94 @@ class InlineAttachmentUtil
     }
 
     /**
-     * Replaces only if quoted.
      * @internal
      * @param callable(string $id): ?string $replacer
      */
-    public static function replace(string $content, callable $replacer): string
+    public static function replace(string $content, callable $replacer, bool $onlyQuoted = true): string
     {
-        $result = preg_replace_callback(self::REG_EXP, function ($matches) use ($content, $replacer): string {
-            [$whole, $offset] = $matches[0];
+        $result = preg_replace_callback(
+            pattern: self::REG_EXP,
+            callback: function ($matches) use ($content, $replacer, $onlyQuoted): string {
+                [$whole, $offset] = $matches[0];
 
-            $before = $offset > 0 ? $content[$offset - 1] : '';
-            $after = $content[$offset + strlen($whole)] ?? '';
+                if ($onlyQuoted) {
+                    $before = $offset > 0 ? $content[$offset - 1] : '';
+                    $after = $content[$offset + strlen($whole)] ?? '';
 
-            $isQuoted = ($before === '"' || $before === "'") && $before === $after;
+                    $isQuoted = ($before === '"' || $before === "'") && $before === $after;
 
-            if (!$isQuoted) {
-                return $whole;
-            }
+                    if (!$isQuoted) {
+                        return $whole;
+                    }
+                }
 
-            return $replacer($matches[1][0]) ?? $whole;
-        }, $content, flags: PREG_OFFSET_CAPTURE);
+                return $replacer($matches[1][0]) ?? $whole;
+            },
+            subject: $content,
+            flags: PREG_OFFSET_CAPTURE,
+        );
 
         return $result ?? $content;
+    }
+
+    /**
+     * Neutralizes entity-encoded references, which a browser (and the editor) would decode into a live reference.
+     * Literal references are left unchanged.
+     *
+     * @internal
+     */
+    public static function neutralizeEncoded(string $content): string
+    {
+        // No encoded form is possible without these.
+        if (
+            !str_contains($content, '&#') &&
+            !str_contains($content, '&equals;') &&
+            !str_contains($content, '&quest;')
+        ) {
+            return $content;
+        }
+
+        $result = preg_replace_callback(
+            pattern: self::getTolerantTokenPattern(),
+            callback: fn (array $matches) => $matches[0] === self::TOKEN ? $matches[0] : self::NEUTRALIZED_TOKEN,
+            subject: $content,
+        );
+
+        return $result ?? $content;
+    }
+
+    /**
+     * A pattern matching the token where each character may be written as a character reference.
+     */
+    private static function getTolerantTokenPattern(): string
+    {
+        if (self::$tolerantTokenPattern !== null) {
+            return self::$tolerantTokenPattern;
+        }
+
+        $parts = [];
+
+        foreach (str_split(self::TOKEN) as $char) {
+            $code = ord($char);
+            $hex = dechex($code);
+
+            $alternatives = [
+                preg_quote($char, '/'),
+                // Decimal. Browsers also decode it without ';' if no digit follows.
+                "&#0*+$code(?:;|(?![0-9]))",
+                // Hexadecimal. 'x' or 'X', hex digits in any case.
+                "&#[xX]0*+(?i:$hex)(?:;|(?![0-9a-fA-F]))",
+            ];
+
+            if (isset(self::NAMED_REFS[$char])) {
+                $alternatives[] = '&' . self::NAMED_REFS[$char] . ';';
+            }
+
+            $parts[] = '(?:' . implode('|', $alternatives) . ')';
+        }
+
+        self::$tolerantTokenPattern = '/' . implode('', $parts) . '/';
+
+        return self::$tolerantTokenPattern;
     }
 }

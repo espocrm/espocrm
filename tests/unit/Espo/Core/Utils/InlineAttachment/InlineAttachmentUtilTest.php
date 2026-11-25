@@ -91,4 +91,66 @@ class InlineAttachmentUtilTest extends TestCase
 
         $this->assertEquals($content, InlineAttachmentUtil::replace($content, fn () => 'x'));
     }
+
+    public function testReplaceNotQuoted(): void
+    {
+        $content =
+            '<img src=?entryPoint=attachment&amp;id=a1>';
+
+        $expected =
+            "<img src=cid:a1@espo>";
+
+        $replacer = fn (string $id) => $id === 'a1' ? "cid:$id@espo" : null;
+
+        $this->assertEquals($expected, InlineAttachmentUtil::replace($content, $replacer, onlyQuoted: false));
+    }
+
+    public function testNeutralizeEncoded(): void
+    {
+        $neutralized = '<img src="?entryPoint=%61ttachment&amp;id=a1">';
+
+        $encodedList = [
+            '<img src="?entryPoint&#61;attachment&amp;id=a1">',
+            '<img src="?entryPoint&#x3D;attachment&amp;id=a1">',
+            '<img src="?entryPoint&#X3d;attachment&amp;id=a1">',
+            '<img src="?entryPoint&#0061;attachment&amp;id=a1">',
+            '<img src="?entryPoint&#61attachment&amp;id=a1">',
+            '<img src="?entryPoint&equals;attachment&amp;id=a1">',
+            '<img src="?&#101;ntryPoint=attachment&amp;id=a1">',
+            '<img src="&quest;entryPoint=attachment&amp;id=a1">',
+            '<img src="&#63;&#101;&#110;&#116;&#114;&#121;&#80;&#111;&#105;&#110;&#116;&#61;attachment&amp;id=a1">',
+        ];
+
+        foreach ($encodedList as $encoded) {
+            $this->assertEquals($neutralized, InlineAttachmentUtil::neutralizeEncoded($encoded), $encoded);
+        }
+
+        $unchangedList = [
+            // Literal.
+            '<img src="?entryPoint=attachment&amp;id=a1">',
+            // A different character, not '='.
+            '<img src="?entryPoint&#615;attachment&amp;id=a1">',
+            '<img src="?entryPoint&#x3D0;attachment&amp;id=a1">',
+            // Not decoded by browsers into a live reference.
+            '<img src="?entryPoint=%61ttachment&amp;id=a1">',
+            // Other references are not touched.
+            '<p>&#169; &#61; &#60;b&#62; &amp;#61;</p>',
+            '<style>p::after { content: "&#61;"; }</style>',
+        ];
+
+        foreach ($unchangedList as $content) {
+            $this->assertSame($content, InlineAttachmentUtil::neutralizeEncoded($content), $content);
+        }
+    }
+
+    public function testNeutralizeEncodedPerformance(): void
+    {
+        $content = str_repeat('&#0000', 1_000_000) . str_repeat('?&#101;ntryPoint&#61', 100_000);
+
+        $start = microtime(true);
+
+        InlineAttachmentUtil::neutralizeEncoded($content);
+
+        $this->assertLessThan(2.0, microtime(true) - $start);
+    }
 }

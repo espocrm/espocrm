@@ -116,25 +116,33 @@ class BodyCheck
             return $ids;
         }
 
+        if (!$ids) {
+            return [];
+        }
+
         $map = array_fill_keys($ids, true);
 
         $attachments = $this->entityManager
             ->getRDBRepositoryByClass(Attachment::class)
             ->select([
                 Attribute::ID,
-                Attachment::FIELD_ROLE,
                 Attachment::FIELD_RELATED . 'Id',
                 Attachment::FIELD_RELATED . 'Type',
+                Attachment::FIELD_PARENT . 'Id',
+                Attachment::FIELD_PARENT . 'Type',
             ])
             ->where([Attribute::ID => $ids])
             ->find();
 
         foreach ($attachments as $attachment) {
-            if (
-                $attachment->getRole() !== Attachment::ROLE_INLINE_ATTACHMENT ||
-                $attachment->getRelatedType() !== Email::ENTITY_TYPE ||
-                $attachment->getRelatedId() !== $replied->getId()
-            ) {
+            $isRelated =
+                $attachment->getRelatedType() === Email::ENTITY_TYPE &&
+                $attachment->getRelatedId() === $replied->getId() ||
+                // Attachments could be wrongly imported as not inline.
+                $attachment->getParentType() === Email::ENTITY_TYPE &&
+                $attachment->getParentId() === $replied->getId();
+
+            if (!$isRelated) {
                 // Any attachment that is not related to the replied email should be checked.
                 // Hence, they are excluded from the exclusion.
                 unset($map[$attachment->getId()]);

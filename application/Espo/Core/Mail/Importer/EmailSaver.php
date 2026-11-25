@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Mail\Importer;
 
+use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Name\Attribute;
@@ -52,7 +53,10 @@ class EmailSaver
                 ->where([Attribute::ID => $email->getId()])
                 ->findOne();
 
-            $this->entityManager->saveEntity($email, [Email::SAVE_OPTION_IS_BEING_IMPORTED => true]);
+            $this->entityManager->saveEntity($email, [
+                Email::SAVE_OPTION_IS_BEING_IMPORTED => true,
+                Saver::SAVE_OPTION_SKIP_INLINE_ATTACHMENTS => true,
+            ]);
         });
     }
 }

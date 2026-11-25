@@ -29,12 +29,14 @@
 
 namespace tests\unit\Espo\Core\Mail;
 
+use Espo\Core\Mail\Parser;
 use Espo\Core\Utils\File\MimeType;
+use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
+use Espo\Entities\Attachment;
 use Espo\Entities\Email;
-
 use Espo\Core\Notification\AssignmentNotificator;
-
 use Espo\ORM\Metadata;
+use Espo\ORM\Name\Attribute;
 use Espo\ORM\Value\ValueAccessor;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
@@ -240,5 +242,114 @@ class ImporterTest extends TestCase
 
         $this->assertEquals($messageId, $email->get('messageId'));
         $this->assertEquals($messageId . '-r@test.com', $email->get('messageIdInternal'));
+    }
+
+    /**
+     * References to attachments not created by the parser are neutralized.
+     *
+     * @noinspection HtmlRequiredAltAttribute
+     */
+    public function testImportStripForeignInlineAttachments(): void
+    {
+        $entityManager = $this->entityManager;
+
+        $valueAccessorFactory = $this->createMock(ValueAccessorFactory::class);
+
+        $valueAccessorFactory
+            ->expects($this->any())
+            ->method('create')
+            ->willReturn($this->createMock(ValueAccessor::class));
+
+        $attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
+
+        $ownAttachment = new Attachment(
+            entityType: Attachment::ENTITY_TYPE,
+            defs: $attachmentDefs,
+            entityManager: $entityManager,
+            valueAccessorFactory: $valueAccessorFactory,
+        );
+
+        $ownAttachment->set(Attribute::ID, 'own1');
+
+        $body =
+            '<p>Hello</p>' .
+            '<img src="?entryPoint=attachment&amp;id=own1">' .
+            '<img src="?entryPoint=attachment&amp;id=foreign1">' .
+            "<img src='?entryPoint=attachment&id=foreign2'>" .
+            '<img src="https://crm.test/?entryPoint=attachment&amp;id=foreign3">' .
+            '<p>See ?entryPoint=attachment&amp;id=foreign4 for details.</p>' .
+            '<img src="?entryPoint&#61;attachment&amp;id=foreign5" width="1" height="1">';
+
+        $expectedBody =
+            '<p>Hello</p>' .
+            '<img src="?entryPoint=attachment&amp;id=own1">' .
+            '<img src="?entryPoint=%61ttachment&id=foreign1">' .
+            "<img src='?entryPoint=%61ttachment&id=foreign2'>" .
+            '<img src="https://crm.test/?entryPoint=%61ttachment&id=foreign3">' .
+            '<p>See ?entryPoint=%61ttachment&id=foreign4 for details.</p>' .
+            '<img src="?entryPoint=%61ttachment&amp;id=foreign5" width="1" height="1">';
+
+        $parser = $this->createMock(Parser::class);
+
+        $parser
+            ->expects($this->any())
+            ->method('getAddressNameMap')
+            ->willReturn((object) []);
+
+        $parser
+            ->expects($this->once())
+            ->method('getInlineAttachmentList')
+            ->willReturnCallback(function ($message, Email $email) use ($body, $ownAttachment) {
+                $email->setIsHtml();
+                $email->setBody($body);
+
+                return [$ownAttachment];
+            });
+
+        $entityManager
+            ->expects($this->any())
+            ->method('getRDBRepositoryByClass')
+            ->willReturnMap($this->repositoryMap);
+
+        $entityManager
+            ->expects($this->any())
+            ->method('saveEntity')
+            ->willReturnCallback(function ($entity) {
+                if ($entity instanceof Email) {
+                    $entity->set(Attribute::ID, 'test-id');
+                }
+            });
+
+        $this->emailRepository
+            ->expects($this->once())
+            ->method('getNew')
+            ->willReturn($this->email);
+
+        $importer = new Importer\DefaultImporter(
+            entityManager: $entityManager,
+            config: $this->config,
+            notificatorFactory: $this->assignmentNotificatorFactory,
+            parserFactory: $this->parserFactory,
+            linkMultipleSaver: $this->linkMultipleSaver,
+            duplicateFinder: $this->duplicateFinder,
+            jobSchedulerFactory: $this->jobSchedulerFactory,
+            parentFinder: $this->parentFinder,
+            autoReplyDetector: $this->createMock(Importer\AutoReplyDetector::class),
+            emailSaver: $this->createMock(Importer\EmailSaver::class),
+            groupFolderApplier: $this->createMock(GroupFolderApplier::class),
+        );
+
+        $message = new MessageWrapper(
+            id: 0,
+            storage: null,
+            parser: $parser,
+            fullRawContent: '',
+        );
+
+        $email = $importer->import($message, ImporterData::create());
+
+        $this->assertNotNull($email);
+        $this->assertEquals($expectedBody, $email->getBody());
+        $this->assertEquals(['own1'], InlineAttachmentUtil::extractIds($email->getBody() ?? ''));
     }
 }

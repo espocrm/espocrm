@@ -34,6 +34,7 @@ namespace tests\integration\Espo\Email;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\DateTime;
+use Espo\Core\FieldProcessing\Wysiwyg\Saver;
 use Espo\Core\Name\Field;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\CreateParams;
@@ -196,6 +197,75 @@ class BodyInlineAttachmentTest extends BaseTestCase
     }
 
     /**
+     * A reply to an imported email exempts only attachments belonging to the replied email.
+     *
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testReplyToImported(): void
+    {
+        $user = $this->createTestUser();
+        $otherUser = $this->createUser('other');
+
+        $noAccessId = $this->createAttachment(Attachment::ROLE_INLINE_ATTACHMENT, $otherUser->getId());
+        $notInlineId = $this->createAttachment(Attachment::ROLE_ATTACHMENT, $otherUser->getId());
+
+        $sourceEmail = $this->createReceivedEmail(
+            readable: true,
+            userId: $user->getId(),
+            imported: true,
+        );
+
+        $noAccessEmail = $this->createReceivedEmail(
+            readable: true,
+            userId: $user->getId(),
+            imported: true,
+            foreignIds: [$noAccessId],
+        );
+
+        $withNotInlineEmail = $this->createReceivedEmail(
+            readable: true,
+            userId: $user->getId(),
+            imported: true,
+            foreignIds: [$notInlineId],
+        );
+
+        $this->assertCount(2, $this->parseIds($sourceEmail->getBody() ?? ''));
+
+        $this->authenticate('test');
+
+        $service = $this->getEmailService();
+
+        // A foreign inline attachment referenced in the imported body is checked.
+        $this->assertForbidden(function () use ($service, $noAccessEmail) {
+            $service->create(
+                $this->composeDraftData($this->composeQuote($noAccessEmail), $noAccessEmail->getId()),
+                CreateParams::create()
+            );
+        }, self::MESSAGE_NO_ACCESS);
+
+        // A foreign not-inline attachment referenced in the imported body is checked.
+        $this->assertForbidden(function () use ($service, $withNotInlineEmail) {
+            $service->create(
+                $this->composeDraftData($this->composeQuote($withNotInlineEmail), $withNotInlineEmail->getId()),
+                CreateParams::create()
+            );
+        }, self::MESSAGE_NOT_INLINE);
+
+        $this->assertNotRelated($noAccessId);
+        $this->assertNotRelated($notInlineId);
+
+        // Own attachments are exempted: the related inline one and the legacy 'Attachment'-role one (parent).
+        $contents = $this->composeQuote($sourceEmail);
+
+        $reply = $service
+            ->create($this->composeDraftData($contents, $sourceEmail->getId()), CreateParams::create())
+            ->getEntity();
+
+        $this->assertBodyEquals($reply->getId(), $contents);
+        $this->assertEquals($sourceEmail->getId(), $reply->getReplied()?->getId());
+    }
+
+    /**
      * Forward obtains the body from duplicate attributes.
      *
      * @noinspection PhpUnhandledExceptionInspection
@@ -269,9 +339,18 @@ class BodyInlineAttachmentTest extends BaseTestCase
     /**
      * Mimics an email fetched from a mailbox: the body references an image stored with the 'Attachment' role
      * (also listed in the attachments field) and a regular inline image.
+     *
+     * If imported, the inline image is related to the email, as the importer does.
+     *
+     * @param string[] $foreignIds IDs of attachments not belonging to the email, referenced in the body.
      */
-    private function createReceivedEmail(bool $readable, string $userId): Email
-    {
+    private function createReceivedEmail(
+        bool $readable,
+        string $userId,
+        bool $imported = false,
+        array $foreignIds = [],
+    ): Email {
+
         $em = $this->getEntityManager();
 
         $email = $em->getRDBRepositoryByClass(Email::class)->getNew();
@@ -282,7 +361,8 @@ class BodyInlineAttachmentTest extends BaseTestCase
             ->setIsHtml()
             ->setFromAddress(self::SENDER_ADDRESS)
             ->setToAddressList($readable ? [self::USER_ADDRESS] : [self::OTHER_ADDRESS])
-            ->setDateSent(DateTime::createNow());
+            ->setDateSent(DateTime::createNow())
+            ->setIsImported($imported);
 
         if ($readable) {
             $email->addUserId($userId);
@@ -291,22 +371,22 @@ class BodyInlineAttachmentTest extends BaseTestCase
         $em->saveEntity($email);
 
         $attachmentRoleId = $this->createAttachment(
-            Attachment::ROLE_ATTACHMENT,
-            null,
-            $email,
-            self::FIELD_ATTACHMENTS
+            role: Attachment::ROLE_ATTACHMENT,
+            createdById: null,
+            parent: $email,
+            targetField: self::FIELD_ATTACHMENTS,
         );
 
-        $inlineRoleId = $this->createAttachment(
-            Attachment::ROLE_INLINE_ATTACHMENT,
-            null,
-            $email
-        );
+        $inlineRoleId = $imported ?
+            $this->createAttachment(Attachment::ROLE_INLINE_ATTACHMENT, null, related: $email) :
+            $this->createAttachment(Attachment::ROLE_INLINE_ATTACHMENT, null, $email);
 
         $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachmentRoleId);
-        $email->setBody('<p>Hello</p>' . $this->composeContents($attachmentRoleId, $inlineRoleId));
+        $email->setBody('<p>Hello</p>' . $this->composeContents($attachmentRoleId, $inlineRoleId, ...$foreignIds));
 
-        $em->saveEntity($email);
+        $em->saveEntity($email, [
+            Saver::SAVE_OPTION_SKIP_INLINE_ATTACHMENTS => true,
+        ]);
 
         $this->assertEquals(Attachment::ROLE_ATTACHMENT, $this->getAttachment($attachmentRoleId)->getRole());
 
@@ -318,6 +398,7 @@ class BodyInlineAttachmentTest extends BaseTestCase
         ?string $createdById,
         ?Email $parent = null,
         string $targetField = self::FIELD_BODY,
+        ?Email $related = null,
     ): string {
 
         $attachment = $this->getEntityManager()->getRDBRepositoryByClass(Attachment::class)->getNew();
@@ -331,6 +412,10 @@ class BodyInlineAttachmentTest extends BaseTestCase
 
         if ($parent) {
             $attachment->setParent($parent);
+        }
+
+        if ($related) {
+            $attachment->setRelated($related);
         }
 
         $this->getEntityManager()->saveEntity($attachment, [SaveOption::CREATED_BY_ID => $createdById]);
