@@ -27,6 +27,7 @@
         "isRead": "Is Read",
         "isNotRead": "Is Not Read",
         "isImportant": "Is Important",
+        "isImported": "Is Imported",
         "isReplied": "Is Replied",
         "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",

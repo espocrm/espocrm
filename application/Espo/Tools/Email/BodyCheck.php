@@ -36,6 +36,7 @@ use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Name\Attribute;
 
 /**
  * @internal
@@ -78,7 +79,7 @@ class BodyCheck
 
         $ids = InlineAttachmentUtil::extractIds($contents);
         $previousIds = InlineAttachmentUtil::extractIds($previousContents ?? '');
-        $repliedIds = self::getRepliedEmailAttachmentIds($email);
+        $repliedIds = $this->getRepliedEmailAttachmentIds($email);
 
         foreach (array_diff($ids, $previousIds, $repliedIds) as $id) {
             $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
@@ -100,10 +101,46 @@ class BodyCheck
     /**
      * @return string[]
      */
-    private static function getRepliedEmailAttachmentIds(Email $email): array
+    private function getRepliedEmailAttachmentIds(Email $email): array
     {
-        return $email->getReplied() && $email->getReplied()->isHtml() ?
-            InlineAttachmentUtil::extractIds($email->getReplied()->getBody() ?? '') :
-            [];
+        $replied = $email->getReplied();
+
+        if (!$replied || !$replied->isHtml()) {
+            return [];
+        }
+
+        $ids = InlineAttachmentUtil::extractIds($replied->getBody() ?? '');
+
+        if (!$replied->isImported()) {
+            // If the reply is originated from Espo, its attachments are already passed the body check on save.
+            return $ids;
+        }
+
+        $map = array_fill_keys($ids, true);
+
+        $attachments = $this->entityManager
+            ->getRDBRepositoryByClass(Attachment::class)
+            ->select([
+                Attribute::ID,
+                Attachment::FIELD_ROLE,
+                Attachment::FIELD_RELATED . 'Id',
+                Attachment::FIELD_RELATED . 'Type',
+            ])
+            ->where([Attribute::ID => $ids])
+            ->find();
+
+        foreach ($attachments as $attachment) {
+            if (
+                $attachment->getRole() !== Attachment::ROLE_INLINE_ATTACHMENT ||
+                $attachment->getRelatedType() !== Email::ENTITY_TYPE ||
+                $attachment->getRelatedId() !== $replied->getId()
+            ) {
+                // Any attachment that is not related to the replied email should be checked.
+                // Hence, they are excluded from the exclusion.
+                unset($map[$attachment->getId()]);
+            }
+        }
+
+        return array_keys($map);
     }
 }

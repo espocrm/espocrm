@@ -193,6 +193,12 @@
             "readOnly": true,
             "customizationDisabled": true
         },
+        "isImported": {
+            "type": "bool",
+            "readOnly": true,
+            "customizationDisabled": true,
+            "duplicateIgnore": true
+        },
         "isReplied": {
             "type": "bool",
             "readOnly": true,

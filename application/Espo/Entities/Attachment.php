@@ -46,6 +46,12 @@ class Attachment extends CoreEntity
     /** @since 10.2.0 */
     public const string FIELD_CONTENTS = 'contents';
 
+    /** @since 10.2.0 */
+    public const string FIELD_ROLE = 'role';
+
+    /** @since 10.2.0 */
+    public const string FIELD_RELATED = 'related';
+
     /**
      * Multiple attachment can refer to one file. Source ID is an original attachment.
      */
@@ -109,7 +115,7 @@ class Attachment extends CoreEntity
     public function getRelated(): ?LinkParent
     {
         /** @var ?LinkParent */
-        return $this->getValueObject('related');
+        return $this->getValueObject(self::FIELD_RELATED);
     }
 
     public function getParentType(): ?string
@@ -148,7 +154,7 @@ class Attachment extends CoreEntity
      */
     public function getRole(): ?string
     {
-        return $this->get('role');
+        return $this->get(self::FIELD_ROLE);
     }
 
     /**
@@ -184,7 +190,7 @@ class Attachment extends CoreEntity
 
     public function setRole(?string $type): self
     {
-        $this->set('role', $type);
+        $this->set(self::FIELD_ROLE, $type);
 
         return $this;
     }
@@ -226,12 +232,12 @@ class Attachment extends CoreEntity
     public function setRelated(LinkParent|Entity|null $related): self
     {
         if ($related instanceof LinkParent) {
-            $this->setValueObject('related', $related);
+            $this->setValueObject(self::FIELD_RELATED, $related);
 
             return $this;
         }
 
-        $this->relations->set('related', $related);
+        $this->relations->set(self::FIELD_RELATED, $related);
 
         return $this;
     }

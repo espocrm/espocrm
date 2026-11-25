@@ -212,7 +212,9 @@ class DefaultImporter implements Importer
             $email->setDummyMessageId();
         }
 
-        $email->setStatus(Email::STATUS_BEING_IMPORTED);
+        $email
+            ->setStatus(Email::STATUS_BEING_IMPORTED)
+            ->setIsImported(true);
 
         $this->entityManager->saveEntity($email, [
             SaveOption::SKIP_ALL => true,

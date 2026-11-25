@@ -74,6 +74,9 @@ class Email extends Entity
 
     private const ATTR_BODY_PLAIN = 'bodyPlain';
 
+    /** @since 10.2.0 */
+    public const string FIELD_IS_IMPORTED = 'isImported';
+
     public const LINK_REPLIES = 'replies';
 
     public const ADDRESS_FROM = 'from';
@@ -878,5 +881,21 @@ class Email extends Entity
     public function setIsAutoReply(bool $isAutoReply = true): self
     {
         return $this->set('isAutoReply', $isAutoReply);
+    }
+
+    /**
+     * @since 10.2.0
+     */
+    public function isImported(): bool
+    {
+        return $this->get(self::FIELD_IS_IMPORTED);
+    }
+
+    /**
+     * @since 10.2.0
+     */
+    public function setIsImported(bool $isImported): self
+    {
+        return $this->set(self::FIELD_IS_IMPORTED, $isImported);
     }
 }
