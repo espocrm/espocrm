@@ -72,6 +72,9 @@ class Email extends Entity
     public const SAVE_OPTION_IS_BEING_IMPORTED = 'isBeingImported';
     public const SAVE_OPTION_IS_JUST_SENT = 'isJustSent';
 
+    /** @since 10.1.5 */
+    public const FIELD_STATUS = 'status';
+
     private const ATTR_BODY_PLAIN = 'bodyPlain';
 
     /** @since 10.2.0 */
@@ -322,7 +325,7 @@ class Email extends Entity
      */
     public function setStatus(string $status): self
     {
-        $this->set('status', $status);
+        $this->set(self::FIELD_STATUS, $status);
 
         return $this;
     }
@@ -605,7 +608,7 @@ class Email extends Entity
 
     public function getStatus(): ?string
     {
-        return $this->get('status');
+        return $this->get(self::FIELD_STATUS);
     }
 
     public function getAccount(): ?Account
