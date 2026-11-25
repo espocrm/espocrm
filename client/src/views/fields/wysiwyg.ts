@@ -813,10 +813,15 @@ class WysiwygFieldView <
         }
     }
 
-    private plainToHtml(html: string): string {
-        html = html || '';
+    private plainToHtml(value: string): string {
+        value = value || '';
 
-        return html.replace(/\n/g, '<br>');
+        // noinspection SpellCheckingInspection
+        value = value.replace(/\?entryPoint=attachment/g, '?entryPoint=%61ttachment');
+
+        value = this.getHelper().escapeString(value);
+
+        return value.replace(/\n/g, '<br>');
     }
 
     protected htmlToPlain(html: string): string {
