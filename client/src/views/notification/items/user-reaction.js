@@ -35,7 +35,7 @@ export default class UserReactionNotificationItemView extends BaseNotificationIt
     // language=Handlebars
     templateContent = `
         <div class="stream-head-container">
-            <div class="pull-left">
+            <div class="avatar-container">
                 {{{avatar}}}
             </div>
             <div class="stream-head-text-container">

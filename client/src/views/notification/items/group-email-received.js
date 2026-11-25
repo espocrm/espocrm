@@ -35,7 +35,7 @@ export default class GroupNoteNotificationItemView extends BaseNotificationItemV
     // language=Handlebars
     templateContent = `
         <div class="stream-head-container">
-            <div class="pull-left stream-head-left-icon-container">
+            <div class="stream-head-left-icon-container">
                 <span
                     class="far fa-envelope text-soft icon"
                 >

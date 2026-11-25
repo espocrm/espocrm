@@ -35,7 +35,7 @@ class EmailInboxNotificationItemView extends BaseNotificationItemView {
     // language=Handlebars
     templateContent = `
         <div class="stream-head-container">
-            <div class="pull-left">{{{avatar}}}</div>
+            <div class="avatar-container">{{{avatar}}}</div>
             <div class="stream-head-text-container">
                 <span
                     class="fas fa-envelope text-muted action icon"

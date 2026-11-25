@@ -2260,7 +2260,7 @@ td > span.color-icon {
 }
 
 .stream-head-text-container {
-    min-height: var(--line-height-computed);
+    min-height: var(--21px);
 
     span.label {
         position: relative;
@@ -2288,6 +2288,8 @@ td > span.color-icon {
     }
 
     .message {
+        line-height: var(--21px);
+
         a {
             &[data-scope] {
                 & {
@@ -2390,6 +2392,14 @@ td > span.color-icon {
     > .stream-head-left-icon-container {
         width: var(--26px);
         text-align: center;
+
+        position: absolute;
+    }
+
+    position: relative;
+
+    > .avatar-container {
+        position: absolute;
     }
 }
 

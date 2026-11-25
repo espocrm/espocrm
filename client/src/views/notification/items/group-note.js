@@ -37,7 +37,7 @@ export default class GroupNoteNotificationItemView extends BaseNotificationItemV
     templateContent = `
         <div class="stream-head-container">
             {{#if iconClass}}
-                <div class="pull-left stream-head-left-icon-container">
+                <div class="stream-head-left-icon-container">
                     <span
                         class=" {{iconClass}} text-muted action icon"
                         style="

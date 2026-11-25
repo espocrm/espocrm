@@ -34,7 +34,7 @@ define('crm:views/notification/items/event-attendee', ['views/notification/items
 
         templateContent: `
             <div class="stream-head-container">
-                <div class="pull-left">{{{avatar}}}</div>
+                <div class="avatar-container">{{{avatar}}}</div>
                 <div class="stream-head-text-container">
                     <span class="message">{{{message}}}</span>
                 </div>

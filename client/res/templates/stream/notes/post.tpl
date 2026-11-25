@@ -5,7 +5,7 @@
 {{/unless}}
 
 <div class="stream-head-container">
-    <div class="pull-left">
+    <div class="avatar-container">
         {{{avatar}}}
         {{#if isInternal}}
         <div class="internal-badge">
