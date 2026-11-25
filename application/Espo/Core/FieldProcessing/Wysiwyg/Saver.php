@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\Wysiwyg;
 
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Entities\Attachment;
@@ -44,8 +45,6 @@ class Saver implements SaverInterface
 {
     /** @var array<string, string[]> */
     private $fieldListMapCache = [];
-
-    private const string FIELD_IS_HTML = 'isHtml';
 
     public function __construct(private EntityManager $entityManager)
     {}
@@ -66,12 +65,12 @@ class Saver implements SaverInterface
         if ($this->hasPlain($entity, $name)) {
             if (
                 !$entity->isAttributeChanged($name) &&
-                !$entity->isAttributeChanged(self::FIELD_IS_HTML)
+                !$entity->isAttributeChanged(Field::IS_HTML)
             ) {
                 return;
             }
 
-            if (!$entity->get(self::FIELD_IS_HTML)) {
+            if (!$entity->get(Field::IS_HTML)) {
                 return;
             }
         } else {

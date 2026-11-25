@@ -31,6 +31,7 @@ namespace Espo\Core\Record\Access\LinkCheck;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Name\Field;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Core\Utils\Metadata;
@@ -68,11 +69,21 @@ class WysiwygCheck
      */
     private function checkField(Entity $entity, string $field): void
     {
-        if (
-            !$entity->isAttributeChanged($field) ||
-            $this->getParam($entity->getEntityType(), $field, 'linkCheckDisabled')
-        ) {
+        if ($this->getParam($entity->getEntityType(), $field, 'linkCheckDisabled')) {
             return;
+        }
+
+        if ($this->hasPlain($entity, $field)) {
+            if (
+                !$entity->isAttributeChanged($field) &&
+                !$entity->isAttributeChanged(Field::IS_HTML)
+            ) {
+                return;
+            }
+        } else {
+            if (!$entity->isAttributeChanged($field)) {
+                return;
+            }
         }
 
         $contents = $entity->get($field);
@@ -108,5 +119,14 @@ class WysiwygCheck
     private function getParam(string $entityType, string $link, string $param): mixed
     {
         return $this->metadata->get(['recordDefs', $entityType, 'relationships', $link, $param]);
+    }
+
+    private function hasPlain(Entity $entity, string $name): bool
+    {
+        return (bool) $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getField($name)
+            ->getParam('hasPlain');
     }
 }

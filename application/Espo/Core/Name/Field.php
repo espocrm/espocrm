@@ -75,4 +75,9 @@ class Field
      * @since 10.1.3
      */
     public const string DESCRIPTION = 'description';
+
+    /**
+     * @since 10.2.0
+     */
+    public const string IS_HTML = 'isHtml';
 }

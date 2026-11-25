@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldDuplicators;
 
 use Espo\Core\Acl;
+use Espo\Core\Name\Field;
 use Espo\Core\Record\Duplicator\FieldDuplicator;
 use Espo\Core\Utils\InlineAttachment\InlineAttachmentUtil;
 use Espo\Core\Utils\Metadata;
@@ -45,8 +46,6 @@ use stdClass;
  */
 class Wysiwyg implements FieldDuplicator
 {
-    private const string FIELD_IS_HTML = 'isHtml';
-
     public function __construct(
         private EntityManager $entityManager,
         private Acl $acl,
@@ -63,7 +62,7 @@ class Wysiwyg implements FieldDuplicator
             return $valueMap;
         }
 
-        if ($this->hasPlain($entity, $field) && !$entity->get(self::FIELD_IS_HTML)) {
+        if ($this->hasPlain($entity, $field) && !$entity->get(Field::IS_HTML)) {
             return $valueMap;
         }
 
