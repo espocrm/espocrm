@@ -586,13 +586,21 @@ input[type="radio"].form-radio {
         user-select: none;
 
         &:before {
-            content: "–";
+            content: "⋯";
             display: inline;
         }
     }
 
     .none-value {
         color: var(--text-muted-color);
+
+        visibility: hidden;
+
+        &:before {
+            content: "–";
+            display: inline;
+            visibility: visible;
+        }
     }
 }
 
