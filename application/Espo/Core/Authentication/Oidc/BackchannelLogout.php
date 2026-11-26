@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Authentication\Oidc;
 
-use Espo\Core\Authentication\AuthToken\AuthToken;
 use Espo\Core\Authentication\AuthToken\Manager as AuthTokenManager;
 use Espo\Core\Authentication\Jwt\Exceptions\Invalid;
 use Espo\Core\Authentication\Jwt\Exceptions\SignatureNotVerified;
@@ -37,12 +36,9 @@ use Espo\Core\Authentication\Jwt\Token;
 use Espo\Core\Authentication\Jwt\Validator;
 use Espo\Core\Authentication\Oidc\UserProvider\UserRepository;
 use Espo\Core\Utils\Log;
-use Espo\Entities\AuthToken as AuthTokenEntity;
-use Espo\ORM\EntityManager;
+use stdClass;
 
 /**
- * Compatible only with default Espo auth tokens.
- *
  * @todo Use a token-sessionId map to retrieve tokens. Send sid claim in id_token.
  */
 class BackchannelLogout
@@ -53,8 +49,7 @@ class BackchannelLogout
         private TokenValidator $tokenValidator,
         private ConfigDataProvider $configDataProvider,
         private UserRepository $userRepository,
-        private EntityManager $entityManager,
-        private AuthTokenManager $authTokenManger
+        private AuthTokenManager $authTokenManger,
     ) {}
 
     /**
@@ -71,6 +66,8 @@ class BackchannelLogout
         $this->validator->validate($token);
         $this->tokenValidator->validateSignature($token);
         $this->tokenValidator->validateFields($token);
+
+        $this->assertEvent($token->getPayload());
 
         $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
@@ -90,18 +87,25 @@ class BackchannelLogout
             return;
         }
 
-        $authTokenList = $this->entityManager
-            ->getRDBRepositoryByClass(AuthTokenEntity::class)
-            ->where([
-                'userId' => $user->getId(),
-                'isActive' => true,
-            ])
-            ->find();
+        $this->authTokenManger->inactivateAllForUser($user->getId());
+    }
 
-        foreach ($authTokenList as $authToken) {
-            assert($authToken instanceof AuthToken);
+    /**
+     * @throws Invalid
+     */
+    private function assertEvent(Token\Payload $payload): void
+    {
+        $events = $payload->get('events');
 
-            $this->authTokenManger->inactivate($authToken);
+        /** @noinspection HttpUrlsUsage */
+        if (
+            $events instanceof stdClass &&
+            property_exists($events, 'http://schemas.openid.net/event/backchannel-logout') &&
+            $payload->get('nonce') === null
+        ) {
+            return;
         }
+
+        throw new Invalid("JWT is not a logout token.");
     }
 }
