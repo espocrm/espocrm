@@ -49,7 +49,7 @@ class BackchannelLogout
         private TokenValidator $tokenValidator,
         private ConfigDataProvider $configDataProvider,
         private UserRepository $userRepository,
-        private AuthTokenManager $authTokenManger,
+        private AuthTokenManager $authTokenManager,
     ) {}
 
     /**
@@ -87,7 +87,7 @@ class BackchannelLogout
             return;
         }
 
-        $this->authTokenManger->inactivateAllForUser($user->getId());
+        $this->authTokenManager->inactivateAllForUser($user->getId());
     }
 
     /**
