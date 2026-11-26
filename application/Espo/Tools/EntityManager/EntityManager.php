@@ -374,6 +374,7 @@ class EntityManager
      *     color?: ?string,
      *     iconClass?: ?string,
      *     optimisticConcurrencyControl?: bool,
+     *     progressBar?: bool,
      * }|array<string, mixed> $params
      * @throws Error
      */
@@ -421,6 +422,11 @@ class EntityManager
                 $params['kanbanViewMode'] = false;
                 $params['kanbanStatusIgnoreList'] = null;
             }
+
+            if (!$params['statusField'] && $this->metadata->get("clientDefs.$name.progressBar")) {
+                $params['progressBar'] = false;
+                $params['kanbanStatusIgnoreList'] = null;
+            }
         }
 
         if (isset($params['sortBy'])) {
@@ -461,6 +467,10 @@ class EntityManager
 
         if (array_key_exists('kanbanViewMode', $params)) {
             $this->metadata->set('clientDefs', $name, ['kanbanViewMode' => $params['kanbanViewMode']]);
+        }
+
+        if (array_key_exists('progressBar', $params)) {
+            $this->metadata->set('clientDefs', $name, ['progressBar' => $params['progressBar']]);
         }
 
         if (array_key_exists('color', $params)) {
@@ -705,6 +715,7 @@ class EntityManager
             'iconClass',
             'statusField',
             'kanbanViewMode',
+            'progressBar',
             'color',
         ]);
 
@@ -777,7 +788,8 @@ class EntityManager
         }
 
         $data['statusField'] = $this->getScopeMetadataParam($scope, 'statusField');
-        $data['kanbanViewMode'] = $this->getScopeMetadataParam($scope, 'kanbanViewMode');
+        $data['kanbanViewMode'] = $this->getClientDefsMetadataParam($scope, 'kanbanViewMode');
+        $data['progressBar'] = $this->getClientDefsMetadataParam($scope, 'progressBar');
         $data['disabled'] = $this->getScopeMetadataParam($scope, 'disabled');
 
         return $data;
@@ -1021,5 +1033,10 @@ class EntityManager
     private function getScopeMetadataParam(string $scope, string $param): mixed
     {
         return $this->metadata->get("scopes.$scope.$param");
+    }
+
+    private function getClientDefsMetadataParam(string $scope, string $param): mixed
+    {
+        return $this->metadata->get("clientDefs.$scope.$param");
     }
 }

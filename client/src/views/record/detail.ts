@@ -45,6 +45,7 @@ import Ui from 'ui';
 import DynamicHandler from 'dynamic-handler';
 import type Collection from 'collection';
 import DetailRecordButtonsView from 'views/record/detail/buttons';
+import ProgressBarView from 'views/record/bar/progress-bar';
 
 type ReturnDispatchParams = Record<string, unknown> & {
     controller?: string;
@@ -433,6 +434,14 @@ export interface DetailRecordViewOptions extends BaseRecordViewOptions {
      * @internal
      */
     exit?: (action: string) => {};
+
+    /**
+     * Allow the top bar.
+     *
+     * @since 10.2.0
+     * @internal
+     */
+    allowTopBar?: boolean;
 }
 
 /**
@@ -1542,6 +1551,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
 
             this.listenTo(fieldView, 'inline-edit-on', () => {
                 this.inlineEditModeIsOn = true;
+
+                this.trigger('inline-edit-change');
             });
 
             this.listenTo(fieldView, 'inline-edit-off', (o) => {
@@ -1554,6 +1565,8 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
                 this.inlineEditModeIsOn = false;
 
                 this.setIsNotChanged();
+
+                this.trigger('inline-edit-change');
             });
 
             this.listenTo(fieldView, 'after:inline-edit-off', o => {
@@ -1851,6 +1864,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
             nextButtonEnabled: nextButtonEnabled,
             hasMiddleTabs: hasMiddleTabs,
             middleTabDataList: middleTabDataList,
+            hasBar: this.hasView('bar'),
         };
     }
 
@@ -2037,6 +2051,7 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
         this.dataObject = this.options.dataObject || {};
         this.rootData = this.options.rootData || {};
 
+        this.setupBar();
         this.setupActionItems();
         this.setupBeforeFinal();
         this.setupDynamicBehavior();
@@ -3947,6 +3962,37 @@ class DetailRecordView<S extends DetailRecordViewSchema = DetailRecordViewSchema
     protected modifyDetailLayout(layout: any) {
         // noinspection BadExpressionStatementJS
         layout;
+    }
+
+    private setupBar() {
+        if (
+            !this.options.allowTopBar ||
+            this.type !== 'detail' ||
+            !this.scope ||
+            !this.getMetadata().get(`clientDefs.${this.scope}.progressBar`) ||
+            !this.getMetadata().get(`scopes.${this.scope}.statusField`)
+        ) {
+            return;
+        }
+
+        const view = new ProgressBarView({
+            model: this.model,
+            scope: this.scope,
+            recordHelper: this.recordHelper,
+            readOnly: this.readOnlyLocked,
+        });
+
+        this.assignView('bar', view);
+
+        const handleBlockEdit = () => {
+            const block = this.mode !== this.MODE_DETAIL || this.inlineEditModeIsOn;
+
+            view.setBlockEdit(block);
+        };
+
+        handleBlockEdit();
+
+        this.on('after:mode-change inline-edit-change', () => handleBlockEdit());
     }
 }
 

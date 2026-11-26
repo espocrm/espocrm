@@ -135,6 +135,11 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
      */
     protected viewModeList: string[]
 
+    /**
+     * Allow the top bar.
+     */
+    protected allowTopBar = true
+
     protected setup() {
         if (!this.model.entityType) {
             throw new Error('No entity type.');
@@ -295,6 +300,7 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
             scope: this.scope,
             shortcutKeysEnabled: true,
             isReturn: this.isReturn,
+            allowTopBar: this.allowTopBar,
         } as Record<string, unknown>;
 
         this.optionsToPass.forEach((option) => {
