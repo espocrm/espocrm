@@ -1174,7 +1174,7 @@ export default class Model<T extends Record<string, any> = Record<string, any>> 
      */
     onSync(
         params: {
-            owner: import('view').default | import('model').default | import('collection').default,
+            owner: import('view').default<any> | import('model').default | import('collection').default,
             once?: boolean,
             callback: (event: {
                 action: 'fetch' | 'save' | 'destroy' | null,
