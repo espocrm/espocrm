@@ -10667,7 +10667,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.3.0 <8.6.0",
+        "php": ">=8.4.0 <8.6.0",
         "ext-openssl": "*",
         "ext-json": "*",
         "ext-zip": "*",
@@ -10682,7 +10682,7 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "8.3.0"
+        "php": "8.4.0"
     },
     "plugin-api-version": "2.6.0"
 }
