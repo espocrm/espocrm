@@ -46,6 +46,10 @@
     </div>
     {{/unless}}
 
+    {{#if hasBar}}
+        <div class="bar-container">{{{bar}}}</div>
+    {{/if}}
+
     <div class="record-grid{{#if isWide}} record-grid-wide{{/if}}{{#if isSmall}} record-grid-small{{/if}}">
         <div class="left">
             {{#if hasMiddleTabs}}

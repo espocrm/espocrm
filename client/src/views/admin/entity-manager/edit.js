@@ -234,12 +234,7 @@ class EntityManagerEditView extends View {
                                 translatedOptions: this.textFilterFieldsTranslation,
                             },
                         },
-                        {
-                            name: 'statusField',
-                            options: {
-                                translatedOptions: this.translatedStatusFields,
-                            },
-                        },
+                        false,
                     ],
                     [
                         {
@@ -247,6 +242,21 @@ class EntityManagerEditView extends View {
                         },
                         {
                             name: 'countDisabled',
+                        },
+                    ],
+                ],
+            },
+            {
+                rows: [
+                    [
+                        {
+                            name: 'statusField',
+                            options: {
+                                translatedOptions: this.translatedStatusFields,
+                            },
+                        },
+                        {
+                            name: 'progressBar',
                         },
                     ],
                     [
@@ -259,9 +269,9 @@ class EntityManagerEditView extends View {
                                 translatedOptions: this.translatedStatusOptions,
                             },
                         },
-                    ],
+                    ]
                 ]
-            },
+            }
         ];
 
         if (!this.scope) {
@@ -357,6 +367,8 @@ class EntityManagerEditView extends View {
             'kanbanStatusIgnoreList',
             this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
         );
+
+        this.model.set('progressBar', this.getMetadata().get(`clientDefs.${scope}.progressBar`) ?? false);
 
         for (const param in this.additionalParams) {
             /** @type {{fieldDefs: Object, location?: string, param?: string}} */
@@ -497,6 +509,9 @@ class EntityManagerEditView extends View {
                     tooltip: true,
                 },
                 kanbanViewMode: {
+                    type: 'bool',
+                },
+                progressBar: {
                     type: 'bool',
                 },
                 textFilterFields: {
@@ -689,6 +704,7 @@ class EntityManagerEditView extends View {
             data.sortBy = this.model.get('sortBy');
             data.sortDirection = this.model.get('sortDirection');
             data.kanbanViewMode = this.model.get('kanbanViewMode');
+            data.progressBar = this.model.get('progressBar');
             data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
 
             for (const param in this.additionalParams) {

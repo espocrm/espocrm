@@ -34,6 +34,8 @@ class DeletedDetailView extends DetailView {
 
     menuDisabled = true
 
+    allowTopBar = false
+
     setup() {
         super.setup();
 

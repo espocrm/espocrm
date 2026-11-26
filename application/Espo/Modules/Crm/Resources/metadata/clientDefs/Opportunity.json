@@ -79,6 +79,7 @@
       }
    },
    "kanbanViewMode": true,
+   "progressBar": true,
     "relationshipPanels": {
         "contacts": {
             "createAttributeMap": {

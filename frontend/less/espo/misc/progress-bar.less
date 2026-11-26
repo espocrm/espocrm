@@ -1,0 +1,142 @@
+.bar-container {
+    > .stage-bar {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        > .stage-bar-item {
+            flex: 1;
+            min-width: 0;
+
+            + .stage-bar-item {
+                margin-left: var(--minus-10px);
+            }
+
+            > a {
+                width: 100%;
+                height: var(--30px);
+                padding: 0 var(--16px) 0 var(--24px);
+                border: 0;
+                font: inherit;
+                cursor: pointer;
+                background: var(--gray-light);
+                color: var(--text-color);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                clip-path: polygon(
+                    0 0,
+                    calc(100% - var(--12px)) 0,
+                    100% 50%,
+                    calc(100% - var(--12px)) 100%, 0 100%,
+                    var(--12px) 50%
+                );
+
+                display: block;
+                line-height: var(--30px);
+                text-decoration: none;
+
+                background-color: var(--stage-bg);
+            }
+
+            &:first-child {
+                > a {
+                    padding-left: var(--12px);
+                    clip-path: polygon(
+                        0 0,
+                        calc(100% - var(--12px)) 0,
+                        100% 50%,
+                        calc(100% - var(--12px)) 100%,
+                        0 100%
+                    );
+
+                    border-start-start-radius: var(--border-radius);
+                    border-end-start-radius: var(--border-radius);
+                }
+            }
+
+            &:last-child {
+                > a {
+                    padding-right: var(--12px);
+                    clip-path: polygon(
+                        0 0,
+                        100% 0,
+                        100% 100%,
+                        0 100%,
+                        var(--12px) 50%
+                    );
+
+                    border-start-end-radius: var(--border-radius);
+                    border-end-end-radius: var(--border-radius);
+                }
+            }
+
+            &.done {
+                > a {
+                    --stage-bg: var(--label-default-bg);
+                    color: var(--text-white-color);
+                    font-weight: 500;
+                }
+            }
+
+            &.current {
+                > a {
+                    font-weight: 500;
+
+                    &[data-style="success"] {
+                        --stage-bg: var(--brand-success);
+                    }
+
+                    &[data-style="danger"] {
+                        --stage-bg: var(--brand-danger);
+                    }
+
+                    &[data-style="warning"] {
+                        --stage-bg: var(--brand-warning);
+                    }
+
+                    &[data-style="primary"] {
+                        --stage-bg: var(--brand-primary);
+                    }
+
+                    &[data-style="info"] {
+                        --stage-bg: var(--brand-info);
+                    }
+                }
+            }
+
+            &.current {
+                > a {
+                    --stage-bg: var(--label-default-bg);
+                    color: var(--text-white-color);
+
+                    pointer-events: none;
+                }
+            }
+
+            &:not(.current):not(.done) {
+                > a {
+                    --stage-bg: var(--label-weak-bg);
+                    color: var(--label-weak-color);
+                }
+            }
+
+            &.read-only {
+                > a {
+                    pointer-events: none;
+                }
+            }
+
+            &:not(.current):not(.read-only) {
+                > a {
+                    &:hover {
+                        background: color-mix(in srgb, var(--stage-bg), black 3%);
+                    }
+                }
+            }
+        }
+    }
+
+    margin-bottom: var(--vertical-gap);
+}

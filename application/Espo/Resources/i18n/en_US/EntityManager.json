@@ -31,6 +31,7 @@
         "audited": "Audited",
         "auditedForeign": "Foreign Audited",
         "statusField": "Status Field",
+        "progressBar": "Progress Bar",
         "beforeSaveCustomScript": "Before Save Custom Script",
         "beforeSaveApiScript": "API Before Save Script",
         "color": "Color",

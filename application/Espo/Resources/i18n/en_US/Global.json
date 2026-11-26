@@ -485,7 +485,9 @@
         "massUnlockDone": "{count} unlocked",
         "cannotModifyLockedRecord": "Cannot modify the field *{field}*. The record is locked.",
         "cannotRemoveLockedRecord": "Cannot remove a locked record.",
-        "noPipeline": "No pipeline."
+        "noPipeline": "No pipeline.",
+        "confirmProgressChange": "Move to **{to}**?",
+        "confirmProgressBackChange": "Move from **{from}** back to **{to}**?"
     },
     "boolFilters": {
         "onlyMy": "Only My",

@@ -98,6 +98,7 @@ export default class EntityManagerEditRecordView extends EditRecordView {
             this.hideField('countDisabled');
             this.hideField('kanbanViewMode');
             this.hideField('kanbanStatusIgnoreList');
+            this.hideField('progressBar');
             this.hideField('disabled');
         }
 
@@ -110,17 +111,12 @@ export default class EntityManagerEditRecordView extends EditRecordView {
         }
 
         if (!this.isCreate) {
-            this.manageKanbanFields({});
+            this.manageStatusRelatedFields({});
+            this.listenTo(this.model, 'change:statusField', (m, v, o) => this.manageStatusRelatedFields(o));
 
-            this.listenTo(this.model, 'change:statusField', (m, v, o) => {
-                this.manageKanbanFields(o);
-            });
-
-            this.manageKanbanViewModeField();
-
-            this.listenTo(this.model, 'change:kanbanViewMode', () => {
-                this.manageKanbanViewModeField();
-            });
+            this.manageKanbanRelatedFields();
+            this.listenTo(this.model, 'change:kanbanViewMode change:progressBar',
+                () => this.manageKanbanRelatedFields());
         }
     }
 
@@ -136,15 +132,22 @@ export default class EntityManagerEditRecordView extends EditRecordView {
         this.trigger('reset-to-default');
     }
 
-    manageKanbanViewModeField() {
-        if (this.model.get('kanbanViewMode')) {
+    /**
+     * @private
+     */
+    manageKanbanRelatedFields() {
+        if (this.model.get('kanbanViewMode') || this.model.get('progressBar')) {
             this.showField('kanbanStatusIgnoreList');
         } else {
             this.hideField('kanbanStatusIgnoreList');
         }
     }
 
-    manageKanbanFields(o) {
+    /**
+     * @private
+     * @param {Record} o
+     */
+    manageStatusRelatedFields(o) {
         if (o.ui) {
             this.model.set('kanbanStatusIgnoreList', []);
         }
@@ -153,14 +156,16 @@ export default class EntityManagerEditRecordView extends EditRecordView {
             this.setKanbanStatusIgnoreListOptions();
 
             this.showField('kanbanViewMode');
+            this.showField('progressBar');
 
-            if (this.model.get('kanbanViewMode')) {
+            if (this.model.get('kanbanViewMode') || this.model.get('progressBar')) {
                 this.showField('kanbanStatusIgnoreList');
             } else {
                 this.hideField('kanbanStatusIgnoreList');
             }
         } else {
             this.hideField('kanbanViewMode');
+            this.hideField('progressBar');
             this.hideField('kanbanStatusIgnoreList');
         }
     }

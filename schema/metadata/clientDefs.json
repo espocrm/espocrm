@@ -830,6 +830,10 @@
             "description": "Whether the scope has the kanban view mode on the list view.",
             "type": "boolean"
         },
+        "progressBar": {
+            "type": "boolean",
+            "description": "Enables the progress bar."
+        },
         "isExpandedByDefault": {
             "description": "Actual for category scopes (e.g. DocumentFolder). If true, then by default it will be in expanded mode.",
             "type": "boolean"
