@@ -51,7 +51,9 @@ class Map
     ];
 
     /**
-     * @param DataCacheAccess<stdClass> $dataCacheAccess
+     * @param DataCacheAccess<stdClass & object{
+     *     hash: string,
+     * }> $dataCacheAccess
      */
     public function __construct(
         Table $table,
@@ -63,6 +65,7 @@ class Map
         $this->dataCacheAccess->init(
             key: $cacheKeyProvider->get(),
             loader: fn () => $this->dataBuilder->build($table),
+            validityChecker: fn ($data) => isset($data->hash),
         );
     }
 
@@ -71,7 +74,21 @@ class Map
      */
     public function getData(): stdClass
     {
-        return ObjectUtil::clone($this->dataCacheAccess->get());
+        $data = ObjectUtil::clone($this->dataCacheAccess->get());
+
+        unset($data->hash);
+
+        return $data;
+    }
+
+    /**
+     * A snapshot hash. Can be used for other cache dependent on the user's ACL.
+     *
+     * @since 10.2.0
+     */
+    public function getHash(): string
+    {
+        return $this->dataCacheAccess->get()->hash;
     }
 
     /**

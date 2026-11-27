@@ -58,6 +58,16 @@ class Acl
     }
 
     /**
+     * A snapshot hash. Can be used for other cache dependent on the user's ACL.
+     *
+     * @since 10.2.0
+     */
+    public function getHash(): string
+    {
+        return $this->aclManager->getHash($this->user);
+    }
+
+    /**
      * Get an access level for a specific scope and action.
      *
      * @param Table::ACTION_* $action

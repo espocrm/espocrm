@@ -300,6 +300,53 @@ class AclTest extends BaseTestCase
         $this->assertFalse($aclManager->checkAdmin($admin));
     }
 
+    public function testHash(): void
+    {
+        $roleData = [
+            Role::FIELD_DATA => [
+                Call::ENTITY_TYPE => [
+                    Acl\Table::ACTION_CREATE => Acl\Table::LEVEL_NO,
+                    Acl\Table::ACTION_READ => Acl\Table::LEVEL_OWN,
+                    Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_NO,
+                    Acl\Table::ACTION_DELETE => Acl\Table::LEVEL_NO,
+                ],
+            ],
+            Role::FIELD_FIELD_DATA => [
+                Call::ENTITY_TYPE => [
+                    'direction' => [
+                        Acl\Table::ACTION_READ => Acl\Table::LEVEL_YES,
+                        Acl\Table::ACTION_EDIT => Acl\Table::LEVEL_NO,
+                    ],
+                ],
+            ],
+        ];
+
+        $otherRoleData = $roleData;
+        $otherRoleData['fieldData'][Call::ENTITY_TYPE]['direction'][Acl\Table::ACTION_READ] = Acl\Table::LEVEL_NO;
+
+        $user1 = $this->reFetchUser($this->createUser('test-1', $roleData));
+        $user2 = $this->reFetchUser($this->createUser('test-2', $roleData));
+        $user3 = $this->reFetchUser($this->createUser('test-3', $otherRoleData));
+
+        $aclManager = $this->getInjectableFactory()->create(AclManager::class);
+
+        $hash1 = $aclManager->getHash($user1);
+        $hash2 = $aclManager->getHash($user2);
+        $hash3 = $aclManager->getHash($user3);
+
+        $this->assertNotEmpty($hash1);
+        $this->assertEquals($hash1, $hash2);
+        $this->assertNotEquals($hash1, $hash3);
+        $this->assertEquals($hash1, $aclManager->createUserAcl($user1)->getHash());
+
+        $this->assertObjectNotHasProperty('hash', $aclManager->getMapData($user1));
+
+        // A new instance. Loads from the cache if caching is enabled.
+        $aclManager = $this->getInjectableFactory()->create(AclManager::class);
+
+        $this->assertEquals($hash1, $aclManager->getHash($this->reFetchUser($user1)));
+    }
+
     private function reFetchUser(User $user): User
     {
         return $this->getEntityManager()
