@@ -31,11 +31,16 @@ namespace tests\integration\Espo\Role;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Portal\Acl\Table as TablePortal;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\DeleteParams;
+use Espo\Core\Record\Service;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
+use Espo\Entities\Portal;
 use Espo\Entities\PortalRole;
 use Espo\Entities\Role;
+use Espo\Entities\Team;
 use Espo\Modules\Crm\Entities\Account;
 use tests\integration\Core\BaseTestCase;
 
@@ -151,5 +156,103 @@ class ServiceTest extends BaseTestCase
 
         $this->assertEquals($data, $role->get('data'));
         $this->assertEquals($fieldData, $role->get('fieldData'));
+    }
+
+    public function testDeleteReferenced(): void
+    {
+        $em = $this->getEntityManager();
+
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Role::class);
+
+        $role = $em->createEntity(Role::ENTITY_TYPE, ['name' => 'Test']);
+        $user = $this->createUser('test');
+        $team = $em->createEntity(Team::ENTITY_TYPE, ['name' => 'Test']);
+
+        // User.
+
+        $em->getRelation($role, Role::LINK_USERS)->relate($user);
+
+        $this->assertDeleteConflict($service, $role->getId(), 'cannotRemoveUsedByUsers', Role::ENTITY_TYPE);
+
+        $em->getRelation($role, Role::LINK_USERS)->unrelate($user);
+
+        // Team.
+
+        $em->getRelation($role, Role::LINK_TEAMS)->relate($team);
+
+        $this->assertDeleteConflict($service, $role->getId(), 'cannotRemoveUsedByTeams', Role::ENTITY_TYPE);
+
+        $em->getRelation($role, Role::LINK_TEAMS)->unrelate($team);
+
+        // Baseline.
+
+        $this->setConfigParams(['baselineRoleId' => $role->getId()]);
+
+        $this->assertDeleteConflict($service, $role->getId(), 'cannotRemoveBaseline', Role::ENTITY_TYPE);
+
+        $this->setConfigParams(['baselineRoleId' => null]);
+
+        // Not referenced.
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->delete($role->getId(), DeleteParams::create());
+
+        $this->assertNull($em->getEntityById(Role::ENTITY_TYPE, $role->getId()));
+    }
+
+    public function testPortalDeleteReferenced(): void
+    {
+        $em = $this->getEntityManager();
+
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(PortalRole::class);
+
+        $role = $em->createEntity(PortalRole::ENTITY_TYPE, ['name' => 'Test']);
+        $portal = $em->createEntity(Portal::ENTITY_TYPE, ['name' => 'Test']);
+
+        // Portal.
+
+        $em->getRelation($role, PortalRole::LINK_PORTALS)->relate($portal);
+
+        $this->assertDeleteConflict(
+            $service,
+            $role->getId(),
+            'cannotRemoveUsedByPortals',
+            PortalRole::ENTITY_TYPE
+        );
+
+        $em->getRelation($role, PortalRole::LINK_PORTALS)->unrelate($portal);
+
+        // Not referenced.
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->delete($role->getId(), DeleteParams::create());
+
+        $this->assertNull($em->getEntityById(PortalRole::ENTITY_TYPE, $role->getId()));
+    }
+
+    /**
+     * @param Service<Role|PortalRole> $service
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    private function assertDeleteConflict(Service $service, string $id, string $label, string $scope): void
+    {
+        $exception = null;
+
+        try {
+            $service->delete($id, DeleteParams::create());
+        } catch (Conflict $e) {
+            $exception = $e;
+        }
+
+        $this->assertNotNull($exception);
+
+        $body = json_decode($exception->getBody() ?? '');
+
+        $this->assertEquals($label, $body->messageTranslation->label ?? null);
+        $this->assertEquals($scope, $body->messageTranslation->scope ?? null);
     }
 }

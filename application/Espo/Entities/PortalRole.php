@@ -36,6 +36,9 @@ class PortalRole extends Entity
 {
     public const ENTITY_TYPE = 'PortalRole';
 
+    /** @since 10.2.0 */
+    public const string LINK_PORTALS = 'portals';
+
     public function getRawData(): stdClass
     {
         return $this->get('data') ?? (object) [];

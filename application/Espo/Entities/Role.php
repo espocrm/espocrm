@@ -41,6 +41,12 @@ class Role extends Entity
     /** @since 10.0.4 */
     public const string FIELD_FIELD_DATA = 'fieldData';
 
+    /** @since 10.2.0 */
+    public const string LINK_USERS = 'users';
+
+    /** @since 10.2.0 */
+    public const string LINK_TEAMS = 'teams';
+
     public function getRawData(): stdClass
     {
         return $this->get('data') ?? (object) [];

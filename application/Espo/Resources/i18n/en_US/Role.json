@@ -69,6 +69,9 @@
         "create": "Create"
     },
     "messages": {
-        "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared."
+        "changesAfterClearCache": "All changes in an access control will be applied after cache is cleared.",
+        "cannotRemoveBaseline": "Cannot remove the role as it is set as the Baseline Role in the settings.",
+        "cannotRemoveUsedByUsers": "Cannot remove the role as it is assigned to one or more users.",
+        "cannotRemoveUsedByTeams": "Cannot remove the role as it is assigned to one or more teams."
     }
 }
