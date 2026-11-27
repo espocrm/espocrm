@@ -20,7 +20,9 @@
         "leads": "Leads",
         "campaigns": "Campaigns",
         "massEmails": "Mass Emails",
-        "category": "Category"
+        "category": "Category",
+        "massEmailsExcluding": "Mass Emails Excluding",
+        "campaignsExcluding": "Campaigns Excluding"
     },
     "options": {
         "type": {
