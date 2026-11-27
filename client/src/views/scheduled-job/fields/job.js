@@ -27,25 +27,31 @@
  ************************************************************************/
 
 import EnumFieldView from 'views/fields/enum';
+import Ajax from 'ajax';
+
+let jobs;
 
 export default class extends EnumFieldView {
 
     setup() {
         super.setup();
 
-        if (this.isEditMode() || this.isDetailMode()) {
-            this.wait(true);
+        if (this.isEditMode() || this.isDetailMode() || this.isSearchMode()) {
+            this.wait((async () => {
+                if (!jobs) {
+                    try {
+                        jobs = await Ajax.getRequest('Admin/jobs');
+                    } catch (e) {
+                        return;
+                    }
+                }
 
-            Espo.Ajax.getRequest('Admin/jobs')
-                .then(data => {
-                    this.params.options = data.filter(item => {
-                        return !this.getMetadata().get(['entityDefs', 'ScheduledJob', 'jobs', item, 'isSystem']);
-                    });
-
-                    this.params.options.unshift('');
-
-                    this.wait(false);
+                this.params.options = jobs.filter(item => {
+                    return !this.getMetadata().get(['entityDefs', 'ScheduledJob', 'jobs', item, 'isSystem']);
                 });
+
+                this.params.options.unshift('');
+            })());
         }
 
         if (this.model.isNew()) {

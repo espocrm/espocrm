@@ -25,10 +25,10 @@
             "SendScheduledEmails": "Send Scheduled Emails"
         },
         "cronSetup": {
-            "linux": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
-            "mac": "Note: Add this line to the crontab file to run Espo Scheduled Jobs:",
-            "windows": "Note: Create a batch file with the following commands to run Espo Scheduled Jobs using Windows Scheduled Tasks:",
-            "default": "Note: Add this command to Cron Job (Scheduled Task):"
+            "linux": "[Crontab](https://docs.espocrm.com/administration/jobs/#cron) line:",
+            "mac": "[Crontab](https://docs.espocrm.com/administration/jobs/#cron) line:",
+            "windows": "Create a batch file with the following commands to run scheduled jobs using Windows Scheduled Tasks:",
+            "default": "[Crontab](https://docs.espocrm.com/administration/jobs/#cron) line:"
         },
         "status": {
             "Active": "Active",

@@ -27,10 +27,9 @@
  ************************************************************************/
 
 import ListView from 'views/list';
+import Ajax from 'ajax';
 
 export default class extends ListView {
-
-    searchPanel = false
 
     setup() {
         super.setup();
@@ -39,21 +38,54 @@ export default class extends ListView {
             link: '#Admin/jobs',
             text: this.translate('Jobs', 'labels', 'Admin'),
         });
-
-        this.createView('search', 'views/base', {
-            fullSelector: '#main > .search-container',
-            template: 'scheduled-job/cronjob',
-        });
     }
 
     afterRender() {
         super.afterRender();
 
-        Espo.Ajax
-            .getRequest('Admin/action/cronMessage')
+        const searchElement = this.element.querySelector('.list-container');
+
+        if (searchElement) {
+            searchElement.after(
+                (() => {
+                    const template = document.createElement('template');
+
+                    template.innerHTML = `
+                        <div
+                            class="cronjob well"
+                            style="
+                                margin: var(--vertical-gap) auto var(--vertical-gap) auto;
+                                max-width: var(--900px);
+                            "
+                        >
+                            <div class="message">&nbsp;</div>
+                            <div class="margin-top">
+                                <code class="command">&nbsp;</code>
+                            </div>
+                        </div>
+                    `;
+
+                    return template.content.firstElementChild;
+                })()
+            );
+        }
+
+        Ajax.getRequest('Admin/action/cronMessage')
             .then(data => {
-                this.$el.find('.cronjob .message').html(data.message);
-                this.$el.find('.cronjob .command').html('<strong>' + data.command + '</strong>');
+                const message = this.getHelper().transformMarkdownText(data.message ?? '', {
+                    linksInNewTab: true,
+                });
+
+                const messageElement = this.element.querySelector('.cronjob .message');
+                const commandElement = this.element.querySelector('.cronjob .command');
+
+                if (messageElement) {
+                    messageElement.innerHTML = message.toString();
+                }
+
+                if (commandElement) {
+                    commandElement.innerText = data.command;
+                }
             });
     }
 
