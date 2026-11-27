@@ -2,6 +2,7 @@
 <span class="breadcrumb-separator"><span></span></span>
 {{translate 'Extensions' scope='Admin'}}</h3></div>
 
+{{#if hasUpload}}
 <div class="panel panel-default upload">
     <div class="panel-heading">
         <h4 class="panel-title">{{translate 'selectExtensionPackage' category='messages' scope='Admin'}}</h4>
@@ -10,7 +11,10 @@
         <div>
             <input type="file" name="package" accept="application/zip">
         </div>
-        <div class="message-container text-danger" style="height: 20px; margin-bottom: 10px; margin-top: 10px;"></div>
+        <div
+            class="message-container text-danger margin-bottom margin-top"
+            style="height: var(--20px);"
+        ></div>
         <div class="buttons-container">
             <button
                 class="btn btn-primary disabled"
@@ -20,6 +24,7 @@
         </div>
     </div>
 </div>
+{{/if}}
 
 <p class="text-danger notify-text hidden"></p>
 

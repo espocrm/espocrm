@@ -87,6 +87,12 @@ class IndexExtensionsView extends View {
         }
     }
 
+    data() {
+        return {
+            hasUpload: !this.getHelper().getAppParam('isRestrictedMode') || this.getUser().isSuperAdmin(),
+        };
+    }
+
     setup() {
         const selectProvider = new SelectProvider();
 

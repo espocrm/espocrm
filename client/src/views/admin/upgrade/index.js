@@ -36,6 +36,7 @@ export default class UpgradeIndexView extends View {
 
     data() {
         return {
+            hasUpload: !this.getHelper().getAppParam('isRestrictedMode') || this.getUser().isSuperAdmin(),
             versionMsg: this.translate('Current version') + ': ' + this.getConfig().get('version'),
             infoMsg: this.translate('upgradeInfo', 'messages', 'Admin')
                 .replace('{url}', 'https://www.espocrm.com/documentation/administration/upgrading/'),
