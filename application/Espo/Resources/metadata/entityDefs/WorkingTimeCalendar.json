@@ -18,7 +18,10 @@
                 ["09:00", "17:00"]
             ],
             "view": "views/working-time-calendar/fields/time-ranges",
-            "required": true
+            "required": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday0": {
             "type": "bool",
@@ -51,37 +54,58 @@
         "weekday0TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday1TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday2TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday3TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday4TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday5TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "weekday6TimeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "isDefault": {
             "type": "bool",

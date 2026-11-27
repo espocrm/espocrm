@@ -3,7 +3,10 @@
         "timeRanges": {
             "type": "jsonArray",
             "default": null,
-            "view": "views/working-time-calendar/fields/time-ranges"
+            "view": "views/working-time-calendar/fields/time-ranges",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\WorkingTimeCalendar\\TimeRanges\\Valid"
+            ]
         },
         "dateStart": {
             "type": "date",
