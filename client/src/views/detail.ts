@@ -287,7 +287,7 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
     }
 
     private getViewModeKey(): string {
-        return `detailViewMode-${this.scope}-${this.model.id}}`;
+        return `detailViewMode-${this.scope}-${this.model.id}`;
     }
 
     /**
