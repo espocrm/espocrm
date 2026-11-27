@@ -31,7 +31,7 @@ namespace Espo\Core\Acl\Map;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Utils\FieldUtil;
-
+use Espo\Core\Utils\Json;
 use stdClass;
 
 class DataBuilder
@@ -59,14 +59,18 @@ class DataBuilder
     {}
 
     /**
-     * @return stdClass&object{table: stdClass, fieldTable: stdClass}
+     * @return stdClass & object{
+     *     table: stdClass,
+     *     fieldTable: stdClass,
+     *     hash: string,
+     * }
      */
     public function build(Table $table): stdClass
     {
-        $data = (object) [
-            'table' => (object) [],
-            'fieldTable' => (object) [],
-        ];
+        $data = (object) [];
+
+        $data->table = (object) [];
+        $data->fieldTable = (object) [];
 
         foreach ($this->metadataProvider->getScopeList() as $scope) {
             $data->table->$scope = $this->getScopeRawData($table, $scope);
@@ -82,8 +86,11 @@ class DataBuilder
             $data->{$permission . 'Permission'} = $table->getPermissionLevel($permission);
         }
 
+        $data->hash = hash('xxh128', Json::encode($data));
+
         $data->fieldTableQuickAccess = $this->buildFieldTableQuickAccess($data->fieldTable);
 
+        /** @var stdClass & object{table: stdClass, fieldTable: stdClass, hash: string} $data */
         return $data;
     }
 

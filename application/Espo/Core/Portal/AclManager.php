@@ -134,6 +134,20 @@ class AclManager extends InternalAclManager
         return parent::getMapData($user);
     }
 
+    /**
+     * A snapshot hash.
+     *
+     * @since 10.2.0
+     */
+    public function getHash(User $user): string
+    {
+        if ($this->checkUserIsNotPortal($user)) {
+            return $this->internalAclManager->getHash($user);
+        }
+
+        return parent::getHash($user);
+    }
+
     public function getLevel(User $user, string $scope, string $action): string
     {
         if ($this->checkUserIsNotPortal($user)) {
