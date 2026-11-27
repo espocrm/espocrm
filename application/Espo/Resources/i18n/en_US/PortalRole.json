@@ -13,5 +13,8 @@
         "Create PortalRole": "Create Portal Role",
         "Scope Level": "Scope Level",
         "Field Level": "Field Level"
+    },
+    "messages": {
+        "cannotRemoveUsedByPortals": "Cannot remove the role as it is assigned to one or more portals."
     }
 }
