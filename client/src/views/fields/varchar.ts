@@ -78,7 +78,9 @@ export interface VarcharOptions extends BaseOptions {
     customOptionList?: string[];
 }
 
-type AutocompleteReturn = Promise<import('ui/autocomplete').AutocompleteItem & Record<string, unknown>>;
+type AutocompleteItem = import('ui/autocomplete').AutocompleteItem & Record<string, unknown>;
+
+export type AutocompleteReturn = Promise<AutocompleteItem[]>;
 
 /**
  * A varchar field.

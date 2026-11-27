@@ -26,24 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import VarcharFieldView from 'views/fields/varchar';
+import VarcharFieldView, {AutocompleteReturn} from 'views/fields/varchar';
+import Utils from 'utils';
 
-class AddressCountryFieldView extends VarcharFieldView {
+interface AddressCountryData {
+    list?: string[];
+    preferredList?: string[];
+}
 
-    setupOptions() {
+type AutocompleteItem = import('ui/autocomplete').AutocompleteItem;
+
+export default class AddressCountryFieldView extends VarcharFieldView {
+
+    setupOptions(): void {
         const countryList = this.getCountryList();
 
         if (countryList.length) {
-            this.params.options = Espo.Utils.clone(countryList);
+            this.params.options = Utils.clone(countryList);
         }
     }
 
-    /**
-     * @private
-     * @return {string[]}
-     */
-    getCountryList() {
-        const list = (this.getHelper().getAppParam('addressCountryData') || {}).list || [];
+    private getAddressCountryData(): AddressCountryData {
+        return (this.getHelper().getAppParam('addressCountryData') as AddressCountryData | null) ?? {};
+    }
+
+    private getCountryList(): string[] {
+        const list = this.getAddressCountryData().list ?? [];
 
         if (list.length) {
             return list;
@@ -52,36 +60,32 @@ class AddressCountryFieldView extends VarcharFieldView {
         return [];
     }
 
-    getAutocompleteLookupFunction() {
-        // noinspection JSUnresolvedReference
-        const list = (this.getHelper().getAppParam('addressCountryData') || {}).preferredList || [];
+    protected getAutocompleteLookupFunction(): ((query: string) => AutocompleteReturn) | undefined {
+        const list = this.getAddressCountryData().preferredList ?? [];
 
         if (!list.length) {
             return undefined;
         }
 
-        const fullList = (this.params.options || []);
+        const fullList: string[] = this.params.options ?? [];
 
-        return query => {
+        return (query: string): Promise<AutocompleteItem[]> => {
             if (query.length === 0) {
-                const result = list.map(item => ({value: item}));
+                const result: AutocompleteItem[] = list.map(item => ({value: item}));
 
                 return Promise.resolve(result);
             }
 
             const queryLowerCase = query.toLowerCase();
 
-            const result = fullList
-                .filter(item => {
-                    if (item.toLowerCase().indexOf(queryLowerCase) === 0) {
-                        return item.length !== queryLowerCase.length;
-                    }
-                })
+            const result: AutocompleteItem[] = fullList
+                .filter(item =>
+                    item.toLowerCase().indexOf(queryLowerCase) === 0 &&
+                    item.length !== queryLowerCase.length
+                )
                 .map(item => ({value: item}));
 
             return Promise.resolve(result);
         };
     }
 }
-
-export default AddressCountryFieldView;
