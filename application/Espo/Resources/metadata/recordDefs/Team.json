@@ -4,6 +4,7 @@
             "allowed": true
         }
     },
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
     "afterUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Team\\AfterUpdate"
     ],

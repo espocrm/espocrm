@@ -5,6 +5,7 @@
         }
     },
     "forceSelectAllAttributes": true,
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
     ],

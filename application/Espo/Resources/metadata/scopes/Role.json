@@ -6,5 +6,6 @@
     "customizable": false,
     "importable": true,
     "exportFormatList": ["csv"],
-    "preserveAuditLog": true
+    "preserveAuditLog": true,
+    "duplicateCheckFieldList": ["name"]
 }

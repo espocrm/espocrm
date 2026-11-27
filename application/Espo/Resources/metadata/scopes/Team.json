@@ -7,5 +7,6 @@
     "aclLevelList": ["all", "team", "no"],
     "importable": true,
     "customizable": false,
-    "preserveAuditLog": true
+    "preserveAuditLog": true,
+    "duplicateCheckFieldList": ["name"]
 }
