@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Core\Select;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Application;
 use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
@@ -38,6 +39,7 @@ use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Select\Where\ItemBuilder;
+use Espo\Entities\Role;
 use Espo\Entities\User;
 use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Account;
@@ -999,6 +1001,146 @@ class SelectBuilderTest extends BaseTestCase
                 ->clone($query)
                 ->count()
         );
+    }
+
+    /**
+     * @noinspection PhpUnhandledExceptionInspection
+     */
+    public function testTextFilterForbiddenFields(): void
+    {
+        $ids = $this->initTextFilterAclData();
+
+        //
+
+        // Without restrictions, each record is found.
+        $this->assertEqualsCanonicalizing(
+            array_values($ids),
+            $this->findOpportunityIdsByTextFilter('hello')
+        );
+
+        $this->createUser('tester', [
+            Role::FIELD_DATA => [
+                Opportunity::ENTITY_TYPE => [Table::ACTION_READ => Table::LEVEL_ALL],
+                Account::ENTITY_TYPE => [Table::ACTION_READ => Table::LEVEL_ALL],
+            ],
+            Role::FIELD_FIELD_DATA => [
+                Opportunity::ENTITY_TYPE => [
+                    Field::DESCRIPTION => [
+                        Table::ACTION_READ => Table::LEVEL_NO,
+                        Table::ACTION_EDIT => Table::LEVEL_NO,
+                    ],
+                ],
+                Account::ENTITY_TYPE => [
+                    Field::NAME => [
+                        Table::ACTION_READ => Table::LEVEL_NO,
+                        Table::ACTION_EDIT => Table::LEVEL_NO,
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->authenticate('tester');
+
+        $this->assertEqualsCanonicalizing(
+            [$ids['byName'], $ids['byAccountDescription']],
+            $this->findOpportunityIdsByTextFilter('hello')
+        );
+
+        //
+
+        // No access to a foreign entity type.
+
+        $this->createUser('tester-2', [
+            Role::FIELD_DATA => [
+                Opportunity::ENTITY_TYPE => [Table::ACTION_READ => Table::LEVEL_ALL],
+                Account::ENTITY_TYPE => [Table::ACTION_READ => Table::LEVEL_NO],
+            ],
+        ]);
+
+        $this->authenticate('tester-2');
+
+        $this->assertEqualsCanonicalizing(
+            [$ids['byName'], $ids['byDescription']],
+            $this->findOpportunityIdsByTextFilter('hello')
+        );
+    }
+
+    /**
+     * Each opportunity matches the 'hello' text filter through a single attribute only.
+     *
+     * @return array{
+     *     byName: string,
+     *     byDescription: string,
+     *     byAccountName: string,
+     *     byAccountDescription: string,
+     * }
+     */
+    private function initTextFilterAclData(): array
+    {
+        $metadata = $this->getMetadata();
+
+        $metadata->set('entityDefs', Opportunity::ENTITY_TYPE, [
+            'collection' => [
+                'textFilterFields' => [
+                    'name',
+                    'description',
+                    'account.name',
+                    'account.description',
+                ],
+            ],
+        ]);
+        $metadata->save();
+
+        $em = $this->getEntityManager();
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'hello account']);
+        $account2 = $em->createEntity(Account::ENTITY_TYPE, ['name' => 'a2', 'description' => 'hello account']);
+
+        return [
+            'byName' => $em->createEntity(Opportunity::ENTITY_TYPE, [
+                'name' => 'hello 1',
+            ])->getId(),
+            'byDescription' => $em->createEntity(Opportunity::ENTITY_TYPE, [
+                'name' => 'o2',
+                'description' => 'hello 2',
+            ])->getId(),
+            'byAccountName' => $em->createEntity(Opportunity::ENTITY_TYPE, [
+                'name' => 'o3',
+                'accountId' => $account1->getId(),
+            ])->getId(),
+            'byAccountDescription' => $em->createEntity(Opportunity::ENTITY_TYPE, [
+                'name' => 'o4',
+                'accountId' => $account2->getId(),
+            ])->getId(),
+        ];
+    }
+
+    /**
+     * @return string[]
+     * @noinspection PhpUnhandledExceptionInspection
+     * @noinspection PhpSameParameterValueInspection
+     */
+    private function findOpportunityIdsByTextFilter(string $filter): array
+    {
+        $query = $this->getInjectableFactory()
+            ->create(SelectBuilderFactory::class)
+            ->create()
+            ->from(Opportunity::ENTITY_TYPE)
+            ->withTextFilter($filter)
+            ->build();
+
+        $collection = $this->getEntityManager()
+            ->getRDBRepositoryByClass(Opportunity::class)
+            ->clone($query)
+            ->find();
+
+        $ids = [];
+
+        foreach ($collection as $it) {
+            $ids[] = $it->getId();
+        }
+
+        return $ids;
     }
 
     protected function createUserEmailAddress(Container $container) : string

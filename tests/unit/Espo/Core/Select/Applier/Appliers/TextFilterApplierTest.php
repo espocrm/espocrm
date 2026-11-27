@@ -29,6 +29,7 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\Acl;
 use Espo\Core\Select\Text\Applier as TextFilterApplier;
 use Espo\Core\Select\Text\ConfigProvider;
 use Espo\Core\Select\Text\DefaultFilter;
@@ -71,6 +72,20 @@ class TextFilterApplierTest extends TestCase
 
         $configProvider = $this->createMock(ConfigProvider::class);
 
+        $acl = $this->createMock(Acl::class);
+
+        $acl->expects($this->any())
+            ->method('checkLink')
+            ->willReturn(true);
+
+        $acl->expects($this->any())
+            ->method('tryCheck')
+            ->willReturn(true);
+
+        $acl->expects($this->any())
+            ->method('getScopeForbiddenAttributeList')
+            ->willReturn([]);
+
         $this->entityType = 'Test';
 
         $this->applier = new TextFilterApplier(
@@ -79,7 +94,8 @@ class TextFilterApplierTest extends TestCase
             $this->metadataProvider,
             $this->fullTextSearchDataComposerFactory,
             $this->filterFactory,
-            $configProvider
+            $configProvider,
+            $acl,
         );
     }
 

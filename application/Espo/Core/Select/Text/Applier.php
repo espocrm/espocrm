@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Text;
 
+use Espo\Core\Acl;
 use Espo\Core\Name\Field;
 use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
@@ -61,6 +62,7 @@ class Applier
         private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
         private FilterFactory $filterFactory,
         private ConfigProvider $config,
+        private Acl $acl,
     ) {}
 
     /**
@@ -180,7 +182,9 @@ class Applier
 
         $list = array_diff($list, $fullTextFieldList);
 
-        return array_values($list);
+        $list = array_values($list);
+
+        return $this->accessFilterAttributeList($list);
     }
 
     /**
@@ -212,5 +216,44 @@ class Applier
         $filterObj = $this->filterFactory->create($this->entityType, $this->user);
 
         $filterObj->apply($queryBuilder, $filterData);
+    }
+
+    /**
+     * @param string[] $list
+     * @return string[]
+     */
+    private function accessFilterAttributeList(array $list): array
+    {
+        $list = array_filter($list, function ($it) {
+            $entityType = $this->entityType;
+            $attribute = $it;
+
+            if (str_contains($it, '.')) {
+                [$link, $attribute] = explode('.', $it, 2);
+
+                if (!$this->acl->checkLink($this->entityType, $link)) {
+                    return false;
+                }
+
+                $entityType = $this->metadataProvider->getRelationEntityType($this->entityType, $link);
+
+                if (!$entityType) {
+                    // Intentionally. The error will be thrown down the line.
+                    return true;
+                }
+
+                if (!$this->acl->tryCheck($entityType, Acl\Table::ACTION_READ)) {
+                    return false;
+                }
+            }
+
+            if (in_array($attribute, $this->acl->getScopeForbiddenAttributeList($entityType))) {
+                return false;
+            }
+
+            return true;
+        });
+
+        return array_values($list);
     }
 }
