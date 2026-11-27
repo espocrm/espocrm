@@ -37,7 +37,6 @@ use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\Where\Comparison as Cmp;
 use Espo\ORM\Query\Part\Expression as Expr;
-
 use Espo\ORM\Entity;
 use RuntimeException;
 
@@ -81,7 +80,7 @@ class DefaultFilter implements Filter
         SelectBuilder $queryBuilder,
         OrGroupBuilder $orGroupBuilder,
         string $attribute,
-        Data $data
+        Data $data,
     ): void {
 
         $filter = $data->getFilter();
@@ -216,12 +215,7 @@ class DefaultFilter implements Filter
             return true;
         }
 
-        if (
-            in_array(
-                $attribute,
-                $this->metadataProvider->getUseContainsAttributeList($this->entityType)
-            )
-        ) {
+        if (in_array($attribute, $this->metadataProvider->getUseContainsAttributeList($this->entityType))) {
             return true;
         }
 

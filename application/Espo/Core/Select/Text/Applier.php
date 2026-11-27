@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Select\Text;
 
+use Espo\Core\Name\Field;
 use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
@@ -46,12 +47,12 @@ class Applier
     /** @todo Move to metadata. */
     private int $fullTextOrderRelevanceDivider = 5; /** @phpstan-ignore-line */
 
-    private const DEFAULT_FT_ORDER = self::FT_ORDER_COMBINED;
-    private const DEFAULT_ATTRIBUTE_LIST = ['name'];
+    private const int DEFAULT_FT_ORDER = self::FT_ORDER_COMBINED;
+    private const array DEFAULT_ATTRIBUTE_LIST = [Field::NAME];
 
-    private const FT_ORDER_COMBINED = 0;
-    private const FT_ORDER_RELEVANCE = 1;
-    private const FT_ORDER_ORIGINAL = 3;
+    private const int FT_ORDER_COMBINED = 0;
+    private const int FT_ORDER_RELEVANCE = 1;
+    private const int FT_ORDER_ORIGINAL = 3;
 
     public function __construct(
         private string $entityType,
@@ -59,7 +60,7 @@ class Applier
         private MetadataProvider $metadataProvider,
         private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
         private FilterFactory $filterFactory,
-        private ConfigProvider $config
+        private ConfigProvider $config,
     ) {}
 
     /**
@@ -175,10 +176,11 @@ class Applier
 
         $fullTextFieldList = $fullTextData ? $fullTextData->getFieldList() : [];
 
-        return array_filter(
-            $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? self::DEFAULT_ATTRIBUTE_LIST,
-            fn ($field) => !in_array($field, $fullTextFieldList)
-        );
+        $list = $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? self::DEFAULT_ATTRIBUTE_LIST;
+
+        $list = array_diff($list, $fullTextFieldList);
+
+        return array_values($list);
     }
 
     /**
@@ -189,7 +191,7 @@ class Applier
         string $filter,
         array $fieldList,
         bool $forceFullTextSearch,
-        ?WhereItem $fullTextWhere
+        ?WhereItem $fullTextWhere,
     ): FilterData {
 
         $skipWildcards = false;
