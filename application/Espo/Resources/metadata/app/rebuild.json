@@ -9,6 +9,7 @@
         "Espo\\Core\\Rebuild\\Actions\\GenerateInstanceId",
         "Espo\\Core\\Rebuild\\Actions\\SetIntegrationDefaults",
         "Espo\\Core\\Rebuild\\Actions\\SyncCurrency",
-        "Espo\\Core\\Rebuild\\Actions\\CurrencyRates"
+        "Espo\\Core\\Rebuild\\Actions\\CurrencyRates",
+        "Espo\\Core\\Rebuild\\Actions\\CorrectSettingsLinks"
     ]
 }
