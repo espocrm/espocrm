@@ -33,13 +33,22 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\EntryPoint\Traits\NoAuth;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Entities\Portal;
+use Espo\Entities\Settings;
 
+/**
+ * @noinspection PhpUnused
+ */
 class LogoImage extends Image
 {
     use NoAuth;
 
-    protected $allowedRelatedTypeList = ['Settings', 'Portal'];
-    protected $allowedFieldList = ['companyLogo'];
+    protected $allowedRelatedTypeList = [
+        Settings::ENTITY_TYPE,
+        Portal::ENTITY_TYPE,
+    ];
+
+    protected $allowedFieldList = [Settings::FIELD_COMPANY_LOGO];
 
     public function run(Request $request, Response $response): void
     {
@@ -47,13 +56,18 @@ class LogoImage extends Image
         $size = $request->getQueryParam('size') ?? null;
 
         if (!$id) {
-            $id = $this->config->get('companyLogoId');
+            $id = $this->config->get(Settings::FIELD_COMPANY_LOGO . 'Id');
         }
 
         if (!$id) {
-            throw new NotFound("No id.");
+            throw new NotFound("No ID.");
         }
 
-        $this->show($request, $response, $id, $size);
+        $this->show(
+            request: $request,
+            response: $response,
+            id: $id,
+            size: $size,
+        );
     }
 }

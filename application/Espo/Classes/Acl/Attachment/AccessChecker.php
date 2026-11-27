@@ -60,8 +60,10 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->getParentType() === Settings::ENTITY_TYPE) {
-            // Allow the logo.
+        if (
+            $entity->getRelatedType() === Settings::ENTITY_TYPE &&
+            $entity->getTargetField() === Settings::FIELD_COMPANY_LOGO
+        ) {
             return true;
         }
 

@@ -29,7 +29,14 @@
 
 namespace Espo\Entities;
 
-class Settings extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Settings extends Entity
 {
     public const ENTITY_TYPE = 'Settings';
+
+    /**
+     * @internal
+     */
+    public const string FIELD_COMPANY_LOGO = 'companyLogo';
 }
