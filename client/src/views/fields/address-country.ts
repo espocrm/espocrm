@@ -38,6 +38,12 @@ type AutocompleteItem = import('ui/autocomplete').AutocompleteItem;
 
 export default class AddressCountryFieldView extends VarcharFieldView {
 
+    protected setup() {
+        super.setup();
+
+        this.validations.push(() => this.validateCountryValid());
+    }
+
     setupOptions(): void {
         const countryList = this.getCountryList();
 
@@ -87,5 +93,28 @@ export default class AddressCountryFieldView extends VarcharFieldView {
 
             return Promise.resolve(result);
         };
+    }
+
+    private validateCountryValid(): boolean {
+        if (!this.getConfig().get('validateAddressCountry')) {
+            return false;
+        }
+
+        const value = this.model.attributes[this.name];
+
+        if (value == null) {
+            return false;
+        }
+
+        if (this.getCountryList().includes(value)) {
+            return false;
+        }
+
+        const msg = this.translate('fieldAddressCountryIsNotValid', 'messages')
+            .replace('{field}', this.translate(this.name, 'fields', this.entityType));
+
+        this.showValidationMessage(msg);
+
+        return true;
     }
 }

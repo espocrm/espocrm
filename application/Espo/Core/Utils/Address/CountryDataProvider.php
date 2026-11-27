@@ -38,7 +38,7 @@ use Espo\ORM\Query\Part\Order;
 class CountryDataProvider
 {
     private const string CACHE_KEY = 'addressCountryData';
-    private const int LIMIT = 500;
+    private const int LIMIT = 1000;
 
     /**
      * @param DataCacheAccess<array{list: string[], preferredList: string[]}> $dataCacheAccess
@@ -75,7 +75,10 @@ class CountryDataProvider
         $collection = $this->entityManager
             ->getRDBRepositoryByClass(AddressCountry::class)
             ->sth()
-            ->select([Field::NAME, 'isPreferred'])
+            ->select([
+                Field::NAME,
+                AddressCountry::FIELD_IS_PREFERRED,
+            ])
             ->order(Field::NAME, Order::ASC)
             ->limit(0, self::LIMIT)
             ->find();

@@ -67,5 +67,11 @@
     "skipOrmDefs": true,
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\Address\\AddressFactory",
-    "attributeExtractorClassName": "Espo\\Core\\Field\\Address\\AddressAttributeExtractor"
+    "attributeExtractorClassName": "Espo\\Core\\Field\\Address\\AddressAttributeExtractor",
+    "mandatoryValidationList": [
+        "countryValid"
+    ],
+    "validatorClassNameMap": {
+        "countryValid": "Espo\\Classes\\FieldValidators\\Common\\Address\\CountryValid"
+    }
 }

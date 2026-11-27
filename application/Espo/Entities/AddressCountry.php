@@ -36,6 +36,9 @@ class AddressCountry extends Entity
 {
     public const ENTITY_TYPE = 'AddressCountry';
 
+    /** @since 10.2.0 */
+    public const string FIELD_IS_PREFERRED = 'isPreferred';
+
     public function getName(): string
     {
         return $this->get(Field::NAME);
@@ -48,6 +51,6 @@ class AddressCountry extends Entity
 
     public function isPreferred(): bool
     {
-        return (bool) $this->get('isPreferred');
+        return (bool) $this->get(self::FIELD_IS_PREFERRED);
     }
 }

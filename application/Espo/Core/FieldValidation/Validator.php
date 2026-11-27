@@ -39,7 +39,7 @@ use Espo\Core\FieldValidation\Validator\Failure;
  *
  * Note: Validators are not supposed to perform any access control checks.
  *
- * @template TEntity of Entity
+ * @template TEntity of Entity = Entity
  */
 interface Validator
 {

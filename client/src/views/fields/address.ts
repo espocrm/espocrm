@@ -499,6 +499,8 @@ class AddressFieldView<
 
         this.addActionHandler('viewMap', (e) => this.viewMapHandler(e));
 
+        this.validations.push(() => this.validateCountryValid());
+
         this.maxLengthMap = {};
 
         const actualAttributePartList: string[] = this.getMetadata().get(['fields', this.type, 'actualFields']) ??
@@ -721,6 +723,29 @@ class AddressFieldView<
 
             return Promise.resolve(result);
         };
+    }
+
+    private validateCountryValid(): boolean {
+        if (!this.getConfig().get('validateAddressCountry')) {
+            return false;
+        }
+
+        const value = this.model.attributes[this.countryField];
+
+        if (value == null) {
+            return false;
+        }
+
+        if (this.getCountryList().includes(value)) {
+            return false;
+        }
+
+        const msg = this.translate('fieldAddressCountryIsNotValid', 'messages')
+            .replace('{field}', this.translate(this.countryField, 'fields', this.entityType));
+
+        this.showValidationMessage(msg, `[data-name="${this.countryField}"]`);
+
+        return true;
     }
 }
 

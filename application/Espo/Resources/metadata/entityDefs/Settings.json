@@ -758,6 +758,10 @@
             "type": "multiEnum",
             "tooltip": true
         },
+        "validateAddressCountry": {
+            "type": "bool",
+            "tooltip": true
+        },
         "jobRunInParallel": {
             "type": "bool",
             "tooltip": true

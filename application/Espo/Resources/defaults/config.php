@@ -208,6 +208,7 @@ return [
     'authTokenMaxIdleTime' => 48,
     'userNameRegularExpression' => '[^a-z0-9\-@_\.\s]',
     'addressFormat' => 1,
+    'validateAddressCountry' => false,
     'displayListViewRecordCount' => true,
     'dashboardLayout' => [
         (object) [

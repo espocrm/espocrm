@@ -405,6 +405,7 @@
         "fieldValueDuplicate": "Duplicate value",
         "fieldIsUploading": "Uploading in progress",
         "fieldExceedsMaxCount": "Count exceeds max allowed {maxCount}",
+        "fieldAddressCountryIsNotValid": "{field} is not in the system country list",
         "barcodeInvalid": "{field} is not valid {type}",
         "arrayItemMaxLength": "Item shouldn't be longer than {max} characters",
         "arrayInputNotEmpty": "Item is entered but not added",

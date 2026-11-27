@@ -44,7 +44,8 @@
     {
         "rows": [
             [{"name": "addressFormat"}, {"name": "addressPreview"}],
-            [{"name": "addressCityList"}, {"name": "addressStateList"}]
+            [{"name": "addressCityList"}, {"name": "addressStateList"}],
+            [{"name": "validateAddressCountry"}, false]
         ]
     },
     {
