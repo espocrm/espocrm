@@ -105,14 +105,14 @@ class ListView<S extends ListViewSchema = ListViewSchema> extends MainView<S> {
     protected quickCreate: boolean = false
 
     /**
-     * After create a view will be stored, so it can be re-used after.
-     * Useful to avoid re-rendering when come back the list view.
+     * After create the view will be stored, so it can be re-used after.
+     * Useful to avoid re-rendering when come back to the list view.
      */
     readonly storeViewAfterCreate: boolean = false
 
     /**
-     * After update a view will be stored, so it can be re-used after.
-     * Useful to avoid re-rendering when come back the list view.
+     * After update the view will be stored, so it can be re-used after.
+     * Useful to avoid re-rendering when come back to the list view.
      */
     readonly storeViewAfterUpdate: boolean = true
 
