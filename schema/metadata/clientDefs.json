@@ -113,6 +113,20 @@
             "type": "string",
             "description": "A default detail view mode."
         },
+        "detailViewModes": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "storeView":{
+                        "type": "boolean",
+                        "description": "To store the view to be re-used when navigating back."
+                    }
+                },
+                "description": "A mode."
+            },
+            "description": "Detail view mode parameters."
+        },
         "detailViewModeIsStorable": {
             "type": "boolean",
             "description": "A selected detail view mode will be stored in the browser storage for a user a per record."

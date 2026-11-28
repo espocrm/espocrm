@@ -135,6 +135,7 @@ class RecordController extends Controller {
      * @param {{
      *     returnUrl?: string,
      *     returnDispatchParams?: Record,
+     *     isReturn?: boolean,
      * } | Record} options
      * @param {module:model} model
      * @param {string|null} [view]
@@ -148,6 +149,9 @@ class RecordController extends Controller {
             returnUrl: options.returnUrl,
             returnDispatchParams: options.returnDispatchParams,
             params: options,
+        }, null, {
+            useStored: options.isReturn === true,
+            key: 'view',
         });
     }
 
@@ -170,7 +174,11 @@ class RecordController extends Controller {
     actionView(options) {
         const id = options.id;
 
-        const isReturn = this.getRouter().backProcessed;
+        const isReturn = options.isReturn || this.getRouter().backProcessed;
+
+        if (!isReturn && this.getStoredMainView('view')) {
+            this.clearStoredMainView('view');
+        }
 
         if (isReturn) {
             if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
@@ -182,8 +190,7 @@ class RecordController extends Controller {
             }
 
             options.isReturn = true;
-        }
-        else {
+        } else {
             delete this.lastViewActionOptions;
         }
 

@@ -716,6 +716,14 @@ class DetailView<S extends DetailViewSchema = DetailViewSchema> extends MainView
 
         recordView.setupReuse();
     }
+
+    isActualForReuse(): boolean {
+        if (this.model.attributes.deleted === true) {
+            return false;
+        }
+
+        return this.getMetadata().get(`clientDefs.${this.scope}.detailViewModes.${this.viewMode}.storeView`) === true;
+    }
 }
 
 export default DetailView;

@@ -312,6 +312,14 @@ class Controller {
             view.remove(true);
         }
 
+        this._clearStoredMainViewInternal(key);
+    }
+
+    /**
+     * @private
+     * @param {string} key
+     */
+    _clearStoredMainViewInternal(key) {
         this.unset(this._composeScrollKey(key));
         this.unset(this._composeMainViewKey(key));
     }
@@ -323,6 +331,11 @@ class Controller {
      * @param {import('view').default} view A view.
      */
     storeMainView(key, view) {
+        if (this.getStoredMainView(key) === view) {
+            // Already stored. Prevent the extra listener.
+            return;
+        }
+
         this.set(this._composeMainViewKey(key), view);
 
         this.listenTo(view, 'remove', (o) => {
@@ -334,7 +347,10 @@ class Controller {
 
             this.stopListening(view, 'remove');
 
-            this.clearStoredMainView(key);
+            if (this.getStoredMainView(key) === view) {
+                // Already being removed. Only forget it.
+                this._clearStoredMainViewInternal(key);
+            }
         });
     }
 
@@ -529,6 +545,17 @@ class Controller {
             return;
         }
 
+        if (currentMainView.isRemoved()) {
+            masterView.unchainView('main');
+
+            return;
+        }
+
+        if (!this.isStoredViewActualForReuse(currentMainView)) {
+            // The view will be removed with `masterView.setView`.
+            return;
+        }
+
         currentMainView.propagateEvent('remove', {ignoreCleaning: true});
         masterView.unchainView('main');
     }
@@ -579,20 +606,11 @@ class Controller {
             if (useStored && this.hasStoredMainView(key)) {
                 const mainView = this.getStoredMainView(key);
 
-                let isActual = true;
-
-                if (
-                    mainView &&
-                    ('isActualForReuse' in mainView) &&
-                    typeof mainView.isActualForReuse === 'function'
-                ) {
-                    isActual = mainView.isActualForReuse();
-                }
-
                 const lastUrl = (mainView && 'lastUrl' in mainView) ? mainView.lastUrl : null;
 
                 if (
-                    isActual &&
+                    mainView &&
+                    this.isStoredViewActualForReuse(mainView) &&
                     (!lastUrl || lastUrl === this.getRouter().getCurrentUrl())
                 ) {
                     this._processMain(mainView, masterView, dto);
@@ -626,6 +644,22 @@ class Controller {
                 this._processMain(view, masterView, dto);
             });
         });
+    }
+
+    /**
+     * @private
+     * @param {import('view').default} mainView
+     * @return {boolean}
+     */
+    isStoredViewActualForReuse(mainView) {
+        if (
+            ('isActualForReuse' in mainView) &&
+            typeof mainView.isActualForReuse === 'function'
+        ) {
+            return mainView.isActualForReuse();
+        }
+
+        return true;
     }
 
     /**
